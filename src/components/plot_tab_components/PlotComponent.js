@@ -1,10 +1,8 @@
-import React, {Component} from 'react';
+import React from 'react';
 
 import Plot from 'react-plotly.js'
 
-class PlotComponent extends Component {
-
-    render() {
+let PlotComponent  = props => {
         return (
             <Plot
                 data={[
@@ -20,8 +18,6 @@ class PlotComponent extends Component {
                 layout={ {width: 320, height: 240, title: 'A Fancy Plot'} }
             />
     );
-    }
-
-}
+};
 
 export default PlotComponent;

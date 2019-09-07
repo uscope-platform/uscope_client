@@ -1,26 +1,23 @@
-import React, {Component} from 'react';
+import React from 'react';
 
 import Container from "react-bootstrap/Container";
 
 
-class PlotControls extends Component {
+let  PlotControls= props =>{
 
-    onClick(){
+    let onClick = () => {
         console.log("controlled");
-    }
+    };
 
-    render() {
-        return(
-            <Container>
-                {this.props.controls.map((control) => {
-                    return(
-                        <img className={"plot_controls_asset"} src={control.image} alt={control.name} onClick={this.onClick} />
-                    );
-                })}
-            </Container>
-        );
-    }
-
-}
+    return(
+        <Container>
+            {props.controls.map((control) => {
+                return(
+                    <img className={"plot_controls_asset"} src={control.image} alt={control.name} onClick={onClick} />
+                );
+            })}
+        </Container>
+    );
+};
 
 export default PlotControls;

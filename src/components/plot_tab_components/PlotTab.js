@@ -1,4 +1,5 @@
-import React, {Component} from 'react';
+import React from 'react';
+import {useSelector} from "react-redux";
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row"
@@ -10,9 +11,12 @@ import ParametersArea from "./ParametersArea";
 import PlotControls from "./PlotControls";
 
 
-class PlotTab extends Component {
 
-    controls = [
+
+let PlotTab = function (props) {
+    const channels = useSelector(state => state.channelStatus)
+
+    let controls = [
         {
             name:"play",
             image:"assets/Icons/play.svg"
@@ -36,12 +40,11 @@ class PlotTab extends Component {
 
     ];
 
-    render() {
         return(
             <Container>
                 <Row>
                     <Col md={3}>
-                        <ChannelSelector content={this.props.content}/>
+                        <ChannelSelector channels={channels}/>
                     </Col>
                     <Col md={8}>
                         <Row>
@@ -51,19 +54,17 @@ class PlotTab extends Component {
                         </Row>
                         <Row>
                             <Col>
-                                <ParametersArea parameters={this.props.content.channels}/>
+                                <ParametersArea parameters={props.content.parameters}/>
                             </Col>
                         </Row>
                     </Col>
                     <Col md={1}>
-                        <PlotControls controls={this.controls}/>
+                        <PlotControls controls={controls}/>
                     </Col>
                 </Row>
 
             </Container>
         );
-    }
-
-}
+};
 
 export default PlotTab;

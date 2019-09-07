@@ -1,23 +1,20 @@
-import React, {Component} from 'react';
+import React from 'react';
 
 import Container from "react-bootstrap/Container";
 
 import ChannelSelectorItem from "./ChannelSelectorItem";
 
-class ChannelSelector extends Component {
 
-    render() {
-        return(
+let ChannelSelector = function(props) {
+    return(
             <Container>
-                {this.props.content.channels.map((chan) => {
-                    return(
-                        <ChannelSelectorItem name={chan.name}/>
-                    );
-                })}
+                    {props.channels.map((chan) => {
+                        return(
+                            <ChannelSelectorItem name={chan.name} />
+                        );
+                    })}
             </Container>
         );
-    }
-
-}
+};
 
 export default ChannelSelector;

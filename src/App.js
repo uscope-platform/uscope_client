@@ -1,7 +1,11 @@
 import React, {Component} from 'react';
 import MainAppBody from "./components/MainAppBody";
 
+import { Provider } from "react-redux";
+
 import './App.css';
+
+import store from "./store";
 
 class App extends Component {
   state = {
@@ -128,9 +132,11 @@ class App extends Component {
 
   render() {
     return (
-        <div className="App">
-          <MainAppBody tabs={this.state.tabs} />
-        </div>
+        <Provider store={store}>
+          <div className="App">
+            <MainAppBody tabs={this.state.tabs} />
+          </div>
+        </Provider>
     );
   }
 }

@@ -4,12 +4,16 @@
   "private": true,
   "dependencies": {
     "bootstrap": "^4.3.1",
+    "immutability-helper": "^3.0.1",
     "plotly.js": "^1.49.4",
     "react": "^16.9.0",
     "react-bootstrap": "^1.0.0-beta.12",
     "react-dom": "^16.9.0",
     "react-plotly.js": "^2.3.0",
-    "react-scripts": "3.1.1"
+    "react-redux": "^7.1.1",
+    "react-scripts": "3.1.1",
+    "redux": "^4.0.4",
+    "redux-form": "^8.2.6"
   },
   "scripts": {
     "start": "react-scripts start",
