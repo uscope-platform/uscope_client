@@ -21,13 +21,15 @@ function arraysEqual(a,b) {
     definition.
 */
 if (a instanceof Array && b instanceof Array) {
-    if (a.length!=b.length)  // assert same length
+    // eslint-disable-next-line
+    if (a.length!=b.length)
         return false;
     for(var i=0; i<a.length; i++)  // assert each element equal
         if (!arraysEqual(a[i],b[i]))
             return false;
     return true;
 } else {
+    // eslint-disable-next-line
     return a==b;  // if not both arrays, should be the same
 }
 }
