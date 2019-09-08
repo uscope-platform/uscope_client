@@ -5,15 +5,15 @@ import RegisterTab from "./register_tab_components/Register_tab";
 
 
 let TabContent = props => {
-    if(props.type==='Scope'){
+    if(props.tab.type==='Scope'){
         return(
-            <PlotTab content={props.content}/>
+            <PlotTab content={props.tab}/>
         );
-    } else if(props.type==='Registers'){
+    } else if(props.tab.type==='Registers'){
         return (
-            <RegisterTab content={props.content}/>
+            <RegisterTab content={props.tab}/>
         );
     }
-}
+};
 
 export default TabContent;

@@ -1,5 +1,4 @@
 import { combineReducers} from "redux";
-import { reducer as formReducer } from 'redux-form'
 
 import channelStatusReducer from "./channelStatusReducer";
 import parameterValuesReducer from "./ParameterReducers";
@@ -9,5 +8,6 @@ export default combineReducers({
     channelStatus: channelStatusReducer,
     parameterValues: parameterValuesReducer,
     registerValues: registerValuesReducer,
-    form: formReducer
+    tabs: (state = {}) => state,  //dummy reducer as tabs is only loaded from server during initialization
+    settings : (state = {}) => state //dummy reducer as settings is only loaded from server during initialization
     });

@@ -3,13 +3,22 @@ import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import TabContent from "./TabContent";
 
+import {useSelector} from "react-redux";
+
 let MainAppBody = props => {
+    const tabs = useSelector(
+        state => state.tabs
+    );
+    const settings = useSelector(
+        state => state.settings
+    );
+
     return(
         <div>
-            <Tabs defaultActiveKey={props.default_tab} id="uncontrolled-tab-example">
-                {props.tabs.map((tab) => {
+            <Tabs defaultActiveKey={settings.default_tab} id="uncontrolled-tab-example">
+                {tabs.map((tab) => {
                     return(
-                            <Tab eventKey={tab.name} title={tab.name}> <TabContent type={tab.type} content={tab.content}/></Tab>
+                            <Tab eventKey={tab.name} title={tab.name}> <TabContent tab={tab}/></Tab>
                     )
                 })}
             </Tabs>
