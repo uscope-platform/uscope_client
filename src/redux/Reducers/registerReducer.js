@@ -11,9 +11,8 @@ let registerValuesReducer = function (state = null, action) {
             });
         case SET_TWO_VALUE_REGISTER:
             return produce(state, draftState => {
-                debugger;
                 let index =  draftState[action.payload.peripheral].findIndex((obj => obj.qualified_name === action.payload.name));
-                draftState[action.payload.peripheral][index]["value"][action.payload.value.idx-1] = action.payload.value.value;
+                draftState[action.payload.peripheral][index]["value"] = action.payload.value;
             });
         default:
             return state;
