@@ -6,11 +6,11 @@ import Col from "react-bootstrap/Col"
 
 let TwoValuesField = props => {
         return(
-            <Form.Row>
+            <Form.Row >
                 <Col>
                     <Form.Group controlId="first_input">
-                        <Form.Label>{props.field.name[0]}</Form.Label>
-                        <Form.Control type="text" placeholder={props.field.default_value[0]} />
+                        <Form.Label>{props.field.display_name[0]}</Form.Label>
+                        <Form.Control className='twoFields.1' type="text" id={props.field.qualified_name} placeholder={props.field.value[0]} />
                         <Form.Text className="text-muted">
                             {props.field.description[0]}
                         </Form.Text>
@@ -18,8 +18,8 @@ let TwoValuesField = props => {
                 </Col>
                 <Col>
                     <Form.Group controlId="second_input">
-                        <Form.Label>{props.field.name[1]}</Form.Label>
-                        <Form.Control type="text" placeholder={props.field.default_value[1]} />
+                        <Form.Label>{props.field.display_name[1]}</Form.Label>
+                        <Form.Control className='twoFields.2' type="text" id={props.field.qualified_name} placeholder={props.field.value[1]} />
                         <Form.Text className="text-muted">
                             {props.field.description[1]}
                         </Form.Text>

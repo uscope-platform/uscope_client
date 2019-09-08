@@ -1,4 +1,4 @@
-import {SET_PARAMETER_VALUE} from "../reduxActions/types";
+import {SET_PARAMETER_VALUE} from "../Actions/types";
 
 
 
@@ -6,8 +6,8 @@ let parameterValuesReducer = function (state = null, action) {
     switch (action.type) {
         case SET_PARAMETER_VALUE:
             return state.map(parameter => {
-                if (parameter.name === action.payload.name) {
-                    return {...parameter, value:  action.payload.enabled}
+                if (parameter.qualified_name === action.payload.name) {
+                    return {...parameter, value:  action.payload.value}
                 }
                 return parameter;
             });

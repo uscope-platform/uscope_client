@@ -1,4 +1,4 @@
-import {ENABLE_CHANNEL, DISABLE_CHANNEL} from "../reduxActions/types";
+import {ENABLE_CHANNEL, DISABLE_CHANNEL} from "../Actions/types";
 
 
 
