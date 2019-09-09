@@ -6,7 +6,7 @@ import {connect} from "react-redux";
 
 import {setSetting} from "./redux/Actions/SettingsActions";
 import {loadTabs} from "./redux/Actions/TabsActions";
-
+import {loadRegisters} from "./redux/Actions/RegisterActions";
 
 import './App.css';
 import serverProxy from "./redux/ServerProxy";
@@ -24,10 +24,12 @@ const mapDispatchToProps = dispatch => {
     return{
         setSettings: (setting) => {dispatch(setSetting(["application", setting]))},
         loadTabs: (tab) => {dispatch(loadTabs(tab))},
+        loadRegisters: (peripheral, registers) => {dispatch(loadRegisters(peripheral,registers))}
     }
 };
 
 class App extends Component {
+
     constructor(props) {
         super(props);
         this.server = new serverProxy('http://172.18.0.1:4999/uscope/');
@@ -42,13 +44,31 @@ class App extends Component {
     handleApplicationChosen = e =>{
         this.server.app_proxy.getApplication(e).then((result) =>{
             this.props.setSettings(e);
+            this.initializeRegisterStore(result.tabs);
             this.props.loadTabs(result.tabs);
-            this.setState({initializationPhase:'done'});
         });
     };
 
-    render() {
+    initializeRegisterStore = (tabs) =>{
 
+        Promise.all(tabs.map((tab) =>{
+            if(tab.user_accessible && tab.type==="Registers"){
+                return this.server.periph_proxy.getPeripheralRegisters(tab.tab_id);
+            }
+            return 'Not Needed';
+        })).then((result) =>{
+            result.map((item) => {
+                if(item!=='Not Needed'){
+                    this.props.loadRegisters(item.peripheral_name, item.registers);
+                }
+                return null
+            });
+            this.setState({initializationPhase:'done'});
+            }
+        );
+    };
+
+    render() {
         switch (this.state.initializationPhase) {
             case "application_choice":
                 return (

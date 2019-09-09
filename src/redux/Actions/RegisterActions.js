@@ -1,4 +1,4 @@
-import {SET_SINGLE_VALUE_REGISTER, SET_TWO_VALUE_REGISTER} from "./types";
+import {LOAD_REGISTERS, SET_SINGLE_VALUE_REGISTER, SET_TWO_VALUE_REGISTER} from "./types";
 
 export const setSingleValueRegister = (register_name, register_value, peripheral) =>{
     return {
@@ -22,3 +22,13 @@ export const setTwoValueRegister = (register_name, register_value, peripheral) =
         }
     }
 };
+
+export const loadRegisters = (peripheral, value) =>{
+    return{
+        type: LOAD_REGISTERS,
+        payload:{
+            peripheral:peripheral,
+            value:value
+        }
+    }
+}

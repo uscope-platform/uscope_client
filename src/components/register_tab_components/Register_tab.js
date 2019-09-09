@@ -46,7 +46,7 @@ let RegisterTab  = props => {
         let first_field_value = null;
         for(let register of event.target){ // eslint-disable-line no-unused-vars
             if(register.className.includes("oneField")){
-                let idx = registers.findIndex((obj => obj.qualified_name === register.name));
+                let idx = registers.findIndex((obj => obj.register_name === register.name));
                 let intValue = parseFloat(register.value);
                 if(register.value!=="" && registers[idx].value !==intValue){
                     dispatch(setSingleValueRegister(register.name, intValue, props.content.tab_id));
@@ -56,7 +56,7 @@ let RegisterTab  = props => {
                     if(item.includes("twoFields")){
                         debugger;
                         let reg_id = register.id.split('.')[0];
-                        let reg_idx = registers.findIndex((obj => obj.qualified_name === reg_id));
+                        let reg_idx = registers.findIndex((obj => obj.register_name === reg_id));
                         let fld_idx = parseInt(item.replace("twoFields.",''));
                         let currentValue = parseInt(register.value);
                         if(fld_idx===1){
@@ -75,6 +75,7 @@ let RegisterTab  = props => {
         }
     };
 
+
     return(
         <Container>
             <Row>
@@ -82,13 +83,17 @@ let RegisterTab  = props => {
                 <Col>
                     <Form onSubmit={handleSubmit}>
                         {registers.map((reg, i) => {
-                            if(reg.type === "single"){
+                            if(reg.register_format === "single"){
                                 return(
-                                    <SingleValueField key={i} field={reg}/>
+                                    <SingleValueField key={i} name={reg.register_name} value={reg.value} description={reg.description}/>
                                 );
-                            } else if(reg.type==='two'){
+                            } else if(reg.register_format === "complex"){
                                 return(
-                                    <TwoValuesField key={i} field={reg}/>
+                                    <SingleValueField key={i} name={reg.register_name} value={reg.value} description={reg.description}/>
+                                );
+                            } else if(reg.register_format==='words'){
+                                return(
+                                    <TwoValuesField key={i} field_names={reg.field_names} register_name={reg.register_name} value={reg.value} field_descriptions={reg.field_descriptions}/>
                                 );
                             } else return(<p>invalid form field</p>);
                         })}

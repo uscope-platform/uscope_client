@@ -49,62 +49,7 @@ const initialState = {
             description:'Parameter boring description'
         },
     ],
-    registerValues:{
-        SPI:[
-            {
-                qualified_name:'Register 1',
-                type:'single',
-                value:123,
-                description:'Register brief description'
-            },
-            {
-                qualified_name:'Register 2',
-                type:'single',
-                value:456,
-                description:'Register long description'
-            },
-            {
-                qualified_name:'Register 3',
-                type:'single',
-                value:789,
-                description:'Register boring description'
-            },
-            {
-                qualified_name: 'Register 4',
-                display_name:['Field 4.1', 'Field 4.2'],
-                type:'two',
-                value:[7891,7892],
-                description:['Register boring description','Register ultra boring description']
-            }
-        ],
-        ADC_Processing:[
-            {
-                qualified_name:'Register 1',
-                type:'single',
-                value:123,
-                description:'Register brief description'
-            },
-            {
-                qualified_name:'Register 2',
-                type:'single',
-                value:456,
-                description:'Register long description'
-            },
-            {
-                qualified_name:'Register 3',
-                type:'single',
-                value:789,
-                description:'Register boring description'
-            },
-            {
-                qualified_name: 'Register 4',
-                display_name:['Field 4.1', 'Field 4.2'],
-                type:'two',
-                value:[7891,7892],
-                description:['Register boring description','Register ultra boring description']
-            }
-        ]
-    },
+    registerValues:{},
     tabs: [],
     settings:{
         default_tab: "Plot"
