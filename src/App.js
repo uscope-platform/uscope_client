@@ -7,7 +7,7 @@ import {connect} from "react-redux";
 import {setSetting} from "./redux/Actions/SettingsActions";
 import {loadTabs} from "./redux/Actions/TabsActions";
 import {loadRegisters} from "./redux/Actions/RegisterActions";
-import {loadParameters} from "./redux/Actions/ParameterActions";
+
 import './App.css';
 import serverProxy from "./redux/ServerProxy";
 import ApplicationChooser from "./components/Modal_Components/ApplicationChooser";
@@ -24,8 +24,7 @@ const mapDispatchToProps = dispatch => {
     return{
         setSettings: (setting) => {dispatch(setSetting(["application", setting]))},
         loadTabs: (tab) => {dispatch(loadTabs(tab))},
-        loadRegisters: (peripheral, registers) => {dispatch(loadRegisters(peripheral,registers))},
-        loadParameters: () =>{dispatch(loadParameters('http://172.18.0.1:4999/uscope/application/parameters'))}
+        loadRegisters: (peripheral, registers) => {dispatch(loadRegisters(peripheral,registers))}
     }
 };
 
@@ -40,7 +39,7 @@ class App extends Component {
             this.setState({initializationPhase:'application_choice'});
             return result
         });
-        this.props.loadParameters();
+        this.server.app_proxy.getApplicationParameters();
     }
 
     handleApplicationChosen = e =>{

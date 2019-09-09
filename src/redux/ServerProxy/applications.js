@@ -1,9 +1,10 @@
 import axios from "axios"
+import {loadParameters} from "../Actions/ParameterActions";
+import store from "../../store";
 
 export default function applicationProxy(server_url) {
     let _this = this;
     this.server_url = server_url;
-
 
     this.getApplicationsList = function () {
         return new Promise(function (resolve, reject) {
@@ -13,6 +14,10 @@ export default function applicationProxy(server_url) {
                 })
         });
 
+    };
+
+    this.getApplicationParameters = function (){
+        store.dispatch(loadParameters(_this.server_url+'/application/parameters'));
     };
 
     this.setApplication = function (app_name) {
