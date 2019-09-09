@@ -1,4 +1,10 @@
-import { createStore} from "redux";
+import { createStore, applyMiddleware} from "redux";
+import thunk from "redux-thunk";
+import { composeWithDevTools } from 'redux-devtools-extension';
+
+
+
+
 
 import rootReducer from './redux/Reducers';
 
@@ -35,20 +41,7 @@ const initialState = {
             enabled: false
         }
     ],
-    parameterValues:[
-        {
-            id: 1,
-            qualified_name:'Parameter 1',
-            value:0,
-            description:'Parameter brief description'
-        },
-        {
-            id: 2,
-            qualified_name:'Parameter 2',
-            value:0,
-            description:'Parameter boring description'
-        },
-    ],
+    parameterValues:[],
     registerValues:{},
     tabs: [],
     settings:{
@@ -56,7 +49,9 @@ const initialState = {
     }
 };
 
-const store = createStore(rootReducer,initialState, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+
+let middleware =[thunk];
+const store = createStore(rootReducer,initialState, composeWithDevTools(applyMiddleware(...middleware)));
 
 
 export default store;

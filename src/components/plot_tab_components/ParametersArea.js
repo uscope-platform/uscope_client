@@ -31,7 +31,7 @@ let ParametersArea = props => {
         <Form onSubmit={handleSubmit}>
                 {parameters.map((param, i) => {
                     return(
-                        <SingleValueField field={param} key={i}/>
+                        <SingleValueField key={i} name={param.parameter_name} value={param.value} description={param.description}/>
                     );
                 })}
                 <Button variant="primary" type="submit">
