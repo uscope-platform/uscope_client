@@ -8,9 +8,9 @@ import ChannelSelectorItem from "./ChannelSelectorItem";
 let ChannelSelector = function(props) {
     return(
             <Container>
-                    {props.channels.map((chan) => {
+                    {props.channels.map((chan,i) => {
                         return(
-                            <ChannelSelectorItem name={chan.name} />
+                            <ChannelSelectorItem key={i} name={chan.name} />
                         );
                     })}
             </Container>

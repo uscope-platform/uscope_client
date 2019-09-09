@@ -11,9 +11,9 @@ let  PlotControls= props =>{
 
     return(
         <Container>
-            {props.controls.map((control) => {
+            {props.controls.map((control, i) => {
                 return(
-                    <img className={"plot_controls_asset"} src={control.image} alt={control.name} onClick={onClick} />
+                    <img className={"plot_controls_asset"} key={i} src={control.image} alt={control.name} onClick={onClick} />
                 );
             })}
         </Container>

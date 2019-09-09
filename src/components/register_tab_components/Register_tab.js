@@ -54,7 +54,9 @@ let RegisterTab  = props => {
             }else if (register.className.includes("twoFields")){
                 for(let item of register.classList){ // eslint-disable-line no-unused-vars
                     if(item.includes("twoFields")){
-                        let reg_idx = registers.findIndex((obj => obj.qualified_name === register.id));
+                        debugger;
+                        let reg_id = register.id.split('.')[0];
+                        let reg_idx = registers.findIndex((obj => obj.qualified_name === reg_id));
                         let fld_idx = parseInt(item.replace("twoFields.",''));
                         let currentValue = parseInt(register.value);
                         if(fld_idx===1){
@@ -62,7 +64,7 @@ let RegisterTab  = props => {
                         }else if(fld_idx===2){
                             currentValue = [first_field_value, currentValue];
                             if(register.value!=="" && !arraysEqual( registers[reg_idx].value, currentValue)) {
-                                dispatch(setTwoValueRegister(register.id, currentValue, props.content.tab_id));
+                                dispatch(setTwoValueRegister(reg_id, currentValue, props.content.tab_id));
                             }
                         }
 
@@ -79,14 +81,14 @@ let RegisterTab  = props => {
                 <Col md={5}><Image src={props.content.image_src} alt='ADC processing block diagram' fluid/></Col>
                 <Col>
                     <Form onSubmit={handleSubmit}>
-                        {registers.map((reg) => {
+                        {registers.map((reg, i) => {
                             if(reg.type === "single"){
                                 return(
-                                    <SingleValueField field={reg}/>
+                                    <SingleValueField key={i} field={reg}/>
                                 );
                             } else if(reg.type==='two'){
                                 return(
-                                    <TwoValuesField field={reg}/>
+                                    <TwoValuesField key={i} field={reg}/>
                                 );
                             } else return(<p>invalid form field</p>);
                         })}

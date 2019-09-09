@@ -15,6 +15,7 @@ class ApplicationChooser extends Component {
     };
 
     handleClose = (event) =>{
+        event.preventDefault();
         let app = this.state.chosen_application;
         this.props.done(app);
     };
@@ -31,8 +32,8 @@ class ApplicationChooser extends Component {
                             <Form.Label>State</Form.Label>
                             <Form.Control as="select" onChange={this.handleChange}>
                                 <option>Chose An Application</option>
-                                {this.props.applications.map(size => (
-                                    <option>{size}</option>
+                                {this.props.applications.map((size,i) => (
+                                    <option key={i} >{size}</option>
                                 ))}
                             </Form.Control>
                         </Form.Group>

@@ -105,24 +105,7 @@ const initialState = {
             }
         ]
     },
-    tabs: [
-        {
-            name: 'Plot',
-            type: "Scope"
-        },
-        {
-            name: 'ADC Processing',
-            type: 'Registers',
-            tab_id: "ADC_Processing",
-            image_src: 'assets/Images/ADC_processing.png',
-        },
-        {
-            name: 'SPI',
-            type: 'Registers',
-            tab_id:'SPI',
-            image_src: 'assets/Images/SPI.png',
-        }
-    ],
+    tabs: [],
     settings:{
         default_tab: "Plot"
     }

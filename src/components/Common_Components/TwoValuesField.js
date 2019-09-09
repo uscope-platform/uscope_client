@@ -10,7 +10,7 @@ let TwoValuesField = props => {
                 <Col>
                     <Form.Group controlId="first_input">
                         <Form.Label>{props.field.display_name[0]}</Form.Label>
-                        <Form.Control className='twoFields.1' type="text" id={props.field.qualified_name} placeholder={props.field.value[0]} />
+                        <Form.Control className='twoFields.1' type="text" id={props.field.qualified_name+'.1'} placeholder={props.field.value[0]} />
                         <Form.Text className="text-muted">
                             {props.field.description[0]}
                         </Form.Text>
@@ -19,7 +19,7 @@ let TwoValuesField = props => {
                 <Col>
                     <Form.Group controlId="second_input">
                         <Form.Label>{props.field.display_name[1]}</Form.Label>
-                        <Form.Control className='twoFields.2' type="text" id={props.field.qualified_name} placeholder={props.field.value[1]} />
+                        <Form.Control className='twoFields.2' type="text" id={props.field.qualified_name+'.2'} placeholder={props.field.value[1]} />
                         <Form.Text className="text-muted">
                             {props.field.description[1]}
                         </Form.Text>

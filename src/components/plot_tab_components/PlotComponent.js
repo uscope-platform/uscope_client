@@ -1,6 +1,8 @@
 import React from 'react';
 
-import Plot from 'react-plotly.js'
+import Plotly from 'plotly.js-dist';
+import createPlotlyComponent from 'react-plotly.js/factory';
+const Plot = createPlotlyComponent(Plotly);
 
 let PlotComponent  = props => {
         return (

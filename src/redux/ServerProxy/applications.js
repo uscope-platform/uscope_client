@@ -5,7 +5,7 @@ export default function applicationProxy(server_url) {
     this.server_url = server_url;
 
 
-   this.getApplicationsList = function () {
+    this.getApplicationsList = function () {
         return new Promise(function (resolve, reject) {
             axios.get(_this.server_url+'/application/list')
                 .then(res => {
@@ -17,6 +17,15 @@ export default function applicationProxy(server_url) {
 
     this.setApplication = function (app_name) {
 
+    };
+
+    this.getApplication = function (app_name) {
+        return new Promise(function (resolve, reject) {
+            axios.get(_this.server_url+'application/specs/'+app_name)
+                .then(res => {
+                    resolve(res.data);
+                })
+        });
     };
 
     this.createApplication = function (application) {

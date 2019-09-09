@@ -13,6 +13,8 @@ let TabContent = props => {
         return (
             <RegisterTab content={props.tab}/>
         );
+    } else{
+        return (null)
     }
 };
 

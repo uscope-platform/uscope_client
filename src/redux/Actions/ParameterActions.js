@@ -9,3 +9,11 @@ export const setParameterValue = (parameter_name, parameter_value) =>{
         }
     }
 };
+
+
+export const loadParameters = (server_url)  => {
+
+
+
+};
+

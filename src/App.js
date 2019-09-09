@@ -1,14 +1,17 @@
 import React, {Component} from 'react';
 
-import {Tab, Tabs} from "react-bootstrap";
+import {Tab, Tabs, Container} from "react-bootstrap";
 import TabContent from "./components/TabContent";
 import {connect} from "react-redux";
 
 import {setSetting} from "./redux/Actions/SettingsActions";
+import {loadTabs} from "./redux/Actions/TabsActions";
+
 
 import './App.css';
 import serverProxy from "./redux/ServerProxy";
 import ApplicationChooser from "./components/Modal_Components/ApplicationChooser";
+
 
 function mapStateToProps(state) {
     return{
@@ -19,7 +22,8 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = dispatch => {
     return{
-        setSettings: (setting) => {dispatch(setSetting(["application", setting]))}
+        setSettings: (setting) => {dispatch(setSetting(["application", setting]))},
+        loadTabs: (tab) => {dispatch(loadTabs(tab))},
     }
 };
 
@@ -30,39 +34,51 @@ class App extends Component {
         this.state = {initializationPhase: 'start'};
         this.server.app_proxy.getApplicationsList().then((result) =>{
             this.setState({available_apps: result});
-            this.setState({initializationPhase:'application_choice'})
+            this.setState({initializationPhase:'application_choice'});
+            return result
         });
     }
 
     handleApplicationChosen = e =>{
-        this.setState({initializationPhase:'done'});
-        this.props.setSettings(e);
+        this.server.app_proxy.getApplication(e).then((result) =>{
+            this.props.setSettings(e);
+            this.props.loadTabs(result.tabs);
+            this.setState({initializationPhase:'done'});
+        });
     };
 
     render() {
-        if(this.state.initializationPhase==='application_choice'){
-            return (
-                <div className="App">
-                    <ApplicationChooser applications={this.state.available_apps} done={this.handleApplicationChosen}/>
-                </div>
-            );
-        } else if(this.state.initializationPhase==='done'){
-            return (
-                <div className="App">
-                    <Tabs defaultActiveKey={this.props.settings.default_tab} id="uncontrolled-tab-example">
-                        {this.props.tabs.map((tab) => {
-                            return(
-                                <Tab eventKey={tab.name} title={tab.name}> <TabContent tab={tab}/></Tab>
-                            )
-                        })}
-                    </Tabs>
-                </div>
-            );
-        } else{
-            return(
-                <h1>loading</h1>
-            )
+
+        switch (this.state.initializationPhase) {
+            case "application_choice":
+                return (
+                    <div className="App">
+                        <ApplicationChooser applications={this.state.available_apps} done={this.handleApplicationChosen}/>
+                    </div>
+                );
+            case "done":
+                return (
+                    <div className="App">
+                        <Tabs defaultActiveKey={this.props.settings.default_tab} id="uncontrolled-tab-example">
+                            {this.props.tabs.map((tab, i) => {
+                                if(tab.user_accessible){
+                                    return(
+                                        <Tab eventKey={tab.name} key={i} title={tab.name}> <TabContent tab={tab}/></Tab>
+                                    )
+                                } else {
+                                    return null;
+                                }
+                            })}
+                        </Tabs>
+                    </div>
+                );
+            default:
+                return(
+                    <Container>
+                    </Container>
+                )
         }
+
     }
 
 
