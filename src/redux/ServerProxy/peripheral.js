@@ -1,4 +1,6 @@
 import axios from "axios"
+import {sendRegister} from "../Actions/RegisterActions";
+import store from "../../store";
 
 export default function peripheralProxy(server_url) {
     let _this = this;
@@ -14,15 +16,9 @@ export default function peripheralProxy(server_url) {
         });
     };
 
-
-    this.setApplication = function (app_name) {
-
-    };
-
-
-    this.createApplication = function (application) {
-        return;
-    };
+    this.setRegisterValue = (register) => {
+        store.dispatch(sendRegister(_this.server_url+'registers/'+register.peripheral+'/value', register))
+    }
 }
 
 

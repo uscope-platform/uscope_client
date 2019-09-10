@@ -9,8 +9,7 @@ import Button from "react-bootstrap/Button";
 
 import SingleValueField from "../Common_Components/SingleValueField";
 import TwoValuesField from "../Common_Components/TwoValuesField";
-import {useDispatch, useSelector} from "react-redux";
-import {setSingleValueRegister, setTwoValueRegister} from "../../redux/Actions/RegisterActions";
+import {useSelector} from "react-redux";
 
 function arraysEqual(a,b) {
 /*
@@ -39,8 +38,6 @@ let RegisterTab  = props => {
         state => state.registerValues[props.content.tab_id]
     );
 
-    const dispatch = useDispatch();
-
     const handleSubmit = event => {
         event.preventDefault();
         let first_field_value = null;
@@ -49,12 +46,11 @@ let RegisterTab  = props => {
                 let idx = registers.findIndex((obj => obj.register_name === register.name));
                 let intValue = parseFloat(register.value);
                 if(register.value!=="" && registers[idx].value !==intValue){
-                    dispatch(setSingleValueRegister(register.name, intValue, props.content.tab_id));
+                    props.server.periph_proxy.setRegisterValue({name:register.name, peripheral:props.content.tab_id, value:intValue})
                 }
             }else if (register.className.includes("twoFields")){
                 for(let item of register.classList){ // eslint-disable-line no-unused-vars
                     if(item.includes("twoFields")){
-                        debugger;
                         let reg_id = register.id.split('.')[0];
                         let reg_idx = registers.findIndex((obj => obj.register_name === reg_id));
                         let fld_idx = parseInt(item.replace("twoFields.",''));
@@ -64,7 +60,7 @@ let RegisterTab  = props => {
                         }else if(fld_idx===2){
                             currentValue = [first_field_value, currentValue];
                             if(register.value!=="" && !arraysEqual( registers[reg_idx].value, currentValue)) {
-                                dispatch(setTwoValueRegister(reg_id, currentValue, props.content.tab_id));
+                                props.server.periph_proxy.setRegisterValue({name:reg_id, peripheral:props.content.tab_id, value:currentValue[0]+(currentValue[1]<<16)});
                             }
                         }
 
