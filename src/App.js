@@ -40,6 +40,7 @@ class App extends Component {
             return result
         });
         this.server.app_proxy.getApplicationParameters();
+        this.server.plot_proxy.getChannelsInfo();
     }
 
     handleApplicationChosen = e =>{

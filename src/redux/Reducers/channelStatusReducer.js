@@ -1,4 +1,4 @@
-import {ENABLE_CHANNEL, DISABLE_CHANNEL} from "../Actions/types";
+import {ENABLE_CHANNEL, DISABLE_CHANNEL, LOAD_CHANNELS} from "../Actions/types";
 
 
 
@@ -18,6 +18,9 @@ let channelStatusReducer = function (state = null, action) {
                 }
                 return channel;
             });
+        case LOAD_CHANNELS:
+            state = action.payload;
+            return state;
         default:
             return state;
     }
