@@ -14,7 +14,8 @@ const initialState = {
     registerValues:{},
     tabs: [],
     settings:{
-        default_tab: "Plot"
+        default_tab: "Plot",
+        refreshRate: 150
     }
 };
 

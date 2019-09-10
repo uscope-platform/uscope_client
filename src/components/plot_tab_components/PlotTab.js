@@ -14,8 +14,8 @@ import PlotControls from "./PlotControls";
 
 
 let PlotTab = function (props) {
-    const channels = useSelector(state => state.channelStatus)
-
+    const channels = useSelector(state => state.channelStatus);
+    const settings = useSelector(state => state.settings);
     let controls = [
         {
             name:"play",
@@ -49,7 +49,7 @@ let PlotTab = function (props) {
                     <Col md={8}>
                         <Row>
                             <Col>
-                                <PlotComponent/>
+                                <PlotComponent refreshRate={settings.refreshRate} />
                             </Col>
                         </Row>
                         <Row>
