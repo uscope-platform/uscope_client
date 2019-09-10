@@ -88,8 +88,9 @@ let RegisterTab  = props => {
                                     <SingleValueField key={i} name={reg.register_name} value={reg.value} description={reg.description}/>
                                 );
                             } else if(reg.register_format==='words'){
+                                let split_values = [(reg.value & 0x0000ffff), (reg.value & 0xffff0000) >> 16];
                                 return(
-                                    <TwoValuesField key={i} field_names={reg.field_names} register_name={reg.register_name} value={reg.value} field_descriptions={reg.field_descriptions}/>
+                                    <TwoValuesField key={i} field_names={reg.field_names} register_name={reg.register_name} value={split_values} field_descriptions={reg.field_descriptions}/>
                                 );
                             } else return(<p>invalid form field</p>);
                         })}
