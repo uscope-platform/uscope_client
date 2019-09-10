@@ -54,7 +54,7 @@ let PlotTab = function (props) {
                         </Row>
                         <Row>
                             <Col>
-                                <ParametersArea/>
+                                <ParametersArea server={props.server}/>
                             </Col>
                         </Row>
                     </Col>

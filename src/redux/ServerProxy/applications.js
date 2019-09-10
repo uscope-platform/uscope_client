@@ -1,5 +1,6 @@
 import axios from "axios"
 import {loadParameters} from "../Actions/ParameterActions";
+import {sendParameter} from "../Actions/ParameterActions";
 import store from "../../store";
 
 export default function applicationProxy(server_url) {
@@ -20,8 +21,8 @@ export default function applicationProxy(server_url) {
         store.dispatch(loadParameters(_this.server_url+'/application/parameters'));
     };
 
-    this.setApplication = function (app_name) {
-
+    this.setApplicationParameters = function (parameter){
+        store.dispatch(sendParameter(_this.server_url+'application/parameters', parameter));
     };
 
     this.getApplication = function (app_name) {

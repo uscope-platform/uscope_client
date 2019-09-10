@@ -1,28 +1,5 @@
-import { LOAD_REGISTERS, SET_SINGLE_VALUE_REGISTER, SET_TWO_VALUE_REGISTER, SEND_REGISTER} from "./types";
+import { LOAD_REGISTERS, SEND_REGISTER} from "./types";
 import axios from "axios";
-
-export const setSingleValueRegister = (register_name, register_value, peripheral) =>{
-    return {
-        type: SET_SINGLE_VALUE_REGISTER,
-        payload:{
-            name: register_name,
-            peripheral: peripheral,
-            value: register_value
-        }
-    }
-};
-
-
-export const setTwoValueRegister = (register_name, register_value, peripheral) =>{
-    return {
-        type: SET_TWO_VALUE_REGISTER,
-        payload:{
-            name: register_name,
-            peripheral: peripheral,
-            value: register_value
-        }
-    }
-};
 
 export const sendRegister = (server_url ,register) => {
     return dispatch => {

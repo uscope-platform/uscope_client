@@ -1,4 +1,4 @@
-import {LOAD_PARAMETERS_DONE, SET_PARAMETER_VALUE} from "../Actions/types";
+import {LOAD_PARAMETERS_DONE, SEND_PARAMETER} from "../Actions/types";
 
 
 
@@ -7,7 +7,7 @@ let parameterValuesReducer = function (state = null, action) {
         case LOAD_PARAMETERS_DONE:
             state = action.payload;
             return state;
-        case SET_PARAMETER_VALUE:
+        case SEND_PARAMETER:
             return state.map(parameter => {
                 if (parameter.qualified_name === action.payload.name) {
                     return {...parameter, value:  action.payload.value}
