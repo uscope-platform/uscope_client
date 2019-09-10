@@ -25,7 +25,8 @@ let ParametersArea = props => {
     };
 
     return(
-        <Form onSubmit={handleSubmit}>
+        <div className="parameters_area_containser">
+            <Form onSubmit={handleSubmit}>
                 {parameters.map((param, i) => {
                     return(
                         <SingleValueField key={i} name={param.parameter_name} value={param.value} description={param.description}/>
@@ -34,7 +35,8 @@ let ParametersArea = props => {
                 <Button variant="primary" type="submit">
                     Submit
                 </Button>
-        </Form>
+            </Form>
+        </div>
     );
 };
 

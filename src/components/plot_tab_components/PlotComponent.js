@@ -22,19 +22,20 @@ class PlotComponent extends Component {
 
     render() {
         return (
-            <Plot
-                data={[
-                    {
-                        x: [1, 2, 3],
-                        y: [2, 6, 3],
-                        type: 'scatter',
-                        mode: 'lines+points',
-                        marker: {color: 'red'},
-                    },
-                    {type: 'bar', x: [1, 2, 3], y: [2, 5, 3]},
-                ]}
-                layout={ {width: 320, height: 240, title: 'A Fancy Plot'} }
-            />
+            <div className="plot_div_container">
+                <Plot
+                    data={[
+                        {
+                            x: [1, 2, 3],
+                            y: [2, 6, 3],
+                            type: 'scatter',
+                            mode: 'lines+points',
+                            marker: {color: 'red'},
+                        }
+                    ]}
+                    layout={ {width: "auto", height: "auto",  title: 'A Fancy Plot', paper_bgcolor:"#444",plot_bgcolor:"#444"} }
+                />
+            </div>
         );
     }
 }

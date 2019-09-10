@@ -26,9 +26,50 @@ a {
 .channel_select_label, .channel_select_checkbox, .settings_icon{
   margin-top: -2em;
   margin-bottom: -2em;
+
 }
 
 .plot_controls_asset {
-  height: 42px;
-  margin: 0.3em;
+  height: 25px;
+  margin-top: 1em;
+  display:block;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.main_content_tab{
+  margin:1.5em;
+}
+
+.nav-tabs{
+  background-color: #444444;
+}
+
+.tab_content{
+  margin: 1.5em;
+}
+
+.plot_controls_container  {
+  margin-left:-0.5em;
+}
+
+.plot_channel_selector_container {
+  margin-top: 1em;
+}
+.channel_enable_group{
+  margin-left: 7em;
+}
+
+.plot_div_container{
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.parameters_area_containser{
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.parameters_area_containser > label{
+  alignment: center;
 }

@@ -41,29 +41,22 @@ let PlotTab = function (props) {
     ];
 
         return(
-            <Container>
-                <Row>
-                    <Col md={3}>
-                        <ChannelSelector channels={channels}/>
-                    </Col>
-                    <Col md={8}>
-                        <Row>
-                            <Col>
-                                <PlotComponent refreshRate={settings.refreshRate} />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <ParametersArea server={props.server}/>
-                            </Col>
-                        </Row>
-                    </Col>
-                    <Col md={1}>
-                        <PlotControls controls={controls}/>
-                    </Col>
-                </Row>
-
-            </Container>
+            <Row>
+                <Col md={3} className="plot_channel_selector_container">
+                    <ChannelSelector channels={channels}/>
+                </Col>
+                <Col md={8}>
+                    <Row>
+                        <PlotComponent refreshRate={settings.refreshRate} />
+                    </Row>
+                    <Row>
+                        <ParametersArea server={props.server}/>
+                    </Row>
+                </Col>
+                <Col md={1} className="plot_controls_container">
+                    <PlotControls controls={controls}/>
+                </Col>
+            </Row>
         );
 };
 

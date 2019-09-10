@@ -85,7 +85,7 @@ class App extends Component {
                             {this.props.tabs.map((tab, i) => {
                                 if(tab.user_accessible){
                                     return(
-                                        <Tab eventKey={tab.name} key={i} title={tab.name}> <TabContent server={this.server} tab={tab}/></Tab>
+                                        <Tab eventKey={tab.name} key={i} title={tab.name}> <TabContent className="main_content_tab" server={this.server} tab={tab}/></Tab>
                                     )
                                 } else {
                                     return null;

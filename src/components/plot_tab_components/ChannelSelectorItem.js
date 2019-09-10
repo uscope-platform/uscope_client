@@ -18,11 +18,13 @@ function ChannelSelectorItem(props){
     }
 
     return(
-        <Form.Group controlId="channel_select">
-            <input className="channel_select_checkbox" type="checkbox" name={props.name} onChange={handleChannelStateChange} />
-            <Form.Label className="channel_select_label">{props.name}</Form.Label>
-            <Image  className="settings_icon" src='assets/Icons/settings.png'/>
-        </Form.Group>
+        <div className="channel_enable_group">
+            <Form.Group controlId="channel_select">
+                <input className="channel_select_checkbox" type="checkbox" name={props.name} onChange={handleChannelStateChange} />
+                <Form.Label className="channel_select_label">{props.name}</Form.Label>
+                <Image  className="settings_icon" src='assets/Icons/settings.png'/>
+            </Form.Group>
+        </div>
     );
 }
 
