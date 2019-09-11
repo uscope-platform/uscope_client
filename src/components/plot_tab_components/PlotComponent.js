@@ -29,11 +29,38 @@ class PlotComponent extends Component {
                             x: [1, 2, 3],
                             y: [2, 6, 3],
                             type: 'scatter',
-                            mode: 'lines+points',
-                            marker: {color: 'red'},
+                            mode: 'lines',
+                            marker: {color: 'white'},
                         }
                     ]}
-                    layout={ {width: "auto", height: "auto",  title: 'A Fancy Plot', paper_bgcolor:"#444",plot_bgcolor:"#444"} }
+                    layout={{
+                        width: "auto",
+                        height: "auto",
+                        title: 'A Fancy Plot',
+                        paper_bgcolor: "rgba(0,0,0,0)",
+                        plot_bgcolor:"#444",
+                        font: {
+                            color: '#FFFFFF'
+                        },
+                        xaxis: {
+                            showline: true,
+                            showgrid: true,
+                            tickcolor: '#FFFFFF',
+                            linecolor: '#FFFFFF',
+                            gridcolor: '#777777'
+                        },
+                        yaxis: {
+                            showline: true,
+                            showgrid: true,
+                            tickcolor: '#FFFFFF',
+                            linecolor: '#FFFFFF',
+                            gridcolor: '#777777'
+                        },
+                    }}
+                    config={{
+                        responsive: true,
+                        displaylogo: false
+                    }}
                 />
             </div>
         );

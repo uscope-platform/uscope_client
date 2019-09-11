@@ -1,11 +1,6 @@
 import React from 'react';
 
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Image from "react-bootstrap/Image"
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
+import {Row, Col, Image, Form, Button} from "react-bootstrap";
 
 import SingleValueField from "../Common_Components/SingleValueField";
 import TwoValuesField from "../Common_Components/TwoValuesField";

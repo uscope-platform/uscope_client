@@ -7,6 +7,7 @@
 body {
   font-family: arial, Helvetica, sans-serif;
   line-height: 1.4;
+  color: #fff;
 }
 
 a {
@@ -72,4 +73,8 @@ a {
 
 .parameters_area_containser > label{
   alignment: center;
+}
+
+.text-muted {
+  color: #666 !important;
 }
