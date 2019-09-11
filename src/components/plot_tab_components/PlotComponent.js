@@ -2,7 +2,17 @@ import React, {Component} from 'react';
 
 import Plotly from 'plotly.js-dist';
 import createPlotlyComponent from 'react-plotly.js/factory';
+import {connect} from "react-redux";
 const Plot = createPlotlyComponent(Plotly);
+
+
+
+function mapStateToProps(state) {
+    return{
+        settings:state.settings
+    }
+}
+
 
 class PlotComponent extends Component {
 
@@ -26,46 +36,20 @@ class PlotComponent extends Component {
                 <Plot
                     data={[
                         {
-                            x: [1, 2, 3],
-                            y: [2, 6, 3],
+                            x: Array.from(Array(this.props.settings.plot.memory_depth).keys()),
+                            y: Array.from(Array(this.props.settings.plot.memory_depth).keys()),
                             type: 'scatter',
                             mode: 'lines',
                             marker: {color: 'white'},
                         }
                     ]}
-                    layout={{
-                        width: "auto",
-                        height: "auto",
-                        title: 'A Fancy Plot',
-                        paper_bgcolor: "rgba(0,0,0,0)",
-                        plot_bgcolor:"#444",
-                        font: {
-                            color: '#FFFFFF'
-                        },
-                        xaxis: {
-                            showline: true,
-                            showgrid: true,
-                            tickcolor: '#FFFFFF',
-                            linecolor: '#FFFFFF',
-                            gridcolor: '#777777'
-                        },
-                        yaxis: {
-                            showline: true,
-                            showgrid: true,
-                            tickcolor: '#FFFFFF',
-                            linecolor: '#FFFFFF',
-                            gridcolor: '#777777'
-                        },
-                    }}
-                    config={{
-                        responsive: true,
-                        displaylogo: false
-                    }}
+                    layout={this.props.settings.plot.layout}
+                    config={this.props.settings.plot.configs}
                 />
             </div>
         );
     }
 }
 
+export default connect(mapStateToProps)(PlotComponent);
 
-export default PlotComponent;
