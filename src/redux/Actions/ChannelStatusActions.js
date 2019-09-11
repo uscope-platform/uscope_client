@@ -2,21 +2,21 @@ import {ENABLE_CHANNEL, DISABLE_CHANNEL, LOAD_CHANNELS} from "./types";
 import axios from "axios";
 
 
-export const enableChannel = (channel_name) =>{
+export const enableChannel = (channel) =>{
     return{
         type: ENABLE_CHANNEL,
         payload:{
-            name: channel_name,
+            channel: channel,
             enabled: true
         }
     }
 };
 
-export const disableChannel = (channel_name) =>{
+export const disableChannel = (channel) =>{
     return {
         type: DISABLE_CHANNEL,
         payload:{
-            name: channel_name,
+            channel: channel,
             enabled: false
         }
     }
@@ -36,3 +36,4 @@ const loadChanelsDone = channels => ({
     type: LOAD_CHANNELS,
     payload: channels
 });
+

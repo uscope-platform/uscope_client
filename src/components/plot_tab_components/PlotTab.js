@@ -13,7 +13,7 @@ import PlotControls from "./PlotControls";
 
 
 let PlotTab = function (props) {
-    const channels = useSelector(state => state.channelStatus);
+    const channels = useSelector(state => state.channels);
     const settings = useSelector(state => state.settings);
     let controls = [
         {

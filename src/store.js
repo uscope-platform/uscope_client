@@ -8,11 +8,32 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 import rootReducer from './redux/Reducers';
 
+
+
+let base_data = [];
+
+// eslint-disable-next-line
+for(let i = 0; i<7;i++){
+    base_data.push({
+        x: Array.from(Array(1024).keys()),
+        y:  Array(1024).fill(0),
+        type: 'scatter',
+        mode: 'lines',
+        name: 'channel_'+ i,
+        visible: false
+    });
+}
+
+
+
 const initialState = {
-    channelStatus:[],
+    channels:{
+        data:base_data
+    },
     parameterValues:[],
     registerValues:{},
     tabs: [],
+    plot: {},
     settings:{
         default_tab: "Plot",
         refreshRate: 150,
@@ -51,8 +72,22 @@ const initialState = {
 };
 
 
+
+const actionSanitizer = (action) => (
+    action.type === 'FETCH_DATA' && action.data ?
+        { ...action, data: '<<DATA_BLOB>>' } : action
+);
+
+const composeEnhancers = composeWithDevTools({
+    actionSanitizer,
+    stateSanitizer: (state) => state.data ? { ...state, data: '<<DATA_BLOB>>' } : state
+});
+
 let middleware =[thunk];
-const store = createStore(rootReducer,initialState, composeWithDevTools(applyMiddleware(...middleware)));
+
+const store = createStore(rootReducer,initialState, composeEnhancers(
+    applyMiddleware(...middleware)));
+
 
 
 export default store;

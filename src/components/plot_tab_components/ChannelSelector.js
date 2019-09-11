@@ -3,14 +3,15 @@ import React from 'react';
 import Container from "react-bootstrap/Container";
 
 import ChannelSelectorItem from "./ChannelSelectorItem";
-
+import {useSelector} from "react-redux";
 
 let ChannelSelector = function(props) {
+    const channels_settings = useSelector(state => state.channels.settings);
     return(
             <Container>
-                    {props.channels.map((chan,i) => {
+                    {channels_settings.map((chan,i) => {
                         return(
-                            <ChannelSelectorItem key={i} name={chan.name} />
+                            <ChannelSelectorItem id={chan.id} key={i} name={chan.name} />
                         );
                     })}
             </Container>

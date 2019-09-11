@@ -12,3 +12,9 @@ export const SEND_REGISTER = 'SEND_REGISTER';
 export const SET_SETTING = 'SET_PARAMETER_VALUE';
 //                  TABS ACTIONS
 export const LOAD_TABS = 'LOAD_TABS';
+//                  PLOT ACTONS
+export const PLOT_PLAY = 'PLOT_PLAY';
+export const PLOT_PAUSE = 'PLOT_PAUSE';
+export const PLOT_STOP = 'PLOT_STOP';
+//                  DATA ACTIONS
+export const FETCH_DATA = 'FETCH_DATA';
