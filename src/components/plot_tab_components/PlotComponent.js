@@ -9,7 +9,7 @@ const Plot = createPlotlyComponent(Plotly);
 
 function mapStateToProps(state) {
     return{
-        channels:state.channels,
+        channels:state.plot,
         settings:state.settings,
     }
 }

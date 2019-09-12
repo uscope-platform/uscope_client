@@ -6,8 +6,8 @@ import ChannelSelectorItem from "./ChannelSelectorItem";
 import {useSelector} from "react-redux";
 
 let ChannelSelector = function(props) {
-    const channels_settings = useSelector(state => state.channels.settings);
-    const channels_data = useSelector(state => state.channels.data);
+    const channels_settings = useSelector(state => state.plot.settings);
+    const channels_data = useSelector(state => state.plot.data);
     return(
             <Container>
                     {channels_settings.map((chan,i) => {

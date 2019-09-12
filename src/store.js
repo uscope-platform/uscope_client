@@ -27,10 +27,11 @@ for(let i = 0; i<7;i++){
 
 
 const initialState = {
-    channels:{
+    plot:{
         data:base_data,
         plot_running:false,
         datarevision:0,
+        memory_depth: 1024,
         layout: {
             width: "1200",
             height: "auto",
@@ -65,10 +66,7 @@ const initialState = {
     tabs: [],
     settings:{
         default_tab: "Plot",
-        refreshRate: 150,
-        plot: {
-            memory_depth: 1024
-        }
+        refreshRate: 150
     }
 };
 

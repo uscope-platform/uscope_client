@@ -10,7 +10,7 @@ import {
 import produce from "immer";
 
 
-let channelStatusReducer = function (state = null, action) {
+let plotReducer = function (state = null, action) {
     switch (action.type) {
         case ENABLE_CHANNEL:
             return produce(state, draftState => {
@@ -59,4 +59,4 @@ let channelStatusReducer = function (state = null, action) {
     }
 };
 
-export default channelStatusReducer;
+export default plotReducer;
