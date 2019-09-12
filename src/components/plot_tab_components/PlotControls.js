@@ -3,8 +3,12 @@ import React from 'react';
 import Container from "react-bootstrap/Container";
 import {useDispatch} from "react-redux";
 import {plotPause, plotPlay, plotStop} from "../../redux/Actions/ChannelStatusActions";
+import TimebaseModal from "../Modal_Components/TimebaseModal"
 
-let  PlotControls= props =>{
+
+let  PlotControls = props =>{
+    let display_modal = false;
+
     const dispatch = useDispatch();
 
     let onClick = (event) => {
@@ -17,6 +21,10 @@ let  PlotControls= props =>{
                 break;
             case "stop":
                 dispatch(plotStop());
+                break;
+            case "timebase":
+                display_modal = true;
+
                 break;
             default:
                 break;
