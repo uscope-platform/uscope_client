@@ -30,7 +30,7 @@ class PlotComponent extends Component {
 
     handleRefresh = () =>{
         if(this.props.channels.plot_running){
-            debugger;
+            this.props.server.plot_proxy.fetchData([0]);
         }
     };
 

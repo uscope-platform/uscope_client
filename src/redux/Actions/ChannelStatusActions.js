@@ -1,4 +1,4 @@
-import {ENABLE_CHANNEL, DISABLE_CHANNEL, LOAD_CHANNELS, PLOT_PLAY, PLOT_PAUSE, PLOT_STOP} from "./types";
+import {ENABLE_CHANNEL, DISABLE_CHANNEL, LOAD_CHANNELS, PLOT_PLAY, PLOT_PAUSE, PLOT_STOP, FETCH_DATA} from "./types";
 import axios from "axios";
 
 
@@ -64,3 +64,26 @@ export const plotStop = () =>{
         }
     }
 };
+
+
+export const fetchData = (server_url, channels) => {
+    return dispatch => {
+
+        const options = {
+            params: {
+                channels: channels
+            }
+        };
+
+        axios.get(server_url, options).then(res => {
+            dispatch(fetchDataDone(res.data));
+        }).catch(err => {
+            alert(err.message);
+        });
+    };
+};
+
+export const fetchDataDone = data =>({
+    type: FETCH_DATA,
+    payload: data
+});

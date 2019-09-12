@@ -46,7 +46,7 @@ let PlotTab = function (props) {
                 </Col>
                 <Col md={8}>
                     <Row>
-                        <PlotComponent refreshRate={settings.refreshRate} />
+                        <PlotComponent refreshRate={settings.refreshRate} server={props.server}/>
                     </Row>
                     <Row>
                         <ParametersArea server={props.server}/>

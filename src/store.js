@@ -66,7 +66,7 @@ const initialState = {
     tabs: [],
     settings:{
         default_tab: "Plot",
-        refreshRate: 150
+        refreshRate: 90
     }
 };
 
