@@ -11,7 +11,11 @@ export default function plotProxy(server_url) {
         store.dispatch(loadChanels(_this.server_url+'plot/channels/specs'));
     };
     
-    this.fetchData = function (channels) {
+    this.fetchData = function () {
+        const state = store.getState();
+        let channels = state.plot.data.map((data)=>{
+            return data.visible
+        });
         store.dispatch(fetchData(_this.server_url+'plot/channels/data',channels))
     }
     

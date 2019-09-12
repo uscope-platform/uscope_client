@@ -29,7 +29,6 @@ let plotReducer = function (state = null, action) {
 
         case FETCH_DATA:
             return produce(state, draftState => {
-                debugger;
                 draftState['data'][action.payload.channel]['y'] = action.payload.data;
                 draftState['datarevision'] += 1;
             });

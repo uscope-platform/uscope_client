@@ -71,7 +71,7 @@ export const fetchData = (server_url, channels) => {
 
         const options = {
             params: {
-                channels: channels
+                channels: JSON.stringify(channels)
             }
         };
 
