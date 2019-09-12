@@ -5,7 +5,6 @@ import parameterValuesReducer from "./ParameterReducers";
 import registerValuesReducer from "./registerReducer"
 import settingsReducer from "./settingsReducer";
 import tabsReducer from "./tabsReducer";
-import plotReducer from "./PlotReducer";
 
 
 export default combineReducers({
@@ -13,6 +12,5 @@ export default combineReducers({
     parameterValues: parameterValuesReducer,
     registerValues: registerValuesReducer,
     tabs: tabsReducer,
-    settings : settingsReducer,
-    plot : plotReducer
+    settings : settingsReducer
     });

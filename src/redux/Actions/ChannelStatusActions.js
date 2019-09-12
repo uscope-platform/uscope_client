@@ -1,4 +1,4 @@
-import {ENABLE_CHANNEL, DISABLE_CHANNEL, LOAD_CHANNELS} from "./types";
+import {ENABLE_CHANNEL, DISABLE_CHANNEL, LOAD_CHANNELS, PLOT_PLAY, PLOT_PAUSE, PLOT_STOP} from "./types";
 import axios from "axios";
 
 
@@ -37,3 +37,30 @@ const loadChanelsDone = channels => ({
     payload: channels
 });
 
+
+export const plotPlay = () =>{
+    return{
+        type: PLOT_PLAY,
+        payload:{
+            value: true
+        }
+    }
+};
+
+export const plotPause = () =>{
+    return{
+        type: PLOT_PAUSE,
+        payload:{
+            value: false
+        }
+    }
+};
+
+export const plotStop = () =>{
+    return{
+        type: PLOT_STOP,
+        payload:{
+            value: false
+        }
+    }
+};

@@ -20,7 +20,7 @@ function ChannelSelectorItem(props){
     return(
         <div className="channel_enable_group">
             <Form.Group controlId="channel_select">
-                <input className="channel_select_checkbox" type="checkbox" id={props.id} name={props.name} onChange={handleChannelStateChange} />
+                <input className="channel_select_checkbox" type="checkbox" id={props.id} name={props.name} onChange={handleChannelStateChange} checked={props.value}/>
                 <Form.Label className="channel_select_label">{props.name}</Form.Label>
                 <Image  className="settings_icon" src='assets/Icons/settings.png'/>
             </Form.Group>

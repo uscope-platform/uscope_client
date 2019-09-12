@@ -2,7 +2,7 @@ import React from 'react';
 
 import Container from "react-bootstrap/Container";
 import {useDispatch} from "react-redux";
-import {plotPause, plotPlay, plotStop} from "../../redux/Actions/PlotActions";
+import {plotPause, plotPlay, plotStop} from "../../redux/Actions/ChannelStatusActions";
 
 let  PlotControls= props =>{
     const dispatch = useDispatch();

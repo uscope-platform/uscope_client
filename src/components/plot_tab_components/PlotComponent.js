@@ -11,8 +11,6 @@ function mapStateToProps(state) {
     return{
         channels:state.channels,
         settings:state.settings,
-        plot:state.plot,
-        data:state.data
     }
 }
 
@@ -31,7 +29,7 @@ class PlotComponent extends Component {
 
 
     handleRefresh = () =>{
-        if(this.props.plot.running){
+        if(this.props.channels.plot_running){
             debugger;
         }
     };
@@ -40,9 +38,10 @@ class PlotComponent extends Component {
         return (
             <div className="plot_div_container">
                 <Plot
-                    data={this.props.settings.plot.data}
-                    layout={this.props.settings.plot.layout}
-                    config={this.props.settings.plot.configs}
+                    data={this.props.channels.data}
+                    layout={this.props.channels.layout}
+                    config={this.props.channels.configs}
+                    datarevision={this.props.datarevision}
                 />
             </div>
         );
