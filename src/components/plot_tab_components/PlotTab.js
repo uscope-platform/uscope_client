@@ -42,7 +42,7 @@ let PlotTab = function (props) {
         return(
             <Row>
                 <Col md={3} className="plot_channel_selector_container">
-                    <ChannelSelector channels={channels}/>
+                    <ChannelSelector server={props.server} channels={channels}/>
                 </Col>
                 <Col md={8}>
                     <Row>

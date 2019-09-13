@@ -30,6 +30,9 @@ class TimebaseModal extends Component {
         this.state = {timebase:""}
     }
 
+    handleHide = () =>{
+        this.props.hideModal();
+    }
 
     handleChange = (event) => {
         this.setState({timebase:event.target.value});
@@ -72,7 +75,7 @@ class TimebaseModal extends Component {
 
     render() {
         return(
-            <Modal show={this.props.modals.timebase_choice}>
+            <Modal onHide={this.handleHide} show={this.props.modals.timebase_choice}>
                 <Modal.Header closeButton>
                     <Modal.Title>Application Choice</Modal.Title>
                 </Modal.Header>
@@ -82,12 +85,11 @@ class TimebaseModal extends Component {
                             <Form.Label>State</Form.Label>
                             <Form.Control type="text" onChange={this.handleChange} />
                         </Form.Group>
-                        <Button variant="primary" type="submit" onClick={this.handleClose}>Save changes</Button>
                     </Form>
                 </Modal.Body>
 
                 <Modal.Footer>
-
+                    <Button variant="primary" type="submit" onClick={this.handleClose}>Save changes</Button>
                 </Modal.Footer>
             </Modal>
         );

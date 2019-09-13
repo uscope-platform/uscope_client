@@ -2,6 +2,7 @@ import axios from "axios"
 import {loadParameters} from "../Actions/ParameterActions";
 import {sendParameter} from "../Actions/ParameterActions";
 import store from "../../store";
+import {setChannelSetting} from "../Actions/plotActions";
 
 export default function applicationProxy(server_url) {
     let _this = this;
@@ -37,6 +38,15 @@ export default function applicationProxy(server_url) {
     this.createApplication = function (application) {
         return;
     };
+
+    this.setChannelLimits = (min_val, max_val, id) =>{
+        let message = [{name:'min_value', channel_id:id, value:min_val},{name:'min_value', channel_id:id, value:min_val}];
+        store.dispatch(setChannelSetting(_this.server_url+'plot/channels/params', message));
+    }
+
+
+
+
 }
 
 

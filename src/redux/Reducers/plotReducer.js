@@ -5,7 +5,7 @@ import {
     PLOT_PLAY,
     PLOT_PAUSE,
     PLOT_STOP,
-    FETCH_DATA
+    FETCH_DATA, SET_CHANNEL_SETTING
 } from "../Actions/types";
 import produce from "immer";
 
@@ -52,7 +52,13 @@ let plotReducer = function (state = null, action) {
                 });
                 draftState['datarevision'] += 1;
             });
-
+        case SET_CHANNEL_SETTING:
+            return produce(state, draftState =>{
+                // eslint-disable-next-line
+                for(let s of action.payload){
+                    draftState['settings'][s.channel_id][s.name] = s.value;
+                }
+            });
         default:
             return state;
     }

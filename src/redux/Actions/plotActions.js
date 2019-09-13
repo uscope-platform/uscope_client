@@ -5,7 +5,7 @@ import {
     PLOT_PLAY,
     PLOT_PAUSE,
     PLOT_STOP,
-    FETCH_DATA,
+    FETCH_DATA, SET_CHANNEL_SETTING,
 } from "./types";
 import axios from "axios";
 
@@ -71,6 +71,24 @@ export const plotStop = () =>{
         }
     }
 };
+
+export const setChannelSetting = (server_url, settings) => {
+    return dispatch => {
+
+        axios.post(server_url, settings).then(res => {
+            dispatch(setChannelSettingDone(settings));
+        }).catch(err => {
+            alert(err.message);
+        });
+    };
+};
+
+export const setChannelSettingDone = (settings) =>({
+    type: SET_CHANNEL_SETTING,
+    payload: settings
+});
+
+
 
 export const fetchData = (server_url, channels) => {
     return dispatch => {

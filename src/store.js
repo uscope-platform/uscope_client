@@ -70,7 +70,7 @@ const initialState = {
         application_choice:false,
         timebase_choice:false,
         scope_mode_choice:false,
-        channel_settings_choice:false
+        channel_settings_choice: [false, false, false,false, false, false]
     },
     settings:{
         default_tab: "Plot",

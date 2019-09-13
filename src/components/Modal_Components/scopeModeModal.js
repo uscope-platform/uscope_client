@@ -36,9 +36,13 @@ class ScopeModeModal extends Component {
         this.props.hideModal();
     };
 
+    handleHide = () =>{
+        this.props.hideModal();
+    }
+
     render() {
         return(
-            <Modal show={this.props.modals.scope_mode_choice}>
+            <Modal onHide={this.handleHide} show={this.props.modals.scope_mode_choice}>
                 <Modal.Header closeButton>
                     <Modal.Title>Application Choice</Modal.Title>
                 </Modal.Header>

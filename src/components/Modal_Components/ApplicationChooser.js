@@ -37,12 +37,12 @@ class ApplicationChooser extends Component {
                                 ))}
                             </Form.Control>
                         </Form.Group>
-                        <Button variant="primary" type="submit" onClick={this.handleClose}>Save changes</Button>
+
                     </Form>
                 </Modal.Body>
 
                 <Modal.Footer>
-
+                    <Button variant="primary" type="submit" onClick={this.handleClose}>Save changes</Button>
                 </Modal.Footer>
             </Modal.Dialog>
         );
