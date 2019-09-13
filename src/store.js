@@ -31,9 +31,11 @@ const initialState = {
         data:base_data,
         plot_running:false,
         datarevision:0,
-        memory_depth: 1024,
+        parameters:{
+            memory_depth: 1024
+        },
         layout: {
-            width: "1200",
+            width: "1024",
             height: "auto",
             title: 'A Fancy Plot',
             paper_bgcolor: "rgba(0,0,0,0)",
@@ -64,6 +66,12 @@ const initialState = {
     parameterValues:[],
     registerValues:{},
     tabs: [],
+    modals: {
+        application_choice:false,
+        timebase_choice:false,
+        scope_mode_choice:false,
+        channel_settings_choice:false
+    },
     settings:{
         default_tab: "Plot",
         refreshRate: 90

@@ -1,6 +1,6 @@
 import store from "../../store";
-import {loadChanels} from "../Actions/ChannelStatusActions";
-import {fetchData} from "../Actions/ChannelStatusActions"
+import {loadChanels} from "../Actions/plotActions";
+import {fetchData} from "../Actions/plotActions"
 
 export default function plotProxy(server_url) {
     let _this = this;
@@ -18,7 +18,7 @@ export default function plotProxy(server_url) {
         });
         store.dispatch(fetchData(_this.server_url+'plot/channels/data',channels))
     }
-    
+
 }
 
 

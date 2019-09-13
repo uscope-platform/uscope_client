@@ -2,7 +2,7 @@ import React from 'react';
 
 import Form from "react-bootstrap/Form";
 import {Image} from "react-bootstrap";
-import {enableChannel, disableChannel} from "../../redux/Actions/ChannelStatusActions";
+import {enableChannel, disableChannel} from "../../redux/Actions/plotActions";
 import {useDispatch} from "react-redux";
 
 

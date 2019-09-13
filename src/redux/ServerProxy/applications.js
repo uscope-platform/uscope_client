@@ -9,7 +9,7 @@ export default function applicationProxy(server_url) {
 
     this.getApplicationsList = function () {
         return new Promise(function (resolve, reject) {
-            axios.get(_this.server_url+'/application/list')
+            axios.get(_this.server_url+'application/list')
                 .then(res => {
                     resolve(res.data);
                 })
@@ -18,7 +18,7 @@ export default function applicationProxy(server_url) {
     };
 
     this.getApplicationParameters = function (){
-        store.dispatch(loadParameters(_this.server_url+'/application/parameters'));
+        store.dispatch(loadParameters(_this.server_url+'application/parameters'));
     };
 
     this.setApplicationParameters = function (parameter){

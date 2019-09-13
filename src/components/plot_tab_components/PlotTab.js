@@ -53,7 +53,7 @@ let PlotTab = function (props) {
                     </Row>
                 </Col>
                 <Col md={1} className="plot_controls_container">
-                    <PlotControls controls={controls}/>
+                    <PlotControls server={props.server} controls={controls}/>
                 </Col>
             </Row>
         );

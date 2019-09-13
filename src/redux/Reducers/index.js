@@ -5,6 +5,7 @@ import parameterValuesReducer from "./ParameterReducers";
 import registerValuesReducer from "./registerReducer"
 import settingsReducer from "./settingsReducer";
 import tabsReducer from "./tabsReducer";
+import modalsReducer from "./modalsReducer";
 
 
 export default combineReducers({
@@ -12,5 +13,6 @@ export default combineReducers({
     parameterValues: parameterValuesReducer,
     registerValues: registerValuesReducer,
     tabs: tabsReducer,
-    settings : settingsReducer
+    settings : settingsReducer,
+    modals : modalsReducer
     });

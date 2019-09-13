@@ -22,7 +22,7 @@ class TimebaseModal extends Component {
 
     render() {
         return(
-            <Modal.Dialog>
+            <Modal show={this.props.show}>
                 <Modal.Header closeButton>
                     <Modal.Title>Application Choice</Modal.Title>
                 </Modal.Header>
@@ -39,7 +39,7 @@ class TimebaseModal extends Component {
                 <Modal.Footer>
 
                 </Modal.Footer>
-            </Modal.Dialog>
+            </Modal>
         );
     }
 }
