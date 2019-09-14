@@ -39,14 +39,15 @@ class App extends Component {
             this.setState({initializationPhase:'application_choice'});
             return result
         });
-        this.server.app_proxy.getApplicationParameters();
-        this.server.plot_proxy.getChannelsInfo();
+
     }
 
     handleApplicationChosen = e =>{
         this.server.app_proxy.getApplication(e).then((result) =>{
             this.props.setSettings(e);
             this.initializeRegisterStore(result.tabs);
+            this.server.app_proxy.getApplicationParameters();
+            this.server.plot_proxy.getChannelsInfo();
             this.props.loadTabs(result.tabs);
         });
     };
