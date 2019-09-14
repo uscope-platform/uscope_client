@@ -1,5 +1,5 @@
 import store from "../../store";
-import {loadChanels} from "../Actions/plotActions";
+import {loadChanels, setTimebase} from "../Actions/plotActions";
 import {fetchData} from "../Actions/plotActions"
 
 export default function plotProxy(server_url) {
@@ -17,6 +17,10 @@ export default function plotProxy(server_url) {
             return data.visible
         });
         store.dispatch(fetchData(_this.server_url+'plot/channels/data',channels))
+    };
+
+    this.setTimebase = function (parameter) {
+        store.dispatch(setTimebase(_this.server_url+'plot/timebase', parameter));
     }
 
 }

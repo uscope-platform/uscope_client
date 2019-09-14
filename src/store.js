@@ -29,6 +29,7 @@ for(let i = 0; i<7;i++){
 const initialState = {
     plot:{
         data:base_data,
+        loading_done:false,
         plot_running:false,
         datarevision:0,
         parameters:{

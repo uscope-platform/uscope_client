@@ -68,7 +68,8 @@ class TimebaseModal extends Component {
         }
 
         let sample_time =  numeric_value/this.props.plot.parameters.memory_depth;
-        this.props.server.app_proxy.setApplicationParameters({name:'uscope_timebase_change',value:sample_time});
+        this.props.server.plot_proxy.setTimebase({name:'uscope_timebase_change',value:sample_time});
+
         debugger;
         this.props.hideModal();
     };

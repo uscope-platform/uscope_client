@@ -5,7 +5,7 @@ import {
     PLOT_PLAY,
     PLOT_PAUSE,
     PLOT_STOP,
-    FETCH_DATA, SET_CHANNEL_SETTING
+    FETCH_DATA, SET_CHANNEL_SETTING, SET_TIMEBASE
 } from "../Actions/types";
 import produce from "immer";
 
@@ -25,6 +25,7 @@ let plotReducer = function (state = null, action) {
         case LOAD_CHANNELS:
             return produce(state, draftState => {
                 draftState['settings'] = action.payload;
+                draftState['loading_done'] = true;
             });
 
         case FETCH_DATA:
@@ -58,6 +59,10 @@ let plotReducer = function (state = null, action) {
                 for(let s of action.payload){
                     draftState['settings'][s.channel_id][s.name] = s.value;
                 }
+            });
+        case SET_TIMEBASE:
+            return produce(state, draftState =>{
+                draftState["timebase"] = action.payload;
             });
         default:
             return state;
