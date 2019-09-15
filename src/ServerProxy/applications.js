@@ -1,8 +1,8 @@
 import axios from "axios"
-import {loadParameters} from "../Actions/ParameterActions";
-import {sendParameter} from "../Actions/ParameterActions";
-import store from "../../store";
-import {setChannelSetting} from "../Actions/plotActions";
+import {loadParameters} from "../redux/Actions/ParameterActions";
+import {sendParameter} from "../redux/Actions/ParameterActions";
+import store from "../store";
+import {setChannelSetting} from "../redux/Actions/plotActions";
 
 export default function applicationProxy(server_url) {
     let _this = this;

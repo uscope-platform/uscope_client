@@ -1,6 +1,6 @@
 import axios from "axios"
-import {sendRegister} from "../Actions/RegisterActions";
-import store from "../../store";
+import {sendRegister} from "../redux/Actions/RegisterActions";
+import store from "../store";
 
 export default function peripheralProxy(server_url) {
     let _this = this;

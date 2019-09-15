@@ -1,6 +1,6 @@
-import store from "../../store";
-import {loadChanels, setTimebase} from "../Actions/plotActions";
-import {fetchData} from "../Actions/plotActions"
+import store from "../store";
+import {loadChanels, setTimebase} from "../redux/Actions/plotActions";
+import {fetchData} from "../redux/Actions/plotActions"
 
 export default function plotProxy(server_url) {
     let _this = this;

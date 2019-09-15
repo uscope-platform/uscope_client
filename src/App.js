@@ -9,7 +9,7 @@ import {loadTabs} from "./redux/Actions/TabsActions";
 import {loadRegisters} from "./redux/Actions/RegisterActions";
 
 import './App.css';
-import serverProxy from "./redux/ServerProxy";
+import serverProxy from "./ServerProxy";
 import ApplicationChooser from "./components/Modal_Components/ApplicationChooser";
 
 
