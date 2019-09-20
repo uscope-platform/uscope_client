@@ -69,7 +69,7 @@ let RegisterTab  = props => {
 
     return(
         <Row>
-            <Col md={5}><Image src={props.content.image_src} alt='ADC processing block diagram' fluid/></Col>
+            <Col md={5}><Image src={props.server.server_url + props.content.image_src} alt='ADC processing block diagram' fluid/></Col>
             <Col>
                 <Form onSubmit={handleSubmit}>
                     {registers.map((reg, i) => {

@@ -71,7 +71,8 @@ const initialState = {
         application_choice:false,
         timebase_choice:false,
         scope_mode_choice:false,
-        channel_settings_choice: [false, false, false,false, false, false]
+        channel_settings_choice: [false, false, false,false, false, false],
+        tab_creator_image_choice: false
     },
     settings:{
         default_tab: "Plot",

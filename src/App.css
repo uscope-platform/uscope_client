@@ -78,3 +78,26 @@ a {
 .text-muted {
   color: #666 !important;
 }
+
+#tab_creator_add_image_col > img{
+  text-align: center;
+  padding: 3em;
+  margin: 3em 1em 1em 3em;
+}
+
+#tab_creator_add_image_caption{
+  width: 500px;
+  text-align: center;
+}
+
+#tab_creator_add_register_col > img{
+  text-align: center;
+  padding: 6.5em;
+
+  width: 90%;
+}
+
+#tab_creator_add_register_caption{
+  width: 500px;
+  text-align: center;
+}
