@@ -54,6 +54,18 @@ class TabCreator extends Component {
         this.setState({tab_registers:[...this.state.tab_registers, register]});
     };
 
+    handleRemoveRegister = (name) => {
+        let newRegistersValue = this.state.tab_registers.filter( (elem) => {
+                debugger;
+                return elem.register_name !== name;
+            }
+        );
+
+
+
+        this.setState({...this.state, tab_registers: newRegistersValue});
+    };
+
     render(){
         return(
             <div>
@@ -62,19 +74,12 @@ class TabCreator extends Component {
                 <Row>
                     <Col md={5} id={"tab_creator_add_image_col"}>
                         <Image src={this.state.tab_image} alt='add tab image' id="addImage" onClick={this.handleClick} fluid/>
-                        <div id={"tab_creator_add_image_caption"}>
-                            <h5>Add diagram here</h5>
-                        </div>
                     </Col>
-                    <Col>
-                        <div id={"tab_creator_add_register_col"}>
-                            <Row>
-                                <RegisterInputForm registers={this.state.tab_registers} preview_only={true}/>
-                            </Row>
-                            <Row>
-                                <Image src="assets/Icons/add_register.svg" id="addRegister" alt='add register' onClick={this.handleClick}fluid/>
-                            </Row>
-                        </div>
+                    <Col id={"tab_creator_add_register_col"}>
+                        <RegisterInputForm registers={this.state.tab_registers} preview_only={true} handle_remove={this.handleRemoveRegister}/>
+                        <Row>
+                            <Image src="assets/Icons/add_register.svg" id="addRegister" alt='add register' onClick={this.handleClick}fluid/>
+                        </Row>
                     </Col>
                 </Row>
             </div>

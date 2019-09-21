@@ -66,19 +66,19 @@ let RegisterInputForm  = props => {
 
 
 
-    let generate_field = (reg, i) => {
+    let generate_field = (reg, i, preview) => {
         if(reg.register_format === "single"){
             return(
-                <SingleValueField key={i} name={reg.register_name} value={reg.value} description={reg.description}/>
+                <SingleValueField key={i} name={reg.register_name} value={reg.value} description={reg.description} preview_only={preview} handle_remove={props.handle_remove}/>
             );
         } else if(reg.register_format === "complex"){
             return(
-                <SingleValueField key={i} name={reg.register_name} value={reg.value} description={reg.description}/>
+                <SingleValueField key={i} name={reg.register_name} value={reg.value} description={reg.description} preview_only={preview} handle_remove={props.handle_remove}/>
             );
         } else if(reg.register_format==='words'){
             let split_values = [(reg.value & 0x0000ffff), (reg.value & 0xffff0000) >> 16];
             return(
-                <TwoValuesField key={i} field_names={reg.field_names} register_name={reg.register_name} value={split_values} field_descriptions={reg.field_descriptions}/>
+                <TwoValuesField key={i} field_names={reg.field_names} register_name={reg.register_name} value={split_values} field_descriptions={reg.field_descriptions} preview_only={preview} handle_remove={props.handle_remove}/>
             );
         } else return(<p>invalid form field</p>);
     };
@@ -88,7 +88,7 @@ let RegisterInputForm  = props => {
         return(
             <Form onSubmit={handleSubmit}>
                 {props.registers.map((reg, i) => {
-                    return generate_field(reg, i)
+                    return generate_field(reg, i, false)
                 })}
                 <Button variant="primary" type="submit">
                     Submit
@@ -97,11 +97,11 @@ let RegisterInputForm  = props => {
         );
     } else{
         return(
-            <Form>
+            <>
                 {props.registers.map((reg, i) => {
-                    return generate_field(reg, i)
+                    return generate_field(reg, i, true)
                 })}
-            </Form>
+            </>
         );
     }
 
