@@ -1,12 +1,12 @@
 import React, {Component}  from 'react';
-import {Col, Form, Image, Row} from "react-bootstrap";
+import {Col, Image, Row} from "react-bootstrap";
 
 import TabCreatorRegisterModal from "../Modal_Components/tabCreatorRegisterModal"
 import TabCreatorImageChooser from "../Modal_Components/tabCreatorImageChooser";
 import {showModal} from "../../redux/Actions/modalsActions";
 import {connect} from "react-redux"
-import SingleValueField from "../Common_Components/SingleValueField";
-import TwoValuesField from "../Common_Components/TwoValuesField";
+
+import RegisterInputForm from "../register_tab_components/RegisterInputForm";
 
 
 function mapStateToProps(state) {
@@ -69,25 +69,7 @@ class TabCreator extends Component {
                     <Col>
                         <div id={"tab_creator_add_register_col"}>
                             <Row>
-                                <Form>
-                                    {this.state.tab_registers.map((reg, i) => {
-                                        debugger;
-                                        if(reg.register_format === "single"){
-                                            return(
-                                                <SingleValueField key={i} name={reg.register_name} value={reg.value} description={reg.description}/>
-                                            );
-                                        } else if(reg.register_format === "complex"){
-                                            return(
-                                                <SingleValueField key={i} name={reg.register_name} value={reg.value} description={reg.description}/>
-                                            );
-                                        } else if(reg.register_format==='words'){
-                                            let split_values = [(reg.value & 0x0000ffff), (reg.value & 0xffff0000) >> 16];
-                                            return(
-                                                <TwoValuesField key={i} field_names={reg.field_names} register_name={reg.register_name} value={split_values} field_descriptions={reg.field_descriptions}/>
-                                            );
-                                        } else return(<p>invalid form field</p>);
-                                    })}
-                                </Form>
+                                <RegisterInputForm registers={this.state.tab_registers} preview_only={true}/>
                             </Row>
                             <Row>
                                 <Image src="assets/Icons/add_register.svg" id="addRegister" alt='add register' onClick={this.handleClick}fluid/>
