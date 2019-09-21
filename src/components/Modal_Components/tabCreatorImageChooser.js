@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import {Modal, Button, Form, Col} from "react-bootstrap";
 import {hideModal} from "../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
-import axios from 'axios'
+
 function mapStateToProps(state) {
     return{
         modals:state.modals
@@ -30,9 +30,10 @@ class TabCreatorImageChooser extends Component {
 
     handleClose = (event) =>{
         event.preventDefault();
-
-        this.props.done(this.state.chosenImage);
-        this.props.hideModal();
+        if(this.state.chosenImage){
+            this.props.done(this.state.chosenImage);
+            this.props.hideModal();
+        }
     };
 
     handleHide = () => {

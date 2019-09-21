@@ -21,34 +21,16 @@ const mapDispatchToProps = dispatch => {
 class TabCreatorRegisterModal extends Component {
     constructor(props){
         super(props);
-        this.state = {reg_direction:'', enable_word_fields:false,single_type_checked:true,words_type_checked:false, reg_type:'single'};
+        this.state = {reg_direction:'', enable_word_fields:false, read_checked:true, write_checked:true, single_type_checked:true, words_type_checked:false, reg_type:'single'};
     }
 
 
     handleChange = (event) => {
         if(event.target.name==='reg_direction') {
             if(event.target.id==='read'){
-
-                if(this.state.reg_direction.includes('W')){
-                    if(event.target.checked){
-                        this.setState({reg_direction: 'R/W'});
-                    } else {
-                        this.setState({reg_direction: 'W'});
-                    }
-
-                } else  {
-                    this.setState({reg_direction: 'R'});
-                }
+                this.setState({read_checked:event.target.checked})
             } else{
-                if(this.state.reg_direction.includes('R')){
-                    if(event.target.checked){
-                        this.setState({reg_direction: 'R/W'});
-                    } else {
-                        this.setState({reg_direction: 'R'});
-                    }
-                } else  {
-                    this.setState({reg_direction: 'W'});
-                }
+                this.setState({write_checked:event.target.checked})
             }
 
         }else if(event.target.name==='reg_type'){
@@ -73,7 +55,16 @@ class TabCreatorRegisterModal extends Component {
         register['register_name'] = this.state.reg_name;
         register['offset'] = this.state.reg_offset;
         register['description'] = this.state.reg_description;
-        register['direction'] = this.state.reg_direction;
+
+        if(this.state.read_checked && this.state.write_checked){
+            register['direction'] = "R/W";
+        } else if(this.state.write_checked){
+            register['direction'] = "W";
+        } else if(this.state.read_checked){
+            register['direction'] = "R";
+        }
+
+
         register['register_format'] = this.state.reg_type;
         if(this.state.enable_word_fields){
             let field_names = this.state.field_names.split('\n');
@@ -81,6 +72,7 @@ class TabCreatorRegisterModal extends Component {
             register['field_names'] = field_names;
             register['field_descriptions'] = field_desc;
         }
+
         this.props.done(register);
         this.props.hideModal();
     };
@@ -104,8 +96,8 @@ class TabCreatorRegisterModal extends Component {
                             <Form.Control name='reg_description' placeholder="Description" type="text" onChange={this.handleChange} />
                             <Form.Group>
                                 <Form.Label>Register access capabilities</Form.Label>
-                                <Form.Check label="Read" name="reg_direction" type="checkbox" id={'read'} onChange={this.handleChange} />
-                                <Form.Check label="Write" name="reg_direction" type="checkbox" id={'write'} onChange={this.handleChange} />
+                                <Form.Check label="Read" name="reg_direction" type="checkbox" id={'read'} checked={this.state.read_checked} onChange={this.handleChange} />
+                                <Form.Check label="Write" name="reg_direction" type="checkbox" id={'write'} checked={this.state.write_checked} onChange={this.handleChange} />
                             </Form.Group>
                             <div>
                                 <Form.Label>Register type</Form.Label>
