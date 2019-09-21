@@ -73,7 +73,8 @@ const initialState = {
         scope_mode_choice:false,
         channel_settings_choice: [false, false, false,false, false, false],
         tab_creator_image_choice: false,
-        tab_creator_register_modal: false
+        tab_creator_register_modal: false,
+        tab_creator_app_param_modal:false
     },
     settings:{
         default_tab: "Plot",

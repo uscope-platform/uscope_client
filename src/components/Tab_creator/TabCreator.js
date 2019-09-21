@@ -3,6 +3,8 @@ import {Button, Col, Image, Row} from "react-bootstrap";
 
 import TabCreatorRegisterModal from "../Modal_Components/tabCreatorRegisterModal"
 import TabCreatorImageChooser from "../Modal_Components/tabCreatorImageChooser";
+import TabCreatorPeripheralParametersModal from "../Modal_Components/tabCreatorPeripheralParametersModal"
+
 import {showModal} from "../../redux/Actions/modalsActions";
 import {connect} from "react-redux"
 
@@ -24,7 +26,7 @@ const mapDispatchToProps = dispatch => {
 class TabCreator extends Component {
     constructor(props) {
         super(props);
-        this.state= {tab_image:"assets/Icons/add_peripheral_img.svg", tab_registers:[]};
+        this.state= {tab_image:"assets/Icons/add_peripheral_img.svg",tab_image_raw:null, tab_registers:[]};
     }
 
 
@@ -65,7 +67,21 @@ class TabCreator extends Component {
     };
 
     handleSubmit = (event) =>{
-        this.props.server.creator_proxy.createPeripheral(this.state.tab_registers, this.state.tab_image_raw);
+        if(this.state.tab_image_raw){
+            this.props.showModal("tab_creator_app_param_modal");
+        }
+    };
+
+    handleSendPeripheral= (periph) =>{
+        debugger;
+        let peripheral = {
+            [periph.name]: {
+                peripheral_name: periph.name,
+                version: periph.version,
+                registers: this.state.tab_registers
+            }
+        };
+        this.props.server.creator_proxy.createPeripheral(peripheral, this.state.tab_image_raw);
     };
 
     render(){
@@ -73,6 +89,7 @@ class TabCreator extends Component {
             <div>
                 <TabCreatorImageChooser server={this.props.server} done={this.handleImageChoiceDone}/>
                 <TabCreatorRegisterModal server={this.props.server} done={this.handleRegisterCreationDone}/>
+                <TabCreatorPeripheralParametersModal done={this.handleSendPeripheral}/>
                 <Row>
                     <Col md={5} id={"tab_creator_add_image_col"}>
                         <Image src={this.state.tab_image} alt='add tab image' id="addImage" onClick={this.handleClick} fluid/>

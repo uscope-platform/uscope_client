@@ -18,7 +18,7 @@ export default function creatorProxy(server_url) {
             console.log(response);
         });
 
-        axios.post(this.server_url+'tab_creator/create_application',{payload:app}).catch(err => {
+        axios.post(this.server_url+'tab_creator/create_peripheral',{payload:app}).catch(err => {
             alert(err.message);
         });
     };
