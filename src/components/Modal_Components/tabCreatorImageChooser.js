@@ -30,18 +30,7 @@ class TabCreatorImageChooser extends Component {
 
     handleClose = (event) =>{
         event.preventDefault();
-        let formData = new FormData();
-        formData.append("file", this.state.chosenImage, this.state.chosenImage.name);
 
-        axios({
-            method: 'post',
-            url: this.props.server.server_url+'tab_creator/diagram',
-            data: formData,
-            config: { headers: {'Content-Type': 'multipart/form-data' }}
-        }).catch(function (response) {
-            //handle error
-            console.log(response);
-        });
         this.props.done(this.state.chosenImage);
         this.props.hideModal();
     };

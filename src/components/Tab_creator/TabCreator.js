@@ -1,5 +1,5 @@
 import React, {Component}  from 'react';
-import {Col, Image, Row} from "react-bootstrap";
+import {Button, Col, Image, Row} from "react-bootstrap";
 
 import TabCreatorRegisterModal from "../Modal_Components/tabCreatorRegisterModal"
 import TabCreatorImageChooser from "../Modal_Components/tabCreatorImageChooser";
@@ -43,6 +43,7 @@ class TabCreator extends Component {
     };
 
     handleImageChoiceDone = (file) => {
+        this.setState({tab_image_raw:file});
         let reader = new FileReader();
         reader.onload = () => {
             this.setState({tab_image:reader.result});
@@ -60,10 +61,11 @@ class TabCreator extends Component {
                 return elem.register_name !== name;
             }
         );
-
-
-
         this.setState({...this.state, tab_registers: newRegistersValue});
+    };
+
+    handleSubmit = (event) =>{
+        this.props.server.creator_proxy.createPeripheral(this.state.tab_registers, this.state.tab_image_raw);
     };
 
     render(){
@@ -79,6 +81,13 @@ class TabCreator extends Component {
                         <RegisterInputForm registers={this.state.tab_registers} preview_only={true} handle_remove={this.handleRemoveRegister}/>
                         <Row>
                             <Image src="assets/Icons/add_register.svg" id="addRegister" alt='add register' onClick={this.handleClick}fluid/>
+                        </Row>
+                        <Row>
+                            <Col md={{ span: 3, offset: 9 }}>
+                                <Button variant="success" onClick={this.handleSubmit}>
+                                    Submit
+                                </Button>
+                            </Col>
                         </Row>
                     </Col>
                 </Row>

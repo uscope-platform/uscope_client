@@ -14,7 +14,7 @@ let TwoValuesField = props => {
     if(props.preview_only){
         return(
             <Row>
-                <Col>
+                <Col fluid={true}>
                     <Row>
                         <Col>
                             <Form.Group controlId="first_input">
@@ -35,10 +35,10 @@ let TwoValuesField = props => {
                             </Form.Group>
                         </Col>
                     </Row>
-                </Col>
-                <Col md={3}>
-                    <Image src='assets/Icons/remove.svg' className='remove_registers_image' onClick={localRemoveHandler}/>
-                </Col>
+            </Col>
+            <Col md={2}>
+                <Image src='assets/Icons/remove.svg' className='remove_registers_image' onClick={localRemoveHandler}/>
+            </Col>
             </Row>
         );
     } else{
