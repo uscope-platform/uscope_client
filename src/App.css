@@ -90,11 +90,14 @@ a {
   text-align: center;
 }
 
-#tab_creator_add_register_col > img{
+#tab_creator_add_register_col {
   text-align: center;
   padding: 6.5em;
-
   width: 90%;
+}
+
+#tab_creator_add_register_col img{
+  margin-top: 2em;
 }
 
 #tab_creator_add_register_caption{
