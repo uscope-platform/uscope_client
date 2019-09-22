@@ -73,7 +73,6 @@ class TabCreator extends Component {
     };
 
     handleSendPeripheral= (periph) =>{
-        debugger;
         let peripheral = {
             [periph.name]: {
                 peripheral_name: periph.name,

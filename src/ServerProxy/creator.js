@@ -12,8 +12,12 @@ export default function creatorProxy(server_url) {
 
         axios.post(this.server_url+'tab_creator/diagram',
             formData,
-             { headers: {'Content-Type': 'multipart/form-data' }}
-        ).catch(function (response) {
+            {
+                headers: {
+                    'accept': 'application/json',
+                    'Accept-Language': 'en-US,en;q=0.8',
+                    'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+                }}).catch(function (response) {
             //handle error
             console.log(response);
         });
