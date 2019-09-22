@@ -79,7 +79,8 @@ const initialState = {
     settings:{
         default_tab: "Plot",
         refreshRate: 90
-    }
+    },
+    scripts:[]
 };
 
 

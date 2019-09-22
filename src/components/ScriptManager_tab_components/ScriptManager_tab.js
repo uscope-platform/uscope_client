@@ -1,14 +1,15 @@
 import React, {Component}  from 'react';
 
 
-import {showModal} from "../../redux/Actions/modalsActions";
+import {saveScript} from "../../redux/Actions/scriptsActions";
 import {connect} from "react-redux"
 
 import BootstrapTable from 'react-bootstrap-table-next';
 import cellEditFactory from 'react-bootstrap-table2-editor';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 
-import {Button, Container, Row} from "react-bootstrap";
+import {Button, Col, Container, Row} from "react-bootstrap";
+
 
 
 function mapStateToProps(state) {
@@ -19,7 +20,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = dispatch => {
     return{
-        showModal: (modal) => {dispatch(showModal(modal))},
+        saveScript: (script) => {dispatch(saveScript(script))},
     }
 };
 
@@ -40,10 +41,10 @@ const expandRow = {
 class ScriptManager extends Component {
     constructor(props) {
         super(props);
-        this.state= {last_id:0};
+        this.state= {last_id:1};
     }
 
-    scripts = [];
+    scripts = [{id:1, name:'', path:'',triggers:'',script_content:''}];
     columns = [{
         dataField: 'id',
         text: 'Script ID'
@@ -77,6 +78,17 @@ class ScriptManager extends Component {
         this.setState({last_id:this.state.last_id-1});
     };
 
+    handleScriptConfigurationSave = () =>{
+        debugger;
+        this.scripts.map((script)=>{
+            debugger;
+            if(script.name!=='' && script.path !==''){
+                this.props.saveScript(script);
+            }
+            return null;
+        })
+    };
+
     render(){
         return(
             <Container>
@@ -96,6 +108,11 @@ class ScriptManager extends Component {
                         })}
                         pagination={ paginationFactory() }
                     />
+                </Row>
+                <Row>
+                    <Col md={{ offset: 9 }}>
+                        <Button  variant="outline-success" onClick={this.handleScriptConfigurationSave}>Save scripts configuration</Button>
+                    </Col>
                 </Row>
             </Container>
         );

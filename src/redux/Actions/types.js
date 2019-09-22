@@ -21,3 +21,6 @@ export const LOAD_TABS = 'LOAD_TABS';
 //                  MODAL ACTIONS
 export const SHOW_MODAL = "SHOW_MODAL";
 export const HIDE_MODAL = "HIDE_MODAL";
+//                   SCRIPTS ACTIONS
+export const SAVE_SCRIPT = "SAVE_SCRIPT";
+export const LOAD_SCRIPTS = "LOAD_SCRIPTS";
