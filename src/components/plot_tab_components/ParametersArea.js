@@ -4,20 +4,7 @@ import React from 'react';
 import {Button, Form} from "react-bootstrap"
 import {useSelector} from "react-redux";
 import SingleValueField from "../Common_Components/SingleValueField";
-
-
-
-
-    let parseFunction = function (string) {
-        let funcReg = /function (\S*) *\(([^()]*)\)[ \n\t]*{(.*)}/gmi;
-        let match = funcReg.exec(string.replace(/(\r\n|\n|\r)/gm, ""));
-        if(match) {
-            // eslint-disable-next-line
-            return new Function(match[2].split(','), match[3]);
-        }
-        return null;
-    };
-
+import {parseFunction, context_cleaner} from "../../user_script_launcher";
 
 
 let ParametersArea = props => {
@@ -35,18 +22,23 @@ let ParametersArea = props => {
 
     const handleSubmit = event => {
         event.preventDefault();
-        let new_params = parameters;
         for(let parameter of event.target){ // eslint-disable-line no-unused-vars
-            let objIndex = new_params.findIndex((obj => obj.parameter_name === parameter.name));
+            //Parse parameter value and find out if it has changed
             let floatValue = parseFloat(parameter.value);
-            if(parameter.value!=="" && new_params[objIndex].value !==floatValue){
-                let scriptTrigger = new_params[objIndex].trigger;
+            let objIndex = parameters.findIndex((obj => obj.parameter_name === parameter.name));
+            if(parameter.value!=="" && parameters[objIndex].value !==floatValue){
+                //Retrive relevant script content
+                let scriptTrigger = parameters[objIndex].trigger;
                 let trigger = scripts.filter((script)=>{
                     return script.triggers.includes(scriptTrigger);
                 });
                 let content = trigger[0].script_content;
-                debugger;
-                let func = parseFunction(content)(parameter.value, registers);
+
+                //Parse the script into a callable function and execute it
+                let context = context_cleaner(registers, parameters, parameter.name);
+                //TODO: DO SOMETHING WITH THE RETURN VALUE
+                // eslint-disable-next-line
+                let return_value = parseFunction(content)(parameter.value, context);
 
             }
         }
@@ -56,9 +48,13 @@ let ParametersArea = props => {
         <div className="parameters_area_containser">
             <Form onSubmit={handleSubmit}>
                 {parameters.map((param, i) => {
-                    return(
-                        <SingleValueField key={i} name={param.parameter_name} value={param.value} description={param.description}/>
-                    );
+                    if(param.visible){
+                        return(
+                            <SingleValueField key={i} name={param.parameter_name} value={param.value} description={param.description}/>
+                        );
+                    } else{
+                        return null;
+                    }
                 })}
                 <Button variant="primary" type="submit">
                     Submit

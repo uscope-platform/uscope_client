@@ -1,0 +1,35 @@
+
+let context_cleaner = (registers, parameters, current_parameter) =>{
+    //purge register context of unwanted and potentially dangerous fields
+    let register_context = {};
+    // eslint-disable-next-line
+    for(let periph in registers){
+        let new_periph = registers[periph].map((elem)=>{
+            return{name:elem.register_name, value:elem.value}
+        });
+        register_context[periph] = new_periph;
+    }
+
+    //purge parameters context of unwanted and potentially dangerous fields
+    let parameters_context = {};
+    parameters.map((param) => {
+        if(current_parameter!==param.parameter_name){
+            parameters_context[param.parameter_id] = param.value;
+        }
+        return null;
+    });
+    return {registers:register_context, parameters:parameters_context};
+};
+
+
+let parseFunction = function (string) {
+    let funcReg = /function (\S*) *\(([^()]*)\)[ \n\t]*{(.*)}/gmi;
+    let match = funcReg.exec(string.replace(/(\r\n|\n|\r)/gm, ""));
+    if(match) {
+        // eslint-disable-next-line
+        return new Function(match[2].split(','), match[3]);
+    }
+    return null;
+};
+
+export {context_cleaner, parseFunction};

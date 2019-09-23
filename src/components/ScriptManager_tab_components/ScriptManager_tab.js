@@ -28,7 +28,6 @@ const mapDispatchToProps = dispatch => {
 
 const expandRow = {
     renderer: row => {
-        debugger;
         return(
             <div>
                 <p>{row.script_content}</p>
@@ -42,8 +41,15 @@ const expandRow = {
 class ScriptManager extends Component {
     constructor(props) {
         super(props);
-        this.state= {last_id:1};
+        this.state= {last_id:0};
         this.scripts = JSON.parse(JSON.stringify(this.props.scripts_store));
+        this.scripts.map((script)=>{
+            if(parseInt(script.id)>this.state.last_id){
+               this.state.last_id = script.id;
+            }
+            return(null);
+        });
+
     }
 
 
