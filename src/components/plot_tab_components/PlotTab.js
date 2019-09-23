@@ -8,6 +8,7 @@ import ChannelSelector from "./ChannelSelector";
 import PlotComponent from "./PlotComponent";
 import ParametersArea from "./ParametersArea";
 import PlotControls from "./PlotControls";
+import MacroActions from "./MacroActions";
 
 
 
@@ -42,7 +43,12 @@ let PlotTab = function (props) {
         return(
             <Row>
                 <Col md={3} className="plot_channel_selector_container">
-                    <ChannelSelector server={props.server} channels={channels}/>
+                    <Row>
+                        <ChannelSelector server={props.server} channels={channels}/>
+                    </Row>
+                    <Row>
+                        <MacroActions/>
+                    </Row>
                 </Col>
                 <Col md={8}>
                     <Row>

@@ -29,6 +29,10 @@ let ParametersArea = props => {
         state => state.scripts
     );
 
+    const registers = useSelector(
+        state => state.registerValues
+    );
+
     const handleSubmit = event => {
         event.preventDefault();
         let new_params = parameters;
@@ -41,7 +45,8 @@ let ParametersArea = props => {
                     return script.triggers.includes(scriptTrigger);
                 });
                 let content = trigger[0].script_content;
-                let func = parseFunction(content)(parameter.value);
+                debugger;
+                let func = parseFunction(content)(parameter.value, registers);
 
             }
         }
