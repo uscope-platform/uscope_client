@@ -1,16 +1,12 @@
-import {LOAD_SCRIPTS, SAVE_SCRIPT} from "../Actions/types";
-import produce from "immer";
+import { SAVE_SCRIPTS} from "../Actions/types";
+
 
 
 let scriptsReducer = function (state = null, action) {
     switch (action.type) {
-        case LOAD_SCRIPTS:
-            state = action.payload;
-            break;
-        case SAVE_SCRIPT:
-            return produce(state, draftState => {
-                draftState.push(action.payload);
-            });
+        case SAVE_SCRIPTS:
+                state = action.payload;
+                return  state;
         default:
             return state;
     }

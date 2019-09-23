@@ -1,12 +1,8 @@
-import {SAVE_SCRIPT, LOAD_SCRIPTS} from "./types";
+import {SAVE_SCRIPTS} from "./types";
 
 
-export const saveScript = (script) => ({
-    type: SAVE_SCRIPT,
-    payload:script
+export const saveScripts = (scripts) => ({
+    type: SAVE_SCRIPTS,
+    payload:scripts
 });
 
-export const LoadScripts = (scripts) => ({
-    type: LOAD_SCRIPTS,
-    payload: scripts
-});

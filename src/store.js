@@ -1,10 +1,9 @@
 import { createStore, applyMiddleware} from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from 'redux-devtools-extension';
-
-
-
-
+import {persistReducer, persistStore} from 'redux-persist';
+import storage from 'redux-persist/lib/storage'
+import autoMergeLevel1 from "redux-persist/lib/stateReconciler/autoMergeLevel1";
 
 import rootReducer from './redux/Reducers';
 
@@ -84,6 +83,17 @@ const initialState = {
 };
 
 
+const persistConfig = {
+    key: 'root',
+    storage: storage,
+    stateReconciler: autoMergeLevel1,
+    whitelist: ['scripts']
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+
+
 
 const actionSanitizer = (action) => (
     action.type === 'FETCH_DATA' && action.data ?
@@ -97,9 +107,15 @@ const composeEnhancers = composeWithDevTools({
 
 let middleware =[thunk];
 
-const store = createStore(rootReducer,initialState, composeEnhancers(
-    applyMiddleware(...middleware)));
+const store = createStore(
+    persistedReducer,
+    initialState,
+    composeEnhancers(
+        applyMiddleware(...middleware)
+    )
+);
 
 
 
 export default store;
+export const persistor = persistStore(store);

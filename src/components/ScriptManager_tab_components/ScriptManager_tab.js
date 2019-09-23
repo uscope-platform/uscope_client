@@ -1,7 +1,7 @@
 import React, {Component}  from 'react';
 
 
-import {saveScript} from "../../redux/Actions/scriptsActions";
+import {saveScripts} from "../../redux/Actions/scriptsActions";
 import {connect} from "react-redux"
 
 import BootstrapTable from 'react-bootstrap-table-next';
@@ -14,13 +14,14 @@ import {Button, Col, Container, Row} from "react-bootstrap";
 
 function mapStateToProps(state) {
     return{
-        modals:state.modals
+        modals:state.modals,
+        scripts_store:state.scripts
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return{
-        saveScript: (script) => {dispatch(saveScript(script))},
+        saveScripts: (script) => {dispatch(saveScripts(script))},
     }
 };
 
@@ -42,9 +43,11 @@ class ScriptManager extends Component {
     constructor(props) {
         super(props);
         this.state= {last_id:1};
+        debugger;
+        this.scripts = JSON.parse(JSON.stringify(this.props.scripts_store));
     }
 
-    scripts = [{id:1, name:'', path:'',triggers:'',script_content:''}];
+
     columns = [{
         dataField: 'id',
         text: 'Script ID'
@@ -80,13 +83,7 @@ class ScriptManager extends Component {
 
     handleScriptConfigurationSave = () =>{
         debugger;
-        this.scripts.map((script)=>{
-            debugger;
-            if(script.name!=='' && script.path !==''){
-                this.props.saveScript(script);
-            }
-            return null;
-        })
+        this.props.saveScripts(this.scripts);
     };
 
     render(){
