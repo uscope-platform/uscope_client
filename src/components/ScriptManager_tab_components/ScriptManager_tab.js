@@ -43,7 +43,6 @@ class ScriptManager extends Component {
     constructor(props) {
         super(props);
         this.state= {last_id:1};
-        debugger;
         this.scripts = JSON.parse(JSON.stringify(this.props.scripts_store));
     }
 
@@ -82,7 +81,6 @@ class ScriptManager extends Component {
     };
 
     handleScriptConfigurationSave = () =>{
-        debugger;
         this.props.saveScripts(this.scripts);
     };
 

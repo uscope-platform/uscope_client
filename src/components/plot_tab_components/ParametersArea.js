@@ -6,11 +6,28 @@ import {useSelector} from "react-redux";
 import SingleValueField from "../Common_Components/SingleValueField";
 
 
+
+
+    let parseFunction = function (string) {
+        let funcReg = /function (\S*) *\(([^()]*)\)[ \n\t]*{(.*)}/gmi;
+        let match = funcReg.exec(string.replace(/(\r\n|\n|\r)/gm, ""));
+        if(match) {
+            // eslint-disable-next-line
+            return new Function(match[2].split(','), match[3]);
+        }
+        return null;
+    };
+
+
+
 let ParametersArea = props => {
     const parameters = useSelector(
         state => state.parameterValues
     );
 
+    const scripts = useSelector(
+        state => state.scripts
+    );
 
     const handleSubmit = event => {
         event.preventDefault();
@@ -19,7 +36,13 @@ let ParametersArea = props => {
             let objIndex = new_params.findIndex((obj => obj.parameter_name === parameter.name));
             let floatValue = parseFloat(parameter.value);
             if(parameter.value!=="" && new_params[objIndex].value !==floatValue){
-                props.server.app_proxy.setApplicationParameters({name:parameter.name, value:floatValue});
+                let scriptTrigger = new_params[objIndex].trigger;
+                let trigger = scripts.filter((script)=>{
+                    return script.triggers.includes(scriptTrigger);
+                });
+                let content = trigger[0].script_content;
+                let func = parseFunction(content)(parameter.value);
+
             }
         }
     };
