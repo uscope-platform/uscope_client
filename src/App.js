@@ -47,7 +47,7 @@ class App extends Component {
 
     constructor(props) {
         super(props);
-        this.server = new serverProxy('http://172.18.0.1:4999/uscope/');
+        this.server = new serverProxy('http://155.185.48.185:4999/uscope/');
         this.state = {initializationPhase: states.START};
         this.server.app_proxy.getApplicationsList().then((result) =>{
             this.setState({available_apps: result});

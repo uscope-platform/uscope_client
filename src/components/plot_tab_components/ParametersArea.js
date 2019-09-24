@@ -2,10 +2,11 @@ import React from 'react';
 
 
 import {Button, Form} from "react-bootstrap"
-import {useSelector} from "react-redux";
+import {useSelector, useDispatch} from "react-redux";
 import SingleValueField from "../Common_Components/SingleValueField";
 import {parseFunction, context_cleaner} from "../../user_script_launcher";
-
+import {saveScriptsWorkspace} from "../../redux/Actions/scriptsActions";
+import {sendParameter} from "../../redux/Actions/ParameterActions";
 
 let ParametersArea = props => {
     const parameters = useSelector(
@@ -19,6 +20,8 @@ let ParametersArea = props => {
     const registers = useSelector(
         state => state.registerValues
     );
+
+    const dispatch = useDispatch();
 
     const handleSubmit = event => {
         event.preventDefault();
@@ -36,10 +39,10 @@ let ParametersArea = props => {
 
                 //Parse the script into a callable function and execute it
                 let context = context_cleaner(registers, parameters, parameter.name);
-                //TODO: DO SOMETHING WITH THE RETURN VALUE
-                // eslint-disable-next-line
-                let return_value = parseFunction(content)(parameter.value, context);
 
+                let return_value = parseFunction(content)(floatValue, context);
+                dispatch(saveScriptsWorkspace(return_value));
+                dispatch(sendParameter({name:parameter.name, value:floatValue}));
             }
         }
     };

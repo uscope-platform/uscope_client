@@ -23,3 +23,4 @@ export const SHOW_MODAL = "SHOW_MODAL";
 export const HIDE_MODAL = "HIDE_MODAL";
 //                   SCRIPTS ACTIONS
 export const SAVE_SCRIPTS = "SAVE_SCRIPTS";
+export const SAVE_SCRIPT_WORKSPACE = "SAVE_SCRIPT_WORKSPACE";

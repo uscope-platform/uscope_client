@@ -9,7 +9,7 @@ let parameterValuesReducer = function (state = null, action) {
             return state;
         case SEND_PARAMETER:
             return state.map(parameter => {
-                if (parameter.qualified_name === action.payload.name) {
+                if (parameter.parameter_name === action.payload.name) {
                     return {...parameter, value:  action.payload.value}
                 }
                 return parameter;

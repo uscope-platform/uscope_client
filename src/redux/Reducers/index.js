@@ -6,7 +6,7 @@ import registerValuesReducer from "./registerReducer"
 import settingsReducer from "./settingsReducer";
 import tabsReducer from "./tabsReducer";
 import modalsReducer from "./modalsReducer";
-import scriptsReducer from "./scriptsReducer";
+import {scriptsReducer, scriptsWorkspaceReducer} from "./scriptsReducer";
 
 
 export default combineReducers({
@@ -16,5 +16,6 @@ export default combineReducers({
     tabs: tabsReducer,
     settings : settingsReducer,
     modals : modalsReducer,
-    scripts: scriptsReducer
+    scripts: scriptsReducer,
+    scriptsWorkspace: scriptsWorkspaceReducer
     });

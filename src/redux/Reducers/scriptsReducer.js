@@ -1,4 +1,4 @@
-import { SAVE_SCRIPTS} from "../Actions/types";
+import { SAVE_SCRIPTS, SAVE_SCRIPT_WORKSPACE} from "../Actions/types";
 
 
 
@@ -12,4 +12,16 @@ let scriptsReducer = function (state = null, action) {
     }
 };
 
-export default scriptsReducer;
+
+let scriptsWorkspaceReducer = function(state=null, action) {
+    switch (action.type) {
+        case SAVE_SCRIPT_WORKSPACE:
+            state = {...state, ...action.payload};
+            return state;
+        default:
+            return state;
+    }
+};
+
+
+export  {scriptsReducer, scriptsWorkspaceReducer};
