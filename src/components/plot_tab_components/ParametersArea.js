@@ -6,7 +6,7 @@ import {useSelector, useDispatch} from "react-redux";
 import SingleValueField from "../Common_Components/SingleValueField";
 import {parseFunction, context_cleaner} from "../../user_script_launcher";
 import {saveScriptsWorkspace} from "../../redux/Actions/scriptsActions";
-import {sendParameter} from "../../redux/Actions/ParameterActions";
+import {saveParameter} from "../../redux/Actions/ParameterActions";
 
 let ParametersArea = props => {
     const parameters = useSelector(
@@ -19,6 +19,10 @@ let ParametersArea = props => {
 
     const registers = useSelector(
         state => state.registerValues
+    );
+
+    const scripts_workspace = useSelector(
+        state => state.scriptsWorkspace
     );
 
     const dispatch = useDispatch();
@@ -39,10 +43,10 @@ let ParametersArea = props => {
 
                 //Parse the script into a callable function and execute it
                 let context = context_cleaner(registers, parameters, parameter.name);
-
+                context['workspace'] = scripts_workspace;
                 let return_value = parseFunction(content)(floatValue, context);
                 dispatch(saveScriptsWorkspace(return_value));
-                dispatch(sendParameter({name:parameter.name, value:floatValue}));
+                dispatch(saveParameter({name:parameter.name, value:floatValue}));
             }
         }
     };

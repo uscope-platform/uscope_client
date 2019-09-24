@@ -9,7 +9,7 @@ export const FETCH_DATA = 'FETCH_DATA';
 export const SET_CHANNEL_SETTING = "SET_CHANNEL_SETTING";
 export const SET_TIMEBASE = 'SET_TIMEBASE';
 //                   PARAMETERS ACTIONS
-export const SEND_PARAMETER =  'SEND_PARAMETER';
+export const SAVE_PARAMETER =  'SEND_PARAMETER';
 export const LOAD_PARAMETERS_DONE = 'LOAD_PARAMETERS_DONE';
 //                   REGISTERS ACTIONS
 export const LOAD_REGISTERS = 'LOAD_REGISTERS';

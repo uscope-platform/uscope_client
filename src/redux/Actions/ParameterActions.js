@@ -1,11 +1,11 @@
-import {LOAD_PARAMETERS_DONE, SEND_PARAMETER} from "./types";
+import {LOAD_PARAMETERS_DONE, SAVE_PARAMETER} from "./types";
 import axios from 'axios';
 
 
 
 
-export const sendParameter = (parameter) => ({
-    type: SEND_PARAMETER,
+export const saveParameter = (parameter) => ({
+    type: SAVE_PARAMETER,
     payload:{
         name: parameter.name,
         value: parameter.value
