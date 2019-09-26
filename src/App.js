@@ -2,7 +2,8 @@
 
 //       REACT AND BOOTSTRAP IMPORTS
 import React, {Component} from 'react';
-import {Tab, Tabs, Container} from "react-bootstrap";
+import {Tab, Container} from "react-bootstrap";
+import {Route} from 'react-router-dom'
 
 //       REDUX IMPORTS
 import {connect} from "react-redux";
@@ -13,6 +14,7 @@ import {loadRegisters} from "./redux/Actions/RegisterActions";
 //      APP RELATED IMPORTS
 import serverProxy from "./ServerProxy";
 import TabContent from "./components/TabContent";
+import Navbar from "./components/Navbar";
 import ApplicationChooser from "./components/Modal_Components/ApplicationChooser";
 import './App.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
@@ -47,7 +49,7 @@ class App extends Component {
 
     constructor(props) {
         super(props);
-        this.server = new serverProxy('http://155.185.48.185:4999/uscope/');
+        this.server = new serverProxy('http://172.18.0.1:4999/uscope/'); //http://155.185.48.185:4999/uscope/
         this.state = {initializationPhase: states.START};
         this.server.app_proxy.getApplicationsList().then((result) =>{
             this.setState({available_apps: result});
@@ -125,17 +127,29 @@ class App extends Component {
                     });
                     return (
                         <div className="App">
-                            <Tabs defaultActiveKey={this.props.settings.default_tab} id="uncontrolled-tab-example">
-                                {this.props.tabs.map((tab, i) => {
-                                    if(tab.user_accessible){
-                                        return(
-                                            <Tab eventKey={tab.name} key={i} title={tab.name}> <TabContent className="main_content_tab" server={this.server} tab={tab}/></Tab>
-                                        )
-                                    } else {
-                                        return null;
-                                    }
-                                })}
-                            </Tabs>
+
+                            <Tab.Container defaultActiveKey={this.props.settings.default_tab}>
+                                <Navbar tabs={this.props.tabs}/>
+                                <Tab.Content>
+                                    {this.props.tabs.map((tab, i) => {
+                                        if(tab.user_accessible){
+                                            return(
+                                                <Route
+                                                    path={'/'+tab.name}
+                                                    exact
+                                                    render={(props) => <TabContent className="main_content_tab" server={this.server} tab={tab}/>}
+                                                />
+
+                                            )
+                                        } else {
+                                            return null;
+                                        }
+                                    })}
+                                </Tab.Content>
+                            </Tab.Container>
+
+
+
                         </div>
                     );
                 }
