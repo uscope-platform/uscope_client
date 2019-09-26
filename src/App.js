@@ -16,6 +16,8 @@ import serverProxy from "./ServerProxy";
 import TabContent from "./components/TabContent";
 import Navbar from "./components/Navbar";
 import ApplicationChooser from "./components/Modal_Components/ApplicationChooser";
+
+//////  STYLE IMPORTS
 import './App.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 
@@ -23,7 +25,8 @@ function mapStateToProps(state) {
     return{
         tabs:state.tabs,
         plot:state.plot,
-        settings:state.settings
+        settings:state.settings,
+        peripherals:state.peripherals
     }
 }
 
@@ -51,6 +54,12 @@ class App extends Component {
         super(props);
         this.server = new serverProxy('http://172.18.0.1:4999/uscope/'); //http://155.185.48.185:4999/uscope/
         this.state = {initializationPhase: states.START};
+        debugger;
+        // eslint-disable-next-line
+        if(this.props.peripherals ==undefined){
+            this.server.periph_proxy.loadAllPeripherals();
+        }
+
         this.server.app_proxy.getApplicationsList().then((result) =>{
             this.setState({available_apps: result});
             this.setState({initializationPhase:states.APP_CHOICE});

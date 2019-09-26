@@ -24,3 +24,5 @@ export const HIDE_MODAL = "HIDE_MODAL";
 //                   SCRIPTS ACTIONS
 export const SAVE_SCRIPTS = "SAVE_SCRIPTS";
 export const SAVE_SCRIPT_WORKSPACE = "SAVE_SCRIPT_WORKSPACE";
+//                  PERIPHERALS ACTIONS
+export const LOAD_PERIPHERALS = 'LOAD_PERIPHERALS';

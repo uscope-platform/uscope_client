@@ -87,7 +87,7 @@ const persistConfig = {
     key: 'root',
     storage: storage,
     stateReconciler: autoMergeLevel1,
-    whitelist: ['scripts']
+    whitelist: ['scripts', 'peripherals']
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

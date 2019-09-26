@@ -2,7 +2,7 @@ import React from 'react';
 import PlotTab from "./plot_tab_components/PlotTab";
 import RegisterTab from "./register_tab_components/Register_tab";
 import TabCreator from "./Tab_creator/TabCreator";
-import ScriptManager from "./ScriptManager_tab_components/ScriptManager_tab";
+import ScriptManager from "./Managers/ScriptManager_tab";
 
 
 let TabContent = props => {

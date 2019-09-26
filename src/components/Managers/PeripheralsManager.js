@@ -34,8 +34,9 @@ const expandRow = {
             </div>
         )
     },
+    onlyOneExpanding: true,
     showExpandColumn: true,
-    expandByColumnOnly: true
+    expandColumnPosition: 'right'
 };
 
 class ScriptManager extends Component {
@@ -45,11 +46,15 @@ class ScriptManager extends Component {
         this.scripts = JSON.parse(JSON.stringify(this.props.scripts_store));
         this.scripts.map((script)=>{
             if(parseInt(script.id)>this.state.last_id){
-               this.state.last_id = script.id;
+                this.state.last_id = script.id;
             }
             return(null);
         });
-
+        this.selectRow = {
+            mode: 'radio',
+            clickToEdit: true,
+            clickToSelect: true
+        };
     }
 
 
@@ -108,6 +113,7 @@ class ScriptManager extends Component {
                             blurToSave: true
                         })}
                         pagination={ paginationFactory() }
+                        selectRow={ this.selectRow }
                     />
                 </Row>
                 <Row>
@@ -157,8 +163,8 @@ class FileChoice extends React.Component {
 
     };
 
-     getValue() {
-         return this.filename;
+    getValue() {
+        return this.filename;
     }
 
     render() {

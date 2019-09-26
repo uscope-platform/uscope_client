@@ -1,5 +1,6 @@
 import axios from "axios"
 import {sendRegister} from "../redux/Actions/RegisterActions";
+import {loadPeripherals} from "../redux/Actions/peripheralsActions";
 import store from "../store";
 
 export default function peripheralProxy(server_url) {
@@ -18,7 +19,11 @@ export default function peripheralProxy(server_url) {
 
     this.setRegisterValue = (register) => {
         store.dispatch(sendRegister(_this.server_url+'registers/'+register.peripheral+'/value', register))
-    }
+    };
+
+    this.loadAllPeripherals = () =>{
+        store.dispatch(loadPeripherals(_this.server_url+'registers/all_peripheral/descriptions'))
+    };
 }
 
 

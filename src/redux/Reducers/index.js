@@ -6,6 +6,7 @@ import registerValuesReducer from "./registerReducer"
 import settingsReducer from "./settingsReducer";
 import tabsReducer from "./tabsReducer";
 import modalsReducer from "./modalsReducer";
+import PeripheralsReducer from './PeripheralsReducer'
 import {scriptsReducer, scriptsWorkspaceReducer} from "./scriptsReducer";
 
 
@@ -13,6 +14,7 @@ export default combineReducers({
     plot: plotReducer,
     parameterValues: parameterValuesReducer,
     registerValues: registerValuesReducer,
+    peripherals:PeripheralsReducer,
     tabs: tabsReducer,
     settings : settingsReducer,
     modals : modalsReducer,
