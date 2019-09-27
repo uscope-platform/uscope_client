@@ -3,7 +3,7 @@ import PlotTab from "./plot_tab_components/PlotTab";
 import RegisterTab from "./register_tab_components/Register_tab";
 import TabCreator from "./Tab_creator/TabCreator";
 import ScriptManager from "./Managers/ScriptManager_tab";
-
+import PeripheralsManager from "./Managers/PeripheralsManager";
 
 let TabContent = props => {
     if(props.tab.type==='Scope'){
@@ -25,6 +25,11 @@ let TabContent = props => {
     }else if(props.tab.type ==='script_manager'){
         return (
             <ScriptManager server={props.server}/>
+        );
+    }else if(props.tab.type ==='peripherals_manager'){
+        return (
+            <PeripheralsManager/>
+
         );
     } else{
         return (null)

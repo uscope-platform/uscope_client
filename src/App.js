@@ -54,7 +54,6 @@ class App extends Component {
         super(props);
         this.server = new serverProxy('http://172.18.0.1:4999/uscope/'); //http://155.185.48.185:4999/uscope/
         this.state = {initializationPhase: states.START};
-        debugger;
         // eslint-disable-next-line
         if(this.props.peripherals ==undefined){
             this.server.periph_proxy.loadAllPeripherals();
@@ -132,6 +131,12 @@ class App extends Component {
                         name: "Script manager",
                         tab_id: "script_manager",
                         type: "script_manager",
+                        user_accessible: true
+                    });
+                    ui_tabs.push({
+                        name: "Peripherals manager",
+                        tab_id: "peripherals_manager",
+                        type: "peripherals_manager",
                         user_accessible: true
                     });
                     return (
