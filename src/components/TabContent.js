@@ -1,7 +1,7 @@
 import React from 'react';
 import PlotTab from "./plot_tab_components/PlotTab";
 import RegisterTab from "./register_tab_components/Register_tab";
-import TabCreator from "./Tab_creator/TabCreator";
+import PeripheralsCreator from "./Creators/PeripheralsCreator";
 import ScriptManager from "./Managers/ScriptManager_tab";
 import PeripheralsManager from "./Managers/PeripheralsManager";
 
@@ -20,7 +20,7 @@ let TabContent = props => {
         );
     }else if(props.tab.type ==='tab_creator'){
         return (
-            <TabCreator server={props.server}/>
+            <PeripheralsCreator server={props.server}/>
         );
     }else if(props.tab.type ==='script_manager'){
         return (

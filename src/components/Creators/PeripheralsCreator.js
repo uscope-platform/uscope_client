@@ -23,7 +23,7 @@ const mapDispatchToProps = dispatch => {
     }
 };
 
-class TabCreator extends Component {
+class PeripheralsCreator extends Component {
     constructor(props) {
         super(props);
         this.state= {tab_image:"assets/Icons/add_peripheral_img.svg",tab_image_raw:null, tab_registers:[]};
@@ -113,4 +113,4 @@ class TabCreator extends Component {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TabCreator);
+export default connect(mapStateToProps, mapDispatchToProps)(PeripheralsCreator);
