@@ -28,7 +28,7 @@ let TabContent = props => {
         );
     }else if(props.tab.type ==='peripherals_manager'){
         return (
-            <PeripheralsManager/>
+            <PeripheralsManager server={props.server}/>
 
         );
     } else{

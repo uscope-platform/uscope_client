@@ -20,6 +20,7 @@ import ApplicationChooser from "./components/Modal_Components/ApplicationChooser
 //////  STYLE IMPORTS
 import './App.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
+import PeripheralsCreator from "./components/Creators/PeripheralsCreator";
 
 function mapStateToProps(state) {
     return{
@@ -122,12 +123,6 @@ class App extends Component {
                 } else {
                     let ui_tabs = this.props.tabs;
                     ui_tabs.push({
-                        name: "Tab creator",
-                        tab_id: "tab_creator",
-                        type: "tab_creator",
-                        user_accessible: true
-                    });
-                    ui_tabs.push({
                         name: "Script manager",
                         tab_id: "script_manager",
                         type: "script_manager",
@@ -160,10 +155,13 @@ class App extends Component {
                                         }
                                     })}
                                 </Tab.Content>
+
                             </Tab.Container>
-
-
-
+                            <Route
+                                path={'/peripheral_creator'}
+                                exact
+                                render={(props) => <PeripheralsCreator server={this.props.server}/>}
+                            />
                         </div>
                     );
                 }

@@ -1,6 +1,7 @@
 import React, {Component}  from 'react';
 
 
+import { LinkContainer } from 'react-router-bootstrap'
 import {saveScripts} from "../../redux/Actions/scriptsActions";
 import {connect} from "react-redux"
 
@@ -78,7 +79,9 @@ class PeripheralsManager extends Component {
         return(
             <Container>
                 <Row>
-                    <Button variant="outline-success" onClick={this.handleAddRow}>+ Add new row</Button>
+                    <LinkContainer to="/peripheral_creator">
+                        <Button variant="outline-success" onClick={this.handleAddRow}>+ Add new row</Button>
+                    </LinkContainer>
                     <Button variant="outline-danger" onClick={this.handleRemoveRow}>- Remove Row</Button>
                 </Row>
                 <Row>
@@ -93,7 +96,7 @@ class PeripheralsManager extends Component {
                         pagination={ paginationFactory() }
                         selectRow={ this.selectRow }
                     />
-                </Row>
+                </Row>q
             </Container>
         );
     };
