@@ -25,6 +25,10 @@ const mapDispatchToProps = dispatch => {
     }
 };
 
+const defaultSorted = [{
+    dataField: 'id',
+    order: 'asc'
+}];
 
 const expandRow = {
     renderer: row => {
@@ -42,53 +46,79 @@ const expandRow = {
 class ScriptManager extends Component {
     constructor(props) {
         super(props);
-        this.state= {last_id:0};
+        this.state = { selected: null };
         this.scripts = JSON.parse(JSON.stringify(this.props.scripts_store));
-        this.scripts.map((script)=>{
-            if(parseInt(script.id)>this.state.last_id){
-               this.state.last_id = script.id;
-            }
-            return(null);
-        });
         this.selectRow = {
             mode: 'radio',
             clickToEdit: true,
-            clickToSelect: true
+            clickToSelect: true,
+            selected: this.state.selected,
+            onSelect: this.handleOnSelect,
         };
     }
 
 
-    columns = [{
-        dataField: 'id',
-        text: 'Script ID'
-    }, {
-        dataField: 'name',
-        text: 'Script Name'
-    }, {
-        dataField: 'path',
-        text: 'Script Filename',
-        editorRenderer: (editorProps, value, row, column, rowIndex, columnIndex) => (
-            <FileChoice { ...editorProps } value={ value } row={row} column={column} updateContent={(content)=>{row.script_content=content}}/>)
-    }, {
-        dataField: 'triggers',
-        text: 'Script Triggers'
-    }];
+    columns = [
+        {
+            dataField: 'id',
+            text: 'Script ID',
+            sort: true
+        },
+        {
+            dataField: 'name',
+            text: 'Script Name',
+            sort: true
+        },
+        {
+            dataField: 'path',
+            text: 'Script Filename',
+            editorRenderer: (editorProps, value, row, column, rowIndex, columnIndex) => (
+                <FileChoice { ...editorProps } value={ value } row={row} column={column} updateContent={(content)=>{row.script_content=content}}/>)
+        },
+        {
+            dataField: 'triggers',
+            text: 'Script Triggers'
+        }
+    ];
 
+
+    handleOnSelect = (row, isSelect) => {
+        if (isSelect) {
+            this.setState(() => ({
+                selected: row.name
+            }));
+        } else {
+            this.setState(() => ({
+                selected: null
+            }));
+        }
+    };
 
     handleAddRow = () =>{
+        let id = null;
+        for(let i=1;i<=this.scripts.length;i++){
+            if(this.scripts[i-1].id !== i){
+                id = i;
+                break;
+            }
+        }
+        if(id===null){
+            id = this.scripts.length+1;
+        }
 
         this.scripts.push({
-            id:this.state.last_id+1,
-            name:'',
+            id:id,
+            name:'new script',
             path:'',
             triggers:''
         });
-        this.setState({last_id:this.state.last_id+1});
+        //The state modification is not needed in this case, it is only used to trigger the table's reload
+        this.setState({selected:this.state.selected});
     };
 
     handleRemoveRow = (event) =>{
-        this.scripts.pop();
-        this.setState({last_id:this.state.last_id-1});
+        this.scripts.splice(this.scripts.findIndex(item => item.name === this.state.selected), 1);
+        this.setState({selected:null});
     };
 
     handleScriptConfigurationSave = () =>{
@@ -112,6 +142,7 @@ class ScriptManager extends Component {
                             mode: 'click',
                             blurToSave: true
                         })}
+                        defaultSorted={defaultSorted}
                         pagination={ paginationFactory() }
                         selectRow={ this.selectRow }
                     />
