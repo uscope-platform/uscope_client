@@ -27,11 +27,14 @@ const mapDispatchToProps = dispatch => {
 class PeripheralsManager extends Component {
     constructor(props) {
         super(props);
+        this.state = {selected:null};
         this.peripherals = Object.values(this.props.peripherals);
         this.selectRow = {
             mode: 'radio',
             clickToEdit: true,
-            clickToSelect: true
+            clickToSelect: true,
+            selected: this.state.selected,
+            onSelect: this.handleOnSelect,
         };
     }
 
@@ -39,7 +42,8 @@ class PeripheralsManager extends Component {
     columns = [
         {
             dataField: 'peripheral_name',
-            text: 'Peripheral Name'
+            text: 'Peripheral Name',
+            sort: true
         },
         {
             dataField: 'version',
@@ -48,12 +52,25 @@ class PeripheralsManager extends Component {
     ];
 
 
+    handleOnSelect = (row, isSelect) => {
+        if (isSelect) {
+            this.setState(() => ({
+                selected: row.peripheral_name
+            }));
+        } else {
+            this.setState(() => ({
+                selected: null
+            }));
+        }
+    };
+
     handleAddRow = () =>{
 
     };
 
     handleRemoveRow = (event) =>{
-
+        this.peripherals.splice(this.peripherals.findIndex(item => item.peripheral_name === this.state.selected), 1);
+        this.setState({selected:null});
     };
 
 
