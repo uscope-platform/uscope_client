@@ -3,7 +3,7 @@
 //       REACT AND BOOTSTRAP IMPORTS
 import React, {Component} from 'react';
 import {Tab, Container} from "react-bootstrap";
-import {Route} from 'react-router-dom'
+import {Route, Redirect} from 'react-router-dom'
 
 //       REDUX IMPORTS
 import {connect} from "react-redux";
@@ -136,7 +136,7 @@ class App extends Component {
                     });
                     return (
                         <div className="App">
-
+                            <Redirect exact from="/" to="plot" />
                             <Tab.Container defaultActiveKey={this.props.settings.default_tab}>
                                 <Navbar tabs={this.props.tabs}/>
                                 <Tab.Content>
@@ -160,7 +160,7 @@ class App extends Component {
                             <Route
                                 path={'/peripheral_creator'}
                                 exact
-                                render={(props) => <PeripheralsCreator server={this.props.server}/>}
+                                render={(props) => <PeripheralsCreator server={this.server}/>}
                             />
                         </div>
                     );

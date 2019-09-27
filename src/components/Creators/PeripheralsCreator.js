@@ -80,6 +80,7 @@ class PeripheralsCreator extends Component {
                 registers: this.state.tab_registers
             }
         };
+
         this.props.server.creator_proxy.createPeripheral(peripheral, this.state.tab_image_raw);
     };
 
