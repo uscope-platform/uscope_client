@@ -81,6 +81,19 @@ class App extends Component {
      loadResources = () => {
         this.server.app_proxy.getApplicationParameters();
         this.server.plot_proxy.getChannelsInfo();
+         let ui_tabs = this.props.tabs;
+         ui_tabs.push({
+             name: "Script manager",
+             tab_id: "script_manager",
+             type: "script_manager",
+             user_accessible: true
+         });
+         ui_tabs.push({
+             name: "Peripherals manager",
+             tab_id: "peripherals_manager",
+             type: "peripherals_manager",
+             user_accessible: true
+         });
         this.setState({initializationPhase:states.NORMAL});
     };
 
@@ -121,22 +134,9 @@ class App extends Component {
                         <></>
                     )
                 } else {
-                    let ui_tabs = this.props.tabs;
-                    ui_tabs.push({
-                        name: "Script manager",
-                        tab_id: "script_manager",
-                        type: "script_manager",
-                        user_accessible: true
-                    });
-                    ui_tabs.push({
-                        name: "Peripherals manager",
-                        tab_id: "peripherals_manager",
-                        type: "peripherals_manager",
-                        user_accessible: true
-                    });
+
                     return (
                         <div className="App">
-                            <Redirect exact from="/" to="plot" />
                             <Tab.Container defaultActiveKey={this.props.settings.default_tab}>
                                 <Navbar tabs={this.props.tabs}/>
                                 <Tab.Content>
@@ -162,6 +162,7 @@ class App extends Component {
                                 exact
                                 render={(props) => <PeripheralsCreator server={this.server}/>}
                             />
+                            <Redirect exact from="/" to="plot" />
                         </div>
                     );
                 }

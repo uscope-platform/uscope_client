@@ -2,7 +2,6 @@ import React, {Component}  from 'react';
 
 
 import { LinkContainer } from 'react-router-bootstrap'
-import {saveScripts} from "../../redux/Actions/scriptsActions";
 import {connect} from "react-redux"
 
 import BootstrapTable from 'react-bootstrap-table-next';
@@ -18,12 +17,6 @@ function mapStateToProps(state) {
         peripherals:state.peripherals
     }
 }
-
-const mapDispatchToProps = dispatch => {
-    return{
-        saveScripts: (script) => {dispatch(saveScripts(script))},
-    }
-};
 
 class PeripheralsManager extends Component {
     constructor(props) {
@@ -65,12 +58,10 @@ class PeripheralsManager extends Component {
         }
     };
 
-    handleAddRow = () =>{
-
-    };
 
     handleRemoveRow = (event) =>{
         this.peripherals.splice(this.peripherals.findIndex(item => item.peripheral_name === this.state.selected), 1);
+        this.props.server.creator_proxy.removePeripheral(this.state.selected);
         this.setState({selected:null});
     };
 
@@ -80,7 +71,7 @@ class PeripheralsManager extends Component {
             <Container>
                 <Row>
                     <LinkContainer to="/peripheral_creator">
-                        <Button variant="outline-success" onClick={this.handleAddRow}>+ Add new row</Button>
+                        <Button variant="outline-success">+ Add new row</Button>
                     </LinkContainer>
                     <Button variant="outline-danger" onClick={this.handleRemoveRow}>- Remove Row</Button>
                 </Row>
@@ -96,10 +87,10 @@ class PeripheralsManager extends Component {
                         pagination={ paginationFactory() }
                         selectRow={ this.selectRow }
                     />
-                </Row>q
+                </Row>
             </Container>
         );
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PeripheralsManager);
+export default connect(mapStateToProps)(PeripheralsManager);

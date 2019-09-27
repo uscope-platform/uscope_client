@@ -24,6 +24,7 @@ export default function peripheralProxy(server_url) {
     this.loadAllPeripherals = () =>{
         store.dispatch(loadPeripherals(_this.server_url+'registers/all_peripheral/descriptions'))
     };
+
 }
 
 

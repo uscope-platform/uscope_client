@@ -47,7 +47,9 @@ class ScriptManager extends Component {
     constructor(props) {
         super(props);
         this.state = { selected: null };
+        // the json stringify/parse is used to do a deep copy of the redux store
         this.scripts = JSON.parse(JSON.stringify(this.props.scripts_store));
+
         this.selectRow = {
             mode: 'radio',
             clickToEdit: true,

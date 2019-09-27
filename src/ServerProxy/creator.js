@@ -1,12 +1,13 @@
 //import store from "../store";
 
 import axios from "axios";
+import store from "../store";
+import {removePeripheral} from "../redux/Actions/peripheralsActions";
 
 export default function creatorProxy(server_url) {
     this.server_url = server_url;
 
     this.createPeripheral = (app, image) => {
-
         debugger;
         let formData = new FormData();
         formData.append("file", image, image.name);
@@ -27,10 +28,10 @@ export default function creatorProxy(server_url) {
             //handle error
             console.log(response);
         });
-
-
     };
 
-
+    this.removePeripheral = (peripheral) => {
+        store.dispatch(removePeripheral(this.server_url+'tab_creator/remove_peripheral/'+ peripheral, peripheral))
+    };
 
 }
