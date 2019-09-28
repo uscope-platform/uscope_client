@@ -75,37 +75,38 @@ class App extends Component {
     }
 
     handleApplicationChosen = e =>{
-        this.server.app_proxy.getApplication(e).then((result) =>{
-            this.props.setSettings(e);
-            this.props.loadTabs(result.tabs);
-            this.initializeRegisterStore(result.tabs);
+        this.server.app_proxy.setApplication(e);
+        let app = this.props.applications[e];
+        this.props.setSettings(e);
+        let tabs = Object.values(app.tabs);
+        this.props.loadTabs(tabs);
+        this.initializeRegisterStore(tabs);
 
-        });
     };
 
 
      loadResources = () => {
-        this.server.app_proxy.getApplicationParameters();
-        this.server.plot_proxy.getChannelsInfo();
-         let ui_tabs = this.props.tabs;
-         ui_tabs.push({
+         this.server.app_proxy.getApplicationParameters();
+         this.server.plot_proxy.getChannelsInfo();
+         this.props.loadTabs([{
              name: "Script manager",
              tab_id: "script_manager",
              type: "script_manager",
              user_accessible: true
-         });
-         ui_tabs.push({
+         }]);
+         this.props.loadTabs([{
              name: "Peripherals manager",
              tab_id: "peripherals_manager",
              type: "peripherals_manager",
              user_accessible: true
-         });
+         }]);
         this.setState({initializationPhase:states.NORMAL});
     };
 
 
 
     initializeRegisterStore = (tabs) =>{
+        this.setState({initializationPhase:states.RESOURCE_LOADING});
 
         Promise.all(tabs.map((tab) =>{
             if(tab.user_accessible && tab.type==="Registers"){
@@ -113,16 +114,17 @@ class App extends Component {
             }
             return 'Not Needed';
         })).then((result) =>{
-            result.map((item) => {
-                if(item!=='Not Needed'){
-                    this.props.loadRegisters(item.peripheral_name, item.registers);
-                }
-                return null
-            });
-            this.setState({initializationPhase:states.RESOURCE_LOADING});
-            this.loadResources();
+                result.map((item) => {
+                    if(item!=='Not Needed'){
+                        this.props.loadRegisters(item.peripheral_name, item.registers);
+                    }
+                    return null
+                });
+                this.setState({initializationPhase:states.RESOURCE_LOADING});
+                this.loadResources();
             }
         );
+
     };
 
     render() {
@@ -140,7 +142,6 @@ class App extends Component {
                         <></>
                     )
                 } else {
-
                     return (
                         <div className="App">
                             <Tab.Container defaultActiveKey={this.props.settings.default_tab}>

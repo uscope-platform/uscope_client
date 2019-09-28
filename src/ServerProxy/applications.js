@@ -26,9 +26,9 @@ export default function applicationProxy(server_url) {
         store.dispatch(loadParameters(_this.server_url+'application/parameters'));
     };
 
-    this.getApplication = function (app_name) {
+    this.setApplication = function (app_name) {
         return new Promise(function (resolve, reject) {
-            axios.get(_this.server_url+'application/specs/'+app_name)
+            axios.get(_this.server_url+'application/set/'+app_name)
                 .then(res => {
                     resolve(res.data);
                 })
