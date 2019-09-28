@@ -1,12 +1,23 @@
 import React, {Component} from 'react';
 
 import {Modal, Button, Form, Col} from "react-bootstrap";
+import {connect} from "react-redux";
 
+function mapStateToProps(state) {
+    return{
+        applications:state.applications
+    }
+}
 
 class ApplicationChooser extends Component {
     constructor(props){
         super(props);
-        this.state = {chosen_application:props.applications[0]}
+        this.applications_list = [];
+        // eslint-disable-next-line
+        for (let item in this.props.applications){
+            this.applications_list.push(item);
+        }
+        this.state = {chosen_application:this.applications_list[0]}
     }
 
 
@@ -32,8 +43,8 @@ class ApplicationChooser extends Component {
                             <Form.Label>State</Form.Label>
                             <Form.Control as="select" onChange={this.handleChange}>
                                 <option>Chose An Application</option>
-                                {this.props.applications.map((size,i) => (
-                                    <option key={i} >{size}</option>
+                                {this.applications_list.map((name,i) => (
+                                    <option key={i} >{name}</option>
                                 ))}
                             </Form.Control>
                         </Form.Group>
@@ -50,4 +61,4 @@ class ApplicationChooser extends Component {
 }
 
 
-export default ApplicationChooser;
+export default connect(mapStateToProps)(ApplicationChooser);

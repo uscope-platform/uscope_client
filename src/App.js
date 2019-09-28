@@ -56,8 +56,8 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.server = new serverProxy('http://172.18.0.1:4999/uscope/'); //http://155.185.48.185:4999/uscope/
-        this.state = {initializationPhase: states.START};
         this.server.app_proxy.loadAllApplications();
+        this.state = {initializationPhase: states.APP_CHOICE};
 
         if(this.props.peripherals ===undefined){
             this.server.periph_proxy.loadAllPeripherals();
@@ -71,12 +71,6 @@ class App extends Component {
                 }
             });
         }
-
-        this.server.app_proxy.getApplicationsList().then((result) =>{
-            this.setState({available_apps: result});
-            this.setState({initializationPhase:states.APP_CHOICE});
-            return result
-        });
 
     }
 
@@ -136,7 +130,7 @@ class App extends Component {
             case states.APP_CHOICE:
                 return (
                     <div className="App">
-                        <ApplicationChooser applications={this.state.available_apps} done={this.handleApplicationChosen}/>
+                        <ApplicationChooser done={this.handleApplicationChosen}/>
                     </div>
                 );
             case states.NORMAL:
