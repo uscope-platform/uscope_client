@@ -26,6 +26,7 @@ for(let i = 0; i<7;i++){
 
 
 const initialState = {
+    applications: [],
     plot:{
         data:base_data,
         loading_done:false,
@@ -87,7 +88,7 @@ const persistConfig = {
     key: 'root',
     storage: storage,
     stateReconciler: autoMergeLevel1,
-    whitelist: ['scripts', 'peripherals']
+    whitelist: ['scripts', 'peripherals', 'applications']
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

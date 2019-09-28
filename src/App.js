@@ -28,7 +28,8 @@ function mapStateToProps(state) {
         tabs:state.tabs,
         plot:state.plot,
         settings:state.settings,
-        peripherals:state.peripherals
+        peripherals:state.peripherals,
+        applications:state.applications
     }
 }
 
@@ -56,17 +57,16 @@ class App extends Component {
         super(props);
         this.server = new serverProxy('http://172.18.0.1:4999/uscope/'); //http://155.185.48.185:4999/uscope/
         this.state = {initializationPhase: states.START};
-        // eslint-disable-next-line
-        if(this.props.peripherals ==undefined){
+        this.server.app_proxy.loadAllApplications();
+
+        if(this.props.peripherals ===undefined){
             this.server.periph_proxy.loadAllPeripherals();
         } else{
             this.server.periph_proxy.get_peripherals_hash().then((res)=>{
                 let periph_string = JSON.stringify(this.props.peripherals);
                 let raw_hash = sjcl.hash.sha256.hash(periph_string);
                 let digest = sjcl.codec.hex.fromBits(raw_hash);
-                debugger;
                 if(digest!==res){
-                    debugger;
                     this.server.periph_proxy.loadAllPeripherals();
                 }
             });

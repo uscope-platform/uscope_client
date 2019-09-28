@@ -8,7 +8,7 @@ import tabsReducer from "./tabsReducer";
 import modalsReducer from "./modalsReducer";
 import PeripheralsReducer from './PeripheralsReducer'
 import {scriptsReducer, scriptsWorkspaceReducer} from "./scriptsReducer";
-
+import ApplicationsReducer from './applicationsReducer'
 
 export default combineReducers({
     plot: plotReducer,
@@ -18,6 +18,7 @@ export default combineReducers({
     tabs: tabsReducer,
     settings : settingsReducer,
     modals : modalsReducer,
+    applications : ApplicationsReducer,
     scripts: scriptsReducer,
     scriptsWorkspace: scriptsWorkspaceReducer
     });
