@@ -7,27 +7,33 @@ import {removePeripheral} from "../redux/Actions/peripheralsActions";
 export default function creatorProxy(server_url) {
     this.server_url = server_url;
 
-    this.createPeripheral = (app, image) => {
-        debugger;
-        let formData = new FormData();
-        formData.append("file", image, image.name);
+    this.createPeripheral = (peripheral, image) => {
+        if(image!==null){
+            let formData = new FormData();
+            formData.append("file", image, image.name);
 
-        axios.post(this.server_url+'tab_creator/diagram',
-            formData,
-            {
-                headers: {
-                    'accept': 'application/json',
-                    'Accept-Language': 'en-US,en;q=0.8',
-                    'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
-                }}
-        ).then(() =>{
-                axios.post(this.server_url+'tab_creator/create_peripheral',{payload:app}).catch(err => {
+            axios.post(this.server_url+'tab_creator/diagram',
+                formData,
+                {
+                    headers: {
+                        'accept': 'application/json',
+                        'Accept-Language': 'en-US,en;q=0.8',
+                        'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+                    }}
+            ).then(() =>{
+                axios.post(this.server_url+'tab_creator/create_peripheral',{payload:peripheral, image:true}).catch(err => {
                     alert(err.message);
                 })
-        }).catch(function (response) {
-            //handle error
-            console.log(response);
-        });
+            }).catch(function (response) {
+                //handle error
+                console.log(response);
+            });
+        } else{
+            axios.post(this.server_url+'tab_creator/create_peripheral',{payload:peripheral, image:false}).catch(err => {
+                alert(err.message);
+            })
+        }
+
     };
 
     this.removePeripheral = (peripheral) => {

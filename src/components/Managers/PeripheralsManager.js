@@ -65,15 +65,56 @@ class PeripheralsManager extends Component {
         this.setState({selected:null});
     };
 
+    handleExport = (event) =>{
+        if(this.state.selected===null){
+            alert("Please select a peripheral to Export");
+            return;
+        }
+        debugger;
+        let peripheral = {[this.state.selected]:this.peripherals[this.peripherals.findIndex(item => item.peripheral_name === this.state.selected)]};
+        let blob = new Blob([JSON.stringify(peripheral, null, 4)], {type: "application/json"});
+        let url  = URL.createObjectURL(blob);
+
+        let link = document.createElement('a');
+        link.href = url;
+        link.download = this.state.selected;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    handleImport = (event) =>{
+        let input = document.createElement('input');
+        input.type = 'file';
+        input.setAttribute('style', 'display:none');
+        input.onchange = e => {
+            let file = e.target.files[0];
+            let reader = new FileReader();
+            reader.readAsText(file,'UTF-8');
+
+            reader.onload = readerEvent => {
+                let content = readerEvent.target.result; // this is the content!
+                this.addPeripheral(content)
+            }
+        };
+        document.body.appendChild(input);
+        input.click();
+    };
+
+    addPeripheral = (content) => {
+        this.props.server.creator_proxy.createPeripheral(JSON.parse(content), null);
+    };
 
     render(){
         return(
             <Container>
                 <Row>
                     <LinkContainer to="/peripheral_creator">
-                        <Button variant="outline-success">+ Add new row</Button>
+                        <Button variant="outline-success"> Add new row</Button>
                     </LinkContainer>
-                    <Button variant="outline-danger" onClick={this.handleRemoveRow}>- Remove Row</Button>
+                    <Button variant="outline-danger" onClick={this.handleRemoveRow}> Remove Row</Button>
+                    <Button variant="outline-primary" onClick={this.handleImport}>Import peripheral</Button>
+                    <Button variant="outline-primary" onClick={this.handleExport}>Export peripheral</Button>
                 </Row>
                 <Row>
                     <BootstrapTable
