@@ -17,6 +17,7 @@ import TabContent from "./components/TabContent";
 import Navbar from "./components/Navbar";
 import ApplicationChooser from "./components/Modal_Components/ApplicationChooser";
 
+import * as sjcl from 'sjcl';
 //////  STYLE IMPORTS
 import './App.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
@@ -58,6 +59,17 @@ class App extends Component {
         // eslint-disable-next-line
         if(this.props.peripherals ==undefined){
             this.server.periph_proxy.loadAllPeripherals();
+        } else{
+            this.server.periph_proxy.get_peripherals_hash().then((res)=>{
+                let periph_string = JSON.stringify(this.props.peripherals);
+                let raw_hash = sjcl.hash.sha256.hash(periph_string);
+                let digest = sjcl.codec.hex.fromBits(raw_hash);
+                debugger;
+                if(digest!==res){
+                    debugger;
+                    this.server.periph_proxy.loadAllPeripherals();
+                }
+            });
         }
 
         this.server.app_proxy.getApplicationsList().then((result) =>{

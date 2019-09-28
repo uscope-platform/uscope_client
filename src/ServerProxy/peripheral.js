@@ -25,6 +25,14 @@ export default function peripheralProxy(server_url) {
         store.dispatch(loadPeripherals(_this.server_url+'registers/all_peripheral/descriptions'))
     };
 
+    this.get_peripherals_hash = () =>{
+        return new Promise(function (resolve, reject) {
+            axios.get(_this.server_url+'registers/digest')
+                .then(res => {
+                    resolve(res.data);
+                })
+        });
+    }
 }
 
 
