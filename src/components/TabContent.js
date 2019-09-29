@@ -4,6 +4,7 @@ import RegisterTab from "./register_tab_components/Register_tab";
 import PeripheralsCreator from "./Creators/PeripheralsCreator";
 import ScriptManager from "./Managers/ScriptManager_tab";
 import PeripheralsManager from "./Managers/PeripheralsManager";
+import ApplicationsManager from "./Managers/ApplicationsManager"
 
 let TabContent = props => {
     if(props.tab.type==='Scope'){
@@ -29,7 +30,10 @@ let TabContent = props => {
     }else if(props.tab.type ==='peripherals_manager'){
         return (
             <PeripheralsManager server={props.server}/>
-
+        );
+    }else if(props.tab.type ==='applications_manager'){
+        return (
+            <ApplicationsManager server={props.server}/>
         );
     } else{
         return (null)

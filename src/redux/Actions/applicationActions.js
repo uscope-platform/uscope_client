@@ -18,17 +18,17 @@ const loadApplicationsDone = parameters => ({
 });
 
 
-export const removeApplication = (server_url, peripheral) =>{
+export const removeApplication = (server_url, application) =>{
     return dispatch => {
         axios.get(server_url).then(res => {
-            dispatch(removeApplicationDone(peripheral));
+            dispatch(removeApplicationDone(application));
         }).catch(err => {
             alert(err.message);
         });
     };
 };
 
-const removeApplicationDone = peripheral =>({
+const removeApplicationDone = application =>({
     type: REMOVE_APPLICATION,
-    payload:peripheral
+    payload:application
 });

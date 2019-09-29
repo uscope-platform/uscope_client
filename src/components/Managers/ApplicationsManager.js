@@ -18,11 +18,17 @@ function mapStateToProps(state) {
     }
 }
 
-class PeripheralsManager extends Component {
+class ApplicationsManager extends Component {
     constructor(props) {
         super(props);
         this.state = {selected:null};
-        this.applications = Object.values(this.props.applications);
+
+        this.applications = [];
+        // eslint-disable-next-line
+        for(let item in this.props.applications){
+            this.applications.push({...this.props.applications[item], application_name:item});
+        }
+
         this.selectRow = {
             mode: 'radio',
             clickToEdit: true,
@@ -35,21 +41,18 @@ class PeripheralsManager extends Component {
 
     columns = [
         {
-            dataField: 'peripheral_name',
-            text: 'Peripheral Name',
+            dataField: 'application_name',
+            text: 'Application Name',
             sort: true
-        },
-        {
-            dataField: 'version',
-            text: 'Peripheral Version'
         }
     ];
 
 
     handleOnSelect = (row, isSelect) => {
+        debugger;
         if (isSelect) {
             this.setState(() => ({
-                selected: row.peripheral_name
+                selected: row.application_name
             }));
         } else {
             this.setState(() => ({
@@ -60,8 +63,8 @@ class PeripheralsManager extends Component {
 
 
     handleRemoveRow = (event) =>{
-        this.peripherals.splice(this.peripherals.findIndex(item => item.peripheral_name === this.state.selected), 1);
-        this.props.server.creator_proxy.removePeripheral(this.state.selected);
+        this.applications.splice(this.applications.findIndex(item => item.application_name === this.state.selected), 1);
+        this.props.server.app_proxy.removeApplication(this.state.selected);
         this.setState({selected:null});
     };
 
@@ -70,9 +73,9 @@ class PeripheralsManager extends Component {
             alert("Please select a peripheral to Export");
             return;
         }
-        debugger;
-        let peripheral = {[this.state.selected]:this.peripherals[this.peripherals.findIndex(item => item.peripheral_name === this.state.selected)]};
-        let blob = new Blob([JSON.stringify(peripheral, null, 4)], {type: "application/json"});
+
+        let application = {[this.state.selected]:this.applications[this.applications.findIndex(item => item.application_name === this.state.selected)]};
+        let blob = new Blob([JSON.stringify(application, null, 4)], {type: "application/json"});
         let url  = URL.createObjectURL(blob);
 
         let link = document.createElement('a');
@@ -84,6 +87,7 @@ class PeripheralsManager extends Component {
     };
 
     handleImport = (event) =>{
+        /*
         let input = document.createElement('input');
         input.type = 'file';
         input.setAttribute('style', 'display:none');
@@ -99,6 +103,8 @@ class PeripheralsManager extends Component {
         };
         document.body.appendChild(input);
         input.click();
+
+         */
     };
 
     addPeripheral = (content) => {
@@ -109,17 +115,17 @@ class PeripheralsManager extends Component {
         return(
             <Container>
                 <Row>
-                    <LinkContainer to="/peripheral_creator">
+                    <LinkContainer to="/application_creator">
                         <Button variant="outline-success"> Add new row</Button>
                     </LinkContainer>
                     <Button variant="outline-danger" onClick={this.handleRemoveRow}> Remove Row</Button>
-                    <Button variant="outline-primary" onClick={this.handleImport}>Import peripheral</Button>
-                    <Button variant="outline-primary" onClick={this.handleExport}>Export peripheral</Button>
+                    <Button variant="outline-primary" onClick={this.handleImport}>Import application</Button>
+                    <Button variant="outline-primary" onClick={this.handleExport}>Export application</Button>
                 </Row>
                 <Row>
                     <BootstrapTable
-                        keyField='peripheral_name'
-                        data={this.peripherals}
+                        keyField='application_name'
+                        data={this.applications}
                         columns={this.columns}
                         cellEdit={ cellEditFactory({
                             mode: 'click',
@@ -134,4 +140,4 @@ class PeripheralsManager extends Component {
     };
 }
 
-export default connect(mapStateToProps)(PeripheralsManager);
+export default connect(mapStateToProps)(ApplicationsManager);

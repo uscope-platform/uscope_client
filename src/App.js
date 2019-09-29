@@ -100,6 +100,12 @@ class App extends Component {
              type: "peripherals_manager",
              user_accessible: true
          }]);
+         this.props.loadTabs([{
+             name: "Applications manager",
+             tab_id: "applications_manager",
+             type: "applications_manager",
+             user_accessible: true
+         }]);
         this.setState({initializationPhase:states.NORMAL});
     };
 
