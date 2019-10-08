@@ -2,11 +2,14 @@
 let context_cleaner = (registers, parameters, current_parameter) =>{
     //purge register context of unwanted and potentially dangerous fields
     let register_context = {};
+
     // eslint-disable-next-line
     for(let periph in registers){
-        let new_periph = registers[periph].map((elem)=>{
-            return{name:elem.register_name, value:elem.value}
-        });
+        let new_periph = {};
+        // eslint-disable-next-line
+        for(let element in registers[periph]){
+            new_periph[element] = registers[periph][element];
+        }
         register_context[periph] = new_periph;
     }
 
