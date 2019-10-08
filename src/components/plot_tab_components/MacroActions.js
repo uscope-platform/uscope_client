@@ -4,7 +4,7 @@ import {Button} from "react-bootstrap";
 import {connect} from "react-redux";
 import {parseFunction, context_cleaner} from "../../user_script_launcher";
 
-import {setSetting} from "../../redux/Actions/SettingsActions";
+import {saveScriptsWorkspace} from "../../redux/Actions/scriptsActions";
 
 
 function mapStateToProps(state) {
@@ -20,7 +20,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = dispatch => {
     return{
-        setSettings: (setting) => {dispatch(setSetting(["application", setting]))},
+        saveScriptsWorkspace: (workspace) => {dispatch(saveScriptsWorkspace(workspace))},
     }
 };
 
