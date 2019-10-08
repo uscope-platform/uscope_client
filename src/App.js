@@ -15,13 +15,16 @@ import {loadRegisters} from "./redux/Actions/RegisterActions";
 import serverProxy from "./ServerProxy";
 import TabContent from "./components/TabContent";
 import Navbar from "./components/Navbar";
-import ApplicationChooser from "./components/Modal_Components/ApplicationChooser";
-
 import * as sjcl from 'sjcl';
+
+import ApplicationChooser from "./components/Modal_Components/ApplicationChooser";
+import PeripheralsCreator from "./components/Creators/PeripheralsCreator";
+import ApplicationsCreator from "./components/Creators/ApplicationsCreator";
+
 //////  STYLE IMPORTS
 import './App.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
-import PeripheralsCreator from "./components/Creators/PeripheralsCreator";
+
 
 function mapStateToProps(state) {
     return{
@@ -174,6 +177,11 @@ class App extends Component {
                                 path={'/peripheral_creator'}
                                 exact
                                 render={(props) => <PeripheralsCreator server={this.server}/>}
+                            />
+                            <Route
+                                path={'/application_creator'}
+                                exact
+                                render={(props) => <ApplicationsCreator server={this.server}/>}
                             />
                             <Redirect exact from="/" to="plot" />
                         </div>
