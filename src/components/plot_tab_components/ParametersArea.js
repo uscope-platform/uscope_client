@@ -36,6 +36,7 @@ class ParametersArea extends Component {
 
     handleSubmit = event => {
         if(event==='initialization'){
+            // eslint-disable-next-line
             for(let elem of this.props.parameters){
                 let scriptTrigger = elem.trigger;
                 let trigger = this.props.scripts.filter((script)=>{
@@ -50,8 +51,13 @@ class ParametersArea extends Component {
                 //Parse the script into a callable function and execute it
                 let context = context_cleaner(this.props.registers, this.props.parameters, elem.parameter_name);
                 context['workspace'] = this.props.scripts_workspace;
-                let return_value = parseFunction(content)(elem.value, context);
-                this.props.saveScriptsWorkspace(return_value);
+                let {workspace, registers} = parseFunction(content)(elem.value, context);
+                if(workspace!== null){
+                    this.props.saveScriptsWorkspace(workspace);
+                }
+                if(registers!== null){
+                    //TODO: do something with the registers
+                }
             }
         } else {
             event.preventDefault();
@@ -70,8 +76,13 @@ class ParametersArea extends Component {
                     //Parse the script into a callable function and execute it
                     let context = context_cleaner(this.props.registers, this.props.parameters, parameter.name);
                     context['workspace'] = this.props.scripts_workspace;
-                    let return_value = parseFunction(content)(floatValue, context);
-                    this.props.saveScriptsWorkspace(return_value);
+                    let {workspace, registers} = parseFunction(content)(floatValue, context);
+                    if(workspace!== null){
+                        this.props.saveScriptsWorkspace(workspace);
+                    }
+                    if(registers!== null){
+                        //TODO: do something with the registers
+                    }
                     this.props.saveParameter({name:parameter.name, value:floatValue});
                 }
             }
