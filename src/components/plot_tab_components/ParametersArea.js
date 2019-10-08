@@ -43,7 +43,6 @@ class ParametersArea extends Component {
                     return script.triggers.includes(scriptTrigger);
                 });
                 if(trigger[0] ===undefined){
-                    debugger;
                     continue;
                 }
                 let content = trigger[0].script_content;
@@ -56,7 +55,11 @@ class ParametersArea extends Component {
                     this.props.saveScriptsWorkspace(workspace);
                 }
                 if(registers!== null){
-                    //TODO: do something with the registers
+                    // eslint-disable-next-line
+                    for(let reg in registers){
+                        let [periph_name, reg_name] = reg.split('.');
+                        this.props.server.periph_proxy.setRegisterValue({name:reg_name, peripheral:periph_name, value:registers[reg]});
+                    }
                 }
             }
         } else {
@@ -81,7 +84,11 @@ class ParametersArea extends Component {
                         this.props.saveScriptsWorkspace(workspace);
                     }
                     if(registers!== null){
-                        //TODO: do something with the registers
+                        // eslint-disable-next-line
+                        for(let reg in registers){
+                            let [periph_name, reg_name] = reg.split('.');
+                            this.props.server.periph_proxy.setRegisterValue({name:reg_name, peripheral:periph_name, value:registers[reg]});
+                        }
                     }
                     this.props.saveParameter({name:parameter.name, value:floatValue});
                 }

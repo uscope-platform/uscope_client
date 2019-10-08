@@ -9,8 +9,7 @@ let registerValuesReducer = function (state = null, action) {
             });
         case SEND_REGISTER:
             return produce(state, draftState => {
-                let index =  draftState[action.payload.peripheral].findIndex((obj => obj.register_name === action.payload.name));
-                draftState[action.payload.peripheral][index]["value"] = action.payload.value;
+                draftState[action.payload.peripheral][action.payload.name] = action.payload.value;
             });
         default:
             return state;

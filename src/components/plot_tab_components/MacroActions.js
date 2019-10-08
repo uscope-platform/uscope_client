@@ -41,13 +41,16 @@ class MacroActions extends Component {
 
          let context = context_cleaner(this.props.registers, this.props.parameters, "");
          context["workspace"] = this.props.workspace;
-         //TODO: DO SOMETHING WITH THE RETURN VALUE
          let {workspace, registers} = parseFunction(content)(null, context);
          if(workspace!== null){
              this.props.saveScriptsWorkspace(workspace);
          }
          if(registers!== null){
-             //TODO: do something with the registers
+             // eslint-disable-next-line
+             for(let reg in registers){
+                 let [periph_name, reg_name] = reg.split('.');
+                 this.props.server.periph_proxy.setRegisterValue({name:reg_name, peripheral:periph_name, value:registers[reg]});
+             }
          }
     };
 

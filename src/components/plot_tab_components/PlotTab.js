@@ -47,7 +47,7 @@ let PlotTab = function (props) {
                         <ChannelSelector server={props.server} channels={channels}/>
                     </Row>
                     <Row>
-                        <MacroActions/>
+                        <MacroActions server={props.server}/>
                     </Row>
                 </Col>
                 <Col md={8}>
