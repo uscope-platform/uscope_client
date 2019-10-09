@@ -78,13 +78,13 @@ class App extends Component {
     }
 
     handleApplicationChosen = e =>{
-        this.server.app_proxy.setApplication(e);
-        let app = this.props.applications[e];
-        this.props.setSettings(e);
-        let tabs = Object.values(app.tabs);
-        this.props.loadTabs(tabs);
-        this.initializeRegisterStore(tabs);
-
+        this.server.app_proxy.setApplication(e).then(()=>{
+            let app = this.props.applications[e];
+            this.props.setSettings(e);
+            let tabs = Object.values(app.tabs);
+            this.props.loadTabs(tabs);
+            this.initializeRegisterStore(tabs);
+        });
     };
 
 
