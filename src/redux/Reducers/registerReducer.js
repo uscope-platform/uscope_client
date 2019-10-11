@@ -1,7 +1,7 @@
 import {LOAD_REGISTERS, SEND_REGISTER} from "../Actions/types";
 import produce from "immer";
 
-let registerValuesReducer = function (state = null, action) {
+let registerValuesReducer = function (state = {}, action) {
     switch (action.type) {
         case LOAD_REGISTERS:
             return produce(state, draftState => {

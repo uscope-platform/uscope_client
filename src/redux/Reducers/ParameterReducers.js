@@ -2,7 +2,7 @@ import {LOAD_PARAMETERS_DONE, SAVE_PARAMETER} from "../Actions/types";
 
 
 
-let parameterValuesReducer = function (state = null, action) {
+let parameterValuesReducer = function (state = [], action) {
     switch (action.type) {
         case LOAD_PARAMETERS_DONE:
             state = action.payload;

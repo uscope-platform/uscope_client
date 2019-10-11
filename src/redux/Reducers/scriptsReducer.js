@@ -2,7 +2,7 @@ import { SAVE_SCRIPTS, SAVE_SCRIPT_WORKSPACE} from "../Actions/types";
 
 
 
-let scriptsReducer = function (state = null, action) {
+let scriptsReducer = function (state = [], action) {
     switch (action.type) {
         case SAVE_SCRIPTS:
                 state = action.payload;

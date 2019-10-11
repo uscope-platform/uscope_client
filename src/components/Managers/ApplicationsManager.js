@@ -49,7 +49,6 @@ class ApplicationsManager extends Component {
 
 
     handleOnSelect = (row, isSelect) => {
-        debugger;
         if (isSelect) {
             this.setState(() => ({
                 selected: row.application_name
@@ -87,7 +86,7 @@ class ApplicationsManager extends Component {
     };
 
     handleImport = (event) =>{
-        /*
+
         let input = document.createElement('input');
         input.type = 'file';
         input.setAttribute('style', 'display:none');
@@ -104,11 +103,10 @@ class ApplicationsManager extends Component {
         document.body.appendChild(input);
         input.click();
 
-         */
     };
 
     addPeripheral = (content) => {
-
+        this.props.server.app_proxy.createApplication(JSON.parse(content), null);
     };
 
     render(){

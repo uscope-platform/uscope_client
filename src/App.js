@@ -58,7 +58,7 @@ class App extends Component {
 
     constructor(props) {
         super(props);
-        this.server = new serverProxy('http://172.18.0.1:4999/uscope/'); //http://155.185.48.185:4999/uscope/
+        this.server = new serverProxy('http://10.190.0.74/uscope/'); // unimore:http://155.185.48.185:4999/uscope/ docker:http://172.18.0.1:4999/uscope/ unnc:http://10.190.0.74:4999/uscope/
         this.server.app_proxy.loadAllApplications();
         this.state = {initializationPhase: states.APP_CHOICE};
 

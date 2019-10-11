@@ -1,9 +1,17 @@
 import {SHOW_MODAL, HIDE_MODAL} from "../Actions/types";
 import produce from "immer";
 
+const initial_state = {
+    application_choice:false,
+        timebase_choice:false,
+        scope_mode_choice:false,
+        channel_settings_choice: [false, false, false,false, false, false],
+        tab_creator_image_choice: false,
+        tab_creator_register_modal: false,
+        tab_creator_app_param_modal:false
+};
 
-
-let modalsReducer = function (state = null, action) {
+let modalsReducer = function (state = initial_state, action) {
     switch (action.type) {
         case SHOW_MODAL:
             return produce(state, draftState => {

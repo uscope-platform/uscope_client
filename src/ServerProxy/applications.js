@@ -2,21 +2,13 @@ import axios from "axios"
 import {loadParameters} from "../redux/Actions/ParameterActions";
 import store from "../store";
 import {setChannelSetting} from "../redux/Actions/plotActions";
-import {loadApplications, removeApplication} from "../redux/Actions/applicationActions";
+import {loadApplications, addApplication, removeApplication} from "../redux/Actions/applicationActions";
 
 export default function applicationProxy(server_url) {
     let _this = this;
     this.server_url = server_url;
 
-    this.getApplicationsList = function () {
-        return new Promise(function (resolve, reject) {
-            axios.get(_this.server_url+'application/list')
-                .then(res => {
-                    resolve(res.data);
-                })
-        });
 
-    };
 
     this.loadAllApplications = () =>{
         store.dispatch(loadApplications(_this.server_url+'application/all/specs'))
@@ -44,6 +36,10 @@ export default function applicationProxy(server_url) {
         store.dispatch(removeApplication(_this.server_url+'application/remove/'+application, application));
     };
 
+    this.createApplication = (application_obj) => {
+        store.dispatch(addApplication(_this.server_url+'application/add', application_obj));
+    };
+
     this.get_applications_hash = () =>{
         return new Promise(function (resolve, reject) {
             axios.get(_this.server_url+'application/digest')
@@ -51,8 +47,17 @@ export default function applicationProxy(server_url) {
                     resolve(res.data);
                 })
         });
-    }
+    };
 
+    this.getApplicationsList = function () {
+        return new Promise(function (resolve, reject) {
+            axios.get(_this.server_url+'application/list')
+                .then(res => {
+                    resolve(res.data);
+                })
+        });
+
+    };
 }
 
 
