@@ -59,7 +59,6 @@ class PeripheralsCreator extends Component {
 
     handleRemoveRegister = (name) => {
         let newRegistersValue = this.state.tab_registers.filter( (elem) => {
-                debugger;
                 return elem.register_name !== name;
             }
         );
@@ -69,6 +68,8 @@ class PeripheralsCreator extends Component {
     handleSubmit = (event) =>{
         if(this.state.tab_image_raw){
             this.props.showModal("tab_creator_app_param_modal");
+        } else {
+            alert('A Peripheral diagram must be added');
         }
     };
 

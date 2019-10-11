@@ -5,7 +5,6 @@ import axios from 'axios';
 export const loadApplications = (server_url) => {
     return dispatch => {
         axios.get(server_url).then(res => {
-            debugger;
             dispatch(loadApplicationsDone(res.data));
         }).catch(err => {
             alert(err.message);
