@@ -4,11 +4,12 @@ import {Button, Col, Image, Row} from "react-bootstrap";
 import {showModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux"
 
-import RegisterInputForm from "../../register_tab_components/RegisterInputForm";
 import AppCreatorPeripheralModal from "./appCreatorPeripheralModal";
 import AppCreatorPeripheralsDisplay from "./AppCreatorPeripheralsDisplay";
+import AppCreatorParameterDisplay from "./AppCreatorParameterDisplay";
 
 import produce from "immer"
+import AppCreatorParameterModal from "./appCreatorParameterModal";
 
 function mapStateToProps(state) {
     return{
@@ -25,7 +26,7 @@ const mapDispatchToProps = dispatch => {
 class ApplicationsCreator extends Component {
     constructor(props) {
         super(props);
-        this.state= {app:{tabs:[]}, tab_parameters:[]};
+        this.state= {app:{tabs:[], parameters: []}, tab_parameters:[]};
     }
 
     handleClick = (event) =>{
@@ -54,11 +55,28 @@ class ApplicationsCreator extends Component {
     };
 
     handlePeripheralRemove = (event) =>{
-        let peripheral_name = event.target.name;
+        let evicted = event.target.name;
 
         const nextState = produce(this.state.app, draftState => {
             draftState.tabs = draftState.tabs.filter( (elem) => {
-                    return elem.name !== peripheral_name;
+                    return elem.name !== evicted;
+                }
+            );
+        });
+        this.setState({app: nextState});
+    };
+
+
+    handleParameterDefinitionDone = (peripheral) =>{
+        this.setState({app:{...this.state.app, parameters:[...this.state.app.parameters, peripheral]}});
+    };
+
+    handleParameterRemove = (event) =>{
+        let evicted = event.target.name;
+
+        const nextState = produce(this.state.app, draftState => {
+            draftState.parameters = draftState.parameters.filter( (elem) => {
+                    return elem.parameter_name !== evicted;
                 }
             );
         });
@@ -70,10 +88,10 @@ class ApplicationsCreator extends Component {
             <div>
                 <Row>
                     <AppCreatorPeripheralModal server={this.props.server} done={this.handlePeripheralDefinitionDone}/>
+                    <AppCreatorParameterModal server={this.props.server} done={this.handleParameterDefinitionDone}/>
                     <Col md={6} id={"tab_creator_add_register_col"}>
                         <Row>
                             <Col md={{ span: 6, offset: 4 }}><AppCreatorPeripheralsDisplay peripherals={this.state.app.tabs} remove={this.handlePeripheralRemove} /></Col>
-
                         </Row>
                         <Row>
                             <Image src="assets/Icons/add_register.svg" alt='add peripheral' id="addPeripheral" onClick={this.handleClick} fluid/>
@@ -81,10 +99,11 @@ class ApplicationsCreator extends Component {
 
                     </Col>
                     <Col id={"tab_creator_add_register_col"}>
-                        <RegisterInputForm registers={this.state.tab_parameters} preview_only={true} handle_remove={this.handleRemoveRegister}/>
                         <Row>
-                            <Image src="assets/Icons/add_register.svg" id="addParameter" alt='add parameter' onClick={this.handleClick}
-                                   fluid/>
+                            <Col md={{ span: 6, offset: 4 }}><AppCreatorParameterDisplay parameters={this.state.app.parameters} remove={this.handleParameterRemove} /></Col>
+                        </Row>
+                        <Row>
+                            <Image src="assets/Icons/add_register.svg" id="addParameter" alt='add parameter' onClick={this.handleClick} fluid/>
                         </Row>
                         <Row>
                             <Col md={{ span: 3, offset: 9 }}>
