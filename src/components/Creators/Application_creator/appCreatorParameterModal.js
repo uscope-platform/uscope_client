@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 import {Modal, Button, Form, Col} from "react-bootstrap";
-import {hideModal} from "../../redux/Actions/modalsActions";
+import {hideModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
 
 function mapStateToProps(state) {
@@ -13,12 +13,12 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = dispatch => {
     return{
-        hideModal: () => {dispatch(hideModal('app_creator_peripheral_modal'))},
+        hideModal: () => {dispatch(hideModal('app_creator_parameter_modal'))},
     }
 };
 
 
-class AppCreatorPeripheralModal extends Component {
+class AppCreatorParameterModal extends Component {
     constructor(props){
         super(props);
         this.state = {proxied:false, accessible:false, base_address:null, proxy_address:null, peripheral_type:Object.entries(this.props.peripherals)[0][0]};
@@ -55,7 +55,7 @@ class AppCreatorPeripheralModal extends Component {
 
     render() {
         return(
-            <Modal onHide={this.handleHide} show={this.props.modals.app_creator_peripheral_modal}>
+            <Modal onHide={this.handleHide} show={this.props.modals.app_creator_parameter_modal}>
                 <Modal.Header closeButton>
                     <Modal.Title>Peripheral Settings</Modal.Title>
                 </Modal.Header>
@@ -90,4 +90,4 @@ class AppCreatorPeripheralModal extends Component {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(AppCreatorPeripheralModal);
+export default connect(mapStateToProps, mapDispatchToProps)(AppCreatorParameterModal);

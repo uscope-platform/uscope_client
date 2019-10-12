@@ -1,14 +1,14 @@
 import React, {Component}  from 'react';
 import {Button, Col, Image, Row} from "react-bootstrap";
 
-import TabCreatorRegisterModal from "../Modal_Components/tabCreatorRegisterModal"
-import TabCreatorImageChooser from "../Modal_Components/tabCreatorImageChooser";
-import TabCreatorPeripheralParametersModal from "../Modal_Components/tabCreatorPeripheralParametersModal"
+import TabCreatorRegisterModal from "./peripheralCreatorRegisterModal"
+import TabCreatorImageChooser from "./peripheralCreatorImageChooser";
+import TabCreatorPeripheralParametersModal from "./peripheralCreatorPeripheralParametersModal"
 
-import {showModal} from "../../redux/Actions/modalsActions";
+import {showModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux"
 
-import RegisterInputForm from "../register_tab_components/RegisterInputForm";
+import RegisterInputForm from "../../register_tab_components/RegisterInputForm";
 
 
 function mapStateToProps(state) {
@@ -34,10 +34,10 @@ class PeripheralsCreator extends Component {
     handleClick = (event) =>{
         switch (event.target.id) {
             case "addImage":
-                this.props.showModal('tab_creator_image_choice');
+                this.props.showModal('peripheral_creator_image_choice');
                 break;
             case "addRegister":
-                this.props.showModal('tab_creator_register_modal');
+                this.props.showModal('peripheral_creator_register_modal');
                 break;
             default:
                 break;
@@ -67,7 +67,7 @@ class PeripheralsCreator extends Component {
 
     handleSubmit = (event) =>{
         if(this.state.tab_image_raw){
-            this.props.showModal("tab_creator_app_param_modal");
+            this.props.showModal("peripheral_creator_app_param_modal");
         } else {
             alert('A Peripheral diagram must be added');
         }

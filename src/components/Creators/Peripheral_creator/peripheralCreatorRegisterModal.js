@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 import {Modal, Button, Form} from "react-bootstrap";
-import {hideModal} from "../../redux/Actions/modalsActions";
+import {hideModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
 
 
@@ -13,12 +13,12 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = dispatch => {
     return{
-        hideModal: () => {dispatch(hideModal('tab_creator_register_modal'))},
+        hideModal: () => {dispatch(hideModal('peripheral_creator_register_modal'))},
     }
 };
 
 
-class TabCreatorRegisterModal extends Component {
+class PeripheralCreatorRegisterModal extends Component {
     constructor(props){
         super(props);
         this.state = {reg_direction:'', enable_word_fields:false, read_checked:true, write_checked:true, single_type_checked:true, words_type_checked:false, reg_type:'single'};
@@ -84,7 +84,7 @@ class TabCreatorRegisterModal extends Component {
     render() {
 
         return(
-            <Modal onHide={this.handleHide} show={this.props.modals.tab_creator_register_modal}>
+            <Modal onHide={this.handleHide} show={this.props.modals.peripheral_creator_register_modal}>
                 <Modal.Header closeButton>
                     <Modal.Title>Add a new register</Modal.Title>
                 </Modal.Header>
@@ -125,4 +125,4 @@ class TabCreatorRegisterModal extends Component {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(TabCreatorRegisterModal);
+export default connect(mapStateToProps, mapDispatchToProps)(PeripheralCreatorRegisterModal);

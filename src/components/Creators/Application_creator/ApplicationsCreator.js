@@ -1,11 +1,11 @@
 import React, {Component}  from 'react';
 import {Button, Col, Image, Row} from "react-bootstrap";
 
-import {showModal} from "../../redux/Actions/modalsActions";
+import {showModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux"
 
-import RegisterInputForm from "../register_tab_components/RegisterInputForm";
-import AppCreatorPeripheralModal from "../Modal_Components/appCreatorPeripheralModal";
+import RegisterInputForm from "../../register_tab_components/RegisterInputForm";
+import AppCreatorPeripheralModal from "./appCreatorPeripheralModal";
 import AppCreatorPeripheralsDisplay from "./AppCreatorPeripheralsDisplay";
 
 import produce from "immer"

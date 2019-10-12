@@ -18,8 +18,8 @@ import Navbar from "./components/Navbar";
 import * as sjcl from 'sjcl';
 
 import ApplicationChooser from "./components/Modal_Components/ApplicationChooser";
-import PeripheralsCreator from "./components/Creators/PeripheralsCreator";
-import ApplicationsCreator from "./components/Creators/ApplicationsCreator";
+import PeripheralsCreator from "./components/Creators/Peripheral_creator/PeripheralsCreator";
+import ApplicationsCreator from "./components/Creators/Application_creator/ApplicationsCreator";
 
 //////  STYLE IMPORTS
 import './App.css';

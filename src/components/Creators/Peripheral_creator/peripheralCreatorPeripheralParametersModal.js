@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 import {Modal, Button, Form, Col} from "react-bootstrap";
-import {hideModal} from "../../redux/Actions/modalsActions";
+import {hideModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
 
 function mapStateToProps(state) {
@@ -12,12 +12,12 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = dispatch => {
     return{
-        hideModal: () => {dispatch(hideModal('tab_creator_app_param_modal'))},
+        hideModal: () => {dispatch(hideModal('peripheral_creator_app_param_modal'))},
     }
 };
 
 
-class TabCreatorPeripheralParametersModal extends Component {
+class PeripheralCreatorPeripheralParametersModal extends Component {
     constructor(props){
         super(props);
         this.state = {periph_name:null, periph_version:null};
@@ -43,7 +43,7 @@ class TabCreatorPeripheralParametersModal extends Component {
     render() {
 
         return(
-            <Modal onHide={this.handleHide} show={this.props.modals.tab_creator_app_param_modal}>
+            <Modal onHide={this.handleHide} show={this.props.modals.peripheral_creator_app_param_modal}>
                 <Modal.Header closeButton>
                     <Modal.Title>Peripheral Image choice</Modal.Title>
                 </Modal.Header>
@@ -66,4 +66,4 @@ class TabCreatorPeripheralParametersModal extends Component {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(TabCreatorPeripheralParametersModal);
+export default connect(mapStateToProps, mapDispatchToProps)(PeripheralCreatorPeripheralParametersModal);
