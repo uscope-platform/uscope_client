@@ -10,7 +10,9 @@ const initial_state = {
     peripheral_creator_register_modal: false,
     peripheral_creator_app_param_modal:false,
     app_creator_peripheral_modal:false,
-    app_creator_parameter_modal:false
+    app_creator_parameter_modal:false,
+    app_creator_macro_modal:false,
+    app_creator_channel_modal:false,
 };
 
 let modalsReducer = function (state = initial_state, action) {

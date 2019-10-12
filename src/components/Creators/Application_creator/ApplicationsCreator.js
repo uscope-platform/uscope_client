@@ -10,6 +10,8 @@ import AppCreatorParameterDisplay from "./AppCreatorParameterDisplay";
 
 import produce from "immer"
 import AppCreatorParameterModal from "./appCreatorParameterModal";
+import AppCreatorMacroModal from "./appCreatorMacroModal";
+import AppCreatorChannelModal from "./appCreatorChannelModal";
 
 function mapStateToProps(state) {
     return{
@@ -26,7 +28,7 @@ const mapDispatchToProps = dispatch => {
 class ApplicationsCreator extends Component {
     constructor(props) {
         super(props);
-        this.state= {app:{tabs:[], parameters: []}, tab_parameters:[]};
+        this.state= {app:{tabs:[], parameters: [], macro:[], channels:[]}, tab_parameters:[], last_channel_id:0};
     }
 
     handleClick = (event) =>{
@@ -36,6 +38,12 @@ class ApplicationsCreator extends Component {
                 break;
             case 'addPeripheral':
                 this.props.showModal('app_creator_peripheral_modal');
+                break;
+            case  'addMacro':
+                this.props.showModal('app_creator_macro_modal');
+                break;
+            case 'addChannel':
+                this.props.showModal('app_creator_channel_modal');
                 break;
             default:
                 break;
@@ -67,8 +75,8 @@ class ApplicationsCreator extends Component {
     };
 
 
-    handleParameterDefinitionDone = (peripheral) =>{
-        this.setState({app:{...this.state.app, parameters:[...this.state.app.parameters, peripheral]}});
+    handleParameterDefinitionDone = (parameter) =>{
+        this.setState({app:{...this.state.app, parameters:[...this.state.app.parameters, parameter]}});
     };
 
     handleParameterRemove = (event) =>{
@@ -82,6 +90,49 @@ class ApplicationsCreator extends Component {
         });
         this.setState({app: nextState});
     };
+
+    handleMacroDefinitionDone = (macro) =>{
+        this.setState({app:{...this.state.app, macro:[...this.state.app.macro, macro]}});
+    };
+
+    handleMacroRemove = (event) => {
+        let evicted = event.target.name;
+
+        const nextState = produce(this.state.app, draftState => {
+            draftState.macro = draftState.macro.filter((elem) => {
+                    return elem.name !== evicted;
+                }
+            );
+        });
+        this.setState({app: nextState});
+    };
+
+    handleChannelDefinitionDone = (channel) =>{
+        channel['id'] = this.state.last_channel_id+1;
+        this.setState({last_channel_id:  this.state.last_channel_id+1});
+        this.setState({app:{...this.state.app, channels:[...this.state.app.channels, channel]}});
+    };
+
+    //TODO: Channel remove does not work anymore
+    handleChannelRemove = (event) => {
+        let evicted = event.target.name;
+
+        const nextState = produce(this.state.app, draftState => {
+
+            draftState.channels = draftState.channels.filter((elem) => {
+                    return elem.name !== evicted;
+                }
+            );
+            let previous_id = 0;
+            for(let elem of draftState.channels){
+                if(elem.id!==previous_id+1){
+                    debugger;
+                }
+            }
+        });
+        this.setState({app: nextState});
+    };
+
 
     render(){
         return(
@@ -109,23 +160,23 @@ class ApplicationsCreator extends Component {
                     </Col>
                 </Row>
                 <Row>
-                    <AppCreatorPeripheralModal server={this.props.server} done={this.handlePeripheralDefinitionDone}/>
-                    <AppCreatorParameterModal server={this.props.server} done={this.handleParameterDefinitionDone}/>
+                    <AppCreatorMacroModal server={this.props.server} done={this.handleMacroDefinitionDone}/>
+                    <AppCreatorChannelModal server={this.props.server} done={this.handleChannelDefinitionDone}/>
                     <Col md={6} id={"tab_creator_add_register_col"}>
                         <Row>
-                            <Col md={{ span: 6, offset: 4 }}><AppCreatorPeripheralsDisplay peripherals={this.state.app.tabs} remove={this.handlePeripheralRemove} /></Col>
+                            <Col md={{ span: 6, offset: 4 }}><AppCreatorPeripheralsDisplay peripherals={this.state.app.macro} remove={this.handleMacroRemove} /></Col>
                         </Row>
                         <Row>
-                            <Image src="assets/Icons/add_macro.svg" alt='add peripheral' id="addPeripheral" onClick={this.handleClick} fluid/>
+                            <Image src="assets/Icons/add_macro.svg" alt='addMacro' id="addMacro" onClick={this.handleClick} fluid/>
                         </Row>
 
                     </Col>
                     <Col id={"tab_creator_add_register_col"}>
                         <Row>
-                            <Col md={{ span: 6, offset: 4 }}><AppCreatorParameterDisplay parameters={this.state.app.parameters} remove={this.handleParameterRemove} /></Col>
+                            <Col md={{ span: 6, offset: 4 }}><AppCreatorPeripheralsDisplay peripherals={this.state.app.channels} remove={this.handleChannelRemove} /></Col>
                         </Row>
                         <Row>
-                            <Image src="assets/Icons/add_channel.svg" id="addParameter" alt='add parameter' onClick={this.handleClick} fluid/>
+                            <Image src="assets/Icons/add_channel.svg" id="addChannel" alt='add Channel' onClick={this.handleClick} fluid/>
                         </Row>
                         <Row>
                             <Col md={{ span: 3, offset: 9 }}>
