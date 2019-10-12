@@ -94,7 +94,7 @@ class ApplicationsCreator extends Component {
                             <Col md={{ span: 6, offset: 4 }}><AppCreatorPeripheralsDisplay peripherals={this.state.app.tabs} remove={this.handlePeripheralRemove} /></Col>
                         </Row>
                         <Row>
-                            <Image src="assets/Icons/add_register.svg" alt='add peripheral' id="addPeripheral" onClick={this.handleClick} fluid/>
+                            <Image src="assets/Icons/add_peripheral.svg" alt='add peripheral' id="addPeripheral" onClick={this.handleClick} fluid/>
                         </Row>
 
                     </Col>
@@ -103,7 +103,29 @@ class ApplicationsCreator extends Component {
                             <Col md={{ span: 6, offset: 4 }}><AppCreatorParameterDisplay parameters={this.state.app.parameters} remove={this.handleParameterRemove} /></Col>
                         </Row>
                         <Row>
-                            <Image src="assets/Icons/add_register.svg" id="addParameter" alt='add parameter' onClick={this.handleClick} fluid/>
+                            <Image src="assets/Icons/add_parameter.svg" id="addParameter" alt='add parameter' onClick={this.handleClick} fluid/>
+                        </Row>
+
+                    </Col>
+                </Row>
+                <Row>
+                    <AppCreatorPeripheralModal server={this.props.server} done={this.handlePeripheralDefinitionDone}/>
+                    <AppCreatorParameterModal server={this.props.server} done={this.handleParameterDefinitionDone}/>
+                    <Col md={6} id={"tab_creator_add_register_col"}>
+                        <Row>
+                            <Col md={{ span: 6, offset: 4 }}><AppCreatorPeripheralsDisplay peripherals={this.state.app.tabs} remove={this.handlePeripheralRemove} /></Col>
+                        </Row>
+                        <Row>
+                            <Image src="assets/Icons/add_macro.svg" alt='add peripheral' id="addPeripheral" onClick={this.handleClick} fluid/>
+                        </Row>
+
+                    </Col>
+                    <Col id={"tab_creator_add_register_col"}>
+                        <Row>
+                            <Col md={{ span: 6, offset: 4 }}><AppCreatorParameterDisplay parameters={this.state.app.parameters} remove={this.handleParameterRemove} /></Col>
+                        </Row>
+                        <Row>
+                            <Image src="assets/Icons/add_channel.svg" id="addParameter" alt='add parameter' onClick={this.handleClick} fluid/>
                         </Row>
                         <Row>
                             <Col md={{ span: 3, offset: 9 }}>
