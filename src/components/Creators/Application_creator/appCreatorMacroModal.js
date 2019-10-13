@@ -32,7 +32,6 @@ class AppCreatorMacroModal extends Component {
     handleClose = (event) =>{
         event.preventDefault();
         let macro = {};
-        debugger;
         macro['name'] = this.state.name;
         macro['trigger'] = this.state.trigger;
         this.props.done(macro);

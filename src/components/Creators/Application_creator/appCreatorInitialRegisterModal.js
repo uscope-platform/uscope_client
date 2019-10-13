@@ -13,15 +13,15 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = dispatch => {
     return{
-        hideModal: () => {dispatch(hideModal('app_creator_channel_modal'))},
+        hideModal: () => {dispatch(hideModal('app_creator_IRV_modal'))},
     }
 };
 
 
-class AppCreatorChannelModal extends Component {
+class AppCreatorInitialRegisterModal extends Component {
     constructor(props){
         super(props);
-        this.state = {name:null, min_value:null, max_value:null};
+        this.state = {name:null, address:null, value:null};
     }
 
 
@@ -31,12 +31,11 @@ class AppCreatorChannelModal extends Component {
 
     handleClose = (event) =>{
         event.preventDefault();
-        let channel = {};
-        channel['name'] = this.state.name;
-        channel['min_value'] = this.state.min_value;
-        channel['max_value'] = this.state.max_value;
-        channel['enabled'] = false;
-        this.props.done(channel);
+        let initRegVal = {};
+        initRegVal['name'] = this.state.name;
+        initRegVal['address'] = this.state.address;
+        initRegVal['value'] = this.state.value;
+        this.props.done(initRegVal);
         this.props.hideModal();
     };
 
@@ -46,16 +45,16 @@ class AppCreatorChannelModal extends Component {
 
     render() {
         return(
-            <Modal onHide={this.handleHide} show={this.props.modals.app_creator_channel_modal}>
+            <Modal onHide={this.handleHide} show={this.props.modals.app_creator_IRV_modal}>
                 <Modal.Header closeButton>
                     <Modal.Title>Channel Settings</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
                         <Form.Group as={Col}>
-                            <Form.Control inline name='name' placeholder="Parameter Name" type="text" onChange={this.handleChange} />
-                            <Form.Control inline name='min_value' placeholder="Minimum Value" type="integer" onChange={this.handleChange} />
-                            <Form.Control inline name='max_value' placeholder="Maximum Value" type="integer" onChange={this.handleChange} />
+                            <Form.Control inline name='name' placeholder="Register Name (for local display only)" type="text" onChange={this.handleChange} />
+                            <Form.Control inline name='address' placeholder="Address" type="integer" onChange={this.handleChange} />
+                            <Form.Control inline name='value' placeholder="Value" type="integer" onChange={this.handleChange} />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
@@ -69,4 +68,4 @@ class AppCreatorChannelModal extends Component {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(AppCreatorChannelModal);
+export default connect(mapStateToProps, mapDispatchToProps)(AppCreatorInitialRegisterModal);

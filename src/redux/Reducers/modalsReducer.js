@@ -13,6 +13,8 @@ const initial_state = {
     app_creator_parameter_modal:false,
     app_creator_macro_modal:false,
     app_creator_channel_modal:false,
+    app_creator_app_name_modal:false,
+    app_creator_IRV_modal: false
 };
 
 let modalsReducer = function (state = initial_state, action) {

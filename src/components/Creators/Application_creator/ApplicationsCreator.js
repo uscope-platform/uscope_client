@@ -12,7 +12,8 @@ import produce from "immer"
 import AppCreatorParameterModal from "./appCreatorParameterModal";
 import AppCreatorMacroModal from "./appCreatorMacroModal";
 import AppCreatorChannelModal from "./appCreatorChannelModal";
-
+import AppCreatorAppNameModal from "./AppCreatorAppNameModal";
+import AppCreatorInitialRegisterModal from './appCreatorInitialRegisterModal'
 function mapStateToProps(state) {
     return{
         modals:state.modals
@@ -28,7 +29,7 @@ const mapDispatchToProps = dispatch => {
 class ApplicationsCreator extends Component {
     constructor(props) {
         super(props);
-        this.state= {app:{tabs:[], parameters: [], macro:[], channels:[]}, tab_parameters:[], last_channel_id:0};
+        this.state= {app:{ bitstream: null, initial_registers_values:[], tabs:[], parameters: [], macro:[], channels:[]}, tab_parameters:[], last_channel_id:0};
     }
 
     handleClick = (event) =>{
@@ -45,17 +46,31 @@ class ApplicationsCreator extends Component {
             case 'addChannel':
                 this.props.showModal('app_creator_channel_modal');
                 break;
+            case 'addIRV':
+                this.props.showModal('app_creator_IRV_modal');
+                break;
             default:
                 break;
         }
     };
 
     handleSubmit = (event) =>{
-
+        const nextState = produce(this.state.app, draftState => {
+            let id = 1;
+            // eslint-disable-next-line
+            for(let channel of draftState.channels){
+                channel.id = id;
+                id +=1;
+            }
+        });
+        this.setState({app: nextState});
+        this.props.showModal('app_creator_app_name_modal');
     };
 
     handleSendApplication= (app) =>{
-
+        let application = {[app.name]:{...this.state.app}};
+        application[app.name]['bitstream'] = app.bitstream;
+        this.props.server.app_proxy.createApplication(application);
     };
 
     handlePeripheralDefinitionDone = (peripheral) =>{
@@ -108,28 +123,34 @@ class ApplicationsCreator extends Component {
     };
 
     handleChannelDefinitionDone = (channel) =>{
-        channel['id'] = this.state.last_channel_id+1;
-        this.setState({last_channel_id:  this.state.last_channel_id+1});
         this.setState({app:{...this.state.app, channels:[...this.state.app.channels, channel]}});
     };
 
-    //TODO: Channel remove does not work anymore
     handleChannelRemove = (event) => {
         let evicted = event.target.name;
 
         const nextState = produce(this.state.app, draftState => {
-
             draftState.channels = draftState.channels.filter((elem) => {
-                    return elem.name !== evicted;
-                }
-            );
-            let previous_id = 0;
-            for(let elem of draftState.channels){
-                if(elem.id!==previous_id+1){
-                    debugger;
-                }
-            }
+                return elem.name !== evicted;
+            });
         });
+
+        this.setState({app: nextState});
+    };
+
+    handleIRVDefinitionDone = (irv) =>{
+        this.setState({app:{...this.state.app, initial_registers_values:[...this.state.app.initial_registers_values, irv]}});
+    };
+
+    handleIRVRemove = (event) => {
+        let evicted = event.target.name;
+
+        const nextState = produce(this.state.app, draftState => {
+            draftState.initial_registers_values = draftState.initial_registers_values.filter((elem) => {
+                return elem.name !== evicted;
+            });
+        });
+
         this.setState({app: nextState});
     };
 
@@ -137,10 +158,11 @@ class ApplicationsCreator extends Component {
     render(){
         return(
             <div>
+                <AppCreatorAppNameModal done={this.handleSendApplication}/>
                 <Row>
-                    <AppCreatorPeripheralModal server={this.props.server} done={this.handlePeripheralDefinitionDone}/>
-                    <AppCreatorParameterModal server={this.props.server} done={this.handleParameterDefinitionDone}/>
-                    <Col md={6} id={"tab_creator_add_register_col"}>
+                    <AppCreatorPeripheralModal done={this.handlePeripheralDefinitionDone}/>
+                    <AppCreatorParameterModal  done={this.handleParameterDefinitionDone}/>
+                    <Col id={"tab_creator_add_register_col"}>
                         <Row>
                             <Col md={{ span: 6, offset: 4 }}><AppCreatorPeripheralsDisplay peripherals={this.state.app.tabs} remove={this.handlePeripheralRemove} /></Col>
                         </Row>
@@ -160,9 +182,9 @@ class ApplicationsCreator extends Component {
                     </Col>
                 </Row>
                 <Row>
-                    <AppCreatorMacroModal server={this.props.server} done={this.handleMacroDefinitionDone}/>
-                    <AppCreatorChannelModal server={this.props.server} done={this.handleChannelDefinitionDone}/>
-                    <Col md={6} id={"tab_creator_add_register_col"}>
+                    <AppCreatorMacroModal done={this.handleMacroDefinitionDone}/>
+                    <AppCreatorChannelModal done={this.handleChannelDefinitionDone}/>
+                    <Col  id={"tab_creator_add_register_col"}>
                         <Row>
                             <Col md={{ span: 6, offset: 4 }}><AppCreatorPeripheralsDisplay peripherals={this.state.app.macro} remove={this.handleMacroRemove} /></Col>
                         </Row>
@@ -177,6 +199,17 @@ class ApplicationsCreator extends Component {
                         </Row>
                         <Row>
                             <Image src="assets/Icons/add_channel.svg" id="addChannel" alt='add Channel' onClick={this.handleClick} fluid/>
+                        </Row>
+                    </Col>
+                </Row>
+                <Row>
+                    <AppCreatorInitialRegisterModal done={this.handleIRVDefinitionDone}/>
+                    <Col id={"tab_creator_add_register_col"}>
+                        <Row>
+                            <Col md={{ span: 6, offset: 5 }}><AppCreatorPeripheralsDisplay peripherals={this.state.app.initial_registers_values} remove={this.handleIRVRemove} /></Col>
+                        </Row>
+                        <Row>
+                            <Image src="assets/Icons/add_IRV.svg" id="addIRV" alt='add initial register value' onClick={this.handleClick} fluid/>
                         </Row>
                         <Row>
                             <Col md={{ span: 3, offset: 9 }}>

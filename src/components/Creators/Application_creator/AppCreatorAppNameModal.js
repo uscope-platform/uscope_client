@@ -13,15 +13,15 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = dispatch => {
     return{
-        hideModal: () => {dispatch(hideModal('app_creator_channel_modal'))},
+        hideModal: () => {dispatch(hideModal('app_creator_app_name_modal'))},
     }
 };
 
 
-class AppCreatorChannelModal extends Component {
+class AppCreatorAppNameModal extends Component {
     constructor(props){
         super(props);
-        this.state = {name:null, min_value:null, max_value:null};
+        this.state = {name:null, bitstream:null};
     }
 
 
@@ -31,12 +31,10 @@ class AppCreatorChannelModal extends Component {
 
     handleClose = (event) =>{
         event.preventDefault();
-        let channel = {};
-        channel['name'] = this.state.name;
-        channel['min_value'] = this.state.min_value;
-        channel['max_value'] = this.state.max_value;
-        channel['enabled'] = false;
-        this.props.done(channel);
+        let app = {};
+        app['name'] = this.state.name;
+        app['bitstream'] = this.state.bitstream;
+        this.props.done(app);
         this.props.hideModal();
     };
 
@@ -46,16 +44,15 @@ class AppCreatorChannelModal extends Component {
 
     render() {
         return(
-            <Modal onHide={this.handleHide} show={this.props.modals.app_creator_channel_modal}>
+            <Modal onHide={this.handleHide} show={this.props.modals.app_creator_app_name_modal}>
                 <Modal.Header closeButton>
                     <Modal.Title>Channel Settings</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
                         <Form.Group as={Col}>
-                            <Form.Control inline name='name' placeholder="Parameter Name" type="text" onChange={this.handleChange} />
-                            <Form.Control inline name='min_value' placeholder="Minimum Value" type="integer" onChange={this.handleChange} />
-                            <Form.Control inline name='max_value' placeholder="Maximum Value" type="integer" onChange={this.handleChange} />
+                            <Form.Control inline name='name' placeholder="Application Name" type="text" onChange={this.handleChange} />
+                            <Form.Control inline name='bitstream' placeholder="Bitstream Filename" type="integer" onChange={this.handleChange} />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
@@ -69,4 +66,4 @@ class AppCreatorChannelModal extends Component {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(AppCreatorChannelModal);
+export default connect(mapStateToProps, mapDispatchToProps)(AppCreatorAppNameModal);
