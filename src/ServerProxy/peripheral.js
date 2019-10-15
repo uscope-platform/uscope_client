@@ -17,6 +17,15 @@ export default function peripheralProxy(server_url) {
         });
     };
 
+    this.bulkRegisterWrite = (registers) =>{
+        return new Promise(function (resolve, reject) {
+            axios.post(_this.server_url+'registers/bulk_write', registers)
+                .then(res => {
+                    resolve(res.data);
+                })
+        });
+    };
+
     this.setRegisterValue = (register) => {
         store.dispatch(sendRegister(_this.server_url+'registers/'+register.peripheral+'/value', register))
     };

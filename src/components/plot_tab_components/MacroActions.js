@@ -46,11 +46,14 @@ class MacroActions extends Component {
              this.props.saveScriptsWorkspace(workspace);
          }
          if(registers!== null){
+             let bulk_registers = [];
              // eslint-disable-next-line
              for(let reg in registers){
                  let [periph_name, reg_name] = reg.split('.');
-                 this.props.server.periph_proxy.setRegisterValue({name:reg_name, peripheral:periph_name, value:registers[reg]});
+                 bulk_registers.push({name:reg_name, peripheral:periph_name, value:registers[reg]})
              }
+             debugger;
+             this.props.server.periph_proxy.bulkRegisterWrite({payload:bulk_registers});
          }
     };
 
