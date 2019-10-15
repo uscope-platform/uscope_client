@@ -2,7 +2,7 @@ function switching_frequency_trigger(parameters, context) {
 
     let period = 1/parameters;
     let center = period/2;
-    let on_period = period*context.parameters.duty;
+    let on_period = period*(1-context.parameters.duty);
 
     let output_turn_on = center-on_period/2;
     let output_turn_off = center+on_period/2;

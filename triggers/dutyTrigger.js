@@ -1,8 +1,7 @@
 function duty_trigger(parameters, context) {
-    debugger;
     let period = 1/context.parameters.sw_freq;
     let center = period/2;
-    let on_period = period*parameters;
+    let on_period = period*(1-parameters);
 
     let output_turn_on = center-on_period/2;
     let output_turn_off = center+on_period/2;

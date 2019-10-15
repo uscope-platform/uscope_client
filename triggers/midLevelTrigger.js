@@ -3,7 +3,7 @@ function mid_level_trigger(parameters, context) {
 
     let period = 1/context.parameters.sw_freq;
     let center = period/2;
-    let on_period = period*context.parameters.duty;
+    let on_period = period*(1-context.parameters.duty);
 
     let output_turn_on = center-on_period/2;
     let output_turn_off = center+on_period/2;
@@ -26,5 +26,5 @@ function mid_level_trigger(parameters, context) {
     workspace['high_side_turn_off_mid'] = high_side_turn_off-mid_lvl_duration/2;
     workspace['high_side_turn_off_neg'] = high_side_turn_off+mid_lvl_duration/2;
 
-    return {workspace:workspace, registers:null};
+        return {workspace:workspace, registers:null};
 }
