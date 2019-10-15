@@ -74,20 +74,22 @@ class ParametersArea extends Component {
                     let trigger = this.props.scripts.filter((script)=>{
                         return script.triggers.includes(scriptTrigger);
                     });
-                    let content = trigger[0].script_content;
+                    if(trigger[0]!==undefined){
+                        let content = trigger[0].script_content;
 
-                    //Parse the script into a callable function and execute it
-                    let context = context_cleaner(this.props.registers, this.props.parameters, parameter.name);
-                    context['workspace'] = this.props.scripts_workspace;
-                    let {workspace, registers} = parseFunction(content)(floatValue, context);
-                    if(workspace!== null){
-                        this.props.saveScriptsWorkspace(workspace);
-                    }
-                    if(registers!== null){
-                        // eslint-disable-next-line
-                        for(let reg in registers){
-                            let [periph_name, reg_name] = reg.split('.');
-                            this.props.server.periph_proxy.setRegisterValue({name:reg_name, peripheral:periph_name, value:registers[reg]});
+                        //Parse the script into a callable function and execute it
+                        let context = context_cleaner(this.props.registers, this.props.parameters, parameter.name);
+                        context['workspace'] = this.props.scripts_workspace;
+                        let {workspace, registers} = parseFunction(content)(floatValue, context);
+                        if(workspace!== null){
+                            this.props.saveScriptsWorkspace(workspace);
+                        }
+                        if(registers!== null){
+                            // eslint-disable-next-line
+                            for(let reg in registers){
+                                let [periph_name, reg_name] = reg.split('.');
+                                this.props.server.periph_proxy.setRegisterValue({name:reg_name, peripheral:periph_name, value:registers[reg]});
+                            }
                         }
                     }
                     this.props.saveParameter({name:parameter.name, value:floatValue});

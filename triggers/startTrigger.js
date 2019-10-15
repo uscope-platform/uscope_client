@@ -3,7 +3,7 @@ function start_trigger(parameters, context) {
     /* before starting to calculate the register settings I need to find out what is the best clock prescaler to use,
     *  given the clock frequency I'm running at*/
 
-    let prescaler_options = [4, 8, 16, 32];
+    let prescaler_options = [2, 4, 8, 16, 32];
     let pwm_counter_res = 16;
     let period = context.workspace.period;
 
@@ -17,8 +17,7 @@ function start_trigger(parameters, context) {
     }
 
     let counter_start = 0;
-    let counter_stop = Math.round(2*period*counter_frequency);
-
+    let counter_stop = Math.round(period*counter_frequency);
 
     /* first the values are converted to percentages of a single period*/
     let ls_off_mid_norm = context.workspace.low_side_turn_off_mid/period;
