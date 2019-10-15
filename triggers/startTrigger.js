@@ -1,7 +1,5 @@
 function start_trigger(parameters, context) {
 
-
-    console.log(context);
     /* before starting to calculate the register settings I need to find out what is the best clock prescaler to use,
     *  given the clock frequency I'm running at*/
 
@@ -19,7 +17,7 @@ function start_trigger(parameters, context) {
     }
 
     let counter_start = 0;
-    let counter_stop = Math.round(period*counter_frequency);
+    let counter_stop = Math.round(2*period*counter_frequency);
 
 
     /* first the values are converted to percentages of a single period*/
@@ -47,15 +45,39 @@ function start_trigger(parameters, context) {
 
     let registers = {};
     let ws = {};
-    ws['ls_off_mid'] = ls_off_mid;
-    ws['ls_off_neg'] = ls_off_neg;
-    ws['ls_on_mid'] = ls_on_mid;
-    ws['ls_on_full'] = ls_on_full;
 
-    ws['hs_off_mid'] = hs_off_mid;
-    ws['hs_off_neg'] = hs_off_neg;
-    ws['hs_on_mid'] = hs_on_mid;
-    ws['hs_on_full'] = hs_on_full;
+   /*
+    *   Channel 1 of each chain controls the full voltage
+    *   Channel 2 controls the mid level turn on and turn off
+    */
+
+
+    registers['Pwm_Generator.cmp_1l_a'] = ls_off_mid;
+    registers['Pwm_Generator.cmp_2l_a'] = ls_off_neg;
+    registers['Pwm_Generator.cmp_2h_a'] = ls_on_mid;
+    registers['Pwm_Generator.cmp_1h_a'] = ls_on_full;
+    registers['Pwm_Generator.cmp_3h_a'] = 0xffff;
+
+    registers['Pwm_Generator.cmp_1l_b'] = hs_on_mid;
+    registers['Pwm_Generator.cmp_2l_b'] = hs_on_full;
+    registers['Pwm_Generator.cmp_2h_b'] = hs_off_mid;
+    registers['Pwm_Generator.cmp_1h_b'] = hs_off_neg;
+    registers['Pwm_Generator.cmp_3h_b'] = 0xffff;
+
+    registers['Pwm_Generator.cnt_low_a'] = counter_start;
+    registers['Pwm_Generator.cnt_high_a'] = counter_stop;
+
+    registers['Pwm_Generator.cnt_low_b'] = counter_start;
+    registers['Pwm_Generator.cnt_high_b'] = counter_stop;
+
+
+    registers['Pwm_Generator.out_en_a'] = 0x3F;
+    registers['Pwm_Generator.out_en_b'] = 0x3F;
+
+    registers['Pwm_Generator.ch_ctrl_a'] = 1;
+    registers['Pwm_Generator.ch_ctrl_b'] = 1;
+
+    registers['Pwm_Generator.pwm_ctrl'] = 0x2428;
 
     return {workspace:ws, registers:registers};
 }
