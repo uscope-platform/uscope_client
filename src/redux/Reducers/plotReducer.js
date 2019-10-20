@@ -18,7 +18,7 @@ for(let i = 0; i<7;i++){
         x: Array.from(Array(1024).keys()),
         y:  Array(1024).fill(0),
         type: 'scatter',
-        mode: 'markers',
+        mode: 'lines',
         name: 'channel_'+ i,
         visible: false
     });

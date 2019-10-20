@@ -40,7 +40,7 @@ class ApplicationChooser extends Component {
                 <Modal.Body>
                     <Form>
                         <Form.Group as={Col}>
-                            <Form.Label>State</Form.Label>
+                            <Form.Label>Application Name</Form.Label>
                             <Form.Control as="select" onChange={this.handleChange}>
                                 <option>Chose An Application</option>
                                 {this.applications_list.map((name,i) => (

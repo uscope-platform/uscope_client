@@ -21,7 +21,7 @@ const mapDispatchToProps = dispatch => {
 class AppCreatorParameterModal extends Component {
     constructor(props){
         super(props);
-        this.state = {parameter_name:null, trigger_name:null, default_value:null, visible:false};
+        this.state = {parameter_name:null, trigger:null, default_value:null, visible:false};
     }
 
 
@@ -39,7 +39,7 @@ class AppCreatorParameterModal extends Component {
         parameter['visible'] = this.state.visible;
         parameter['parameter_name'] = this.state.parameter_name;
         parameter['parameter_id'] = this.state.parameter_name.replace(' ', '_');
-        parameter['trigger_name'] = this.state.trigger_name;
+        parameter['trigger'] = this.state.trigger;
         parameter['default_value'] = this.state.default_value;
         this.props.done(parameter);
         this.props.hideModal();
@@ -59,7 +59,7 @@ class AppCreatorParameterModal extends Component {
                     <Form>
                         <Form.Group as={Col}>
                             <Form.Control inline name='parameter_name' placeholder="Parameter Name" type="text" onChange={this.handleChange} />
-                            <Form.Control inline name='trigger_name' placeholder="Trigger Name" type="text" onChange={this.handleChange} />
+                            <Form.Control inline name='trigger' placeholder="Trigger Name" type="text" onChange={this.handleChange} />
                             <Form.Control inline name='default_value' placeholder="Default Value" type="text" onChange={this.handleChange} />
                             <Form.Check label="visible" name="visible" type="checkbox" id="visible" value={this.state.visible} onChange={this.handleChange} />
                         </Form.Group>
