@@ -9,6 +9,9 @@ let registerValuesReducer = function (state = {}, action) {
             });
         case SEND_REGISTER:
             return produce(state, draftState => {
+                if (!(action.payload.peripheral in draftState)){
+                    draftState[action.payload.peripheral] = {};
+                }
                 draftState[action.payload.peripheral][action.payload.name] = action.payload.value;
             });
         default:
