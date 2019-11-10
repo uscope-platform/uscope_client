@@ -15,7 +15,7 @@ import {loadRegisters} from "./redux/Actions/RegisterActions";
 import serverProxy from "./ServerProxy";
 import TabContent from "./components/TabContent";
 import Navbar from "./components/Navbar";
-import * as sjcl from 'sjcl';
+
 
 import ApplicationChooser from "./components/Modal_Components/ApplicationChooser";
 import PeripheralsCreator from "./components/Creators/Peripheral_creator/PeripheralsCreator";
@@ -59,18 +59,35 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.server = new serverProxy('http://10.190.0.10/uscope/'); // unimore:http://155.185.48.185:4999/uscope/ docker:http://172.18.0.1:4999/uscope/ unnc:http://10.190.0.74:4999/uscope/
-        this.server.app_proxy.loadAllApplications();
         this.state = {initializationPhase: states.APP_CHOICE};
 
-        if(this.props.peripherals ===undefined){
+
+        let app_digest = localStorage.getItem('Applications-hash');
+        if(this.props.applications === undefined || app_digest === null){
+            this.server.app_proxy.loadAllApplications();
+            this.server.app_proxy.get_applications_hash().then((res)=>{
+                localStorage.setItem('Applications-hash', res);
+            });
+        } else{
+            this.server.app_proxy.get_applications_hash().then((res)=>{
+                if(app_digest!==res){
+                    this.server.app_proxy.loadAllApplications();
+                    localStorage.setItem('Applications-hash', res);
+                }
+            });
+        }
+
+        let periph_digest = localStorage.getItem('Peripherals-hash');
+        if(this.props.peripherals ===undefined || periph_digest === null){
             this.server.periph_proxy.loadAllPeripherals();
+            this.server.periph_proxy.get_peripherals_hash().then((res)=>{
+                localStorage.setItem('Peripherals-hash', res);
+            });
         } else{
             this.server.periph_proxy.get_peripherals_hash().then((res)=>{
-                let periph_string = JSON.stringify(this.props.peripherals);
-                let raw_hash = sjcl.hash.sha256.hash(periph_string);
-                let digest = sjcl.codec.hex.fromBits(raw_hash);
-                if(digest!==res){
+                if(periph_digest!==res){
                     this.server.periph_proxy.loadAllPeripherals();
+                    localStorage.setItem('Peripherals-hash', res);
                 }
             });
         }
