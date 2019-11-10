@@ -27,7 +27,6 @@
     "redux-form": "^8.2.6",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
-    "sjcl": "^1.0.8",
     "source-map-explorer": "^2.1.0"
   },
   "scripts": {
