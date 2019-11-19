@@ -1,6 +1,7 @@
 import store from "../store";
 import {loadChanels, setTimebase} from "../redux/Actions/plotActions";
 import {fetchData} from "../redux/Actions/plotActions"
+import axios from "axios";
 
 export default function plotProxy(server_url) {
     let _this = this;
@@ -21,8 +22,25 @@ export default function plotProxy(server_url) {
 
     this.setTimebase = function (parameter) {
         store.dispatch(setTimebase(_this.server_url+'plot/timebase', parameter));
-    }
+    };
 
+    this.setCapture = function (capture_lenght) {
+        axios.post(_this.server_url+'plot/capture', {length: capture_lenght}).then(res => {
+            return res;
+        }).catch(err => {
+            alert(err.message);
+        });
+    };
+
+    this.get_captured_data = () =>{
+        return new Promise((resolve, reject) => {
+            axios.get(_this.server_url+'/plot/capture').then(res =>{
+                resolve(res.data);
+            }).catch(err=>{
+                reject(err.message);
+            })
+        });
+    }
 }
 
 

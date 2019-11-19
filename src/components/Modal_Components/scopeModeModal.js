@@ -22,34 +22,34 @@ const mapDispatchToProps = dispatch => {
 class ScopeModeModal extends Component {
     constructor(props){
         super(props);
-        this.state = {selected_mode:""}
+        this.state = {n_buffers:""}
     }
 
 
     handleChange = (event) => {
-        this.setState({selected_mode:event.target.id});
+        this.setState({n_buffers:event.target.value});
     };
 
     handleClose = (event) =>{
         event.preventDefault();
-        debugger;
+        this.props.done(this.state.n_buffers);
         this.props.hideModal();
     };
 
     handleHide = () =>{
         this.props.hideModal();
-    }
+    };
 
     render() {
         return(
             <Modal onHide={this.handleHide} show={this.props.modals.scope_mode_choice}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Application Choice</Modal.Title>
+                    <Modal.Title>Select the number of buffers to capture</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
-                        <Form.Check type='radio' id={'single'} label={'Single Capture'} onChange={this.handleChange}/>
-                        <Form.Check type='radio' id={'run'} label={'Run'} onChange={this.handleChange}/>
+                    <Form onSubmit={this.handleClose}>
+                        <Form.Label>Number of buffers</Form.Label>
+                        <Form.Control name="n_buffers" type="text" onChange={this.handleChange} />
 
                     </Form>
                 </Modal.Body>
