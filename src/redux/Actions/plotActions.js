@@ -6,8 +6,7 @@ import {
     PLOT_PAUSE,
     PLOT_STOP,
     FETCH_DATA,
-    SET_CHANNEL_SETTING,
-    SET_TIMEBASE
+    SET_CHANNEL_SETTING
 } from "./types";
 import axios from "axios";
 
@@ -87,23 +86,6 @@ export const setChannelSetting = (server_url, settings) => {
 export const setChannelSettingDone = (settings) =>({
     type: SET_CHANNEL_SETTING,
     payload: settings
-});
-
-
-
-export const setTimebase = (server_url, timebase) => {
-    return dispatch => {
-        axios.post(server_url, timebase).then(res => {
-            dispatch(setTimebaseDone(timebase));
-        }).catch(err => {
-            alert(err.message);
-        });
-    };
-};
-
-export const setTimebaseDone = (timebase) =>({
-    type: SET_TIMEBASE,
-    payload: timebase
 });
 
 
