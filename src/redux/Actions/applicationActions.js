@@ -48,8 +48,4 @@ const addApplicationDone = application =>({
     payload:application
 });
 
-export const setCurrentApplication = application_name =>({
-    type: SET_CURRENT_APPLICATION,
-    payload:application_name
-});
 

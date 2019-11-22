@@ -9,7 +9,8 @@ function mapStateToProps(state) {
     return{
         modals: state.modals,
         plot: state.plot,
-        applications: state.applications
+        applications: state.applications,
+        settings: state.settings,
     }
 }
 
@@ -26,8 +27,8 @@ class TimebaseModal extends Component {
         super(props);
         this.state = {
             target: null,
-            n_enables: this.props.applications[this.props.applications['current_application']]['n_enables'],
-            clock_frequency:this.props.applications[this.props.applications['current_application']]['clock_frequency']
+            n_enables: this.props.applications[this.props.settings['application']]['n_enables'],
+            clock_frequency:this.props.applications[this.props.settings['application']]['clock_frequency']
         }
     }
 
