@@ -64,7 +64,7 @@ class PeripheralCreatorRegisterModal extends Component {
             register['direction'] = "R";
         }
 
-
+        register['ID'] = this.state.reg_ID;
         register['register_format'] = this.state.reg_type;
         if(this.state.enable_word_fields){
             let field_names = this.state.field_names.split('\n');
@@ -92,6 +92,7 @@ class PeripheralCreatorRegisterModal extends Component {
                     <Form>
                         <Form.Group>
                             <Form.Control inline name='reg_name' placeholder="Register Name" type="text" onChange={this.handleChange} />
+                            <Form.Control inline name='reg_ID' placeholder="Register ID" type="text" onChange={this.handleChange} />
                             <Form.Control name='reg_offset' placeholder="Address offset" type="text" onChange={this.handleChange} />
                             <Form.Control name='reg_description' placeholder="Description" type="text" onChange={this.handleChange} />
                             <Form.Group>
