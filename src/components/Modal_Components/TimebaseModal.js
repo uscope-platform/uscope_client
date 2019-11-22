@@ -5,14 +5,11 @@ import {hideModal} from "../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
 
 
-
-
-
-
 function mapStateToProps(state) {
     return{
-        modals:state.modals,
-        plot:state.plot
+        modals: state.modals,
+        plot: state.plot,
+        applications: state.applications
     }
 }
 
@@ -27,7 +24,11 @@ const mapDispatchToProps = dispatch => {
 class TimebaseModal extends Component {
     constructor(props){
         super(props);
-        this.state = {timebase:"", target:null}
+        this.state = {
+            target: null,
+            n_enables: this.props.applications[this.props.applications['current_application']]['n_enables'],
+            clock_frequency:this.props.applications[this.props.applications['current_application']]['clock_frequency']
+        }
     }
 
     handleHide = () =>{
@@ -35,92 +36,96 @@ class TimebaseModal extends Component {
     };
 
     handleChange = (event) => {
-        this.setState({timebase:event.target.value});
-        this.setState({target:event.target.name});
+        this.setState({[event.target.name]:event.target.value});
     };
+
+
+    parse_number = (raw_value) =>{
+        let numeric_value = 0;
+        if(isNaN(parseFloat(raw_value[raw_value.length -1]))){
+            numeric_value = raw_value.slice(0,raw_value.length-1);
+            switch (raw_value[raw_value.length-1]) {
+                case 'M':
+                    numeric_value = numeric_value*1e6;
+                    break;
+                case 'k':
+                case 'K':
+                    numeric_value = numeric_value*1e3;
+                    break;
+                case 'm':
+                    numeric_value = numeric_value*1e-3;
+                    break;
+                case 'u':
+                case 'U':
+                    numeric_value = numeric_value*1e-6;
+                    break;
+                default:
+                    break;
+            }
+        } else{
+            numeric_value = Math.round(this.state.clock_frequency/parseFloat(raw_value));
+        }
+        return numeric_value
+
+    };
+
 
     handleClose = (event) =>{
         event.preventDefault();
-        let sample_time = null;
-        if(this.state.target === 'timebase'){
-            let value = this.state.timebase.replace(' ', '');
-            let numeric_value = 0;
-            if(isNaN(parseFloat(value[value.length -1]))){
-                numeric_value = value.slice(0,value.length-1);
-                switch (value[value.length-1]) {
-                    case 'M':
-                        numeric_value = numeric_value*1e6;
-                        break;
-                    case 'k':
-                    case 'K':
-                        numeric_value = numeric_value*1e3;
-                        break;
-                    case 'm':
-                        numeric_value = numeric_value*1e-3;
-                        break;
-                    case 'u':
-                    case 'U':
-                        numeric_value = numeric_value*1e-6;
-                        break;
-                    default:
-                        break;
-                }
-            } else{
-                numeric_value = parseFloat(value);
-            }
-            sample_time =  numeric_value/this.props.plot.parameters.memory_depth;
-        } else if(this.state.target ==="sample_rate"){
-            let value = this.state.timebase.replace(' ', '');
-            let numeric_value = 0;
-            if(isNaN(parseFloat(value[value.length -1]))){
-                numeric_value = value.slice(0,value.length-1);
-                switch (value[value.length-1]) {
-                    case 'M':
-                        numeric_value = numeric_value*1e6;
-                        break;
-                    case 'k':
-                    case 'K':
-                        numeric_value = numeric_value*1e3;
-                        break;
-                    case 'm':
-                        numeric_value = numeric_value*1e-3;
-                        break;
-                    case 'u':
-                    case 'U':
-                        numeric_value = numeric_value*1e-6;
-                        break;
-                    default:
-                        break;
-                }
-            } else{
-                numeric_value = parseFloat(value);
-            }
-            sample_time =  1/numeric_value;
-        }
+        let value = this.state.frequency.replace(' ', '');
+
         debugger;
-        if(sample_time===null){
-            alert("the chosen value is invalid");
-            this.props.hideModal();
-            return;
+
+        let timebase_reg = {};
+        timebase_reg['name'] = 'freq';
+        timebase_reg['peripheral'] = 'enable_generator';
+        timebase_reg['value'] =this.parse_number(value);
+
+        let phases = Array.from({length: this.state.n_enables}, (x,i) => i).map((reg, i) => {
+            let ret_val = {};
+            ret_val['name'] = 'pha_'+(i+1);
+            ret_val['peripheral'] = 'enable_generator';
+            ret_val['value'] = Math.round(parseFloat(this.state['enable_'+(i+1)].replace(' ', ''))*timebase_reg.value);
+            return ret_val;
+        });
+
+        this.props.server.periph_proxy.setRegisterValue(timebase_reg);
+
+        // eslint-disable-next-line
+        for(let i of phases){
+            this.props.server.periph_proxy.setRegisterValue(i);
         }
-        this.props.server.plot_proxy.setTimebase({name:'uscope_timebase_change',value:sample_time});
+
         this.props.hideModal();
+    };
+
+    generate_form = (label) => {
+        return(
+            <Form.Group as={Col}>
+                <Form.Label>{label}</Form.Label>
+                <Form.Control name={label} type="text" onChange={this.handleChange} />
+            </Form.Group>
+        );
+
     };
 
     render() {
         return(
             <Modal onHide={this.handleHide} show={this.props.modals.timebase_choice}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Timebase Control</Modal.Title>
+                    <Modal.Title>Application timebase Control</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
                         <Form.Group as={Col}>
-                            <Form.Label>Overall timebase length</Form.Label>
-                            <Form.Control name="timebase" type="text" onChange={this.handleChange} />
-                            <Form.Label>ADC sampling Rate</Form.Label>
-                            <Form.Control name="sample_rate" type="text" onChange={this.handleChange} />
+                            <Form.Label>Frequency</Form.Label>
+                            <Form.Control name="frequency" type="text" onChange={this.handleChange} />
                         </Form.Group>
+                        {
+                            Array.from({length: this.state.n_enables}, (x,i) => i).map((reg, i) => {
+                                    return this.generate_form('enable_'+(i+1));
+                            })
+                        }
                     </Form>
                 </Modal.Body>
 

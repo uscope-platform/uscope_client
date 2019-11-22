@@ -1,4 +1,4 @@
-import {ADD_APPLICATION, LOAD_APPLICATIONS, REMOVE_APPLICATION} from "./types";
+import {ADD_APPLICATION, LOAD_APPLICATIONS, REMOVE_APPLICATION, SET_CURRENT_APPLICATION} from "./types";
 import axios from 'axios';
 
 
@@ -47,3 +47,9 @@ const addApplicationDone = application =>({
     type: ADD_APPLICATION,
     payload:application
 });
+
+export const setCurrentApplication = application_name =>({
+    type: SET_CURRENT_APPLICATION,
+    payload:application_name
+});
+

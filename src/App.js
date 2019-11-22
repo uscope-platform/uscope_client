@@ -10,6 +10,7 @@ import {connect} from "react-redux";
 import {setSetting} from "./redux/Actions/SettingsActions";
 import {loadTabs} from "./redux/Actions/TabsActions";
 import {loadRegisters} from "./redux/Actions/RegisterActions";
+import {setCurrentApplication} from "./redux/Actions/applicationActions";
 
 //      APP RELATED IMPORTS
 import serverProxy from "./ServerProxy";
@@ -40,7 +41,8 @@ const mapDispatchToProps = dispatch => {
     return{
         setSettings: (setting) => {dispatch(setSetting(["application", setting]))},
         loadTabs: (tab) => {dispatch(loadTabs(tab))},
-        loadRegisters: (peripheral, registers) => {dispatch(loadRegisters(peripheral,registers))}
+        loadRegisters: (peripheral, registers) => {dispatch(loadRegisters(peripheral,registers))},
+        setApplication: (application_name) => {dispatch(setCurrentApplication(application_name))}
     }
 };
 
@@ -96,6 +98,7 @@ class App extends Component {
 
     handleApplicationChosen = e =>{
         this.server.app_proxy.setApplication(e).then(()=>{
+            this.props.setApplication(e);
             let app = this.props.applications[e];
             this.props.setSettings(e);
             let tabs = Object.values(app.tabs);

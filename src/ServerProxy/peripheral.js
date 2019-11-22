@@ -26,6 +26,13 @@ export default function peripheralProxy(server_url) {
         });
     };
 
+    /**
+     * This method sets the value of a register
+     * @param {Object} register - An object containing the details of the register to set;
+     * @param {String} register.name - Name of the register to set.
+     * @param {String} register.peripheral - Name of the peripheral whose register has to be set.
+     * @param {Number} register.value - Value to set the register to.
+     */
     this.setRegisterValue = (register) => {
         store.dispatch(sendRegister(_this.server_url+'registers/'+register.peripheral+'/value', register))
     };
