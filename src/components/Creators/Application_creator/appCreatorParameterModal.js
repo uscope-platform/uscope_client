@@ -21,7 +21,7 @@ const mapDispatchToProps = dispatch => {
 class AppCreatorParameterModal extends Component {
     constructor(props){
         super(props);
-        this.state = {parameter_name:null, trigger:null, default_value:null, visible:false};
+        this.state = {parameter_name:null, trigger:null, value:null, visible:false};
     }
 
 
@@ -40,7 +40,7 @@ class AppCreatorParameterModal extends Component {
         parameter['parameter_name'] = this.state.parameter_name;
         parameter['parameter_id'] = this.state.parameter_name.replace(' ', '_');
         parameter['trigger'] = this.state.trigger;
-        parameter['default_value'] = this.state.default_value;
+        parameter['value'] = this.state.value;
         this.props.done(parameter);
         this.props.hideModal();
     };
@@ -49,19 +49,28 @@ class AppCreatorParameterModal extends Component {
         this.props.hideModal();
     };
 
+    handleShow = () =>{
+        this.setState({
+            visible:this.props.init_values.visible,
+            parameter_name:this.props.init_values.parameter_name,
+            trigger:this.props.init_values.trigger,
+            value:this.props.init_values.value
+        });
+    };
+
     render() {
         return(
-            <Modal onHide={this.handleHide} show={this.props.modals.app_creator_parameter_modal}>
+            <Modal onHide={this.handleHide} onShow={this.handleShow} show={this.props.modals.app_creator_parameter_modal}>
                 <Modal.Header closeButton>
                     <Modal.Title>Parameter Settings</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
                         <Form.Group as={Col}>
-                            <Form.Control inline name='parameter_name' placeholder="Parameter Name" type="text" onChange={this.handleChange} />
-                            <Form.Control inline name='trigger' placeholder="Trigger Name" type="text" onChange={this.handleChange} />
-                            <Form.Control inline name='default_value' placeholder="Default Value" type="text" onChange={this.handleChange} />
-                            <Form.Check label="visible" name="visible" type="checkbox" id="visible" value={this.state.visible} onChange={this.handleChange} />
+                            <Form.Control inline name='parameter_name' placeholder="Parameter Name" type="text" onChange={this.handleChange} value={this.state.parameter_name}/>
+                            <Form.Control inline name='trigger' placeholder="Trigger Name" type="text" onChange={this.handleChange} value={this.state.trigger}/>
+                            <Form.Control inline name='value' placeholder="Value" type="text" onChange={this.handleChange} value={this.state.value}/>
+                            <Form.Check label="visible" name="visible" type="checkbox" id="visible" checked={this.state.visible} onChange={this.handleChange}/>
                         </Form.Group>
                     </Form>
                 </Modal.Body>

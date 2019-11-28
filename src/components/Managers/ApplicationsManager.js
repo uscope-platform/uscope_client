@@ -9,14 +9,22 @@ import cellEditFactory from 'react-bootstrap-table2-editor';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 
 import {Button, Container, Row} from "react-bootstrap";
+import {setSetting} from "../../redux/Actions/SettingsActions";
 
 
 
 function mapStateToProps(state) {
     return{
-        applications:state.applications
+        applications:state.applications,
+        settings:state.settings,
     }
 }
+
+const mapDispatchToProps = dispatch => {
+    return{
+        setSetting: (name, value) => {dispatch(setSetting([name, value]))},
+    }
+};
 
 class ApplicationsManager extends Component {
     constructor(props) {
@@ -109,16 +117,29 @@ class ApplicationsManager extends Component {
         this.props.server.app_proxy.createApplication(JSON.parse(content), null);
     };
 
+    handleEdit = (content) => {
+        if(this.state.selected===null){
+            return false;
+        }
+        this.props.setSetting("edit_application_mode", true);
+        this.props.setSetting("edit_application_name", this.state.selected);
+        return true;
+    };
+
     render(){
         return(
             <Container>
                 <Row>
                     <LinkContainer to="/application_creator">
-                        <Button variant="outline-success"> Add new row</Button>
+                        <Button variant="outline-success"> Add application</Button>
                     </LinkContainer>
-                    <Button variant="outline-danger" onClick={this.handleRemoveRow}> Remove Row</Button>
+
+                    <Button variant="outline-danger" onClick={this.handleRemoveRow}> Remove application</Button>
                     <Button variant="outline-primary" onClick={this.handleImport}>Import application</Button>
                     <Button variant="outline-primary" onClick={this.handleExport}>Export application</Button>
+                    <LinkContainer isActive={this.handleEdit} to="/application_creator">
+                        <Button variant="outline-primary">Edit application</Button>
+                    </LinkContainer>
                 </Row>
                 <Row>
                     <BootstrapTable
@@ -138,4 +159,4 @@ class ApplicationsManager extends Component {
     };
 }
 
-export default connect(mapStateToProps)(ApplicationsManager);
+export default connect(mapStateToProps, mapDispatchToProps)(ApplicationsManager);

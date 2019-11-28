@@ -10,7 +10,7 @@ import {connect} from "react-redux";
 import {setSetting} from "./redux/Actions/SettingsActions";
 import {loadTabs} from "./redux/Actions/TabsActions";
 import {loadRegisters} from "./redux/Actions/RegisterActions";
-import {setCurrentApplication} from "./redux/Actions/applicationActions";
+
 //      APP RELATED IMPORTS
 import serverProxy from "./ServerProxy";
 import TabContent from "./components/TabContent";

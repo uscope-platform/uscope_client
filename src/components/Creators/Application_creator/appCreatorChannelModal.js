@@ -44,18 +44,22 @@ class AppCreatorChannelModal extends Component {
         this.props.hideModal();
     };
 
+    handleShow = () => {
+        this.setState({name:this.props.init_values.name, min_value:this.props.init_values.min_value, max_value:this.props.init_values.max_value});
+    };
+
     render() {
         return(
-            <Modal onHide={this.handleHide} show={this.props.modals.app_creator_channel_modal}>
+            <Modal onHide={this.handleHide} onShow={this.handleShow} show={this.props.modals.app_creator_channel_modal}>
                 <Modal.Header closeButton>
                     <Modal.Title>Channel Settings</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
                         <Form.Group as={Col}>
-                            <Form.Control inline name='name' placeholder="Parameter Name" type="text" onChange={this.handleChange} />
-                            <Form.Control inline name='min_value' placeholder="Minimum Value" type="integer" onChange={this.handleChange} />
-                            <Form.Control inline name='max_value' placeholder="Maximum Value" type="integer" onChange={this.handleChange} />
+                            <Form.Control inline name='name' placeholder="Parameter Name" type="text" onChange={this.handleChange} value={this.state.name} />
+                            <Form.Control inline name='min_value' placeholder="Minimum Value" type="integer" onChange={this.handleChange} value={this.state.min_value}/>
+                            <Form.Control inline name='max_value' placeholder="Maximum Value" type="integer" onChange={this.handleChange} value={this.state.max_value}/>
                         </Form.Group>
                     </Form>
                 </Modal.Body>

@@ -3,13 +3,11 @@ function start_trigger_cl(parameters, context) {
 
     let registers = {};
 
-    let period = 1000;
+    let out_freq = context.workspace.fsw;
 
-    let duty = Math.max(period*context.workspace.duty,0.005);
-    let deadtime = 50;
+    let pwm_clock = 10e6;
+    let period = pwm_clock/out_freq;
 
-    registers['Pwm_Generator.cmp_2l_a'] = duty;
-    registers['Pwm_Generator.cmp_3l_a'] = duty+deadtime;
     registers['Pwm_Generator.cmp_2h_a'] = period+1;
     registers['Pwm_Generator.cmp_3h_a'] = period+1;
 

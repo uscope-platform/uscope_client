@@ -21,7 +21,7 @@ const mapDispatchToProps = dispatch => {
 class AppCreatorInitialRegisterModal extends Component {
     constructor(props){
         super(props);
-        this.state = {name:null, address:null, value:null};
+        this.state = {name:props.init_values.name, address:props.init_values.address, value:props.init_values.value};
     }
 
 
@@ -43,18 +43,22 @@ class AppCreatorInitialRegisterModal extends Component {
         this.props.hideModal();
     };
 
+    handleShow = () => {
+        this.setState({name:this.props.init_values.name, address:this.props.init_values.address, value:this.props.init_values.value});
+    };
+
     render() {
         return(
-            <Modal onHide={this.handleHide} show={this.props.modals.app_creator_IRV_modal}>
+            <Modal onHide={this.handleHide} onShow={this.handleShow} show={this.props.modals.app_creator_IRV_modal}>
                 <Modal.Header closeButton>
                     <Modal.Title>Channel Settings</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
                         <Form.Group as={Col}>
-                            <Form.Control inline name='name' placeholder="Register Name (for local display only)" type="text" onChange={this.handleChange} />
-                            <Form.Control inline name='address' placeholder="Address" type="integer" onChange={this.handleChange} />
-                            <Form.Control inline name='value' placeholder="Value" type="integer" onChange={this.handleChange} />
+                            <Form.Control inline name='name' placeholder="Register Name (for local display only)" type="text" onChange={this.handleChange} value={this.state.name}/>
+                            <Form.Control inline name='address' placeholder="Address" type="integer" onChange={this.handleChange} value={this.state.address}/>
+                            <Form.Control inline name='value' placeholder="Value" type="integer" onChange={this.handleChange} value={this.state.value}/>
                         </Form.Group>
                     </Form>
                 </Modal.Body>

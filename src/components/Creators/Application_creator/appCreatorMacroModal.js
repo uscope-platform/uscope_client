@@ -42,17 +42,21 @@ class AppCreatorMacroModal extends Component {
         this.props.hideModal();
     };
 
+    handleShow = () => {
+        this.setState({name:this.props.init_values.name, trigger:this.props.init_values.trigger});
+    };
+
     render() {
         return(
-            <Modal onHide={this.handleHide} show={this.props.modals.app_creator_macro_modal}>
+            <Modal onHide={this.handleHide} onShow={this.handleShow} show={this.props.modals.app_creator_macro_modal}>
                 <Modal.Header closeButton>
                     <Modal.Title>Macro Settings</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
                         <Form.Group as={Col}>
-                            <Form.Control inline name='name' placeholder="Parameter Name" type="text" onChange={this.handleChange} />
-                            <Form.Control inline name='trigger' placeholder="Trigger Name" type="text" onChange={this.handleChange} />
+                            <Form.Control inline name='name' placeholder="Parameter Name" type="text" onChange={this.handleChange} value={this.state.name}/>
+                            <Form.Control inline name='trigger' placeholder="Trigger Name" type="text" onChange={this.handleChange} value={this.state.trigger} />
                         </Form.Group>
                     </Form>
                 </Modal.Body>

@@ -6,7 +6,6 @@ import {connect} from "react-redux"
 
 import AppCreatorPeripheralModal from "./appCreatorPeripheralModal";
 import AppCreatorPeripheralsDisplay from "./AppCreatorPeripheralsDisplay";
-import AppCreatorParameterDisplay from "./AppCreatorParameterDisplay";
 
 import produce from "immer"
 import AppCreatorParameterModal from "./appCreatorParameterModal";
@@ -16,7 +15,9 @@ import AppCreatorAppNameModal from "./AppCreatorAppNameModal";
 import AppCreatorInitialRegisterModal from './appCreatorInitialRegisterModal'
 function mapStateToProps(state) {
     return{
-        modals:state.modals
+        modals:state.modals,
+        settings:state.settings,
+        applications:state.applications
     }
 }
 
@@ -29,7 +30,79 @@ const mapDispatchToProps = dispatch => {
 class ApplicationsCreator extends Component {
     constructor(props) {
         super(props);
-        this.state= {app:{ bitstream: null, initial_registers_values:[], tabs:[], parameters: [], macro:[], channels:[]}, tab_parameters:[], last_channel_id:0};
+        if(this.props.settings.edit_application_mode){
+            this.state= {
+                app:this.props.applications[this.props.settings.edit_application_name],
+                tab_parameters:[],
+                last_channel_id:0,
+                edit_IRV:{
+                    name:"",
+                    address:"",
+                    value:""
+                },
+                edit_channel:{
+                    name:"",
+                    min_value:null,
+                    max_value:null
+                },
+                edit_macro:{
+                    name:"",
+                    trigger:""
+                },
+                edit_parameter:{
+                    visible:false,
+                    parameter_name:"",
+                    trigger:"",
+                    default_value:null
+                },
+                edit_peripheral:{
+                    proxied:false,
+                    accessible:false,
+                    base_address:"",
+                    proxy_address:""
+                }
+            };
+        } else {
+            this.state= {
+                app:{
+                    bitstream: null,
+                    initial_registers_values:[],
+                    tabs:[],
+                    parameters: [],
+                    macro:[],
+                    channels:[]
+                },
+                tab_parameters:[],
+                last_channel_id:0,
+                edit_IRV:{
+                    name:"",
+                    address:"",
+                    value:""
+                },
+                edit_channel:{
+                    name:"",
+                    min_value:null,
+                    max_value:null
+
+                },
+                edit_macro:{
+                    name:"",
+                    trigger:""
+                },
+                edit_parameter:{
+                    visible:false,
+                    parameter_name:"",
+                    trigger:"",
+                    default_value:null
+                },
+                edit_peripheral:{
+                    proxied:false,
+                    accessible:false,
+                    base_address:"",
+                    proxy_address:""
+                }
+            };
+        }
     }
 
     handleClick = (event) =>{
@@ -74,84 +147,217 @@ class ApplicationsCreator extends Component {
     };
 
     handlePeripheralDefinitionDone = (peripheral) =>{
-        this.setState({app:{...this.state.app, tabs:[...this.state.app.tabs, peripheral]}});
+
+        let edited = false;
+        let new_peripherals = this.state.app.tabs.map((old_peripheral)=>{
+
+            if(this.state.edit_peripheral.tab_id === old_peripheral.tab_id){
+                edited = true;
+                return peripheral;
+            }
+            else
+                return old_peripheral
+        });
+
+        if(!edited){
+            this.setState({app:{...this.state.app, tabs:[...this.state.app.tabs, peripheral]}});
+        } else{
+            this.setState({app:{...this.state.app, tabs:new_peripherals}});
+        }
     };
 
-    handlePeripheralRemove = (event) =>{
-        let evicted = event.target.name;
+    handlePeripheralRemove = (target_peripheral) =>{
 
         const nextState = produce(this.state.app, draftState => {
             draftState.tabs = draftState.tabs.filter( (elem) => {
-                    return elem.name !== evicted;
+                    return elem.name !== target_peripheral;
                 }
             );
         });
         this.setState({app: nextState});
+    };
+
+    editPeripheral = (target_name) => {
+
+        let currentPeripheral = this.state.app.tabs.filter((peripheral)=>{
+            if(peripheral.name === target_name)
+                return peripheral;
+            else
+                return null;
+        });
+
+
+        this.setState({edit_peripheral:{...this.state.edit_peripheral, ...currentPeripheral[0]}});
+        this.props.showModal('app_creator_peripheral_modal');
     };
 
 
     handleParameterDefinitionDone = (parameter) =>{
-        this.setState({app:{...this.state.app, parameters:[...this.state.app.parameters, parameter]}});
+
+        let edited = false;
+        let new_parameters = this.state.app.parameters.map((old_parameter)=>{
+
+            if(this.state.edit_parameter.parameter_name === old_parameter.parameter_name){
+                edited = true;
+                return parameter;
+            }
+            else
+                return old_parameter
+        });
+
+        if(!edited){
+            this.setState({app:{...this.state.app, parameters:[...this.state.app.parameters, parameter]}});
+        } else{
+            this.setState({app:{...this.state.app, parameters:new_parameters}});
+        }
+
     };
 
-    handleParameterRemove = (event) =>{
-        let evicted = event.target.name;
-
+    handleParameterRemove = (target_parameter) =>{
         const nextState = produce(this.state.app, draftState => {
             draftState.parameters = draftState.parameters.filter( (elem) => {
-                    return elem.parameter_name !== evicted;
+                    return elem.parameter_name !== target_parameter;
                 }
             );
         });
         this.setState({app: nextState});
     };
 
-    handleMacroDefinitionDone = (macro) =>{
-        this.setState({app:{...this.state.app, macro:[...this.state.app.macro, macro]}});
+    editParameter = (target_name) => {
+
+        let currentParameter = this.state.app.parameters.filter((parameter)=>{
+            if(parameter.parameter_name === target_name)
+                return parameter;
+            else
+                return null;
+        });
+        this.setState({edit_parameter:{...this.state.edit_parameter, ...currentParameter[0]}});
+        this.props.showModal('app_creator_parameter_modal');
     };
 
-    handleMacroRemove = (event) => {
-        let evicted = event.target.name;
+
+    handleMacroDefinitionDone = (macro) =>{
+        let edited = false;
+        let new_macros = this.state.app.macro.map((old_macro)=>{
+
+            if(this.state.edit_macro.name === old_macro.name) {
+                edited = true;
+                return macro;
+            }
+            else
+                return old_macro
+        });
+
+        if(!edited){
+            this.setState({app:{...this.state.app, macro:[...this.state.app.macro, macro]}});
+        } else{
+            this.setState({app:{...this.state.app, macro:new_macros}});
+        }
+
+    };
+
+    handleMacroRemove = (target_macro) => {
 
         const nextState = produce(this.state.app, draftState => {
             draftState.macro = draftState.macro.filter((elem) => {
-                    return elem.name !== evicted;
+                    return elem.name !== target_macro;
                 }
             );
         });
         this.setState({app: nextState});
     };
 
-    handleChannelDefinitionDone = (channel) =>{
-        this.setState({app:{...this.state.app, channels:[...this.state.app.channels, channel]}});
+    editMacro = (target_name) => {
+        let currentMacro = this.state.app.macro.filter((macro)=>{
+            if(macro.name === target_name)
+                return macro;
+            else
+                return null;
+        });
+        this.setState({edit_macro:{...this.state.edit_macro, ...currentMacro[0]}});
+        this.props.showModal('app_creator_macro_modal');
     };
 
-    handleChannelRemove = (event) => {
-        let evicted = event.target.name;
+    handleChannelDefinitionDone = (channel) =>{
+        let edited = false;
+
+        let new_channels = this.state.app.channels.map((old_channel)=>{
+            if(this.state.edit_channel.name === old_channel.name){
+                edited = true;
+                return channel;
+            }
+            else
+                return old_channel
+        });
+
+        if(!edited){
+            this.setState({app:{...this.state.app, channels:[...this.state.app.channels, channel]}});
+        } else{
+            this.setState({app:{...this.state.app, channels:new_channels}});
+        }
+
+    };
+
+    handleChannelRemove = (target_name) => {
 
         const nextState = produce(this.state.app, draftState => {
             draftState.channels = draftState.channels.filter((elem) => {
-                return elem.name !== evicted;
+                return elem.name !== target_name;
             });
         });
 
         this.setState({app: nextState});
     };
+
+    editChannel = (target_name) => {
+        let currentChannel = this.state.app.channels.filter((channel)=>{
+            if(channel.name === target_name)
+                return channel;
+            else
+                return null;
+        });
+        this.setState({edit_channel:{...this.state.edit_channel, ...currentChannel[0]}});
+        this.props.showModal('app_creator_channel_modal');
+    };
+
 
     handleIRVDefinitionDone = (irv) =>{
-        this.setState({app:{...this.state.app, initial_registers_values:[...this.state.app.initial_registers_values, irv]}});
+        let edited = false;
+        let new_irvs = this.state.app.initial_registers_values.map((old_irv)=>{
+            if(this.state.edit_IRV.address === old_irv.address){
+                edited = true;
+                return irv;
+            }
+            else
+                return old_irv
+        });
+
+        if(!edited){
+            this.setState({app:{...this.state.app, initial_registers_values:[...this.state.app.initial_registers_values, irv]}});
+        } else{
+            this.setState({app:{...this.state.app, initial_registers_values:new_irvs}});
+        }
     };
 
-    handleIRVRemove = (event) => {
-        let evicted = event.target.name;
-
+    handleIRVRemove = (target_address) => {
         const nextState = produce(this.state.app, draftState => {
             draftState.initial_registers_values = draftState.initial_registers_values.filter((elem) => {
-                return elem.name !== evicted;
+                return elem.address !== target_address;
             });
         });
 
         this.setState({app: nextState});
+    };
+
+    editIRV = (target_address) => {
+        let currentIRV = this.state.app.initial_registers_values.filter((IRV)=>{
+            if(IRV.address === target_address)
+                return IRV;
+            else
+                return null;
+        });
+        this.setState({edit_IRV:{...this.state.edit_IRV, ...currentIRV[0]}});
+        this.props.showModal('app_creator_IRV_modal');
     };
 
 
@@ -160,11 +366,11 @@ class ApplicationsCreator extends Component {
             <div>
                 <AppCreatorAppNameModal done={this.handleSendApplication}/>
                 <Row>
-                    <AppCreatorPeripheralModal done={this.handlePeripheralDefinitionDone}/>
-                    <AppCreatorParameterModal  done={this.handleParameterDefinitionDone}/>
+                    <AppCreatorPeripheralModal init_values={this.state.edit_peripheral} done={this.handlePeripheralDefinitionDone}/>
+                    <AppCreatorParameterModal init_values={this.state.edit_parameter} done={this.handleParameterDefinitionDone}/>
                     <Col id={"tab_creator_add_register_col"}>
                         <Row>
-                            <Col md={{ span: 6, offset: 4 }}><AppCreatorPeripheralsDisplay peripherals={this.state.app.tabs} remove={this.handlePeripheralRemove} /></Col>
+                            <Col md={{ span: 6, offset: 4 }}><AppCreatorPeripheralsDisplay id_field={'name'} peripherals={this.state.app.tabs} remove={this.handlePeripheralRemove} onClick={this.editPeripheral}  /></Col>
                         </Row>
                         <Row>
                             <Image src="assets/Icons/add_peripheral.svg" alt='add peripheral' id="addPeripheral" onClick={this.handleClick} fluid/>
@@ -172,8 +378,8 @@ class ApplicationsCreator extends Component {
 
                     </Col>
                     <Col id={"tab_creator_add_register_col"}>
-                        <Row>
-                            <Col md={{ span: 6, offset: 4 }}><AppCreatorParameterDisplay parameters={this.state.app.parameters} remove={this.handleParameterRemove} /></Col>
+                        <Row>0x43c00124
+                            <Col md={{ span: 6, offset: 4 }}><AppCreatorPeripheralsDisplay id_field={'parameter_name'} peripherals={this.state.app.parameters} remove={this.handleParameterRemove} onClick={this.editParameter}/></Col>
                         </Row>
                         <Row>
                             <Image src="assets/Icons/add_parameter.svg" id="addParameter" alt='add parameter' onClick={this.handleClick} fluid/>
@@ -182,11 +388,11 @@ class ApplicationsCreator extends Component {
                     </Col>
                 </Row>
                 <Row>
-                    <AppCreatorMacroModal done={this.handleMacroDefinitionDone}/>
-                    <AppCreatorChannelModal done={this.handleChannelDefinitionDone}/>
+                    <AppCreatorMacroModal init_values={this.state.edit_macro} done={this.handleMacroDefinitionDone}/>
+                    <AppCreatorChannelModal init_values={this.state.edit_channel} done={this.handleChannelDefinitionDone}/>
                     <Col  id={"tab_creator_add_register_col"}>
                         <Row>
-                            <Col md={{ span: 6, offset: 4 }}><AppCreatorPeripheralsDisplay peripherals={this.state.app.macro} remove={this.handleMacroRemove} /></Col>
+                            <Col md={{ span: 6, offset: 4 }}><AppCreatorPeripheralsDisplay id_field={'name'} peripherals={this.state.app.macro} remove={this.handleMacroRemove}  onClick={this.editMacro} /></Col>
                         </Row>
                         <Row>
                             <Image src="assets/Icons/add_macro.svg" alt='addMacro' id="addMacro" onClick={this.handleClick} fluid/>
@@ -195,7 +401,7 @@ class ApplicationsCreator extends Component {
                     </Col>
                     <Col id={"tab_creator_add_register_col"}>
                         <Row>
-                            <Col md={{ span: 6, offset: 4 }}><AppCreatorPeripheralsDisplay peripherals={this.state.app.channels} remove={this.handleChannelRemove} /></Col>
+                            <Col md={{ span: 6, offset: 4 }}><AppCreatorPeripheralsDisplay id_field={'name'} peripherals={this.state.app.channels} remove={this.handleChannelRemove} onClick={this.editChannel} /></Col>
                         </Row>
                         <Row>
                             <Image src="assets/Icons/add_channel.svg" id="addChannel" alt='add Channel' onClick={this.handleClick} fluid/>
@@ -203,10 +409,10 @@ class ApplicationsCreator extends Component {
                     </Col>
                 </Row>
                 <Row>
-                    <AppCreatorInitialRegisterModal done={this.handleIRVDefinitionDone}/>
+                    <AppCreatorInitialRegisterModal init_values={this.state.edit_IRV} done={this.handleIRVDefinitionDone}/>
                     <Col id={"tab_creator_add_register_col"}>
                         <Row>
-                            <Col md={{ span: 6, offset: 5 }}><AppCreatorPeripheralsDisplay peripherals={this.state.app.initial_registers_values} remove={this.handleIRVRemove} /></Col>
+                            <Col md={{ span: 6, offset: 5 }}><AppCreatorPeripheralsDisplay id_field={'address'} peripherals={this.state.app.initial_registers_values} remove={this.handleIRVRemove} onClick={this.editIRV} /></Col>
                         </Row>
                         <Row>
                             <Image src="assets/Icons/add_IRV.svg" id="addIRV" alt='add initial register value' onClick={this.handleClick} fluid/>

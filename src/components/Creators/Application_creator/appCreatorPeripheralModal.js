@@ -53,9 +53,20 @@ class AppCreatorPeripheralModal extends Component {
         this.props.hideModal();
     };
 
+    handleShow = () =>{
+        debugger;
+        this.setState({
+            peripheral_type:this.props.init_values.tab_id,
+            proxied:this.props.init_values.proxied,
+            accessible:this.props.init_values.user_accessible,
+            base_address:this.props.init_values.base_address,
+            proxy_address:this.props.init_values.proxy_address
+        });
+    };
+
     render() {
         return(
-            <Modal onHide={this.handleHide} show={this.props.modals.app_creator_peripheral_modal}>
+            <Modal onHide={this.handleHide} onShow={this.handleShow} show={this.props.modals.app_creator_peripheral_modal}>
                 <Modal.Header closeButton>
                     <Modal.Title>Peripheral Settings</Modal.Title>
                 </Modal.Header>
@@ -64,7 +75,7 @@ class AppCreatorPeripheralModal extends Component {
                         <Form.Group as={Col}>
                             <Form.Group>
                                 <Form.Label> Peripheral type</Form.Label>
-                                <Form.Control name="peripheral_type" as="select" onChange={this.handleChange}>
+                                <Form.Control name="peripheral_type" as="select" value={this.state.peripheral_type} onChange={this.handleChange}>
                                     {
                                         Object.entries(this.props.peripherals).map((name,i) => (
                                             <option key={i} >{name[0]}</option>
@@ -72,10 +83,10 @@ class AppCreatorPeripheralModal extends Component {
                                     }
                                 </Form.Control>
                             </Form.Group>
-                            <Form.Control inline name='base_address' placeholder="Base Address" type="text" onChange={this.handleChange} />
+                            <Form.Control inline name='base_address' placeholder="Base Address" type="text" value={this.state.base_address} onChange={this.handleChange} />
                             <Form.Control inline name='proxy_address' placeholder="Proxy Address" type="text" value={this.state.proxy_address} disabled={!this.state.proxied} onChange={this.handleChange} />
-                            <Form.Check label="RTCU proxied peripheral" name="proxied" type="checkbox" id={'proxied'} value={this.state.proxied}  onChange={this.handleChange} />
-                            <Form.Check label="User accessible" name="accessible" type="checkbox" id="accessible" value={this.state.accessible} onChange={this.handleChange} />
+                            <Form.Check label="RTCU proxied peripheral" name="proxied" type="checkbox" id={'proxied'} checked={this.state.proxied}  onChange={this.handleChange} />
+                            <Form.Check label="User accessible" name="accessible" type="checkbox" id="accessible" checked={this.state.accessible} onChange={this.handleChange} />
                         </Form.Group>
 
                     </Form>

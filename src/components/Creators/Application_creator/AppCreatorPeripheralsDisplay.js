@@ -11,14 +11,27 @@ let AppCreatorPeripheralsDisplay  = props => {
                 {
                     props.peripherals.map((peripheral) => (
                         <ListGroup.Item>
-                            <Row>
-                                <Col>
-                                    {peripheral['name']}
-                                </Col>
-                                <Col md={4}>
-                                    <Image name={peripheral['name']} src='assets/Icons/remove.svg' className='remove_registers_image'  onClick={props.remove}/>
-                                </Col>
-                            </Row>
+                            <div onClick={() => props.onClick(peripheral[props.id_field])}>
+                                <Row>
+                                     <Col>
+                                            {(() => {
+                                                if(props.id_field==='name'){
+                                                    if ('name' in peripheral && peripheral['name'] !== ""){
+                                                        return peripheral['name'];
+                                                    } else{
+                                                        return peripheral['address'];
+                                                    }
+                                                }else{
+                                                    return peripheral[props.id_field];
+                                                }
+
+                                            })()}
+                                     </Col>
+                                    <Col md={4}>
+                                        <Image name={peripheral['name']} src='assets/Icons/remove.svg' className='remove_registers_image'  onClick={(e) => {props.remove(peripheral[props.id_field]); e.stopPropagation()}}/>
+                                    </Col>
+                                </Row>
+                            </div>
                         </ListGroup.Item>
                     ))
                 }
