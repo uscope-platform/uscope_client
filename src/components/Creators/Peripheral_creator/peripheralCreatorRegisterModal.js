@@ -81,20 +81,63 @@ class PeripheralCreatorRegisterModal extends Component {
         this.props.hideModal();
     };
 
+    handleShow = () => {
+        debugger;
+        if(this.props.initial_values === undefined){
+            this.setState({
+                reg_name:"",
+                reg_offset:"",
+                reg_description:"",
+                write_checked:false,
+                read_checked:false,
+                reg_ID:"",
+                single_type_checked:true,
+                words_type_checked:false,
+                enable_word_fields:false,
+                field_names:"",
+                field_desc:""
+            });
+        } else {
+            let descriptions = null;
+            let names = null;
+            if(this.props.initial_values.field_descriptions !== undefined){
+                descriptions = this.props.initial_values.field_descriptions.reduce((next, current)=>{
+                    return current + '\n' + next;
+                });
+                names = this.props.initial_values.field_names.reduce((next, current)=>{
+                    return current + '\n' + next;
+                });
+            }
+            this.setState({
+                reg_name:this.props.initial_values.register_name,
+                reg_offset:this.props.initial_values.offset,
+                reg_description:this.props.initial_values.description,
+                write_checked:this.props.initial_values.direction.includes('W'),
+                read_checked:this.props.initial_values.direction.includes('R'),
+                reg_ID:this.props.initial_values.ID,
+                single_type_checked:this.props.initial_values.register_format ==='single',
+                words_type_checked:this.props.initial_values.register_format ==='words',
+                enable_word_fields:this.props.initial_values.register_format ==='words',
+                field_names:names,
+                field_desc:descriptions
+            });
+        }
+    };
+
     render() {
 
         return(
-            <Modal onHide={this.handleHide} show={this.props.modals.peripheral_creator_register_modal}>
+            <Modal onHide={this.handleHide} onShow={this.handleShow} show={this.props.modals.peripheral_creator_register_modal}>
                 <Modal.Header closeButton>
                     <Modal.Title>Add a new register</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
                         <Form.Group>
-                            <Form.Control inline name='reg_name' placeholder="Register Name" type="text" onChange={this.handleChange} />
-                            <Form.Control inline name='reg_ID' placeholder="Register ID" type="text" onChange={this.handleChange} />
-                            <Form.Control name='reg_offset' placeholder="Address offset" type="text" onChange={this.handleChange} />
-                            <Form.Control name='reg_description' placeholder="Description" type="text" onChange={this.handleChange} />
+                            <Form.Control inline name='reg_name' placeholder="Register Name" type="text" value={this.state.reg_name} onChange={this.handleChange} />
+                            <Form.Control inline name='reg_ID' placeholder="Register ID" type="text" value={this.state.reg_ID}  onChange={this.handleChange} />
+                            <Form.Control name='reg_offset' placeholder="Address offset" type="text" value={this.state.reg_offset}  onChange={this.handleChange} />
+                            <Form.Control name='reg_description' placeholder="Description" type="text" value={this.state.reg_description} onChange={this.handleChange} />
                             <Form.Group>
                                 <Form.Label>Register access capabilities</Form.Label>
                                 <Form.Check label="Read" name="reg_direction" type="checkbox" id={'read'} checked={this.state.read_checked} onChange={this.handleChange} />
@@ -107,11 +150,11 @@ class PeripheralCreatorRegisterModal extends Component {
                             </div>
                             <Form.Group>
                                 <Form.Label>Field Names</Form.Label>
-                                <Form.Control disabled={!this.state.enable_word_fields} name="field_names" label="Field Names" as="textarea" rows={2} onChange={this.handleChange} />
+                                <Form.Control disabled={!this.state.enable_word_fields} name="field_names" value={this.state.field_names} label="Field Names" as="textarea" rows={2} onChange={this.handleChange} />
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label>Field descriptions</Form.Label>
-                                <Form.Control disabled={!this.state.enable_word_fields} name="field_desc" label="Field Descriptions" as="textarea" rows={2} onChange={this.handleChange} />
+                                <Form.Control disabled={!this.state.enable_word_fields} name="field_desc" value={this.state.field_desc} label="Field Descriptions" as="textarea" rows={2} onChange={this.handleChange} />
                             </Form.Group>
                         </Form.Group>
                     </Form>

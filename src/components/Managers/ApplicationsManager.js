@@ -117,6 +117,12 @@ class ApplicationsManager extends Component {
         this.props.server.app_proxy.createApplication(JSON.parse(content), null);
     };
 
+    handleCreate = () => {
+        this.props.setSetting("edit_application_mode", false);
+        this.props.setSetting("edit_application_name", null);
+        return true
+    };
+
     handleEdit = (content) => {
         if(this.state.selected===null){
             return false;
@@ -126,19 +132,25 @@ class ApplicationsManager extends Component {
         return true;
     };
 
+
+    is_editable = (peripheral) =>{
+        return this.state.selected !== null;
+    };
+
+
     render(){
         return(
             <Container>
                 <Row>
                     <LinkContainer to="/application_creator">
-                        <Button variant="outline-success"> Add application</Button>
+                        <Button variant="outline-success" onClick={this.handleCreate}> Add application</Button>
                     </LinkContainer>
 
-                    <Button variant="outline-danger" onClick={this.handleRemoveRow}> Remove application</Button>
+                    <Button variant="outline-danger"  onClick={this.handleRemoveRow}> Remove application</Button>
                     <Button variant="outline-primary" onClick={this.handleImport}>Import application</Button>
                     <Button variant="outline-primary" onClick={this.handleExport}>Export application</Button>
-                    <LinkContainer isActive={this.handleEdit} to="/application_creator">
-                        <Button variant="outline-primary">Edit application</Button>
+                    <LinkContainer isActive={this.is_editable} to="/application_creator">
+                        <Button variant="outline-primary"  onClick={this.handleEdit}>Edit application</Button>
                     </LinkContainer>
                 </Row>
                 <Row>

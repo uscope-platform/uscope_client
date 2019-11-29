@@ -4,7 +4,6 @@ import {Card, Col, Image, ListGroup, Row} from "react-bootstrap";
 
 
 let AppCreatorPeripheralsDisplay  = props => {
-
     return(
         <Card style={{ width: '18rem' }}>
             <ListGroup variant="flush">

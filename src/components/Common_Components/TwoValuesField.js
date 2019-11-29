@@ -11,6 +11,11 @@ let TwoValuesField = props => {
         props.handle_remove(props.register_name);
     };
 
+    let localEditHandler = () =>{
+        props.handle_edit(props.regID);
+    };
+
+
     if(props.preview_only){
         return(
             <Row>
@@ -35,6 +40,9 @@ let TwoValuesField = props => {
                             </Form.Group>
                         </Col>
                     </Row>
+            </Col>
+            <Col md={2}>
+                <Image src='assets/Icons/edit.svg' className='edit_registers_image'  onClick={localEditHandler}/>
             </Col>
             <Col md={2}>
                 <Image src='assets/Icons/remove.svg' className='remove_registers_image' onClick={localRemoveHandler}/>

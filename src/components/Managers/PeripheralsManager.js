@@ -9,6 +9,7 @@ import cellEditFactory from 'react-bootstrap-table2-editor';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 
 import {Button, Container, Row} from "react-bootstrap";
+import {setSetting} from "../../redux/Actions/SettingsActions";
 
 
 
@@ -17,6 +18,12 @@ function mapStateToProps(state) {
         peripherals:state.peripherals
     }
 }
+
+const mapDispatchToProps = dispatch => {
+    return{
+        setSetting: (name, value) => {dispatch(setSetting([name, value]))},
+    }
+};
 
 class PeripheralsManager extends Component {
     constructor(props) {
@@ -105,16 +112,34 @@ class PeripheralsManager extends Component {
         this.props.server.creator_proxy.createPeripheral(JSON.parse(content), null);
     };
 
+    handle_create = () =>{
+        this.props.setSetting("edit_peripheral_mode", false);
+        this.props.setSetting("edit_peripheral_name", null);
+    };
+
+    handleEdit = (content) => {
+        this.props.setSetting("edit_peripheral_mode", true);
+        this.props.setSetting("edit_peripheral_name", this.state.selected);
+    };
+
+
+    is_editable = (peripheral) =>{
+        return this.state.selected !== null;
+    };
+
     render(){
         return(
             <Container>
                 <Row>
                     <LinkContainer to="/peripheral_creator">
-                        <Button variant="outline-success"> Add new row</Button>
+                        <Button variant="outline-success" onClick={this.handle_create}> Add new row</Button>
                     </LinkContainer>
                     <Button variant="outline-danger" onClick={this.handleRemoveRow}> Remove Row</Button>
                     <Button variant="outline-primary" onClick={this.handleImport}>Import peripheral</Button>
                     <Button variant="outline-primary" onClick={this.handleExport}>Export peripheral</Button>
+                    <LinkContainer isActive={this.is_editable} to="/peripheral_creator">
+                        <Button variant="outline-primary" onClick={this.handleEdit} >Edit peripheral</Button>
+                    </LinkContainer>
                 </Row>
                 <Row>
                     <BootstrapTable
@@ -134,4 +159,4 @@ class PeripheralsManager extends Component {
     };
 }
 
-export default connect(mapStateToProps)(PeripheralsManager);
+export default connect(mapStateToProps, mapDispatchToProps)(PeripheralsManager);

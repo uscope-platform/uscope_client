@@ -10,6 +10,11 @@ let SingleValueField = props => {
         props.handle_remove(props.name);
     };
 
+    let localEditHandler = () =>{
+        props.handle_edit(props.regID);
+    };
+
+
     if(props.preview_only){
         return(
             <Row>
@@ -23,7 +28,10 @@ let SingleValueField = props => {
                     </Form.Group>
                 </Col>
                 <Col md={2}>
-                    <Image src='assets/Icons/remove.svg'className='remove_registers_image'  onClick={localRemoveHandler}/>
+                    <Image src='assets/Icons/edit.svg' className='edit_registers_image'  onClick={localEditHandler}/>
+                </Col>
+                <Col md={2}>
+                    <Image src='assets/Icons/remove.svg' className='remove_registers_image'  onClick={localRemoveHandler}/>
                 </Col>
             </Row>
         );
