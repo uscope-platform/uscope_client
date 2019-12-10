@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import {Modal, Button, Form, Col} from "react-bootstrap";
 import {hideModal} from "../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
-
+import {saveScriptsWorkspace} from '../../redux/Actions/scriptsActions';
 
 function mapStateToProps(state) {
     return{
@@ -17,6 +17,7 @@ function mapStateToProps(state) {
 const mapDispatchToProps = dispatch => {
     return{
         hideModal: () => {dispatch(hideModal('timebase_choice'))},
+        setWorkspaceVariable: (variable) => dispatch(saveScriptsWorkspace(variable))
     }
 };
 
@@ -64,8 +65,10 @@ class TimebaseModal extends Component {
                     break;
             }
         } else{
+
             numeric_value = Math.round(this.state.clock_frequency/parseFloat(raw_value));
         }
+        this.props.setWorkspaceVariable({fsw:parseFloat(raw_value)});
         return numeric_value
 
     };
