@@ -30,6 +30,7 @@ function mapStateToProps(state) {
     return{
         tabs:state.tabs,
         plot:state.plot,
+        scripts:state.scripts_store,
         settings:state.settings,
         peripherals:state.peripherals,
         applications:state.applications
@@ -58,7 +59,7 @@ class App extends Component {
 
     constructor(props) {
         super(props);
-        this.server = new serverProxy('http://10.190.0.10/uscope/'); // unimore:http://155.185.48.185:4999/uscope/ docker:http://172.18.0.1:4999/uscope/ unnc:http://10.190.0.74:4999/uscope/
+        this.server = new serverProxy('http://155.185.48.185/uscope/'); // unimore:http://155.185.48.185:4999/uscope/ docker:http://172.18.0.1:4999/uscope/ unnc:http://10.190.0.74:4999/uscope/
         this.state = {initializationPhase: states.APP_CHOICE};
 
 
@@ -91,6 +92,22 @@ class App extends Component {
                 }
             });
         }
+
+        let script_digest = localStorage.getItem('Script-hash');
+        if(this.props.scripts === undefined || script_digest === null){
+            this.server.script_proxy.download_all_scripts();
+            this.server.script_proxy.get_hash().then((res)=>{
+                localStorage.setItem('Script-hash', res);
+            });
+        } else{
+            this.server.script_proxy.get_hash().then((res)=>{
+                if(app_digest!==res){
+                    this.server.script_proxy.download_all_scripts();
+                    localStorage.setItem('Script-hash', res);
+                }
+            });
+        }
+
 
     }
 

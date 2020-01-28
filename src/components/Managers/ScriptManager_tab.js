@@ -1,7 +1,6 @@
 import React, {Component}  from 'react';
 
 
-import {saveScripts} from "../../redux/Actions/scriptsActions";
 import {connect} from "react-redux"
 
 import BootstrapTable from 'react-bootstrap-table-next';
@@ -18,12 +17,6 @@ function mapStateToProps(state) {
         scripts_store:state.scripts
     }
 }
-
-const mapDispatchToProps = dispatch => {
-    return{
-        saveScripts: (script) => {dispatch(saveScripts(script))},
-    }
-};
 
 const defaultSorted = [{
     dataField: 'id',
@@ -46,7 +39,7 @@ const expandRow = {
 class ScriptManager extends Component {
     constructor(props) {
         super(props);
-        this.state = { selected: null };
+        this.state = { selected: null, removed_scripts:[]};
         // the json stringify/parse is used to do a deep copy of the redux store
         this.scripts = JSON.parse(JSON.stringify(this.props.scripts_store));
 
@@ -87,7 +80,7 @@ class ScriptManager extends Component {
     handleOnSelect = (row, isSelect) => {
         if (isSelect) {
             this.setState(() => ({
-                selected: row.name
+                selected: row.id
             }));
         } else {
             this.setState(() => ({
@@ -119,12 +112,32 @@ class ScriptManager extends Component {
     };
 
     handleRemoveRow = (event) =>{
-        this.scripts.splice(this.scripts.findIndex(item => item.name === this.state.selected), 1);
+        let removed = this.scripts.find(x => x.id === this.state.selected);
+        this.scripts.splice(this.scripts.findIndex(item => item.id === this.state.selected), 1);
+        this.setState(() => ({
+            removed_scripts: [...this.state.removed_scripts, ...[removed]]
+        }));
         this.setState({selected:null});
     };
 
     handleScriptConfigurationSave = () =>{
-        this.props.saveScripts(this.scripts);
+        //HANDLE ADDITIONS
+        let difference = this.scripts.filter((element) => {
+            let presence = this.props.scripts_store.filter((curr_obj) => {
+                    return JSON.stringify(curr_obj) === JSON.stringify(element)
+            });
+            return !(presence && presence.length);
+        });
+
+        // eslint-disable-next-line
+        for(let script of difference){
+            this.props.server.script_proxy.upload_script(script);
+        }
+        //HANDLE DELETIONS
+        // eslint-disable-next-line
+        for(let script of this.state.removed_scripts){
+            this.props.server.script_proxy.delete_script(script);
+        }
     };
 
     render(){
@@ -210,4 +223,4 @@ class FileChoice extends React.Component {
 
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(ScriptManager);
+export default connect(mapStateToProps)(ScriptManager);
