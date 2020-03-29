@@ -24,6 +24,7 @@ export const HIDE_MODAL = "HIDE_MODAL";
 export const ADD_SCRIPT = "ADD_SCRIPT";
 export const REMOVE_SCRIPT = "REMOVE_SCRIPT";
 export const LOAD_ALL_SCRIPTS = "LOAD_ALL_SCRIPTS";
+export const EDIT_SCRIPT = "EDIT_SCRIPT";
 export const SAVE_SCRIPTS = "SAVE_SCRIPTS";
 export const SAVE_SCRIPT_WORKSPACE = "SAVE_SCRIPT_WORKSPACE";
 //                  PERIPHERALS ACTIONS

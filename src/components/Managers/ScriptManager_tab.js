@@ -8,6 +8,8 @@ import cellEditFactory from 'react-bootstrap-table2-editor';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 
 import {Button, Col, Container, Row} from "react-bootstrap";
+import {setSetting} from "../../redux/Actions/SettingsActions";
+import {LinkContainer} from "react-router-bootstrap";
 
 
 
@@ -17,6 +19,13 @@ function mapStateToProps(state) {
         scripts_store:state.scripts
     }
 }
+
+
+const mapDispatchToProps = dispatch => {
+    return{
+        setSetting: (name, value) => {dispatch(setSetting([name, value]))},
+    }
+};
 
 const defaultSorted = [{
     dataField: 'id',
@@ -140,12 +149,20 @@ class ScriptManager extends Component {
         }
     };
 
+    handleScriptEdit = () => {
+        let script = this.scripts.find(x => x.id === this.state.selected);
+        this.props.setSetting("scriptEditor_title", script.path);
+    };
+
     render(){
         return(
             <Container>
                 <Row>
                     <Button variant="outline-success" onClick={this.handleAddRow}>+ Add new row</Button>
                     <Button variant="outline-danger" onClick={this.handleRemoveRow}>- Remove Row</Button>
+                    <LinkContainer isActive={this.is_editable} to="/script_creator">
+                        <Button variant="outline-primary" onClick={this.handleScriptEdit}>Edit Script</Button>
+                    </LinkContainer>
                 </Row>
                 <Row>
                     <BootstrapTable
@@ -223,4 +240,4 @@ class FileChoice extends React.Component {
 
 
 
-export default connect(mapStateToProps)(ScriptManager);
+export default connect(mapStateToProps,mapDispatchToProps)(ScriptManager);

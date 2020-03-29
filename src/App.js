@@ -24,6 +24,7 @@ import ApplicationsCreator from "./components/Creators/Application_creator/Appli
 //////  STYLE IMPORTS
 import './App.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
+import ScriptsCreator from "./components/Creators/Script_creator/ScriptsCreator";
 
 
 function mapStateToProps(state) {
@@ -59,10 +60,8 @@ class App extends Component {
 
     constructor(props) {
         super(props);
-        this.server = new serverProxy('http://155.185.48.185/uscope/'); // unimore:http://155.185.48.185:4999/uscope/ docker:http://172.18.0.1:4999/uscope/ unnc:http://10.190.0.74:4999/uscope/
+        this.server = new serverProxy('http://192.168.1.2/uscope/'); // unimore:http://155.185.48.185/uscope/ docker:http://172.18.0.1:4999/uscope/ unnc:http://10.190.0.74:4999/uscope/
         this.state = {initializationPhase: states.APP_CHOICE};
-
-
         let app_digest = localStorage.getItem('Applications-hash');
         if(this.props.applications === undefined || app_digest === null){
             this.server.app_proxy.loadAllApplications();
@@ -207,6 +206,11 @@ class App extends Component {
                                 </Tab.Content>
 
                             </Tab.Container>
+                            <Route
+                                path={'/script_creator'}
+                                exact
+                                render={(props) => <ScriptsCreator server={this.server}/>}
+                            />
                             <Route
                                 path={'/peripheral_creator'}
                                 exact

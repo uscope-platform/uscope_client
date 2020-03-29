@@ -1,4 +1,4 @@
-import {LOAD_ALL_SCRIPTS, SAVE_SCRIPT_WORKSPACE, ADD_SCRIPT, REMOVE_SCRIPT} from "./types";
+import {LOAD_ALL_SCRIPTS, SAVE_SCRIPT_WORKSPACE, ADD_SCRIPT, REMOVE_SCRIPT, EDIT_SCRIPT} from "./types";
 import axios from "axios";
 
 
@@ -24,6 +24,22 @@ const AddScriptDone = script =>({
     payload:script
 });
 
+
+export const editScript = (server_url, script) =>{
+    return dispatch => {
+        axios.patch(server_url,script).then(res => {
+            dispatch(editScriptDone(script));
+        }).catch(err => {
+            alert(err.message);
+            dispatch(editScriptDone(script));
+        });
+    };
+};
+
+const editScriptDone = script =>({
+    type: EDIT_SCRIPT,
+    payload:script
+});
 
 export const removeScript = (server_url, script) =>{
     return dispatch => {

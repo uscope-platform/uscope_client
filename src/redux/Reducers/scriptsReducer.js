@@ -1,4 +1,4 @@
-import {SAVE_SCRIPT_WORKSPACE, ADD_SCRIPT, REMOVE_SCRIPT, LOAD_ALL_SCRIPTS} from "../Actions/types";
+import {SAVE_SCRIPT_WORKSPACE, ADD_SCRIPT, REMOVE_SCRIPT, LOAD_ALL_SCRIPTS, EDIT_SCRIPT} from "../Actions/types";
 import produce from "immer";
 
 
@@ -17,6 +17,15 @@ let scriptsReducer = function (state = [], action) {
         case LOAD_ALL_SCRIPTS:
             state = action.payload;
             return  state;
+        case EDIT_SCRIPT:
+            return produce(state, draftState => {
+                debugger;
+                let current_state = draftState.find(x => x.id === action.payload.id);
+                let index = draftState.indexOf(current_state);
+                draftState.splice(index, 1);
+                draftState.push(action.payload)
+
+            });
         default:
             return state;
     }
