@@ -1,9 +1,9 @@
 import { LOAD_REGISTERS, SEND_REGISTER} from "./types";
 import axios from "axios";
 
-export const sendRegister = (server_url ,register) => {
+export const sendRegister = (server_url ,register, config) => {
     return dispatch => {
-        axios.post(server_url,{payload:register}).then(() => {
+        axios.post(server_url,{payload:register}, config).then(() => {
             dispatch(sendRegisterDone(register));
         }).catch(err => {
             alert(err.message);

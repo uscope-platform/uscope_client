@@ -4,8 +4,9 @@ import axios from "axios";
 import store from "../store";
 import {removePeripheral} from "../redux/Actions/peripheralsActions";
 
-export default function creatorProxy(server_url) {
+export default function creatorProxy(server_url, token) {
     this.server_url = server_url;
+    this.config = {headers: { Authorization: `Bearer ${token}` }};
 
     this.createPeripheral = (peripheral, image) => {
         if(image!==null){
@@ -19,9 +20,10 @@ export default function creatorProxy(server_url) {
                         'accept': 'application/json',
                         'Accept-Language': 'en-US,en;q=0.8',
                         'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+                        'Authorization': `Bearer ${token}`
                     }}
             ).then(() =>{
-                axios.post(this.server_url+'tab_creator/create_peripheral',{payload:peripheral, image:true}).catch(err => {
+                axios.post(this.server_url+'tab_creator/create_peripheral',{payload:peripheral, image:true}, this.config).catch(err => {
                     alert(err.message);
                 })
             }).catch(function (response) {
@@ -29,7 +31,7 @@ export default function creatorProxy(server_url) {
                 console.log(response);
             });
         } else{
-            axios.post(this.server_url+'tab_creator/create_peripheral',{payload:peripheral, image:false}).catch(err => {
+            axios.post(this.server_url+'tab_creator/create_peripheral',{payload:peripheral, image:false},this.config).catch(err => {
                 alert(err.message);
             })
         }
@@ -37,7 +39,7 @@ export default function creatorProxy(server_url) {
     };
 
     this.removePeripheral = (peripheral) => {
-        store.dispatch(removePeripheral(this.server_url+'tab_creator/remove_peripheral/'+ peripheral, peripheral))
+        store.dispatch(removePeripheral(this.server_url+'tab_creator/remove_peripheral/'+ peripheral, peripheral, this.config))
     };
 
 }

@@ -2,9 +2,10 @@ import {ADD_APPLICATION, LOAD_APPLICATIONS, REMOVE_APPLICATION} from "./types";
 import axios from 'axios';
 
 
-export const loadApplications = (server_url) => {
+export const loadApplications = (server_url, config) => {
+
     return dispatch => {
-        axios.get(server_url).then(res => {
+        axios.get(server_url, config).then(res => {
             dispatch(loadApplicationsDone(res.data));
         }).catch(err => {
             alert(err.message);
@@ -18,9 +19,9 @@ const loadApplicationsDone = parameters => ({
 });
 
 
-export const removeApplication = (server_url, application) =>{
+export const removeApplication = (server_url, application, config) =>{
     return dispatch => {
-        axios.get(server_url).then(res => {
+        axios.get(server_url, config).then(res => {
             dispatch(removeApplicationDone(application));
         }).catch(err => {
             alert(err.message);
@@ -33,9 +34,9 @@ const removeApplicationDone = application =>({
     payload:application
 });
 
-export const addApplication = (server_url, application_obj) =>{
+export const addApplication = (server_url, application_obj, config) =>{
     return dispatch => {
-        axios.post(server_url, application_obj).then(res => {
+        axios.post(server_url, application_obj, config).then(res => {
             dispatch(addApplicationDone(application_obj));
         }).catch(err => {
             alert(err.message);

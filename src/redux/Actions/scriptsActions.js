@@ -9,9 +9,9 @@ export const saveScriptsWorkspace = (workspace) => ({
 });
 
 
-export const addScript = (server_url, script) =>{
+export const addScript = (server_url, script, config) =>{
     return dispatch => {
-        axios.post(server_url, script).then(res => {
+        axios.post(server_url, script, config).then(res => {
             dispatch(AddScriptDone(script));
         }).catch(err => {
             alert(err.message);
@@ -25,9 +25,9 @@ const AddScriptDone = script =>({
 });
 
 
-export const editScript = (server_url, script) =>{
+export const editScript = (server_url, script, config) =>{
     return dispatch => {
-        axios.patch(server_url,script).then(res => {
+        axios.patch(server_url,script, config).then(res => {
             dispatch(editScriptDone(script));
         }).catch(err => {
             alert(err.message);
@@ -41,9 +41,9 @@ const editScriptDone = script =>({
     payload:script
 });
 
-export const removeScript = (server_url, script) =>{
+export const removeScript = (server_url, script, config) =>{
     return dispatch => {
-        axios.delete(server_url).then(res => {
+        axios.delete(server_url, config).then(res => {
             dispatch(removeScriptDone(script));
         }).catch(err => {
             alert(err.message);
@@ -57,9 +57,9 @@ const removeScriptDone = script =>({
 });
 
 
-export const loadAllScripts = (server_url) =>{
+export const loadAllScripts = (server_url, config) =>{
     return dispatch => {
-        axios.get(server_url).then(res => {
+        axios.get(server_url, config).then(res => {
             dispatch(loadAllScriptsDone(res.data));
         }).catch(err => {
             alert(err.message);

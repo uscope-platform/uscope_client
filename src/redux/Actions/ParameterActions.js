@@ -13,9 +13,9 @@ export const saveParameter = (parameter) => ({
 });
 
 
-export const loadParameters = (server_url) => {
+export const loadParameters = (server_url, config) => {
     return dispatch => {
-        axios.get(server_url).then(res => {
+        axios.get(server_url, config).then(res => {
                 dispatch(loadParametersDone(res.data));
             }).catch(err => {
                 alert(err.message);

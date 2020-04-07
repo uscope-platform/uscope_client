@@ -31,9 +31,9 @@ export const disableChannel = (channel) =>{
     }
 };
 
-export const loadChanels = (server_url) => {
+export const loadChanels = (server_url, config) => {
     return dispatch => {
-        axios.get(server_url).then(res => {
+        axios.get(server_url, config).then(res => {
             dispatch(loadChanelsDone(res.data));
         }).catch(err => {
             alert(err.message);
@@ -73,9 +73,9 @@ export const plotStop = () =>{
     }
 };
 
-export const setChannelSetting = (server_url, settings) => {
+export const setChannelSetting = (server_url, settings, config) => {
     return dispatch => {
-        axios.post(server_url, settings).then(res => {
+        axios.post(server_url, settings, config).then(res => {
             dispatch(setChannelSettingDone(settings));
         }).catch(err => {
             alert(err.message);
@@ -89,15 +89,16 @@ export const setChannelSettingDone = (settings) =>({
 });
 
 
-export const fetchData = (server_url, channels) => {
+export const fetchData = (server_url, channels, config) => {
     return dispatch => {
 
-        const options = {
+        let options = {
             params: {
                 channels: JSON.stringify(channels)
             }
         };
 
+        options = {...options, config};
         axios.get(server_url, options).then(res => {
             dispatch(fetchDataDone(res.data));
         }).catch(err => {

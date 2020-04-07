@@ -2,6 +2,7 @@ import {SHOW_MODAL, HIDE_MODAL} from "../Actions/types";
 import produce from "immer";
 
 const initial_state = {
+    login_modal:false,
     application_choice:false,
     timebase_choice:false,
     scope_mode_choice:false,
