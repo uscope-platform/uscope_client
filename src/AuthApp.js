@@ -193,6 +193,7 @@ class AuthApp extends Component {
                                         if(tab.user_accessible){
                                             return(
                                                 <Route
+                                                    key={tab.name}
                                                     path={'/'+tab.name}
                                                     exact
                                                     render={(props) => <TabContent className="main_content_tab" server={this.server} tab={tab}/>}

@@ -7,12 +7,12 @@ let  Navbar = props =>{
 
     return(
 
-        <Nav variant="tabs" >
+        <Nav id="navbar-element" variant="tabs" >
             {props.tabs.map((tab, i) => {
                 if(tab.user_accessible){
                     return(
-                        <Nav.Item>
-                            <Link to={'/'+tab.name} className="nav-link">{tab.name}</Link>
+                        <Nav.Item key={tab.name+"_item"}>
+                            <Link key={tab.name} to={'/'+tab.name} className="nav-link">{tab.name}</Link>
                         </Nav.Item>
                     )
                 } else {

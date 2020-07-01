@@ -48,9 +48,9 @@ class LoginPage extends Component {
                 <Row>
                     <Form>
                         <Form.Group>
-                            <Form.Control inline name='username' placeholder="Usernamne" type="text" value={this.state.username} onChange={this.handleChange} />
-                            <Form.Control inline name='password' placeholder="Password" type="password" value={this.state.password}  onChange={this.handleChange} />
-                            <Form.Check inline name='remember_me' type="checkbox" label="Remember Me" value={this.state.remember_me} onChange={this.handleChange}/>
+                            <Form.Control inline="true" name='username' placeholder="Usernamne" type="text" value={this.state.username} onChange={this.handleChange} />
+                            <Form.Control inline="true" name='password' placeholder="Password" type="password" value={this.state.password}  onChange={this.handleChange} />
+                            <Form.Check inline="true" name='remember_me' type="checkbox" label="Remember Me" value={this.state.remember_me} onChange={this.handleChange}/>
                         </Form.Group>
                     </Form>
                 </Row>

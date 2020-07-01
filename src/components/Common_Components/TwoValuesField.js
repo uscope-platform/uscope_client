@@ -22,7 +22,7 @@ let TwoValuesField = props => {
                 <Col fluid={true}>
                     <Row>
                         <Col>
-                            <Form.Group controlId="first_input">
+                            <Form.Group>
                                 <Form.Label>{props.field_names[0]}</Form.Label>
                                 <Form.Control className='twoFields.1' type="text" id={props.register_name+'.1'} placeholder={props.value[0]} />
                                 <Form.Text className="text-muted">
@@ -31,7 +31,7 @@ let TwoValuesField = props => {
                             </Form.Group>
                         </Col>
                         <Col>
-                            <Form.Group controlId="second_input">
+                            <Form.Group>
                                 <Form.Label>{props.field_names[1]}</Form.Label>
                                 <Form.Control className='twoFields.2' type="text" id={props.C+'.2'} placeholder={props.value[1]} />
                                 <Form.Text className="text-muted">
@@ -53,7 +53,7 @@ let TwoValuesField = props => {
         return(
             <Form.Row >
                 <Col>
-                    <Form.Group controlId="first_input">
+                    <Form.Group>
                         <Form.Label>{props.field_names[0]}</Form.Label>
                         <Form.Control className='twoFields.1' type="text" id={props.register_name+'.1'} placeholder={props.value[0]} />
                         <Form.Text className="text-muted">
@@ -62,7 +62,7 @@ let TwoValuesField = props => {
                     </Form.Group>
                 </Col>
                 <Col>
-                    <Form.Group controlId="second_input">
+                    <Form.Group>
                         <Form.Label>{props.field_names[1]}</Form.Label>
                         <Form.Control className='twoFields.2' type="text" id={props.register_name+'.2'} placeholder={props.value[1]} />
                         <Form.Text className="text-muted">

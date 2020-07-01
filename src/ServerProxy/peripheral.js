@@ -38,7 +38,7 @@ export default function peripheralProxy(server_url, token) {
     };
 
     this.loadAllPeripherals = () =>{
-        store.dispatch(loadPeripherals(_this.server_url+'registers/all_peripheral/descriptions'))
+        store.dispatch(loadPeripherals(_this.server_url+'registers/all_peripheral/descriptions', _this.config))
     };
 
     this.get_peripherals_hash = () =>{

@@ -59,10 +59,10 @@ class MacroActions extends Component {
 
      render (){
          return(
-             <div>
+             <div key="macros">
                  {this.Actions.map((macro) => {
                      return(
-                         <Button className="macro_action_buttons" name={macro.trigger}  variant="primary" onClick={this.onClick}>{macro.name}</Button>
+                         <Button key={macro.trigger} className="macro_action_buttons" name={macro.trigger}  variant="primary" onClick={this.onClick}>{macro.name}</Button>
                      );
                  })}
              </div>

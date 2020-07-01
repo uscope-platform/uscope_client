@@ -98,7 +98,7 @@ export const fetchData = (server_url, channels, config) => {
             }
         };
 
-        options = {...options, config};
+        options = {...options, ...config};
         axios.get(server_url, options).then(res => {
             dispatch(fetchDataDone(res.data));
         }).catch(err => {

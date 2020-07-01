@@ -105,7 +105,7 @@ class TimebaseModal extends Component {
 
     generate_form = (label) => {
         return(
-            <Form.Group as={Col}>
+            <Form.Group key={label} as={Col}>
                 <Form.Label>{label}</Form.Label>
                 <Form.Control name={label} type="text" onChange={this.handleChange} />
             </Form.Group>

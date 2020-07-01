@@ -12,7 +12,7 @@ let ChannelSelector = function(props) {
             <Container>
                     {channels_settings.map((chan,i) => {
                         return(
-                            <ChannelSelectorItem id={chan.id} idx={i} name={chan.name} server={props.server} value={channels_data[i].visible}/>
+                            <ChannelSelectorItem key={chan.id} id={chan.id} idx={i} name={chan.name} server={props.server} value={channels_data[i].visible}/>
                         );
                     })}
             </Container>

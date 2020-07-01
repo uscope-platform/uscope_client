@@ -37,7 +37,7 @@ let SingleValueField = props => {
         );
     } else{
         return(
-            <Form.Group controlId="formBasicEmail">
+            <Form.Group controlId={props.name}>
                 <Form.Label>{props.name}</Form.Label>
                 <Form.Control type="text" className='oneField' name={props.name} placeholder={props.value} />
                 <Form.Text className="text-muted">

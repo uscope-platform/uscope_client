@@ -7,7 +7,7 @@ import {loadApplications, addApplication, removeApplication} from "../redux/Acti
 export default function applicationProxy(server_url, token) {
     let _this = this;
     this.server_url = server_url;
-    this.config = {headers: { Authorization: 'Bearer ' +token }};
+    this.config = {headers: { Authorization: `Bearer ${token}` }};
 
     this.loadAllApplications = () =>{
         store.dispatch(loadApplications(_this.server_url+'application/all/specs', _this.config))
