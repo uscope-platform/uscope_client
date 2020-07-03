@@ -37,7 +37,6 @@ const initial_state = {
     layout: {
         width: "1024",
             height: "auto",
-            title: 'A Fancy Plot',
             paper_bgcolor: "rgba(0,0,0,0)",
             plot_bgcolor:"#444",
             font: {
