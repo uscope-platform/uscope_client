@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {Card, Col, Image, ListGroup, Row} from "react-bootstrap";
+import {Trash} from "grommet-icons";
 
 
 let AppCreatorPeripheralsDisplay  = props => {
@@ -27,7 +28,7 @@ let AppCreatorPeripheralsDisplay  = props => {
                                             })()}
                                      </Col>
                                     <Col md={4}>
-                                        <Image name={peripheral['name']} src='assets/Icons/remove.svg' className='remove_registers_image'  onClick={(e) => {props.remove(peripheral[props.id_field]); e.stopPropagation()}}/>
+                                        <Trash color='white' onClick={(e) => {props.remove(peripheral[props.id_field]); e.stopPropagation()}}/>
                                     </Col>
                                 </Row>
                             </div>

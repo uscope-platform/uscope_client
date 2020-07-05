@@ -1,6 +1,7 @@
 import React, {Component}  from 'react';
 import Button from "../../UI_elements/Button"
-import { Col, Image, Row} from "react-bootstrap";
+import Image from "../../UI_elements/Image"
+import { Col, Row} from "react-bootstrap";
 
 import {showModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux"
@@ -379,7 +380,7 @@ class ApplicationsCreator extends Component {
 
                     </Col>
                     <Col id={"tab_creator_add_register_col"}>
-                        <Row>0x43c00124
+                        <Row>
                             <Col md={{ span: 6, offset: 4 }}><AppCreatorPeripheralsDisplay id_field={'parameter_name'} peripherals={this.state.app.parameters} remove={this.handleParameterRemove} onClick={this.editParameter}/></Col>
                         </Row>
                         <Row>

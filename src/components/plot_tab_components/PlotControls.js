@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {useDispatch, useSelector} from "react-redux";
+import {Camera, Configure, Pause, Play, Stop} from 'grommet-icons'
 import {plotPause, plotPlay, plotStop} from "../../redux/Actions/plotActions";
 import TimebaseModal from "../Modal_Components/TimebaseModal"
 import ScopeModeModal from "../Modal_Components/scopeModeModal";
@@ -56,11 +57,11 @@ let  PlotControls = props =>{
         <div>
             <TimebaseModal server={props.server} show={modals.timebase_choice}/>
             <ScopeModeModal server={props.server} show={modals.scope_mode_choice} done={onModeSubmit} />
-            {props.controls.map((control, i) => {
-                return(
-                    <img className={"plot_controls_asset"} key={i} src={control.image} alt={control.name} id={control.name} onClick={onClick} />
-                );
-            })}
+            <Play id='play' color='white' onClick={onClick}/>
+            <Pause id='pause' color='white' onClick={onClick}/>
+            <Stop id='stop' color='white' onClick={onClick}/>
+            <Configure id='timebase' color='white' onClick={onClick}/>
+            <Camera id='mode' color='white' onClick={onClick}/>
         </div>
     );
 };

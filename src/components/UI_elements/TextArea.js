@@ -24,6 +24,7 @@ class TextArea extends React.Component {
                 <InputTextArea
                     rows={this.props.rows}
                     name={this.props.name}
+                    disabled = {(this.props.disabled)? "disabled" : ""}
                     onChange={e => this.props.onChange(e)}/>
             </Wrapper>
         );

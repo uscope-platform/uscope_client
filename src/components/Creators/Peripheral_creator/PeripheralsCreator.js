@@ -1,6 +1,7 @@
 import React, {Component}  from 'react';
 import Button from "../../UI_elements/Button"
-import { Col, Image, Row} from "react-bootstrap";
+import Image from "../../UI_elements/Image";
+import { Col, Row} from "react-bootstrap";
 
 import TabCreatorRegisterModal from "./peripheralCreatorRegisterModal"
 import TabCreatorImageChooser from "./peripheralCreatorImageChooser";

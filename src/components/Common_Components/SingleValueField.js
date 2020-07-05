@@ -1,7 +1,8 @@
 import React from 'react';
 
-import {Col, Image, Row} from "react-bootstrap";
+import {Col, Row} from "react-bootstrap";
 import InputField from "../UI_elements/InputField";
+import {Edit,Trash} from "grommet-icons";
 
 let SingleValueField = props => {
 
@@ -22,10 +23,10 @@ let SingleValueField = props => {
                     <InputField description={props.description} name={props.name} label={props.name}/>
                 </Col>
                 <Col md={2}>
-                    <Image src='assets/Icons/edit.svg' className='edit_registers_image'  onClick={localEditHandler}/>
+                    <Edit color='white' onClick={localEditHandler} />
                 </Col>
                 <Col md={2}>
-                    <Image src='assets/Icons/remove.svg' className='remove_registers_image'  onClick={localRemoveHandler}/>
+                    <Trash color='white' onClick={localRemoveHandler}/>
                 </Col>
             </Row>
         );

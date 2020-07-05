@@ -25,6 +25,7 @@ class Radio extends React.Component {
                     name={this.props.name}
                     id={this.props.id}
                     type="radio"
+                    checked = {this.props.value}
                     onChange={e => this.props.onChange(e)}/>
                 <Label inline={this.props.inline}>{this.props.label}</Label>
             </Wrapper>

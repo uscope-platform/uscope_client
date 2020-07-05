@@ -146,8 +146,8 @@ class PeripheralCreatorRegisterModal extends Component {
                     </div>
                     <div>
                         <Label>Register type</Label>
-                        <Radio name="reg_type"  onChange={this.handleChange} label="single" id='single'/>
-                        <Radio name="reg_type" onChange={this.handleChange} label="words" id='words'/>
+                        <Radio name="reg_type" value={!this.state.enable_word_fields} onChange={this.handleChange} label="single" id='single'/>
+                        <Radio name="reg_type" value={this.state.enable_word_fields} onChange={this.handleChange} label="words" id='words'/>
                     </div>
                     <div>
                         <Label>Field Names</Label>
