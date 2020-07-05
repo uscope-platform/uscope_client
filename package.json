@@ -28,14 +28,17 @@
     "redux-form": "^8.2.6",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
-    "source-map-explorer": "^2.1.0"
+    "source-map-explorer": "^2.1.0",
+    "styled-components": "^5.1.1"
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "PORT=3004 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -51,5 +54,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@storybook/addon-actions": "^5.3.19",
+    "@storybook/addon-links": "^5.3.19",
+    "@storybook/addons": "^5.3.19",
+    "@storybook/preset-create-react-app": "^3.1.2",
+    "@storybook/react": "^5.3.19",
+    "storybook-dark-mode": "^0.6.1",
+    "styled-react-modal": "^2.0.1"
   }
 }

@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 
-import {Modal, Button, Form, Col} from "react-bootstrap";
+import Button from "../../UI_elements/Button"
+import {Modal} from "react-bootstrap";
 import {hideModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
+import InputField from "../../UI_elements/InputField";
 
 function mapStateToProps(state) {
     return{
@@ -49,16 +51,12 @@ class AppCreatorAppNameModal extends Component {
                     <Modal.Title>Channel Settings</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
-                        <Form.Group as={Col}>
-                            <Form.Control inline name='name' placeholder="Application Name" type="text" onChange={this.handleChange} />
-                            <Form.Control inline name='bitstream' placeholder="Bitstream Filename" type="integer" onChange={this.handleChange} />
-                        </Form.Group>
-                    </Form>
+                    <InputField inline name='name' onChange={this.handleChange} label="Application Name"/>
+                    <InputField inline name='bitstream' onChange={this.handleChange} label="Bitstream Filename"/>
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="primary" type="submit" onClick={this.handleClose}>Save changes</Button>
+                    <Button onClick={this.handleClose}>Save changes</Button>
                 </Modal.Footer>
             </Modal>
         );

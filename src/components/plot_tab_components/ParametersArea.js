@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 
-
-import {Button, Form} from "react-bootstrap"
+import Button from "../UI_elements/Button"
 import {connect} from "react-redux";
 import SingleValueField from "../Common_Components/SingleValueField";
 import {parseFunction, context_cleaner} from "../../user_script_launcher";
@@ -101,7 +100,7 @@ class ParametersArea extends Component {
     render(){
         return(
             <div className="parameters_area_containser">
-                <Form onSubmit={this.handleSubmit}>
+                <form onSubmit={this.handleSubmit}>
                     {this.props.parameters.map((param, i) => {
                         if(param.visible){
                             return(
@@ -111,10 +110,8 @@ class ParametersArea extends Component {
                             return null;
                         }
                     })}
-                    <Button variant="primary" type="submit">
-                        Submit
-                    </Button>
-                </Form>
+                    <Button> Submit </Button>
+                </form>
             </div>
         );
     }

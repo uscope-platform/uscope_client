@@ -1,6 +1,10 @@
 import React, {Component} from 'react';
 
-import {Modal, Button, Form, Col} from "react-bootstrap";
+import Button from "../../UI_elements/Button"
+import InputField from "../../UI_elements/InputField";
+import Checkbox from "../../UI_elements/checkbox";
+
+import {Modal} from "react-bootstrap";
 import {hideModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
 
@@ -65,18 +69,14 @@ class AppCreatorParameterModal extends Component {
                     <Modal.Title>Parameter Settings</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
-                        <Form.Group as={Col}>
-                            <Form.Control inline name='parameter_name' placeholder="Parameter Name" type="text" onChange={this.handleChange} value={this.state.parameter_name}/>
-                            <Form.Control inline name='trigger' placeholder="Trigger Name" type="text" onChange={this.handleChange} value={this.state.trigger}/>
-                            <Form.Control inline name='value' placeholder="Value" type="text" onChange={this.handleChange} value={this.state.value}/>
-                            <Form.Check label="visible" name="visible" type="checkbox" id="visible" checked={this.state.visible} onChange={this.handleChange}/>
-                        </Form.Group>
-                    </Form>
+                    <InputField name='parameter_name' onChange={this.handleChange} label="Parameter Name"/>
+                    <InputField name='trigger' onChange={this.handleChange} label="Trigger Name"/>
+                    <InputField name='value' onChange={this.handleChange} label="Value"/>
+                    <Checkbox name='visible' onChange={this.handleChange} label="Visible"/>
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="primary" type="submit" onClick={this.handleClose}>Save changes</Button>
+                    <Button onClick={this.handleClose}>Save changes</Button>
                 </Modal.Footer>
             </Modal>
         );

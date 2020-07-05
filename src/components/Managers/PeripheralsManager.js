@@ -8,7 +8,8 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import cellEditFactory from 'react-bootstrap-table2-editor';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 
-import {Button, Container, Row} from "react-bootstrap";
+import Button from "../UI_elements/Button"
+import {Container, Row} from "react-bootstrap";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
 
@@ -132,13 +133,13 @@ class PeripheralsManager extends Component {
             <Container>
                 <Row>
                     <LinkContainer to="/peripheral_creator">
-                        <Button variant="outline-success" onClick={this.handle_create}> Add new row</Button>
+                        <Button outline confirm onClick={this.handle_create}> Add new row</Button>
                     </LinkContainer>
-                    <Button variant="outline-danger" onClick={this.handleRemoveRow}> Remove Row</Button>
-                    <Button variant="outline-primary" onClick={this.handleImport}>Import peripheral</Button>
-                    <Button variant="outline-primary" onClick={this.handleExport}>Export peripheral</Button>
+                    <Button outline deny onClick={this.handleRemoveRow}> Remove Row</Button>
+                    <Button outline onClick={this.handleImport}>Import peripheral</Button>
+                    <Button outline onClick={this.handleExport}>Export peripheral</Button>
                     <LinkContainer isActive={this.is_editable} to="/peripheral_creator">
-                        <Button variant="outline-primary" onClick={this.handleEdit} >Edit peripheral</Button>
+                        <Button outline onClick={this.handleEdit} >Edit peripheral</Button>
                     </LinkContainer>
                 </Row>
                 <Row>

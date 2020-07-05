@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import {Button} from "react-bootstrap";
+import Button from "../UI_elements/Button"
 import {connect} from "react-redux";
 import {parseFunction, context_cleaner} from "../../user_script_launcher";
 
@@ -62,7 +62,7 @@ class MacroActions extends Component {
              <div key="macros">
                  {this.Actions.map((macro) => {
                      return(
-                         <Button key={macro.trigger} className="macro_action_buttons" name={macro.trigger}  variant="primary" onClick={this.onClick}>{macro.name}</Button>
+                         <Button key={macro.trigger} className="macro_action_buttons" name={macro.trigger} onClick={this.onClick}>{macro.name}</Button>
                      );
                  })}
              </div>

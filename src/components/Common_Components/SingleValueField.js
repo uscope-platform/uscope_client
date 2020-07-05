@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Form from "react-bootstrap/Form";
 import {Col, Image, Row} from "react-bootstrap";
+import InputField from "../UI_elements/InputField";
 
 let SingleValueField = props => {
 
@@ -19,13 +19,7 @@ let SingleValueField = props => {
         return(
             <Row>
                 <Col fluid={true}>
-                    <Form.Group controlId="formBasicEmail">
-                        <Form.Label>{props.name}</Form.Label>
-                        <Form.Control type="text" className='oneField' name={props.name} placeholder={props.value} />
-                        <Form.Text className="text-muted">
-                            {props.description}
-                        </Form.Text>
-                    </Form.Group>
+                    <InputField description={props.description} name={props.name} label={props.name}/>
                 </Col>
                 <Col md={2}>
                     <Image src='assets/Icons/edit.svg' className='edit_registers_image'  onClick={localEditHandler}/>
@@ -37,13 +31,7 @@ let SingleValueField = props => {
         );
     } else{
         return(
-            <Form.Group controlId={props.name}>
-                <Form.Label>{props.name}</Form.Label>
-                <Form.Control type="text" className='oneField' name={props.name} placeholder={props.value} />
-                <Form.Text className="text-muted">
-                    {props.description}
-                </Form.Text>
-            </Form.Group>
+            <InputField description={props.description} name={props.name} label={props.name}/>
         );
     }
 };

@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 
-import {Modal, Button, Form, Col} from "react-bootstrap";
+import Button from "../../UI_elements/Button"
+import {Modal} from "react-bootstrap";
 import {hideModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
+import InputField from "../../UI_elements/InputField";
 
 function mapStateToProps(state) {
     return{
@@ -55,17 +57,13 @@ class AppCreatorChannelModal extends Component {
                     <Modal.Title>Channel Settings</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
-                        <Form.Group as={Col}>
-                            <Form.Control inline name='name' placeholder="Parameter Name" type="text" onChange={this.handleChange} value={this.state.name} />
-                            <Form.Control inline name='min_value' placeholder="Minimum Value" type="integer" onChange={this.handleChange} value={this.state.min_value}/>
-                            <Form.Control inline name='max_value' placeholder="Maximum Value" type="integer" onChange={this.handleChange} value={this.state.max_value}/>
-                        </Form.Group>
-                    </Form>
+                    <InputField inline name='name' onChange={this.handleChange} label="Parameter Name"/>
+                    <InputField inline name='min_value' onChange={this.handleChange} label="Minimum Value"/>
+                    <InputField inline name='max_value' onChange={this.handleChange} label="Maximum Value"/>
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="primary" type="submit" onClick={this.handleClose}>Save changes</Button>
+                    <Button onClick={this.handleClose}>Save changes</Button>
                 </Modal.Footer>
             </Modal>
         );

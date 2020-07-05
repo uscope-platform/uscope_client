@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 
-import {Modal, Button, Form, Col} from "react-bootstrap";
+import Button from "../UI_elements/Button"
+import {Modal} from "react-bootstrap";
 import {connect} from "react-redux";
+import Select from "../UI_elements/Select";
 
 function mapStateToProps(state) {
     return{
@@ -38,22 +40,16 @@ class ApplicationChooser extends Component {
                     <Modal.Title>Application Choice</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
-                        <Form.Group as={Col}>
-                            <Form.Label>Application Name</Form.Label>
-                            <Form.Control as="select" onChange={this.handleChange}>
-                                <option>Chose An Application</option>
-                                {this.applications_list.map((name,i) => (
-                                    <option key={i} >{name}</option>
-                                ))}
-                            </Form.Control>
-                        </Form.Group>
-
-                    </Form>
+                    <Select name="peripheral_type" onChange={this.handleChange}>
+                        <option value="" hidden>Application Name</option>
+                        {this.applications_list.map((name,i) => (
+                            <option key={i} >{name}</option>
+                        ))}
+                    </Select>
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="primary" type="submit" onClick={this.handleClose}>Save changes</Button>
+                    <Button onClick={this.handleClose}>Save changes</Button>
                 </Modal.Footer>
             </Modal.Dialog>
         );

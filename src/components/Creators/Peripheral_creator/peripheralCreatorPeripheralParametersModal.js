@@ -1,8 +1,12 @@
 import React, {Component} from 'react';
 
-import {Modal, Button, Form, Col} from "react-bootstrap";
+import Button from "../../UI_elements/Button"
+import InputField from "../../UI_elements/InputField";
+
+import {Modal} from "react-bootstrap";
 import {hideModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
+
 
 function mapStateToProps(state) {
     return{
@@ -48,17 +52,12 @@ class PeripheralCreatorPeripheralParametersModal extends Component {
                     <Modal.Title>Peripheral Image choice</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
-                        <Form.Group as={Col}>
-                            <Form.Control inline name='periph_name' placeholder="Peripheral Name" type="text" onChange={this.handleChange} />
-                            <Form.Control inline name='periph_version' placeholder="Peripheral Version number" type="text" onChange={this.handleChange} />
-                        </Form.Group>
-
-                    </Form>
+                    <InputField inline name='periph_name' onChange={this.handleChange} label="Peripheral Name"/>
+                    <InputField inline name='periph_version' onChange={this.handleChange} label="Peripheral Version number"/>
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="primary" type="submit" onClick={this.handleClose}>Save changes</Button>
+                    <Button onClick={this.handleClose}>Save changes</Button>
                 </Modal.Footer>
             </Modal>
         );

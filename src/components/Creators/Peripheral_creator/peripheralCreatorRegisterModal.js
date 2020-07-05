@@ -1,9 +1,14 @@
 import React, {Component} from 'react';
 
-import {Modal, Button, Form} from "react-bootstrap";
+import Button from "../../UI_elements/Button"
+import {Modal} from "react-bootstrap";
 import {hideModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
-
+import InputField from "../../UI_elements/InputField";
+import Checkbox from "../../UI_elements/checkbox";
+import Label from "../../UI_elements/Label";
+import Radio from "../../UI_elements/Radio";
+import TextArea from "../../UI_elements/TextArea";
 
 function mapStateToProps(state) {
     return{
@@ -26,14 +31,13 @@ class PeripheralCreatorRegisterModal extends Component {
 
 
     handleChange = (event) => {
-        if(event.target.name==='reg_direction') {
-            if(event.target.id==='read'){
-                this.setState({read_checked:event.target.checked})
-            } else{
-                this.setState({write_checked:event.target.checked})
-            }
-
-        }else if(event.target.name==='reg_type'){
+        if(event.target.name==='reg_direction_read') {
+            this.setState({read_checked: event.target.checked});
+        }
+        if(event.target.name==='reg_direction_read') {
+            this.setState({write_checked: event.target.checked})
+        }
+        if(event.target.name==='reg_type'){
             this.setState({[event.target.name]: event.target.id});
             if(event.target.id==='words'){
                 this.setState({enable_word_fields:true});
@@ -82,7 +86,6 @@ class PeripheralCreatorRegisterModal extends Component {
     };
 
     handleShow = () => {
-        debugger;
         if(this.props.initial_values === undefined){
             this.setState({
                 reg_name:"",
@@ -132,36 +135,32 @@ class PeripheralCreatorRegisterModal extends Component {
                     <Modal.Title>Add a new register</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
-                        <Form.Group>
-                            <Form.Control inline name='reg_name' placeholder="Register Name" type="text" value={this.state.reg_name} onChange={this.handleChange} />
-                            <Form.Control inline name='reg_ID' placeholder="Register ID" type="text" value={this.state.reg_ID}  onChange={this.handleChange} />
-                            <Form.Control name='reg_offset' placeholder="Address offset" type="text" value={this.state.reg_offset}  onChange={this.handleChange} />
-                            <Form.Control name='reg_description' placeholder="Description" type="text" value={this.state.reg_description} onChange={this.handleChange} />
-                            <Form.Group>
-                                <Form.Label>Register access capabilities</Form.Label>
-                                <Form.Check label="Read" name="reg_direction" type="checkbox" id={'read'} checked={this.state.read_checked} onChange={this.handleChange} />
-                                <Form.Check label="Write" name="reg_direction" type="checkbox" id={'write'} checked={this.state.write_checked} onChange={this.handleChange} />
-                            </Form.Group>
-                            <div>
-                                <Form.Label>Register type</Form.Label>
-                                <Form.Check name="reg_type" label="single" type="radio" id='single' checked={this.state.single_type_checked} onChange={this.handleChange} />
-                                <Form.Check name="reg_type" label="words" type="radio" id='words' checked={this.state.words_type_checked} onChange={this.handleChange} />
-                            </div>
-                            <Form.Group>
-                                <Form.Label>Field Names</Form.Label>
-                                <Form.Control disabled={!this.state.enable_word_fields} name="field_names" value={this.state.field_names} label="Field Names" as="textarea" rows={2} onChange={this.handleChange} />
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Label>Field descriptions</Form.Label>
-                                <Form.Control disabled={!this.state.enable_word_fields} name="field_desc" value={this.state.field_desc} label="Field Descriptions" as="textarea" rows={2} onChange={this.handleChange} />
-                            </Form.Group>
-                        </Form.Group>
-                    </Form>
+                    <InputField inline name='reg_name' onChange={this.handleChange} label="Register Name"/>
+                    <InputField inline name='reg_ID' onChange={this.handleChange} label="Register ID"/>
+                    <InputField inline name='reg_offset' onChange={this.handleChange} label="Address offset"/>
+                    <InputField inline name='reg_description' onChange={this.handleChange} label="Description"/>
+                    <div>
+                        <Label>Register access capabilities</Label>
+                        <Checkbox name='reg_direction_read' onChange={this.handleChange} label="Read"/>
+                        <Checkbox name='reg_direction_write' onChange={this.handleChange} label="Write"/>
+                    </div>
+                    <div>
+                        <Label>Register type</Label>
+                        <Radio name="reg_type"  onChange={this.handleChange} label="single" id='single'/>
+                        <Radio name="reg_type" onChange={this.handleChange} label="words" id='words'/>
+                    </div>
+                    <div>
+                        <Label>Field Names</Label>
+                        <TextArea disabled={!this.state.enable_word_fields} name="field_names" label="Field Names" rows={2}  onChange={this.handleChange}/>
+                    </div>
+                    <div>
+                        <Label>Field descriptions</Label>
+                        <TextArea disabled={!this.state.enable_word_fields} name="field_desc" label="Field Descriptions" rows={2}  onChange={this.handleChange}/>
+                    </div>
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="primary" type="submit" onClick={this.handleClose}>Save changes</Button>
+                    <Button onClick={this.handleClose}>Save changes</Button>
                 </Modal.Footer>
             </Modal>
         );

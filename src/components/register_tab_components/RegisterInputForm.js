@@ -1,6 +1,7 @@
 import React from 'react';
 
-import {Form, Button} from "react-bootstrap";
+import Button from "../UI_elements/Button"
+import {Form} from "react-bootstrap";
 
 import SingleValueField from "../Common_Components/SingleValueField";
 import TwoValuesField from "../Common_Components/TwoValuesField";
@@ -94,9 +95,7 @@ let RegisterInputForm  = props => {
                 {props.registers.map((reg, i) => {
                     return generate_field(reg, i, false)
                 })}
-                <Button variant="primary" type="submit">
-                    Submit
-                </Button>
+                <Button> Submit </Button>
             </Form>
         );
     } else{

@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 
-import {Modal, Button, Form} from "react-bootstrap";
+import Button from "../UI_elements/Button"
+import {Modal} from "react-bootstrap";
 import {hideModal} from "../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
+import InputField from "../UI_elements/InputField";
 
 
 function mapStateToProps(state) {
@@ -51,20 +53,12 @@ class ChannelSettingsModal extends Component {
                     <Modal.Title>Application Choice</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
-                        <Form.Group>
-                            <Form.Label>Minimum Value</Form.Label>
-                            <Form.Control name='min_value' placeholder={this.props.plot.settings[this.props.id].min_value} type="text" onChange={this.handleChange} />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Maximum value</Form.Label>
-                            <Form.Control name='max_value' placeholder={this.props.plot.settings[this.props.id].max_value} type="text" onChange={this.handleChange} />
-                        </Form.Group>
-                    </Form>
+                    <InputField inline name='min_value' onChange={this.handleChange} label="Minimum Value"/>
+                    <InputField inline name='max_value' onChange={this.handleChange} label="Maximum value"/>
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="primary" type="submit" onClick={this.handleClose}>Save changes</Button>
+                    <Button onClick={this.handleClose}>Save changes</Button>
                 </Modal.Footer>
             </Modal>
         );

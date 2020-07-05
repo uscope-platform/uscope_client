@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 
-import {Container, Row, Col, Button, Form} from "react-bootstrap";
+import Button from "../UI_elements/Button"
+import InputField from "../UI_elements/InputField";
+import Checkbox from "../UI_elements/checkbox";
+import {Container, Row, Col} from "react-bootstrap";
 import {hideModal} from "../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
 
@@ -46,16 +49,12 @@ class LoginPage extends Component {
                     <Col><h1>Please Sign In</h1></Col>
                 </Row>
                 <Row>
-                    <Form>
-                        <Form.Group>
-                            <Form.Control inline="true" name='username' placeholder="Usernamne" type="text" value={this.state.username} onChange={this.handleChange} />
-                            <Form.Control inline="true" name='password' placeholder="Password" type="password" value={this.state.password}  onChange={this.handleChange} />
-                            <Form.Check inline="true" name='remember_me' type="checkbox" label="Remember Me" value={this.state.remember_me} onChange={this.handleChange}/>
-                        </Form.Group>
-                    </Form>
+                    <InputField name='username' compact onChange={this.handleChange} label="Username"/>
+                    <InputField name='password' type='password' compact onChange={this.handleChange} label="Password"/>
+                    <Checkbox name='remember_me' onChange={this.handleChange} label="Remember Me"/>
                 </Row>
                 <Row>
-                    <Button variant="primary" type="submit" onClick={this.handleClose}>Sign In</Button>
+                    <Button onClick={this.handleClose}>Sign In</Button>
                 </Row>
             </Container>
         );

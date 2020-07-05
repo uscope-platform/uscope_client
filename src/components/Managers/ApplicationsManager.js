@@ -8,7 +8,8 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import cellEditFactory from 'react-bootstrap-table2-editor';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 
-import {Button, Container, Row} from "react-bootstrap";
+import Button from "../UI_elements/Button"
+import { Container, Row} from "react-bootstrap";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
 
@@ -143,14 +144,14 @@ class ApplicationsManager extends Component {
             <Container>
                 <Row>
                     <LinkContainer to="/application_creator">
-                        <Button variant="outline-success" onClick={this.handleCreate}> Add application</Button>
+                        <Button outline confirm onClick={this.handleCreate}> Add application</Button>
                     </LinkContainer>
 
-                    <Button variant="outline-danger"  onClick={this.handleRemoveRow}> Remove application</Button>
-                    <Button variant="outline-primary" onClick={this.handleImport}>Import application</Button>
-                    <Button variant="outline-primary" onClick={this.handleExport}>Export application</Button>
+                    <Button outline deny  onClick={this.handleRemoveRow}> Remove application</Button>
+                    <Button outline onClick={this.handleImport}>Import application</Button>
+                    <Button outline onClick={this.handleExport}>Export application</Button>
                     <LinkContainer isActive={this.is_editable} to="/application_creator">
-                        <Button variant="outline-primary"  onClick={this.handleEdit}>Edit application</Button>
+                        <Button outline onClick={this.handleEdit}>Edit application</Button>
                     </LinkContainer>
                 </Row>
                 <Row>

@@ -1,8 +1,14 @@
 import React, {Component} from 'react';
 
-import {Modal, Button, Form, Col} from "react-bootstrap";
+import Button from "../../UI_elements/Button"
+import InputField from "../../UI_elements/InputField";
+import Select from "../../UI_elements/Select";
+
+import {Modal} from "react-bootstrap";
 import {hideModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
+import Checkbox from "../../UI_elements/checkbox";
+
 
 function mapStateToProps(state) {
     return{
@@ -54,7 +60,6 @@ class AppCreatorPeripheralModal extends Component {
     };
 
     handleShow = () =>{
-        debugger;
         this.setState({
             peripheral_type:this.props.init_values.tab_id,
             proxied:this.props.init_values.proxied,
@@ -71,29 +76,23 @@ class AppCreatorPeripheralModal extends Component {
                     <Modal.Title>Peripheral Settings</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
-                        <Form.Group as={Col}>
-                            <Form.Group>
-                                <Form.Label> Peripheral type</Form.Label>
-                                <Form.Control name="peripheral_type" as="select" value={this.state.peripheral_type} onChange={this.handleChange}>
-                                    {
-                                        Object.entries(this.props.peripherals).map((name,i) => (
-                                            <option key={i} >{name[0]}</option>
-                                        ))
-                                    }
-                                </Form.Control>
-                            </Form.Group>
-                            <Form.Control inline name='base_address' placeholder="Base Address" type="text" value={this.state.base_address} onChange={this.handleChange} />
-                            <Form.Control inline name='proxy_address' placeholder="Proxy Address" type="text" value={this.state.proxy_address} disabled={!this.state.proxied} onChange={this.handleChange} />
-                            <Form.Check label="RTCU proxied peripheral" name="proxied" type="checkbox" id={'proxied'} checked={this.state.proxied}  onChange={this.handleChange} />
-                            <Form.Check label="User accessible" name="accessible" type="checkbox" id="accessible" checked={this.state.accessible} onChange={this.handleChange} />
-                        </Form.Group>
+                    <Select name="peripheral_type" onChange={this.handleChange}>
+                        <option value="" hidden>Peripheral type</option>
+                        {
+                            Object.entries(this.props.peripherals).map((name,i) => (
+                                <option key={i} >{name[0]}</option>
+                            ))
+                        }
+                    </Select>
 
-                    </Form>
+                    <InputField inline name='base_address' onChange={this.handleChange} label="Base Address"/>
+                    <InputField inline name='proxy_address' onChange={this.handleChange} label="Proxy Address" disabled={!this.state.proxied}/>
+                    <Checkbox name='proxied' onChange={this.handleChange} label="RTCU proxied peripheral"/>
+                    <Checkbox name='accessible' onChange={this.handleChange} label="User accessible"/>
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="primary" type="submit" onClick={this.handleClose}>Save changes</Button>
+                    <Button onClick={this.handleClose}>Save changes</Button>
                 </Modal.Footer>
             </Modal>
         );

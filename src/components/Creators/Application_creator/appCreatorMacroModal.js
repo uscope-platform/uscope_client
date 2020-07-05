@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 
-import {Modal, Button, Form, Col} from "react-bootstrap";
+import Button from "../../UI_elements/Button"
+import InputField from "../../UI_elements/InputField";
+
+import {Modal} from "react-bootstrap";
 import {hideModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
 
@@ -53,16 +56,12 @@ class AppCreatorMacroModal extends Component {
                     <Modal.Title>Macro Settings</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
-                        <Form.Group as={Col}>
-                            <Form.Control inline name='name' placeholder="Parameter Name" type="text" onChange={this.handleChange} value={this.state.name}/>
-                            <Form.Control inline name='trigger' placeholder="Trigger Name" type="text" onChange={this.handleChange} value={this.state.trigger} />
-                        </Form.Group>
-                    </Form>
+                    <InputField inline name='name' onChange={this.handleChange} label="Parameter Name"/>
+                    <InputField inline name='trigger' onChange={this.handleChange} label="Trigger Name"/>
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="primary" type="submit" onClick={this.handleClose}>Save changes</Button>
+                    <Button onClick={this.handleClose}>Save changes</Button>
                 </Modal.Footer>
             </Modal>
         );

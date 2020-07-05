@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import AceEditor from "react-ace";
-import {Container, Row, Col, Button, Jumbotron} from "react-bootstrap";
+import Button from "../../UI_elements/Button"
+import {Container, Row, Col, Jumbotron} from "react-bootstrap";
 
 import "ace-builds/src-min-noconflict/mode-javascript";
 import "ace-builds/src-min-noconflict/theme-dracula";
@@ -69,9 +70,7 @@ class ScriptsCreator extends Component {
                 </Row>
                 <Row>
                     <Col md={{ span: 6, offset: 9 }}>
-                        <Button variant="success" onClick={this.onSubmit}>
-                            Submit
-                        </Button>
+                        <Button variant="success" onClick={this.onSubmit}>Submit</Button>
                     </Col>
                 </Row>
             </Container>

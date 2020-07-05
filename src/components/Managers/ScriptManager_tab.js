@@ -7,7 +7,8 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import cellEditFactory from 'react-bootstrap-table2-editor';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 
-import {Button, Col, Container, Row} from "react-bootstrap";
+import Button from "../UI_elements/Button"
+import {Col, Container, Row} from "react-bootstrap";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import {LinkContainer} from "react-router-bootstrap";
 
@@ -158,10 +159,10 @@ class ScriptManager extends Component {
         return(
             <Container>
                 <Row>
-                    <Button variant="outline-success" onClick={this.handleAddRow}>+ Add new row</Button>
-                    <Button variant="outline-danger" onClick={this.handleRemoveRow}>- Remove Row</Button>
+                    <Button outline confirm onClick={this.handleAddRow}>+ Add new row</Button>
+                    <Button outline deny onClick={this.handleRemoveRow}>- Remove Row</Button>
                     <LinkContainer isActive={this.is_editable} to="/script_creator">
-                        <Button variant="outline-primary" onClick={this.handleScriptEdit}>Edit Script</Button>
+                        <Button outline onClick={this.handleScriptEdit}>Edit Script</Button>
                     </LinkContainer>
                 </Row>
                 <Row>
@@ -181,7 +182,7 @@ class ScriptManager extends Component {
                 </Row>
                 <Row>
                     <Col md={{ offset: 9 }}>
-                        <Button  variant="outline-success" onClick={this.handleScriptConfigurationSave}>Save scripts configuration</Button>
+                        <Button  outline confirm onClick={this.handleScriptConfigurationSave}>Save scripts configuration</Button>
                     </Col>
                 </Row>
             </Container>

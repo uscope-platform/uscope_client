@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 
-import {Modal, Button, Form} from "react-bootstrap";
+import Button from "../UI_elements/Button"
+import {Modal} from "react-bootstrap";
 import {hideModal} from "../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
+import InputField from "../UI_elements/InputField";
 
 
 function mapStateToProps(state) {
@@ -47,15 +49,11 @@ class ScopeModeModal extends Component {
                     <Modal.Title>Select the number of buffers to capture</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form onSubmit={this.handleClose}>
-                        <Form.Label>Number of buffers</Form.Label>
-                        <Form.Control name="n_buffers" type="text" onChange={this.handleChange} />
-
-                    </Form>
+                    <InputField inline name='n_buffers' onChange={this.handleChange} label="Number of buffers"/>
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="primary" type="submit" onClick={this.handleClose}>Save changes</Button>
+                    <Button onClick={this.handleClose}>Save changes</Button>
                 </Modal.Footer>
             </Modal>
         );

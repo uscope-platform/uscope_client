@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 
-import {Modal, Button, Form, Col} from "react-bootstrap";
+import Button from "../../UI_elements/Button"
+import InputField from "../../UI_elements/InputField";
+
+import {Modal} from "react-bootstrap";
 import {hideModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
 
@@ -54,13 +57,9 @@ class AppCreatorInitialRegisterModal extends Component {
                     <Modal.Title>Channel Settings</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
-                        <Form.Group as={Col}>
-                            <Form.Control inline name='name' placeholder="Register Name (for local display only)" type="text" onChange={this.handleChange} value={this.state.name}/>
-                            <Form.Control inline name='address' placeholder="Address" type="integer" onChange={this.handleChange} value={this.state.address}/>
-                            <Form.Control inline name='value' placeholder="Value" type="integer" onChange={this.handleChange} value={this.state.value}/>
-                        </Form.Group>
-                    </Form>
+                    <InputField inline name='name' onChange={this.handleChange} label="Register Name (for local display only)"/>
+                    <InputField inline name='address' onChange={this.handleChange} label="Register Address"/>
+                    <InputField inline name='value' onChange={this.handleChange} label="Value"/>
                 </Modal.Body>
 
                 <Modal.Footer>

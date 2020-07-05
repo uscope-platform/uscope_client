@@ -1,8 +1,8 @@
 import React from 'react';
 
-import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col"
 import {Image, Row} from "react-bootstrap";
+import InputField from "../UI_elements/InputField";
 
 
 let TwoValuesField = props => {
@@ -22,22 +22,10 @@ let TwoValuesField = props => {
                 <Col fluid={true}>
                     <Row>
                         <Col>
-                            <Form.Group>
-                                <Form.Label>{props.field_names[0]}</Form.Label>
-                                <Form.Control className='twoFields.1' type="text" id={props.register_name+'.1'} placeholder={props.value[0]} />
-                                <Form.Text className="text-muted">
-                                    {props.field_descriptions[0]}
-                                </Form.Text>
-                            </Form.Group>
+                            <InputField description={props.field_descriptions[0]} name={props.register_name+'.1'} label={props.field_names[0]}/>
                         </Col>
                         <Col>
-                            <Form.Group>
-                                <Form.Label>{props.field_names[1]}</Form.Label>
-                                <Form.Control className='twoFields.2' type="text" id={props.C+'.2'} placeholder={props.value[1]} />
-                                <Form.Text className="text-muted">
-                                    {props.field_descriptions[1]}
-                                </Form.Text>
-                            </Form.Group>
+                            <InputField description={props.field_descriptions[1]} name={props.register_name+'.2'} label={props.field_names[1]}/>
                         </Col>
                     </Row>
             </Col>
@@ -51,26 +39,14 @@ let TwoValuesField = props => {
         );
     } else{
         return(
-            <Form.Row >
+            <Row >
                 <Col>
-                    <Form.Group>
-                        <Form.Label>{props.field_names[0]}</Form.Label>
-                        <Form.Control className='twoFields.1' type="text" id={props.register_name+'.1'} placeholder={props.value[0]} />
-                        <Form.Text className="text-muted">
-                            {props.field_descriptions[0]}
-                        </Form.Text>
-                    </Form.Group>
+                    <InputField description={props.field_descriptions[0]} name={props.register_name+'.1'} label={props.field_names[0]}/>
                 </Col>
                 <Col>
-                    <Form.Group>
-                        <Form.Label>{props.field_names[1]}</Form.Label>
-                        <Form.Control className='twoFields.2' type="text" id={props.register_name+'.2'} placeholder={props.value[1]} />
-                        <Form.Text className="text-muted">
-                            {props.field_descriptions[1]}
-                        </Form.Text>
-                    </Form.Group>
+                    <InputField description={props.field_descriptions[1]} name={props.register_name+'.2'} label={props.field_names[1]}/>
                 </Col>
-            </Form.Row>
+            </Row>
         );
     }
 

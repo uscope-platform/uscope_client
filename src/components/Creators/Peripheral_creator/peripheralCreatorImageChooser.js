@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 
-import {Modal, Button, Form, Col} from "react-bootstrap";
+import Button from "../../UI_elements/Button"
+import {Modal, Form, Col} from "react-bootstrap";
 import {hideModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
+import FileChoice from "../../UI_elements/FileChoice";
 
 function mapStateToProps(state) {
     return{
@@ -50,15 +52,14 @@ class PeripheralCreatorImageChooser extends Component {
                 <Modal.Body>
                     <Form>
                         <Form.Group as={Col}>
-                            <Form.Label>Choose an image</Form.Label>
-                            <Form.Control as="input" type='file' onChange={this.handleChange}/>
+                            <FileChoice label={"Choose an image"} onChange={this.handleChange}/>
                         </Form.Group>
 
                     </Form>
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="primary" type="submit" onClick={this.handleClose}>Save changes</Button>
+                    <Button onClick={this.handleClose}>Save changes</Button>
                 </Modal.Footer>
             </Modal>
         );

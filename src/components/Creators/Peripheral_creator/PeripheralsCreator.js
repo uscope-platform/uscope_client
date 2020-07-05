@@ -1,5 +1,6 @@
 import React, {Component}  from 'react';
-import {Button, Col, Image, Row} from "react-bootstrap";
+import Button from "../../UI_elements/Button"
+import { Col, Image, Row} from "react-bootstrap";
 
 import TabCreatorRegisterModal from "./peripheralCreatorRegisterModal"
 import TabCreatorImageChooser from "./peripheralCreatorImageChooser";
@@ -57,7 +58,6 @@ class PeripheralsCreator extends Component {
                 this.props.showModal('peripheral_creator_image_choice');
                 break;
             case "addRegister":
-                debugger;
                 this.setState({edit_register:undefined});
                 this.props.showModal('peripheral_creator_register_modal');
                 break;
@@ -76,7 +76,6 @@ class PeripheralsCreator extends Component {
     };
 
     handleRegisterCreationDone = (register) => {
-        debugger;
         let edited = false;
         let new_registers = this.state.tab_registers.map((old_register)=>{
 
@@ -154,9 +153,7 @@ class PeripheralsCreator extends Component {
                         </Row>
                         <Row>
                             <Col md={{ span: 3, offset: 9 }}>
-                                <Button variant="success" onClick={this.handleSubmit}>
-                                    Submit
-                                </Button>
+                                <Button variant="success" onClick={this.handleSubmit}>Submit</Button>
                             </Col>
                         </Row>
                     </Col>

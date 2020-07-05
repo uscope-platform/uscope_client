@@ -1,5 +1,6 @@
 import React, {Component}  from 'react';
-import {Button, Col, Image, Row} from "react-bootstrap";
+import Button from "../../UI_elements/Button"
+import { Col, Image, Row} from "react-bootstrap";
 
 import {showModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux"
@@ -419,9 +420,7 @@ class ApplicationsCreator extends Component {
                         </Row>
                         <Row>
                             <Col md={{ span: 3, offset: 9 }}>
-                                <Button variant="success" onClick={this.handleSubmit}>
-                                    Submit
-                                </Button>
+                                <Button variant="success" onClick={this.handleSubmit}> Submit</Button>
                             </Col>
                         </Row>
                     </Col>
