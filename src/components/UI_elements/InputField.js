@@ -21,8 +21,9 @@ margin-left: 0.15rem;
 `
 
 const Wrapper = styled.div`
-
-display: flex;
+margin: 0 0.2rem;
+display: ${props => props.inline ? "flex" : "block"};
+justify-content: ${props => props.inline ? "space-between" : "start"};
 align-items: center;
 flex-flow: wrap;
 `
@@ -65,17 +66,15 @@ class InputField extends React.Component {
                 );
             } else{
                 return (
-                    <Wrapper>
+                    <Wrapper inline={this.props.inline}>
                         <Label inline={this.props.inline}>{this.props.label}</Label>
                         <LineBreak inline={this.props.inline}/>
-                        <Wrapper>
                             <InnerInput
                                 name={this.props.name}
                                 type={(this.props.type)?this.props.type:"text"}
                                 disabled = {(this.props.disabled)? "disabled" : ""}
                                 onChange={e => {if(this.props.onChange) this.props.onChange(e)}}
                             />
-                        </Wrapper>
                     </Wrapper>
                 );
             }

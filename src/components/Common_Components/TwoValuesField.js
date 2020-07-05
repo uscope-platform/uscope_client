@@ -1,10 +1,17 @@
 import React from 'react';
 
-import Col from "react-bootstrap/Col"
-import {Row} from "react-bootstrap";
 import InputField from "../UI_elements/InputField";
 import {Edit, Trash} from "grommet-icons";
+import styled from "styled-components";
 
+const LayoutWrapper = styled.div`
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    grid-column-gap: 1em;
+    justify-content: start;
+    grid-auto-rows: minmax(1em, auto);
+    align-items: center;
+`
 
 let TwoValuesField = props => {
 
@@ -19,35 +26,19 @@ let TwoValuesField = props => {
 
     if(props.preview_only){
         return(
-            <Row>
-                <Col fluid={true}>
-                    <Row>
-                        <Col>
-                            <InputField description={props.field_descriptions[0]} name={props.register_name+'.1'} label={props.field_names[0]}/>
-                        </Col>
-                        <Col>
-                            <InputField description={props.field_descriptions[1]} name={props.register_name+'.2'} label={props.field_names[1]}/>
-                        </Col>
-                    </Row>
-            </Col>
-            <Col md={2}>
+            <LayoutWrapper>
+                <InputField description={props.field_descriptions[0]} name={props.register_name+'.1'} label={props.field_names[0]}/>
+                <InputField description={props.field_descriptions[1]} name={props.register_name+'.2'} label={props.field_names[1]}/>
                 <Edit color='white' onClick={localEditHandler} />
-            </Col>
-            <Col md={2}>
                 <Trash color='white' onClick={localRemoveHandler}/>
-            </Col>
-            </Row>
+            </LayoutWrapper>
         );
     } else{
         return(
-            <Row >
-                <Col>
-                    <InputField description={props.field_descriptions[0]} name={props.register_name+'.1'} label={props.field_names[0]}/>
-                </Col>
-                <Col>
-                    <InputField description={props.field_descriptions[1]} name={props.register_name+'.2'} label={props.field_names[1]}/>
-                </Col>
-            </Row>
+            <>
+                <InputField description={props.field_descriptions[0]} name={props.register_name+'.1'} label={props.field_names[0]}/>
+                <InputField description={props.field_descriptions[1]} name={props.register_name+'.2'} label={props.field_names[1]}/>
+            </>
         );
     }
 

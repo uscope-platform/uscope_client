@@ -9,6 +9,7 @@ border-radius: 5px;
 const Wrapper = styled.div`
  display: inline-flex;
   flex-wrap: wrap;
+  justify-content: space-between;
   align-items: center;
 `
 

@@ -1,8 +1,19 @@
 import React from 'react';
 
-import {Col, Row} from "react-bootstrap";
 import InputField from "../UI_elements/InputField";
 import {Edit,Trash} from "grommet-icons";
+import styled from "styled-components";
+
+
+const LayoutWrapper = styled.div`
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-column-gap: 1em;
+    justify-content: start;
+    grid-auto-rows: minmax(1em, auto);
+    align-items: center;
+`
+
 
 let SingleValueField = props => {
 
@@ -18,17 +29,11 @@ let SingleValueField = props => {
 
     if(props.preview_only){
         return(
-            <Row>
-                <Col fluid={true}>
-                    <InputField description={props.description} name={props.name} label={props.name}/>
-                </Col>
-                <Col md={2}>
-                    <Edit color='white' onClick={localEditHandler} />
-                </Col>
-                <Col md={2}>
-                    <Trash color='white' onClick={localRemoveHandler}/>
-                </Col>
-            </Row>
+            <LayoutWrapper>
+                <InputField description={props.description} name={props.name} label={props.name}/>
+                <Edit color='white' onClick={localEditHandler} />
+                <Trash color='white' onClick={localRemoveHandler}/>
+            </LayoutWrapper>
         );
     } else{
         return(

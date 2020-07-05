@@ -9,6 +9,7 @@ import Checkbox from "../../UI_elements/checkbox";
 import Label from "../../UI_elements/Label";
 import Radio from "../../UI_elements/Radio";
 import TextArea from "../../UI_elements/TextArea";
+import styled from "styled-components";
 
 function mapStateToProps(state) {
     return{
@@ -21,6 +22,23 @@ const mapDispatchToProps = dispatch => {
         hideModal: () => {dispatch(hideModal('peripheral_creator_register_modal'))},
     }
 };
+
+const LayoutWrapper = styled.div`
+    display: grid;
+    grid-template-rows: repeat(8, auto);
+    grid-auto-columns: auto;
+    grid-gap: 0.3rem;
+    align-items: start;
+`
+
+const ChoicesWrapper = styled.div`
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    grid-gap: 0.3rem;
+    justify-content: space-between;
+    align-items: start;
+`
+
 
 
 class PeripheralCreatorRegisterModal extends Component {
@@ -135,28 +153,28 @@ class PeripheralCreatorRegisterModal extends Component {
                     <Modal.Title>Add a new register</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <InputField inline name='reg_name' onChange={this.handleChange} label="Register Name"/>
-                    <InputField inline name='reg_ID' onChange={this.handleChange} label="Register ID"/>
-                    <InputField inline name='reg_offset' onChange={this.handleChange} label="Address offset"/>
-                    <InputField inline name='reg_description' onChange={this.handleChange} label="Description"/>
-                    <div>
-                        <Label>Register access capabilities</Label>
-                        <Checkbox name='reg_direction_read' onChange={this.handleChange} label="Read"/>
-                        <Checkbox name='reg_direction_write' onChange={this.handleChange} label="Write"/>
-                    </div>
-                    <div>
-                        <Label>Register type</Label>
-                        <Radio name="reg_type" value={!this.state.enable_word_fields} onChange={this.handleChange} label="single" id='single'/>
-                        <Radio name="reg_type" value={this.state.enable_word_fields} onChange={this.handleChange} label="words" id='words'/>
-                    </div>
-                    <div>
-                        <Label>Field Names</Label>
+                    <LayoutWrapper>
+                        <InputField inline name='reg_name' onChange={this.handleChange} label="Register Name"/>
+                        <InputField inline name='reg_ID' onChange={this.handleChange} label="Register ID"/>
+                        <InputField inline name='reg_offset' onChange={this.handleChange} label="Address offset"/>
+                        <InputField inline name='reg_description' onChange={this.handleChange} label="Description"/>
+                        <ChoicesWrapper>
+                            <Label>Register access capabilities</Label>
+                            <div>
+                                <Checkbox name='reg_direction_read' onChange={this.handleChange} label="Read"/>
+                                <Checkbox name='reg_direction_write' onChange={this.handleChange} label="Write"/>
+                            </div>
+                        </ChoicesWrapper>
+                        <ChoicesWrapper>
+                            <Label>Register type</Label>
+                            <div>
+                                <Radio name="reg_type" value={!this.state.enable_word_fields} onChange={this.handleChange} label="single" id='single'/>
+                                <Radio name="reg_type" value={this.state.enable_word_fields} onChange={this.handleChange} label="words" id='words'/>
+                            </div>
+                        </ChoicesWrapper>
                         <TextArea disabled={!this.state.enable_word_fields} name="field_names" label="Field Names" rows={2}  onChange={this.handleChange}/>
-                    </div>
-                    <div>
-                        <Label>Field descriptions</Label>
                         <TextArea disabled={!this.state.enable_word_fields} name="field_desc" label="Field Descriptions" rows={2}  onChange={this.handleChange}/>
-                    </div>
+                    </LayoutWrapper>
                 </Modal.Body>
 
                 <Modal.Footer>

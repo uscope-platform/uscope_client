@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 import Button from "../../UI_elements/Button"
-import {Modal, Form, Col} from "react-bootstrap";
+import {Modal} from "react-bootstrap";
 import {hideModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
 import FileChoice from "../../UI_elements/FileChoice";
@@ -50,12 +50,7 @@ class PeripheralCreatorImageChooser extends Component {
                     <Modal.Title>Peripheral Image choice</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
-                        <Form.Group as={Col}>
-                            <FileChoice label={"Choose an image"} onChange={this.handleChange}/>
-                        </Form.Group>
-
-                    </Form>
+                    <FileChoice label={"Choose an image"} onChange={this.handleChange}/>
                 </Modal.Body>
 
                 <Modal.Footer>

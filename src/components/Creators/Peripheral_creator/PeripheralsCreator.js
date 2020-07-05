@@ -80,7 +80,7 @@ class PeripheralsCreator extends Component {
         let edited = false;
         let new_registers = this.state.tab_registers.map((old_register)=>{
 
-            if(this.state.edit_register.ID === old_register.ID){
+            if(this.state.edit_register && (this.state.edit_register.ID === old_register.ID)){
                 edited = true;
                 return register;
             }
