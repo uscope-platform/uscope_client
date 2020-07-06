@@ -19,6 +19,7 @@ import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 
 
 
+
 function mapStateToProps(state) {
     return{
         tabs:state.tabs,

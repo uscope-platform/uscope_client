@@ -30,7 +30,7 @@ const ComponentStyle = styled.div`
     grid-template-columns: auto auto auto;
     grid-auto-rows: auto;
     grid-row-gap: 1em;
-    background-color: #5a5a5a;
+    background-color: #162447;
     border-radius: 1rem;
     padding: 1rem;
 `

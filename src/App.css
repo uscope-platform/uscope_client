@@ -7,65 +7,27 @@
 body {
   font-family: arial, Helvetica, sans-serif;
   line-height: 1.4;
-  color: #fff;
+  color: #FFF;
+  background-color: #08081A;
 }
 
 a {
   text-decoration: none;
 }
 
-.settings_icon{
-  height: 20px;
-  margin-left: 0.25em;
-}
 
-.channel_select_checkbox{
-  margin-right: 0em;
-
-}
-
-.channel_select_label, .channel_select_checkbox, .settings_icon{
-  margin-top: -2em;
-  margin-bottom: -2em;
-
-}
-
-.plot_controls_asset {
-  height: 25px;
-  margin-top: 1em;
-  display:block;
-  margin-right: auto;
-  margin-left: auto;
-}
 
 .main_content_tab{
   margin:1.5em;
 }
 
 .nav-tabs{
-  background-color: #444444;
+  background-color: #08081A;
 }
 
 .tab_content{
   margin: 1.5em;
 }
-
-.plot_controls_container  {
-  margin-left:-0.5em;
-}
-
-.plot_channel_selector_container {
-  margin-top: 1em;
-}
-.channel_enable_group{
-  margin-left: 7em;
-}
-
-.plot_div_container{
-  margin-left: auto;
-  margin-right: auto;
-}
-
 
 .macro_action_buttons {
   margin: 1.5em;

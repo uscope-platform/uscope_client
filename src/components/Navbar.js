@@ -24,7 +24,7 @@ let  Navbar = props =>{
     return(
         <ComponentLayout>
             <Image src="assets/logo.svg" alt='µScope Logo'/>
-            <Image src="assets/name.svg" alt='µScope Logo'/>
+            <Image src="assets/name.svg" alt='µScope Name'/>
             {props.tabs.map((tab, i) => {
                 if(tab.user_accessible){
                     return(

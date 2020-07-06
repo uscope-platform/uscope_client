@@ -24,6 +24,12 @@ import './App.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import ScriptsCreator from "./components/Creators/Script_creator/ScriptsCreator";
 
+const theme = {
+    base: "#08081A",
+    level_1:"#162447",
+    level_2:"#1f4068",
+    accents:"#e43f5a"
+};
 
 function mapStateToProps(state) {
     return{

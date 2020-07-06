@@ -28,7 +28,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 const ParamAreaStyle = styled.div`
-    background-color: #5a5a5a;
+    background-color: #162447;
     margin-left: auto;
     margin-right: auto;
     border-radius: 1rem;
