@@ -2,8 +2,8 @@
 
 //       REACT AND BOOTSTRAP IMPORTS
 import React, {Component} from 'react';
-import {Tab} from "react-bootstrap";
 import {Route, Redirect} from 'react-router-dom'
+import styled from "styled-components";
 
 //       REDUX IMPORTS
 import {connect} from "react-redux";
@@ -53,6 +53,14 @@ const states = Object.freeze({
     NORMAL: Symbol("normal"),
 });
 
+
+
+const ComponentLayout = styled.div`
+    display: grid;
+    grid-template-columns: 2fr 10fr;
+    grid-auto-rows: auto;
+    
+`
 
 
 class AuthApp extends Component {
@@ -186,27 +194,24 @@ class AuthApp extends Component {
                 } else {
                     return (
                         <div className="App">
-                            <Tab.Container defaultActiveKey={this.props.settings.default_tab}>
+                            <ComponentLayout>
                                 <Navbar tabs={this.props.tabs}/>
-                                <Tab.Content>
-                                    {this.props.tabs.map((tab, i) => {
-                                        if(tab.user_accessible){
-                                            return(
-                                                <Route
-                                                    key={tab.name}
-                                                    path={'/'+tab.name}
-                                                    exact
-                                                    render={(props) => <TabContent className="main_content_tab" server={this.server} tab={tab}/>}
-                                                />
+                                {this.props.tabs.map((tab, i) => {
+                                    if(tab.user_accessible){
+                                        return(
+                                            <Route
+                                                key={tab.name}
+                                                path={'/'+tab.name}
+                                                exact
+                                                render={(props) => <TabContent className="main_content_tab" server={this.server} tab={tab}/>}
+                                            />
 
-                                            )
-                                        } else {
-                                            return null;
-                                        }
-                                    })}
-                                </Tab.Content>
-
-                            </Tab.Container>
+                                        )
+                                    } else {
+                                        return null;
+                                    }
+                                })}
+                            </ComponentLayout>
                             <Route
                                 path={'/script_creator'}
                                 exact
