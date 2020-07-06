@@ -1,7 +1,6 @@
 import React, {Component}  from 'react';
 import Button from "../../UI_elements/Button"
 import Image from "../../UI_elements/Image"
-import { Col, Row} from "react-bootstrap";
 
 import {showModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux"
@@ -15,6 +14,7 @@ import AppCreatorMacroModal from "./appCreatorMacroModal";
 import AppCreatorChannelModal from "./appCreatorChannelModal";
 import AppCreatorAppNameModal from "./AppCreatorAppNameModal";
 import AppCreatorInitialRegisterModal from './appCreatorInitialRegisterModal'
+import styled from "styled-components";
 function mapStateToProps(state) {
     return{
         modals:state.modals,
@@ -28,6 +28,33 @@ const mapDispatchToProps = dispatch => {
         showModal: (modal) => {dispatch(showModal(modal))},
     }
 };
+
+
+const LayoutWrapper = styled.div`
+    display: grid;
+    margin: 1rem 1rem;
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+    grid-row-gap: 1rem; 
+`
+const SingleRowWrapper = styled.div`
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+`
+const SplitRowWrapper = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+     grid-column-gap: 1rem;
+    grid-auto-rows: auto;
+`
+const ElementWrapper = styled.div`
+    display: grid;
+    justify-items: center;
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+    
+`
 
 class ApplicationsCreator extends Component {
     constructor(props) {
@@ -365,69 +392,42 @@ class ApplicationsCreator extends Component {
 
     render(){
         return(
-            <div>
+            <LayoutWrapper>
                 <AppCreatorAppNameModal done={this.handleSendApplication}/>
-                <Row>
-                    <AppCreatorPeripheralModal init_values={this.state.edit_peripheral} done={this.handlePeripheralDefinitionDone}/>
-                    <AppCreatorParameterModal init_values={this.state.edit_parameter} done={this.handleParameterDefinitionDone}/>
-                    <Col id={"tab_creator_add_register_col"}>
-                        <Row>
-                            <Col md={{ span: 6, offset: 4 }}><AppCreatorPeripheralsDisplay id_field={'name'} peripherals={this.state.app.tabs} remove={this.handlePeripheralRemove} onClick={this.editPeripheral}  /></Col>
-                        </Row>
-                        <Row>
-                            <Image src="assets/Icons/add_peripheral.svg" alt='add peripheral' id="addPeripheral" onClick={this.handleClick} fluid/>
-                        </Row>
+                <AppCreatorPeripheralModal init_values={this.state.edit_peripheral} done={this.handlePeripheralDefinitionDone}/>
+                <AppCreatorParameterModal init_values={this.state.edit_parameter} done={this.handleParameterDefinitionDone}/>
+                <AppCreatorMacroModal init_values={this.state.edit_macro} done={this.handleMacroDefinitionDone}/>
+                <AppCreatorChannelModal init_values={this.state.edit_channel} done={this.handleChannelDefinitionDone}/>
+                <AppCreatorInitialRegisterModal init_values={this.state.edit_IRV} done={this.handleIRVDefinitionDone}/>
+                <SplitRowWrapper>
+                    <ElementWrapper>
+                        <AppCreatorPeripheralsDisplay id_field={'name'} peripherals={this.state.app.tabs} remove={this.handlePeripheralRemove} onClick={this.editPeripheral}  />
+                        <Image src="assets/Icons/add_peripheral.svg" alt='add peripheral' id="addPeripheral" onClick={this.handleClick} fluid/>
+                    </ElementWrapper>
 
-                    </Col>
-                    <Col id={"tab_creator_add_register_col"}>
-                        <Row>
-                            <Col md={{ span: 6, offset: 4 }}><AppCreatorPeripheralsDisplay id_field={'parameter_name'} peripherals={this.state.app.parameters} remove={this.handleParameterRemove} onClick={this.editParameter}/></Col>
-                        </Row>
-                        <Row>
-                            <Image src="assets/Icons/add_parameter.svg" id="addParameter" alt='add parameter' onClick={this.handleClick} fluid/>
-                        </Row>
-
-                    </Col>
-                </Row>
-                <Row>
-                    <AppCreatorMacroModal init_values={this.state.edit_macro} done={this.handleMacroDefinitionDone}/>
-                    <AppCreatorChannelModal init_values={this.state.edit_channel} done={this.handleChannelDefinitionDone}/>
-                    <Col  id={"tab_creator_add_register_col"}>
-                        <Row>
-                            <Col md={{ span: 6, offset: 4 }}><AppCreatorPeripheralsDisplay id_field={'name'} peripherals={this.state.app.macro} remove={this.handleMacroRemove}  onClick={this.editMacro} /></Col>
-                        </Row>
-                        <Row>
-                            <Image src="assets/Icons/add_macro.svg" alt='addMacro' id="addMacro" onClick={this.handleClick} fluid/>
-                        </Row>
-
-                    </Col>
-                    <Col id={"tab_creator_add_register_col"}>
-                        <Row>
-                            <Col md={{ span: 6, offset: 4 }}><AppCreatorPeripheralsDisplay id_field={'name'} peripherals={this.state.app.channels} remove={this.handleChannelRemove} onClick={this.editChannel} /></Col>
-                        </Row>
-                        <Row>
-                            <Image src="assets/Icons/add_channel.svg" id="addChannel" alt='add Channel' onClick={this.handleClick} fluid/>
-                        </Row>
-                    </Col>
-                </Row>
-                <Row>
-                    <AppCreatorInitialRegisterModal init_values={this.state.edit_IRV} done={this.handleIRVDefinitionDone}/>
-                    <Col id={"tab_creator_add_register_col"}>
-                        <Row>
-                            <Col md={{ span: 6, offset: 5 }}><AppCreatorPeripheralsDisplay id_field={'address'} peripherals={this.state.app.initial_registers_values} remove={this.handleIRVRemove} onClick={this.editIRV} /></Col>
-                        </Row>
-                        <Row>
-                            <Image src="assets/Icons/add_IRV.svg" id="addIRV" alt='add initial register value' onClick={this.handleClick} fluid/>
-                        </Row>
-                        <Row>
-                            <Col md={{ span: 3, offset: 9 }}>
-                                <Button variant="success" onClick={this.handleSubmit}> Submit</Button>
-                            </Col>
-                        </Row>
-                    </Col>
-                </Row>
-            </div>
-
+                    <ElementWrapper>
+                        <AppCreatorPeripheralsDisplay id_field={'parameter_name'} peripherals={this.state.app.parameters} remove={this.handleParameterRemove} onClick={this.editParameter}/>
+                        <Image src="assets/Icons/add_parameter.svg" id="addParameter" alt='add parameter' onClick={this.handleClick} fluid/>
+                    </ElementWrapper>
+                </SplitRowWrapper>
+                <SplitRowWrapper>
+                    <ElementWrapper>
+                        <AppCreatorPeripheralsDisplay id_field={'name'} peripherals={this.state.app.macro} remove={this.handleMacroRemove}  onClick={this.editMacro} />
+                        <Image src="assets/Icons/add_macro.svg" alt='addMacro' id="addMacro" onClick={this.handleClick} fluid/>
+                    </ElementWrapper>
+                    <ElementWrapper>
+                        <AppCreatorPeripheralsDisplay id_field={'name'} peripherals={this.state.app.channels} remove={this.handleChannelRemove} onClick={this.editChannel} />
+                        <Image src="assets/Icons/add_channel.svg" id="addChannel" alt='add Channel' onClick={this.handleClick} fluid/>
+                    </ElementWrapper>
+                </SplitRowWrapper>
+                <SingleRowWrapper>
+                    <ElementWrapper>
+                        <AppCreatorPeripheralsDisplay id_field={'address'} peripherals={this.state.app.initial_registers_values} remove={this.handleIRVRemove} onClick={this.editIRV} />
+                        <Image src="assets/Icons/add_IRV.svg" id="addIRV" alt='add initial register value' onClick={this.handleClick} fluid/>
+                        <Button variant="success" onClick={this.handleSubmit}> Submit</Button>
+                    </ElementWrapper>
+                </SingleRowWrapper>
+            </LayoutWrapper>
         );
     };
 }

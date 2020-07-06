@@ -10,6 +10,7 @@ import Label from "../../UI_elements/Label";
 import Radio from "../../UI_elements/Radio";
 import TextArea from "../../UI_elements/TextArea";
 import styled from "styled-components";
+import FormLayout from "../../UI_elements/FormLayout";
 
 function mapStateToProps(state) {
     return{
@@ -23,13 +24,6 @@ const mapDispatchToProps = dispatch => {
     }
 };
 
-const LayoutWrapper = styled.div`
-    display: grid;
-    grid-template-rows: repeat(8, auto);
-    grid-auto-columns: auto;
-    grid-gap: 0.3rem;
-    align-items: start;
-`
 
 const ChoicesWrapper = styled.div`
     display: grid;
@@ -153,7 +147,7 @@ class PeripheralCreatorRegisterModal extends Component {
                     <Modal.Title>Add a new register</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <LayoutWrapper>
+                    <FormLayout>
                         <InputField inline name='reg_name' onChange={this.handleChange} label="Register Name"/>
                         <InputField inline name='reg_ID' onChange={this.handleChange} label="Register ID"/>
                         <InputField inline name='reg_offset' onChange={this.handleChange} label="Address offset"/>
@@ -174,7 +168,7 @@ class PeripheralCreatorRegisterModal extends Component {
                         </ChoicesWrapper>
                         <TextArea disabled={!this.state.enable_word_fields} name="field_names" label="Field Names" rows={2}  onChange={this.handleChange}/>
                         <TextArea disabled={!this.state.enable_word_fields} name="field_desc" label="Field Descriptions" rows={2}  onChange={this.handleChange}/>
-                    </LayoutWrapper>
+                    </FormLayout>
                 </Modal.Body>
 
                 <Modal.Footer>

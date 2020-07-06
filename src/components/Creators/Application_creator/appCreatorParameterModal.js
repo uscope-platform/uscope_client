@@ -7,6 +7,9 @@ import Checkbox from "../../UI_elements/checkbox";
 import {Modal} from "react-bootstrap";
 import {hideModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
+import styled from "styled-components";
+import Label from "../../UI_elements/Label";
+import FormLayout from "../../UI_elements/FormLayout";
 
 function mapStateToProps(state) {
     return{
@@ -21,6 +24,14 @@ const mapDispatchToProps = dispatch => {
     }
 };
 
+
+const ChoicesWrapper = styled.div`
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    grid-gap: 0.3rem;
+    justify-content: space-between;
+    align-items: start;
+`
 
 class AppCreatorParameterModal extends Component {
     constructor(props){
@@ -69,10 +80,17 @@ class AppCreatorParameterModal extends Component {
                     <Modal.Title>Parameter Settings</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <InputField name='parameter_name' onChange={this.handleChange} label="Parameter Name"/>
-                    <InputField name='trigger' onChange={this.handleChange} label="Trigger Name"/>
-                    <InputField name='value' onChange={this.handleChange} label="Value"/>
-                    <Checkbox name='visible' onChange={this.handleChange} label="Visible"/>
+                    <FormLayout>
+                        <InputField inline name='parameter_name' onChange={this.handleChange} label="Parameter Name"/>
+                        <InputField inline name='trigger' onChange={this.handleChange} label="Trigger Name"/>
+                        <InputField inline name='value' onChange={this.handleChange} label="Value"/>
+                        <ChoicesWrapper>
+                            <Label>Visible</Label>
+                            <Checkbox name='visible' onChange={this.handleChange}/>
+                        </ChoicesWrapper>
+                    </FormLayout>
+
+
                 </Modal.Body>
 
                 <Modal.Footer>

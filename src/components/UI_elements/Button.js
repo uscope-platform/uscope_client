@@ -6,6 +6,7 @@ const Button = styled.button`
   border-style: solid;
   border-color: darkblue;
   color: white;
+  width: fit-content;
   margin: 0 1em;
   padding: 0.5em 1em;
    // FULL BUTTONS

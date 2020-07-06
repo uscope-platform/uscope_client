@@ -6,6 +6,8 @@ import InputField from "../../UI_elements/InputField";
 import {Modal} from "react-bootstrap";
 import {hideModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
+import styled from "styled-components";
+import FormLayout from "../../UI_elements/FormLayout";
 
 function mapStateToProps(state) {
     return{
@@ -57,9 +59,11 @@ class AppCreatorInitialRegisterModal extends Component {
                     <Modal.Title>Channel Settings</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <InputField inline name='name' onChange={this.handleChange} label="Register Name (for local display only)"/>
-                    <InputField inline name='address' onChange={this.handleChange} label="Register Address"/>
-                    <InputField inline name='value' onChange={this.handleChange} label="Value"/>
+                    <FormLayout>
+                        <InputField inline name='name' onChange={this.handleChange} label="Register Name (for local display only)"/>
+                        <InputField inline name='address' onChange={this.handleChange} label="Register Address"/>
+                        <InputField inline name='value' onChange={this.handleChange} label="Value"/>
+                    </FormLayout>
                 </Modal.Body>
 
                 <Modal.Footer>

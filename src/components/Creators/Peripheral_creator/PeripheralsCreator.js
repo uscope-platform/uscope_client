@@ -1,7 +1,6 @@
 import React, {Component}  from 'react';
 import Button from "../../UI_elements/Button"
 import Image from "../../UI_elements/Image";
-import { Col, Row} from "react-bootstrap";
 
 import TabCreatorRegisterModal from "./peripheralCreatorRegisterModal"
 import TabCreatorImageChooser from "./peripheralCreatorImageChooser";
@@ -11,6 +10,7 @@ import {showModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux"
 
 import RegisterInputForm from "../../register_tab_components/RegisterInputForm";
+import styled from "styled-components";
 
 
 function mapStateToProps(state) {
@@ -26,6 +26,23 @@ const mapDispatchToProps = dispatch => {
         showModal: (modal) => {dispatch(showModal(modal))},
     }
 };
+
+const LayoutWrapper = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-auto-rows: minmax(0, 10rem);
+    grid-gap: 0.3rem;
+    margin-top: 1rem;
+    margin-right: 1rem;
+    margin-left: 1rem;
+
+`
+
+const RegistersWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    
+`
 
 class PeripheralsCreator extends Component {
     constructor(props) {
@@ -143,22 +160,14 @@ class PeripheralsCreator extends Component {
                 <TabCreatorImageChooser server={this.props.server} done={this.handleImageChoiceDone}/>
                 <TabCreatorRegisterModal initial_values={this.state.edit_register} server={this.props.server} done={this.handleRegisterCreationDone}/>
                 <TabCreatorPeripheralParametersModal done={this.handleSendPeripheral}/>
-                <Row>
-                    <Col md={5} id={"tab_creator_add_image_col"}>
-                        <Image src={this.state.tab_image} alt='add tab image' id="addImage" onClick={this.handleClick} fluid/>
-                    </Col>
-                    <Col id={"tab_creator_add_register_col"}>
+                <LayoutWrapper>
+                    <Image src={this.state.tab_image} alt='add tab image' id="addImage" onClick={this.handleClick} fluid/>
+                    <RegistersWrapper>
                         <RegisterInputForm registers={this.state.tab_registers} preview_only={true} handle_edit={this.handleEditRegister} handle_remove={this.handleRemoveRegister}/>
-                        <Row>
-                            <Image src="assets/Icons/add_register.svg" id="addRegister" alt='add register' onClick={this.handleClick} fluid/>
-                        </Row>
-                        <Row>
-                            <Col md={{ span: 3, offset: 9 }}>
-                                <Button variant="success" onClick={this.handleSubmit}>Submit</Button>
-                            </Col>
-                        </Row>
-                    </Col>
-                </Row>
+                        <Image src="assets/Icons/add_register.svg" id="addRegister" alt='add register' onClick={this.handleClick} fluid/>
+                        <Button variant="success" onClick={this.handleSubmit}>Submit</Button>
+                    </RegistersWrapper>
+                </LayoutWrapper>
             </div>
 
         );

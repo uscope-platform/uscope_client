@@ -6,6 +6,7 @@ import InputField from "../../UI_elements/InputField";
 import {Modal} from "react-bootstrap";
 import {hideModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
+import FormLayout from "../../UI_elements/FormLayout";
 
 
 function mapStateToProps(state) {
@@ -52,8 +53,10 @@ class PeripheralCreatorPeripheralParametersModal extends Component {
                     <Modal.Title>Peripheral Image choice</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <InputField inline name='periph_name' onChange={this.handleChange} label="Peripheral Name"/>
-                    <InputField inline name='periph_version' onChange={this.handleChange} label="Peripheral Version number"/>
+                    <FormLayout>
+                        <InputField inline name='periph_name' onChange={this.handleChange} label="Peripheral Name"/>
+                        <InputField inline name='periph_version' onChange={this.handleChange} label="Peripheral Version number"/>
+                    </FormLayout>
                 </Modal.Body>
 
                 <Modal.Footer>

@@ -5,6 +5,7 @@ import {Modal} from "react-bootstrap";
 import {hideModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
 import InputField from "../../UI_elements/InputField";
+import FormLayout from "../../UI_elements/FormLayout";
 
 function mapStateToProps(state) {
     return{
@@ -51,8 +52,10 @@ class AppCreatorAppNameModal extends Component {
                     <Modal.Title>Channel Settings</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <InputField inline name='name' onChange={this.handleChange} label="Application Name"/>
-                    <InputField inline name='bitstream' onChange={this.handleChange} label="Bitstream Filename"/>
+                    <FormLayout>
+                        <InputField inline name='name' onChange={this.handleChange} label="Application Name"/>
+                        <InputField inline name='bitstream' onChange={this.handleChange} label="Bitstream Filename"/>
+                    </FormLayout>
                 </Modal.Body>
 
                 <Modal.Footer>

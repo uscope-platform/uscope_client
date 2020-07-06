@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Card, Col, Image, ListGroup, Row} from "react-bootstrap";
+import {Card, Col, ListGroup, Row} from "react-bootstrap";
 import {Trash} from "grommet-icons";
 
 

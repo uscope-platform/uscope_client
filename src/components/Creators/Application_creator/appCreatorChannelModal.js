@@ -5,6 +5,7 @@ import {Modal} from "react-bootstrap";
 import {hideModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
 import InputField from "../../UI_elements/InputField";
+import FormLayout from "../../UI_elements/FormLayout";
 
 function mapStateToProps(state) {
     return{
@@ -57,9 +58,11 @@ class AppCreatorChannelModal extends Component {
                     <Modal.Title>Channel Settings</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <InputField inline name='name' onChange={this.handleChange} label="Parameter Name"/>
-                    <InputField inline name='min_value' onChange={this.handleChange} label="Minimum Value"/>
-                    <InputField inline name='max_value' onChange={this.handleChange} label="Maximum Value"/>
+                    <FormLayout>
+                        <InputField inline name='name' onChange={this.handleChange} label="Parameter Name"/>
+                        <InputField inline name='min_value' onChange={this.handleChange} label="Minimum Value"/>
+                        <InputField inline name='max_value' onChange={this.handleChange} label="Maximum Value"/>
+                    </FormLayout>
                 </Modal.Body>
 
                 <Modal.Footer>

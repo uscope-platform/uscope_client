@@ -8,6 +8,9 @@ import {Modal} from "react-bootstrap";
 import {hideModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
 import Checkbox from "../../UI_elements/checkbox";
+import styled from "styled-components";
+import Label from "../../UI_elements/Label";
+import FormLayout from "../../UI_elements/FormLayout";
 
 
 function mapStateToProps(state) {
@@ -22,6 +25,15 @@ const mapDispatchToProps = dispatch => {
         hideModal: () => {dispatch(hideModal('app_creator_peripheral_modal'))},
     }
 };
+
+
+const ChoicesWrapper = styled.div`
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    grid-gap: 0.3rem;
+    justify-content: space-between;
+    align-items: start;
+`
 
 
 class AppCreatorPeripheralModal extends Component {
@@ -76,19 +88,31 @@ class AppCreatorPeripheralModal extends Component {
                     <Modal.Title>Peripheral Settings</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Select name="peripheral_type" onChange={this.handleChange}>
-                        <option value="" hidden>Peripheral type</option>
-                        {
-                            Object.entries(this.props.peripherals).map((name,i) => (
-                                <option key={i} >{name[0]}</option>
-                            ))
-                        }
-                    </Select>
+                    <FormLayout>
+                        <ChoicesWrapper>
+                            <Label>Peripheral Type</Label>
+                            <Select name="peripheral_type" onChange={this.handleChange}>
+                                <option value="" hidden>Peripheral type</option>
+                                {
+                                    Object.entries(this.props.peripherals).map((name,i) => (
+                                        <option key={i} >{name[0]}</option>
+                                    ))
+                                }
+                            </Select>
+                        </ChoicesWrapper>
 
-                    <InputField inline name='base_address' onChange={this.handleChange} label="Base Address"/>
-                    <InputField inline name='proxy_address' onChange={this.handleChange} label="Proxy Address" disabled={!this.state.proxied}/>
-                    <Checkbox name='proxied' onChange={this.handleChange} label="RTCU proxied peripheral"/>
-                    <Checkbox name='accessible' onChange={this.handleChange} label="User accessible"/>
+                        <InputField inline name='base_address' onChange={this.handleChange} label="Base Address"/>
+                        <InputField inline name='proxy_address' onChange={this.handleChange} label="Proxy Address" disabled={!this.state.proxied}/>
+                        <ChoicesWrapper>
+                            <Label>RTCU proxied peripheral</Label>
+                            <Checkbox name='proxied' onChange={this.handleChange}/>
+                        </ChoicesWrapper>
+                        <ChoicesWrapper>
+                            <Label>User accessible</Label>
+                            <Checkbox name='accessible' onChange={this.handleChange}/>
+                        </ChoicesWrapper>
+                    </FormLayout>
+
                 </Modal.Body>
 
                 <Modal.Footer>

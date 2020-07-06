@@ -6,6 +6,8 @@ import InputField from "../../UI_elements/InputField";
 import {Modal} from "react-bootstrap";
 import {hideModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
+import styled from "styled-components";
+import FormLayout from "../../UI_elements/FormLayout";
 
 function mapStateToProps(state) {
     return{
@@ -19,7 +21,6 @@ const mapDispatchToProps = dispatch => {
         hideModal: () => {dispatch(hideModal('app_creator_macro_modal'))},
     }
 };
-
 
 class AppCreatorMacroModal extends Component {
     constructor(props){
@@ -56,8 +57,10 @@ class AppCreatorMacroModal extends Component {
                     <Modal.Title>Macro Settings</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <InputField inline name='name' onChange={this.handleChange} label="Parameter Name"/>
-                    <InputField inline name='trigger' onChange={this.handleChange} label="Trigger Name"/>
+                    <FormLayout>
+                        <InputField inline name='name' onChange={this.handleChange} label="Parameter Name"/>
+                        <InputField inline name='trigger' onChange={this.handleChange} label="Trigger Name"/>
+                    </FormLayout>
                 </Modal.Body>
 
                 <Modal.Footer>
