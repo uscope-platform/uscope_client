@@ -6,6 +6,17 @@ import {plotPause, plotPlay, plotStop} from "../../redux/Actions/plotActions";
 import TimebaseModal from "../Modal_Components/TimebaseModal"
 import ScopeModeModal from "../Modal_Components/scopeModeModal";
 import {showModal} from "../../redux/Actions/modalsActions";
+import styled from "styled-components";
+
+
+const ComponentStyle = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+const IconStyle = styled.div`
+  flex: 0 0 2rem;
+  
+`
 
 
 let  PlotControls = props =>{
@@ -54,15 +65,30 @@ let  PlotControls = props =>{
     };
 
     return(
-        <div>
+        <ComponentStyle>
             <TimebaseModal server={props.server} show={modals.timebase_choice}/>
             <ScopeModeModal server={props.server} show={modals.scope_mode_choice} done={onModeSubmit} />
-            <Play id='play' color='white' onClick={onClick}/>
-            <Pause id='pause' color='white' onClick={onClick}/>
-            <Stop id='stop' color='white' onClick={onClick}/>
-            <Configure id='timebase' color='white' onClick={onClick}/>
-            <Camera id='mode' color='white' onClick={onClick}/>
-        </div>
+            <IconStyle>
+                <Play id='play' color='white' onClick={onClick}/>
+            </IconStyle>
+
+            <IconStyle>
+                <Pause id='pause' color='white' onClick={onClick}/>
+            </IconStyle>
+
+            <IconStyle>
+                <Stop id='stop' color='white' onClick={onClick}/>
+            </IconStyle>
+
+            <IconStyle>
+                <Configure id='timebase' color='white' onClick={onClick}/>
+            </IconStyle>
+
+            <IconStyle>
+                <Camera id='mode' color='white' onClick={onClick}/>
+            </IconStyle>
+
+        </ComponentStyle>
     );
 };
 

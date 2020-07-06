@@ -6,6 +6,15 @@ import {showModal} from "../../redux/Actions/modalsActions";
 import ChannelSettingsModal from "../Modal_Components/ChannelSettingsModal";
 import Checkbox from "../UI_elements/checkbox";
 import {Configure} from "grommet-icons";
+import styled from "styled-components";
+
+const ComponentStyle = styled.div`
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-auto-rows: auto;
+  grid-column-gap: 0.5rem;
+  grid-row-gap: 2rem;
+`
 
 
 function ChannelSelectorItem(props){
@@ -20,11 +29,11 @@ function ChannelSelectorItem(props){
     }
 
     return(
-        <div className="channel_enable_group">
+        <ComponentStyle>
             <ChannelSettingsModal id={props.idx} server={props.server}/>
             <Checkbox name={props.id} onChange={handleChannelStateChange} label={props.name}/>
             <Configure color='white' onClick={() =>(dispatch(showModal('channel_settings_choice', props.idx)))}/>
-        </div>
+        </ComponentStyle>
     );
 }
 

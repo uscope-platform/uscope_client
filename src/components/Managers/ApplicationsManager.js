@@ -1,6 +1,5 @@
 import React, {Component}  from 'react';
 
-
 import { LinkContainer } from 'react-router-bootstrap'
 import {connect} from "react-redux"
 
@@ -9,9 +8,8 @@ import cellEditFactory from 'react-bootstrap-table2-editor';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 
 import Button from "../UI_elements/Button"
-import { Container, Row} from "react-bootstrap";
 import {setSetting} from "../../redux/Actions/SettingsActions";
-
+import styled from "styled-components";
 
 
 function mapStateToProps(state) {
@@ -26,6 +24,20 @@ const mapDispatchToProps = dispatch => {
         setSetting: (name, value) => {dispatch(setSetting([name, value]))},
     }
 };
+
+const ComponentLayout = styled.div`
+  display: grid;
+  grid-template-columns: auto;
+  grid-auto-rows: auto;
+  grid-gap: 2rem;
+`
+const ButtonsLayout = styled.div`
+  display: flex;
+  grid-template-columns: auto;
+  grid-auto-rows: auto;
+  grid-gap: 2rem;
+`
+
 
 class ApplicationsManager extends Component {
     constructor(props) {
@@ -141,8 +153,8 @@ class ApplicationsManager extends Component {
 
     render(){
         return(
-            <Container>
-                <Row>
+            <ComponentLayout>
+                <ButtonsLayout>
                     <LinkContainer to="/application_creator">
                         <Button outline confirm onClick={this.handleCreate}> Add application</Button>
                     </LinkContainer>
@@ -153,21 +165,19 @@ class ApplicationsManager extends Component {
                     <LinkContainer isActive={this.is_editable} to="/application_creator">
                         <Button outline onClick={this.handleEdit}>Edit application</Button>
                     </LinkContainer>
-                </Row>
-                <Row>
-                    <BootstrapTable
-                        keyField='application_name'
-                        data={this.applications}
-                        columns={this.columns}
-                        cellEdit={ cellEditFactory({
-                            mode: 'click',
-                            blurToSave: true
-                        })}
-                        pagination={ paginationFactory() }
-                        selectRow={ this.selectRow }
-                    />
-                </Row>
-            </Container>
+                </ButtonsLayout>
+                <BootstrapTable
+                    keyField='application_name'
+                    data={this.applications}
+                    columns={this.columns}
+                    cellEdit={ cellEditFactory({
+                        mode: 'click',
+                        blurToSave: true
+                    })}
+                    pagination={ paginationFactory() }
+                    selectRow={ this.selectRow }
+                />
+            </ComponentLayout>
         );
     };
 }

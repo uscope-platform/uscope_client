@@ -5,6 +5,7 @@ import {connect} from "react-redux";
 import {parseFunction, context_cleaner} from "../../user_script_launcher";
 
 import {saveScriptsWorkspace} from "../../redux/Actions/scriptsActions";
+import styled from "styled-components";
 
 
 function mapStateToProps(state) {
@@ -24,6 +25,15 @@ const mapDispatchToProps = dispatch => {
     }
 };
 
+const ComponentStyle = styled.div`
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-auto-rows: auto;
+    grid-row-gap: 1em;
+    background-color: #5a5a5a;
+    border-radius: 1rem;
+    padding: 1rem;
+`
 
 class MacroActions extends Component {
     constructor(props) {
@@ -59,13 +69,13 @@ class MacroActions extends Component {
 
      render (){
          return(
-             <div key="macros">
+             <ComponentStyle>
                  {this.Actions.map((macro) => {
                      return(
                          <Button key={macro.trigger} className="macro_action_buttons" name={macro.trigger} onClick={this.onClick}>{macro.name}</Button>
                      );
                  })}
-             </div>
+             </ComponentStyle>
          );
      }
 

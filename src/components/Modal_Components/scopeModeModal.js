@@ -25,7 +25,7 @@ const mapDispatchToProps = dispatch => {
 class ScopeModeModal extends Component {
     constructor(props){
         super(props);
-        this.state = {n_buffers:""}
+        this.state = {n_buffers:"", visible:false}
     }
 
 

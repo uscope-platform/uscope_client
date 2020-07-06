@@ -2,7 +2,7 @@
 
 //       REACT AND BOOTSTRAP IMPORTS
 import React, {Component} from 'react';
-import {Tab, Container} from "react-bootstrap";
+import {Tab} from "react-bootstrap";
 import {Route, Redirect} from 'react-router-dom'
 
 //       REDUX IMPORTS
@@ -228,8 +228,8 @@ class AuthApp extends Component {
                 }
             default:
                 return(
-                    <Container>
-                    </Container>
+                    <>
+                    </>
                 )
         }
 

@@ -1,46 +1,53 @@
 import React from 'react';
 
-import {Card, Col, ListGroup, Row} from "react-bootstrap";
 import {Trash} from "grommet-icons";
+import styled from "styled-components";
 
+const ComponentStyle = styled.div`
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-auto-rows: auto;
+  grid-row-gap: 1em;
+  width: 18rem;
+  border-radius: 0.3rem;
+  justify-content: space-between;
+  background-color: #3c3b3b;
+  padding: 0 0.5rem;
+`
+
+const ListStyle = styled.div`
+  display: grid;
+  grid-template-columns: auto;
+  grid-auto-rows: auto;
+  grid-gap: 0.2rem;
+`
 
 let AppCreatorPeripheralsDisplay  = props => {
     return(
-        <Card style={{ width: '18rem' }}>
-            <ListGroup variant="flush">
-                {
-                    props.peripherals.map((peripheral) => (
-                        <ListGroup.Item>
-                            <div onClick={() => props.onClick(peripheral[props.id_field])}>
-                                <Row>
-                                     <Col>
-                                            {(() => {
-                                                if(props.id_field==='name'){
-                                                    if ('name' in peripheral && peripheral['name'] !== ""){
-                                                        return peripheral['name'];
-                                                    } else{
-                                                        return peripheral['address'];
-                                                    }
-                                                }else{
-                                                    return peripheral[props.id_field];
-                                                }
+            <ListStyle>
+            {
+                props.peripherals.map((peripheral) => (
+                    <div onClick={() => props.onClick(peripheral[props.id_field])}>
+                        <ComponentStyle>
+                            {(() => {
+                                if(props.id_field==='name'){
+                                    if ('name' in peripheral && peripheral['name'] !== ""){
+                                        return peripheral['name'];
+                                    } else{
+                                        return peripheral['address'];
+                                    }
+                                }else{
+                                    return peripheral[props.id_field];
+                                }
 
-                                            })()}
-                                     </Col>
-                                    <Col md={4}>
-                                        <Trash color='white' onClick={(e) => {props.remove(peripheral[props.id_field]); e.stopPropagation()}}/>
-                                    </Col>
-                                </Row>
-                            </div>
-                        </ListGroup.Item>
-                    ))
-                }
-            </ListGroup>
-        </Card>
-
+                            })()}
+                            <Trash color='white' onClick={(e) => {props.remove(peripheral[props.id_field]); e.stopPropagation()}}/>
+                        </ComponentStyle>
+                    </div>
+                ))
+            }
+            </ListStyle>
     );
-
-
 };
 
 export default AppCreatorPeripheralsDisplay;

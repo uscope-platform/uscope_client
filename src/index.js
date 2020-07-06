@@ -10,7 +10,7 @@ ReactDOM.render(
     <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
             <BrowserRouter>
-                <App />
+                    <App />
             </BrowserRouter>
         </PersistGate>
     </Provider>,

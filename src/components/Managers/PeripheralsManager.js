@@ -9,8 +9,8 @@ import cellEditFactory from 'react-bootstrap-table2-editor';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 
 import Button from "../UI_elements/Button"
-import {Container, Row} from "react-bootstrap";
 import {setSetting} from "../../redux/Actions/SettingsActions";
+import styled from "styled-components";
 
 
 
@@ -25,6 +25,19 @@ const mapDispatchToProps = dispatch => {
         setSetting: (name, value) => {dispatch(setSetting([name, value]))},
     }
 };
+
+const ComponentLayout = styled.div`
+  display: grid;
+  grid-template-columns: auto;
+  grid-auto-rows: auto;
+  grid-gap: 2rem;
+`
+const ButtonsLayout = styled.div`
+  display: flex;
+  grid-template-columns: auto;
+  grid-auto-rows: auto;
+  grid-gap: 2rem;
+`
 
 class PeripheralsManager extends Component {
     constructor(props) {
@@ -130,8 +143,8 @@ class PeripheralsManager extends Component {
 
     render(){
         return(
-            <Container>
-                <Row>
+            <ComponentLayout>
+                <ButtonsLayout>
                     <LinkContainer to="/peripheral_creator">
                         <Button outline confirm onClick={this.handle_create}> Add new row</Button>
                     </LinkContainer>
@@ -141,21 +154,19 @@ class PeripheralsManager extends Component {
                     <LinkContainer isActive={this.is_editable} to="/peripheral_creator">
                         <Button outline onClick={this.handleEdit} >Edit peripheral</Button>
                     </LinkContainer>
-                </Row>
-                <Row>
-                    <BootstrapTable
-                        keyField='peripheral_name'
-                        data={this.peripherals}
-                        columns={this.columns}
-                        cellEdit={ cellEditFactory({
-                            mode: 'click',
-                            blurToSave: true
-                        })}
-                        pagination={ paginationFactory() }
-                        selectRow={ this.selectRow }
-                    />
-                </Row>
-            </Container>
+                </ButtonsLayout>
+                <BootstrapTable
+                    keyField='peripheral_name'
+                    data={this.peripherals}
+                    columns={this.columns}
+                    cellEdit={ cellEditFactory({
+                        mode: 'click',
+                        blurToSave: true
+                    })}
+                    pagination={ paginationFactory() }
+                    selectRow={ this.selectRow }
+                />
+            </ComponentLayout>
         );
     };
 }

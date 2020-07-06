@@ -3,9 +3,9 @@ import React, {Component} from 'react';
 import Button from "../UI_elements/Button"
 import InputField from "../UI_elements/InputField";
 import Checkbox from "../UI_elements/checkbox";
-import {Container, Row, Col} from "react-bootstrap";
 import {hideModal} from "../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
+import styled from "styled-components";
 
 
 function mapStateToProps(state) {
@@ -20,6 +20,32 @@ const mapDispatchToProps = dispatch => {
     }
 };
 
+const ComponentStyle = styled.div`
+  display: grid;
+  grid-template-columns: auto;
+  grid-auto-rows: auto;
+  grid-column-gap: 0.5rem;
+  grid-row-gap: 2rem;
+  margin-left: auto;
+  margin-right: auto;
+`
+
+
+const LoginFormLayout = styled.div`
+  display: grid;
+  grid-template-columns: auto;
+  grid-auto-rows: auto;
+  grid-column-gap: 0.5rem;
+  grid-row-gap: 1rem;
+  width: 20rem;
+  margin-left: auto;
+  margin-right: auto;  
+`
+
+const Centering = styled.div`
+  margin-left: auto;
+  margin-right: auto;  
+`
 
 class LoginPage extends Component {
     constructor(props){
@@ -44,19 +70,19 @@ class LoginPage extends Component {
 
     render() {
         return(
-            <Container>
-                <Row>
-                    <Col><h1>Please Sign In</h1></Col>
-                </Row>
-                <Row>
+            <ComponentStyle>
+                <Centering>
+                    <h1>Please Sign In</h1>
+                </Centering>
+                <LoginFormLayout>
                     <InputField name='username' compact onChange={this.handleChange} label="Username"/>
                     <InputField name='password' type='password' compact onChange={this.handleChange} label="Password"/>
                     <Checkbox name='remember_me' onChange={this.handleChange} label="Remember Me"/>
-                </Row>
-                <Row>
+                </LoginFormLayout>
+                <Centering>
                     <Button onClick={this.handleClose}>Sign In</Button>
-                </Row>
-            </Container>
+                </Centering>
+            </ComponentStyle>
         );
     }
 }

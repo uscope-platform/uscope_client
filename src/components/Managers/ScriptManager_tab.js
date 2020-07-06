@@ -8,9 +8,9 @@ import cellEditFactory from 'react-bootstrap-table2-editor';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 
 import Button from "../UI_elements/Button"
-import {Col, Container, Row} from "react-bootstrap";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import {LinkContainer} from "react-router-bootstrap";
+import styled from "styled-components";
 
 
 
@@ -45,6 +45,19 @@ const expandRow = {
     showExpandColumn: true,
     expandColumnPosition: 'right'
 };
+
+const ComponentLayout = styled.div`
+  display: grid;
+  grid-template-columns: auto;
+  grid-auto-rows: auto;
+  grid-gap: 2rem;
+`
+const ButtonsLayout = styled.div`
+  display: flex;
+  grid-template-columns: auto;
+  grid-auto-rows: auto;
+  grid-gap: 2rem;
+`
 
 class ScriptManager extends Component {
     constructor(props) {
@@ -157,35 +170,29 @@ class ScriptManager extends Component {
 
     render(){
         return(
-            <Container>
-                <Row>
+            <ComponentLayout>
+                <ButtonsLayout>
                     <Button outline confirm onClick={this.handleAddRow}>+ Add new row</Button>
                     <Button outline deny onClick={this.handleRemoveRow}>- Remove Row</Button>
                     <LinkContainer isActive={this.is_editable} to="/script_creator">
                         <Button outline onClick={this.handleScriptEdit}>Edit Script</Button>
                     </LinkContainer>
-                </Row>
-                <Row>
-                    <BootstrapTable
-                        keyField='id'
-                        data={this.scripts}
-                        columns={this.columns}
-                        expandRow={ expandRow }
-                        cellEdit={ cellEditFactory({
-                            mode: 'click',
-                            blurToSave: true
-                        })}
-                        defaultSorted={defaultSorted}
-                        pagination={ paginationFactory() }
-                        selectRow={ this.selectRow }
-                    />
-                </Row>
-                <Row>
-                    <Col md={{ offset: 9 }}>
-                        <Button  outline confirm onClick={this.handleScriptConfigurationSave}>Save scripts configuration</Button>
-                    </Col>
-                </Row>
-            </Container>
+                </ButtonsLayout>
+                <BootstrapTable
+                    keyField='id'
+                    data={this.scripts}
+                    columns={this.columns}
+                    expandRow={ expandRow }
+                    cellEdit={ cellEditFactory({
+                        mode: 'click',
+                        blurToSave: true
+                    })}
+                    defaultSorted={defaultSorted}
+                    pagination={ paginationFactory() }
+                    selectRow={ this.selectRow }
+                />
+                <Button  outline confirm onClick={this.handleScriptConfigurationSave}>Save scripts configuration</Button>
+            </ComponentLayout>
         );
     };
 }

@@ -7,7 +7,8 @@ import {parseFunction, context_cleaner} from "../../user_script_launcher";
 import {saveScriptsWorkspace} from "../../redux/Actions/scriptsActions";
 import {saveParameter} from "../../redux/Actions/ParameterActions";
 import {setSetting} from "../../redux/Actions/SettingsActions";
-
+import FormLayout from "../UI_elements/FormLayout";
+import styled from "styled-components";
 
 function mapStateToProps(state) {
     return{
@@ -25,6 +26,14 @@ const mapDispatchToProps = dispatch => {
         saveParameter: (param) => {dispatch(saveParameter(param))}
     }
 };
+
+const ParamAreaStyle = styled.div`
+    background-color: #5a5a5a;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 1rem;
+    padding: 1rem;
+`
 
 class ParametersArea extends Component {
     constructor(props){
@@ -99,20 +108,22 @@ class ParametersArea extends Component {
     };
     render(){
         return(
-            <div className="parameters_area_containser">
+            <ParamAreaStyle>
                 <form onSubmit={this.handleSubmit}>
-                    {this.props.parameters.map((param, i) => {
-                        if(param.visible){
-                            return(
-                                <SingleValueField key={i} name={param.parameter_name} value={param.value} description={param.description}/>
-                            );
-                        } else{
-                            return null;
-                        }
-                    })}
-                    <Button> Submit </Button>
+                    <FormLayout>
+                        {this.props.parameters.map((param, i) => {
+                            if(param.visible){
+                                return(
+                                    <SingleValueField key={i} name={param.parameter_name} value={param.value} description={param.description}/>
+                                );
+                            } else{
+                                return null;
+                            }
+                        })}
+                        <Button> Submit </Button>
+                    </FormLayout>
                 </form>
-            </div>
+            </ParamAreaStyle>
         );
     }
 
