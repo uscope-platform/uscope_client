@@ -13,6 +13,16 @@ const LayoutWrapper = styled.div`
     align-items: center;
 `
 
+
+const DualWrapper = styled.div`
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    grid-gap: 1rem;
+    align-items: start;
+`
+
+
+
 let TwoValuesField = props => {
 
     let localRemoveHandler = () =>{
@@ -35,10 +45,10 @@ let TwoValuesField = props => {
         );
     } else{
         return(
-            <>
+            <DualWrapper>
                 <InputField description={props.field_descriptions[0]} name={props.register_name+'.1'} label={props.field_names[0]}/>
                 <InputField description={props.field_descriptions[1]} name={props.register_name+'.2'} label={props.field_names[1]}/>
-            </>
+            </DualWrapper>
         );
     }
 

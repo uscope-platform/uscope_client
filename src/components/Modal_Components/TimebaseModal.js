@@ -6,6 +6,7 @@ import {hideModal} from "../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
 import {saveScriptsWorkspace} from '../../redux/Actions/scriptsActions';
 import InputField from "../UI_elements/InputField";
+import FormLayout from "../UI_elements/FormLayout";
 
 function mapStateToProps(state) {
     return{
@@ -117,12 +118,14 @@ class TimebaseModal extends Component {
                     <Modal.Title>Application timebase Control</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <InputField inline name='frequency' onChange={this.handleChange} label="Frequency"/>
-                    {
-                        Array.from({length: this.state.n_enables}, (x,i) => i).map((reg, i) => {
+                    <FormLayout>
+                        <InputField inline name='frequency' onChange={this.handleChange} label="Frequency"/>
+                        {
+                            Array.from({length: this.state.n_enables}, (x,i) => i).map((reg, i) => {
                                 return this.generate_form('enable_'+(i+1));
-                        })
-                    }
+                            })
+                        }
+                    </FormLayout>
                 </Modal.Body>
 
                 <Modal.Footer>

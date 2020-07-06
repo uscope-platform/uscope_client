@@ -5,6 +5,7 @@ import {Modal} from "react-bootstrap";
 import {hideModal} from "../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
 import InputField from "../UI_elements/InputField";
+import FormLayout from "../UI_elements/FormLayout";
 
 
 function mapStateToProps(state) {
@@ -49,7 +50,9 @@ class ScopeModeModal extends Component {
                     <Modal.Title>Select the number of buffers to capture</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <InputField inline name='n_buffers' onChange={this.handleChange} label="Number of buffers"/>
+                    <FormLayout>
+                        <InputField inline name='n_buffers' onChange={this.handleChange} label="Number of buffers"/>
+                    </FormLayout>
                 </Modal.Body>
 
                 <Modal.Footer>
