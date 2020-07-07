@@ -1,9 +1,12 @@
-import React from 'react';
+import React, {Component} from 'react';
 import Image from "../UI_elements/Image";
 
-import {useSelector} from "react-redux";
+import {connect} from "react-redux";
 import RegisterInputForm from "./RegisterInputForm";
 import styled from "styled-components";
+import {setSetting} from "../../redux/Actions/SettingsActions";
+import {loadTabs} from "../../redux/Actions/TabsActions";
+import {loadRegisters} from "../../redux/Actions/RegisterActions";
 
 
 const LayoutWrapper = styled.div`
@@ -17,21 +20,45 @@ const LayoutWrapper = styled.div`
 
 `
 
-let RegisterTab  = props => {
-    const register_values = useSelector(
-        state => state.registerValues[props.content.tab_id]
-    );
+function mapStateToProps(state) {
+    return{
+        peripherals:state.peripherals,
+        settings:state.settings,
+        registerValues:state.registerValues
+    }
+}
 
-    const register_specs = useSelector(
-        state => state.peripherals[props.content.tab_id]
-    );
-
-    return(
-        <LayoutWrapper>
-            <Image src={props.server.server_url + props.content.image_src} alt='Peripheral diagram' fluid/>
-            <RegisterInputForm registers={register_specs.registers} values={register_values} server={props.server} content={props.content}/>
-        </LayoutWrapper>
-    );
+const mapDispatchToProps = dispatch => {
+    return{
+        setSettings: (setting) => {dispatch(setSetting(setting))}
+    }
 };
 
-export default RegisterTab;
+
+
+class RegisterTab extends Component {
+    constructor(props) {
+        super(props);
+
+        this.server = this.props.server;
+        }
+
+        componentDidMount() {
+            this.props.setSettings(["current_view_requires_sidebar", false]);
+        }
+
+        componentWillUnmount() {
+            this.props.setSettings(["current_view_requires_sidebar", true]);
+        }
+
+    render(){
+        return(
+            <LayoutWrapper>
+                <Image src={this.props.server.server_url + this.props.content.image_src} alt='Peripheral diagram' fluid/>
+                <RegisterInputForm registers={this.props.peripherals[this.props.content.tab_id].registers} values={this.props.registerValues[this.props.content.tab_id]} server={this.props.server} content={this.props.registerValues[this.props.content.tab_id]}/>
+            </LayoutWrapper>
+        );
+    };
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(RegisterTab,);

@@ -12,7 +12,9 @@ import styled from "styled-components";
 const ComponentStyle = styled.div`
   display: flex;
   flex-direction: column;
+  margin-top: 2.75rem;
 `
+
 const IconStyle = styled.div`
   flex: 0 0 2rem;
   

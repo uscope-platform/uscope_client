@@ -6,7 +6,6 @@ import InputField from "../../UI_elements/InputField";
 import {Modal} from "react-bootstrap";
 import {hideModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
-import styled from "styled-components";
 import FormLayout from "../../UI_elements/FormLayout";
 
 function mapStateToProps(state) {

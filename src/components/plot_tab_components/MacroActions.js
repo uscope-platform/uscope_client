@@ -6,7 +6,8 @@ import {parseFunction, context_cleaner} from "../../user_script_launcher";
 
 import {saveScriptsWorkspace} from "../../redux/Actions/scriptsActions";
 import styled from "styled-components";
-
+import BlockTitle from "../UI_elements/BlockTitle";
+import BlockLayout from "../UI_elements/BlockLayout";
 
 function mapStateToProps(state) {
     return{
@@ -25,14 +26,11 @@ const mapDispatchToProps = dispatch => {
     }
 };
 
-const ComponentStyle = styled.div`
+const ButtonGrid = styled.div`
     display: grid;
     grid-template-columns: auto auto auto;
-    grid-auto-rows: auto;
+    grid-auto-rows: max-content;
     grid-row-gap: 1em;
-    background-color: #162447;
-    border-radius: 1rem;
-    padding: 1rem;
 `
 
 class MacroActions extends Component {
@@ -69,13 +67,16 @@ class MacroActions extends Component {
 
      render (){
          return(
-             <ComponentStyle>
-                 {this.Actions.map((macro) => {
-                     return(
-                         <Button key={macro.trigger} className="macro_action_buttons" name={macro.trigger} onClick={this.onClick}>{macro.name}</Button>
-                     );
-                 })}
-             </ComponentStyle>
+             <BlockLayout centered>
+                 <BlockTitle>Macro Area</BlockTitle>
+                 <ButtonGrid>
+                     {this.Actions.map((macro) => {
+                         return(
+                             <Button key={macro.trigger} className="macro_action_buttons" name={macro.trigger} onClick={this.onClick}>{macro.name}</Button>
+                         );
+                     })}
+                 </ButtonGrid>
+             </BlockLayout>
          );
      }
 

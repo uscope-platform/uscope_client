@@ -4,8 +4,7 @@ import Button from "../UI_elements/Button"
 import {Modal} from "react-bootstrap";
 import {connect} from "react-redux";
 import Select from "../UI_elements/Select";
-import FormLayout from "../UI_elements/FormLayout";
-import Label from "../UI_elements/Label";
+import styled from "styled-components";
 
 function mapStateToProps(state) {
     return{
@@ -13,6 +12,19 @@ function mapStateToProps(state) {
     }
 }
 
+const ComponentLayout = styled.div`
+display: flex;
+flex-direction: column;
+
+`
+const Centering = styled.div`
+  margin-left: auto;
+  margin-right: auto;  
+`
+
+const Title = styled.h1`
+font-size: 2em;
+`
 class ApplicationChooser extends Component {
     constructor(props){
         super(props);
@@ -38,25 +50,18 @@ class ApplicationChooser extends Component {
     render() {
         return(
             <Modal.Dialog>
-                <Modal.Header closeButton>
-                    <Modal.Title>Application Choice</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <FormLayout>
-                        <Label>Application Name</Label>
-                        <Select name="peripheral_type" onChange={this.handleChange}>
-                            <option value="" hidden>Application Name</option>
-                            {this.applications_list.map((name,i) => (
-                                <option key={i} >{name}</option>
-                            ))}
-                        </Select>
-                    </FormLayout>
-
-                </Modal.Body>
-
-                <Modal.Footer>
-                    <Button onClick={this.handleClose}>Save changes</Button>
-                </Modal.Footer>
+                <ComponentLayout>
+                    <Centering>
+                        <Title>Application Choice</Title>
+                            <Select name="peripheral_type" onChange={this.handleChange}>
+                                <option value="" hidden>Application Name</option>
+                                {this.applications_list.map((name,i) => (
+                                    <option key={i} >{name}</option>
+                                ))}
+                            </Select>
+                        <Button onClick={this.handleClose}>Save changes</Button>
+                    </Centering>
+                </ComponentLayout>
             </Modal.Dialog>
         );
     }

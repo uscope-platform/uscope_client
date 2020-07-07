@@ -3,7 +3,6 @@
 //       REACT AND BOOTSTRAP IMPORTS
 import React, {Component} from 'react';
 import {Route, Redirect} from 'react-router-dom'
-import styled from "styled-components";
 
 //       REDUX IMPORTS
 import {connect} from "react-redux";
@@ -23,13 +22,10 @@ import ApplicationsCreator from "./components/Creators/Application_creator/Appli
 import './App.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import ScriptsCreator from "./components/Creators/Script_creator/ScriptsCreator";
+import ApplicationLayout from "./components/UI_elements/ApplicationLayout";
+import Sidebar from "./components/Sidebar";
 
-const theme = {
-    base: "#08081A",
-    level_1:"#162447",
-    level_2:"#1f4068",
-    accents:"#e43f5a"
-};
+
 
 function mapStateToProps(state) {
     return{
@@ -59,14 +55,6 @@ const states = Object.freeze({
     NORMAL: Symbol("normal"),
 });
 
-
-
-const ComponentLayout = styled.div`
-    display: grid;
-    grid-template-columns: 2fr 10fr;
-    grid-auto-rows: auto;
-    
-`
 
 
 class AuthApp extends Component {
@@ -200,7 +188,7 @@ class AuthApp extends Component {
                 } else {
                     return (
                         <div className="App">
-                            <ComponentLayout>
+                            <ApplicationLayout sidebarNeeded={this.props.settings.current_view_requires_sidebar}>
                                 <Navbar tabs={this.props.tabs}/>
                                 {this.props.tabs.map((tab, i) => {
                                     if(tab.user_accessible){
@@ -217,7 +205,8 @@ class AuthApp extends Component {
                                         return null;
                                     }
                                 })}
-                            </ComponentLayout>
+                                <Sidebar/>
+                            </ApplicationLayout>
                             <Route
                                 path={'/script_creator'}
                                 exact

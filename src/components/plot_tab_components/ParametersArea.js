@@ -8,7 +8,8 @@ import {saveScriptsWorkspace} from "../../redux/Actions/scriptsActions";
 import {saveParameter} from "../../redux/Actions/ParameterActions";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import FormLayout from "../UI_elements/FormLayout";
-import styled from "styled-components";
+import BlockLayout from "../UI_elements/BlockLayout";
+import BlockTitle from "../UI_elements/BlockTitle";
 
 function mapStateToProps(state) {
     return{
@@ -26,14 +27,6 @@ const mapDispatchToProps = dispatch => {
         saveParameter: (param) => {dispatch(saveParameter(param))}
     }
 };
-
-const ParamAreaStyle = styled.div`
-    background-color: #162447;
-    margin-left: auto;
-    margin-right: auto;
-    border-radius: 1rem;
-    padding: 1rem;
-`
 
 class ParametersArea extends Component {
     constructor(props){
@@ -108,7 +101,8 @@ class ParametersArea extends Component {
     };
     render(){
         return(
-            <ParamAreaStyle>
+            <BlockLayout>
+                <BlockTitle>Parameter Area</BlockTitle>
                 <form onSubmit={this.handleSubmit}>
                     <FormLayout>
                         {this.props.parameters.map((param, i) => {
@@ -123,7 +117,7 @@ class ParametersArea extends Component {
                         <Button> Submit </Button>
                     </FormLayout>
                 </form>
-            </ParamAreaStyle>
+            </BlockLayout>
         );
     }
 

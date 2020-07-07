@@ -35,6 +35,13 @@ const initial_state = {
         memory_depth: 1024
     },
     layout: {
+        margin: {
+            l: 50,
+            r: 50,
+            b: 50,
+            t: 50,
+            pad: 4
+        },
         width: "1024",
             height: "auto",
             paper_bgcolor: "rgba(0,0,0,0)",

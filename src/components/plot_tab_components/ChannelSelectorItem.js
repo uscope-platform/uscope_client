@@ -14,6 +14,7 @@ const ComponentStyle = styled.div`
   grid-auto-rows: auto;
   grid-column-gap: 0.5rem;
   grid-row-gap: 2rem;
+  margin: 0 auto;
 `
 
 

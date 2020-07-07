@@ -12,11 +12,12 @@ const ComponentLayout = styled.div`
     
 `
 
-const LinkContainer = styled.div`
+const LinkContainer = styled(Link)`
      display: block;
      background-color: #1d7097;
      margin-top: 0.5rem;
      border-radius: 0.5rem;
+     padding-left: 1rem;
 `
 
 let  Navbar = props =>{
@@ -28,8 +29,8 @@ let  Navbar = props =>{
             {props.tabs.map((tab, i) => {
                 if(tab.user_accessible){
                     return(
-                        <LinkContainer>
-                            <Link key={tab.name} to={'/'+tab.name} className="nav-link">{tab.name}</Link>
+                        <LinkContainer style={{ textDecoration: 'none', color:'white' }} key={tab.name} to={'/'+tab.name} className="nav-link">
+                            {tab.name}
                         </LinkContainer>
                     )
                 } else {

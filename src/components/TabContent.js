@@ -36,7 +36,7 @@ let TabContent = props => {
             <ApplicationsManager server={props.server}/>
         );
     } else{
-        return (null)
+        return null
     }
 };
 

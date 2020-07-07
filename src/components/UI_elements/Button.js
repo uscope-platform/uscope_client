@@ -4,9 +4,10 @@ const Button = styled.button`
   background: #e43f5a;
   border-radius: 3px;
   border-style: solid;
-  
+  font-size: 16px;
   color: black;
   width: fit-content;
+  height: fit-content;
   margin: 0 1em;
   padding: 0.5em 1em;
    // FULL BUTTONS

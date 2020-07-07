@@ -5,7 +5,8 @@ const initial_state = {
     default_tab: "Plot",
     refreshRate: 90,
     edit_application_mode:false,
-    edit_application_name: ""
+    edit_application_name: "",
+    current_view_requires_sidebar: true
 };
 
 let settingsReducer = function (state = initial_state, action) {

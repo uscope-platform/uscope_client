@@ -1,11 +1,12 @@
 *{
   box-sizing: border-box;
   margin: 0;
+  font-family: Helvetica,sans-serif;
   padding: 0;
 }
 
 body {
-  font-family: arial, Helvetica, sans-serif;
+  font-family: Helvetica, sans-serif;
   line-height: 1.4;
   color: #FFF;
   background-color: #08081A;
