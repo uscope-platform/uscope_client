@@ -3,14 +3,15 @@ import React, {Component}  from 'react';
 
 import {connect} from "react-redux"
 
-import BootstrapTable from 'react-bootstrap-table-next';
-import cellEditFactory from 'react-bootstrap-table2-editor';
-import paginationFactory from 'react-bootstrap-table2-paginator';
+import DataTable from 'react-data-table-component';
+import {TableStyle} from './TableStyles'
+
 
 import Button from "../UI_elements/Button"
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import {LinkContainer} from "react-router-bootstrap";
-import styled from "styled-components";
+import BlockLayout from "../UI_elements/BlockLayout";
+import ManagerLayout, {ManagerButtonsLayout} from "../UI_elements/ManagerLayout";
 
 
 
@@ -28,36 +29,7 @@ const mapDispatchToProps = dispatch => {
     }
 };
 
-const defaultSorted = [{
-    dataField: 'id',
-    order: 'asc'
-}];
 
-const expandRow = {
-    renderer: row => {
-        return(
-            <div>
-                <p>{row.script_content}</p>
-            </div>
-        )
-    },
-    onlyOneExpanding: true,
-    showExpandColumn: true,
-    expandColumnPosition: 'right'
-};
-
-const ComponentLayout = styled.div`
-  display: grid;
-  grid-template-columns: auto;
-  grid-auto-rows: auto;
-  grid-gap: 2rem;
-`
-const ButtonsLayout = styled.div`
-  display: flex;
-  grid-template-columns: auto;
-  grid-auto-rows: auto;
-  grid-gap: 2rem;
-`
 
 class ScriptManager extends Component {
     constructor(props) {
@@ -66,50 +38,44 @@ class ScriptManager extends Component {
         // the json stringify/parse is used to do a deep copy of the redux store
         this.scripts = JSON.parse(JSON.stringify(this.props.scripts_store));
 
-        this.selectRow = {
-            mode: 'radio',
-            clickToEdit: true,
-            clickToSelect: true,
-            selected: this.state.selected,
-            onSelect: this.handleOnSelect,
-        };
     }
-
 
     columns = [
         {
-            dataField: 'id',
-            text: 'Script ID',
+            selector: 'id',
+            name: 'Script ID',
             sort: true
         },
         {
-            dataField: 'name',
-            text: 'Script Name',
-            sort: true
+            selector: 'name',
+            name: 'Script Name',
+            sort: true,
+            grow:2
         },
         {
-            dataField: 'path',
-            text: 'Script Filename',
-            editorRenderer: (editorProps, value, row, column, rowIndex, columnIndex) => (
-                <FileChoice { ...editorProps } value={ value } row={row} column={column} updateContent={(content)=>{row.script_content=content}}/>)
+            selector: 'path',
+            name: 'Script Filename',
+            grow:3
         },
         {
-            dataField: 'triggers',
-            text: 'Script Triggers'
+            selector: 'triggers',
+            name: 'Script Triggers',
+            grow:3
         }
     ];
 
 
-    handleOnSelect = (row, isSelect) => {
-        if (isSelect) {
+    handleOnSelect = (selection) => {
+        if(!selection.allSelected && selection.selectedCount===1){
             this.setState(() => ({
-                selected: row.id
+                selected: selection.selectedRows[0].id
             }));
-        } else {
+        } else if(selection.selectedCount===0) {
             this.setState(() => ({
                 selected: null
             }));
         }
+
     };
 
     handleAddRow = () =>{
@@ -170,29 +136,27 @@ class ScriptManager extends Component {
 
     render(){
         return(
-            <ComponentLayout>
-                <ButtonsLayout>
+            <ManagerLayout>
+                <ManagerButtonsLayout>
                     <Button outline confirm onClick={this.handleAddRow}>+ Add new row</Button>
                     <Button outline deny onClick={this.handleRemoveRow}>- Remove Row</Button>
                     <LinkContainer isActive={this.is_editable} to="/script_creator">
                         <Button outline onClick={this.handleScriptEdit}>Edit Script</Button>
                     </LinkContainer>
-                </ButtonsLayout>
-                <BootstrapTable
-                    keyField='id'
-                    data={this.scripts}
-                    columns={this.columns}
-                    expandRow={ expandRow }
-                    cellEdit={ cellEditFactory({
-                        mode: 'click',
-                        blurToSave: true
-                    })}
-                    defaultSorted={defaultSorted}
-                    pagination={ paginationFactory() }
-                    selectRow={ this.selectRow }
-                />
+                </ManagerButtonsLayout>
+                <BlockLayout centered>
+                    <DataTable
+                        title='Scripts'
+                        data={this.scripts}
+                        columns={this.columns}
+                        customStyles={TableStyle}
+                        theme="uScopeTableTheme"
+                        selectableRows
+                        onSelectedRowsChange={this.handleOnSelect}
+                    />
+                </BlockLayout>
                 <Button  outline confirm onClick={this.handleScriptConfigurationSave}>Save scripts configuration</Button>
-            </ComponentLayout>
+            </ManagerLayout>
         );
     };
 }

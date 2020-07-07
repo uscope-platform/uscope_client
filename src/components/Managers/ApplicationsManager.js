@@ -3,14 +3,15 @@ import React, {Component}  from 'react';
 import { LinkContainer } from 'react-router-bootstrap'
 import {connect} from "react-redux"
 
-import BootstrapTable from 'react-bootstrap-table-next';
-import cellEditFactory from 'react-bootstrap-table2-editor';
-import paginationFactory from 'react-bootstrap-table2-paginator';
 
 import Button from "../UI_elements/Button"
 import {setSetting} from "../../redux/Actions/SettingsActions";
-import styled from "styled-components";
 
+import DataTable   from 'react-data-table-component';
+import {TableStyle} from './TableStyles'
+
+import BlockLayout from "../UI_elements/BlockLayout";
+import ManagerLayout, {ManagerButtonsLayout} from "../UI_elements/ManagerLayout";
 
 function mapStateToProps(state) {
     return{
@@ -24,19 +25,6 @@ const mapDispatchToProps = dispatch => {
         setSetting: (name, value) => {dispatch(setSetting([name, value]))},
     }
 };
-
-const ComponentLayout = styled.div`
-  display: grid;
-  grid-template-columns: auto;
-  grid-auto-rows: auto;
-  grid-gap: 2rem;
-`
-const ButtonsLayout = styled.div`
-  display: flex;
-  grid-template-columns: auto;
-  grid-auto-rows: auto;
-  grid-gap: 2rem;
-`
 
 
 class ApplicationsManager extends Component {
@@ -62,19 +50,20 @@ class ApplicationsManager extends Component {
 
     columns = [
         {
-            dataField: 'application_name',
-            text: 'Application Name',
-            sort: true
+            selector: 'application_name',
+            name: 'Application Name',
+            sortable: true,
+
         }
     ];
 
 
-    handleOnSelect = (row, isSelect) => {
-        if (isSelect) {
+    handleOnSelect = (selection) => {
+        if(!selection.allSelected && selection.selectedCount===1){
             this.setState(() => ({
-                selected: row.application_name
+                selected: selection.selectedRows[0].application_name
             }));
-        } else {
+        } else if(selection.selectedCount===0) {
             this.setState(() => ({
                 selected: null
             }));
@@ -153,8 +142,8 @@ class ApplicationsManager extends Component {
 
     render(){
         return(
-            <ComponentLayout>
-                <ButtonsLayout>
+            <ManagerLayout>
+                <ManagerButtonsLayout>
                     <LinkContainer to="/application_creator">
                         <Button outline confirm onClick={this.handleCreate}> Add application</Button>
                     </LinkContainer>
@@ -165,19 +154,20 @@ class ApplicationsManager extends Component {
                     <LinkContainer isActive={this.is_editable} to="/application_creator">
                         <Button outline onClick={this.handleEdit}>Edit application</Button>
                     </LinkContainer>
-                </ButtonsLayout>
-                <BootstrapTable
-                    keyField='application_name'
-                    data={this.applications}
-                    columns={this.columns}
-                    cellEdit={ cellEditFactory({
-                        mode: 'click',
-                        blurToSave: true
-                    })}
-                    pagination={ paginationFactory() }
-                    selectRow={ this.selectRow }
-                />
-            </ComponentLayout>
+                </ManagerButtonsLayout>
+                <BlockLayout centered>
+                    <DataTable
+                        title='Applications'
+                        data={this.applications}
+                        columns={this.columns}
+                        theme="uScopeTableTheme"
+                        customStyles={TableStyle}
+                        selectableRows
+                        onSelectedRowsChange={this.handleOnSelect}
+                    />
+                </BlockLayout>
+
+            </ManagerLayout>
         );
     };
 }

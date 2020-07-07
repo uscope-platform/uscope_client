@@ -17,6 +17,8 @@
     "react-bootstrap-table-next": "^4.0.0",
     "react-bootstrap-table2-editor": "^1.4.0",
     "react-bootstrap-table2-paginator": "^2.1.0",
+    "react-data-table": "^0.1.0",
+    "react-data-table-component": "^6.9.6",
     "react-dom": "^16.9.0",
     "react-plotly.js": "^2.3.0",
     "react-redux": "^7.1.1",
@@ -62,7 +64,6 @@
     "@storybook/addons": "^5.3.19",
     "@storybook/preset-create-react-app": "^3.1.2",
     "@storybook/react": "^5.3.19",
-    "storybook-dark-mode": "^0.6.1",
-    "styled-react-modal": "^2.0.1"
+    "storybook-dark-mode": "^0.6.1"
   }
 }

@@ -5,12 +5,16 @@ import { LinkContainer } from 'react-router-bootstrap'
 import {connect} from "react-redux"
 
 import BootstrapTable from 'react-bootstrap-table-next';
+import DataTable from 'react-data-table-component';
+import {TableStyle} from './TableStyles'
 import cellEditFactory from 'react-bootstrap-table2-editor';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 
 import Button from "../UI_elements/Button"
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import styled from "styled-components";
+import BlockLayout from "../UI_elements/BlockLayout";
+import ManagerLayout, {ManagerButtonsLayout} from "../UI_elements/ManagerLayout";
 
 
 
@@ -26,18 +30,6 @@ const mapDispatchToProps = dispatch => {
     }
 };
 
-const ComponentLayout = styled.div`
-  display: grid;
-  grid-template-columns: auto;
-  grid-auto-rows: auto;
-  grid-gap: 2rem;
-`
-const ButtonsLayout = styled.div`
-  display: flex;
-  grid-template-columns: auto;
-  grid-auto-rows: auto;
-  grid-gap: 2rem;
-`
 
 class PeripheralsManager extends Component {
     constructor(props) {
@@ -53,26 +45,26 @@ class PeripheralsManager extends Component {
         };
     }
 
-
     columns = [
         {
-            dataField: 'peripheral_name',
-            text: 'Peripheral Name',
-            sort: true
+            selector: 'peripheral_name',
+            name: 'Peripheral Name',
+            sort: true,
+            grow:2
         },
         {
-            dataField: 'version',
-            text: 'Peripheral Version'
+            selector: 'version',
+            name: 'Peripheral Version'
         }
     ];
 
 
-    handleOnSelect = (row, isSelect) => {
-        if (isSelect) {
+    handleOnSelect = (selection) => {
+        if(!selection.allSelected && selection.selectedCount===1){
             this.setState(() => ({
-                selected: row.peripheral_name
+                selected: selection.selectedRows[0].peripheral_name
             }));
-        } else {
+        } else if(selection.selectedCount===0) {
             this.setState(() => ({
                 selected: null
             }));
@@ -91,7 +83,6 @@ class PeripheralsManager extends Component {
             alert("Please select a peripheral to Export");
             return;
         }
-        debugger;
         let peripheral = {[this.state.selected]:this.peripherals[this.peripherals.findIndex(item => item.peripheral_name === this.state.selected)]};
         let blob = new Blob([JSON.stringify(peripheral, null, 4)], {type: "application/json"});
         let url  = URL.createObjectURL(blob);
@@ -143,8 +134,8 @@ class PeripheralsManager extends Component {
 
     render(){
         return(
-            <ComponentLayout>
-                <ButtonsLayout>
+            <ManagerLayout>
+                <ManagerButtonsLayout>
                     <LinkContainer to="/peripheral_creator">
                         <Button outline confirm onClick={this.handle_create}> Add new row</Button>
                     </LinkContainer>
@@ -154,19 +145,19 @@ class PeripheralsManager extends Component {
                     <LinkContainer isActive={this.is_editable} to="/peripheral_creator">
                         <Button outline onClick={this.handleEdit} >Edit peripheral</Button>
                     </LinkContainer>
-                </ButtonsLayout>
-                <BootstrapTable
-                    keyField='peripheral_name'
-                    data={this.peripherals}
-                    columns={this.columns}
-                    cellEdit={ cellEditFactory({
-                        mode: 'click',
-                        blurToSave: true
-                    })}
-                    pagination={ paginationFactory() }
-                    selectRow={ this.selectRow }
-                />
-            </ComponentLayout>
+                </ManagerButtonsLayout>
+                <BlockLayout centered>
+                    <DataTable
+                        title='Peripherals'
+                        data={this.peripherals}
+                        columns={this.columns}
+                        customStyles={TableStyle}
+                        theme="uScopeTableTheme"
+                        selectableRows
+                        onSelectedRowsChange={this.handleOnSelect}
+                    />
+                </BlockLayout>
+            </ManagerLayout>
         );
     };
 }
