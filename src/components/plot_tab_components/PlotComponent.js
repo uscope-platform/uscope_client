@@ -26,7 +26,6 @@ let  PlotComponent = props =>{
     };
 
     useInterval(() => {
-        // Your custom logic here
         handleRefresh();
     },  props.refreshRate);
 

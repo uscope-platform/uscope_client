@@ -2,8 +2,11 @@ import React from 'react';
 
 import Button from "../UI_elements/Button"
 
+
+
 import SingleValueField from "../Common_Components/SingleValueField";
 import TwoValuesField from "../Common_Components/TwoValuesField";
+import {useSelector} from "react-redux";
 
 function arraysEqual(a,b) {
     /*
@@ -29,19 +32,17 @@ function arraysEqual(a,b) {
 
 let RegisterInputForm  = props => {
 
-
-
     const handleSubmit = event => {
         event.preventDefault();
         let first_field_value = null;
         for(let register of event.target){ // eslint-disable-line no-unused-vars
-            if(register.className.includes("oneField")){
+            if(!register.name.includes(".1") || !register.name.includes(".2")){
                 let idx = props.registers.findIndex((obj => obj.register_name === register.name));
                 let intValue = parseFloat(register.value);
                 if(register.value!=="" && props.registers[idx].value !==intValue){
-                    props.server.periph_proxy.setRegisterValue({name:register.name, peripheral:props.content.tab_id, value:intValue})
+                    props.server.periph_proxy.setRegisterValue({name:register.name, peripheral:props.parent_peripheral, value:intValue})
                 }
-            }else if (register.className.includes("twoFields")){
+            }else {
                 for(let item of register.classList){ // eslint-disable-line no-unused-vars
                     if(item.includes("twoFields")){
                         let reg_id = register.id.split('.')[0];
@@ -53,7 +54,7 @@ let RegisterInputForm  = props => {
                         }else if(fld_idx===2){
                             currentValue = [first_field_value, currentValue];
                             if(register.value!=="" && !arraysEqual( props.registers[reg_idx].value, currentValue)) {
-                                props.server.periph_proxy.setRegisterValue({name:reg_id, peripheral:props.content.tab_id, value:currentValue[0]+(currentValue[1]<<16)});
+                                props.server.periph_proxy.setRegisterValue({name:reg_id, peripheral:props.parent_peripheral, value:currentValue[0]+(currentValue[1]<<16)});
                             }
                         }
 
