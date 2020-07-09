@@ -7,7 +7,7 @@ import {parseFunction, context_cleaner} from "../../user_script_launcher";
 import {saveScriptsWorkspace} from "../../redux/Actions/scriptsActions";
 import styled from "styled-components";
 import BlockTitle from "../UI_elements/BlockTitle";
-import BlockLayout from "../UI_elements/BlockLayout";
+import BlockLayout from "../UI_elements/Layouts/BlockLayout";
 
 function mapStateToProps(state) {
     return{

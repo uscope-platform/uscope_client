@@ -2,6 +2,7 @@ import styled, {css} from 'styled-components';
 
 const Button = styled.button`
   background: #e43f5a;
+  border-color: #e43f5a;
   border-radius: 3px;
   border-style: solid;
   font-size: 16px;
@@ -13,12 +14,12 @@ const Button = styled.button`
    // FULL BUTTONS
    ${props => props.confirm && css`
     background: yellowgreen;
-    border-color: forestgreen;
+    border-color: yellowgreen;
     color: white;
   `}
   ${props => props.deny && css`
     background: orangered;
-    border-color: darkred;
+    border-color: orangered;
     color: white;
   `}
    // OUTLINE

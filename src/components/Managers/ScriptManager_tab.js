@@ -10,8 +10,8 @@ import {TableStyle} from './TableStyles'
 import Button from "../UI_elements/Button"
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import {LinkContainer} from "react-router-bootstrap";
-import BlockLayout from "../UI_elements/BlockLayout";
-import ManagerLayout, {ManagerButtonsLayout} from "../UI_elements/ManagerLayout";
+import BlockLayout from "../UI_elements/Layouts/BlockLayout";
+import ManagerLayout, {ManagerButtonsLayout} from "../UI_elements/Layouts/ManagerLayout";
 
 
 
@@ -138,10 +138,10 @@ class ScriptManager extends Component {
         return(
             <ManagerLayout>
                 <ManagerButtonsLayout>
-                    <Button outline confirm onClick={this.handleAddRow}>+ Add new row</Button>
-                    <Button outline deny onClick={this.handleRemoveRow}>- Remove Row</Button>
+                    <Button onClick={this.handleAddRow}>Add Script</Button>
+                    <Button onClick={this.handleRemoveRow}>Remove Script</Button>
                     <LinkContainer isActive={this.is_editable} to="/script_creator">
-                        <Button outline onClick={this.handleScriptEdit}>Edit Script</Button>
+                        <Button onClick={this.handleScriptEdit}>Edit Script</Button>
                     </LinkContainer>
                 </ManagerButtonsLayout>
                 <BlockLayout centered>

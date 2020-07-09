@@ -9,7 +9,7 @@ import {hideModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
 import styled from "styled-components";
 import Label from "../../UI_elements/Label";
-import FormLayout from "../../UI_elements/FormLayout";
+import FormLayout from "../../UI_elements/Layouts/FormLayout";
 
 function mapStateToProps(state) {
     return{

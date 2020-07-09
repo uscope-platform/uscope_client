@@ -7,8 +7,8 @@ import {parseFunction, context_cleaner} from "../../user_script_launcher";
 import {saveScriptsWorkspace} from "../../redux/Actions/scriptsActions";
 import {saveParameter} from "../../redux/Actions/ParameterActions";
 import {setSetting} from "../../redux/Actions/SettingsActions";
-import FormLayout from "../UI_elements/FormLayout";
-import BlockLayout from "../UI_elements/BlockLayout";
+import FormLayout from "../UI_elements/Layouts/FormLayout";
+import BlockLayout from "../UI_elements/Layouts/BlockLayout";
 import BlockTitle from "../UI_elements/BlockTitle";
 
 function mapStateToProps(state) {

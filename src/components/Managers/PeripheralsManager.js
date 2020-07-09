@@ -13,8 +13,8 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 import Button from "../UI_elements/Button"
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import styled from "styled-components";
-import BlockLayout from "../UI_elements/BlockLayout";
-import ManagerLayout, {ManagerButtonsLayout} from "../UI_elements/ManagerLayout";
+import BlockLayout from "../UI_elements/Layouts/BlockLayout";
+import ManagerLayout, {ManagerButtonsLayout} from "../UI_elements/Layouts/ManagerLayout";
 
 
 
@@ -64,6 +64,7 @@ class PeripheralsManager extends Component {
             this.setState(() => ({
                 selected: selection.selectedRows[0].peripheral_name
             }));
+            this.props.setSetting("current_peripheral",selection.selectedRows[0].peripheral_name);
         } else if(selection.selectedCount===0) {
             this.setState(() => ({
                 selected: null
@@ -137,13 +138,13 @@ class PeripheralsManager extends Component {
             <ManagerLayout>
                 <ManagerButtonsLayout>
                     <LinkContainer to="/peripheral_creator">
-                        <Button outline confirm onClick={this.handle_create}> Add new row</Button>
+                        <Button onClick={this.handle_create}> Create Peripheral</Button>
                     </LinkContainer>
-                    <Button outline deny onClick={this.handleRemoveRow}> Remove Row</Button>
-                    <Button outline onClick={this.handleImport}>Import peripheral</Button>
-                    <Button outline onClick={this.handleExport}>Export peripheral</Button>
+                    <Button onClick={this.handleRemoveRow}> Remove Peripheral</Button>
+                    <Button onClick={this.handleImport}>Import peripheral</Button>
+                    <Button onClick={this.handleExport}>Export peripheral</Button>
                     <LinkContainer isActive={this.is_editable} to="/peripheral_creator">
-                        <Button outline onClick={this.handleEdit} >Edit peripheral</Button>
+                        <Button onClick={this.handleEdit} >Edit peripheral</Button>
                     </LinkContainer>
                 </ManagerButtonsLayout>
                 <BlockLayout centered>

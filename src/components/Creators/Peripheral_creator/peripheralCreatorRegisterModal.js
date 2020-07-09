@@ -10,7 +10,7 @@ import Label from "../../UI_elements/Label";
 import Radio from "../../UI_elements/Radio";
 import TextArea from "../../UI_elements/TextArea";
 import styled from "styled-components";
-import FormLayout from "../../UI_elements/FormLayout";
+import FormLayout from "../../UI_elements/Layouts/FormLayout";
 
 function mapStateToProps(state) {
     return{

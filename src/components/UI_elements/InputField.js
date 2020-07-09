@@ -37,6 +37,7 @@ class InputField extends React.Component {
         if(this.props.compact){
             return (
                 <InnerInput
+                    onKeyDown={this.props.onKeyDown}
                     name={this.props.name}
                     type={(this.props.type)?this.props.type:"text"}
                     placeholder={this.props.label}

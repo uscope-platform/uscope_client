@@ -5,6 +5,7 @@ import Select from "../components/UI_elements/Select";
 import { action } from '@storybook/addon-actions';
 import Radio from "../components/UI_elements/Radio";
 import TextArea from "../components/UI_elements/TextArea";
+import RegisterProperties from "../components/UI_elements/RegisterProperties";
 
 
 export default {
@@ -42,3 +43,23 @@ export const SelectField = () => <Select>
 export const RadioField = () => <Radio onChange={inline_change_handler} label="Checkbox Field"/>
 
 export const TextAreaField = () => <TextArea onChange={inline_change_handler} rows={5} label="Text Area"/>
+
+
+const reg_example = {
+    "ID": "cmp_thr_1",
+    "description": "This register controls the thresholds for the low (latching mode) and low-falling (normal mode) thresholds, for the filtered (lower word) and fast acting (higher word) comparators",
+    "direction": "R/W",
+    "field_descriptions": [
+        "Threshold for the filtered comparator",
+        "Threshold for the fast acting comparator"
+    ],
+    "field_names": [
+        "Filtered threshold",
+        "Fast threshold"
+    ],
+    "offset": "0x0",
+    "register_format": "words",
+    "register_name": "Comparators threshold 1",
+    "value": 0
+}
+export const RegisterPropertiesExample = () => <RegisterProperties register={reg_example}/>

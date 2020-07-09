@@ -10,8 +10,8 @@ import {setSetting} from "../../redux/Actions/SettingsActions";
 import DataTable   from 'react-data-table-component';
 import {TableStyle} from './TableStyles'
 
-import BlockLayout from "../UI_elements/BlockLayout";
-import ManagerLayout, {ManagerButtonsLayout} from "../UI_elements/ManagerLayout";
+import BlockLayout from "../UI_elements/Layouts/BlockLayout";
+import ManagerLayout, {ManagerButtonsLayout} from "../UI_elements/Layouts/ManagerLayout";
 
 function mapStateToProps(state) {
     return{
@@ -145,14 +145,14 @@ class ApplicationsManager extends Component {
             <ManagerLayout>
                 <ManagerButtonsLayout>
                     <LinkContainer to="/application_creator">
-                        <Button outline confirm onClick={this.handleCreate}> Add application</Button>
+                        <Button onClick={this.handleCreate}> Add application</Button>
                     </LinkContainer>
 
-                    <Button outline deny  onClick={this.handleRemoveRow}> Remove application</Button>
-                    <Button outline onClick={this.handleImport}>Import application</Button>
-                    <Button outline onClick={this.handleExport}>Export application</Button>
+                    <Button onClick={this.handleRemoveRow}> Remove application</Button>
+                    <Button onClick={this.handleImport}>Import application</Button>
+                    <Button onClick={this.handleExport}>Export application</Button>
                     <LinkContainer isActive={this.is_editable} to="/application_creator">
-                        <Button outline onClick={this.handleEdit}>Edit application</Button>
+                        <Button onClick={this.handleEdit}>Edit application</Button>
                     </LinkContainer>
                 </ManagerButtonsLayout>
                 <BlockLayout centered>

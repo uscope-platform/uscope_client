@@ -1,20 +1,12 @@
-import React, {Component} from 'react';
+import React, {useEffect} from 'react';
 
 import Plotly from 'plotly.js-dist';
 import createPlotlyComponent from 'react-plotly.js/factory';
-import {connect} from "react-redux";
+import {useSelector} from "react-redux";
 import styled from "styled-components";
 import PlotControls from "./PlotControls";
+
 const Plot = createPlotlyComponent(Plotly);
-
-
-
-function mapStateToProps(state) {
-    return{
-        channels:state.plot,
-        settings:state.settings,
-    }
-}
 
 const ComponentStyle = styled.div`
   display: grid;
@@ -23,38 +15,34 @@ const ComponentStyle = styled.div`
   grid-row-gap: 1em;
 `
 
-class PlotComponent extends Component {
+let  PlotComponent = props =>{
+    const channels = useSelector(state => state.plot);
 
-    componentDidMount() {
-        this.refreshCallback = window.setInterval(this.handleRefresh, this.props.refreshRate);
+    //This effect hook handles creation and clearing of the plot refresh timer
+    useEffect(() => {
+        let  handleRefresh = () =>{
+            if(channels.plot_running){
+                props.server.plot_proxy.fetchData();
+            }
+        };
 
-    }
+        let refreshCallback = window.setInterval(handleRefresh, props.refreshRate);
+        return () => {
+            window.clearInterval(refreshCallback);
+        };
+    });
 
-    componentWillUnmount() {
-        window.clearInterval(this.refreshCallback);
-    }
+    return(
+        <ComponentStyle>
+            <Plot
+                data={channels.data}
+                layout={channels.layout}
+                config={channels.configs}
+                datarevision={props.datarevision}
+            />
+            <PlotControls server={props.server} />
+        </ComponentStyle>
+    );
+};
 
-
-    handleRefresh = () =>{
-        if(this.props.channels.plot_running){
-            this.props.server.plot_proxy.fetchData();
-        }
-    };
-
-    render() {
-        return (
-            <ComponentStyle>
-                <Plot
-                    data={this.props.channels.data}
-                    layout={this.props.channels.layout}
-                    config={this.props.channels.configs}
-                    datarevision={this.props.datarevision}
-                />
-                <PlotControls server={this.props.server} />
-            </ComponentStyle>
-        );
-    }
-}
-
-export default connect(mapStateToProps)(PlotComponent);
-
+export default PlotComponent;

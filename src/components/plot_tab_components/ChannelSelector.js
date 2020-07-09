@@ -2,12 +2,14 @@ import React from 'react';
 
 import ChannelSelectorItem from "./ChannelSelectorItem";
 import {useSelector} from "react-redux";
-import BlockLayout from "../UI_elements/BlockLayout";
+import BlockLayout from "../UI_elements/Layouts/BlockLayout";
 import BlockTitle from "../UI_elements/BlockTitle";
 
 let ChannelSelector = function(props) {
+
     const channels_settings = useSelector(state => state.plot.settings);
     const channels_data = useSelector(state => state.plot.data);
+
     return(
             <BlockLayout>
                 <BlockTitle>Channel Selector</BlockTitle>

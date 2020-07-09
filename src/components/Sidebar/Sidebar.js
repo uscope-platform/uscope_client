@@ -1,15 +1,15 @@
 import React, {Component}  from 'react';
 
 import {connect} from "react-redux"
-import SidebarLayout from "./UI_elements/SidebarLayout";
-import BlockTitle from "./UI_elements/BlockTitle";
+import SidebarLayout from "../UI_elements/Layouts/SidebarLayout";
+import PeripheralsSidebar from "./PeripheralsSidebar";
 
 
 function mapStateToProps(state) {
     return{
         modals:state.modals,
         settings:state.settings,
-        applications:state.applications
+        peripherals:state.peripherals,
     }
 }
 
@@ -22,7 +22,7 @@ class Sidebar extends Component {
 
         return(
             <SidebarLayout>
-                <BlockTitle>Properties Area</BlockTitle>
+                <PeripheralsSidebar server = {this.props.server}/>
             </SidebarLayout>
         );
     };

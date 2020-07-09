@@ -10,7 +10,7 @@ import {connect} from "react-redux";
 import Checkbox from "../../UI_elements/checkbox";
 import styled from "styled-components";
 import Label from "../../UI_elements/Label";
-import FormLayout from "../../UI_elements/FormLayout";
+import FormLayout from "../../UI_elements/Layouts/FormLayout";
 
 
 function mapStateToProps(state) {
