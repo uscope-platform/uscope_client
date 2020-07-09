@@ -1,4 +1,5 @@
 import React, {useEffect} from 'react';
+import useInterval from "../Common_Components/useInterval";
 
 import Plotly from 'plotly.js-dist';
 import createPlotlyComponent from 'react-plotly.js/factory';
@@ -18,19 +19,16 @@ const ComponentStyle = styled.div`
 let  PlotComponent = props =>{
     const channels = useSelector(state => state.plot);
 
-    //This effect hook handles creation and clearing of the plot refresh timer
-    useEffect(() => {
-        let  handleRefresh = () =>{
-            if(channels.plot_running){
-                props.server.plot_proxy.fetchData();
-            }
-        };
+    let  handleRefresh = () =>{
+        if(channels.plot_running){
+            props.server.plot_proxy.fetchData();
+        }
+    };
 
-        let refreshCallback = window.setInterval(handleRefresh, props.refreshRate);
-        return () => {
-            window.clearInterval(refreshCallback);
-        };
-    });
+    useInterval(() => {
+        // Your custom logic here
+        handleRefresh();
+    },  props.refreshRate);
 
     return(
         <ComponentStyle>
