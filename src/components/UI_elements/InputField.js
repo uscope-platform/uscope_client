@@ -28,57 +28,51 @@ flex-flow: wrap;
 
 
 
-class InputField extends React.Component {
-    constructor(props) {
-        super(props);
-        this.inputRef = React.createRef();
-    }
-    render() {
-        if(this.props.compact){
-            return (
+let  InputField = props =>{
+    if(props.compact){
+        return (
+            <InnerInput
+                onKeyDown={props.onKeyDown}
+                id={props.ID}
+                name={props.name}
+                type={(props.type)?props.type:"text"}
+                placeholder={props.label}
+                disabled = {(props.disabled)? "disabled" : ""}
+                onChange={e => {if(props.onChange) props.onChange(e)}}
+                value={props.value}
+            />
+        );
+    } else if(props.description){
+        return (
+            <Wrapper>
+                <Label inline={props.inline}>{props.label}</Label>
                 <InnerInput
-                    onKeyDown={this.props.onKeyDown}
-                    id={this.props.ID}
-                    name={this.props.name}
-                    type={(this.props.type)?this.props.type:"text"}
-                    placeholder={this.props.label}
-                    disabled = {(this.props.disabled)? "disabled" : ""}
-                    onChange={e => {if(this.props.onChange) this.props.onChange(e)}}
-                    value={this.props.value}
+                    name={props.name}
+                    id={props.ID}
+                    type={(props.type)?props.type:"text"}
+                    disabled = {(props.disabled)? "disabled" : ""}
+                    onChange={e => {if(props.onChange) props.onChange(e)}}
+                    value={props.value}
                 />
-            );
-        } else if(this.props.description){
-                return (
-                    <Wrapper>
-                        <Label inline={this.props.inline}>{this.props.label}</Label>
-                        <InnerInput
-                            name={this.props.name}
-                            id={this.props.ID}
-                            type={(this.props.type)?this.props.type:"text"}
-                            disabled = {(this.props.disabled)? "disabled" : ""}
-                            onChange={e => {if(this.props.onChange) this.props.onChange(e)}}
-                            value={this.props.value}
-                        />
-                        <InputDescription>{this.props.description}</InputDescription>
-                    </Wrapper>
-                );
-        } else{
-            return (
-                <Wrapper inline={this.props.inline}>
-                    <Label inline={this.props.inline}>{this.props.label}</Label>
-                    <InnerInput
-                        name={this.props.name}
-                        id={this.props.ID}
-                        type={(this.props.type)?this.props.type:"text"}
-                        disabled = {(this.props.disabled)? "disabled" : ""}
-                        onChange={e => {if(this.props.onChange) this.props.onChange(e)}}
-                        value={this.props.value}
-                    />
-                </Wrapper>
-            );
-        }
+                <InputDescription>{props.description}</InputDescription>
+            </Wrapper>
+        );
+    } else{
+        return (
+            <Wrapper inline={props.inline}>
+                <Label inline={props.inline}>{props.label}</Label>
+                <InnerInput
+                    name={props.name}
+                    id={props.ID}
+                    type={(props.type)?props.type:"text"}
+                    disabled = {(props.disabled)? "disabled" : ""}
+                    onChange={e => {if(props.onChange) props.onChange(e)}}
+                    value={props.value}
+                />
+            </Wrapper>
+        );
     }
-}
 
+};
 
 export default InputField;

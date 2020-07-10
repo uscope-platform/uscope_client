@@ -13,25 +13,20 @@ const Wrapper = styled.div`
   align-items: center;
 `
 
-class TextArea extends React.Component {
-    constructor(props) {
-        super(props);
-        this.inputRef = React.createRef();
-    }
-    render() {
-        return (
-            <Wrapper>
-                <Label>{this.props.label}</Label>
-                <InputTextArea
-                    rows={this.props.rows}
-                    name={this.props.name}
-                    value={this.props.value}
-                    disabled = {(this.props.disabled)? "disabled" : ""}
-                    onChange={e => this.props.onChange(e)}/>
-            </Wrapper>
-        );
 
-    }
-}
+let  TextArea = props =>{
+
+    return(
+        <Wrapper>
+            <Label>{props.label}</Label>
+            <InputTextArea
+                rows={props.rows}
+                name={props.name}
+                value={props.value}
+                disabled = {(props.disabled)? "disabled" : ""}
+                onChange={e => props.onChange(e)}/>
+        </Wrapper>
+    );
+};
 
 export default TextArea;

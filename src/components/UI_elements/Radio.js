@@ -13,25 +13,20 @@ const Wrapper = styled.div`
   align-items: center;
 `
 
-class Radio extends React.Component {
-    constructor(props) {
-        super(props);
-        this.inputRef = React.createRef();
-    }
-    render() {
-        return (
-            <Wrapper>
-                <InputRadio
-                    name={this.props.name}
-                    id={this.props.id}
-                    type="radio"
-                    checked = {this.props.value}
-                    onChange={e => this.props.onChange(e)}/>
-                <Label inline={this.props.inline}>{this.props.label}</Label>
-            </Wrapper>
-        );
 
-    }
-}
+let  Radio = props =>{
+
+    return(
+        <Wrapper>
+            <InputRadio
+                name={props.name}
+                id={props.id}
+                type="radio"
+                checked = {props.value}
+                onChange={e => props.onChange(e)}/>
+            <Label inline={props.inline}>{props.label}</Label>
+        </Wrapper>
+    );
+};
 
 export default Radio;

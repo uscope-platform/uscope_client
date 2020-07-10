@@ -11,25 +11,20 @@ align-items: center;
 flex-flow: wrap;
 `
 
-class Checkbox extends React.Component {
-    constructor(props) {
-        super(props);
-        this.inputRef = React.createRef();
-    }
-    render() {
-        return (
-            <Wrapper>
-                <Label inline={this.props.inline}>{this.props.label}</Label>
-                <InputCheckbox
-                    name={this.props.name}
-                    checked={this.props.value?"true":""}
-                    type="checkbox"
-                    onChange={e => this.props.onChange(e)}
-                />
-            </Wrapper>
-        );
 
-    }
-}
+let  Checkbox = props =>{
+
+    return(
+        <Wrapper>
+            <Label inline={props.inline}>{props.label}</Label>
+            <InputCheckbox
+                name={props.name}
+                checked={props.value?"true":""}
+                type="checkbox"
+                onChange={e => props.onChange(e)}
+            />
+        </Wrapper>
+    );
+};
 
 export default Checkbox;
