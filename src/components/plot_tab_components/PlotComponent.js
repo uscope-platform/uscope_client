@@ -18,10 +18,11 @@ const ComponentStyle = styled.div`
 
 let  PlotComponent = props =>{
     const channels = useSelector(state => state.plot);
+    const settings = useSelector(state => state.settings);
 
     let  handleRefresh = () =>{
         if(channels.plot_running){
-            props.server.plot_proxy.fetchData();
+            settings.server.plot_proxy.fetchData();
         }
     };
 
@@ -37,7 +38,7 @@ let  PlotComponent = props =>{
                 config={channels.configs}
                 datarevision={props.datarevision}
             />
-            <PlotControls server={props.server} />
+            <PlotControls/>
         </ComponentStyle>
     );
 };

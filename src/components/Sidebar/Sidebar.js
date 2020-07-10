@@ -14,7 +14,7 @@ let  Sidebar = props =>{
 
     return(
         <SidebarLayout>
-            <PeripheralsSidebar server = {props.server}/>
+            <PeripheralsSidebar />
         </SidebarLayout>
     );
 };

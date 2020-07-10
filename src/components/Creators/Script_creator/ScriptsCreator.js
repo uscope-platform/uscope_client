@@ -42,7 +42,7 @@ class ScriptsCreator extends Component {
     onSubmit = (event) => {
         let script = this.props.scripts_store.find(x => x.path === this.props.settings.scriptEditor_title);
         script.script_content = this.state.editor_content;
-        this.props.server.script_proxy.edit_script(script);
+        this.props.settings.server.script_proxy.edit_script(script);
     };
 
     onLoad = (editor) => {

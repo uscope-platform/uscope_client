@@ -48,7 +48,7 @@ let  MacroActions = props =>{
                 let [periph_name, reg_name] = reg.split('.');
                 bulk_registers.push({name:reg_name, peripheral:periph_name, value:registers[reg]})
             }
-            props.server.periph_proxy.bulkRegisterWrite({payload:bulk_registers});
+            settings.server.periph_proxy.bulkRegisterWrite({payload:bulk_registers});
         }
     };
 

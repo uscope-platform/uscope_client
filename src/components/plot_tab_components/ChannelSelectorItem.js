@@ -33,7 +33,7 @@ let  ChannelSelectorItem = props => {
 
     return(
         <ComponentStyle>
-            <ChannelSettingsModal id={props.idx} server={props.server}/>
+            <ChannelSettingsModal id={props.idx} />
             <Checkbox name={props.id} onChange={handleChannelStateChange} value={enabled} label={props.name}/>
             <Configure color='white' onClick={() =>(dispatch(showModal('channel_settings_choice', props.idx)))}/>
         </ComponentStyle>

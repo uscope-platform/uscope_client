@@ -20,6 +20,7 @@ const LayoutWrapper = styled.div`
 
 let  RegisterTab = props =>{
     const peripherals = useSelector(state => state.peripherals);
+    const settings = useSelector(state => state.settings);
     const registerValues = useSelector(state => state.registerValues);
     const dispatch = useCallback(useDispatch(), []);
 
@@ -34,10 +35,9 @@ let  RegisterTab = props =>{
 
     return(
         <LayoutWrapper>
-            <Image src={props.server.server_url + props.content.image_src} alt='Peripheral diagram' fluid/>
+            <Image src={settings.server.server_url + props.content.image_src} alt='Peripheral diagram' fluid/>
             <RegisterInputForm registers={peripherals[props.content.tab_id].registers}
                                values={registerValues[props.content.tab_id]}
-                               server={props.server}
                                content={registerValues[props.content.tab_id]}
                                parent_peripheral={props.content.tab_id}
             />

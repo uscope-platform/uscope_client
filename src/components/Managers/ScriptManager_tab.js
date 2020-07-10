@@ -41,6 +41,7 @@ let columns = [
 let ScriptManager = (props) =>{
 
     const scripts_store = useSelector(state => state.scripts);
+    const settings = useSelector(state => state.settings);
 
     const dispatch = useDispatch();
 
@@ -102,12 +103,12 @@ let ScriptManager = (props) =>{
 
         // eslint-disable-next-line
         for(let script of difference){
-            props.server.script_proxy.upload_script(script);
+            settings.server.script_proxy.upload_script(script);
         }
         //HANDLE DELETIONS
         // eslint-disable-next-line
         for(let script of removed_scripts){
-            props.server.script_proxy.delete_script(script);
+            settings.server.script_proxy.delete_script(script);
         }
     };
 

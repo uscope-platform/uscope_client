@@ -172,7 +172,7 @@ class ApplicationsCreator extends Component {
     handleSendApplication= (app) =>{
         let application = {[app.name]:{...this.state.app}};
         application[app.name]['bitstream'] = app.bitstream;
-        this.props.server.app_proxy.createApplication(application);
+        this.props.settings.server.app_proxy.createApplication(application);
     };
 
     handlePeripheralDefinitionDone = (peripheral) =>{

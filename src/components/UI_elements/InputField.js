@@ -39,7 +39,8 @@ let  InputField = props =>{
                 placeholder={props.label}
                 disabled = {(props.disabled)? "disabled" : ""}
                 onChange={e => {if(props.onChange) props.onChange(e)}}
-                value={props.value}
+                defaultValue={props.defaultValue}
+                value={props.value?props.value:undefined}
             />
         );
     } else if(props.description){
@@ -47,12 +48,14 @@ let  InputField = props =>{
             <Wrapper>
                 <Label inline={props.inline}>{props.label}</Label>
                 <InnerInput
+                    onKeyDown={props.onKeyDown}
                     name={props.name}
                     id={props.ID}
                     type={(props.type)?props.type:"text"}
                     disabled = {(props.disabled)? "disabled" : ""}
                     onChange={e => {if(props.onChange) props.onChange(e)}}
-                    value={props.value}
+                    defaultValue={props.defaultValue}
+                    value={props.value?props.value:undefined}
                 />
                 <InputDescription>{props.description}</InputDescription>
             </Wrapper>
@@ -62,12 +65,15 @@ let  InputField = props =>{
             <Wrapper inline={props.inline}>
                 <Label inline={props.inline}>{props.label}</Label>
                 <InnerInput
+
                     name={props.name}
                     id={props.ID}
                     type={(props.type)?props.type:"text"}
                     disabled = {(props.disabled)? "disabled" : ""}
                     onChange={e => {if(props.onChange) props.onChange(e)}}
-                    value={props.value}
+                    onKeyDown={e => {if(props.onKeyDown) props.onKeyDown(e)}}
+                    defaultValue={props.defaultValue}
+                    value={props.value?props.value:undefined}
                 />
             </Wrapper>
         );

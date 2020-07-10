@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import store from "../store";
-import {removePeripheral} from "../redux/Actions/peripheralsActions";
+import {editPeripheral, removePeripheral} from "../redux/Actions/peripheralsActions";
 
 export default function creatorProxy(server_url, token) {
     this.server_url = server_url;
@@ -36,6 +36,10 @@ export default function creatorProxy(server_url, token) {
             })
         }
 
+    };
+
+    this.edit_peripheral = (edit) => {
+        store.dispatch(editPeripheral(this.server_url+'tab_creator/edit_peripheral', edit, this.config));
     };
 
     this.removePeripheral = (peripheral) => {

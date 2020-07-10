@@ -23,8 +23,11 @@ let  TextArea = props =>{
                 rows={props.rows}
                 name={props.name}
                 value={props.value}
+                defaultValue={props.defaultValue}
                 disabled = {(props.disabled)? "disabled" : ""}
-                onChange={e => props.onChange(e)}/>
+                onChange={e => {if(props.onChange) props.onChange(e)}}
+                onKeyDown={e => {if(props.onKeyDown) props.onKeyDown(e)}}
+            />
         </Wrapper>
     );
 };

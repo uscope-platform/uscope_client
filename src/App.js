@@ -8,6 +8,8 @@ import LoginPage from "./components/Common_Components/LoginPage";
 //////  STYLE IMPORTS
 import './App.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
+import {useDispatch} from "react-redux";
+import {setSetting} from "./redux/Actions/SettingsActions";
 
 let App = (props) =>{
     // home: http://192.168.1.2/uscope/
@@ -17,6 +19,8 @@ let App = (props) =>{
 
     const [server, set_server] = useState(new serverProxy('http://0.0.0.0:8989/uscope/', ''));
     const [logged, set_logged] = useState(false);
+    const dispatch = useDispatch();
+
 
     const done = useCallback((login_credentials)=>{
         server.auth_proxy.sign_in(login_credentials).then((token) =>{
@@ -25,6 +29,7 @@ let App = (props) =>{
                 let ret = localStorage.setItem('login_token', JSON.stringify(token.login_token));
             }
             set_server(uScope_server);
+            dispatch(setSetting(["server", uScope_server]));
             set_logged(true);
         });
     }, []);
@@ -43,7 +48,7 @@ let App = (props) =>{
 
     return(
         <div className="App">
-            {logged? <AuthApp server={server} />:<LoginPage server={server} done={done}/>}
+            {logged? <AuthApp />:<LoginPage server={server} done={done}/>}
         </div>
     )
 

@@ -14,7 +14,8 @@ import FormLayout from "../../UI_elements/Layouts/FormLayout";
 
 function mapStateToProps(state) {
     return{
-        modals:state.modals
+        modals:state.modals,
+        settings:state.settings
     }
 }
 

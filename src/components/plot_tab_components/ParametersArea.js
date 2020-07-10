@@ -14,6 +14,7 @@ import BlockTitle from "../UI_elements/BlockTitle";
 
 let  ParametersArea = props =>{
     const scripts = useSelector(state => state.scripts);
+    const settings = useSelector(state => state.settings);
     const registers_redux = useSelector(state => state.registerValues);
     const parameters = useSelector(state => state.parameterValues);
     const scripts_workspace = useSelector(state => state.scriptsWorkspace);
@@ -42,7 +43,7 @@ let  ParametersArea = props =>{
                 // eslint-disable-next-line
                 for(let reg in registers){
                     let [periph_name, reg_name] = reg.split('.');
-                    props.server.periph_proxy.setRegisterValue({name:reg_name, peripheral:periph_name, value:registers[reg]});
+                    settings.server.periph_proxy.setRegisterValue({name:reg_name, peripheral:periph_name, value:registers[reg]});
                 }
             }
         }
@@ -75,7 +76,7 @@ let  ParametersArea = props =>{
                         // eslint-disable-next-line
                         for(let reg in registers){
                             let [periph_name, reg_name] = reg.split('.');
-                            props.server.periph_proxy.setRegisterValue({name:reg_name, peripheral:periph_name, value:registers[reg]});
+                            settings.server.periph_proxy.setRegisterValue({name:reg_name, peripheral:periph_name, value:registers[reg]});
                         }
                     }
                 }

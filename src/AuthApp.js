@@ -47,14 +47,14 @@ let AuthApp = (props) =>{
     useEffect(()=>{
         let app_digest = localStorage.getItem('Applications-hash');
         if(applications === undefined || app_digest === null){
-            props.server.app_proxy.loadAllApplications();
-            props.server.app_proxy.get_applications_hash().then((res)=>{
+            settings.server.app_proxy.loadAllApplications();
+            settings.server.app_proxy.get_applications_hash().then((res)=>{
                 localStorage.setItem('Applications-hash', res);
             });
         } else{
-            props.server.app_proxy.get_applications_hash().then((res)=>{
+            settings.server.app_proxy.get_applications_hash().then((res)=>{
                 if(app_digest!==res){
-                    props.server.app_proxy.loadAllApplications();
+                    settings.server.app_proxy.loadAllApplications();
                     localStorage.setItem('Applications-hash', res);
                 }
             });
@@ -62,14 +62,14 @@ let AuthApp = (props) =>{
 
         let periph_digest = localStorage.getItem('Peripherals-hash');
         if(peripherals ===undefined || periph_digest === null){
-            props.server.periph_proxy.loadAllPeripherals();
-            props.server.periph_proxy.get_peripherals_hash().then((res)=>{
+            settings.server.periph_proxy.loadAllPeripherals();
+            settings.server.periph_proxy.get_peripherals_hash().then((res)=>{
                 localStorage.setItem('Peripherals-hash', res);
             });
         } else{
-            props.server.periph_proxy.get_peripherals_hash().then((res)=>{
+            settings.server.periph_proxy.get_peripherals_hash().then((res)=>{
                 if(periph_digest!==res){
-                    props.server.periph_proxy.loadAllPeripherals();
+                    settings.server.periph_proxy.loadAllPeripherals();
                     localStorage.setItem('Peripherals-hash', res);
                 }
             });
@@ -77,14 +77,14 @@ let AuthApp = (props) =>{
 
         let script_digest = localStorage.getItem('Script-hash');
         if(scripts === undefined || script_digest === null){
-            props.server.script_proxy.download_all_scripts();
-            props.server.script_proxy.get_hash().then((res)=>{
+            settings.server.script_proxy.download_all_scripts();
+            settings.server.script_proxy.get_hash().then((res)=>{
                 localStorage.setItem('Script-hash', res);
             });
         } else{
-            props.server.script_proxy.get_hash().then((res)=>{
+            settings.server.script_proxy.get_hash().then((res)=>{
                 if(app_digest!==res){
-                    props.server.script_proxy.download_all_scripts();
+                    settings.server.script_proxy.download_all_scripts();
                     localStorage.setItem('Script-hash', res);
                 }
             });
@@ -93,7 +93,7 @@ let AuthApp = (props) =>{
 
 
     let handleApplicationChosen = e =>{
-        props.server.app_proxy.setApplication(e).then(()=>{
+        settings.server.app_proxy.setApplication(e).then(()=>{
             let app = applications[e];
             dispatch(setSetting(["application", e]));
             let tabs = Object.values(app.tabs);
@@ -106,7 +106,7 @@ let AuthApp = (props) =>{
 
         Promise.all(tabs.map((tab) =>{
             if(tab.user_accessible && tab.type==="Registers"){
-                return props.server.periph_proxy.getPeripheralRegisters(tab.tab_id);
+                return settings.server.periph_proxy.getPeripheralRegisters(tab.tab_id);
             }
             return 'Not Needed';
         })).then((result) =>{
@@ -124,8 +124,8 @@ let AuthApp = (props) =>{
     };
 
     let loadResources = () => {
-        props.server.app_proxy.getApplicationParameters();
-        props.server.plot_proxy.getChannelsInfo();
+        settings.server.app_proxy.getApplicationParameters();
+        settings.server.plot_proxy.getChannelsInfo();
         dispatch(loadTabs([{
             name: "Script manager",
             tab_id: "script_manager",
@@ -173,7 +173,7 @@ let AuthApp = (props) =>{
                                             key={tab.name}
                                             path={'/'+tab.name}
                                             exact
-                                            render={(props) => <TabContent className="main_content_tab" server={props.server} tab={tab}/>}
+                                            render={(props) => <TabContent className="main_content_tab" tab={tab}/>}
                                         />
 
                                     )
@@ -181,22 +181,22 @@ let AuthApp = (props) =>{
                                     return null;
                                 }
                             })}
-                            <Sidebar server={props.server} />
+                            <Sidebar />
                         </ApplicationLayout>
                         <Route
                             path={'/script_creator'}
                             exact
-                            render={(props) => <ScriptsCreator server={props.server}/>}
+                            render={(props) => <ScriptsCreator />}
                         />
                         <Route
                             path={'/peripheral_creator'}
                             exact
-                            render={(props) => <PeripheralsCreator server={props.server}/>}
+                            render={(props) => <PeripheralsCreator />}
                         />
                         <Route
                             path={'/application_creator'}
                             exact
-                            render={(props) => <ApplicationsCreator server={props.server}/>}
+                            render={(props) => <ApplicationsCreator />}
                         />
                         <Redirect exact from="/" to="plot" />
                     </div>

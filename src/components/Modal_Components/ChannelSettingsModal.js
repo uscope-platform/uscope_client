@@ -11,6 +11,7 @@ import FormLayout from "../UI_elements/Layouts/FormLayout";
 function mapStateToProps(state) {
     return{
         modals:state.modals,
+        settings:state.settings,
         plot:state.plot
     }
 }
@@ -38,7 +39,7 @@ class ChannelSettingsModal extends Component {
         let min = parseFloat(this.state.min_value);
         let max = parseFloat(this.state.max_value);
 
-        this.props.server.app_proxy.setChannelLimits(min, max, this.props.id);
+        this.props.settings.server.app_proxy.setChannelLimits(min, max, this.props.id);
 
         this.props.hideModal(this.props.id);
     };

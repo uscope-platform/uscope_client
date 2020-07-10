@@ -49,7 +49,7 @@ class PeripheralsCreator extends Component {
         super(props);
         if(props.settings.edit_peripheral_mode){
             this.state= {
-                tab_image:props.server.server_url + props.peripherals[props.settings.edit_peripheral_name].image,
+                tab_image:props.settings.server.server_url + props.peripherals[props.settings.edit_peripheral_name].image,
                 tab_image_raw:null,
                 tab_registers:props.peripherals[props.settings.edit_peripheral_name].registers,
                 edit_register:{
@@ -140,10 +140,10 @@ class PeripheralsCreator extends Component {
 
         if(this.props.settings.edit_peripheral_mode){
             debugger;
-            this.props.server.creator_proxy.removePeripheral(this.props.settings.edit_peripheral_name);
+            this.props.settings.server.creator_proxy.removePeripheral(this.props.settings.edit_peripheral_name);
         }
 
-        this.props.server.creator_proxy.createPeripheral(peripheral, this.state.tab_image_raw);
+        this.props.settings.server.creator_proxy.createPeripheral(peripheral, this.state.tab_image_raw);
     };
 
     handleEditRegister = (registerID) =>{
@@ -157,8 +157,8 @@ class PeripheralsCreator extends Component {
     render(){
         return(
             <div>
-                <TabCreatorImageChooser server={this.props.server} done={this.handleImageChoiceDone}/>
-                <TabCreatorRegisterModal initial_values={this.state.edit_register} server={this.props.server} done={this.handleRegisterCreationDone}/>
+                <TabCreatorImageChooser server={this.props.settings.server} done={this.handleImageChoiceDone}/>
+                <TabCreatorRegisterModal initial_values={this.state.edit_register} done={this.handleRegisterCreationDone}/>
                 <TabCreatorPeripheralParametersModal done={this.handleSendPeripheral}/>
                 <LayoutWrapper>
                     <Image src={this.state.tab_image} alt='add tab image' id="addImage" onClick={this.handleClick} fluid/>

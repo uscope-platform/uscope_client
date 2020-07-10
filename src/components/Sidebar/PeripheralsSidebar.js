@@ -43,12 +43,12 @@ let  Sidebar = props =>{
     return(
         <PeriphSidebarLayout>
             <BlockTitle>{peripherals[settings.current_peripheral].peripheral_name}</BlockTitle>
-            <Image src={props.server.server_url + peripherals[settings.current_peripheral].image} alt='add tab image' id="addImage" onClick={handleClick} fluid/>
+            <Image src={settings.server.server_url + peripherals[settings.current_peripheral].image} alt='add tab image' id="addImage" onClick={handleClick} fluid/>
             <RegistersView>
                 {
                     peripherals[settings.current_peripheral].registers.map((reg)=>{
                         return(
-                            <RegisterProperties register={reg}/>
+                            <RegisterProperties peripheral={settings.current_peripheral} register={reg}/>
                         )
                     })
                 }

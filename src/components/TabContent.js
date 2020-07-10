@@ -10,30 +10,30 @@ let TabContent = props => {
     if(props.tab.type==='Scope'){
         return(
             <div className="tab_content">
-                <PlotTab server={props.server} content={props.tab}/>
+                <PlotTab content={props.tab}/>
             </div>
         );
     } else if(props.tab.type==='Registers') {
         return (
             <div className="tab_content">
-                <RegisterTab server={props.server} content={props.tab}/>
+                <RegisterTab content={props.tab}/>
             </div>
         );
     }else if(props.tab.type ==='tab_creator'){
         return (
-            <PeripheralsCreator server={props.server}/>
+            <PeripheralsCreator />
         );
     }else if(props.tab.type ==='script_manager'){
         return (
-            <ScriptManager server={props.server}/>
+            <ScriptManager />
         );
     }else if(props.tab.type ==='peripherals_manager'){
         return (
-            <PeripheralsManager server={props.server}/>
+            <PeripheralsManager />
         );
     }else if(props.tab.type ==='applications_manager'){
         return (
-            <ApplicationsManager server={props.server}/>
+            <ApplicationsManager />
         );
     } else{
         return null

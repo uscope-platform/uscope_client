@@ -26,6 +26,7 @@ let  ApplicationsManager = props =>{
 
 
     const applications_redux = useSelector(state => state.applications);
+    const settings = useSelector(state => state.settings);
 
     const dispatch = useDispatch();
 
@@ -50,7 +51,7 @@ let  ApplicationsManager = props =>{
 
     let  handleRemoveRow = (event) =>{
         applications.splice(applications.findIndex(item => item.application_name === selected), 1);
-        props.server.app_proxy.removeApplication(selected);
+        settings.server.app_proxy.removeApplication(selected);
         set_selected(null);
     };
 
@@ -93,7 +94,7 @@ let  ApplicationsManager = props =>{
     };
 
     let addApplication = (content) => {
-        props.server.app_proxy.createApplication(JSON.parse(content), null);
+        settings.server.app_proxy.createApplication(JSON.parse(content), null);
     };
 
     let handleCreate = () => {

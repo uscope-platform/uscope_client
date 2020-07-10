@@ -94,11 +94,11 @@ class TimebaseModal extends Component {
             return ret_val;
         });
 
-        this.props.server.periph_proxy.setRegisterValue(timebase_reg);
+        this.props.settings.server.periph_proxy.setRegisterValue(timebase_reg);
 
         // eslint-disable-next-line
         for(let i of phases){
-            this.props.server.periph_proxy.setRegisterValue(i);
+            this.props.settings.server.periph_proxy.setRegisterValue(i);
         }
 
         this.props.hideModal();

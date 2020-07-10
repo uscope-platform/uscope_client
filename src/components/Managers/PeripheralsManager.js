@@ -31,6 +31,7 @@ let columns = [
 let PeripheralsManager = (props)=>{
 
     const peripherals_redux = useSelector(state => state.peripherals);
+    const settings = useSelector(state => state.settings);
 
     const dispatch = useDispatch();
 
@@ -51,7 +52,7 @@ let PeripheralsManager = (props)=>{
 
     let handleRemoveRow = (event) =>{
         peripherals.splice(peripherals.findIndex(item => item.peripheral_name === selected), 1);
-        props.server.creator_proxy.removePeripheral(selected);
+        settings.server.creator_proxy.removePeripheral(selected);
         this.setState({selected:null});
     };
 
@@ -91,7 +92,7 @@ let PeripheralsManager = (props)=>{
     };
 
     let addPeripheral = (content) => {
-        props.server.creator_proxy.createPeripheral(JSON.parse(content), null);
+        settings.server.creator_proxy.createPeripheral(JSON.parse(content), null);
     };
 
     let handle_create = () =>{

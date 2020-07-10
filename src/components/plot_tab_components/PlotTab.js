@@ -22,10 +22,10 @@ let PlotTab = function (props) {
 
         return(
             <ComponentLayout>
-                <ChannelSelector server={props.server} channels={channels}/>
-                <PlotComponent refreshRate={settings.refreshRate} server={props.server}/>
-                <ParametersArea server={props.server}/>
-                <MacroActions server={props.server}/>
+                <ChannelSelector channels={channels}/>
+                <PlotComponent refreshRate={settings.refreshRate}/>
+                <ParametersArea />
+                <MacroActions />
             </ComponentLayout>
         );
 };

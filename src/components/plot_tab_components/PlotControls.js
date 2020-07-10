@@ -23,6 +23,8 @@ const IconStyle = styled.div`
 
 let  PlotControls = props =>{
     const modals = useSelector(state => state.modals);
+    const settings = useSelector(state => state.settings);
+
     const dispatch = useDispatch();
     let onClick = (event) => {
         switch (event.target.id) {
@@ -47,13 +49,13 @@ let  PlotControls = props =>{
     };
 
     let onModeSubmit = (capture_length) => {
-        props.server.plot_proxy.setCapture(capture_length);
+        settings.server.plot_proxy.setCapture(capture_length);
         setTimeout(onCaptureEnd, 1000);
     };
 
 
     let onCaptureEnd = () => {
-        props.server.plot_proxy.get_captured_data().then((res) => {
+        settings.server.plot_proxy.get_captured_data().then((res) => {
             if(res['elapsed'] !== 0){
                 setTimeout(onCaptureEnd, 500);
             } else {
@@ -68,8 +70,8 @@ let  PlotControls = props =>{
 
     return(
         <ComponentStyle>
-            <TimebaseModal server={props.server} show={modals.timebase_choice}/>
-            <ScopeModeModal server={props.server} show={modals.scope_mode_choice} done={onModeSubmit} />
+            <TimebaseModal server={settings.server} show={modals.timebase_choice}/>
+            <ScopeModeModal server={settings.server} show={modals.scope_mode_choice} done={onModeSubmit} />
             <IconStyle>
                 <Play id='play' color='white' onClick={onClick}/>
             </IconStyle>

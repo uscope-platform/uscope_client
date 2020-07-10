@@ -7,6 +7,7 @@ import InputField from "./InputField";
 import Checkbox from "./checkbox";
 import Radio from "./Radio";
 import TextArea from "./TextArea";
+import {useSelector} from "react-redux";
 
 const RegNameWrapper = styled.div`
   height: 1em;
@@ -30,6 +31,9 @@ const ChoicesWrapper = styled.div`
 `
 
 let  RegisterProperties = props =>{
+
+    const settings = useSelector(state => state.settings);
+
     const [is_open, set_is_open] = useState(false);
     const [edit_name, set_edit_name] = useState(false);
     const [words_register, set_words_register] = useState(false);
@@ -46,6 +50,7 @@ let  RegisterProperties = props =>{
     let handleEditNameChange = (event) => {
         if(event.key==="Enter"){
             let NewRegName = event.target.value;
+            let edit = {peripheral:props.peripheral, register:props.register.register_name, field:event.target.name, value:event.target.value,};
             set_edit_name(false);
         }else if(event.key ==="Escape"){
             set_edit_name(false);
@@ -56,9 +61,32 @@ let  RegisterProperties = props =>{
         set_is_open(false);
     }
 
-    let handleChange = (event) =>{
-        if(event.target.name==="reg_type"){
-            set_words_register(event.target.id==="words");
+    let handleChange = ()=>{
+        set_is_open(false);
+    }
+
+    let handleonKeyDown = (event) =>{
+        let edit = {}
+        if(event.key==="Enter"|| event.key ==="Tab"){
+            switch (event.target.name) {
+                case "ID":
+                case "offset":
+                case "description":
+                    edit = {peripheral:props.peripheral, register:props.register.register_name, field:event.target.name, value:event.target.value,};
+                    settings.server.creator_proxy.edit_peripheral(edit);
+                    break;
+                case "field_descriptions":
+                case "field_names":
+                    if(event.shiftKey)
+                        event.preventDefault();
+                    else if(event.key!=="Tab")
+                        return;
+                    edit = {peripheral:props.peripheral, register:props.register.register_name, field:event.target.name, value:event.target.value.split('\n')};
+                    settings.server.creator_proxy.edit_peripheral(edit);
+                    break;
+                default:
+                    return;
+            }
         }
     }
 
@@ -66,25 +94,25 @@ let  RegisterProperties = props =>{
         if(is_open)
             return(
                 <RegContentLayout>
-                    <InputField inline name='reg_ID' value={props.register.ID} onChange={handleChange} label="Register ID"/>
-                    <InputField inline name='reg_offset' value={props.register.offset} onChange={handleChange} label="Address offset"/>
-                    <InputField inline name='reg_description' value={props.register.description} onChange={handleChange} label="Description"/>
+                    <InputField inline name='ID' defaultValue={props.register.ID} onKeyDown={handleonKeyDown} label="Register ID"/>
+                    <InputField inline name='offset' defaultValue={props.register.offset} onKeyDown={handleonKeyDown} label="Address offset"/>
+                    <InputField inline name='description' defaultValue={props.register.description} onKeyDown={handleonKeyDown} label="Description"/>
                     <ChoicesWrapper>
                         <Label>Register access capabilities</Label>
                         <div>
-                            <Checkbox name='reg_direction_read' value={props.register.direction.includes("R")} onChange={handleChange} label="Read"/>
-                            <Checkbox name='reg_direction_write' value={props.register.direction.includes("W")} onChange={handleChange} label="Write"/>
+                            <Checkbox name='direction_read' value={props.register.direction.includes("R")} onChange={handleChange} label="Read"/>
+                            <Checkbox name='direction_write' value={props.register.direction.includes("W")} onChange={handleChange} label="Write"/>
                         </div>
                     </ChoicesWrapper>
                     <ChoicesWrapper>
                         <Label>Register type</Label>
                         <div>
-                            <Radio name="reg_type" value={props.register.register_format !== "words"} onChange={handleChange} label="single" id='single'/>
-                            <Radio name="reg_type" value={props.register.register_format === "words"} onChange={handleChange} label="words" id='words'/>
+                            <Radio name="type" value={props.register.register_format !== "words"} onKeyDown={handleChange} label="single" id='single'/>
+                            <Radio name="type" value={props.register.register_format === "words"} onKeyDown={handleChange} label="words" id='words'/>
                         </div>
                     </ChoicesWrapper>
-                    <TextArea disabled={props.register.register_format !== "words"}  value={props.register.field_names.join('\n')} name="field_names" label="Field Names" rows={2}  onChange={handleChange}/>
-                    <TextArea disabled={props.register.register_format !== "words"}  value={props.register.field_descriptions.join('\n')} name="field_desc" label="Field Descriptions" rows={2}  onChange={handleChange}/>
+                    <TextArea disabled={props.register.register_format !== "words"}  defaultValue={props.register.field_names.join('\n')} name="field_names" label="Field Names" rows={2}  onKeyDown={handleonKeyDown}/>
+                    <TextArea disabled={props.register.register_format !== "words"}  defaultValue={props.register.field_descriptions.join('\n')} name="field_descriptions" label="Field Descriptions" rows={2}  onKeyDown={handleonKeyDown}/>
                 </RegContentLayout>
             )
         return null;
