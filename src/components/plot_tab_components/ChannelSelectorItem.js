@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {enableChannel, disableChannel} from "../../redux/Actions/plotActions";
 import {useDispatch} from "react-redux";
@@ -18,10 +18,12 @@ const ComponentStyle = styled.div`
 `
 
 
-function ChannelSelectorItem(props){
+let  ChannelSelectorItem = props => {
     const dispatch = useDispatch();
+    const [enabled, set_enabled] = useState(false);
 
     function handleChannelStateChange(event){
+        set_enabled(event.target.checked)
         if(event.target.checked){
             dispatch(enableChannel(parseInt(event.target.name)-1));
         } else{
@@ -32,7 +34,7 @@ function ChannelSelectorItem(props){
     return(
         <ComponentStyle>
             <ChannelSettingsModal id={props.idx} server={props.server}/>
-            <Checkbox name={props.id} onChange={handleChannelStateChange} label={props.name}/>
+            <Checkbox name={props.id} onChange={handleChannelStateChange} value={enabled} label={props.name}/>
             <Configure color='white' onClick={() =>(dispatch(showModal('channel_settings_choice', props.idx)))}/>
         </ComponentStyle>
     );

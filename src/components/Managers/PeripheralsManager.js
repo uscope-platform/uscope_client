@@ -1,102 +1,78 @@
-import React, {Component}  from 'react';
+import React, {useState} from 'react';
 
 
 import { LinkContainer } from 'react-router-bootstrap'
-import {connect} from "react-redux"
+import { useDispatch, useSelector} from "react-redux"
 
-import BootstrapTable from 'react-bootstrap-table-next';
 import DataTable from 'react-data-table-component';
 import {TableStyle} from './TableStyles'
-import cellEditFactory from 'react-bootstrap-table2-editor';
-import paginationFactory from 'react-bootstrap-table2-paginator';
+
 
 import Button from "../UI_elements/Button"
 import {setSetting} from "../../redux/Actions/SettingsActions";
-import styled from "styled-components";
+
 import BlockLayout from "../UI_elements/Layouts/BlockLayout";
 import ManagerLayout, {ManagerButtonsLayout} from "../UI_elements/Layouts/ManagerLayout";
 
 
-
-function mapStateToProps(state) {
-    return{
-        peripherals:state.peripherals
+let columns = [
+    {
+        selector: 'peripheral_name',
+        name: 'Peripheral Name',
+        sort: true,
+        grow:2
+    },
+    {
+        selector: 'version',
+        name: 'Peripheral Version'
     }
-}
+];
 
-const mapDispatchToProps = dispatch => {
-    return{
-        setSetting: (name, value) => {dispatch(setSetting([name, value]))},
-    }
-};
+let PeripheralsManager = (props)=>{
 
+    const peripherals_redux = useSelector(state => state.peripherals);
 
-class PeripheralsManager extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {selected:null};
-        this.peripherals = Object.values(this.props.peripherals);
-        this.selectRow = {
-            mode: 'radio',
-            clickToEdit: true,
-            clickToSelect: true,
-            selected: this.state.selected,
-            onSelect: this.handleOnSelect,
-        };
-    }
+    const dispatch = useDispatch();
 
-    columns = [
-        {
-            selector: 'peripheral_name',
-            name: 'Peripheral Name',
-            sort: true,
-            grow:2
-        },
-        {
-            selector: 'version',
-            name: 'Peripheral Version'
-        }
-    ];
+    const [selected, set_selected] = useState(null);
+    const [peripherals, set_peripherals] = useState(()=>{
+        return  Object.values(peripherals_redux);
+    });
 
-
-    handleOnSelect = (selection) => {
+    let handleOnSelect = (selection) => {
         if(!selection.allSelected && selection.selectedCount===1){
-            this.setState(() => ({
-                selected: selection.selectedRows[0].peripheral_name
-            }));
-            this.props.setSetting("current_peripheral",selection.selectedRows[0].peripheral_name);
+            set_selected(selection.selectedRows[0].peripheral_name);
+            dispatch(setSetting(["current_peripheral", selection.selectedRows[0].peripheral_name]))
         } else if(selection.selectedCount===0) {
-            this.setState(() => ({
-                selected: null
-            }));
+            set_selected(null);
         }
     };
 
 
-    handleRemoveRow = (event) =>{
-        this.peripherals.splice(this.peripherals.findIndex(item => item.peripheral_name === this.state.selected), 1);
-        this.props.server.creator_proxy.removePeripheral(this.state.selected);
+    let handleRemoveRow = (event) =>{
+        peripherals.splice(peripherals.findIndex(item => item.peripheral_name === selected), 1);
+        props.server.creator_proxy.removePeripheral(selected);
         this.setState({selected:null});
     };
 
-    handleExport = (event) =>{
-        if(this.state.selected===null){
+    let handleExport = (event) =>{
+        if(selected===null){
             alert("Please select a peripheral to Export");
             return;
         }
-        let peripheral = {[this.state.selected]:this.peripherals[this.peripherals.findIndex(item => item.peripheral_name === this.state.selected)]};
+        let peripheral = {[selected]:peripherals[peripherals.findIndex(item => item.peripheral_name === selected)]};
         let blob = new Blob([JSON.stringify(peripheral, null, 4)], {type: "application/json"});
         let url  = URL.createObjectURL(blob);
 
         let link = document.createElement('a');
         link.href = url;
-        link.download = this.state.selected;
+        link.download = selected;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
     };
 
-    handleImport = (event) =>{
+    let handleImport = (event) =>{
         let input = document.createElement('input');
         input.type = 'file';
         input.setAttribute('style', 'display:none');
@@ -107,60 +83,57 @@ class PeripheralsManager extends Component {
 
             reader.onload = readerEvent => {
                 let content = readerEvent.target.result; // this is the content!
-                this.addPeripheral(content)
+                addPeripheral(content)
             }
         };
         document.body.appendChild(input);
         input.click();
     };
 
-    addPeripheral = (content) => {
-        this.props.server.creator_proxy.createPeripheral(JSON.parse(content), null);
+    let addPeripheral = (content) => {
+        props.server.creator_proxy.createPeripheral(JSON.parse(content), null);
     };
 
-    handle_create = () =>{
-        this.props.setSetting("edit_peripheral_mode", false);
-        this.props.setSetting("edit_peripheral_name", null);
+    let handle_create = () =>{
+        dispatch(setSetting(["edit_peripheral_mode", false]))
+        dispatch(setSetting(["edit_peripheral_name", null]))
     };
 
-    handleEdit = (content) => {
-        this.props.setSetting("edit_peripheral_mode", true);
-        this.props.setSetting("edit_peripheral_name", this.state.selected);
+    let handleEdit = () => {
+        dispatch(setSetting(["edit_peripheral_mode", true]))
+        dispatch(setSetting(["edit_peripheral_name", selected]))
     };
 
-
-    is_editable = (peripheral) =>{
-        return this.state.selected !== null;
+    let is_editable = () =>{
+        return selected !== null;
     };
 
-    render(){
-        return(
-            <ManagerLayout>
-                <ManagerButtonsLayout>
-                    <LinkContainer to="/peripheral_creator">
-                        <Button onClick={this.handle_create}> Create Peripheral</Button>
-                    </LinkContainer>
-                    <Button onClick={this.handleRemoveRow}> Remove Peripheral</Button>
-                    <Button onClick={this.handleImport}>Import peripheral</Button>
-                    <Button onClick={this.handleExport}>Export peripheral</Button>
-                    <LinkContainer isActive={this.is_editable} to="/peripheral_creator">
-                        <Button onClick={this.handleEdit} >Edit peripheral</Button>
-                    </LinkContainer>
-                </ManagerButtonsLayout>
-                <BlockLayout centered>
-                    <DataTable
-                        title='Peripherals'
-                        data={this.peripherals}
-                        columns={this.columns}
-                        customStyles={TableStyle}
-                        theme="uScopeTableTheme"
-                        selectableRows
-                        onSelectedRowsChange={this.handleOnSelect}
-                    />
-                </BlockLayout>
-            </ManagerLayout>
-        );
-    };
+    return(
+        <ManagerLayout>
+            <ManagerButtonsLayout>
+                <LinkContainer to="/peripheral_creator">
+                    <Button onClick={handle_create}> Create Peripheral</Button>
+                </LinkContainer>
+                <Button onClick={handleRemoveRow}> Remove Peripheral</Button>
+                <Button onClick={handleImport}>Import peripheral</Button>
+                <Button onClick={handleExport}>Export peripheral</Button>
+                <LinkContainer isActive={is_editable} to="/peripheral_creator">
+                    <Button onClick={handleEdit} >Edit peripheral</Button>
+                </LinkContainer>
+            </ManagerButtonsLayout>
+            <BlockLayout centered>
+                <DataTable
+                    title='Peripherals'
+                    data={peripherals}
+                    columns={columns}
+                    customStyles={TableStyle}
+                    theme="uScopeTableTheme"
+                    selectableRows
+                    onSelectedRowsChange={handleOnSelect}
+                />
+            </BlockLayout>
+        </ManagerLayout>
+    )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PeripheralsManager);
+export default PeripheralsManager;

@@ -1,7 +1,7 @@
-import React, {Component}  from 'react';
+import React, {useState} from 'react';
 
 import { LinkContainer } from 'react-router-bootstrap'
-import {connect} from "react-redux"
+import {useDispatch, useSelector} from "react-redux"
 
 
 import Button from "../UI_elements/Button"
@@ -13,89 +13,66 @@ import {TableStyle} from './TableStyles'
 import BlockLayout from "../UI_elements/Layouts/BlockLayout";
 import ManagerLayout, {ManagerButtonsLayout} from "../UI_elements/Layouts/ManagerLayout";
 
-function mapStateToProps(state) {
-    return{
-        applications:state.applications,
-        settings:state.settings,
+
+let columns = [
+    {
+        selector: 'application_name',
+        name: 'Application Name',
+        sortable: true,
     }
-}
+];
 
-const mapDispatchToProps = dispatch => {
-    return{
-        setSetting: (name, value) => {dispatch(setSetting([name, value]))},
-    }
-};
+let  ApplicationsManager = props =>{
 
 
-class ApplicationsManager extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {selected:null};
+    const applications_redux = useSelector(state => state.applications);
 
-        this.applications = [];
-        // eslint-disable-next-line
-        for(let item in this.props.applications){
-            this.applications.push({...this.props.applications[item], application_name:item});
+    const dispatch = useDispatch();
+
+    const [selected, set_selected] = useState(null);
+    const [applications, set_applications] = useState(()=>{
+        let applications = [];
+        for(let item in applications_redux){
+            applications.push({...applications_redux[item], application_name:item});
         }
-
-        this.selectRow = {
-            mode: 'radio',
-            clickToEdit: true,
-            clickToSelect: true,
-            selected: this.state.selected,
-            onSelect: this.handleOnSelect,
-        };
-    }
+        return applications;
+    });
 
 
-    columns = [
-        {
-            selector: 'application_name',
-            name: 'Application Name',
-            sortable: true,
-
-        }
-    ];
-
-
-    handleOnSelect = (selection) => {
+    let handleOnSelect = (selection) => {
         if(!selection.allSelected && selection.selectedCount===1){
-            this.setState(() => ({
-                selected: selection.selectedRows[0].application_name
-            }));
+            set_selected(selection.selectedRows[0].application_name)
         } else if(selection.selectedCount===0) {
-            this.setState(() => ({
-                selected: null
-            }));
+            set_selected(null)
         }
     };
 
 
-    handleRemoveRow = (event) =>{
-        this.applications.splice(this.applications.findIndex(item => item.application_name === this.state.selected), 1);
-        this.props.server.app_proxy.removeApplication(this.state.selected);
-        this.setState({selected:null});
+    let  handleRemoveRow = (event) =>{
+        applications.splice(applications.findIndex(item => item.application_name === selected), 1);
+        props.server.app_proxy.removeApplication(selected);
+        set_selected(null);
     };
 
-    handleExport = (event) =>{
-        if(this.state.selected===null){
-            alert("Please select a peripheral to Export");
+    let handleExport = (event) =>{
+        if(selected===null){
+            alert("Please select an Application to Export");
             return;
         }
 
-        let application = {[this.state.selected]:this.applications[this.applications.findIndex(item => item.application_name === this.state.selected)]};
+        let application = {[selected]:applications[applications.findIndex(item => item.application_name === selected)]};
         let blob = new Blob([JSON.stringify(application, null, 4)], {type: "application/json"});
         let url  = URL.createObjectURL(blob);
 
         let link = document.createElement('a');
         link.href = url;
-        link.download = this.state.selected;
+        link.download = selected;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
     };
 
-    handleImport = (event) =>{
+    let handleImport = (event) =>{
 
         let input = document.createElement('input');
         input.type = 'file';
@@ -107,7 +84,7 @@ class ApplicationsManager extends Component {
 
             reader.onload = readerEvent => {
                 let content = readerEvent.target.result; // this is the content!
-                this.addPeripheral(content)
+                addApplication(content)
             }
         };
         document.body.appendChild(input);
@@ -115,61 +92,59 @@ class ApplicationsManager extends Component {
 
     };
 
-    addPeripheral = (content) => {
-        this.props.server.app_proxy.createApplication(JSON.parse(content), null);
+    let addApplication = (content) => {
+        props.server.app_proxy.createApplication(JSON.parse(content), null);
     };
 
-    handleCreate = () => {
-        this.props.setSetting("edit_application_mode", false);
-        this.props.setSetting("edit_application_name", null);
+    let handleCreate = () => {
+        dispatch(setSetting(["edit_application_mode", false]));
+        dispatch(setSetting(["edit_application_name", null]));
+
         return true
     };
 
-    handleEdit = (content) => {
-        if(this.state.selected===null){
+    let handleEdit = () => {
+        if(selected===null){
             return false;
         }
-        this.props.setSetting("edit_application_mode", true);
-        this.props.setSetting("edit_application_name", this.state.selected);
+        dispatch(setSetting(["edit_application_mode", true]));
+        dispatch(setSetting(["edit_application_name", selected]));
         return true;
     };
 
-
-    is_editable = (peripheral) =>{
-        return this.state.selected !== null;
+    let is_editable = () =>{
+        return selected !== null;
     };
 
+    return(
+        <ManagerLayout>
+            <ManagerButtonsLayout>
+                <LinkContainer to="/application_creator">
+                    <Button onClick={handleCreate}> Add application</Button>
+                </LinkContainer>
 
-    render(){
-        return(
-            <ManagerLayout>
-                <ManagerButtonsLayout>
-                    <LinkContainer to="/application_creator">
-                        <Button onClick={this.handleCreate}> Add application</Button>
-                    </LinkContainer>
+                <Button onClick={handleRemoveRow}> Remove application</Button>
+                <Button onClick={handleImport}>Import application</Button>
+                <Button onClick={handleExport}>Export application</Button>
+                <LinkContainer isActive={is_editable} to="/application_creator">
+                    <Button onClick={handleEdit}>Edit application</Button>
+                </LinkContainer>
+            </ManagerButtonsLayout>
+            <BlockLayout centered>
+                <DataTable
+                    title='Applications'
+                    data={applications}
+                    columns={columns}
+                    theme="uScopeTableTheme"
+                    customStyles={TableStyle}
+                    selectableRows
+                    onSelectedRowsChange={handleOnSelect}
+                />
+            </BlockLayout>
 
-                    <Button onClick={this.handleRemoveRow}> Remove application</Button>
-                    <Button onClick={this.handleImport}>Import application</Button>
-                    <Button onClick={this.handleExport}>Export application</Button>
-                    <LinkContainer isActive={this.is_editable} to="/application_creator">
-                        <Button onClick={this.handleEdit}>Edit application</Button>
-                    </LinkContainer>
-                </ManagerButtonsLayout>
-                <BlockLayout centered>
-                    <DataTable
-                        title='Applications'
-                        data={this.applications}
-                        columns={this.columns}
-                        theme="uScopeTableTheme"
-                        customStyles={TableStyle}
-                        selectableRows
-                        onSelectedRowsChange={this.handleOnSelect}
-                    />
-                </BlockLayout>
+        </ManagerLayout>
+    );
+};
 
-            </ManagerLayout>
-        );
-    };
-}
 
-export default connect(mapStateToProps, mapDispatchToProps)(ApplicationsManager);
+export default ApplicationsManager;
