@@ -50,7 +50,8 @@ let  RegisterProperties = props =>{
     let handleEditNameChange = (event) => {
         if(event.key==="Enter"){
             let NewRegName = event.target.value;
-            let edit = {peripheral:props.peripheral, register:props.register.register_name, field:event.target.name, value:event.target.value,};
+            let edit = {peripheral:props.peripheral, register:props.register.register_name, field:"register_name", value:event.target.value,};
+            settings.server.creator_proxy.edit_peripheral(edit);
             set_edit_name(false);
         }else if(event.key ==="Escape"){
             set_edit_name(false);
@@ -61,8 +62,50 @@ let  RegisterProperties = props =>{
         set_is_open(false);
     }
 
-    let handleChange = ()=>{
-        set_is_open(false);
+    let handleChange = (event)=>{
+        let edit ={};
+        let value = ""
+        switch (event.target.name) {
+            case "type":
+                edit = {peripheral:props.peripheral, register:props.register.register_name, field:"register_format", value:event.target.id};
+                break;
+            case "direction_read":
+                if(event.target.checked){
+                    if(props.register.direction.includes("W")){
+                        value = "R/W"
+                    }else{
+                        value = "R"
+                    }
+                } else{
+                    if(props.register.direction.includes("W")){
+                        value = "W"
+                    }else{
+                        value = ""
+                    }
+                }
+                edit = {peripheral:props.peripheral, register:props.register.register_name, field:"direction", value:value};
+                break;
+            case "direction_write":
+                if(event.target.checked){
+                    if(props.register.direction.includes("R")){
+                        value = "R/W"
+                    }else{
+                        value = "W"
+                    }
+                } else{
+                    if(props.register.direction.includes("R")){
+                        value = "R"
+                    }else{
+                        value = ""
+                    }
+                }
+
+                edit = {peripheral:props.peripheral, register:props.register.register_name, field:"direction", value:value};
+                break;
+            default:
+                return;
+        }
+        settings.server.creator_proxy.edit_peripheral(edit);
     }
 
     let handleonKeyDown = (event) =>{
@@ -107,8 +150,8 @@ let  RegisterProperties = props =>{
                     <ChoicesWrapper>
                         <Label>Register type</Label>
                         <div>
-                            <Radio name="type" value={props.register.register_format !== "words"} onKeyDown={handleChange} label="single" id='single'/>
-                            <Radio name="type" value={props.register.register_format === "words"} onKeyDown={handleChange} label="words" id='words'/>
+                            <Radio name="type" value={props.register.register_format !== "words"} onChange={handleChange} label="single" id='single'/>
+                            <Radio name="type" value={props.register.register_format === "words"} onChange={handleChange} label="words" id='words'/>
                         </div>
                     </ChoicesWrapper>
                     <TextArea disabled={props.register.register_format !== "words"}  defaultValue={props.register.field_names.join('\n')} name="field_names" label="Field Names" rows={2}  onKeyDown={handleonKeyDown}/>
@@ -122,7 +165,7 @@ let  RegisterProperties = props =>{
         <RegPropertiesLayout>
             <RegNameWrapper>
                 {edit_name
-                    ? <InputField compact name="edit_name" value={props.register.register_name} onKeyDown={handleEditNameChange} label={props.register.register_name}/>
+                    ? <InputField compact name="edit_name" defaultValue={props.register.register_name} onKeyDown={handleEditNameChange} label={props.register.register_name}/>
                     : <Label onDoubleClick={handleEditName}>{props.register.register_name}</Label>
                 }
 
