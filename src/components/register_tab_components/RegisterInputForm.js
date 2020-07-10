@@ -74,16 +74,16 @@ let RegisterInputForm  = props => {
         }
         if(reg.register_format === "single"){
             return(
-                <SingleValueField key={i} name={reg.register_name} regID={reg.ID} value={reg_value} description={reg.description} preview_only={preview} handle_edit={props.handle_edit} handle_remove={props.handle_remove}/>
+                <SingleValueField key={i} name={reg.register_name} ID={reg.ID} value={reg_value} description={reg.description} preview_only={preview} handle_edit={props.handle_edit} handle_remove={props.handle_remove}/>
             );
         } else if(reg.register_format === "complex"){
             return(
-                <SingleValueField key={i} name={reg.register_name} regID={reg.ID} value={reg_value} description={reg.description} preview_only={preview} handle_edit={props.handle_edit} handle_remove={props.handle_remove}/>
+                <SingleValueField key={i} name={reg.register_name} ID={reg.ID} value={reg_value} description={reg.description} preview_only={preview} handle_edit={props.handle_edit} handle_remove={props.handle_remove}/>
             );
         } else if(reg.register_format==='words'){
             let split_values = [(reg_value & 0x0000ffff), (reg_value & 0xffff0000) >> 16];
             return(
-                <TwoValuesField key={i} field_names={reg.field_names} regID={reg.ID} register_name={reg.register_name} value={split_values} field_descriptions={reg.field_descriptions} preview_only={preview} handle_edit={props.handle_edit} handle_remove={props.handle_remove}/>
+                <TwoValuesField key={i} field_names={reg.field_names} ID={reg.ID} register_name={reg.register_name} value={split_values} field_descriptions={reg.field_descriptions} preview_only={preview} handle_edit={props.handle_edit} handle_remove={props.handle_remove}/>
             );
         } else return(<p>invalid form field</p>);
     };

@@ -6,6 +6,7 @@ const initial_state = {
     refreshRate: 90,
     edit_application_mode:false,
     edit_application_name: "",
+    current_peripheral:"",
     current_view_requires_sidebar: true
 };
 

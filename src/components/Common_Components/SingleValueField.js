@@ -30,14 +30,14 @@ let SingleValueField = props => {
     if(props.preview_only){
         return(
             <LayoutWrapper>
-                <InputField description={props.description} name={props.name} label={props.name}/>
+                <InputField description={props.description} ID={props.ID} name={props.name} label={props.name}/>
                 <Edit color='white' onClick={localEditHandler} />
                 <Trash color='white' onClick={localRemoveHandler}/>
             </LayoutWrapper>
         );
     } else{
         return(
-            <InputField description={props.description} name={props.name} label={props.name}/>
+            <InputField description={props.description} ID={props.ID} name={props.name} label={props.name}/>
         );
     }
 };

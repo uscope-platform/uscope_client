@@ -3,7 +3,7 @@ import React from "react";
 import Label from "./Label";
 
 const InputTextArea = styled.textarea`
-border-radius: 5px;
+  border-radius: 5px;
 `
 
 const Wrapper = styled.div`
@@ -25,6 +25,7 @@ class TextArea extends React.Component {
                 <InputTextArea
                     rows={this.props.rows}
                     name={this.props.name}
+                    value={this.props.value}
                     disabled = {(this.props.disabled)? "disabled" : ""}
                     onChange={e => this.props.onChange(e)}/>
             </Wrapper>

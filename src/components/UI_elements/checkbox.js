@@ -22,6 +22,7 @@ class Checkbox extends React.Component {
                 <Label inline={this.props.inline}>{this.props.label}</Label>
                 <InputCheckbox
                     name={this.props.name}
+                    checked={this.props.value?"true":""}
                     type="checkbox"
                     onChange={e => this.props.onChange(e)}
                 />

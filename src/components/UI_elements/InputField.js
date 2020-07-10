@@ -38,11 +38,13 @@ class InputField extends React.Component {
             return (
                 <InnerInput
                     onKeyDown={this.props.onKeyDown}
+                    id={this.props.ID}
                     name={this.props.name}
                     type={(this.props.type)?this.props.type:"text"}
                     placeholder={this.props.label}
                     disabled = {(this.props.disabled)? "disabled" : ""}
                     onChange={e => {if(this.props.onChange) this.props.onChange(e)}}
+                    value={this.props.value}
                 />
             );
         } else if(this.props.description){
@@ -51,9 +53,11 @@ class InputField extends React.Component {
                         <Label inline={this.props.inline}>{this.props.label}</Label>
                         <InnerInput
                             name={this.props.name}
+                            id={this.props.ID}
                             type={(this.props.type)?this.props.type:"text"}
                             disabled = {(this.props.disabled)? "disabled" : ""}
                             onChange={e => {if(this.props.onChange) this.props.onChange(e)}}
+                            value={this.props.value}
                         />
                         <InputDescription>{this.props.description}</InputDescription>
                     </Wrapper>
@@ -64,9 +68,11 @@ class InputField extends React.Component {
                     <Label inline={this.props.inline}>{this.props.label}</Label>
                     <InnerInput
                         name={this.props.name}
+                        id={this.props.ID}
                         type={(this.props.type)?this.props.type:"text"}
                         disabled = {(this.props.disabled)? "disabled" : ""}
                         onChange={e => {if(this.props.onChange) this.props.onChange(e)}}
+                        value={this.props.value}
                     />
                 </Wrapper>
             );

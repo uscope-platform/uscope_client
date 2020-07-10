@@ -1,20 +1,13 @@
-import React, {Component}  from 'react';
+import React from 'react';
 
-import {connect} from "react-redux"
-import SidebarLayout from "../UI_elements/Layouts/SidebarLayout";
 import BlockTitle from "../UI_elements/BlockTitle";
 import styled from "styled-components";
 import Image from "../UI_elements/Image";
 import Button from "../UI_elements/Button";
 import RegisterProperties from "../UI_elements/RegisterProperties";
+import {useSelector} from "react-redux";
 
-function mapStateToProps(state) {
-    return{
-        modals:state.modals,
-        settings:state.settings,
-        peripherals:state.peripherals
-    }
-}
+
 
 const PeriphSidebarLayout = styled.div`
   display: grid;
@@ -36,30 +29,33 @@ const RegistersView = styled.div`
 
 `
 
+let  Sidebar = props =>{
+    const peripherals = useSelector(state => state.peripherals);
+    const settings = useSelector(state => state.settings);
 
-class Sidebar extends Component {
+    let handleClick  = () =>{
 
-    render(){
-        if(!this.props.settings.current_peripheral)
-            return <></>;
+    }
 
-        return(
-            <PeriphSidebarLayout>
-                <BlockTitle>{this.props.peripherals[this.props.settings.current_peripheral].peripheral_name}</BlockTitle>
-                <Image src={this.props.server.server_url + this.props.peripherals[this.props.settings.current_peripheral].image} alt='add tab image' id="addImage" onClick={this.handleClick} fluid/>
-                <RegistersView>
-                    {
-                        this.props.peripherals[this.props.settings.current_peripheral].registers.map((reg)=>{
-                            return(
-                                <RegisterProperties register={reg}/>
-                            )
-                        })
-                    }
-                </RegistersView>
-                <Button>+ Add Register</Button>
-            </PeriphSidebarLayout>
-        );
-    };
-}
+    if(!settings.current_peripheral)
+        return <></>;
 
-export default connect(mapStateToProps)(Sidebar);
+    return(
+        <PeriphSidebarLayout>
+            <BlockTitle>{peripherals[settings.current_peripheral].peripheral_name}</BlockTitle>
+            <Image src={props.server.server_url + peripherals[settings.current_peripheral].image} alt='add tab image' id="addImage" onClick={handleClick} fluid/>
+            <RegistersView>
+                {
+                    peripherals[settings.current_peripheral].registers.map((reg)=>{
+                        return(
+                            <RegisterProperties register={reg}/>
+                        )
+                    })
+                }
+            </RegistersView>
+            <Button>+ Add Register</Button>
+        </PeriphSidebarLayout>
+    );
+};
+
+export default Sidebar;
