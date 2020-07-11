@@ -8,6 +8,7 @@ import Checkbox from "./checkbox";
 import Radio from "./Radio";
 import TextArea from "./TextArea";
 import {useSelector} from "react-redux";
+import Button from "./Button";
 
 const RegNameWrapper = styled.div`
   height: 1em;
@@ -36,7 +37,7 @@ let  RegisterProperties = props =>{
 
     const [is_open, set_is_open] = useState(false);
     const [edit_name, set_edit_name] = useState(false);
-    const [words_register, set_words_register] = useState(false);
+
 
 
     let handleOpen = ()=>{
@@ -49,8 +50,7 @@ let  RegisterProperties = props =>{
 
     let handleEditNameChange = (event) => {
         if(event.key==="Enter"){
-            let NewRegName = event.target.value;
-            let edit = {peripheral:props.peripheral, register:props.register.register_name, field:"register_name", value:event.target.value,};
+            let edit = {peripheral:props.peripheral, register:props.register.register_name, field:"register_name", value:event.target.value,action:"edit_register"};
             settings.server.creator_proxy.edit_peripheral(edit);
             set_edit_name(false);
         }else if(event.key ==="Escape"){
@@ -67,7 +67,7 @@ let  RegisterProperties = props =>{
         let value = ""
         switch (event.target.name) {
             case "type":
-                edit = {peripheral:props.peripheral, register:props.register.register_name, field:"register_format", value:event.target.id};
+                edit = {peripheral:props.peripheral, register:props.register.register_name, field:"register_format", value:event.target.id, action:"edit_register"};
                 break;
             case "direction_read":
                 if(event.target.checked){
@@ -83,7 +83,7 @@ let  RegisterProperties = props =>{
                         value = ""
                     }
                 }
-                edit = {peripheral:props.peripheral, register:props.register.register_name, field:"direction", value:value};
+                edit = {peripheral:props.peripheral, register:props.register.register_name, field:"direction", value:value,action:"edit_register"};
                 break;
             case "direction_write":
                 if(event.target.checked){
@@ -100,7 +100,7 @@ let  RegisterProperties = props =>{
                     }
                 }
 
-                edit = {peripheral:props.peripheral, register:props.register.register_name, field:"direction", value:value};
+                edit = {peripheral:props.peripheral, register:props.register.register_name, field:"direction", value:value,action:"edit_register"};
                 break;
             default:
                 return;
@@ -115,7 +115,7 @@ let  RegisterProperties = props =>{
                 case "ID":
                 case "offset":
                 case "description":
-                    edit = {peripheral:props.peripheral, register:props.register.register_name, field:event.target.name, value:event.target.value,};
+                    edit = {peripheral:props.peripheral, register:props.register.register_name, field:event.target.name, value:event.target.value,action:"edit_register"};
                     settings.server.creator_proxy.edit_peripheral(edit);
                     break;
                 case "field_descriptions":
@@ -124,13 +124,18 @@ let  RegisterProperties = props =>{
                         event.preventDefault();
                     else if(event.key!=="Tab")
                         return;
-                    edit = {peripheral:props.peripheral, register:props.register.register_name, field:event.target.name, value:event.target.value.split('\n')};
+                    edit = {peripheral:props.peripheral, register:props.register.register_name, field:event.target.name, value:event.target.value.split('\n'),action:"edit_register"};
                     settings.server.creator_proxy.edit_peripheral(edit);
                     break;
                 default:
                     return;
             }
         }
+    }
+
+    let handleRemoveRegister= (event) =>{
+        let edit = {peripheral:props.peripheral, register:props.register.register_name, action:"remove_register"};
+        settings.server.creator_proxy.edit_peripheral(edit);
     }
 
     let renderContent = (props) =>{
@@ -156,6 +161,7 @@ let  RegisterProperties = props =>{
                     </ChoicesWrapper>
                     <TextArea disabled={props.register.register_format !== "words"}  defaultValue={props.register.field_names.join('\n')} name="field_names" label="Field Names" rows={2}  onKeyDown={handleonKeyDown}/>
                     <TextArea disabled={props.register.register_format !== "words"}  defaultValue={props.register.field_descriptions.join('\n')} name="field_descriptions" label="Field Descriptions" rows={2}  onKeyDown={handleonKeyDown}/>
+                    <Button onClick={handleRemoveRegister} >Remove</Button>
                 </RegContentLayout>
             )
         return null;

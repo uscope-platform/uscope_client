@@ -3,10 +3,11 @@ import React from 'react';
 import BlockTitle from "../UI_elements/BlockTitle";
 import styled from "styled-components";
 import Image from "../UI_elements/Image";
-import Button from "../UI_elements/Button";
 import RegisterProperties from "../UI_elements/RegisterProperties";
 import {useSelector} from "react-redux";
+import InputField from "../UI_elements/InputField";
 
+import create_register from "../../utilities/Peripheral";
 
 
 const PeriphSidebarLayout = styled.div`
@@ -33,7 +34,15 @@ let  Sidebar = props =>{
     const peripherals = useSelector(state => state.peripherals);
     const settings = useSelector(state => state.settings);
 
-    let handleClick  = () =>{
+    let handleAddRegister = (event) =>{
+        if(event.key==="Enter"|| event.key ==="Tab"){
+            let reg_name = event.target.value;
+            let edit ={peripheral:settings.current_peripheral, action:"add_register",register:create_register(reg_name,"single")};
+            settings.server.creator_proxy.edit_peripheral(edit);
+        }
+    }
+
+    let handleEditImage = (event) =>{
 
     }
 
@@ -43,7 +52,7 @@ let  Sidebar = props =>{
     return(
         <PeriphSidebarLayout>
             <BlockTitle>{peripherals[settings.current_peripheral].peripheral_name}</BlockTitle>
-            <Image src={settings.server.server_url + peripherals[settings.current_peripheral].image} alt='add tab image' id="addImage" onClick={handleClick} fluid/>
+            <Image src={settings.server.server_url + peripherals[settings.current_peripheral].image} alt='add tab image' id="addImage" onClick={handleEditImage} fluid/>
             <RegistersView>
                 {
                     peripherals[settings.current_peripheral].registers.map((reg)=>{
@@ -53,7 +62,7 @@ let  Sidebar = props =>{
                     })
                 }
             </RegistersView>
-            <Button>+ Add Register</Button>
+            <InputField compact name="add_register" onKeyDown={handleAddRegister} label={"Add Register"}/>
         </PeriphSidebarLayout>
     );
 };

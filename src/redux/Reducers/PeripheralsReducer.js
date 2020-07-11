@@ -8,13 +8,33 @@ let PeripheralsReducer = function (state = null, action) {
             state = action.payload;
             return state;
         case EDIT_PERIPHERAL:
-            return produce(state, draftState => {
-                let reg = draftState[action.payload.peripheral]["registers"].filter((item)=>{
-                    return item.register_name===action.payload.register;
-                })[0];
-                reg[action.payload.field] = action.payload.value;
-               return draftState
-            });
+            switch (action.payload.action) {
+                case "edit_register":
+                    return produce(state, draftState => {
+                        let reg = draftState[action.payload.peripheral]["registers"].filter((item)=>{
+                            return item.register_name===action.payload.register;
+                        })[0];
+                        reg[action.payload.field] = action.payload.value;
+                        return draftState
+                    });
+                case "add_register":
+                    return produce(state, draftState => {
+                        let reg = draftState[action.payload.peripheral]["registers"].push(action.payload.register)
+                        return draftState
+                    });
+                case "remove_register":
+                    return produce(state, draftState => {
+                        let regs = draftState[action.payload.peripheral]["registers"].filter((item)=>{
+                            return item.register_name!==action.payload.register;
+                        });
+                        draftState[action.payload.peripheral]["registers"] = regs;
+                        return draftState
+                    });
+                default:
+                    return state
+
+            }
+
         case REMOVE_PERIPHERAL:
             return produce(state, draftState => {
                 delete draftState[action.payload];
