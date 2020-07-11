@@ -139,7 +139,6 @@ class PeripheralsCreator extends Component {
         };
 
         if(this.props.settings.edit_peripheral_mode){
-            debugger;
             this.props.settings.server.creator_proxy.removePeripheral(this.props.settings.edit_peripheral_name);
         }
 

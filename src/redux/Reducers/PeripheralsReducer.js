@@ -30,8 +30,15 @@ let PeripheralsReducer = function (state = null, action) {
                         draftState[action.payload.peripheral]["registers"] = regs;
                         return draftState
                     });
+                case "change_image":
+                    return produce(state, draftState => {
+                        let periph = draftState[action.payload.peripheral]
+                        let image_path = periph.image.substring(0, periph.image.lastIndexOf("/"));
+                        periph.image = image_path+"/"+action.payload.path;
+                        return draftState
+                    });
                 default:
-                    return state
+                    return state;
 
             }
 

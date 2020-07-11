@@ -8,6 +8,7 @@ import {useSelector} from "react-redux";
 import InputField from "../UI_elements/InputField";
 
 import create_register from "../../utilities/Peripheral";
+import Label from "../UI_elements/Label";
 
 
 const PeriphSidebarLayout = styled.div`
@@ -27,8 +28,12 @@ const RegistersView = styled.div`
   border-top-style: solid;
   border-top-color: #1d7097;
   border-top-width: 1px;
-
 `
+const TitleLayout = styled.div`
+  margin-left: auto;
+  margin-right: auto;
+`
+
 
 let  Sidebar = props =>{
     const peripherals = useSelector(state => state.peripherals);
@@ -43,7 +48,12 @@ let  Sidebar = props =>{
     }
 
     let handleEditImage = (event) =>{
-
+        //RETRIVE AND SEND IMAGE TO SERVER
+        let image = event.target.files[0];
+        settings.server.creator_proxy.send_image(image);
+        //SEND CHANGE COMMAND TO THE SERVER
+        let edit ={peripheral:settings.current_peripheral, action:"change_image", path:image.name};
+        settings.server.creator_proxy.edit_peripheral(edit);
     }
 
     if(!settings.current_peripheral)
@@ -51,8 +61,17 @@ let  Sidebar = props =>{
 
     return(
         <PeriphSidebarLayout>
-            <BlockTitle>{peripherals[settings.current_peripheral].peripheral_name}</BlockTitle>
-            <Image src={settings.server.server_url + peripherals[settings.current_peripheral].image} alt='add tab image' id="addImage" onClick={handleEditImage} fluid/>
+            <TitleLayout>
+                <BlockTitle>{peripherals[settings.current_peripheral].peripheral_name}</BlockTitle>
+                <label>{"Version: "+peripherals[settings.current_peripheral].version}</label>
+            </TitleLayout>
+            <div>
+                <label htmlFor="image_choice">
+                    <Image src={settings.server.server_url + peripherals[settings.current_peripheral].image} alt='add tab image' id="addImage" fluid/>
+                </label>
+                <input id="image_choice" type="file" style={{display: "none"}} onInput={handleEditImage}/>
+            </div>
+
             <RegistersView>
                 {
                     peripherals[settings.current_peripheral].registers.map((reg)=>{
