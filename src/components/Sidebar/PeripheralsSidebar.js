@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import BlockTitle from "../UI_elements/BlockTitle";
 import styled from "styled-components";
@@ -39,6 +39,8 @@ let  Sidebar = props =>{
     const peripherals = useSelector(state => state.peripherals);
     const settings = useSelector(state => state.settings);
 
+    const [edit_label, set_edit_label] = useState(false);
+
     let handleAddRegister = (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
             let reg_name = event.target.value;
@@ -56,6 +58,22 @@ let  Sidebar = props =>{
         settings.server.creator_proxy.edit_peripheral(edit);
     }
 
+    let handleEditVersion = () =>{
+        set_edit_label(true);
+    }
+
+    let handleEditVersionDone = (event) =>{
+        if(event.key ==="Escape"){
+            set_edit_label(false);
+        } else if (event.key ==="Enter"){
+            set_edit_label(false);
+            let edit ={peripheral:settings.current_peripheral, action:"edit_version", version:parseFloat(event.target.value)};
+            settings.server.creator_proxy.edit_peripheral(edit);
+        }
+
+    }
+
+
     if(!settings.current_peripheral)
         return <></>;
 
@@ -63,7 +81,11 @@ let  Sidebar = props =>{
         <PeriphSidebarLayout>
             <TitleLayout>
                 <BlockTitle>{peripherals[settings.current_peripheral].peripheral_name}</BlockTitle>
-                <label>{"Version: "+peripherals[settings.current_peripheral].version}</label>
+                {edit_label
+                    ? <InputField compact name="edit_version" defaultValue={peripherals[settings.current_peripheral].version} onKeyDown={handleEditVersionDone} label="Version"/>
+                    : <Label onDoubleClick={handleEditVersion}>{"Version: "+peripherals[settings.current_peripheral].version}</Label>
+                }
+                <label></label>
             </TitleLayout>
             <div>
                 <label htmlFor="image_choice">
