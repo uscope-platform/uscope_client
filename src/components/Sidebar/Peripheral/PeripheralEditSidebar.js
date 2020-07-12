@@ -1,26 +1,19 @@
 import React, {useState} from 'react';
 
-import BlockTitle from "../UI_elements/BlockTitle";
 import styled from "styled-components";
-import Image from "../UI_elements/Image";
-import RegisterProperties from "../UI_elements/RegisterProperties";
+
 import {useSelector} from "react-redux";
-import InputField from "../UI_elements/InputField";
+import {create_register} from "../../../utilities/PeripheralUtilities";
 
-import create_register from "../../utilities/Peripheral";
-import Label from "../UI_elements/Label";
+import BlockTitle from "../../UI_elements/BlockTitle";
+
+import RegisterProperties from "../../UI_elements/RegisterProperties";
+import InputField from "../../UI_elements/InputField";
+import Label from "../../UI_elements/Label";
+import SidebarContentLayout from "../../UI_elements/Layouts/SidebarContentLayout";
+import PeripheralImage from "./PeripheralImage";
 
 
-const PeriphSidebarLayout = styled.div`
-  display: grid;
-  height: 100vh;
-  grid-template-columns: 1fr;
-  grid-auto-rows: 1fr 3fr minmax(1fr, 10fr) 1fr;
-  grid-gap: 0.5rem;
-  margin-left: 0.8rem;
-  margin-right: 0.8rem;
-  justify-items: center;
-`
 
 const RegistersView = styled.div`
   display: inherit;
@@ -35,7 +28,7 @@ const TitleLayout = styled.div`
 `
 
 
-let  Sidebar = props =>{
+let  PeripheralEditSidebar = props =>{
     const peripherals = useSelector(state => state.peripherals);
     const settings = useSelector(state => state.settings);
 
@@ -49,9 +42,7 @@ let  Sidebar = props =>{
         }
     }
 
-    let handleEditImage = (event) =>{
-        //RETRIVE AND SEND IMAGE TO SERVER
-        let image = event.target.files[0];
+    let handleEditImage = (image) =>{
         settings.server.creator_proxy.send_image(image);
         //SEND CHANGE COMMAND TO THE SERVER
         let edit ={peripheral:settings.current_peripheral, action:"change_image", path:image.name};
@@ -78,21 +69,15 @@ let  Sidebar = props =>{
         return <></>;
 
     return(
-        <PeriphSidebarLayout>
+        <SidebarContentLayout>
             <TitleLayout>
                 <BlockTitle>{peripherals[settings.current_peripheral].peripheral_name}</BlockTitle>
                 {edit_label
                     ? <InputField compact name="edit_version" defaultValue={peripherals[settings.current_peripheral].version} onKeyDown={handleEditVersionDone} label="Version"/>
                     : <Label onDoubleClick={handleEditVersion}>{"Version: "+peripherals[settings.current_peripheral].version}</Label>
                 }
-                <label></label>
             </TitleLayout>
-            <div>
-                <label htmlFor="image_choice">
-                    <Image src={settings.server.server_url + peripherals[settings.current_peripheral].image} alt='add tab image' id="addImage" fluid/>
-                </label>
-                <input id="image_choice" type="file" style={{display: "none"}} onInput={handleEditImage}/>
-            </div>
+            <PeripheralImage image={settings.server.server_url + peripherals[settings.current_peripheral].image} done={handleEditImage}/>
 
             <RegistersView>
                 {
@@ -104,8 +89,8 @@ let  Sidebar = props =>{
                 }
             </RegistersView>
             <InputField compact name="add_register" onKeyDown={handleAddRegister} label={"Add Register"}/>
-        </PeriphSidebarLayout>
+        </SidebarContentLayout>
     );
 };
 
-export default Sidebar;
+export default PeripheralEditSidebar;

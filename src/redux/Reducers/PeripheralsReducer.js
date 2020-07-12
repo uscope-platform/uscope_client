@@ -19,15 +19,14 @@ let PeripheralsReducer = function (state = null, action) {
                     });
                 case "add_register":
                     return produce(state, draftState => {
-                        let reg = draftState[action.payload.peripheral]["registers"].push(action.payload.register)
+                        draftState[action.payload.peripheral]["registers"].push(action.payload.register)
                         return draftState
                     });
                 case "remove_register":
                     return produce(state, draftState => {
-                        let regs = draftState[action.payload.peripheral]["registers"].filter((item)=>{
-                            return item.register_name!==action.payload.register;
+                        draftState[action.payload.peripheral]["registers"] = draftState[action.payload.peripheral]["registers"].filter((item) => {
+                            return item.register_name !== action.payload.register;
                         });
-                        draftState[action.payload.peripheral]["registers"] = regs;
                         return draftState
                     });
                 case "change_image":

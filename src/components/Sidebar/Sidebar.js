@@ -1,22 +1,41 @@
 import React  from 'react';
+import { withRouter } from "react-router";
 
-import {useSelector} from "react-redux"
 import SidebarLayout from "../UI_elements/Layouts/SidebarLayout";
-import PeripheralsSidebar from "./PeripheralsSidebar";
+import PeripheralsSidebar from "./Peripheral/PeripheralsSidebar";
 
 
 let  Sidebar = props =>{
 
-    const settings = useSelector(state => state.settings);
 
-    if(!settings.current_view_requires_sidebar)
-        return null;
+    switch (props.location.pathname) {
+        case "/peripherals_manager":
+            return(
+                <SidebarLayout>
+                    <PeripheralsSidebar />
+                </SidebarLayout>
+                );
+        case "/applications_manager":
+            return(
+                <SidebarLayout>
 
-    return(
-        <SidebarLayout>
-            <PeripheralsSidebar />
-        </SidebarLayout>
-    );
+                </SidebarLayout>
+            );
+        case "/script_manager":
+            return(
+                <SidebarLayout>
+
+                </SidebarLayout>
+            );
+        case "/plot":
+            return(
+                <SidebarLayout>
+
+                </SidebarLayout>
+            );
+        default:
+            return null;
+    }
 };
 
-export default Sidebar;
+export default withRouter(Sidebar);

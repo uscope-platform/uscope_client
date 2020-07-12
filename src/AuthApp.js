@@ -170,8 +170,8 @@ let AuthApp = (props) =>{
                                 if(tab.user_accessible){
                                     return(
                                         <Route
-                                            key={tab.name}
-                                            path={'/'+tab.name}
+                                            key={tab.tab_id}
+                                            path={'/'+tab.tab_id}
                                             exact
                                             render={(props) => <TabContent className="main_content_tab" tab={tab}/>}
                                         />

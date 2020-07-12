@@ -29,7 +29,7 @@ let  Navbar = props =>{
             {props.tabs.map((tab, i) => {
                 if(tab.user_accessible){
                     return(
-                        <LinkContainer style={{ textDecoration: 'none', color:'white' }} key={tab.name} to={'/'+tab.name} className="nav-link">
+                        <LinkContainer style={{ textDecoration: 'none', color:'white' }} key={tab.tab_id} to={'/'+tab.tab_id} className="nav-link">
                             {tab.name}
                         </LinkContainer>
                     )

@@ -31,7 +31,7 @@ let  ApplicationsManager = props =>{
     const dispatch = useDispatch();
 
     const [selected, set_selected] = useState(null);
-    const [applications, set_applications] = useState(()=>{
+    const [applications, ] = useState(()=>{
         let applications = [];
         for(let item in applications_redux){
             applications.push({...applications_redux[item], application_name:item});

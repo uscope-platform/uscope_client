@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import useInterval from "../Common_Components/useInterval";
 
 import Plotly from 'plotly.js-dist';

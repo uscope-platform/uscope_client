@@ -35,29 +35,27 @@ let PeripheralsManager = (props)=>{
 
     const dispatch = useDispatch();
 
-    const [selected, set_selected] = useState(null);
-    const [peripherals, set_peripherals] = useState(()=>{
+    const [peripherals, ] = useState(()=>{
         return  Object.values(peripherals_redux);
     });
 
     let handleOnSelect = (selection) => {
         if(!selection.allSelected && selection.selectedCount===1){
-            set_selected(selection.selectedRows[0].peripheral_name);
             dispatch(setSetting(["current_peripheral", selection.selectedRows[0].peripheral_name]))
         } else if(selection.selectedCount===0) {
-            set_selected(null);
+            dispatch(setSetting(["current_peripheral", null]))
         }
     };
 
 
     let handleRemoveRow = (event) =>{
-        peripherals.splice(peripherals.findIndex(item => item.peripheral_name === selected), 1);
-        settings.server.creator_proxy.removePeripheral(selected);
-        this.setState({selected:null});
+        peripherals.splice(peripherals.findIndex(item => item.peripheral_name === settings.current_peripheral), 1);
+        settings.server.creator_proxy.removePeripheral(settings.current_peripheral);
     };
 
     let handleExport = (event) =>{
-        if(selected===null){
+        let selected = settings.current_peripheral;
+        if(settings.current_peripheral===null){
             alert("Please select a peripheral to Export");
             return;
         }
@@ -102,11 +100,11 @@ let PeripheralsManager = (props)=>{
 
     let handleEdit = () => {
         dispatch(setSetting(["edit_peripheral_mode", true]))
-        dispatch(setSetting(["edit_peripheral_name", selected]))
+        dispatch(setSetting(["edit_peripheral_name", settings.current_peripheral]))
     };
 
     let is_editable = () =>{
-        return selected !== null;
+        return settings.current_peripheral !== null;
     };
 
     return(

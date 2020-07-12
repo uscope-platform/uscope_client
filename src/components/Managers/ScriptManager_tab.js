@@ -46,8 +46,8 @@ let ScriptManager = (props) =>{
     const dispatch = useDispatch();
 
     const [selected, set_selected] = useState(null);
-    const [removed_scripts, set_removed_scripts] = useState([]);
-    const [scripts, set_scripts] = useState(()=>{
+    const [removed_scripts, ] = useState([]);
+    const [scripts, ] = useState(()=>{
         return JSON.parse(JSON.stringify(scripts_store));
     });
 

@@ -32,13 +32,13 @@ let  InputField = props =>{
     if(props.compact){
         return (
             <InnerInput
-                onKeyDown={props.onKeyDown}
                 id={props.ID}
                 name={props.name}
                 type={(props.type)?props.type:"text"}
                 placeholder={props.label}
                 disabled = {(props.disabled)? "disabled" : ""}
                 onChange={e => {if(props.onChange) props.onChange(e)}}
+                onKeyDown={e => {if(props.onKeyDown) props.onKeyDown(e)}}
                 defaultValue={props.defaultValue}
                 value={props.value?props.value:undefined}
             />
@@ -48,12 +48,12 @@ let  InputField = props =>{
             <Wrapper>
                 <Label inline={props.inline}>{props.label}</Label>
                 <InnerInput
-                    onKeyDown={props.onKeyDown}
                     name={props.name}
                     id={props.ID}
                     type={(props.type)?props.type:"text"}
                     disabled = {(props.disabled)? "disabled" : ""}
                     onChange={e => {if(props.onChange) props.onChange(e)}}
+                    onKeyDown={e => {if(props.onKeyDown) props.onKeyDown(e)}}
                     defaultValue={props.defaultValue}
                     value={props.value?props.value:undefined}
                 />
