@@ -13,7 +13,6 @@ import TabContent from "./components/TabContent";
 import Navbar from "./components/Navbar";
 
 import ApplicationChooser from "./components/Modal_Components/ApplicationChooser";
-import PeripheralsCreator from "./components/Creators/Peripheral_creator/PeripheralsCreator";
 import ApplicationsCreator from "./components/Creators/Application_creator/ApplicationsCreator";
 
 //////  STYLE IMPORTS
@@ -187,11 +186,6 @@ let AuthApp = (props) =>{
                             path={'/script_creator'}
                             exact
                             render={(props) => <ScriptsCreator />}
-                        />
-                        <Route
-                            path={'/peripheral_creator'}
-                            exact
-                            render={(props) => <PeripheralsCreator />}
                         />
                         <Route
                             path={'/application_creator'}

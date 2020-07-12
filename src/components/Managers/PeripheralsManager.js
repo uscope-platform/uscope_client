@@ -1,7 +1,5 @@
 import React, {useState} from 'react';
 
-
-import { LinkContainer } from 'react-router-bootstrap'
 import { useDispatch, useSelector} from "react-redux"
 
 import DataTable from 'react-data-table-component';
@@ -51,6 +49,7 @@ let PeripheralsManager = (props)=>{
     let handleRemoveRow = (event) =>{
         peripherals.splice(peripherals.findIndex(item => item.peripheral_name === settings.current_peripheral), 1);
         settings.server.creator_proxy.removePeripheral(settings.current_peripheral);
+        dispatch(setSetting(["current_peripheral", null]))
     };
 
     let handleExport = (event) =>{
@@ -93,32 +92,12 @@ let PeripheralsManager = (props)=>{
         settings.server.creator_proxy.createPeripheral(JSON.parse(content), null);
     };
 
-    let handle_create = () =>{
-        dispatch(setSetting(["edit_peripheral_mode", false]))
-        dispatch(setSetting(["edit_peripheral_name", null]))
-    };
-
-    let handleEdit = () => {
-        dispatch(setSetting(["edit_peripheral_mode", true]))
-        dispatch(setSetting(["edit_peripheral_name", settings.current_peripheral]))
-    };
-
-    let is_editable = () =>{
-        return settings.current_peripheral !== null;
-    };
-
     return(
         <ManagerLayout>
             <ManagerButtonsLayout>
-                <LinkContainer to="/peripheral_creator">
-                    <Button onClick={handle_create}> Create Peripheral</Button>
-                </LinkContainer>
                 <Button onClick={handleRemoveRow}> Remove Peripheral</Button>
                 <Button onClick={handleImport}>Import peripheral</Button>
                 <Button onClick={handleExport}>Export peripheral</Button>
-                <LinkContainer isActive={is_editable} to="/peripheral_creator">
-                    <Button onClick={handleEdit} >Edit peripheral</Button>
-                </LinkContainer>
             </ManagerButtonsLayout>
             <BlockLayout centered>
                 <DataTable

@@ -1,7 +1,6 @@
 import React from 'react';
 import PlotTab from "./plot_tab_components/PlotTab";
 import RegisterTab from "./register_tab_components/Register_tab";
-import PeripheralsCreator from "./Creators/Peripheral_creator/PeripheralsCreator";
 import ScriptManager from "./Managers/ScriptManager_tab";
 import PeripheralsManager from "./Managers/PeripheralsManager";
 import ApplicationsManager from "./Managers/ApplicationsManager"
@@ -18,10 +17,6 @@ let TabContent = props => {
             <div className="tab_content">
                 <RegisterTab content={props.tab}/>
             </div>
-        );
-    }else if(props.tab.type ==='tab_creator'){
-        return (
-            <PeripheralsCreator />
         );
     }else if(props.tab.type ==='script_manager'){
         return (
