@@ -17,6 +17,7 @@
     "react-bootstrap-table-next": "^4.0.0",
     "react-bootstrap-table2-editor": "^1.4.0",
     "react-bootstrap-table2-paginator": "^2.1.0",
+    "react-custom-scrollbars": "^4.2.1",
     "react-data-table": "^0.1.0",
     "react-data-table-component": "^6.9.6",
     "react-dom": "^16.9.0",

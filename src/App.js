@@ -10,6 +10,8 @@ import './App.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import {useDispatch} from "react-redux";
 import {setSetting} from "./redux/Actions/SettingsActions";
+import {ThemeProvider} from "styled-components";
+import ColorTheme from "./components/UI_elements/ColorTheme";
 
 let App = (props) =>{
     // home: http://192.168.1.2/uscope/
@@ -47,9 +49,11 @@ let App = (props) =>{
     },[done])
 
     return(
-        <div className="App">
-            {logged? <AuthApp />:<LoginPage server={server} done={done}/>}
-        </div>
+        <ThemeProvider theme={ColorTheme}>
+            <div className="App">
+                {logged? <AuthApp />:<LoginPage server={server} done={done}/>}
+            </div>
+        </ThemeProvider>
     )
 
 }

@@ -14,11 +14,13 @@ const RegNameWrapper = styled.div`
   height: 1em;
 `
 const RegContentLayout = styled.div`
+  height: fit-content;
   margin-left: 1em;
   margin-top: 0.5em;
 `
 
 const RegPropertiesLayout = styled.div`
+  height: fit-content;
  display: flex;
  flex-direction: column;
 `
@@ -159,8 +161,8 @@ let  RegisterProperties = props =>{
                             <Radio name="type" value={props.register.register_format === "words"} onChange={handleChange} label="words" id='words'/>
                         </div>
                     </ChoicesWrapper>
-                    <TextArea disabled={props.register.register_format !== "words"}  defaultValue={props.register.field_names.join('\n')} name="field_names" label="Field Names" rows={2}  onKeyDown={handleonKeyDown}/>
-                    <TextArea disabled={props.register.register_format !== "words"}  defaultValue={props.register.field_descriptions.join('\n')} name="field_descriptions" label="Field Descriptions" rows={2}  onKeyDown={handleonKeyDown}/>
+                    <TextArea disabled={props.register.register_format !== "words"}  defaultValue={props.register.field_names && props.register.field_names.join('\n')} name="field_names" label="Field Names" rows={2}  onKeyDown={handleonKeyDown}/>
+                    <TextArea disabled={props.register.register_format !== "words"}  defaultValue={props.register.field_names && props.register.field_descriptions.join('\n')} name="field_descriptions" label="Field Descriptions" rows={2}  onKeyDown={handleonKeyDown}/>
                     <Button onClick={handleRemoveRegister} >Remove</Button>
                 </RegContentLayout>
             )

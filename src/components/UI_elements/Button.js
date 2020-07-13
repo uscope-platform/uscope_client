@@ -1,8 +1,8 @@
 import styled, {css} from 'styled-components';
 
 const Button = styled.button`
-  background: #e43f5a;
-  border-color: #e43f5a;
+  background: ${props => props.theme.dark_theme.accents};
+  border-color: ${props => props.theme.dark_theme.accents};
   border-radius: 3px;
   border-style: solid;
   font-size: 16px;

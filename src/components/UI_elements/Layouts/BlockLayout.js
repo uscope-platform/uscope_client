@@ -6,7 +6,7 @@ const BlockLayout = styled.div`
     grid-auto-rows: max-content;
     grid-row-gap: 1em;
     
-    background-color: #162447;
+    background-color: ${props => props.theme.dark_theme.level_1};
     border-radius: 1rem;
     padding: 1rem;
     height: fit-content;

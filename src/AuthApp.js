@@ -22,6 +22,7 @@ import ScriptsCreator from "./components/Creators/Script_creator/ScriptsCreator"
 import ApplicationLayout from "./components/UI_elements/Layouts/ApplicationLayout";
 import Sidebar from "./components/Sidebar/Sidebar";
 
+
 const states = Object.freeze({
     START:   Symbol("start"),
     APP_CHOICE:  Symbol("app_choice"),
@@ -163,25 +164,25 @@ let AuthApp = (props) =>{
             } else {
                 return (
                     <div className="App">
-                        <ApplicationLayout sidebarNeeded={settings.current_view_requires_sidebar}>
-                            <Navbar tabs={tabs}/>
-                            {tabs.map((tab, i) => {
-                                if(tab.user_accessible){
-                                    return(
-                                        <Route
-                                            key={tab.tab_id}
-                                            path={'/'+tab.tab_id}
-                                            exact
-                                            render={(props) => <TabContent className="main_content_tab" tab={tab}/>}
-                                        />
+                            <ApplicationLayout sidebarNeeded={settings.current_view_requires_sidebar}>
+                                <Navbar tabs={tabs}/>
+                                {tabs.map((tab, i) => {
+                                    if(tab.user_accessible){
+                                        return(
+                                            <Route
+                                                key={tab.tab_id}
+                                                path={'/'+tab.tab_id}
+                                                exact
+                                                render={(props) => <TabContent className="main_content_tab" tab={tab}/>}
+                                            />
 
-                                    )
-                                } else {
-                                    return null;
-                                }
-                            })}
-                            <Sidebar />
-                        </ApplicationLayout>
+                                        )
+                                    } else {
+                                        return null;
+                                    }
+                                })}
+                                <Sidebar />
+                            </ApplicationLayout>
                         <Route
                             path={'/script_creator'}
                             exact

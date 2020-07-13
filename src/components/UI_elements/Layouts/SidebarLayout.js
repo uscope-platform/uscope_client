@@ -4,7 +4,8 @@ const SidebarLayout = styled.div`
     display: grid;
     grid-template-columns: 1fr;
     grid-auto-rows: auto;
-    background-color: #162447;
+    
+    background-color: ${props => props.theme.dark_theme.level_1};
     margin-left: 1rem;
 `
 export default SidebarLayout

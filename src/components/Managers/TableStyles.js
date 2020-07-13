@@ -1,5 +1,5 @@
 import {createTheme} from "react-data-table-component";
-
+import ColorTheme from "../UI_elements/ColorTheme";
 
 createTheme('uScopeTableTheme', {
     text: {
@@ -35,10 +35,10 @@ export const TableStyle = {
         style: {
             borderTopStyle: 'solid',
             borderTopWidth: '3px',
-            borderTopColor: '#1d7097',
+            borderTopColor: ColorTheme.dark_theme.level_3,
             borderBottomStyle: 'solid',
             borderBottomWidth: '1px',
-            borderBottomColor: '#1d7097',
+            borderBottomColor: ColorTheme.dark_theme.level_3,
         },
     },
     rows: {
@@ -46,7 +46,7 @@ export const TableStyle = {
             '&:not(:last-of-type)': {
                 borderBottomStyle: 'solid',
                 borderBottomWidth: '1px',
-                borderBottomColor: '#1d7097',
+                borderBottomColor: ColorTheme.dark_theme.level_3,
             },
         },
     },
