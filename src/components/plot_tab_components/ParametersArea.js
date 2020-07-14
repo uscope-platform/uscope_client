@@ -3,7 +3,7 @@ import React, {useEffect} from 'react';
 import Button from "../UI_elements/Button"
 import {useDispatch, useSelector} from "react-redux";
 import SingleValueField from "../Common_Components/SingleValueField";
-import {parseFunction, context_cleaner} from "../../user_script_launcher";
+import {context_cleaner, parseFunction} from "../../user_script_launcher";
 import {saveScriptsWorkspace} from "../../redux/Actions/scriptsActions";
 import {saveParameter} from "../../redux/Actions/ParameterActions";
 

@@ -1,4 +1,4 @@
-import React, {Component}  from 'react';
+import React, {Component} from 'react';
 import Button from "../../UI_elements/Button"
 import Image from "../../UI_elements/Image"
 
@@ -15,6 +15,7 @@ import AppCreatorChannelModal from "./appCreatorChannelModal";
 import AppCreatorAppNameModal from "./AppCreatorAppNameModal";
 import AppCreatorInitialRegisterModal from './appCreatorInitialRegisterModal'
 import styled from "styled-components";
+
 function mapStateToProps(state) {
     return{
         modals:state.modals,

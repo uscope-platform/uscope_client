@@ -1,8 +1,8 @@
 import React from 'react';
-import InputField  from "../components/UI_elements/InputField";
+import InputField from "../components/UI_elements/InputField";
 import Checkbox from "../components/UI_elements/checkbox";
 import Select from "../components/UI_elements/Select";
-import { action } from '@storybook/addon-actions';
+import {action} from '@storybook/addon-actions';
 import Radio from "../components/UI_elements/Radio";
 import TextArea from "../components/UI_elements/TextArea";
 import RegisterProperties from "../components/UI_elements/SidebarComponents/RegisterProperties";

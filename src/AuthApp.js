@@ -1,20 +1,17 @@
 //       REACT AND BOOTSTRAP IMPORTS
 import React, {useEffect, useState} from 'react';
-import {Route, Redirect} from 'react-router-dom'
-
+import {Redirect, Route} from 'react-router-dom'
 //       REDUX IMPORTS
 import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "./redux/Actions/SettingsActions";
 import {loadTabs} from "./redux/Actions/TabsActions";
 import {loadRegisters} from "./redux/Actions/RegisterActions";
-
 //      APP RELATED IMPORTS
 import TabContent from "./components/TabContent";
 import Navbar from "./components/Navbar";
 
 import ApplicationChooser from "./components/Modal_Components/ApplicationChooser";
 import ApplicationsCreator from "./components/Creators/Application_creator/ApplicationsCreator";
-
 //////  STYLE IMPORTS
 import './App.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';

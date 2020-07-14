@@ -1,6 +1,6 @@
 import axios from "axios"
 import store from "../store";
-import {addScript, removeScript, loadAllScripts, editScript} from "../redux/Actions/scriptsActions"
+import {addScript, editScript, loadAllScripts, removeScript} from "../redux/Actions/scriptsActions"
 
 export default function scriptsProxy(server_url, token) {
     let _this = this;

@@ -1,4 +1,4 @@
-import {LOAD_PERIPHERALS, REMOVE_PERIPHERAL, EDIT_PERIPHERAL} from "./types";
+import {EDIT_PERIPHERAL, LOAD_PERIPHERALS, REMOVE_PERIPHERAL} from "./types";
 import axios from 'axios';
 
 

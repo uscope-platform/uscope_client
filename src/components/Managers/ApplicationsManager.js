@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
 
-import { LinkContainer } from 'react-router-bootstrap'
+import {LinkContainer} from 'react-router-bootstrap'
 import {useDispatch, useSelector} from "react-redux"
 
 
 import Button from "../UI_elements/Button"
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
-import DataTable   from 'react-data-table-component';
+import DataTable from 'react-data-table-component';
 import {TableStyle} from './TableStyles'
 
 import BlockLayout from "../UI_elements/Layouts/BlockLayout";

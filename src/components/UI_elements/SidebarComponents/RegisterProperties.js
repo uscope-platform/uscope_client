@@ -1,8 +1,7 @@
 import React, {useState} from "react";
 import Label from "../Label";
 import styled from "styled-components";
-import {CaretDown} from "grommet-icons";
-import {CaretUp} from "grommet-icons";
+import {CaretDown, CaretUp} from "grommet-icons";
 import InputField from "../InputField";
 import Checkbox from "../checkbox";
 import Radio from "../Radio";
@@ -11,7 +10,6 @@ import {useSelector} from "react-redux";
 import Button from "../Button";
 import SidebarCollapsableNameLayout from "../Layouts/SidebarCollapsableNameLayout";
 import SidebarCollapsableContentLayout from "../Layouts/SidebarCollapsableContentLayout";
-import SidebarBlockLayout from "../Layouts/SidebarBlockLayout";
 
 const ChoicesWrapper = styled.div`
     display: grid;

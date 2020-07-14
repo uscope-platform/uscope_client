@@ -1,6 +1,5 @@
-import {LOAD_ALL_SCRIPTS, SAVE_SCRIPT_WORKSPACE, ADD_SCRIPT, REMOVE_SCRIPT, EDIT_SCRIPT} from "./types";
+import {ADD_SCRIPT, EDIT_SCRIPT, LOAD_ALL_SCRIPTS, REMOVE_SCRIPT, SAVE_SCRIPT_WORKSPACE} from "./types";
 import axios from "axios";
-
 
 
 export const saveScriptsWorkspace = (workspace) => ({

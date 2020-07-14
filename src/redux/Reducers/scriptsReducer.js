@@ -1,7 +1,5 @@
-import {SAVE_SCRIPT_WORKSPACE, ADD_SCRIPT, REMOVE_SCRIPT, LOAD_ALL_SCRIPTS, EDIT_SCRIPT} from "../Actions/types";
+import {ADD_SCRIPT, EDIT_SCRIPT, LOAD_ALL_SCRIPTS, REMOVE_SCRIPT, SAVE_SCRIPT_WORKSPACE} from "../Actions/types";
 import produce from "immer";
-
-
 
 
 let scriptsReducer = function (state = [], action) {

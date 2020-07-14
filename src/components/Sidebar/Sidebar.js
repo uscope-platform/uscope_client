@@ -1,5 +1,5 @@
-import React  from 'react';
-import { withRouter } from "react-router";
+import React from 'react';
+import {withRouter} from "react-router";
 
 import SidebarLayout from "../UI_elements/Layouts/SidebarLayout";
 import PeripheralsSidebar from "./Peripheral/PeripheralsSidebar";

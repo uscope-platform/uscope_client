@@ -1,4 +1,4 @@
-import { LOAD_REGISTERS, SEND_REGISTER} from "./types";
+import {LOAD_REGISTERS, SEND_REGISTER} from "./types";
 import axios from "axios";
 
 export const sendRegister = (server_url ,register, config) => {

@@ -1,6 +1,5 @@
 //       REACT AND BOOTSTRAP IMPORTS
 import React, {useCallback, useEffect, useState} from 'react';
-
 //      APP RELATED IMPORTS
 import serverProxy from "./ServerProxy";
 import AuthApp from "./AuthApp";

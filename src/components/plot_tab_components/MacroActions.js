@@ -2,7 +2,7 @@ import React from 'react';
 
 import Button from "../UI_elements/Button"
 import {useDispatch, useSelector} from "react-redux";
-import {parseFunction, context_cleaner} from "../../user_script_launcher";
+import {context_cleaner, parseFunction} from "../../user_script_launcher";
 
 import {saveScriptsWorkspace} from "../../redux/Actions/scriptsActions";
 import styled from "styled-components";

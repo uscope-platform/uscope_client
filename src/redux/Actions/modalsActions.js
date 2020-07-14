@@ -1,4 +1,4 @@
-import {SHOW_MODAL, HIDE_MODAL} from "./types";
+import {HIDE_MODAL, SHOW_MODAL} from "./types";
 
 
 export const showModal = (modal, idx=-1) => ({

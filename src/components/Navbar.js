@@ -5,7 +5,6 @@ import styled from "styled-components";
 import Image from "./UI_elements/Image";
 
 
-
 const ComponentLayout = styled.div`
     display: flex;
     flex-direction: column;

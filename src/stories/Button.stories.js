@@ -1,5 +1,5 @@
 import React from 'react';
-import Button  from "../components/UI_elements/Button";
+import Button from "../components/UI_elements/Button";
 import {action} from "@storybook/addon-actions";
 
 export default {

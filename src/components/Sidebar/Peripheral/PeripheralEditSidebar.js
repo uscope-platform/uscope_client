@@ -59,7 +59,7 @@ let  PeripheralEditSidebar = props =>{
         return <></>;
 
     return(
-        <SidebarContentLayout>
+        <SidebarContentLayout peripheral>
             <TitleLayout>
                 <BlockTitle>{peripherals[settings.current_peripheral].peripheral_name}</BlockTitle>
                 {edit_label

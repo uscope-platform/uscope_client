@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import {enableChannel, disableChannel} from "../../redux/Actions/plotActions";
+import {disableChannel, enableChannel} from "../../redux/Actions/plotActions";
 import {useDispatch} from "react-redux";
 import {showModal} from "../../redux/Actions/modalsActions";
 import ChannelSettingsModal from "../Modal_Components/ChannelSettingsModal";

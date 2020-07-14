@@ -25,7 +25,7 @@ let  ApplicationEditSidebar = props =>{
         return <></>;
 
     return (
-        <SidebarContentLayout>
+        <SidebarContentLayout application>
             <BlockTitle>{applications[settings.current_application].application_name}</BlockTitle>
                 <SidebarBlockLayout>
                     <label style={{fontSize:'20px',fontWeight:600}}>{"Channels"}</label>
