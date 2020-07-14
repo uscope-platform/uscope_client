@@ -11,6 +11,7 @@ import SidebarContentLayout from "../../UI_elements/Layouts/SidebarContentLayout
 import StyledScrollbar from "../../UI_elements/StyledScrollbar";
 import PlotChannelProperties from "../../UI_elements/SidebarComponents/PlotChannelProperties";
 import SidebarBlockLayout from "../../UI_elements/Layouts/SidebarBlockLayout";
+import InitialRegisterValue from "../../UI_elements/SidebarComponents/InitialRegisterValueProperties";
 
 const TitleLayout = styled.div`
   margin-left: auto;
@@ -39,6 +40,18 @@ let  ApplicationEditSidebar = props =>{
                         }
                     </StyledScrollbar>
                 </SidebarBlockLayout>
+            <SidebarBlockLayout>
+                <label style={{fontSize:'20px',fontWeight:600}}>{"Initial Register Values"}</label>
+                <StyledScrollbar>
+                    {
+                        applications[settings.current_application].initial_registers_values.map((irv)=>{
+                            return(
+                                <InitialRegisterValue application={settings.current_application} irv={irv}/>
+                            )
+                        })
+                    }
+                </StyledScrollbar>
+            </SidebarBlockLayout>
             <InputField compact name="add_register" label={"Add Register"}/>
         </SidebarContentLayout>
     );

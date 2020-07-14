@@ -1,4 +1,4 @@
-import {ADD_APPLICATION, LOAD_APPLICATIONS, REMOVE_APPLICATION} from "./types";
+import {ADD_APPLICATION, EDIT_APPLICATION, LOAD_APPLICATIONS, REMOVE_APPLICATION} from "./types";
 import axios from 'axios';
 
 
@@ -16,6 +16,23 @@ export const loadApplications = (server_url, config) => {
 const loadApplicationsDone = parameters => ({
     type: LOAD_APPLICATIONS,
     payload: parameters
+});
+
+
+export const editApplication = (server_url,edit, config) => {
+
+    return dispatch => {
+        axios.post(server_url, edit, config).then(res => {
+            dispatch(editApplicationDone(edit));
+        }).catch(err => {
+            alert(err.message);
+        });
+    };
+};
+
+const editApplicationDone = edit => ({
+    type: EDIT_APPLICATION,
+    payload: edit
 });
 
 
