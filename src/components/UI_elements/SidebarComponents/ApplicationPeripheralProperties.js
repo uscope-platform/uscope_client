@@ -10,6 +10,7 @@ import {useSelector} from "react-redux";
 import Button from "../Button";
 import SidebarCollapsableNameLayout from "../Layouts/SidebarCollapsableNameLayout";
 import SidebarCollapsableContentLayout from "../Layouts/SidebarCollapsableContentLayout";
+import Select from "../Select";
 
 const ChoicesWrapper = styled.div`
     display: grid;
@@ -21,6 +22,7 @@ const ChoicesWrapper = styled.div`
 
 let  ApplicationPeripheralProperties = props =>{
 
+    const peripherals = useSelector(state => state.peripherals);
     const settings = useSelector(state => state.settings);
 
     const [is_open, set_is_open] = useState(false);
@@ -38,8 +40,8 @@ let  ApplicationPeripheralProperties = props =>{
 
     let handleEditNameChange = (event) => {
         if(event.key==="Enter"){
-            let edit = {peripheral:props.peripheral, register:props.register.register_name, field:"register_name", value:event.target.value,action:"edit_register"};
-            settings.server.creator_proxy.edit_peripheral(edit);
+            let edit = {application:props.application, peripheral:props.peripheral.tab_id, field:event.target.name, value:event.target.value, action:"edit_peripheral"};
+            settings.server.app_proxy.edit_application(edit);
             set_edit_name(false);
         }else if(event.key ==="Escape"){
             set_edit_name(false);
@@ -51,29 +53,43 @@ let  ApplicationPeripheralProperties = props =>{
     }
 
     let handleChange = (event)=>{
-        let edit ={};
-        let value = ""
+        let edit = {application:props.application, peripheral:props.peripheral.tab_id, field:event.target.name, value:event.target.checked, action:"edit_peripheral"};
+        settings.server.app_proxy.edit_application(edit);
+    }
 
-        settings.server.creator_proxy.edit_peripheral(edit);
+    let handleIDChange = (event)=>{
+        let edit = {application:props.application, peripheral:props.peripheral.tab_id, field:event.target.name, value:event.target.value, action:"edit_peripheral"};
+        settings.server.app_proxy.edit_application(edit);
     }
 
     let handleonKeyDown = (event) =>{
         let edit = {}
         if(event.key==="Enter"|| event.key ==="Tab"){
-
+            edit = {application:props.application, peripheral:props.peripheral.tab_id, field:event.target.name, value:event.target.value, action:"edit_peripheral"};
+            settings.server.app_proxy.edit_application(edit);
         }
     }
 
     let handleRemoveRegister= (event) =>{
-        let edit = {peripheral:props.peripheral, register:props.register.register_name, action:"remove_register"};
-        settings.server.creator_proxy.edit_peripheral(edit);
+        let edit = {application:props.application, peripheral:props.peripheral.tab_id, action:"remove_peripheral"};
+        settings.server.app_proxy.edit_application(edit);
     }
 
     let renderContent = (props) =>{
         if(is_open)
             return(
                 <SidebarCollapsableContentLayout>
-                    <InputField inline name='tab_id' defaultValue={props.peripheral.tab_id} onKeyDown={handleonKeyDown} label="peripheral ID"/>
+                    <ChoicesWrapper>
+                        <Label>peripheral ID</Label>
+                        <Select name="tab_id" defaultValue={props.peripheral.tab_id} onChange={handleIDChange}>
+                            <option value="" hidden>Peripheral type</option>
+                            {
+                                Object.entries(peripherals).map((name,i) => (
+                                    <option key={i} >{name[0]}</option>
+                                ))
+                            }
+                        </Select>
+                    </ChoicesWrapper>
                     <InputField inline name='base_address' defaultValue={props.peripheral.base_address} onKeyDown={handleonKeyDown} label="Base Address"/>
                     <InputField inline name='type' defaultValue={props.peripheral.type} onKeyDown={handleonKeyDown} label="Type"/>
                     <Checkbox name='proxied' value={props.peripheral.proxied} onChange={handleChange} label="Proxied Peripheral"/>

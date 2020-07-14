@@ -91,9 +91,6 @@ let  ApplicationEditSidebar = props =>{
                     }
                 </StyledScrollbar>
             </SidebarBlockLayout>
-
-
-            <InputField compact name="add_register" label={"Add Register"}/>
         </SidebarContentLayout>
     );
 };
