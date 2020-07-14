@@ -30,7 +30,6 @@ let  ApplicationsManager = props =>{
 
     const dispatch = useDispatch();
 
-    const [selected, set_selected] = useState(null);
     const [applications, ] = useState(()=>{
         let applications = [];
         for(let item in applications_redux){
@@ -42,32 +41,32 @@ let  ApplicationsManager = props =>{
 
     let handleOnSelect = (selection) => {
         if(!selection.allSelected && selection.selectedCount===1){
-            set_selected(selection.selectedRows[0].application_name)
+            dispatch(setSetting(["current_application", selection.selectedRows[0].application_name]))
         } else if(selection.selectedCount===0) {
-            set_selected(null)
+            dispatch(setSetting(["current_application", null]))
         }
     };
 
 
     let  handleRemoveRow = (event) =>{
-        applications.splice(applications.findIndex(item => item.application_name === selected), 1);
-        settings.server.app_proxy.removeApplication(selected);
-        set_selected(null);
+        applications.splice(applications.findIndex(item => item.application_name === settings.current_application), 1);
+        settings.server.app_proxy.removeApplication(settings.current_application);
+        dispatch(setSetting(["current_application", null]))
     };
 
     let handleExport = (event) =>{
-        if(selected===null){
+        if(settings.current_application===null){
             alert("Please select an Application to Export");
             return;
         }
 
-        let application = {[selected]:applications[applications.findIndex(item => item.application_name === selected)]};
+        let application = {[settings.current_application]:applications[applications.findIndex(item => item.application_name === settings.current_application)]};
         let blob = new Blob([JSON.stringify(application, null, 4)], {type: "application/json"});
         let url  = URL.createObjectURL(blob);
 
         let link = document.createElement('a');
         link.href = url;
-        link.download = selected;
+        link.download = settings.current_application;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -105,16 +104,16 @@ let  ApplicationsManager = props =>{
     };
 
     let handleEdit = () => {
-        if(selected===null){
+        if(settings.current_application===null){
             return false;
         }
         dispatch(setSetting(["edit_application_mode", true]));
-        dispatch(setSetting(["edit_application_name", selected]));
+        dispatch(setSetting(["edit_application_name", settings.current_application]));
         return true;
     };
 
     let is_editable = () =>{
-        return selected !== null;
+        return settings.current_application !== null;
     };
 
     return(

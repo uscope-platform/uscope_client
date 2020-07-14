@@ -3,6 +3,7 @@ import { withRouter } from "react-router";
 
 import SidebarLayout from "../UI_elements/Layouts/SidebarLayout";
 import PeripheralsSidebar from "./Peripheral/PeripheralsSidebar";
+import ApplicationSidebar from "./Application/ApplicationSidebar";
 
 
 let  Sidebar = props =>{
@@ -18,7 +19,7 @@ let  Sidebar = props =>{
         case "/applications_manager":
             return(
                 <SidebarLayout>
-
+                    <ApplicationSidebar/>
                 </SidebarLayout>
             );
         case "/script_manager":

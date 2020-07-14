@@ -1,0 +1,47 @@
+import React from 'react';
+
+import styled from "styled-components";
+
+import {useSelector} from "react-redux";
+
+import BlockTitle from "../../UI_elements/BlockTitle";
+
+import InputField from "../../UI_elements/InputField";
+import SidebarContentLayout from "../../UI_elements/Layouts/SidebarContentLayout";
+import StyledScrollbar from "../../UI_elements/StyledScrollbar";
+import PlotChannelProperties from "../../UI_elements/SidebarComponents/PlotChannelProperties";
+import SidebarBlockLayout from "../../UI_elements/Layouts/SidebarBlockLayout";
+
+const TitleLayout = styled.div`
+  margin-left: auto;
+  margin-right: auto;
+`
+
+let  ApplicationEditSidebar = props =>{
+    const settings = useSelector(state => state.settings);
+    const applications = useSelector(state => state.applications)
+
+    if(!settings.current_application)
+        return <></>;
+
+    return (
+        <SidebarContentLayout>
+            <BlockTitle>{applications[settings.current_application].application_name}</BlockTitle>
+                <SidebarBlockLayout>
+                    <label style={{fontSize:'20px',fontWeight:600}}>{"Channels"}</label>
+                    <StyledScrollbar>
+                        {
+                            applications[settings.current_application].channels.map((channel)=>{
+                                return(
+                                    <PlotChannelProperties application={settings.current_application} channel={channel}/>
+                                )
+                            })
+                        }
+                    </StyledScrollbar>
+                </SidebarBlockLayout>
+            <InputField compact name="add_register" label={"Add Register"}/>
+        </SidebarContentLayout>
+    );
+};
+
+export default ApplicationEditSidebar;
