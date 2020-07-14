@@ -48,6 +48,9 @@ export const PlotChannel = () => {
 const app_example = {
     application_name: 'AdcTest',
         bitstream: 'AdcTest.bin',
+
+        clock_frequency: 100000000,
+
         channels: [
         {
             enabled: false,
@@ -92,7 +95,6 @@ const app_example = {
             name: 'Voltage C'
         }
     ],
-        clock_frequency: 100000000,
         initial_registers_values: [
         {
             address: '0x43c00004',
@@ -165,45 +167,46 @@ const app_example = {
             trigger: 'trigger_6'
         }
     ],
+
         n_enables: 1,
         parameters: [
-        {
-            'default-unit': '',
-            parameter_id: 'sw_freq',
-            parameter_name: 'Switching Frequency',
-            trigger: 'switching_frequency_trigger',
-            value: 1000,
-            visible: true
-        },
-        {
-            'default-unit': '',
-            parameter_id: 'duty',
-            parameter_name: 'Duty Cycle',
-            trigger: 'duty_trigger',
-            value: 0.5,
-            visible: true
-        },
-        {
-            'default-unit': '',
-            parameter_id: 'mid_lvl_duration',
-            parameter_name: 'Mid level duration',
-            trigger: 'mid_level_trigger',
-            value: 2e-8,
-            visible: true
-        },
-        {
-            parameter_id: 'clk_freq',
-            parameter_name: 'clock_frequency',
-            value: 40000000,
-            visible: false
-        },
-        {
-            parameter_id: 'deadtime',
-            parameter_name: 'Deadtime',
-            value: 0.000001,
-            visible: false
-        }
-    ],
+            {
+                'default-unit': '',
+                parameter_id: 'sw_freq',
+                parameter_name: 'Switching Frequency',
+                trigger: 'switching_frequency_trigger',
+                value: 1000,
+                visible: true
+            },
+            {
+                'default-unit': '',
+                parameter_id: 'duty',
+                parameter_name: 'Duty Cycle',
+                trigger: 'duty_trigger',
+                value: 0.5,
+                visible: true
+            },
+            {
+                'default-unit': '',
+                parameter_id: 'mid_lvl_duration',
+                parameter_name: 'Mid level duration',
+                trigger: 'mid_level_trigger',
+                value: 2e-8,
+                visible: true
+            },
+            {
+                parameter_id: 'clk_freq',
+                parameter_name: 'clock_frequency',
+                value: 40000000,
+                visible: false
+            },
+            {
+                parameter_id: 'deadtime',
+                parameter_name: 'Deadtime',
+                value: 0.000001,
+                visible: false
+            }
+        ],
         tabs: [
         {
             name: 'Plot',

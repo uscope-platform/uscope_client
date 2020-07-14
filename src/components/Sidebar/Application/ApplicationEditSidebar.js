@@ -12,6 +12,7 @@ import StyledScrollbar from "../../UI_elements/StyledScrollbar";
 import PlotChannelProperties from "../../UI_elements/SidebarComponents/PlotChannelProperties";
 import SidebarBlockLayout from "../../UI_elements/Layouts/SidebarBlockLayout";
 import InitialRegisterValue from "../../UI_elements/SidebarComponents/InitialRegisterValueProperties";
+import MacroProperties from "../../UI_elements/SidebarComponents/MacroProperties";
 
 const TitleLayout = styled.div`
   margin-left: auto;
@@ -52,6 +53,21 @@ let  ApplicationEditSidebar = props =>{
                     }
                 </StyledScrollbar>
             </SidebarBlockLayout>
+            <SidebarBlockLayout>
+                <label style={{fontSize:'20px',fontWeight:600}}>{"Macro"}</label>
+                <StyledScrollbar>
+                    {
+                        applications[settings.current_application].macro.map((macro)=>{
+                            return(
+                                <MacroProperties application={settings.current_application} macro={macro}/>
+                            )
+                        })
+                    }
+                </StyledScrollbar>
+            </SidebarBlockLayout>
+
+
+
             <InputField compact name="add_register" label={"Add Register"}/>
         </SidebarContentLayout>
     );

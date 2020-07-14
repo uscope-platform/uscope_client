@@ -32,6 +32,19 @@ let ApplicationsReducer = function (state = [], action) {
                             return item['address'] !== action.payload.address;
                         });
                     });
+                case "edit_macro":
+                    return produce(state, draftState => {
+                        let target = draftState[action.payload.application]["macro"].filter((item)=>{
+                            return item['name'] === action.payload.name;
+                        })[0];
+                        target[action.payload.field] = action.payload.value;
+                    });
+                case"remove_macro":
+                    return produce(state, draftState => {
+                        draftState[action.payload.application]["macro"] = draftState[action.payload.application]["macro"].filter((item)=>{
+                            return item['name'] !== action.payload.name;
+                        });
+                    });
                 default:
                     return state;
             }
