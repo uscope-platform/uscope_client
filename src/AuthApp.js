@@ -124,6 +124,12 @@ let AuthApp = (props) =>{
         settings.server.app_proxy.getApplicationParameters();
         settings.server.plot_proxy.getChannelsInfo();
         dispatch(loadTabs([{
+            name: "Plot",
+            tab_id: "plot",
+            type: "Scope",
+            user_accessible: true
+        }]))
+        dispatch(loadTabs([{
             name: "Script manager",
             tab_id: "script_manager",
             type: "script_manager",

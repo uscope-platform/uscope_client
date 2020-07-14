@@ -14,6 +14,7 @@ import SidebarBlockLayout from "../../UI_elements/Layouts/SidebarBlockLayout";
 import InitialRegisterValue from "../../UI_elements/SidebarComponents/InitialRegisterValueProperties";
 import MacroProperties from "../../UI_elements/SidebarComponents/MacroProperties";
 import ParameterProperties from "../../UI_elements/SidebarComponents/ParameterProperties";
+import ApplicationPeripheralProperties from "../../UI_elements/SidebarComponents/ApplicationPeripheralProperties";
 
 const TitleLayout = styled.div`
   margin-left: auto;
@@ -78,6 +79,19 @@ let  ApplicationEditSidebar = props =>{
                     }
                 </StyledScrollbar>
             </SidebarBlockLayout>
+            <SidebarBlockLayout>
+                <label style={{fontSize:'20px',fontWeight:600}}>{"Peripherals"}</label>
+                <StyledScrollbar>
+                    {
+                        applications[settings.current_application].tabs.map((peripheral)=>{
+                            return(
+                                <ApplicationPeripheralProperties application={settings.current_application} peripheral={peripheral}/>
+                            )
+                        })
+                    }
+                </StyledScrollbar>
+            </SidebarBlockLayout>
+
 
             <InputField compact name="add_register" label={"Add Register"}/>
         </SidebarContentLayout>

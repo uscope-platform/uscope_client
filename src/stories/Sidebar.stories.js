@@ -50,7 +50,7 @@ const app_example = {
         bitstream: 'AdcTest.bin',
         n_enables: 1,
         clock_frequency: 100000000,
-
+        timebase_address: '0x43c00400',
         channels: [
         {
             enabled: false,
@@ -167,7 +167,6 @@ const app_example = {
             trigger: 'trigger_6'
         }
     ],
-
         parameters: [
             {
                 'default-unit': '',
@@ -208,18 +207,12 @@ const app_example = {
         ],
         tabs: [
         {
-            name: 'Plot',
-            tab_id: 'Plot',
-            type: 'Scope',
-            user_accessible: true
-        },
-        {
+            name: 'ADC processing',
+            tab_id: 'ADC_processing',
             base_address: '0x43c00100',
             image_src: 'static/Images/ADC_processing.png',
-            name: 'ADC processing',
-            proxied: false,
-            tab_id: 'ADC_processing',
             type: 'Registers',
+            proxied: false,
             user_accessible: true
         },
         {
@@ -248,5 +241,5 @@ const app_example = {
             user_accessible: false
         }
     ],
-        timebase_address: '0x43c00400'
+
 }
