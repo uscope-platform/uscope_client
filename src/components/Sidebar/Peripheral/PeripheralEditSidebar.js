@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 import {useSelector} from "react-redux";
 import {create_register} from "../../../utilities/PeripheralUtilities";
-import RegisterProperties from "../../UI_elements/RegisterProperties";
+import RegisterProperties from "../../UI_elements/SidebarComponents/RegisterProperties";
 import BlockTitle from "../../UI_elements/BlockTitle";
 
 import InputField from "../../UI_elements/InputField";
@@ -12,19 +12,12 @@ import Label from "../../UI_elements/Label";
 import SidebarContentLayout from "../../UI_elements/Layouts/SidebarContentLayout";
 import PeripheralImage from "./PeripheralImage";
 import StyledScrollbar from "../../UI_elements/StyledScrollbar";
-
+import SidebarBlockLayout from "../../UI_elements/Layouts/SidebarBlockLayout";
 
 const TitleLayout = styled.div`
   margin-left: auto;
   margin-right: auto;
 `
-
-
-const RegAreaLayout = styled.div`
-width: 100%;
-
-`
-
 
 let  PeripheralEditSidebar = props =>{
     const peripherals = useSelector(state => state.peripherals);
@@ -75,18 +68,18 @@ let  PeripheralEditSidebar = props =>{
                 }
             </TitleLayout>
             <PeripheralImage image={settings.server.server_url + peripherals[settings.current_peripheral].image} done={handleEditImage}/>
-            <RegAreaLayout>
-                <label style={{fontSize:'20px',fontWeight:600}}>{"Registers"}</label>
-                <StyledScrollbar>
-                    {
-                        peripherals[settings.current_peripheral].registers.map((reg)=>{
-                            return(
-                                <RegisterProperties peripheral={settings.current_peripheral} register={reg}/>
-                            )
-                        })
-                    }
-                </StyledScrollbar>
-            </RegAreaLayout>
+                <SidebarBlockLayout>
+                    <label style={{fontSize:'20px',fontWeight:600}}>{"Registers"}</label>
+                    <StyledScrollbar>
+                        {
+                            peripherals[settings.current_peripheral].registers.map((reg)=>{
+                                return(
+                                    <RegisterProperties peripheral={settings.current_peripheral} register={reg}/>
+                                )
+                            })
+                        }
+                    </StyledScrollbar>
+                </SidebarBlockLayout>
             <InputField compact name="add_register" onKeyDown={handleAddRegister} label={"Add Register"}/>
         </SidebarContentLayout>
     );

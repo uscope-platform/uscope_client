@@ -8,7 +8,7 @@ let StyledScrollbar = (props) =>{
 
     let renderThumb = ({style, ...props}) => {
         const thumbStyle = {
-            backgroundColor: ColorTheme.dark_theme.level_3
+            backgroundColor: ColorTheme.dark_theme.level_1
         };
         return (
             <div
@@ -19,6 +19,9 @@ let StyledScrollbar = (props) =>{
 
     return (
         <Scrollbars
+            autoHeight
+            autoHeightMin={100}
+            autoHeightMax={400}
             renderThumbHorizontal={renderThumb}
             renderThumbVertical={renderThumb}
             {...props}/>

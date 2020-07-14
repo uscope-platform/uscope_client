@@ -28,7 +28,7 @@ let  PeripheralsSidebar = props =>{
 
     if(!settings.current_peripheral)
         return (
-            <SidebarContentLayout>
+            <SidebarContentLayout peripheral>
                 <BlockTitle>Peripheral actions</BlockTitle>
                 <PeripheralImage done={handleImageChoiceDone}/>
                 <InputField compact label="Add a peripheral" onKeyDown={handle_add_peripheral}/>

@@ -1,29 +1,17 @@
 import React, {useState} from "react";
-import Label from "./Label";
+import Label from "../Label";
 import styled from "styled-components";
 import {CaretDown} from "grommet-icons";
 import {CaretUp} from "grommet-icons";
-import InputField from "./InputField";
-import Checkbox from "./checkbox";
-import Radio from "./Radio";
-import TextArea from "./TextArea";
+import InputField from "../InputField";
+import Checkbox from "../checkbox";
+import Radio from "../Radio";
+import TextArea from "../TextArea";
 import {useSelector} from "react-redux";
-import Button from "./Button";
-
-const RegNameWrapper = styled.div`
-  height: 1em;
-`
-const RegContentLayout = styled.div`
-  height: fit-content;
-  margin-left: 1em;
-  margin-top: 0.5em;
-`
-
-const RegPropertiesLayout = styled.div`
-  height: fit-content;
- display: flex;
- flex-direction: column;
-`
+import Button from "../Button";
+import SidebarCollapsableNameLayout from "../Layouts/SidebarCollapsableNameLayout";
+import SidebarCollapsableContentLayout from "../Layouts/SidebarCollapsableContentLayout";
+import SidebarBlockLayout from "../Layouts/SidebarBlockLayout";
 
 const ChoicesWrapper = styled.div`
     display: grid;
@@ -143,7 +131,7 @@ let  RegisterProperties = props =>{
     let renderContent = (props) =>{
         if(is_open)
             return(
-                <RegContentLayout>
+                <SidebarCollapsableContentLayout>
                     <InputField inline name='ID' defaultValue={props.register.ID} onKeyDown={handleonKeyDown} label="Register ID"/>
                     <InputField inline name='offset' defaultValue={props.register.offset} onKeyDown={handleonKeyDown} label="Address offset"/>
                     <InputField inline name='description' defaultValue={props.register.description} onKeyDown={handleonKeyDown} label="Description"/>
@@ -164,28 +152,28 @@ let  RegisterProperties = props =>{
                     <TextArea disabled={props.register.register_format !== "words"}  defaultValue={props.register.field_names && props.register.field_names.join('\n')} name="field_names" label="Field Names" rows={2}  onKeyDown={handleonKeyDown}/>
                     <TextArea disabled={props.register.register_format !== "words"}  defaultValue={props.register.field_names && props.register.field_descriptions.join('\n')} name="field_descriptions" label="Field Descriptions" rows={2}  onKeyDown={handleonKeyDown}/>
                     <Button onClick={handleRemoveRegister} >Remove</Button>
-                </RegContentLayout>
+                </SidebarCollapsableContentLayout>
             )
         return null;
     }
 
     return(
-        <RegPropertiesLayout>
-            <RegNameWrapper>
+        <>
+            <SidebarCollapsableNameLayout>
                 {edit_name
                     ? <InputField compact name="edit_name" defaultValue={props.register.register_name} onKeyDown={handleEditNameChange} label={props.register.register_name}/>
                     : <Label onDoubleClick={handleEditName}>{props.register.register_name}</Label>
                 }
 
                 {is_open
-                    ? <CaretUp size={"small"} onClick={handleClose}/>
-                    : <CaretDown size={"small"} onClick={handleOpen}/>
+                    ? <CaretUp size={"small"} onClick={handleClose} color='white'/>
+                    : <CaretDown size={"small"} onClick={handleOpen} color='white'/>
                 }
-            </RegNameWrapper>
+            </SidebarCollapsableNameLayout>
             {
                 renderContent(props)
             }
-        </RegPropertiesLayout>
+        </>
     );
 };
 
