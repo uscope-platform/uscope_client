@@ -48,7 +48,7 @@ export const PlotChannel = () => {
 const app_example = {
     application_name: 'AdcTest',
         bitstream: 'AdcTest.bin',
-
+        n_enables: 1,
         clock_frequency: 100000000,
 
         channels: [
@@ -168,7 +168,6 @@ const app_example = {
         }
     ],
 
-        n_enables: 1,
         parameters: [
             {
                 'default-unit': '',

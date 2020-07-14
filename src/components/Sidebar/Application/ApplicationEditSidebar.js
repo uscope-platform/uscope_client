@@ -13,6 +13,7 @@ import PlotChannelProperties from "../../UI_elements/SidebarComponents/PlotChann
 import SidebarBlockLayout from "../../UI_elements/Layouts/SidebarBlockLayout";
 import InitialRegisterValue from "../../UI_elements/SidebarComponents/InitialRegisterValueProperties";
 import MacroProperties from "../../UI_elements/SidebarComponents/MacroProperties";
+import ParameterProperties from "../../UI_elements/SidebarComponents/ParameterProperties";
 
 const TitleLayout = styled.div`
   margin-left: auto;
@@ -29,7 +30,7 @@ let  ApplicationEditSidebar = props =>{
     return (
         <SidebarContentLayout application>
             <BlockTitle>{applications[settings.current_application].application_name}</BlockTitle>
-                <SidebarBlockLayout>
+            <SidebarBlockLayout>
                     <label style={{fontSize:'20px',fontWeight:600}}>{"Channels"}</label>
                     <StyledScrollbar>
                         {
@@ -65,8 +66,18 @@ let  ApplicationEditSidebar = props =>{
                     }
                 </StyledScrollbar>
             </SidebarBlockLayout>
-
-
+            <SidebarBlockLayout>
+                <label style={{fontSize:'20px',fontWeight:600}}>{"Parameters"}</label>
+                <StyledScrollbar>
+                    {
+                        applications[settings.current_application].parameters.map((parameter)=>{
+                            return(
+                                <ParameterProperties application={settings.current_application} parameter={parameter}/>
+                            )
+                        })
+                    }
+                </StyledScrollbar>
+            </SidebarBlockLayout>
 
             <InputField compact name="add_register" label={"Add Register"}/>
         </SidebarContentLayout>

@@ -45,6 +45,19 @@ let ApplicationsReducer = function (state = [], action) {
                             return item['name'] !== action.payload.name;
                         });
                     });
+                case "edit_parameter":
+                    return produce(state, draftState => {
+                        let target = draftState[action.payload.application]["parameters"].filter((item)=>{
+                            return item['parameter_id'] === action.payload.parameter;
+                        })[0];
+                        target[action.payload.field] = action.payload.value;
+                    });
+                case"remove_parameter":
+                    return produce(state, draftState => {
+                        draftState[action.payload.application]["parameters"] = draftState[action.payload.application]["parameters"].filter((item)=>{
+                            return item['parameter_id'] !== action.payload.parameter;
+                        });
+                    });
                 default:
                     return state;
             }
