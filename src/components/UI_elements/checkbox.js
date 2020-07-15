@@ -3,6 +3,7 @@ import React from "react";
 import Label from "./Label";
 
 const InputCheckbox = styled.input`
+border-width: 0;
 `
 
 const Wrapper = styled.div`
@@ -22,6 +23,7 @@ let  Checkbox = props =>{
                 checked={props.value?"true":""}
                 type="checkbox"
                 onChange={e => props.onChange(e)}
+                style={props.style}
             />
         </Wrapper>
     );

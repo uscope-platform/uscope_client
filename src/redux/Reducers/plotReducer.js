@@ -36,11 +36,10 @@ const initial_state = {
     },
     layout: {
         margin: {
-            l: 50,
-            r: 50,
-            b: 50,
-            t: 50,
-            pad: 4
+            l: 25,
+            r: 25,
+            b: 25,
+            t: 25,
         },
         width: "1024",
             height: "auto",

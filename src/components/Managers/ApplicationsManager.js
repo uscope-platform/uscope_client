@@ -119,16 +119,21 @@ let  ApplicationsManager = props =>{
     return(
         <ManagerLayout>
             <ManagerButtonsLayout>
-                <LinkContainer to="/application_creator">
-                    <Button onClick={handleCreate}> Add application</Button>
-                </LinkContainer>
+                <div style={{margin:"0 1rem"}}>
+                    <LinkContainer to="/application_creator">
+                        <Button onClick={handleCreate}> Add application</Button>
+                    </LinkContainer>
+                </div>
 
-                <Button onClick={handleRemoveRow}> Remove application</Button>
-                <Button onClick={handleImport}>Import application</Button>
-                <Button onClick={handleExport}>Export application</Button>
-                <LinkContainer isActive={is_editable} to="/application_creator">
-                    <Button onClick={handleEdit}>Edit application</Button>
-                </LinkContainer>
+
+                <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}> Remove application</Button>
+                <Button style={{margin:"0 1rem"}} onClick={handleImport}>Import application</Button>
+                <Button style={{margin:"0 1rem"}} onClick={handleExport}>Export application</Button>
+                <div style={{margin:"0 1rem"}}>
+                    <LinkContainer isActive={is_editable} to="/application_creator">
+                        <Button onClick={handleEdit}>Edit application</Button>
+                    </LinkContainer>
+                </div>
             </ManagerButtonsLayout>
             <BlockLayout centered>
                 <DataTable

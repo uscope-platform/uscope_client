@@ -15,10 +15,10 @@ const ColorTheme = {
     },
     dark_theme: {
         base: "#08081A",
-        level_1:"#162447",
+        level_1:"#122964",
         level_2:"#1f4068",
         level_3:"#1d7097",
-        accents:"#e43f5a"
+        accents:"#c76863"
     },
 };
 

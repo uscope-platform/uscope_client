@@ -1,26 +1,31 @@
 import React from 'react';
-
-import {Link} from "react-router-dom";
+import ColorTheme from "./UI_elements/ColorTheme";
+import {NavLink} from "react-router-dom";
 import styled from "styled-components";
 import Image from "./UI_elements/Image";
 
 
 const ComponentLayout = styled.div`
-    display: flex;
+    display: flex;   
     flex-direction: column;
     
 `
 
-const LinkContainer = styled(Link)`
-     display: block;
-     background-color: #1d7097;
-     margin-top: 0.5rem;
-     border-radius: 0.5rem;
-     padding-left: 1rem;
-`
-
 let  Navbar = props =>{
 
+    let link_default_style = {
+        display:"block",
+        backgroundColor: ColorTheme.dark_theme.level_1,
+        color: "white",
+        textDecoration: "none",
+        marginTop: "0.5rem",
+        borderRadius: "0.5rem",
+        paddingLeft: "0.5rem",
+    }
+
+    let link_active_style = {
+        backgroundColor: ColorTheme.dark_theme.level_3
+    }
     return(
         <ComponentLayout>
             <Image src="assets/logo.svg" alt='µScope Logo'/>
@@ -28,9 +33,9 @@ let  Navbar = props =>{
             {props.tabs.map((tab, i) => {
                 if(tab.user_accessible){
                     return(
-                        <LinkContainer style={{ textDecoration: 'none', color:'white' }} key={tab.tab_id} to={'/'+tab.tab_id} className="nav-link">
+                        <NavLink style={link_default_style} activeStyle={link_active_style} key={tab.tab_id} to={'/'+tab.tab_id} className="nav-link">
                             {tab.name}
-                        </LinkContainer>
+                        </NavLink>
                     )
                 } else {
                     return null;

@@ -12,7 +12,7 @@ let ChannelSelector = function(props) {
 
     return(
             <BlockLayout>
-                <BlockTitle>Channel Selector</BlockTitle>
+                <BlockTitle style={{gridRowEnd: 2}}>Channels</BlockTitle>
                     {channels_settings.map((chan,i) => {
                         return(
                             <ChannelSelectorItem key={chan.id} id={chan.id} idx={i} name={chan.name} value={channels_data[i].visible}/>

@@ -124,11 +124,14 @@ let ScriptManager = (props) =>{
     return(
         <ManagerLayout>
             <ManagerButtonsLayout>
-                <Button onClick={handleAddRow}>Add Script</Button>
-                <Button onClick={handleRemoveRow}>Remove Script</Button>
-                <LinkContainer isActive={is_editable} to="/script_creator">
-                    <Button onClick={handleScriptEdit}>Edit Script</Button>
-                </LinkContainer>
+                <Button style={{margin:"0 1rem"}} onClick={handleAddRow}>Add Script</Button>
+                <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}>Remove Script</Button>
+                <div style={{margin:"0 1rem"}}>
+                    <LinkContainer isActive={is_editable} to="/script_creator">
+                        <Button onClick={handleScriptEdit}>Edit Script</Button>
+                    </LinkContainer>
+                </div>
+
             </ManagerButtonsLayout>
             <BlockLayout centered>
                 <DataTable

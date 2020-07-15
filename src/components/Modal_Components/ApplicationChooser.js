@@ -59,7 +59,7 @@ class ApplicationChooser extends Component {
                                     <option key={i} >{name}</option>
                                 ))}
                             </Select>
-                        <Button onClick={this.handleClose}>Save changes</Button>
+                        <Button style={{margin:"1rem 1rem"}} onClick={this.handleClose}>Save changes</Button>
                     </Centering>
                 </ComponentLayout>
             </Modal.Dialog>

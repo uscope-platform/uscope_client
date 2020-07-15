@@ -95,9 +95,9 @@ let PeripheralsManager = (props)=>{
     return(
         <ManagerLayout>
             <ManagerButtonsLayout>
-                <Button onClick={handleRemoveRow}> Remove Peripheral</Button>
-                <Button onClick={handleImport}>Import peripheral</Button>
-                <Button onClick={handleExport}>Export peripheral</Button>
+                <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}> Remove Peripheral</Button>
+                <Button style={{margin:"0 1rem"}} onClick={handleImport}>Import peripheral</Button>
+                <Button style={{margin:"0 1rem"}} onClick={handleExport}>Export peripheral</Button>
             </ManagerButtonsLayout>
             <BlockLayout centered>
                 <DataTable

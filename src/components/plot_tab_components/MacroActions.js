@@ -11,10 +11,10 @@ import BlockLayout from "../UI_elements/Layouts/BlockLayout";
 
 
 const ButtonGrid = styled.div`
-    display: grid;
-    grid-template-columns: auto auto auto;
-    grid-auto-rows: max-content;
-    grid-row-gap: 1em;
+    display: flex;
+    flex-wrap: wrap;
+    justify-items: center;
+    gap: 1em;
 `
 
 let  MacroActions = props =>{
@@ -54,11 +54,13 @@ let  MacroActions = props =>{
 
     return(
         <BlockLayout centered>
-            <BlockTitle>Macro Area</BlockTitle>
+            <BlockTitle>Macros</BlockTitle>
             <ButtonGrid>
                 {actions.map((macro) => {
                     return(
-                        <Button key={macro.trigger} className="macro_action_buttons" name={macro.trigger} onClick={onClick}>{macro.name}</Button>
+                        <div style={{margin:'0.5rem'}}>
+                            <Button key={macro.trigger} className="macro_action_buttons" name={macro.trigger} onClick={onClick}>{macro.name}</Button>
+                        </div>
                     );
                 })}
             </ButtonGrid>

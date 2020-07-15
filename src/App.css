@@ -15,21 +15,3 @@ body {
 a {
   text-decoration: none;
 }
-
-
-
-.main_content_tab{
-  margin:1.5em;
-}
-
-.nav-tabs{
-  background-color: #08081A;
-}
-
-.tab_content{
-  margin: 1.5em;
-}
-
-.macro_action_buttons {
-  margin: 1.5em;
-}

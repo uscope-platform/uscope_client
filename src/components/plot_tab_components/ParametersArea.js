@@ -87,7 +87,7 @@ let  ParametersArea = props =>{
 
     return(
         <BlockLayout>
-            <BlockTitle>Parameter Area</BlockTitle>
+            <BlockTitle>Parameters</BlockTitle>
             <form onSubmit={handleSubmit}>
                 <FormLayout>
                     {parameters.map((param, i) => {

@@ -13,7 +13,8 @@ const ComponentLayout = styled.div`
   display: grid;
   grid-template-columns: auto auto;
   grid-auto-rows: auto;
-  grid-gap: 2em;
+  align-items: center;
+  grid-gap: 1.5em;
 `
 
 let PlotTab = function (props) {

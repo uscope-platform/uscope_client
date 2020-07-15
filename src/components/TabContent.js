@@ -8,9 +8,7 @@ import ApplicationsManager from "./Managers/ApplicationsManager"
 let TabContent = props => {
     if(props.tab.type==='Scope'){
         return(
-            <div className="tab_content">
-                <PlotTab content={props.tab}/>
-            </div>
+            <PlotTab content={props.tab}/>
         );
     } else if(props.tab.type==='Registers') {
         return (

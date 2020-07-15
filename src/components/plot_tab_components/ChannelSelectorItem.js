@@ -9,12 +9,8 @@ import {Configure} from "grommet-icons";
 import styled from "styled-components";
 
 const ComponentStyle = styled.div`
-  display: grid;
-  grid-template-columns: auto auto;
-  grid-auto-rows: auto;
-  grid-column-gap: 0.5rem;
-  grid-row-gap: 2rem;
-  margin: 0 auto;
+  display: flex;
+  margin: 0 auto;  
 `
 
 
@@ -34,7 +30,7 @@ let  ChannelSelectorItem = props => {
     return(
         <ComponentStyle>
             <ChannelSettingsModal id={props.idx} />
-            <Checkbox name={props.id} onChange={handleChannelStateChange} value={enabled} label={props.name}/>
+            <Checkbox style={{marginRight:'0.5rem'}} name={props.id} onChange={handleChannelStateChange} value={enabled} label={props.name}/>
             <Configure color='white' onClick={() =>(dispatch(showModal('channel_settings_choice', props.idx)))}/>
         </ComponentStyle>
     );

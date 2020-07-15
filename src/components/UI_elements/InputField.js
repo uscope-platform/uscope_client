@@ -5,6 +5,7 @@ import Label from "./Label";
 const InnerInput = styled.input`
 height: 2rem;
 border-radius: 5px;
+border-width: 0;
 width: auto;
 `
 
