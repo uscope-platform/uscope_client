@@ -11,7 +11,7 @@ export let create_peripheral = (name) => {
 
 export let create_register = (name, type) =>{
     return {
-        ID: name.replace(" ", "_").toLowerCase(),
+        ID: name.replace(/\s/g, "_").toLowerCase(),
         register_name: name,
         description: "",
         direction: "",

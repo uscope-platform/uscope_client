@@ -6,6 +6,10 @@ let ApplicationsReducer = function (state = [], action) {
     switch (action.type) {
         case EDIT_APPLICATION:
             switch (action.payload.action) {
+                case "add_channel":
+                    return produce(state, draftState => {
+                        draftState[action.payload.application]["channels"].push(action.payload.channel);
+                    });
                 case "edit_channel":
                     return produce(state, draftState => {
                         let target = draftState[action.payload.application]["channels"].filter((item)=>{
@@ -18,6 +22,10 @@ let ApplicationsReducer = function (state = [], action) {
                         draftState[action.payload.application]["channels"] = draftState[action.payload.application]["channels"].filter((item)=>{
                             return item['name'] !== action.payload.channel;
                         });
+                    });
+                case "add_irv":
+                    return produce(state, draftState => {
+                        draftState[action.payload.application]["initial_registers_values"].push(action.payload.irv);
                     });
                 case "edit_irv":
                     return produce(state, draftState => {
@@ -32,6 +40,10 @@ let ApplicationsReducer = function (state = [], action) {
                             return item['address'] !== action.payload.address;
                         });
                     });
+                case "add_macro":
+                    return produce(state, draftState => {
+                        draftState[action.payload.application]["macro"].push(action.payload.macro)
+                    });
                 case "edit_macro":
                     return produce(state, draftState => {
                         let target = draftState[action.payload.application]["macro"].filter((item)=>{
@@ -45,6 +57,10 @@ let ApplicationsReducer = function (state = [], action) {
                             return item['name'] !== action.payload.name;
                         });
                     });
+                case "add_parameter":
+                    return produce(state, draftState => {
+                        draftState[action.payload.application]["parameters"].push(action.payload.parameter);
+                    });
                 case "edit_parameter":
                     return produce(state, draftState => {
                         let target = draftState[action.payload.application]["parameters"].filter((item)=>{
@@ -57,6 +73,10 @@ let ApplicationsReducer = function (state = [], action) {
                         draftState[action.payload.application]["parameters"] = draftState[action.payload.application]["parameters"].filter((item)=>{
                             return item['parameter_id'] !== action.payload.parameter;
                         });
+                    });
+                case "add_peripheral":
+                    return produce(state, draftState => {
+                        draftState[action.payload.application]["tabs"].push(action.payload.peripheral)
                     });
                 case "edit_peripheral":
                     return produce(state, draftState => {
@@ -74,8 +94,6 @@ let ApplicationsReducer = function (state = [], action) {
                 default:
                     return state;
             }
-
-
         case LOAD_APPLICATIONS:
             state = action.payload;
             return state;

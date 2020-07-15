@@ -17,6 +17,13 @@ import ParameterProperties from "../../UI_elements/SidebarComponents/ParameterPr
 import ApplicationPeripheralProperties from "../../UI_elements/SidebarComponents/ApplicationPeripheralProperties";
 import {Add} from "grommet-icons";
 import InputField from "../../UI_elements/InputField";
+import {
+    create_channel,
+    create_irv,
+    create_macro,
+    create_parameter,
+    create_peripheral
+} from "../../../utilities/ApplicationUtilities";
 
 let  ApplicationEditSidebar = props =>{
     const settings = useSelector(state => state.settings);
@@ -33,23 +40,23 @@ let  ApplicationEditSidebar = props =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
             switch (event.target.name) {
                 case "channel":
-                    edit = {application:settings.current_application, action:"add_channel"};
+                    edit = {application:settings.current_application, channel:create_channel(event.target.value), action:"add_channel"};
                     set_new_channel(false);
                     break;
                 case "irv":
-                    edit = {application:settings.current_application, action:"add_irv"};
+                    edit = {application:settings.current_application, irv:create_irv(event.target.value), action:"add_irv"};
                     set_new_irv(false);
                     break;
                 case"macro":
-                    edit = {application:settings.current_application, action:"add_macro"};
+                    edit = {application:settings.current_application, macro:create_macro(event.target.value), action:"add_macro"};
                     set_new_macro(false);
                     break;
                 case"parameter":
-                    edit = {application:settings.current_application, action:"add_parameter"};
+                    edit = {application:settings.current_application, parameter:create_parameter(event.target.value), action:"add_parameter"};
                     set_new_parameter(false);
                     break;
                 case"peripheral":
-                    edit = {application:settings.current_application, action:"add_peripheral"};
+                    edit = {application:settings.current_application, peripheral:create_peripheral(event.target.value), action:"add_peripheral"};
                     set_new_parameter(false);
                     break;
                 default:
