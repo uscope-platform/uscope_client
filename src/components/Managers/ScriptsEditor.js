@@ -11,7 +11,11 @@ const Title = styled.h1`
   margin-right: auto;
   margin-left: auto;
 `
-
+const Editor = styled(AceEditor)`
+    * {
+        font-family: inherit;
+    }
+`;
 let ScriptsEditor = props =>{
     const scripts_store = useSelector(state => state.scripts);
     const settings = useSelector(state => state.settings);
@@ -41,7 +45,7 @@ let ScriptsEditor = props =>{
     return(
         <>
             <Title>{settings.script_editor_title}</Title>
-            <AceEditor
+            <Editor
                 mode="javascript"
                 theme="dracula"
                 width='auto'

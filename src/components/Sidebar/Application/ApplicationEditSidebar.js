@@ -3,15 +3,28 @@ import React, {useState} from 'react';
 import {useSelector} from "react-redux";
 
 import {
-    ApplicationMiscFieldProperties, ApplicationPeripheralProperties, BlockTitle, InitialRegisterValue, InputField, MacroProperties,
-    ParameterProperties, PlotChannelProperties, SidebarBlockLayout, SidebarBlockTitleLayout, SidebarContentLayout, StyledScrollbar
+    ApplicationMiscFieldProperties,
+    ApplicationPeripheralProperties,
+    BlockTitle,
+    InitialRegisterValue,
+    InputField,
+    MacroProperties,
+    ParameterProperties,
+    PlotChannelProperties,
+    SidebarBlockLayout,
+    SidebarBlockTitleLayout,
+    SidebarContentLayout,
+    StyledScrollbar
 } from "../../UI_elements";
 
 import {Add} from "grommet-icons";
 
 import {
-    create_channel, create_irv, create_macro,
-    create_parameter, create_peripheral
+    create_channel,
+    create_irv,
+    create_macro,
+    create_parameter,
+    create_peripheral
 } from "../../../utilities/ApplicationUtilities";
 
 

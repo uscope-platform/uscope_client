@@ -14,7 +14,7 @@ import ApplicationChooser from "./components/Common_Components/ApplicationChoose
 //////  STYLE IMPORTS
 import './App.css';
 
-import ScriptsEditor from "./components/Managers/ScriptsEditor";
+
 import {ApplicationLayout} from "./components/UI_elements";
 import Sidebar from "./components/Sidebar/Sidebar";
 
@@ -185,11 +185,6 @@ let AuthApp = (props) =>{
                                 })}
                                 <Sidebar />
                             </ApplicationLayout>
-                        <Route
-                            path={'/script_creator'}
-                            exact
-                            render={(props) => <ScriptsEditor />}
-                        />
                         <Redirect exact from="/" to="plot" />
                     </div>
                 );
