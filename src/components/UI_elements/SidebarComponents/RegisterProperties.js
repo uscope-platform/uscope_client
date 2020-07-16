@@ -1,15 +1,14 @@
 import React, {useState} from "react";
-import Label from "../Label";
+import {Label} from "../Label";
 import styled from "styled-components";
 import {CaretDown, CaretUp} from "grommet-icons";
-import InputField from "../InputField";
-import Checkbox from "../checkbox";
-import Radio from "../Radio";
-import TextArea from "../TextArea";
+import {InputField} from "../InputField";
+import {Checkbox} from "../checkbox";
+import {Radio} from "../Radio";
+import {TextArea} from "../TextArea";
 import {useSelector} from "react-redux";
-import Button from "../Button";
-import SidebarCollapsableNameLayout from "../Layouts/SidebarCollapsableNameLayout";
-import SidebarCollapsableContentLayout from "../Layouts/SidebarCollapsableContentLayout";
+import {Button} from "../Button";
+import {SidebarCollapsableContentLayout, SidebarCollapsableNameLayout} from "..";
 
 const ChoicesWrapper = styled.div`
     display: grid;
@@ -19,7 +18,7 @@ const ChoicesWrapper = styled.div`
     align-items: start;
 `
 
-let  RegisterProperties = props =>{
+export let  RegisterProperties = props =>{
 
     const settings = useSelector(state => state.settings);
 
@@ -174,5 +173,3 @@ let  RegisterProperties = props =>{
         </>
     );
 };
-
-export default RegisterProperties;

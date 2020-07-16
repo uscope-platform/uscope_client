@@ -4,9 +4,7 @@ import React from 'react';
 import {useSelector} from "react-redux";
 
 
-import SidebarContentLayout from "../../UI_elements/Layouts/SidebarContentLayout";
-import BlockTitle from "../../UI_elements/BlockTitle";
-import InputField from "../../UI_elements/InputField";
+import {BlockTitle, InputField, SidebarContentLayout} from "../../UI_elements";
 
 
 import ApplicationEditSidebar from "./ApplicationEditSidebar";

@@ -1,7 +1,7 @@
 import React from 'react';
 import {withRouter} from "react-router";
 
-import SidebarLayout from "../UI_elements/Layouts/SidebarLayout";
+import {SidebarLayout} from "../UI_elements";
 import PeripheralsSidebar from "./Peripheral/PeripheralsSidebar";
 import ApplicationSidebar from "./Application/ApplicationSidebar";
 

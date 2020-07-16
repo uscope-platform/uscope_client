@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const ManagerLayout = styled.div`
+export const ManagerLayout = styled.div`
   display: grid;
   grid-template-columns: auto;
   grid-auto-rows: max-content;
@@ -12,5 +12,3 @@ export const ManagerButtonsLayout = styled.div`
   margin-top: 1rem;
   height: fit-content;
 `
-
-export default ManagerLayout;

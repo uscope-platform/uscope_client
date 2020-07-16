@@ -1,13 +1,11 @@
 import React from 'react';
 
-import Button from "../UI_elements/Button"
+import {BlockLayout, BlockTitle, Button} from "../UI_elements"
 import {useDispatch, useSelector} from "react-redux";
 import {context_cleaner, parseFunction} from "../../user_script_launcher";
 
 import {saveScriptsWorkspace} from "../../redux/Actions/scriptsActions";
 import styled from "styled-components";
-import BlockTitle from "../UI_elements/BlockTitle";
-import BlockLayout from "../UI_elements/Layouts/BlockLayout";
 
 
 const ButtonGrid = styled.div`

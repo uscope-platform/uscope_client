@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 
-import Button from "../UI_elements/Button"
+import {Button, Select} from "../UI_elements"
 import {Modal} from "react-bootstrap";
 import {connect} from "react-redux";
-import Select from "../UI_elements/Select";
 import styled from "styled-components";
 
 function mapStateToProps(state) {

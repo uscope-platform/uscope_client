@@ -1,6 +1,6 @@
 import styled, {css} from "styled-components";
 
-const BlockLayout = styled.div`
+export const BlockLayout = styled.div`
     display: grid;
     grid-template-columns: 1fr;
     grid-auto-rows: max-content;
@@ -18,5 +18,3 @@ const BlockLayout = styled.div`
     `}
     
 `
-
-export default BlockLayout;

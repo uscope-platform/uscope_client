@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const Select = styled.select`
+export const Select = styled.select`
   width: fit-content;
   height: 2rem;
   border-radius: 5px;
@@ -11,7 +11,3 @@ const Select = styled.select`
     min-height: 20px;
   }
 `;
-
-
-
-export default Select;

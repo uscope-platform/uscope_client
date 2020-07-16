@@ -4,9 +4,7 @@ import React, {useState} from 'react';
 import {useSelector} from "react-redux";
 import PeripheralEditSidebar from "./PeripheralEditSidebar";
 
-import InputField from "../../UI_elements/InputField";
-import SidebarContentLayout from "../../UI_elements/Layouts/SidebarContentLayout";
-import BlockTitle from "../../UI_elements/BlockTitle";
+import {BlockTitle, InputField, SidebarContentLayout} from "../../UI_elements";
 import PeripheralImage from "./PeripheralImage";
 import {create_peripheral} from "../../../utilities/PeripheralUtilities";
 

@@ -1,8 +1,7 @@
 import React from 'react';
-import ColorTheme from "./UI_elements/ColorTheme";
+import {ColorTheme, Image} from "./UI_elements";
 import {NavLink} from "react-router-dom";
 import styled from "styled-components";
-import Image from "./UI_elements/Image";
 
 
 const ComponentLayout = styled.div`

@@ -2,8 +2,7 @@ import React from 'react';
 
 import ChannelSelectorItem from "./ChannelSelectorItem";
 import {useSelector} from "react-redux";
-import BlockLayout from "../UI_elements/Layouts/BlockLayout";
-import BlockTitle from "../UI_elements/BlockTitle";
+import {BlockLayout, BlockTitle} from "../UI_elements";
 
 let ChannelSelector = function(props) {
 

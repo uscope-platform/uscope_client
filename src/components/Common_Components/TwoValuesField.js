@@ -1,6 +1,6 @@
 import React from 'react';
 
-import InputField from "../UI_elements/InputField";
+import {InputField} from "../UI_elements";
 import {Edit, Trash} from "grommet-icons";
 import styled from "styled-components";
 

@@ -1,16 +1,14 @@
 import React, {useState} from "react";
-import Label from "../Label";
+import {Label} from "../Label";
 import styled from "styled-components";
 import {CaretDown, CaretUp} from "grommet-icons";
-import InputField from "../InputField";
-import Checkbox from "../checkbox";
-import Radio from "../Radio";
-import TextArea from "../TextArea";
+import {InputField} from "../InputField";
+import {Checkbox} from "../checkbox";
+
 import {useSelector} from "react-redux";
-import Button from "../Button";
-import SidebarCollapsableNameLayout from "../Layouts/SidebarCollapsableNameLayout";
-import SidebarCollapsableContentLayout from "../Layouts/SidebarCollapsableContentLayout";
-import Select from "../Select";
+import {Button} from "../Button";
+import {SidebarCollapsableContentLayout, SidebarCollapsableNameLayout} from "..";
+import {Select} from "../Select";
 
 const ChoicesWrapper = styled.div`
     display: grid;
@@ -20,7 +18,7 @@ const ChoicesWrapper = styled.div`
     align-items: start;
 `
 
-let  ApplicationPeripheralProperties = props =>{
+export let  ApplicationPeripheralProperties = props =>{
 
     const peripherals = useSelector(state => state.peripherals);
     const settings = useSelector(state => state.settings);
@@ -120,5 +118,3 @@ let  ApplicationPeripheralProperties = props =>{
         </>
     );
 };
-
-export default ApplicationPeripheralProperties;

@@ -1,4 +1,4 @@
-const ColorTheme = {
+export const ColorTheme = {
     global: {
         colors: {
             icon: '#666666',
@@ -21,5 +21,3 @@ const ColorTheme = {
         accents:"#c76863"
     },
 };
-
-export default ColorTheme;

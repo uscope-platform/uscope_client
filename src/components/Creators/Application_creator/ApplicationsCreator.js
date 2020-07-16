@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import Button from "../../UI_elements/Button"
-import Image from "../../UI_elements/Image"
+import {Button, Image} from "../../UI_elements"
 
 import {showModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux"

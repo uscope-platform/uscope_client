@@ -7,11 +7,9 @@ import DataTable from 'react-data-table-component';
 import {TableStyle} from './TableStyles'
 
 
-import Button from "../UI_elements/Button"
+import {BlockLayout, Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements"
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import {LinkContainer} from "react-router-bootstrap";
-import BlockLayout from "../UI_elements/Layouts/BlockLayout";
-import ManagerLayout, {ManagerButtonsLayout} from "../UI_elements/Layouts/ManagerLayout";
 
 
 let columns = [

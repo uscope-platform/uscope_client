@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import React from "react";
 
-import Label from "./Label";
+import {Label} from "./Label";
 
 const InputChoice = styled.input`
 `
@@ -13,7 +13,7 @@ const Wrapper = styled.div`
 `
 
 
-let  FileChoice = props =>{
+export let  FileChoice = props =>{
 
     return(
         <Wrapper>
@@ -26,5 +26,3 @@ let  FileChoice = props =>{
         </Wrapper>
     );
 };
-
-export default FileChoice;

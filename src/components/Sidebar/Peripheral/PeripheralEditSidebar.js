@@ -4,15 +4,19 @@ import styled from "styled-components";
 
 import {useSelector} from "react-redux";
 import {create_register} from "../../../utilities/PeripheralUtilities";
-import RegisterProperties from "../../UI_elements/SidebarComponents/RegisterProperties";
-import BlockTitle from "../../UI_elements/BlockTitle";
-
-import InputField from "../../UI_elements/InputField";
-import Label from "../../UI_elements/Label";
-import SidebarContentLayout from "../../UI_elements/Layouts/SidebarContentLayout";
+import {
+    InputField,
+    Label,
+    RegisterProperties,
+    SidebarBlockLayout,
+    SidebarBlockTitleLayout,
+    SidebarContentLayout,
+    StyledScrollbar
+} from "../../UI_elements";
+import {BlockTitle} from "../../UI_elements/";
 import PeripheralImage from "./PeripheralImage";
-import StyledScrollbar from "../../UI_elements/StyledScrollbar";
-import SidebarBlockLayout from "../../UI_elements/Layouts/SidebarBlockLayout";
+import {Add} from "grommet-icons";
+
 
 const TitleLayout = styled.div`
   margin-left: auto;
@@ -24,14 +28,7 @@ let  PeripheralEditSidebar = props =>{
     const settings = useSelector(state => state.settings);
 
     const [edit_label, set_edit_label] = useState(false);
-
-    let handleAddRegister = (event) =>{
-        if(event.key==="Enter"|| event.key ==="Tab"){
-            let reg_name = event.target.value;
-            let edit ={peripheral:settings.current_peripheral, action:"add_register",register:create_register(reg_name,"single")};
-            settings.server.creator_proxy.edit_peripheral(edit);
-        }
-    }
+    const [new_register, set_new_register] = useState(false);
 
     let handleEditImage = (image) =>{
         settings.server.creator_proxy.send_image(image);
@@ -55,6 +52,21 @@ let  PeripheralEditSidebar = props =>{
 
     }
 
+    let handle_add_register = () => {
+        set_new_register(true);
+    }
+
+    let handle_add_register_done = (event) => {
+        if(event.key==="Enter"|| event.key ==="Tab"){
+            let reg_name = event.target.value;
+            let edit ={peripheral:settings.current_peripheral, action:"add_register",register:create_register(reg_name,"single")};
+            settings.server.creator_proxy.edit_peripheral(edit);
+            set_new_register(false);
+        } else if (event.key ==="Escape"){
+            set_new_register(false);
+        }
+    }
+
     if(!settings.current_peripheral)
         return <></>;
 
@@ -69,7 +81,13 @@ let  PeripheralEditSidebar = props =>{
             </TitleLayout>
             <PeripheralImage image={settings.server.server_url + peripherals[settings.current_peripheral].image} done={handleEditImage}/>
                 <SidebarBlockLayout>
-                    <label style={{fontSize:'20px',fontWeight:600}}>{"Registers"}</label>
+                    <SidebarBlockTitleLayout>
+                        <label style={{fontSize:'20px',fontWeight:600}}>{"Registers"}</label>
+                        <Add id="register" size={"medium"} onClick={handle_add_register} color='white'/>
+                    </SidebarBlockTitleLayout>
+                    {new_register &&
+                    <InputField name="register" compact label="Channel Name" onKeyDown={handle_add_register_done}/>
+                    }
                     <StyledScrollbar>
                         {
                             peripherals[settings.current_peripheral].registers.map((reg)=>{
@@ -80,7 +98,6 @@ let  PeripheralEditSidebar = props =>{
                         }
                     </StyledScrollbar>
                 </SidebarBlockLayout>
-            <InputField compact name="add_register" onKeyDown={handleAddRegister} label={"Add Register"}/>
         </SidebarContentLayout>
     );
 };

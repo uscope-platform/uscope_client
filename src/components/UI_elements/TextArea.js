@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import React from "react";
-import Label from "./Label";
+import {Label} from "./Label";
 
 const InputTextArea = styled.textarea`
   border-radius: 5px;
@@ -14,7 +14,7 @@ const Wrapper = styled.div`
 `
 
 
-let  TextArea = props =>{
+export let  TextArea = props =>{
 
     return(
         <Wrapper>
@@ -31,5 +31,3 @@ let  TextArea = props =>{
         </Wrapper>
     );
 };
-
-export default TextArea;

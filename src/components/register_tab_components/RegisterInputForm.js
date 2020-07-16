@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Button from "../UI_elements/Button"
+import {Button} from "../UI_elements"
 
 import SingleValueField from "../Common_Components/SingleValueField";
 import TwoValuesField from "../Common_Components/TwoValuesField";

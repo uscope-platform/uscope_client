@@ -1,9 +1,9 @@
 import React from 'react';
 import {Scrollbars} from 'react-custom-scrollbars';
-import ColorTheme from "./ColorTheme";
+import {ColorTheme} from "./ColorTheme";
 
 
-let StyledScrollbar = (props) =>{
+export let StyledScrollbar = (props) =>{
 
 
     let renderThumb = ({style, ...props}) => {

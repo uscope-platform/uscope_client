@@ -4,7 +4,7 @@ import {disableChannel, enableChannel} from "../../redux/Actions/plotActions";
 import {useDispatch} from "react-redux";
 import {showModal} from "../../redux/Actions/modalsActions";
 import ChannelSettingsModal from "../Modal_Components/ChannelSettingsModal";
-import Checkbox from "../UI_elements/checkbox";
+import {Checkbox} from "../UI_elements";
 import {Configure} from "grommet-icons";
 import styled from "styled-components";
 

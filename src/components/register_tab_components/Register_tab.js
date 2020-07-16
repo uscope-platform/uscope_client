@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect} from 'react';
-import Image from "../UI_elements/Image";
+import {Image} from "../UI_elements";
 
 import {useDispatch, useSelector} from "react-redux";
 import RegisterInputForm from "./RegisterInputForm";

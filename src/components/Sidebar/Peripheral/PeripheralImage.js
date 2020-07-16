@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 
-import Image from "../../UI_elements/Image";
+import {Image} from "../../UI_elements";
 
 
 let  PeripheralImage = props =>{

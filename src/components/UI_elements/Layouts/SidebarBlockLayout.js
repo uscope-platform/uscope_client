@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const SidebarBlockLayout = styled.div`
+export const SidebarBlockLayout = styled.div`
   border-radius: 1rem;
   height: fit-content;
   padding: 0.2rem 0 0.4rem 0.6rem;
@@ -9,4 +9,3 @@ const SidebarBlockLayout = styled.div`
   flex-direction: column;
   background-color: ${props => props.theme.dark_theme.level_3};
 `
-export default SidebarBlockLayout;

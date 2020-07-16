@@ -16,7 +16,7 @@ import ApplicationsCreator from "./components/Creators/Application_creator/Appli
 import './App.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import ScriptsCreator from "./components/Creators/Script_creator/ScriptsCreator";
-import ApplicationLayout from "./components/UI_elements/Layouts/ApplicationLayout";
+import {ApplicationLayout} from "./components/UI_elements";
 import Sidebar from "./components/Sidebar/Sidebar";
 
 

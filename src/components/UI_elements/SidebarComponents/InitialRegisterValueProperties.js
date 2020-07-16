@@ -1,14 +1,13 @@
 import React, {useState} from "react";
 import {useSelector} from "react-redux";
-import Label from "../Label";
+import {Label} from "../Label";
 import {CaretDown, CaretUp} from "grommet-icons";
-import InputField from "../InputField";
+import {InputField} from "../InputField";
 
-import Button from "../Button";
-import SidebarCollapsableNameLayout from "../Layouts/SidebarCollapsableNameLayout";
-import SidebarCollapsableContentLayout from "../Layouts/SidebarCollapsableContentLayout";
+import {Button} from "../Button";
+import {SidebarCollapsableContentLayout, SidebarCollapsableNameLayout} from "..";
 
-let  InitialRegisterValue = props =>{
+export let  InitialRegisterValue = props =>{
 
     const settings = useSelector(state => state.settings);
 
@@ -82,5 +81,3 @@ let  InitialRegisterValue = props =>{
         </>
     );
 };
-
-export default InitialRegisterValue;

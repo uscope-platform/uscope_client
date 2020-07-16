@@ -1,15 +1,11 @@
 import React, {useEffect} from 'react';
 
-import Button from "../UI_elements/Button"
+import {BlockLayout, BlockTitle, Button, FormLayout} from "../UI_elements"
 import {useDispatch, useSelector} from "react-redux";
 import SingleValueField from "../Common_Components/SingleValueField";
 import {context_cleaner, parseFunction} from "../../user_script_launcher";
 import {saveScriptsWorkspace} from "../../redux/Actions/scriptsActions";
 import {saveParameter} from "../../redux/Actions/ParameterActions";
-
-import FormLayout from "../UI_elements/Layouts/FormLayout";
-import BlockLayout from "../UI_elements/Layouts/BlockLayout";
-import BlockTitle from "../UI_elements/BlockTitle";
 
 
 let  ParametersArea = props =>{

@@ -1,6 +1,6 @@
 import styled, {css} from 'styled-components';
 
-const Button = styled.button`
+export const Button = styled.button`
   background: ${props => props.theme.dark_theme.accents};
   border-color: ${props => props.theme.dark_theme.accents};
   font-weight: bold;
@@ -34,4 +34,3 @@ const Button = styled.button`
     color: darkred;
   `}
 `
-export default Button;

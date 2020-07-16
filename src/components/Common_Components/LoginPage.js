@@ -1,8 +1,6 @@
 import React, {useState} from 'react';
 
-import Button from "../UI_elements/Button"
-import InputField from "../UI_elements/InputField";
-import Checkbox from "../UI_elements/checkbox";
+import {Button, Checkbox, InputField} from "../UI_elements"
 
 import styled from "styled-components";
 

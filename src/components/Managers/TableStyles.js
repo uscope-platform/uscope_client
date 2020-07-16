@@ -1,5 +1,5 @@
 import {createTheme} from "react-data-table-component";
-import ColorTheme from "../UI_elements/ColorTheme";
+import {ColorTheme} from "../UI_elements";
 
 createTheme('uScopeTableTheme', {
     text: {

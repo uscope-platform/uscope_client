@@ -1,12 +1,10 @@
 import React, {Component} from 'react';
 
-import Button from "../../UI_elements/Button"
-import InputField from "../../UI_elements/InputField";
+import {Button, FormLayout, InputField} from "../../UI_elements"
 
 import {Modal} from "react-bootstrap";
 import {hideModal} from "../../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
-import FormLayout from "../../UI_elements/Layouts/FormLayout";
 
 function mapStateToProps(state) {
     return{

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import React from "react";
-import Label from "./Label";
+import {Label} from "./Label";
 
 const InputCheckbox = styled.input`
 border-width: 0;
@@ -13,7 +13,7 @@ flex-flow: wrap;
 `
 
 
-let  Checkbox = props =>{
+export let  Checkbox = props =>{
 
     return(
         <Wrapper>
@@ -28,5 +28,3 @@ let  Checkbox = props =>{
         </Wrapper>
     );
 };
-
-export default Checkbox;

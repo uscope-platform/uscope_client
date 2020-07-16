@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import React from "react";
 
-import Label from "./Label";
+import {Label} from "./Label";
 
 const InputRadio = styled.input`
 height: 1rem;
@@ -14,7 +14,7 @@ const Wrapper = styled.div`
 `
 
 
-let  Radio = props =>{
+export let  Radio = props =>{
 
     return(
         <Wrapper>
@@ -28,5 +28,3 @@ let  Radio = props =>{
         </Wrapper>
     );
 };
-
-export default Radio;

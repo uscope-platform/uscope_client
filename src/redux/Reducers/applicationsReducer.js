@@ -1,4 +1,4 @@
-import {LOAD_APPLICATIONS, EDIT_APPLICATION, REMOVE_APPLICATION} from "../Actions/types";
+import {EDIT_APPLICATION, LOAD_APPLICATIONS, REMOVE_APPLICATION} from "../Actions/types";
 import produce from "immer";
 
 

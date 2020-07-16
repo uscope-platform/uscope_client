@@ -1,6 +1,6 @@
 import styled, {css} from "styled-components";
 
-const ApplicationLayout = styled.div`
+export const ApplicationLayout = styled.div`
     display: grid;
     grid-template-columns: 200px auto 300px;
     grid-gap: 1.5rem;
@@ -12,5 +12,3 @@ const ApplicationLayout = styled.div`
     `}
  
 `
-
-export default ApplicationLayout

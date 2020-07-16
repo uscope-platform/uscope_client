@@ -1,30 +1,19 @@
 import React, {useState} from 'react';
 
-import styled from "styled-components";
-
 import {useSelector} from "react-redux";
 
-import BlockTitle from "../../UI_elements/BlockTitle";
-
-import SidebarBlockTitleLayout from "../../UI_elements/Layouts/SidebarBlockTitleLayout";
-import SidebarContentLayout from "../../UI_elements/Layouts/SidebarContentLayout";
-import StyledScrollbar from "../../UI_elements/StyledScrollbar";
-import PlotChannelProperties from "../../UI_elements/SidebarComponents/PlotChannelProperties";
-import SidebarBlockLayout from "../../UI_elements/Layouts/SidebarBlockLayout";
-import InitialRegisterValue from "../../UI_elements/SidebarComponents/InitialRegisterValueProperties";
-import MacroProperties from "../../UI_elements/SidebarComponents/MacroProperties";
-import ParameterProperties from "../../UI_elements/SidebarComponents/ParameterProperties";
-import ApplicationPeripheralProperties from "../../UI_elements/SidebarComponents/ApplicationPeripheralProperties";
-import {Add} from "grommet-icons";
-import InputField from "../../UI_elements/InputField";
 import {
-    create_channel,
-    create_irv,
-    create_macro,
-    create_parameter,
-    create_peripheral
+    ApplicationMiscFieldProperties, ApplicationPeripheralProperties, BlockTitle, InitialRegisterValue, InputField, MacroProperties,
+    ParameterProperties, PlotChannelProperties, SidebarBlockLayout, SidebarBlockTitleLayout, SidebarContentLayout, StyledScrollbar
+} from "../../UI_elements";
+
+import {Add} from "grommet-icons";
+
+import {
+    create_channel, create_irv, create_macro,
+    create_parameter, create_peripheral
 } from "../../../utilities/ApplicationUtilities";
-import ApplicationMiscFieldProperties from "../../UI_elements/SidebarComponents/ApplicationMiscFieldProperties";
+
 
 let  ApplicationEditSidebar = props =>{
     const settings = useSelector(state => state.settings);

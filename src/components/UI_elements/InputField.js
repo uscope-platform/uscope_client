@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Label from "./Label";
+import {Label} from "./Label";
 
 const InnerInput = styled.input`
 height: 2rem;
@@ -29,7 +29,7 @@ flex-flow: wrap;
 
 
 
-let  InputField = props =>{
+export let  InputField = props =>{
     if(props.compact){
         return (
             <InnerInput
@@ -81,5 +81,3 @@ let  InputField = props =>{
     }
 
 };
-
-export default InputField;

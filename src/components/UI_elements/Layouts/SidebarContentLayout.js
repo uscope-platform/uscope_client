@@ -1,6 +1,6 @@
 import styled, {css} from "styled-components";
 
-const SidebarContentLayout = styled.div`
+export const SidebarContentLayout = styled.div`
   display: grid;
   height: 100vh;
   grid-template-columns: 1fr;
@@ -15,5 +15,3 @@ const SidebarContentLayout = styled.div`
   margin-right: 0.8rem;
   justify-items: center;
 `
-
-export default SidebarContentLayout
