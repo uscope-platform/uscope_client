@@ -1,27 +1,47 @@
-import React from 'react';
+import React, {useCallback, useEffect} from 'react';
+import {Image} from "../UI_elements";
 
-import {Row, Col, Image} from "react-bootstrap";
-
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import RegisterInputForm from "./RegisterInputForm";
+import styled from "styled-components";
+import {setSetting} from "../../redux/Actions/SettingsActions";
 
 
-let RegisterTab  = props => {
-    const register_values = useSelector(
-        state => state.registerValues[props.content.tab_id]
-    );
+const LayoutWrapper = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-auto-rows: minmax(0, 10rem);
+    grid-gap: 1.5rem;
+    margin-top: 1rem;
+    margin-right: 1rem;
+    margin-left: 1rem;
 
-    const register_specs = useSelector(
-        state => state.peripherals[props.content.tab_id]
-    );
+`
+
+let  RegisterTab = props =>{
+    const peripherals = useSelector(state => state.peripherals);
+    const settings = useSelector(state => state.settings);
+    const registerValues = useSelector(state => state.registerValues);
+    const dispatch = useCallback(useDispatch(), []);
+
+
+
+    useEffect(()=>{
+        dispatch(setSetting(["current_view_requires_sidebar", false]));
+        return () =>{
+            dispatch(setSetting(["current_view_requires_sidebar", true]));
+        }
+    }, [dispatch]);
 
     return(
-        <Row>
-            <Col md={5}><Image src={props.server.server_url + props.content.image_src} alt='ADC processing block diagram' fluid/></Col>
-            <Col>
-                <RegisterInputForm registers={register_specs.registers} values={register_values} server={props.server} content={props.content}/>
-            </Col>
-        </Row>
+        <LayoutWrapper>
+            <Image src={settings.server.server_url + peripherals[props.content.tab_id].image} alt='Peripheral diagram' fluid/>
+            <RegisterInputForm registers={peripherals[props.content.tab_id].registers}
+                               values={registerValues[props.content.tab_id]}
+                               content={registerValues[props.content.tab_id]}
+                               parent_peripheral={props.content.tab_id}
+            />
+        </LayoutWrapper>
     );
 };
 

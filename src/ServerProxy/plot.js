@@ -1,6 +1,5 @@
 import store from "../store";
-import {loadChanels} from "../redux/Actions/plotActions";
-import {fetchData} from "../redux/Actions/plotActions"
+import {fetchData, loadChanels} from "../redux/Actions/plotActions";
 import axios from "axios";
 
 export default function plotProxy(server_url, token) {

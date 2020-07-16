@@ -1,8 +1,26 @@
 import React from 'react';
 
-import Form from "react-bootstrap/Form";
-import Col from "react-bootstrap/Col"
-import {Image, Row} from "react-bootstrap";
+import {InputField} from "../UI_elements";
+import {Edit, Trash} from "grommet-icons";
+import styled from "styled-components";
+
+const LayoutWrapper = styled.div`
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    grid-column-gap: 1em;
+    justify-content: start;
+    grid-auto-rows: minmax(1em, auto);
+    align-items: center;
+`
+
+
+const DualWrapper = styled.div`
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    grid-gap: 1rem;
+    align-items: start;
+`
+
 
 
 let TwoValuesField = props => {
@@ -18,59 +36,19 @@ let TwoValuesField = props => {
 
     if(props.preview_only){
         return(
-            <Row>
-                <Col fluid={true}>
-                    <Row>
-                        <Col>
-                            <Form.Group>
-                                <Form.Label>{props.field_names[0]}</Form.Label>
-                                <Form.Control className='twoFields.1' type="text" id={props.register_name+'.1'} placeholder={props.value[0]} />
-                                <Form.Text className="text-muted">
-                                    {props.field_descriptions[0]}
-                                </Form.Text>
-                            </Form.Group>
-                        </Col>
-                        <Col>
-                            <Form.Group>
-                                <Form.Label>{props.field_names[1]}</Form.Label>
-                                <Form.Control className='twoFields.2' type="text" id={props.C+'.2'} placeholder={props.value[1]} />
-                                <Form.Text className="text-muted">
-                                    {props.field_descriptions[1]}
-                                </Form.Text>
-                            </Form.Group>
-                        </Col>
-                    </Row>
-            </Col>
-            <Col md={2}>
-                <Image src='assets/Icons/edit.svg' className='edit_registers_image'  onClick={localEditHandler}/>
-            </Col>
-            <Col md={2}>
-                <Image src='assets/Icons/remove.svg' className='remove_registers_image' onClick={localRemoveHandler}/>
-            </Col>
-            </Row>
+            <LayoutWrapper>
+                <InputField description={props.field_descriptions[0]} ID={props.ID} name={props.register_name+'.1'} label={props.field_names[0]}/>
+                <InputField description={props.field_descriptions[1]} ID={props.ID} name={props.register_name+'.2'} label={props.field_names[1]}/>
+                <Edit color='white' onClick={localEditHandler} />
+                <Trash color='white' onClick={localRemoveHandler}/>
+            </LayoutWrapper>
         );
     } else{
         return(
-            <Form.Row >
-                <Col>
-                    <Form.Group>
-                        <Form.Label>{props.field_names[0]}</Form.Label>
-                        <Form.Control className='twoFields.1' type="text" id={props.register_name+'.1'} placeholder={props.value[0]} />
-                        <Form.Text className="text-muted">
-                            {props.field_descriptions[0]}
-                        </Form.Text>
-                    </Form.Group>
-                </Col>
-                <Col>
-                    <Form.Group>
-                        <Form.Label>{props.field_names[1]}</Form.Label>
-                        <Form.Control className='twoFields.2' type="text" id={props.register_name+'.2'} placeholder={props.value[1]} />
-                        <Form.Text className="text-muted">
-                            {props.field_descriptions[1]}
-                        </Form.Text>
-                    </Form.Group>
-                </Col>
-            </Form.Row>
+            <DualWrapper>
+                <InputField description={props.field_descriptions[0]} ID={props.ID} name={props.register_name+'.1'} label={props.field_names[0]}/>
+                <InputField description={props.field_descriptions[1]} ID={props.ID} name={props.register_name+'.2'} label={props.field_names[1]}/>
+            </DualWrapper>
         );
     }
 

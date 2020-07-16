@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 
-import {Modal, Button, Form, Col} from "react-bootstrap";
+import {Button, FormLayout, InputField} from "../UI_elements"
+import {Modal} from "react-bootstrap";
 import {hideModal} from "../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
 import {saveScriptsWorkspace} from '../../redux/Actions/scriptsActions';
@@ -78,8 +79,6 @@ class TimebaseModal extends Component {
         event.preventDefault();
         let value = this.state.frequency.replace(' ', '');
 
-        debugger;
-
         let timebase_reg = {};
         timebase_reg['name'] = 'freq';
         timebase_reg['peripheral'] = 'enable_generator';
@@ -93,11 +92,11 @@ class TimebaseModal extends Component {
             return ret_val;
         });
 
-        this.props.server.periph_proxy.setRegisterValue(timebase_reg);
+        this.props.settings.server.periph_proxy.setRegisterValue(timebase_reg);
 
         // eslint-disable-next-line
         for(let i of phases){
-            this.props.server.periph_proxy.setRegisterValue(i);
+            this.props.settings.server.periph_proxy.setRegisterValue(i);
         }
 
         this.props.hideModal();
@@ -105,10 +104,7 @@ class TimebaseModal extends Component {
 
     generate_form = (label) => {
         return(
-            <Form.Group key={label} as={Col}>
-                <Form.Label>{label}</Form.Label>
-                <Form.Control name={label} type="text" onChange={this.handleChange} />
-            </Form.Group>
+            <InputField inline name={label} onChange={this.handleChange} label={label}/>
         );
 
     };
@@ -120,21 +116,18 @@ class TimebaseModal extends Component {
                     <Modal.Title>Application timebase Control</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
-                        <Form.Group as={Col}>
-                            <Form.Label>Frequency</Form.Label>
-                            <Form.Control name="frequency" type="text" onChange={this.handleChange} />
-                        </Form.Group>
+                    <FormLayout>
+                        <InputField inline name='frequency' onChange={this.handleChange} label="Frequency"/>
                         {
                             Array.from({length: this.state.n_enables}, (x,i) => i).map((reg, i) => {
-                                    return this.generate_form('enable_'+(i+1));
+                                return this.generate_form('enable_'+(i+1));
                             })
                         }
-                    </Form>
+                    </FormLayout>
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="primary" type="submit" onClick={this.handleClose}>Save changes</Button>
+                    <Button onClick={this.handleClose}>Save changes</Button>
                 </Modal.Footer>
             </Modal>
         );

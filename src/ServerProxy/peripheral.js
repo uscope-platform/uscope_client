@@ -34,7 +34,7 @@ export default function peripheralProxy(server_url, token) {
      * @param {Number} register.value - Value to set the register to.
      */
     this.setRegisterValue = (register) => {
-        store.dispatch(sendRegister(_this.server_url+'registers/'+register.peripheral+'/value', register))
+        store.dispatch(sendRegister(_this.server_url+'registers/'+register.peripheral+'/value', register, _this.config))
     };
 
     this.loadAllPeripherals = () =>{

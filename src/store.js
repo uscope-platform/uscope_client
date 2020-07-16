@@ -1,15 +1,11 @@
-import { createStore, applyMiddleware} from "redux";
+import {applyMiddleware, createStore} from "redux";
 import thunk from "redux-thunk";
-import { composeWithDevTools } from 'redux-devtools-extension';
+import {composeWithDevTools} from 'redux-devtools-extension';
 import {persistReducer, persistStore} from 'redux-persist';
 import storage from 'redux-persist/lib/storage'
 //import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 import hardSet from "redux-persist/lib/stateReconciler/hardSet";
 import rootReducer from './redux/Reducers';
-
-
-
-
 
 
 const initialState = {

@@ -1,67 +1,33 @@
 import React from 'react';
 import {useSelector} from "react-redux";
 
-import Row from "react-bootstrap/Row"
-import Col from "react-bootstrap/Col";
 
 import ChannelSelector from "./ChannelSelector";
 import PlotComponent from "./PlotComponent";
 import ParametersArea from "./ParametersArea";
-import PlotControls from "./PlotControls";
 import MacroActions from "./MacroActions";
+import styled from "styled-components";
 
 
-
+const ComponentLayout = styled.div`
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-auto-rows: auto;
+  align-items: center;
+  grid-gap: 1.5em;
+`
 
 let PlotTab = function (props) {
     const channels = useSelector(state => state.channels);
     const settings = useSelector(state => state.settings);
-    let controls = [
-        {
-            name:"play",
-            image:"assets/Icons/play.svg"
-        },
-        {
-            name:"pause",
-            image:"assets/Icons/pause.svg"
-        },
-        {
-            name:"stop",
-            image:"assets/Icons/stop.svg"
-        },
-        {
-            name:"timebase",
-            image:"assets/Icons/timebase.svg"
-        },
-        {
-            name:"mode",
-            image:"assets/Icons/mode.svg"
-        },
-
-    ];
 
         return(
-            <Row>
-                <Col md={3} className="plot_channel_selector_container">
-                    <Row>
-                        <ChannelSelector server={props.server} channels={channels}/>
-                    </Row>
-                    <Row>
-                        <MacroActions server={props.server}/>
-                    </Row>
-                </Col>
-                <Col md={8}>
-                    <Row>
-                        <PlotComponent refreshRate={settings.refreshRate} server={props.server}/>
-                    </Row>
-                    <Row>
-                        <ParametersArea server={props.server}/>
-                    </Row>
-                </Col>
-                <Col md={1} className="plot_controls_container">
-                    <PlotControls server={props.server} controls={controls}/>
-                </Col>
-            </Row>
+            <ComponentLayout>
+                <ChannelSelector channels={channels}/>
+                <PlotComponent refreshRate={settings.refreshRate}/>
+                <ParametersArea />
+                <MacroActions />
+            </ComponentLayout>
         );
 };
 

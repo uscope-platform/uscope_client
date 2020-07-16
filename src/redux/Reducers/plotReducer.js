@@ -1,11 +1,11 @@
 import {
-    ENABLE_CHANNEL,
     DISABLE_CHANNEL,
-    LOAD_CHANNELS,
-    PLOT_PLAY,
-    PLOT_PAUSE,
-    PLOT_STOP,
+    ENABLE_CHANNEL,
     FETCH_DATA,
+    LOAD_CHANNELS,
+    PLOT_PAUSE,
+    PLOT_PLAY,
+    PLOT_STOP,
     SET_CHANNEL_SETTING
 } from "../Actions/types";
 import produce from "immer";
@@ -35,6 +35,12 @@ const initial_state = {
         memory_depth: 1024
     },
     layout: {
+        margin: {
+            l: 25,
+            r: 25,
+            b: 25,
+            t: 25,
+        },
         width: "1024",
             height: "auto",
             paper_bgcolor: "rgba(0,0,0,0)",

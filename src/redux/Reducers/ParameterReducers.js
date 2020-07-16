@@ -1,7 +1,6 @@
 import {LOAD_PARAMETERS_DONE, SAVE_PARAMETER} from "../Actions/types";
 
 
-
 let parameterValuesReducer = function (state = [], action) {
     switch (action.type) {
         case LOAD_PARAMETERS_DONE:

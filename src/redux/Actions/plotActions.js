@@ -1,11 +1,11 @@
 import {
-    ENABLE_CHANNEL,
     DISABLE_CHANNEL,
-    LOAD_CHANNELS,
-    PLOT_PLAY,
-    PLOT_PAUSE,
-    PLOT_STOP,
+    ENABLE_CHANNEL,
     FETCH_DATA,
+    LOAD_CHANNELS,
+    PLOT_PAUSE,
+    PLOT_PLAY,
+    PLOT_STOP,
     SET_CHANNEL_SETTING
 } from "./types";
 import axios from "axios";

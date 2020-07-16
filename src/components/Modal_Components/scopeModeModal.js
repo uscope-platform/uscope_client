@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 
-import {Modal, Button, Form} from "react-bootstrap";
+import {Button, FormLayout, InputField} from "../UI_elements"
+import {Modal} from "react-bootstrap";
 import {hideModal} from "../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
 
@@ -22,7 +23,7 @@ const mapDispatchToProps = dispatch => {
 class ScopeModeModal extends Component {
     constructor(props){
         super(props);
-        this.state = {n_buffers:""}
+        this.state = {n_buffers:"", visible:false}
     }
 
 
@@ -47,15 +48,13 @@ class ScopeModeModal extends Component {
                     <Modal.Title>Select the number of buffers to capture</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form onSubmit={this.handleClose}>
-                        <Form.Label>Number of buffers</Form.Label>
-                        <Form.Control name="n_buffers" type="text" onChange={this.handleChange} />
-
-                    </Form>
+                    <FormLayout>
+                        <InputField inline name='n_buffers' onChange={this.handleChange} label="Number of buffers"/>
+                    </FormLayout>
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="primary" type="submit" onClick={this.handleClose}>Save changes</Button>
+                    <Button onClick={this.handleClose}>Save changes</Button>
                 </Modal.Footer>
             </Modal>
         );

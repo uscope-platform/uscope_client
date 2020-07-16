@@ -2,7 +2,12 @@ import axios from "axios"
 import {loadParameters} from "../redux/Actions/ParameterActions";
 import store from "../store";
 import {setChannelSetting} from "../redux/Actions/plotActions";
-import {loadApplications, addApplication, removeApplication} from "../redux/Actions/applicationActions";
+import {
+    addApplication,
+    editApplication,
+    loadApplications,
+    removeApplication
+} from "../redux/Actions/applicationActions";
 
 export default function applicationProxy(server_url, token) {
     let _this = this;
@@ -31,14 +36,6 @@ export default function applicationProxy(server_url, token) {
         store.dispatch(setChannelSetting(_this.server_url+'plot/channels/params', message, _this.config));
     };
 
-    this.removeApplication = (application) =>{
-        store.dispatch(removeApplication(_this.server_url+'application/remove/'+application, application, _this.config));
-    };
-
-    this.createApplication = (application_obj) => {
-        store.dispatch(addApplication(_this.server_url+'application/add', application_obj, _this.config));
-    };
-
     this.get_applications_hash = () =>{
         return new Promise(function (resolve, reject) {
             axios.get(_this.server_url+'application/digest', _this.config)
@@ -48,14 +45,16 @@ export default function applicationProxy(server_url, token) {
         });
     };
 
-    this.getApplicationsList = function () {
-        return new Promise(function (resolve, reject) {
-            axios.get(_this.server_url+'application/list', _this.config)
-                .then(res => {
-                    resolve(res.data);
-                })
-        });
+    this.createApplication = (application_obj) => {
+        store.dispatch(addApplication(_this.server_url+'application/add', application_obj, _this.config));
+    };
 
+    this.edit_application = (edit) => {
+        store.dispatch(editApplication(this.server_url+'application/edit', edit, this.config));
+    };
+
+    this.removeApplication = (application) =>{
+        store.dispatch(removeApplication(_this.server_url+'application/remove/'+application, application, _this.config));
     };
 }
 

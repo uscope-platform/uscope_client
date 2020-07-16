@@ -1,4 +1,4 @@
-import { combineReducers} from "redux";
+import {combineReducers} from "redux";
 
 import plotReducer from "./plotReducer";
 import parameterValuesReducer from "./ParameterReducers";

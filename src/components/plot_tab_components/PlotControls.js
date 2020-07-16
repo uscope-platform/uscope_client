@@ -1,14 +1,30 @@
 import React from 'react';
 
 import {useDispatch, useSelector} from "react-redux";
+import {Camera, Configure, Pause, Play, Stop} from 'grommet-icons'
 import {plotPause, plotPlay, plotStop} from "../../redux/Actions/plotActions";
 import TimebaseModal from "../Modal_Components/TimebaseModal"
 import ScopeModeModal from "../Modal_Components/scopeModeModal";
 import {showModal} from "../../redux/Actions/modalsActions";
+import styled from "styled-components";
+
+
+const ComponentStyle = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 2.75rem;
+`
+
+const IconStyle = styled.div`
+  flex: 0 0 2rem;
+  
+`
 
 
 let  PlotControls = props =>{
     const modals = useSelector(state => state.modals);
+    const settings = useSelector(state => state.settings);
+
     const dispatch = useDispatch();
     let onClick = (event) => {
         switch (event.target.id) {
@@ -33,13 +49,13 @@ let  PlotControls = props =>{
     };
 
     let onModeSubmit = (capture_length) => {
-        props.server.plot_proxy.setCapture(capture_length);
+        settings.server.plot_proxy.setCapture(capture_length);
         setTimeout(onCaptureEnd, 1000);
     };
 
 
     let onCaptureEnd = () => {
-        props.server.plot_proxy.get_captured_data().then((res) => {
+        settings.server.plot_proxy.get_captured_data().then((res) => {
             if(res['elapsed'] !== 0){
                 setTimeout(onCaptureEnd, 500);
             } else {
@@ -53,15 +69,30 @@ let  PlotControls = props =>{
     };
 
     return(
-        <div>
-            <TimebaseModal server={props.server} show={modals.timebase_choice}/>
-            <ScopeModeModal server={props.server} show={modals.scope_mode_choice} done={onModeSubmit} />
-            {props.controls.map((control, i) => {
-                return(
-                    <img className={"plot_controls_asset"} key={i} src={control.image} alt={control.name} id={control.name} onClick={onClick} />
-                );
-            })}
-        </div>
+        <ComponentStyle>
+            <TimebaseModal server={settings.server} show={modals.timebase_choice}/>
+            <ScopeModeModal server={settings.server} show={modals.scope_mode_choice} done={onModeSubmit} />
+            <IconStyle>
+                <Play id='play' color='white' onClick={onClick}/>
+            </IconStyle>
+
+            <IconStyle>
+                <Pause id='pause' color='white' onClick={onClick}/>
+            </IconStyle>
+
+            <IconStyle>
+                <Stop id='stop' color='white' onClick={onClick}/>
+            </IconStyle>
+
+            <IconStyle>
+                <Configure id='timebase' color='white' onClick={onClick}/>
+            </IconStyle>
+
+            <IconStyle>
+                <Camera id='mode' color='white' onClick={onClick}/>
+            </IconStyle>
+
+        </ComponentStyle>
     );
 };
 

@@ -3,7 +3,7 @@ import peripheralProxy from "./peripheral";
 import plotProxy from "./plot";
 import creatorProxy from "./creator";
 import scriptsProxy from "./scripts"
-import authProxy  from "./auth"
+import authProxy from "./auth"
 
 export default function serverProxy(server_url, token) {
     this.server_url = server_url;

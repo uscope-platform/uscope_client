@@ -1,96 +1,73 @@
-import React, {Component}  from 'react';
+import React, {useState} from 'react';
+
+import {useDispatch, useSelector} from "react-redux"
+
+import DataTable from 'react-data-table-component';
+import {TableStyle} from './TableStyles'
 
 
-import { LinkContainer } from 'react-router-bootstrap'
-import {connect} from "react-redux"
-
-import BootstrapTable from 'react-bootstrap-table-next';
-import cellEditFactory from 'react-bootstrap-table2-editor';
-import paginationFactory from 'react-bootstrap-table2-paginator';
-
-import {Button, Container, Row} from "react-bootstrap";
+import {BlockLayout, Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements"
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
 
-
-function mapStateToProps(state) {
-    return{
-        peripherals:state.peripherals
+let columns = [
+    {
+        selector: 'peripheral_name',
+        name: 'Peripheral Name',
+        sort: true,
+        grow:2
+    },
+    {
+        selector: 'version',
+        name: 'Peripheral Version'
     }
-}
+];
 
-const mapDispatchToProps = dispatch => {
-    return{
-        setSetting: (name, value) => {dispatch(setSetting([name, value]))},
-    }
-};
+let PeripheralsManager = (props)=>{
 
-class PeripheralsManager extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {selected:null};
-        this.peripherals = Object.values(this.props.peripherals);
-        this.selectRow = {
-            mode: 'radio',
-            clickToEdit: true,
-            clickToSelect: true,
-            selected: this.state.selected,
-            onSelect: this.handleOnSelect,
-        };
-    }
+    const peripherals_redux = useSelector(state => state.peripherals);
+    const settings = useSelector(state => state.settings);
 
+    const dispatch = useDispatch();
 
-    columns = [
-        {
-            dataField: 'peripheral_name',
-            text: 'Peripheral Name',
-            sort: true
-        },
-        {
-            dataField: 'version',
-            text: 'Peripheral Version'
-        }
-    ];
+    const [peripherals, ] = useState(()=>{
+        return  Object.values(peripherals_redux);
+    });
 
-
-    handleOnSelect = (row, isSelect) => {
-        if (isSelect) {
-            this.setState(() => ({
-                selected: row.peripheral_name
-            }));
-        } else {
-            this.setState(() => ({
-                selected: null
-            }));
+    let handleOnSelect = (selection) => {
+        if(!selection.allSelected && selection.selectedCount===1){
+            dispatch(setSetting(["current_peripheral", selection.selectedRows[0].peripheral_name]))
+        } else if(selection.selectedCount===0) {
+            dispatch(setSetting(["current_peripheral", null]))
         }
     };
 
 
-    handleRemoveRow = (event) =>{
-        this.peripherals.splice(this.peripherals.findIndex(item => item.peripheral_name === this.state.selected), 1);
-        this.props.server.creator_proxy.removePeripheral(this.state.selected);
-        this.setState({selected:null});
+    let handleRemoveRow = (event) =>{
+        peripherals.splice(peripherals.findIndex(item => item.peripheral_name === settings.current_peripheral), 1);
+        settings.server.creator_proxy.removePeripheral(settings.current_peripheral);
+        dispatch(setSetting(["current_peripheral", null]))
     };
 
-    handleExport = (event) =>{
-        if(this.state.selected===null){
+    let handleExport = (event) =>{
+        let selected = settings.current_peripheral;
+        if(settings.current_peripheral===null){
             alert("Please select a peripheral to Export");
             return;
         }
-        debugger;
-        let peripheral = {[this.state.selected]:this.peripherals[this.peripherals.findIndex(item => item.peripheral_name === this.state.selected)]};
+        let peripheral = {[selected]:peripherals[peripherals.findIndex(item => item.peripheral_name === selected)]};
         let blob = new Blob([JSON.stringify(peripheral, null, 4)], {type: "application/json"});
         let url  = URL.createObjectURL(blob);
 
         let link = document.createElement('a');
         link.href = url;
-        link.download = this.state.selected;
+        link.download = selected;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
     };
 
-    handleImport = (event) =>{
+    let handleImport = (event) =>{
         let input = document.createElement('input');
         input.type = 'file';
         input.setAttribute('style', 'display:none');
@@ -101,62 +78,37 @@ class PeripheralsManager extends Component {
 
             reader.onload = readerEvent => {
                 let content = readerEvent.target.result; // this is the content!
-                this.addPeripheral(content)
+                addPeripheral(content)
             }
         };
         document.body.appendChild(input);
         input.click();
     };
 
-    addPeripheral = (content) => {
-        this.props.server.creator_proxy.createPeripheral(JSON.parse(content), null);
+    let addPeripheral = (content) => {
+        settings.server.creator_proxy.createPeripheral(JSON.parse(content), null);
     };
 
-    handle_create = () =>{
-        this.props.setSetting("edit_peripheral_mode", false);
-        this.props.setSetting("edit_peripheral_name", null);
-    };
-
-    handleEdit = (content) => {
-        this.props.setSetting("edit_peripheral_mode", true);
-        this.props.setSetting("edit_peripheral_name", this.state.selected);
-    };
-
-
-    is_editable = (peripheral) =>{
-        return this.state.selected !== null;
-    };
-
-    render(){
-        return(
-            <Container>
-                <Row>
-                    <LinkContainer to="/peripheral_creator">
-                        <Button variant="outline-success" onClick={this.handle_create}> Add new row</Button>
-                    </LinkContainer>
-                    <Button variant="outline-danger" onClick={this.handleRemoveRow}> Remove Row</Button>
-                    <Button variant="outline-primary" onClick={this.handleImport}>Import peripheral</Button>
-                    <Button variant="outline-primary" onClick={this.handleExport}>Export peripheral</Button>
-                    <LinkContainer isActive={this.is_editable} to="/peripheral_creator">
-                        <Button variant="outline-primary" onClick={this.handleEdit} >Edit peripheral</Button>
-                    </LinkContainer>
-                </Row>
-                <Row>
-                    <BootstrapTable
-                        keyField='peripheral_name'
-                        data={this.peripherals}
-                        columns={this.columns}
-                        cellEdit={ cellEditFactory({
-                            mode: 'click',
-                            blurToSave: true
-                        })}
-                        pagination={ paginationFactory() }
-                        selectRow={ this.selectRow }
-                    />
-                </Row>
-            </Container>
-        );
-    };
+    return(
+        <ManagerLayout>
+            <ManagerButtonsLayout>
+                <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}> Remove Peripheral</Button>
+                <Button style={{margin:"0 1rem"}} onClick={handleImport}>Import peripheral</Button>
+                <Button style={{margin:"0 1rem"}} onClick={handleExport}>Export peripheral</Button>
+            </ManagerButtonsLayout>
+            <BlockLayout centered>
+                <DataTable
+                    title='Peripherals'
+                    data={peripherals}
+                    columns={columns}
+                    customStyles={TableStyle}
+                    theme="uScopeTableTheme"
+                    selectableRows
+                    onSelectedRowsChange={handleOnSelect}
+                />
+            </BlockLayout>
+        </ManagerLayout>
+    )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PeripheralsManager);
+export default PeripheralsManager;

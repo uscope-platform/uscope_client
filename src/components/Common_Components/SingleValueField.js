@@ -1,7 +1,19 @@
 import React from 'react';
 
-import Form from "react-bootstrap/Form";
-import {Col, Image, Row} from "react-bootstrap";
+import {InputField} from "../UI_elements";
+import {Edit, Trash} from "grommet-icons";
+import styled from "styled-components";
+
+
+const LayoutWrapper = styled.div`
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-column-gap: 1em;
+    justify-content: start;
+    grid-auto-rows: minmax(1em, auto);
+    align-items: center;
+`
+
 
 let SingleValueField = props => {
 
@@ -17,33 +29,15 @@ let SingleValueField = props => {
 
     if(props.preview_only){
         return(
-            <Row>
-                <Col fluid={true}>
-                    <Form.Group controlId="formBasicEmail">
-                        <Form.Label>{props.name}</Form.Label>
-                        <Form.Control type="text" className='oneField' name={props.name} placeholder={props.value} />
-                        <Form.Text className="text-muted">
-                            {props.description}
-                        </Form.Text>
-                    </Form.Group>
-                </Col>
-                <Col md={2}>
-                    <Image src='assets/Icons/edit.svg' className='edit_registers_image'  onClick={localEditHandler}/>
-                </Col>
-                <Col md={2}>
-                    <Image src='assets/Icons/remove.svg' className='remove_registers_image'  onClick={localRemoveHandler}/>
-                </Col>
-            </Row>
+            <LayoutWrapper>
+                <InputField description={props.description} ID={props.ID} name={props.name} label={props.name}/>
+                <Edit color='white' onClick={localEditHandler} />
+                <Trash color='white' onClick={localRemoveHandler}/>
+            </LayoutWrapper>
         );
     } else{
         return(
-            <Form.Group controlId={props.name}>
-                <Form.Label>{props.name}</Form.Label>
-                <Form.Control type="text" className='oneField' name={props.name} placeholder={props.value} />
-                <Form.Text className="text-muted">
-                    {props.description}
-                </Form.Text>
-            </Form.Group>
+            <InputField description={props.description} ID={props.ID} name={props.name} label={props.name}/>
         );
     }
 };

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 
-import {Modal, Button, Form} from "react-bootstrap";
+import {Button, FormLayout, InputField} from "../UI_elements"
+import {Modal} from "react-bootstrap";
 import {hideModal} from "../../redux/Actions/modalsActions";
 import {connect} from "react-redux";
 
@@ -8,6 +9,7 @@ import {connect} from "react-redux";
 function mapStateToProps(state) {
     return{
         modals:state.modals,
+        settings:state.settings,
         plot:state.plot
     }
 }
@@ -35,7 +37,7 @@ class ChannelSettingsModal extends Component {
         let min = parseFloat(this.state.min_value);
         let max = parseFloat(this.state.max_value);
 
-        this.props.server.app_proxy.setChannelLimits(min, max, this.props.id);
+        this.props.settings.server.app_proxy.setChannelLimits(min, max, this.props.id);
 
         this.props.hideModal(this.props.id);
     };
@@ -51,20 +53,14 @@ class ChannelSettingsModal extends Component {
                     <Modal.Title>Application Choice</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
-                        <Form.Group>
-                            <Form.Label>Minimum Value</Form.Label>
-                            <Form.Control name='min_value' placeholder={this.props.plot.settings[this.props.id].min_value} type="text" onChange={this.handleChange} />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Maximum value</Form.Label>
-                            <Form.Control name='max_value' placeholder={this.props.plot.settings[this.props.id].max_value} type="text" onChange={this.handleChange} />
-                        </Form.Group>
-                    </Form>
+                    <FormLayout>
+                        <InputField inline name='min_value' onChange={this.handleChange} label="Minimum Value"/>
+                        <InputField inline name='max_value' onChange={this.handleChange} label="Maximum value"/>
+                    </FormLayout>
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="primary" type="submit" onClick={this.handleClose}>Save changes</Button>
+                    <Button onClick={this.handleClose}>Save changes</Button>
                 </Modal.Footer>
             </Modal>
         );

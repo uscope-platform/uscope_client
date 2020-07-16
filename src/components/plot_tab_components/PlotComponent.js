@@ -1,52 +1,46 @@
-import React, {Component} from 'react';
+import React from 'react';
+import useInterval from "../Common_Components/useInterval";
 
 import Plotly from 'plotly.js-dist';
 import createPlotlyComponent from 'react-plotly.js/factory';
-import {connect} from "react-redux";
+import {useSelector} from "react-redux";
+import styled from "styled-components";
+import PlotControls from "./PlotControls";
+
 const Plot = createPlotlyComponent(Plotly);
 
+const ComponentStyle = styled.div`
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-auto-rows: auto;
+  grid-row-gap: 1em;
+`
 
+let  PlotComponent = props =>{
+    const channels = useSelector(state => state.plot);
+    const settings = useSelector(state => state.settings);
 
-function mapStateToProps(state) {
-    return{
-        channels:state.plot,
-        settings:state.settings,
-    }
-}
-
-class PlotComponent extends Component {
-
-
-
-    componentDidMount() {
-        this.refreshCallback = window.setInterval(this.handleRefresh, this.props.refreshRate);
-
-    }
-
-    componentWillUnmount() {
-        window.clearInterval(this.refreshCallback);
-    }
-
-
-    handleRefresh = () =>{
-        if(this.props.channels.plot_running){
-            this.props.server.plot_proxy.fetchData();
+    let  handleRefresh = () =>{
+        if(channels.plot_running){
+            settings.server.plot_proxy.fetchData();
         }
     };
 
-    render() {
-        return (
-            <div className="plot_div_container">
-                <Plot
-                    data={this.props.channels.data}
-                    layout={this.props.channels.layout}
-                    config={this.props.channels.configs}
-                    datarevision={this.props.datarevision}
-                />
-            </div>
-        );
-    }
-}
+    useInterval(() => {
+        handleRefresh();
+    },  props.refreshRate);
 
-export default connect(mapStateToProps)(PlotComponent);
+    return(
+        <ComponentStyle>
+            <Plot
+                data={channels.data}
+                layout={channels.layout}
+                config={channels.configs}
+                datarevision={props.datarevision}
+            />
+            <PlotControls/>
+        </ComponentStyle>
+    );
+};
 
+export default PlotComponent;

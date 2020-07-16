@@ -1,9 +1,10 @@
 import React from 'react';
 
-import {Form, Button} from "react-bootstrap";
+import {Button} from "../UI_elements"
 
 import SingleValueField from "../Common_Components/SingleValueField";
 import TwoValuesField from "../Common_Components/TwoValuesField";
+import {useSelector} from "react-redux";
 
 function arraysEqual(a,b) {
     /*
@@ -29,19 +30,19 @@ function arraysEqual(a,b) {
 
 let RegisterInputForm  = props => {
 
-
+    const settings = useSelector(state=> state.server);
 
     const handleSubmit = event => {
         event.preventDefault();
         let first_field_value = null;
         for(let register of event.target){ // eslint-disable-line no-unused-vars
-            if(register.className.includes("oneField")){
+            if(!register.name.includes(".1") || !register.name.includes(".2")){
                 let idx = props.registers.findIndex((obj => obj.register_name === register.name));
                 let intValue = parseFloat(register.value);
                 if(register.value!=="" && props.registers[idx].value !==intValue){
-                    props.server.periph_proxy.setRegisterValue({name:register.name, peripheral:props.content.tab_id, value:intValue})
+                    settings.server.periph_proxy.setRegisterValue({name:register.name, peripheral:props.parent_peripheral, value:intValue})
                 }
-            }else if (register.className.includes("twoFields")){
+            }else {
                 for(let item of register.classList){ // eslint-disable-line no-unused-vars
                     if(item.includes("twoFields")){
                         let reg_id = register.id.split('.')[0];
@@ -53,7 +54,7 @@ let RegisterInputForm  = props => {
                         }else if(fld_idx===2){
                             currentValue = [first_field_value, currentValue];
                             if(register.value!=="" && !arraysEqual( props.registers[reg_idx].value, currentValue)) {
-                                props.server.periph_proxy.setRegisterValue({name:reg_id, peripheral:props.content.tab_id, value:currentValue[0]+(currentValue[1]<<16)});
+                                settings.server.periph_proxy.setRegisterValue({name:reg_id, peripheral:props.parent_peripheral, value:currentValue[0]+(currentValue[1]<<16)});
                             }
                         }
 
@@ -73,16 +74,16 @@ let RegisterInputForm  = props => {
         }
         if(reg.register_format === "single"){
             return(
-                <SingleValueField key={i} name={reg.register_name} regID={reg.ID} value={reg_value} description={reg.description} preview_only={preview} handle_edit={props.handle_edit} handle_remove={props.handle_remove}/>
+                <SingleValueField key={i} name={reg.register_name} ID={reg.ID} value={reg_value} description={reg.description} preview_only={preview} handle_edit={props.handle_edit} handle_remove={props.handle_remove}/>
             );
         } else if(reg.register_format === "complex"){
             return(
-                <SingleValueField key={i} name={reg.register_name} regID={reg.ID} value={reg_value} description={reg.description} preview_only={preview} handle_edit={props.handle_edit} handle_remove={props.handle_remove}/>
+                <SingleValueField key={i} name={reg.register_name} ID={reg.ID} value={reg_value} description={reg.description} preview_only={preview} handle_edit={props.handle_edit} handle_remove={props.handle_remove}/>
             );
         } else if(reg.register_format==='words'){
             let split_values = [(reg_value & 0x0000ffff), (reg_value & 0xffff0000) >> 16];
             return(
-                <TwoValuesField key={i} field_names={reg.field_names} regID={reg.ID} register_name={reg.register_name} value={split_values} field_descriptions={reg.field_descriptions} preview_only={preview} handle_edit={props.handle_edit} handle_remove={props.handle_remove}/>
+                <TwoValuesField key={i} field_names={reg.field_names} ID={reg.ID} register_name={reg.register_name} value={split_values} field_descriptions={reg.field_descriptions} preview_only={preview} handle_edit={props.handle_edit} handle_remove={props.handle_remove}/>
             );
         } else return(<p>invalid form field</p>);
     };
@@ -90,14 +91,12 @@ let RegisterInputForm  = props => {
 
     if(!props.preview_only){
         return(
-            <Form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}>
                 {props.registers.map((reg, i) => {
                     return generate_field(reg, i, false)
                 })}
-                <Button variant="primary" type="submit">
-                    Submit
-                </Button>
-            </Form>
+                <Button> Submit </Button>
+            </form>
         );
     } else{
         return(

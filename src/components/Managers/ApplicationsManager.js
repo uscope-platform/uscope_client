@@ -1,99 +1,74 @@
-import React, {Component}  from 'react';
+import React, {useState} from 'react';
+
+import {useDispatch, useSelector} from "react-redux"
 
 
-import { LinkContainer } from 'react-router-bootstrap'
-import {connect} from "react-redux"
-
-import BootstrapTable from 'react-bootstrap-table-next';
-import cellEditFactory from 'react-bootstrap-table2-editor';
-import paginationFactory from 'react-bootstrap-table2-paginator';
-
-import {Button, Container, Row} from "react-bootstrap";
+import {BlockLayout, Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements"
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
+import DataTable from 'react-data-table-component';
+import {TableStyle} from './TableStyles'
 
 
-function mapStateToProps(state) {
-    return{
-        applications:state.applications,
-        settings:state.settings,
+let columns = [
+    {
+        selector: 'application_name',
+        name: 'Application Name',
+        sortable: true,
     }
-}
+];
 
-const mapDispatchToProps = dispatch => {
-    return{
-        setSetting: (name, value) => {dispatch(setSetting([name, value]))},
-    }
-};
+let  ApplicationsManager = props =>{
 
-class ApplicationsManager extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {selected:null};
 
-        this.applications = [];
-        // eslint-disable-next-line
-        for(let item in this.props.applications){
-            this.applications.push({...this.props.applications[item], application_name:item});
+    const applications_redux = useSelector(state => state.applications);
+    const settings = useSelector(state => state.settings);
+
+    const dispatch = useDispatch();
+
+    const [applications, ] = useState(()=>{
+        let applications = [];
+        for(let item in applications_redux){
+            applications.push({...applications_redux[item], application_name:item});
         }
-
-        this.selectRow = {
-            mode: 'radio',
-            clickToEdit: true,
-            clickToSelect: true,
-            selected: this.state.selected,
-            onSelect: this.handleOnSelect,
-        };
-    }
+        return applications;
+    });
 
 
-    columns = [
-        {
-            dataField: 'application_name',
-            text: 'Application Name',
-            sort: true
-        }
-    ];
-
-
-    handleOnSelect = (row, isSelect) => {
-        if (isSelect) {
-            this.setState(() => ({
-                selected: row.application_name
-            }));
-        } else {
-            this.setState(() => ({
-                selected: null
-            }));
+    let handleOnSelect = (selection) => {
+        if(!selection.allSelected && selection.selectedCount===1){
+            dispatch(setSetting(["current_application", selection.selectedRows[0].application_name]))
+        } else if(selection.selectedCount===0) {
+            dispatch(setSetting(["current_application", null]))
         }
     };
 
 
-    handleRemoveRow = (event) =>{
-        this.applications.splice(this.applications.findIndex(item => item.application_name === this.state.selected), 1);
-        this.props.server.app_proxy.removeApplication(this.state.selected);
-        this.setState({selected:null});
+    let  handleRemoveRow = (event) =>{
+        applications.splice(applications.findIndex(item => item.application_name === settings.current_application), 1);
+        settings.server.app_proxy.removeApplication(settings.current_application);
+        dispatch(setSetting(["current_application", null]))
     };
 
-    handleExport = (event) =>{
-        if(this.state.selected===null){
-            alert("Please select a peripheral to Export");
+    let handleExport = (event) =>{
+        if(settings.current_application===null){
+            alert("Please select an Application to Export");
             return;
         }
 
-        let application = {[this.state.selected]:this.applications[this.applications.findIndex(item => item.application_name === this.state.selected)]};
+        let application = {[settings.current_application]:applications[applications.findIndex(item => item.application_name === settings.current_application)]};
         let blob = new Blob([JSON.stringify(application, null, 4)], {type: "application/json"});
         let url  = URL.createObjectURL(blob);
 
         let link = document.createElement('a');
         link.href = url;
-        link.download = this.state.selected;
+        link.download = settings.current_application;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
     };
 
-    handleImport = (event) =>{
+    let handleImport = (event) =>{
 
         let input = document.createElement('input');
         input.type = 'file';
@@ -105,7 +80,7 @@ class ApplicationsManager extends Component {
 
             reader.onload = readerEvent => {
                 let content = readerEvent.target.result; // this is the content!
-                this.addPeripheral(content)
+                addApplication(content)
             }
         };
         document.body.appendChild(input);
@@ -113,62 +88,33 @@ class ApplicationsManager extends Component {
 
     };
 
-    addPeripheral = (content) => {
-        this.props.server.app_proxy.createApplication(JSON.parse(content), null);
-    };
-
-    handleCreate = () => {
-        this.props.setSetting("edit_application_mode", false);
-        this.props.setSetting("edit_application_name", null);
-        return true
-    };
-
-    handleEdit = (content) => {
-        if(this.state.selected===null){
-            return false;
-        }
-        this.props.setSetting("edit_application_mode", true);
-        this.props.setSetting("edit_application_name", this.state.selected);
-        return true;
+    let addApplication = (content) => {
+        settings.server.app_proxy.createApplication(JSON.parse(content), null);
     };
 
 
-    is_editable = (peripheral) =>{
-        return this.state.selected !== null;
-    };
+    return(
+        <ManagerLayout>
+            <ManagerButtonsLayout>
+                <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}> Remove application</Button>
+                <Button style={{margin:"0 1rem"}} onClick={handleImport}>Import application</Button>
+                <Button style={{margin:"0 1rem"}} onClick={handleExport}>Export application</Button>
+            </ManagerButtonsLayout>
+            <BlockLayout centered>
+                <DataTable
+                    title='Applications'
+                    data={applications}
+                    columns={columns}
+                    theme="uScopeTableTheme"
+                    customStyles={TableStyle}
+                    selectableRows
+                    onSelectedRowsChange={handleOnSelect}
+                />
+            </BlockLayout>
+
+        </ManagerLayout>
+    );
+};
 
 
-    render(){
-        return(
-            <Container>
-                <Row>
-                    <LinkContainer to="/application_creator">
-                        <Button variant="outline-success" onClick={this.handleCreate}> Add application</Button>
-                    </LinkContainer>
-
-                    <Button variant="outline-danger"  onClick={this.handleRemoveRow}> Remove application</Button>
-                    <Button variant="outline-primary" onClick={this.handleImport}>Import application</Button>
-                    <Button variant="outline-primary" onClick={this.handleExport}>Export application</Button>
-                    <LinkContainer isActive={this.is_editable} to="/application_creator">
-                        <Button variant="outline-primary"  onClick={this.handleEdit}>Edit application</Button>
-                    </LinkContainer>
-                </Row>
-                <Row>
-                    <BootstrapTable
-                        keyField='application_name'
-                        data={this.applications}
-                        columns={this.columns}
-                        cellEdit={ cellEditFactory({
-                            mode: 'click',
-                            blurToSave: true
-                        })}
-                        pagination={ paginationFactory() }
-                        selectRow={ this.selectRow }
-                    />
-                </Row>
-            </Container>
-        );
-    };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ApplicationsManager);
+export default ApplicationsManager;

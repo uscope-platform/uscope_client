@@ -1,7 +1,6 @@
 import React from 'react';
 import PlotTab from "./plot_tab_components/PlotTab";
 import RegisterTab from "./register_tab_components/Register_tab";
-import PeripheralsCreator from "./Creators/Peripheral_creator/PeripheralsCreator";
 import ScriptManager from "./Managers/ScriptManager_tab";
 import PeripheralsManager from "./Managers/PeripheralsManager";
 import ApplicationsManager from "./Managers/ApplicationsManager"
@@ -9,34 +8,28 @@ import ApplicationsManager from "./Managers/ApplicationsManager"
 let TabContent = props => {
     if(props.tab.type==='Scope'){
         return(
-            <div className="tab_content">
-                <PlotTab server={props.server} content={props.tab}/>
-            </div>
+            <PlotTab content={props.tab}/>
         );
     } else if(props.tab.type==='Registers') {
         return (
             <div className="tab_content">
-                <RegisterTab server={props.server} content={props.tab}/>
+                <RegisterTab content={props.tab}/>
             </div>
-        );
-    }else if(props.tab.type ==='tab_creator'){
-        return (
-            <PeripheralsCreator server={props.server}/>
         );
     }else if(props.tab.type ==='script_manager'){
         return (
-            <ScriptManager server={props.server}/>
+            <ScriptManager />
         );
     }else if(props.tab.type ==='peripherals_manager'){
         return (
-            <PeripheralsManager server={props.server}/>
+            <PeripheralsManager />
         );
     }else if(props.tab.type ==='applications_manager'){
         return (
-            <ApplicationsManager server={props.server}/>
+            <ApplicationsManager />
         );
-    } else{
-        return (null)
+    }else{
+        return null
     }
 };
 

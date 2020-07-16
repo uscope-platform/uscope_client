@@ -2,8 +2,6 @@ import {LOAD_PARAMETERS_DONE, SAVE_PARAMETER} from "./types";
 import axios from 'axios';
 
 
-
-
 export const saveParameter = (parameter) => ({
     type: SAVE_PARAMETER,
     payload:{
