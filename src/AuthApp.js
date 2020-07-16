@@ -1,4 +1,4 @@
-//       REACT AND BOOTSTRAP IMPORTS
+//       REACT IMPORTS
 import React, {useEffect, useState} from 'react';
 import {Redirect, Route} from 'react-router-dom'
 //       REDUX IMPORTS
@@ -13,7 +13,7 @@ import Navbar from "./components/Navbar";
 import ApplicationChooser from "./components/Common_Components/ApplicationChooser";
 //////  STYLE IMPORTS
 import './App.css';
-import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
+
 import ScriptsEditor from "./components/Managers/ScriptsEditor";
 import {ApplicationLayout} from "./components/UI_elements";
 import Sidebar from "./components/Sidebar/Sidebar";

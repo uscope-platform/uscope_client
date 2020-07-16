@@ -1,4 +1,4 @@
-//       REACT AND BOOTSTRAP IMPORTS
+//       REACT IMPORTS
 import React, {useCallback, useEffect, useState} from 'react';
 //      APP RELATED IMPORTS
 import serverProxy from "./ServerProxy";
@@ -6,7 +6,6 @@ import AuthApp from "./AuthApp";
 import LoginPage from "./components/Common_Components/LoginPage";
 //////  STYLE IMPORTS
 import './App.css';
-import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import {useDispatch} from "react-redux";
 import {setSetting} from "./redux/Actions/SettingsActions";
 import {ThemeProvider} from "styled-components";
