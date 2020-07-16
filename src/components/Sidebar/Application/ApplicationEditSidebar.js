@@ -24,6 +24,7 @@ import {
     create_parameter,
     create_peripheral
 } from "../../../utilities/ApplicationUtilities";
+import ApplicationMiscFieldProperties from "../../UI_elements/SidebarComponents/ApplicationMiscFieldProperties";
 
 let  ApplicationEditSidebar = props =>{
     const settings = useSelector(state => state.settings);
@@ -34,6 +35,7 @@ let  ApplicationEditSidebar = props =>{
     const [new_macro, set_new_macro] = useState(false);
     const [new_parameter, set_new_parameter] = useState(false);
     const [new_peripheral, set_new_peripheral] = useState(false);
+    const [new_misc, set_new_misc] = useState(false);
 
     let handle_add_item_done = (event) =>{
         let edit = {};
@@ -59,6 +61,10 @@ let  ApplicationEditSidebar = props =>{
                     edit = {application:settings.current_application, peripheral:create_peripheral(event.target.value), action:"add_peripheral"};
                     set_new_parameter(false);
                     break;
+                case "misc":
+                    edit = {application:settings.current_application, field: {name:event.target.value, value:"0"}, action:"add_misc"};
+                    set_new_misc(false);
+                    break;
                 default:
                     return;
             }
@@ -83,6 +89,9 @@ let  ApplicationEditSidebar = props =>{
             case"peripheral":
                 set_new_peripheral(true);
                 break;
+            case "misc":
+                set_new_misc(true);
+                break;
             default:
                 return;
         }
@@ -90,12 +99,28 @@ let  ApplicationEditSidebar = props =>{
 
 
 
+    let render_misc_fields = () =>{
+        let fields_list = [];
+        for(let field_name in applications[settings.current_application]){
+            let value = applications[settings.current_application][field_name];
+            if(!Array.isArray(value))
+                fields_list.push({name:field_name, value:value})
+        }
+
+        return fields_list.map((field)=>{
+            return(
+                <ApplicationMiscFieldProperties application={settings.current_application} field={field}/>
+            )
+        })
+    }
+
     if(!settings.current_application)
         return <></>;
 
     return (
         <SidebarContentLayout application>
             <BlockTitle>{applications[settings.current_application].application_name}</BlockTitle>
+
             <SidebarBlockLayout>
                 <SidebarBlockTitleLayout>
                     <label style={{fontSize:'20px',fontWeight:600}}>{"Channels"}</label>
@@ -114,6 +139,7 @@ let  ApplicationEditSidebar = props =>{
                         }
                     </StyledScrollbar>
                 </SidebarBlockLayout>
+
             <SidebarBlockLayout>
                 <SidebarBlockTitleLayout>
                     <label style={{fontSize:'20px',fontWeight:600}}>{"Initial Register Values"}</label>
@@ -132,6 +158,7 @@ let  ApplicationEditSidebar = props =>{
                     }
                 </StyledScrollbar>
             </SidebarBlockLayout>
+
             <SidebarBlockLayout>
                 <SidebarBlockTitleLayout>
                     <label style={{fontSize:'20px',fontWeight:600}}>{"Macro"}</label>
@@ -150,6 +177,7 @@ let  ApplicationEditSidebar = props =>{
                     }
                 </StyledScrollbar>
             </SidebarBlockLayout>
+
             <SidebarBlockLayout>
                 <SidebarBlockTitleLayout>
                     <label style={{fontSize:'20px',fontWeight:600}}>{"Parameters"}</label>
@@ -168,6 +196,7 @@ let  ApplicationEditSidebar = props =>{
                     }
                 </StyledScrollbar>
             </SidebarBlockLayout>
+
             <SidebarBlockLayout>
                 <SidebarBlockTitleLayout>
                     <label style={{fontSize:'20px',fontWeight:600}}>{"Peripherals"}</label>
@@ -183,6 +212,21 @@ let  ApplicationEditSidebar = props =>{
                                 <ApplicationPeripheralProperties application={settings.current_application} peripheral={peripheral}/>
                             )
                         })
+                    }
+                </StyledScrollbar>
+            </SidebarBlockLayout>
+
+            <SidebarBlockLayout>
+                <SidebarBlockTitleLayout>
+                    <label style={{fontSize:'20px',fontWeight:600}}>{"Miscelaneous"}</label>
+                    <Add id="misc"  size={"medium"} onClick={handle_add_item} color='white'/>
+                </SidebarBlockTitleLayout>
+                {new_misc &&
+                <InputField name="misc" compact label="Field Name" onKeyDown={handle_add_item_done}/>
+                }
+                <StyledScrollbar>
+                    {
+                        render_misc_fields()
                     }
                 </StyledScrollbar>
             </SidebarBlockLayout>

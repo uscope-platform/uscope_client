@@ -91,6 +91,25 @@ let ApplicationsReducer = function (state = [], action) {
                             return item['tab_id'] !== action.payload.peripheral;
                         });
                     });
+                case "add_misc":
+                    return produce(state, draftState => {
+                        draftState[action.payload.application][action.payload.field.name] = action.payload.field.value;
+                    });
+                case "edit_misc":
+                    return produce(state, draftState => {
+                        let value = 0;
+                        if(action.payload.field.old_name)
+                            value = draftState[action.payload.application][action.payload.field.old_name];
+                        else
+                            value = action.payload.field.value
+
+                        delete draftState[action.payload.application][action.payload.field.old_name];
+                        draftState[action.payload.application][action.payload.field.name] =value;
+                    });
+                case"remove_misc":
+                    return produce(state, draftState => {
+                        delete draftState[action.payload.application][action.payload.field.name];
+                    });
                 default:
                     return state;
             }
