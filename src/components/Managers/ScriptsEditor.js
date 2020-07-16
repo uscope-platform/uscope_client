@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import AceEditor from "react-ace";
-import {Button} from "../../UI_elements"
+import {Button} from "../UI_elements"
 
 import "ace-builds/src-min-noconflict/mode-javascript";
 import "ace-builds/src-min-noconflict/theme-dracula";

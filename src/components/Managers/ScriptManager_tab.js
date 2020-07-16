@@ -10,7 +10,7 @@ import {TableStyle} from './TableStyles'
 import {BlockLayout, Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements"
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
-import ScriptsEditor from "../Creators/Script_creator/ScriptsEditor";
+import ScriptsEditor from "./ScriptsEditor";
 
 
 let columns = [

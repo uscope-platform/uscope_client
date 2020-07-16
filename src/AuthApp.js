@@ -14,7 +14,7 @@ import ApplicationChooser from "./components/Modal_Components/ApplicationChooser
 //////  STYLE IMPORTS
 import './App.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
-import ScriptsEditor from "./components/Creators/Script_creator/ScriptsEditor";
+import ScriptsEditor from "./components/Managers/ScriptsEditor";
 import {ApplicationLayout} from "./components/UI_elements";
 import Sidebar from "./components/Sidebar/Sidebar";
 
