@@ -3,7 +3,6 @@ import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {Camera, Configure, Pause, Play, Stop} from 'grommet-icons'
 import {plotPause, plotPlay, plotStop} from "../../redux/Actions/plotActions";
-import TimebaseModal from "../Modal_Components/TimebaseModal"
 import ScopeModeModal from "../Modal_Components/scopeModeModal";
 import {showModal} from "../../redux/Actions/modalsActions";
 import styled from "styled-components";
@@ -70,7 +69,6 @@ let  PlotControls = props =>{
 
     return(
         <ComponentStyle>
-            <TimebaseModal server={settings.server} show={modals.timebase_choice}/>
             <ScopeModeModal server={settings.server} show={modals.scope_mode_choice} done={onModeSubmit} />
             <IconStyle>
                 <Play id='play' color='white' onClick={onClick}/>

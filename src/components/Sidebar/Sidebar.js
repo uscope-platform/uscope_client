@@ -4,7 +4,7 @@ import {withRouter} from "react-router";
 import {SidebarLayout} from "../UI_elements";
 import PeripheralsSidebar from "./Peripheral/PeripheralsSidebar";
 import ApplicationSidebar from "./Application/ApplicationSidebar";
-
+import PlotSidebar from "./Plot/PlotSidebar";
 
 let  Sidebar = props =>{
 
@@ -31,7 +31,7 @@ let  Sidebar = props =>{
         case "/plot":
             return(
                 <SidebarLayout>
-
+                    <PlotSidebar/>
                 </SidebarLayout>
             );
         default:
