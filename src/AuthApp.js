@@ -11,7 +11,6 @@ import TabContent from "./components/TabContent";
 import Navbar from "./components/Navbar";
 
 import ApplicationChooser from "./components/Modal_Components/ApplicationChooser";
-import ApplicationsCreator from "./components/Creators/Application_creator/ApplicationsCreator";
 //////  STYLE IMPORTS
 import './App.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
@@ -190,11 +189,6 @@ let AuthApp = (props) =>{
                             path={'/script_creator'}
                             exact
                             render={(props) => <ScriptsCreator />}
-                        />
-                        <Route
-                            path={'/application_creator'}
-                            exact
-                            render={(props) => <ApplicationsCreator />}
                         />
                         <Redirect exact from="/" to="plot" />
                     </div>

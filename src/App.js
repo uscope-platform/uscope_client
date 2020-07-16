@@ -27,7 +27,7 @@ let App = (props) =>{
         server.auth_proxy.sign_in(login_credentials).then((token) =>{
             let uScope_server = new serverProxy('http://0.0.0.0:8989/uscope/',token.access_token); //home: http://192.168.1.2/uscope/ unimore:http://155.185.48.185/uscope/ docker:http://172.18.0.1:4999/uscope/ unnc:http://10.190.0.74:4999/uscope/
             if(token.login_token){
-                let ret = localStorage.setItem('login_token', JSON.stringify(token.login_token));
+                localStorage.setItem('login_token', JSON.stringify(token.login_token));
             }
             set_server(uScope_server);
             dispatch(setSetting(["server", uScope_server]));

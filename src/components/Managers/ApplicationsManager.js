@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 
-import {LinkContainer} from 'react-router-bootstrap'
 import {useDispatch, useSelector} from "react-redux"
 
 
@@ -93,44 +92,13 @@ let  ApplicationsManager = props =>{
         settings.server.app_proxy.createApplication(JSON.parse(content), null);
     };
 
-    let handleCreate = () => {
-        dispatch(setSetting(["edit_application_mode", false]));
-        dispatch(setSetting(["edit_application_name", null]));
-
-        return true
-    };
-
-    let handleEdit = () => {
-        if(settings.current_application===null){
-            return false;
-        }
-        dispatch(setSetting(["edit_application_mode", true]));
-        dispatch(setSetting(["edit_application_name", settings.current_application]));
-        return true;
-    };
-
-    let is_editable = () =>{
-        return settings.current_application !== null;
-    };
 
     return(
         <ManagerLayout>
             <ManagerButtonsLayout>
-                <div style={{margin:"0 1rem"}}>
-                    <LinkContainer to="/application_creator">
-                        <Button onClick={handleCreate}> Add application</Button>
-                    </LinkContainer>
-                </div>
-
-
                 <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}> Remove application</Button>
                 <Button style={{margin:"0 1rem"}} onClick={handleImport}>Import application</Button>
                 <Button style={{margin:"0 1rem"}} onClick={handleExport}>Export application</Button>
-                <div style={{margin:"0 1rem"}}>
-                    <LinkContainer isActive={is_editable} to="/application_creator">
-                        <Button onClick={handleEdit}>Edit application</Button>
-                    </LinkContainer>
-                </div>
             </ManagerButtonsLayout>
             <BlockLayout centered>
                 <DataTable
