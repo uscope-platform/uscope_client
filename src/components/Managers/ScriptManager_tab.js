@@ -9,8 +9,8 @@ import {TableStyle} from './TableStyles'
 
 import {BlockLayout, Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements"
 import {setSetting} from "../../redux/Actions/SettingsActions";
-import {LinkContainer} from "react-router-bootstrap";
-import ScriptsCreator from "../Creators/Script_creator/ScriptsCreator";
+
+import ScriptsEditor from "../Creators/Script_creator/ScriptsEditor";
 
 
 let columns = [
@@ -126,7 +126,7 @@ let ScriptManager = (props) =>{
     if(editor_open) {
         return (
             <ManagerLayout>
-                <ScriptsCreator done={handle_edit_done} />
+                <ScriptsEditor done={handle_edit_done} />
             </ManagerLayout>
             );
     }

@@ -14,7 +14,7 @@ import ApplicationChooser from "./components/Modal_Components/ApplicationChooser
 //////  STYLE IMPORTS
 import './App.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
-import ScriptsCreator from "./components/Creators/Script_creator/ScriptsCreator";
+import ScriptsEditor from "./components/Creators/Script_creator/ScriptsEditor";
 import {ApplicationLayout} from "./components/UI_elements";
 import Sidebar from "./components/Sidebar/Sidebar";
 
@@ -188,7 +188,7 @@ let AuthApp = (props) =>{
                         <Route
                             path={'/script_creator'}
                             exact
-                            render={(props) => <ScriptsCreator />}
+                            render={(props) => <ScriptsEditor />}
                         />
                         <Redirect exact from="/" to="plot" />
                     </div>

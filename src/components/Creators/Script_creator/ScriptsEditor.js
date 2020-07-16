@@ -14,7 +14,7 @@ const Title = styled.h1`
 
 
 
-let ScriptsCreator = props =>{
+let ScriptsEditor = props =>{
     const scripts_store = useSelector(state => state.scripts);
     const settings = useSelector(state => state.settings);
     const [editor_content, set_editor_content] = useState("");
@@ -61,6 +61,6 @@ let ScriptsCreator = props =>{
 
 }
 
-export default ScriptsCreator;
+export default ScriptsEditor;
 
 
