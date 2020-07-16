@@ -81,14 +81,14 @@ let ApplicationsReducer = function (state = [], action) {
                 case "edit_peripheral":
                     return produce(state, draftState => {
                         let target = draftState[action.payload.application]["tabs"].filter((item)=>{
-                            return item['tab_id'] === action.payload.peripheral;
+                            return item['name'] === action.payload.peripheral;
                         })[0];
                         target[action.payload.field] = action.payload.value;
                     });
                 case"remove_peripheral":
                     return produce(state, draftState => {
                         draftState[action.payload.application]["tabs"] = draftState[action.payload.application]["tabs"].filter((item)=>{
-                            return item['tab_id'] !== action.payload.peripheral;
+                            return item['name'] !== action.payload.peripheral;
                         });
                     });
                 case "add_misc":

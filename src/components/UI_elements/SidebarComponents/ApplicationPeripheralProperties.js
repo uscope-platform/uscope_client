@@ -40,7 +40,7 @@ let  ApplicationPeripheralProperties = props =>{
 
     let handleEditNameChange = (event) => {
         if(event.key==="Enter"){
-            let edit = {application:props.application, peripheral:props.peripheral.tab_id, field:event.target.name, value:event.target.value, action:"edit_peripheral"};
+            let edit = {application:props.application, peripheral:props.peripheral.name, field:event.target.name, value:event.target.value, action:"edit_peripheral"};
             settings.server.app_proxy.edit_application(edit);
             set_edit_name(false);
         }else if(event.key ==="Escape"){
@@ -53,25 +53,25 @@ let  ApplicationPeripheralProperties = props =>{
     }
 
     let handleChange = (event)=>{
-        let edit = {application:props.application, peripheral:props.peripheral.tab_id, field:event.target.name, value:event.target.checked, action:"edit_peripheral"};
+        let edit = {application:props.application, peripheral:props.peripheral.name, field:event.target.name, value:event.target.checked, action:"edit_peripheral"};
         settings.server.app_proxy.edit_application(edit);
     }
 
     let handleIDChange = (event)=>{
-        let edit = {application:props.application, peripheral:props.peripheral.tab_id, field:event.target.name, value:event.target.value, action:"edit_peripheral"};
+        let edit = {application:props.application, peripheral:props.peripheral.name, field:event.target.name, value:event.target.value, action:"edit_peripheral"};
         settings.server.app_proxy.edit_application(edit);
     }
 
     let handleonKeyDown = (event) =>{
         let edit = {}
         if(event.key==="Enter"|| event.key ==="Tab"){
-            edit = {application:props.application, peripheral:props.peripheral.tab_id, field:event.target.name, value:event.target.value, action:"edit_peripheral"};
+            edit = {application:props.application, peripheral:props.peripheral.name, field:event.target.name, value:event.target.value, action:"edit_peripheral"};
             settings.server.app_proxy.edit_application(edit);
         }
     }
 
     let handleRemoveRegister= (event) =>{
-        let edit = {application:props.application, peripheral:props.peripheral.tab_id, action:"remove_peripheral"};
+        let edit = {application:props.application, peripheral:props.peripheral.name, action:"remove_peripheral"};
         settings.server.app_proxy.edit_application(edit);
     }
 
