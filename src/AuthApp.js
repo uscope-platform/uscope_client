@@ -10,7 +10,7 @@ import {loadRegisters} from "./redux/Actions/RegisterActions";
 import TabContent from "./components/TabContent";
 import Navbar from "./components/Navbar";
 
-import ApplicationChooser from "./components/Modal_Components/ApplicationChooser";
+import ApplicationChooser from "./components/Common_Components/ApplicationChooser";
 //////  STYLE IMPORTS
 import './App.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
