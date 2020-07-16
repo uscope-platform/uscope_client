@@ -10,6 +10,7 @@ import {TableStyle} from './TableStyles'
 import {BlockLayout, Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements"
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import {LinkContainer} from "react-router-bootstrap";
+import ScriptsCreator from "../Creators/Script_creator/ScriptsCreator";
 
 
 let columns = [
@@ -49,6 +50,7 @@ let ScriptManager = (props) =>{
         return JSON.parse(JSON.stringify(scripts_store));
     });
 
+    const [editor_open, set_editor_open] = useState(false);
 
     let handleOnSelect = (selection) => {
         if(!selection.allSelected && selection.selectedCount===1){
@@ -110,40 +112,47 @@ let ScriptManager = (props) =>{
         }
     };
 
-    let is_editable = () =>{
-        return selected !== null;
-    };
 
     let handleScriptEdit = () => {
         let script = scripts.find(x => x.id === selected);
+        set_editor_open(true);
         dispatch(setSetting(["scriptEditor_title", script.path]));
     };
 
-    return(
-        <ManagerLayout>
-            <ManagerButtonsLayout>
-                <Button style={{margin:"0 1rem"}} onClick={handleAddRow}>Add Script</Button>
-                <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}>Remove Script</Button>
-                <div style={{margin:"0 1rem"}}>
-                    <LinkContainer isActive={is_editable} to="/script_creator">
-                        <Button onClick={handleScriptEdit}>Edit Script</Button>
-                    </LinkContainer>
-                </div>
+    let handle_edit_done = () =>{
+        set_editor_open(false);
+    }
 
-            </ManagerButtonsLayout>
-            <BlockLayout centered>
-                <DataTable
-                    title='Scripts'
-                    data={scripts}
-                    columns={columns}
-                    customStyles={TableStyle}
-                    theme="uScopeTableTheme"
-                    selectableRows
-                    onSelectedRowsChange={handleOnSelect}
-                />
-            </BlockLayout>
-            <Button  outline confirm onClick={handleScriptConfigurationSave}>Save scripts configuration</Button>
-        </ManagerLayout>
+    if(editor_open) {
+        return (
+            <ManagerLayout>
+                <ScriptsCreator done={handle_edit_done} />
+            </ManagerLayout>
+            );
+    }
+
+    return(
+    <ManagerLayout>
+        <ManagerButtonsLayout>
+            <Button style={{margin:"0 1rem"}} onClick={handleAddRow}>Add Script</Button>
+            <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}>Remove Script</Button>
+            <Button style={{margin:"0 1rem"}} onClick={handleScriptEdit}>Edit Script</Button>
+
+
+        </ManagerButtonsLayout>
+        <BlockLayout centered>
+            <DataTable
+                title='Scripts'
+                data={scripts}
+                columns={columns}
+                customStyles={TableStyle}
+                theme="uScopeTableTheme"
+                selectableRows
+                onSelectedRowsChange={handleOnSelect}
+            />
+        </BlockLayout>
+        <Button  outline confirm onClick={handleScriptConfigurationSave}>Save scripts configuration</Button>
+    </ManagerLayout>
     );
 }
 

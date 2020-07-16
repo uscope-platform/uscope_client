@@ -28,7 +28,7 @@ let TabContent = props => {
         return (
             <ApplicationsManager />
         );
-    } else{
+    }else{
         return null
     }
 };
