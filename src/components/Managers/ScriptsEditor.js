@@ -12,8 +12,6 @@ const Title = styled.h1`
   margin-left: auto;
 `
 
-
-
 let ScriptsEditor = props =>{
     const scripts_store = useSelector(state => state.scripts);
     const settings = useSelector(state => state.settings);
@@ -24,14 +22,14 @@ let ScriptsEditor = props =>{
     };
 
     let handle_submit = (event) => {
-        let script = scripts_store.find(x => x.path === settings.scriptEditor_title);
+        let script = scripts_store.find(x => x.path === settings.script_editor_title);
         script.script_content = editor_content;
         settings.server.script_proxy.edit_script(script);
         props.done();
     };
 
     let handle_load = (editor) => {
-        let script =scripts_store.find(x => x.path === settings.scriptEditor_title);
+        let script =scripts_store.find(x => x.path === settings.script_editor_title);
         if(typeof script !== 'undefined' && script !== null){
             editor.setValue(script.script_content);
             set_editor_content(script.script_content);
@@ -42,7 +40,7 @@ let ScriptsEditor = props =>{
 
     return(
         <>
-            <Title>{settings.scriptEditor_title}</Title>
+            <Title>{settings.script_editor_title}</Title>
             <AceEditor
                 mode="javascript"
                 theme="dracula"

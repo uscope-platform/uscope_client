@@ -116,7 +116,7 @@ let ScriptManager = (props) =>{
     let handleScriptEdit = () => {
         let script = scripts.find(x => x.id === selected);
         set_editor_open(true);
-        dispatch(setSetting(["scriptEditor_title", script.path]));
+        dispatch(setSetting(["script_editor_title", script.path]));
     };
 
     let handle_edit_done = () =>{

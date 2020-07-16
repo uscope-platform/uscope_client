@@ -8,6 +8,7 @@ const initial_state = {
     edit_application_name: "",
     current_peripheral:null,
     current_application:null,
+    script_editor_title:null,
     current_view_requires_sidebar: true
 };
 
