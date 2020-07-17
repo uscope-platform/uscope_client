@@ -32,10 +32,10 @@ let  PlotSidebar = props =>{
     };
 
     return (
-        <SidebarContentLayout peripheral>
+        <>
             <EnablesProperties/>
             <CaptureProperties done={on_capture_start} />
-        </SidebarContentLayout>
+        </>
     );
 
 };

@@ -1,11 +1,9 @@
 import React, {useState} from "react";
 import {
-    Button,
-    FormLayout,
+    Button, FormLayout,
     InputField,
     SidebarBlockLayout,
-    SidebarBlockTitleLayout,
-    StyledScrollbar
+    SidebarBlockTitleLayout
 } from "../../UI_elements";
 
 let CaptureProperties = props =>{
@@ -23,16 +21,14 @@ let CaptureProperties = props =>{
 
 
     return(
-        <SidebarBlockLayout>
+        <SidebarBlockLayout padding={'1rem'}>
             <SidebarBlockTitleLayout>
                 <label style={{fontSize:'20px',fontWeight:600}}>{"Capture Settings"}</label>
             </SidebarBlockTitleLayout>
-            <StyledScrollbar>
-                <FormLayout>
-                    <InputField inline name='n_buffers' onChange={handle_change} label="Number of buffers"/>
-                </FormLayout>
-                <Button onClick={handle_close}>Save changes</Button>
-            </StyledScrollbar>
+            <FormLayout>
+                <InputField inline name='n_buffers' onChange={handle_change} label="Number of buffers"/>
+                <Button onClick={handle_close}>Submit changes</Button>
+            </FormLayout>
         </SidebarBlockLayout>
     )
 };

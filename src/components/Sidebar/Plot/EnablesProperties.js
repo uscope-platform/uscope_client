@@ -3,12 +3,10 @@ import React, {useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 
 import {
-    Button,
-    FormLayout,
+    Button, FormLayout,
     InputField,
     SidebarBlockLayout,
-    SidebarBlockTitleLayout,
-    StyledScrollbar
+    SidebarBlockTitleLayout
 } from "../../UI_elements";
 
 import {saveScriptsWorkspace} from "../../../redux/Actions/scriptsActions";
@@ -87,11 +85,10 @@ let  EnablesProperties = props =>{
     };
 
     return (
-        <SidebarBlockLayout>
+        <SidebarBlockLayout padding={'1rem'}>
             <SidebarBlockTitleLayout>
                 <label style={{fontSize:'20px',fontWeight:600}}>{"Timebase Settings"}</label>
             </SidebarBlockTitleLayout>
-            <StyledScrollbar>
                 <FormLayout>
                     <InputField inline name='frequency' onChange={handle_change} label="Frequency"/>
                     {
@@ -99,9 +96,8 @@ let  EnablesProperties = props =>{
                             return <InputField inline name={i} onChange={handle_change} label={'enable_'+(i+1)}/>
                         })
                     }
+                    <Button onClick={handle_close}>Submit changes</Button>
                 </FormLayout>
-                <Button onClick={handle_close}>Save changes</Button>
-            </StyledScrollbar>
         </SidebarBlockLayout>
     );
 };
