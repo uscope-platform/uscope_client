@@ -79,7 +79,7 @@ export let  ApplicationPeripheralProperties = props =>{
                 <SidebarCollapsableContentLayout>
                     <ChoicesWrapper>
                         <Label>peripheral ID</Label>
-                        <Select name="tab_id" defaultValue={props.peripheral.tab_id} onChange={handleIDChange}>
+                        <Select name="peripheral_id" defaultValue={props.peripheral.peripheral_id} onChange={handleIDChange}>
                             <option value="" hidden>Peripheral type</option>
                             {
                                 Object.entries(peripherals).map((name,i) => (

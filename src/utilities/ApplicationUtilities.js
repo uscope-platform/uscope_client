@@ -36,7 +36,7 @@ export let create_parameter = (name) =>{
 export let create_peripheral = (name) =>{
     return {
         name: name,
-        tab_id: name.replace(/\s/g, "_").toLowerCase(),
+        peripheral_id: name.replace(/\s/g, "_").toLowerCase(),
         base_address: '0',
         proxied: false,
         proxy_address:'0',

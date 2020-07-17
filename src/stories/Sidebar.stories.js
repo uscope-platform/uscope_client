@@ -205,10 +205,10 @@ const app_example = {
                 visible: false
             }
         ],
-        tabs: [
+    peripherals: [
         {
             name: 'ADC processing',
-            tab_id: 'ADC_processing',
+            peripheral_id: 'ADC_processing',
             base_address: '0x43c00100',
             image_src: 'static/Images/ADC_processing.png',
             type: 'Registers',
@@ -220,7 +220,7 @@ const app_example = {
             image_src: 'static/Images/SPI.png',
             name: 'SPI',
             proxied: false,
-            tab_id: 'SPI',
+            peripheral_id: 'SPI',
             type: 'Registers',
             user_accessible: true
         },
@@ -228,7 +228,7 @@ const app_example = {
             base_address: '0x43c00300',
             name: 'GPIO',
             proxied: false,
-            tab_id: 'GPIO',
+            peripheral_id: 'GPIO',
             type: 'Registers',
             user_accessible: false
         },
@@ -236,7 +236,7 @@ const app_example = {
             base_address: '0x43c00400',
             name: 'enable generator',
             proxied: false,
-            tab_id: 'enable_generator',
+            peripheral_id: 'enable_generator',
             type: 'Registers',
             user_accessible: false
         }

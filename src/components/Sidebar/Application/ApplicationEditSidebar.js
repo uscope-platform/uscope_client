@@ -209,7 +209,7 @@ let  ApplicationEditSidebar = props =>{
                 }
                 <StyledScrollbar>
                     {
-                        applications[settings.current_application].tabs.map((peripheral)=>{
+                        applications[settings.current_application].peripherals.map((peripheral)=>{
                             return(
                                 <ApplicationPeripheralProperties application={settings.current_application} peripheral={peripheral}/>
                             )

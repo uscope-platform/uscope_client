@@ -83,18 +83,18 @@ let ApplicationsReducer = function (state = [], action) {
                     });
                 case "add_peripheral":
                     return produce(state, draftState => {
-                        draftState[action.payload.application]["tabs"].push(action.payload.peripheral)
+                        draftState[action.payload.application]["peripherals"].push(action.payload.peripheral)
                     });
                 case "edit_peripheral":
                     return produce(state, draftState => {
-                        let target = draftState[action.payload.application]["tabs"].filter((item)=>{
+                        let target = draftState[action.payload.application]["peripherals"].filter((item)=>{
                             return item['name'] === action.payload.peripheral;
                         })[0];
                         target[action.payload.field] = action.payload.value;
                     });
                 case"remove_peripheral":
                     return produce(state, draftState => {
-                        draftState[action.payload.application]["tabs"] = draftState[action.payload.application]["tabs"].filter((item)=>{
+                        draftState[action.payload.application]["peripherals"] = draftState[action.payload.application]["peripherals"].filter((item)=>{
                             return item['name'] !== action.payload.peripheral;
                         });
                     });

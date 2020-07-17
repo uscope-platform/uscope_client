@@ -32,7 +32,7 @@ let  Navbar = props =>{
             {props.tabs.map((tab, i) => {
                 if(tab.user_accessible){
                     return(
-                        <NavLink style={link_default_style} activeStyle={link_active_style} key={tab.tab_id} to={'/'+tab.tab_id} className="nav-link">
+                        <NavLink style={link_default_style} activeStyle={link_active_style} key={tab.peripheral_id} to={'/'+tab.peripheral_id} className="nav-link">
                             {tab.name}
                         </NavLink>
                     )

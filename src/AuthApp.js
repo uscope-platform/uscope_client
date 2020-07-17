@@ -92,17 +92,17 @@ let AuthApp = (props) =>{
         settings.server.app_proxy.setApplication(e).then(()=>{
             let app = applications[e];
             dispatch(setSetting(["application", e]));
-            let tabs = Object.values(app.tabs);
-            dispatch(loadTabs(tabs))
-            initializeRegisterStore(tabs);
+            let peripherals = Object.values(app.peripherals);
+            dispatch(loadTabs(peripherals))
+            initializeRegisterStore(peripherals);
         });
     };
 
-    let initializeRegisterStore = (tabs) =>{
+    let initializeRegisterStore = (peripherals) =>{
 
-        Promise.all(tabs.map((tab) =>{
+        Promise.all(peripherals.map((tab) =>{
             if(tab.user_accessible && tab.type==="Registers"){
-                return settings.server.periph_proxy.getPeripheralRegisters(tab.tab_id);
+                return settings.server.periph_proxy.getPeripheralRegisters(tab.peripheral_id);
             }
             return 'Not Needed';
         })).then((result) =>{
@@ -123,25 +123,25 @@ let AuthApp = (props) =>{
         settings.server.plot_proxy.getChannelsInfo();
         dispatch(loadTabs([{
             name: "Plot",
-            tab_id: "plot",
+            peripheral_id: "plot",
             type: "Scope",
             user_accessible: true
         }]))
         dispatch(loadTabs([{
             name: "Script manager",
-            tab_id: "script_manager",
+            peripheral_id: "script_manager",
             type: "script_manager",
             user_accessible: true
         }]))
         dispatch(loadTabs([{
             name: "Peripherals manager",
-            tab_id: "peripherals_manager",
+            peripheral_id: "peripherals_manager",
             type: "peripherals_manager",
             user_accessible: true
         }]))
         dispatch(loadTabs([{
             name: "Applications manager",
-            tab_id: "applications_manager",
+            peripheral_id: "applications_manager",
             type: "applications_manager",
             user_accessible: true
         }]));
@@ -171,8 +171,8 @@ let AuthApp = (props) =>{
                                     if(tab.user_accessible){
                                         return(
                                             <Route
-                                                key={tab.tab_id}
-                                                path={'/'+tab.tab_id}
+                                                key={tab.peripheral_id}
+                                                path={'/'+tab.peripheral_id}
                                                 exact
                                                 render={(props) => <TabContent className="main_content_tab" tab={tab}/>}
                                             />
