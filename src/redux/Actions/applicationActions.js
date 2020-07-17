@@ -1,6 +1,15 @@
-import {ADD_APPLICATION, EDIT_APPLICATION, LOAD_APPLICATIONS, REMOVE_APPLICATION} from "./types";
+import {ADD_APPLICATION, EDIT_APPLICATION, LOAD_APPLICATIONS, REMOVE_APPLICATION, SAVE_PARAMETER} from "./types";
 import axios from 'axios';
 
+
+export const saveParameter = (parameter) => ({
+    type: SAVE_PARAMETER,
+    payload:{
+        name: parameter.name,
+        value: parameter.value,
+        app:parameter.app
+    }
+});
 
 export const loadApplications = (server_url, config) => {
 

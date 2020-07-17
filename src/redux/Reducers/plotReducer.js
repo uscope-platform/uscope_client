@@ -42,11 +42,11 @@ const initial_state = {
             t: 25,
         },
         width: "1024",
-            height: "auto",
-            paper_bgcolor: "rgba(0,0,0,0)",
-            plot_bgcolor:"#444",
-            font: {
-            color: '#FFFFFF'
+        height: "auto",
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor:"#444",
+        font: {
+        color: '#FFFFFF'
         },
         xaxis: {
             showline: true,
@@ -65,7 +65,7 @@ const initial_state = {
     },
     configs: {
         responsive: true,
-            displaylogo: false
+        displaylogo: false
     },
 };
 

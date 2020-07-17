@@ -22,7 +22,7 @@ let  MacroActions = props =>{
     const settings = useSelector(state => state.settings);
     const actions = applications[settings['application']]['macro']
     const registers_redux = useSelector(state => state.registerValues);
-    const parameters = useSelector(state => state.parameterValues);
+    let parameters = applications[settings["application"]].parameters;
     const scripts_workspace = useSelector(state => state.scriptsWorkspace);
     const dispatch = useDispatch();
 

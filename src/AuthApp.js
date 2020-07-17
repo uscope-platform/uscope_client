@@ -120,7 +120,6 @@ let AuthApp = (props) =>{
     };
 
     let loadResources = () => {
-        settings.server.app_proxy.getApplicationParameters();
         settings.server.plot_proxy.getChannelsInfo();
         dispatch(loadTabs([{
             name: "Plot",

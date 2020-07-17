@@ -1,5 +1,4 @@
 import axios from "axios"
-import {loadParameters} from "../redux/Actions/ParameterActions";
 import store from "../store";
 import {setChannelSetting} from "../redux/Actions/plotActions";
 import {
@@ -16,10 +15,6 @@ export default function applicationProxy(server_url, token) {
 
     this.loadAllApplications = () =>{
         store.dispatch(loadApplications(_this.server_url+'application/all/specs', _this.config))
-    };
-
-    this.getApplicationParameters = function (){
-        store.dispatch(loadParameters(_this.server_url+'application/parameters', _this.config));
     };
 
     this.setApplication = function (app_name) {

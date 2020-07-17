@@ -5,16 +5,18 @@ import {useDispatch, useSelector} from "react-redux";
 import SingleValueField from "../Common_Components/SingleValueField";
 import {context_cleaner, parseFunction} from "../../user_script_launcher";
 import {saveScriptsWorkspace} from "../../redux/Actions/scriptsActions";
-import {saveParameter} from "../../redux/Actions/ParameterActions";
+import {saveParameter} from "../../redux/Actions/applicationActions";
 
 
 let  ParametersArea = props =>{
+    const applications = useSelector(state => state.applications)
     const scripts = useSelector(state => state.scripts);
     const settings = useSelector(state => state.settings);
     const registers_redux = useSelector(state => state.registerValues);
-    const parameters = useSelector(state => state.parameterValues);
     const scripts_workspace = useSelector(state => state.scriptsWorkspace);
     const dispatch = useDispatch();
+
+    let parameters = applications[settings["application"]].parameters;
 
     //This effect hook initialized the parameters values
     useEffect(() => {
@@ -51,7 +53,7 @@ let  ParametersArea = props =>{
         for(let parameter of event.target){ // eslint-disable-line no-unused-vars
             //Parse parameter value and find out if it has changed
             let floatValue = parseFloat(parameter.value);
-            let objIndex = parameters.findIndex((obj => obj.parameter_name === parameter.name));
+            let objIndex = parameters.findIndex((obj => obj.parameter_id === parameter.name));
             if(parameter.value!=="" && parameters[objIndex].value !==floatValue){
                 //Retrive relevant script content
                 let scriptTrigger = parameters[objIndex].trigger;
@@ -76,7 +78,7 @@ let  ParametersArea = props =>{
                         }
                     }
                 }
-                dispatch(saveParameter({name:parameter.name, value:floatValue}))
+                dispatch(saveParameter({name:parameter.name, value:floatValue, app:settings["application"]}))
             }
         }
     };
@@ -86,10 +88,11 @@ let  ParametersArea = props =>{
             <BlockTitle>Parameters</BlockTitle>
             <form onSubmit={handleSubmit}>
                 <FormLayout>
-                    {parameters.map((param, i) => {
+                    {
+                        parameters.map((param, i) => {
                         if(param.visible){
                             return(
-                                <SingleValueField key={i} name={param.parameter_name} value={param.value} description={param.description}/>
+                                <SingleValueField key={i} name={param.parameter_id} value={param.value} description={param.description}/>
                             );
                         } else{
                             return null;

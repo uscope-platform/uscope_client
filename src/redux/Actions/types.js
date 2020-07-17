@@ -9,7 +9,6 @@ export const FETCH_DATA = 'FETCH_DATA';
 export const SET_CHANNEL_SETTING = "SET_CHANNEL_SETTING";
 //                   PARAMETERS ACTIONS
 export const SAVE_PARAMETER =  'SEND_PARAMETER';
-export const LOAD_PARAMETERS_DONE = 'LOAD_PARAMETERS_DONE';
 //                   REGISTERS ACTIONS
 export const LOAD_REGISTERS = 'LOAD_REGISTERS';
 export const SEND_REGISTER = 'SEND_REGISTER';

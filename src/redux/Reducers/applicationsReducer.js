@@ -1,9 +1,16 @@
-import {EDIT_APPLICATION, LOAD_APPLICATIONS, REMOVE_APPLICATION} from "../Actions/types";
+import {EDIT_APPLICATION, LOAD_APPLICATIONS, REMOVE_APPLICATION, SAVE_PARAMETER} from "../Actions/types";
 import produce from "immer";
 
 
 let ApplicationsReducer = function (state = [], action) {
     switch (action.type) {
+        case SAVE_PARAMETER:
+            return produce(state, draftState =>{
+                let target = draftState[action.payload.app]["parameters"].filter((item)=>{
+                    return item['parameter_id'] === action.payload.name;
+                })[0];
+                target.value = action.payload.value;
+            });
         case EDIT_APPLICATION:
             switch (action.payload.action) {
                 case "add_channel":

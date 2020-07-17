@@ -30,11 +30,12 @@ let ApplicationChooser = props =>{
 
     let handle_close = (event) =>{
         let default_app = null;
-        if(chosen_application)
+        if(chosen_application){
             props.done(chosen_application);
-        else
+        } else {
             default_app = Object.entries(applications)[0];
             props.done(default_app[0])
+        }
     };
 
     return(
