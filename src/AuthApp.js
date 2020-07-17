@@ -4,7 +4,7 @@ import {Redirect, Route} from 'react-router-dom'
 //       REDUX IMPORTS
 import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "./redux/Actions/SettingsActions";
-import {loadTabs} from "./redux/Actions/TabsActions";
+import {loadViews} from "./redux/Actions/ViewsActions";
 import {loadRegisters} from "./redux/Actions/RegisterActions";
 //      APP RELATED IMPORTS
 import TabContent from "./components/TabContent";
@@ -29,7 +29,7 @@ const states = Object.freeze({
 
 let AuthApp = (props) =>{
 
-    const tabs = useSelector(state => state.tabs);
+    const views = useSelector(state => state.views);
     const plot = useSelector(state => state.plot);
     const scripts = useSelector(state => state.scripts_store);
     const settings = useSelector(state => state.settings);
@@ -93,7 +93,7 @@ let AuthApp = (props) =>{
             let app = applications[e];
             dispatch(setSetting(["application", e]));
             let peripherals = Object.values(app.peripherals);
-            dispatch(loadTabs(peripherals))
+            dispatch(loadViews(peripherals))
             initializeRegisterStore(peripherals);
         });
     };
@@ -121,25 +121,25 @@ let AuthApp = (props) =>{
 
     let loadResources = () => {
         settings.server.plot_proxy.getChannelsInfo();
-        dispatch(loadTabs([{
+        dispatch(loadViews([{
             name: "Plot",
             peripheral_id: "plot",
             type: "Scope",
             user_accessible: true
         }]))
-        dispatch(loadTabs([{
+        dispatch(loadViews([{
             name: "Script manager",
             peripheral_id: "script_manager",
             type: "script_manager",
             user_accessible: true
         }]))
-        dispatch(loadTabs([{
+        dispatch(loadViews([{
             name: "Peripherals manager",
             peripheral_id: "peripherals_manager",
             type: "peripherals_manager",
             user_accessible: true
         }]))
-        dispatch(loadTabs([{
+        dispatch(loadViews([{
             name: "Applications manager",
             peripheral_id: "applications_manager",
             type: "applications_manager",
@@ -166,8 +166,8 @@ let AuthApp = (props) =>{
                 return (
                     <div className="App">
                             <ApplicationLayout sidebarNeeded={settings.current_view_requires_sidebar}>
-                                <Navbar tabs={tabs}/>
-                                {tabs.map((tab, i) => {
+                                <Navbar views={views}/>
+                                {views.map((tab, i) => {
                                     if(tab.user_accessible){
                                         return(
                                             <Route

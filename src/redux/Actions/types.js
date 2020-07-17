@@ -14,8 +14,8 @@ export const LOAD_REGISTERS = 'LOAD_REGISTERS';
 export const SEND_REGISTER = 'SEND_REGISTER';
 //                   GENERAL SETTINGS ACTIONS
 export const SET_SETTING = 'SET_PARAMETER_VALUE';
-//                  TABS ACTIONS
-export const LOAD_TABS = 'LOAD_TABS';
+//                  VIEWS ACTIONS
+export const LOAD_VIEWS = 'LOAD_VIEWS';
 //                  MODAL ACTIONS
 export const SHOW_MODAL = "SHOW_MODAL";
 export const HIDE_MODAL = "HIDE_MODAL";

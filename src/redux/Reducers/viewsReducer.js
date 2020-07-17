@@ -1,9 +1,9 @@
-import {LOAD_TABS} from "../Actions/types";
+import {LOAD_VIEWS} from "../Actions/types";
 
 
-let tabsReducer = function (state = [], action) {
+let viewsReducer = function (state = [], action) {
     switch (action.type) {
-        case LOAD_TABS:
+        case LOAD_VIEWS:
             state =  [...state, ...action.payload];
             return state;
         default:
@@ -11,4 +11,4 @@ let tabsReducer = function (state = [], action) {
     }
 };
 
-export default tabsReducer;
+export default viewsReducer;

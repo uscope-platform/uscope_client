@@ -29,7 +29,7 @@ let  Navbar = props =>{
         <ComponentLayout>
             <Image src="assets/logo.svg" alt='µScope Logo'/>
             <Image src="assets/name.svg" alt='µScope Name'/>
-            {props.tabs.map((tab, i) => {
+            {props.views.map((tab, i) => {
                 if(tab.user_accessible){
                     return(
                         <NavLink style={link_default_style} activeStyle={link_active_style} key={tab.peripheral_id} to={'/'+tab.peripheral_id} className="nav-link">
