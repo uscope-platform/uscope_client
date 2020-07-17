@@ -115,7 +115,9 @@ let AuthApp = (props) =>{
                 set_init_phase(states.RESOURCE_LOADING);
                 loadResources();
             }
-        );
+        ).catch((reason => {
+            console.log(reason)
+        }));
 
     };
 

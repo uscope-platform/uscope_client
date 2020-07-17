@@ -35,11 +35,11 @@ let  RegisterTab = props =>{
 
     return(
         <LayoutWrapper>
-            <Image src={settings.server.server_url + peripherals[props.content.peripheral_id].image} alt='Peripheral diagram' fluid/>
-            <RegisterInputForm registers={peripherals[props.content.peripheral_id].registers}
-                               values={registerValues[props.content.peripheral_id]}
-                               content={registerValues[props.content.peripheral_id]}
-                               parent_peripheral={props.content.peripheral_id}
+            <Image src={settings.server.server_url + peripherals[props.content.spec_id].image} alt='Peripheral diagram' fluid/>
+            <RegisterInputForm registers={peripherals[props.content.spec_id].registers}
+                               values={registerValues[props.content.spec_id]}
+                               content={registerValues[props.content.spec_id]}
+                               parent_peripheral={props.content.spec_id}
             />
         </LayoutWrapper>
     );
