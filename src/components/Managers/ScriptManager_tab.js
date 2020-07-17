@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 
 import {useDispatch, useSelector} from "react-redux"
@@ -46,9 +46,16 @@ let ScriptManager = (props) =>{
 
     const [selected, set_selected] = useState(null);
     const [removed_scripts, ] = useState([]);
+
     const [scripts, ] = useState(()=>{
         return JSON.parse(JSON.stringify(scripts_store));
     });
+
+    useEffect(() => {
+        return() =>{
+            set_selected(null);
+        }
+    },[dispatch]);
 
     const [editor_open, set_editor_open] = useState(false);
 

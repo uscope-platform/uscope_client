@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {useDispatch, useSelector} from "react-redux"
 
@@ -34,6 +34,11 @@ let  ApplicationsManager = props =>{
         return applications;
     });
 
+    useEffect(() => {
+        return() =>{
+            dispatch(setSetting(["current_application", null]));
+        }
+    },[dispatch]);
 
     let handleOnSelect = (selection) => {
         if(!selection.allSelected && selection.selectedCount===1){
