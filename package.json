@@ -8,6 +8,7 @@
     "grommet-icons": "^4.4.0",
     "immer": "^6.0.2",
     "plotly.js": "1.54.6",
+    "plotly.js-basic-dist": "^1.54.6",
     "plotly.js-dist": "1.54.6",
     "react": "^16.9.0",
     "react-ace": "9.1.1",

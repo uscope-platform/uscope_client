@@ -1,7 +1,7 @@
 import React from 'react';
 import useInterval from "../Common_Components/useInterval";
 
-import Plotly from 'plotly.js-dist';
+import Plotly from 'plotly.js-basic-dist';
 import createPlotlyComponent from 'react-plotly.js/factory';
 import {useSelector} from "react-redux";
 import styled from "styled-components";
