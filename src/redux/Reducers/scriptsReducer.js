@@ -6,23 +6,18 @@ let scriptsReducer = function (state = [], action) {
     switch (action.type) {
         case ADD_SCRIPT:
             return produce(state, draftState => {
-                draftState.push(action.payload);
+                draftState[action.payload.id] = action.payload;
             });
         case REMOVE_SCRIPT:
-            return state.filter((elem)=>{
-                return JSON.stringify(elem) !== JSON.stringify(action.payload);
+            return produce(state, draftState => {
+                delete draftState[action.payload.id];
             });
         case LOAD_ALL_SCRIPTS:
             state = action.payload;
             return  state;
         case EDIT_SCRIPT:
             return produce(state, draftState => {
-                debugger;
-                let current_state = draftState.find(x => x.id === action.payload.id);
-                let index = draftState.indexOf(current_state);
-                draftState.splice(index, 1);
-                draftState.push(action.payload)
-
+                draftState[action.payload.script][action.payload.field] = action.payload.value;
             });
         default:
             return state;

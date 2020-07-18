@@ -26,14 +26,15 @@ let ScriptsEditor = props =>{
     };
 
     let handle_submit = (event) => {
-        let script = scripts_store.find(x => x.path === settings.script_editor_title);
-        script.script_content = editor_content;
+        let script = Object.values(scripts_store).find(x => x.path === settings.script_editor_title);
+        script = {script:script.id, field:'script_content', value:editor_content}
+
         settings.server.script_proxy.edit_script(script);
         props.done();
     };
 
     let handle_load = (editor) => {
-        let script =scripts_store.find(x => x.path === settings.script_editor_title);
+        let script =Object.values(scripts_store).find(x => x.path === settings.script_editor_title);
         if(typeof script !== 'undefined' && script !== null){
             editor.setValue(script.script_content);
             set_editor_content(script.script_content);

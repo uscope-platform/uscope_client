@@ -44,11 +44,9 @@ let ScriptManager = (props) =>{
 
     const dispatch = useDispatch();
 
-    const [selected, set_selected] = useState(null);
-
     useEffect(() => {
         return() =>{
-            set_selected(null);
+            dispatch(setSetting(["selected_script", null]));
         }
     },[dispatch]);
 
@@ -56,43 +54,41 @@ let ScriptManager = (props) =>{
 
     let handleOnSelect = (selection) => {
         if(!selection.allSelected && selection.selectedCount===1){
-            set_selected(selection.selectedRows[0].id);
+            dispatch(setSetting(["selected_script", selection.selectedRows[0].id]));
         } else if(selection.selectedCount===0) {
-            set_selected(null);
+            dispatch(setSetting(["selected_script", null]));
         }
 
     };
 
     let handleAddRow = () =>{
+        let ids = Object.values(scripts_store).map(a => a.id).sort();
         let id = null;
-        for(let i=1;i<=scripts_store.length;i++){
-            if(scripts_store[i-1].id !== i){
-                id = i;
-                break;
+        for(var i = 1; i < ids.length; i++) {
+            if(ids[i] - ids[i-1] !== 1) {
+                id = ids[i-1]+1;
             }
         }
-        if(id===null){
-            id = scripts_store.length+1;
-        }
+        if(id===null)
+            id = ids.length+1;
 
-        let new_script = { id:id, name:'new script', path:'', triggers:''};
+        let new_script = { id:id, name:'new script_'+id, path:`new script_${id}.js`, script_content:'', triggers:''};
         settings.server.script_proxy.upload_script(new_script);
-        //The state modification is not needed in this case, it is only used to trigger the table's reload
-        set_selected(selected);
     };
 
     let handleRemoveRow = (event) =>{
-        let removed = scripts_store.find(x => x.id === selected);
-        settings.server.script_proxy.delete_script(settings.server.script_proxy.delete_script(removed));
-        set_selected(null);
+        let removed = Object.values(scripts_store).find(x => x.id === settings.selected_script);
+        settings.server.script_proxy.delete_script(removed);
+        dispatch(setSetting(["selected_script", null]));
     };
-
-    let handleScriptConfigurationSave = () =>{
-    };
-
 
     let handleScriptEdit = () => {
-        let script = scripts_store.find(x => x.id === selected);
+        if(settings.selected_script===null){
+            alert("Please select a script to edit");
+            return;
+        }
+
+        let script = Object.values(scripts_store).find(x => x.id === settings.selected_script);
         set_editor_open(true);
         dispatch(setSetting(["script_editor_title", script.path]));
     };
@@ -115,13 +111,11 @@ let ScriptManager = (props) =>{
             <Button style={{margin:"0 1rem"}} onClick={handleAddRow}>Add Script</Button>
             <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}>Remove Script</Button>
             <Button style={{margin:"0 1rem"}} onClick={handleScriptEdit}>Edit Script</Button>
-
-
         </ManagerButtonsLayout>
         <BlockLayout centered>
             <DataTable
                 title='Scripts'
-                data={scripts_store}
+                data={Object.values(scripts_store)}
                 columns={columns}
                 customStyles={TableStyle}
                 theme="uScopeTableTheme"
@@ -129,7 +123,6 @@ let ScriptManager = (props) =>{
                 onSelectedRowsChange={handleOnSelect}
             />
         </BlockLayout>
-        <Button  outline confirm onClick={handleScriptConfigurationSave}>Save scripts configuration</Button>
     </ManagerLayout>
     );
 }

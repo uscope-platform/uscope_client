@@ -18,11 +18,12 @@ let  ParametersArea = props =>{
 
     let parameters = applications[settings["application"]].parameters;
 
+
     //This effect hook initialized the parameters values
     useEffect(() => {
         for(let elem of parameters){
             let scriptTrigger = elem.trigger;
-            let trigger = scripts.filter((script)=>{
+            let trigger = Object.values(scripts).filter((script)=>{
                 return script.triggers.includes(scriptTrigger);
             });
             if(trigger[0] ===undefined){
@@ -57,7 +58,7 @@ let  ParametersArea = props =>{
             if(parameter.value!=="" && parameters[objIndex].value !==floatValue){
                 //Retrive relevant script content
                 let scriptTrigger = parameters[objIndex].trigger;
-                let trigger = scripts.filter((script)=>{
+                let trigger = Object.values(scripts).filter((script)=>{
                     return script.triggers.includes(scriptTrigger);
                 });
                 if(trigger[0]!==undefined){
