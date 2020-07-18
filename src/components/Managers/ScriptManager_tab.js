@@ -45,11 +45,6 @@ let ScriptManager = (props) =>{
     const dispatch = useDispatch();
 
     const [selected, set_selected] = useState(null);
-    const [removed_scripts, ] = useState([]);
-
-    const [scripts, ] = useState(()=>{
-        return JSON.parse(JSON.stringify(scripts_store));
-    });
 
     useEffect(() => {
         return() =>{
@@ -70,58 +65,34 @@ let ScriptManager = (props) =>{
 
     let handleAddRow = () =>{
         let id = null;
-        for(let i=1;i<=scripts.length;i++){
-            if(scripts[i-1].id !== i){
+        for(let i=1;i<=scripts_store.length;i++){
+            if(scripts_store[i-1].id !== i){
                 id = i;
                 break;
             }
         }
         if(id===null){
-            id = scripts.length+1;
+            id = scripts_store.length+1;
         }
 
-        scripts.push({
-            id:id,
-            name:'new script',
-            path:'',
-            triggers:''
-        });
+        let new_script = { id:id, name:'new script', path:'', triggers:''};
+        settings.server.script_proxy.upload_script(new_script);
         //The state modification is not needed in this case, it is only used to trigger the table's reload
         set_selected(selected);
     };
 
     let handleRemoveRow = (event) =>{
-        let removed = scripts.find(x => x.id === selected);
-        scripts.splice(scripts.findIndex(item => item.id === selected), 1);
-        this.setState(() => ({
-            removed_scripts: [...removed_scripts, ...[removed]]
-        }));
+        let removed = scripts_store.find(x => x.id === selected);
+        settings.server.script_proxy.delete_script(settings.server.script_proxy.delete_script(removed));
         set_selected(null);
     };
 
     let handleScriptConfigurationSave = () =>{
-        //HANDLE ADDITIONS
-        let difference = scripts.filter((element) => {
-            let presence = scripts_store.filter((curr_obj) => {
-                return JSON.stringify(curr_obj) === JSON.stringify(element)
-            });
-            return !(presence && presence.length);
-        });
-
-        // eslint-disable-next-line
-        for(let script of difference){
-            settings.server.script_proxy.upload_script(script);
-        }
-        //HANDLE DELETIONS
-        // eslint-disable-next-line
-        for(let script of removed_scripts){
-            settings.server.script_proxy.delete_script(script);
-        }
     };
 
 
     let handleScriptEdit = () => {
-        let script = scripts.find(x => x.id === selected);
+        let script = scripts_store.find(x => x.id === selected);
         set_editor_open(true);
         dispatch(setSetting(["script_editor_title", script.path]));
     };
@@ -150,7 +121,7 @@ let ScriptManager = (props) =>{
         <BlockLayout centered>
             <DataTable
                 title='Scripts'
-                data={scripts}
+                data={scripts_store}
                 columns={columns}
                 customStyles={TableStyle}
                 theme="uScopeTableTheme"

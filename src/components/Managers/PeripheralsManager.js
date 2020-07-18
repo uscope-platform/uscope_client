@@ -30,10 +30,6 @@ let PeripheralsManager = (props)=>{
 
     const dispatch = useDispatch();
 
-    const [peripherals, ] = useState(()=>{
-        return  Object.values(peripherals_redux);
-    });
-
     const [selected_stack, set_selected_stack] = useState([]);
 
     useEffect(() => {
@@ -57,7 +53,6 @@ let PeripheralsManager = (props)=>{
 
 
     let handleRemoveRow = (event) =>{
-        peripherals.splice(peripherals.findIndex(item => item.peripheral_name === settings.current_peripheral), 1);
         settings.server.creator_proxy.removePeripheral(settings.current_peripheral);
         dispatch(setSetting(["current_peripheral", null]))
     };
@@ -68,7 +63,8 @@ let PeripheralsManager = (props)=>{
             alert("Please select a peripheral to Export");
             return;
         }
-        let peripheral = {[selected]:peripherals[peripherals.findIndex(item => item.peripheral_name === selected)]};
+
+        let peripheral = {[selected]:peripherals_redux[selected]};
         let blob = new Blob([JSON.stringify(peripheral, null, 4)], {type: "application/json"});
         let url  = URL.createObjectURL(blob);
 
@@ -112,7 +108,7 @@ let PeripheralsManager = (props)=>{
             <BlockLayout centered>
                 <DataTable
                     title='Peripherals'
-                    data={peripherals}
+                    data={Object.values(peripherals_redux)}
                     columns={columns}
                     customStyles={TableStyle}
                     theme="uScopeTableTheme"

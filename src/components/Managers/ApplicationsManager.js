@@ -26,14 +26,6 @@ let  ApplicationsManager = props =>{
 
     const dispatch = useDispatch();
 
-    const [applications, ] = useState(()=>{
-        let applications = [];
-        for(let item in applications_redux){
-            applications.push({...applications_redux[item], application_name:item});
-        }
-        return applications;
-    });
-
     useEffect(() => {
         return() =>{
             dispatch(setSetting(["current_application", null]));
@@ -50,7 +42,6 @@ let  ApplicationsManager = props =>{
 
 
     let  handleRemoveRow = (event) =>{
-        applications.splice(applications.findIndex(item => item.application_name === settings.current_application), 1);
         settings.server.app_proxy.removeApplication(settings.current_application);
         dispatch(setSetting(["current_application", null]))
     };
@@ -61,7 +52,7 @@ let  ApplicationsManager = props =>{
             return;
         }
 
-        let application = {[settings.current_application]:applications[applications.findIndex(item => item.application_name === settings.current_application)]};
+        let application = {[settings.current_application]:applications_redux[settings.current_application]};
         let blob = new Blob([JSON.stringify(application, null, 4)], {type: "application/json"});
         let url  = URL.createObjectURL(blob);
 
@@ -108,7 +99,7 @@ let  ApplicationsManager = props =>{
             <BlockLayout centered>
                 <DataTable
                     title='Applications'
-                    data={applications}
+                    data={Object.values(applications_redux)}
                     columns={columns}
                     theme="uScopeTableTheme"
                     customStyles={TableStyle}
