@@ -5,6 +5,7 @@ import {SidebarLayout} from "../UI_elements";
 import PeripheralsSidebar from "./Peripheral/PeripheralsSidebar";
 import ApplicationSidebar from "./Application/ApplicationSidebar";
 import PlotSidebar from "./Plot/PlotSidebar";
+import ScriptSidebar from "./Script/ScriptSidebar";
 
 let  Sidebar = props =>{
 
@@ -25,7 +26,7 @@ let  Sidebar = props =>{
         case "/script_manager":
             return(
                 <SidebarLayout>
-
+                    <ScriptSidebar/>
                 </SidebarLayout>
             );
         case "/plot":

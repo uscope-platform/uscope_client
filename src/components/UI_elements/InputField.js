@@ -50,6 +50,7 @@ export let  InputField = props =>{
                 <Label inline={props.inline}>{props.label}</Label>
                 <InnerInput
                     name={props.name}
+                    placeholder={props.placeholder}
                     id={props.ID}
                     type={(props.type)?props.type:"text"}
                     disabled = {(props.disabled)? "disabled" : ""}
@@ -66,7 +67,7 @@ export let  InputField = props =>{
             <Wrapper inline={props.inline}>
                 <Label inline={props.inline}>{props.label}</Label>
                 <InnerInput
-
+                    placeholder={props.placeholder}
                     name={props.name}
                     id={props.ID}
                     type={(props.type)?props.type:"text"}

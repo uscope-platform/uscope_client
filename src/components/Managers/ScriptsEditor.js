@@ -39,8 +39,6 @@ let ScriptsEditor = props =>{
             editor.setValue(script.script_content);
             set_editor_content(script.script_content);
         }
-
-
     };
 
     return(

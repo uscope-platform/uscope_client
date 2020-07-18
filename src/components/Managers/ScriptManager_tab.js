@@ -58,7 +58,6 @@ let ScriptManager = (props) =>{
         } else if(selection.selectedCount===0) {
             dispatch(setSetting(["selected_script", null]));
         }
-
     };
 
     let handleAddRow = () =>{
