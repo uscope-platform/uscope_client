@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 
 import {Button, Label, Select} from "../UI_elements"
 import {useSelector} from "react-redux";
@@ -22,33 +22,26 @@ font-size: 2em;
 let ApplicationChooser = props =>{
 
     const applications = useSelector(state => state.applications);
-    const [chosen_application, set_chosen_application] = useState(null);
-
-    let handle_change = (event) => {
-        set_chosen_application(event.target.value);
-    };
 
     let handle_close = (event) =>{
-        let default_app = null;
-        if(chosen_application){
-            props.done(chosen_application);
-        } else {
-            default_app = Object.entries(applications)[0];
-            props.done(default_app[0])
-        }
+        event.preventDefault();
+        let app = event.target.application_selector.value;
+        props.done(app);
     };
 
     return(
         <ComponentLayout>
             <Centering>
-                <Title>Application Choice</Title>
+                <Title id='app_chooser_title'>Application Choice</Title>
                 <Label>Application Name</Label>
-                <Select name="peripheral_type" onChange={handle_change}>
-                    {Object.entries(applications).map((application,i) => (
-                        <option key={i} >{application[0]}</option>
-                    ))}
-                </Select>
-                <Button style={{margin:"1rem 1rem"}} onClick={handle_close}>Save changes</Button>
+                <form id='application_chooser_form' onSubmit={handle_close}>
+                    <Select name="application_selector">
+                        {Object.entries(applications).map((application,i) => (
+                            <option value={application[0]} key={i} >{application[0]}</option>
+                        ))}
+                    </Select>
+                    <Button style={{margin:"1rem 1rem"}} name='application_chooser_submit' type="submit">Save changes</Button>
+                </form>
             </Centering>
         </ComponentLayout>
     );
