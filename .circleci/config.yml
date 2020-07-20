@@ -29,6 +29,8 @@ jobs:
           command: |
               cd uscope_server
               sudo chmod -R 777 /var/log/redis/
+              sudo cp test/redis.conf /etc/redis/redis.conf
+              sudo cp test/dump.rdb /var/lib/redis
               python3 ./debug_main.py
 workflows:
     build-and-test:
