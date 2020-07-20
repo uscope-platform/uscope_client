@@ -23,7 +23,7 @@ jobs:
       - run:
           command: |
             cd uscope_server
-            sudo pip install requirements.txt
+            sudo pip install -r requirements.txt
 
 workflows:
     build-and-test:
