@@ -24,7 +24,10 @@ jobs:
           command: |
             cd uscope_server
             sudo pip install -r requirements.txt
-
+      - run:
+          command: |
+              cd uscope_server
+              python3 ./debug_main.py
 workflows:
     build-and-test:
       jobs:
