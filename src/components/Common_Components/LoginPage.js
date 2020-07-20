@@ -63,7 +63,7 @@ let  LoginPage = props =>{
     return(
         <ComponentStyle>
             <Centering>
-                <h1>Please Sign In</h1>
+                <h1 id='login_page_title'>Please Sign In</h1>
             </Centering>
             <LoginFormLayout>
                 <InputField name='username' compact onChange={handleChange} label="Username"/>
@@ -71,7 +71,7 @@ let  LoginPage = props =>{
                 <Checkbox name='remember_me' onChange={handleChange} value={remember_me} label="Remember Me"/>
             </LoginFormLayout>
             <Centering>
-                <Button onClick={handleSignIn}>Sign In</Button>
+                <Button name="sign_in_button" onClick={handleSignIn}>Sign In</Button>
             </Centering>
         </ComponentStyle>
     );

@@ -167,7 +167,7 @@ let AuthApp = (props) =>{
             } else {
                 return (
                     <div className="App">
-                            <ApplicationLayout sidebarNeeded={settings.current_view_requires_sidebar}>
+                            <ApplicationLayout name="plot_tab" sidebarNeeded={settings.current_view_requires_sidebar}>
                                 <Navbar views={views}/>
                                 {views.map((tab, i) => {
                                     if(tab.user_accessible){
