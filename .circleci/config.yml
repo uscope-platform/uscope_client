@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   node: circleci/node@1.1.6
 jobs:
-  build-and-test:
+  client_setup:
     executor:
       name: node/default
     steps:
@@ -10,8 +10,15 @@ jobs:
       - node/with-cache:
           steps:
             - run: npm install
-            - run: npm test
+  server:
+    docker:
+      - image: circleci/python:3.8
+    steps:
+      - run: git clone git@github.com:filssavi/uscope_server.git
+      - run: sudo pip install requirements.txt
+
 workflows:
     build-and-test:
       jobs:
-        - build-and-test
+        - client_setup
+        - server
