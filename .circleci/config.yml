@@ -24,6 +24,7 @@ jobs:
           command: |
             cd uscope_server
             sudo pip install -r requirements.txt
+            sudo apt install redis
       - run:
           command: |
               cd uscope_server
