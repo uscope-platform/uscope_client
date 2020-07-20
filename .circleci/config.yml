@@ -17,11 +17,16 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "52:20:52:98:73:31:1a:0f:e6:1c:84:85:64:eb:ee:8c"
+      - run:
+          command: mkdir ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
       - run: git clone git@github.com:filssavi/uscope_server.git
-      - run: sudo pip install requirements.txt
+      - run:
+          command: |
+            cd uscope_server
+            sudo pip install requirements.txt
 
 workflows:
     build-and-test:
       jobs:
-        
+
         - server
