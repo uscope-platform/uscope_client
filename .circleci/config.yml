@@ -14,11 +14,14 @@ jobs:
     docker:
       - image: circleci/python:3.8
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "52:20:52:98:73:31:1a:0f:e6:1c:84:85:64:eb:ee:8c"
       - run: git clone git@github.com:filssavi/uscope_server.git
       - run: sudo pip install requirements.txt
 
 workflows:
     build-and-test:
       jobs:
-        - client_setup
+        
         - server
