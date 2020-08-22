@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   node: circleci/node@1.1.6
 jobs:
-  build-and-test:
+  client_setup:
     executor:
       name: node/default
     steps:
@@ -10,8 +10,30 @@ jobs:
       - node/with-cache:
           steps:
             - run: npm install
-            - run: npm test
+  server:
+    docker:
+      - image: circleci/python:3.8
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "52:20:52:98:73:31:1a:0f:e6:1c:84:85:64:eb:ee:8c"
+      - run:
+          command: mkdir ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
+      - run: git clone git@github.com:filssavi/uscope_server.git
+      - run:
+          command: |
+            cd uscope_server
+            sudo pip install -r requirements.txt
+            sudo apt install redis
+      - run:
+          command: |
+              cd uscope_server
+              sudo chmod -R 777 /var/log/redis/
+              sudo cp test/redis.conf /etc/redis/redis.conf
+              sudo cp test/dump.rdb /var/lib/redis
+              python3 ./debug_main.py
 workflows:
     build-and-test:
       jobs:
-        - build-and-test
+
+        - server

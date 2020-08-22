@@ -1,8 +1,6 @@
 import React from 'react';
 
 
-import {SidebarContentLayout} from "../../UI_elements";
-
 import EnablesProperties from "./EnablesProperties";
 import CaptureProperties from "./CaptureProperties";
 import {useSelector} from "react-redux";

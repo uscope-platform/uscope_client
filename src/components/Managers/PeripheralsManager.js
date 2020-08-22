@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {useDispatch, useSelector} from "react-redux"
 
@@ -30,8 +30,6 @@ let PeripheralsManager = (props)=>{
 
     const dispatch = useDispatch();
 
-    const [selected_stack, set_selected_stack] = useState([]);
-
     useEffect(() => {
        return() =>{
            dispatch(setSetting(["current_peripheral", null]));
@@ -44,10 +42,9 @@ let PeripheralsManager = (props)=>{
         } else if(selection.selectedCount===0) {
             dispatch(setSetting(["current_peripheral", null]))
         } else if(selection.selectedCount>1){
-            let selectedRows = selection.selectedRows.map((row)=>{
+            selection.selectedRows.map((row)=>{
                 return row.peripheral_name;
             });
-            let a = 0;
         }
     };
 

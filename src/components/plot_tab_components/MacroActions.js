@@ -28,7 +28,8 @@ let  MacroActions = props =>{
 
     let onClick = (event) => {
         let scriptTrigger = event.target.name;
-        let trigger = scripts.filter((script)=>{
+
+        let trigger = Object.values(scripts).filter((script)=>{
             return script.triggers.includes(scriptTrigger);
         });
         let content = trigger[0].script_content;
