@@ -46,8 +46,8 @@ let TwoValuesField = props => {
     } else{
         return(
             <DualWrapper>
-                <InputField description={props.field_descriptions[0]} ID={props.ID} name={props.register_name+'.1'} label={props.field_names[0]}/>
-                <InputField description={props.field_descriptions[1]} ID={props.ID} name={props.register_name+'.2'} label={props.field_names[1]}/>
+                <InputField description={props.field_descriptions[0]} value={props.value[0]} ID={props.ID} name={props.register_name+'.1'} label={props.field_names[0]}/>
+                <InputField description={props.field_descriptions[1]} value={props.value[1]} ID={props.ID} name={props.register_name+'.2'} label={props.field_names[1]}/>
             </DualWrapper>
         );
     }

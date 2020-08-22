@@ -37,7 +37,7 @@ let SingleValueField = props => {
         );
     } else{
         return(
-            <InputField description={props.description} ID={props.ID} name={props.name} label={props.name}/>
+            <InputField description={props.description} value={props.value} ID={props.ID} name={props.name} label={props.name}/>
         );
     }
 };
