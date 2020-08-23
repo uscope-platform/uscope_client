@@ -28,8 +28,17 @@ export default function programsProxy(server_url, token) {
         });
     };
 
-    this.delete_program = function (program) {
+    this.delete_program = (program) => {
         store.dispatch(removeProgram(_this.server_url+'program/'+program.id, program, _this.config));
+    };
+
+    this.compile_program = (program) =>{
+        return new Promise(function (resolve, reject) {
+            axios.get(_this.server_url+'program/compile/'+program.id, _this.config)
+                .then(res =>{
+                    resolve(res.data);
+                })
+        })
     };
 
 }

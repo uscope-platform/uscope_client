@@ -103,19 +103,41 @@ let handle_edit_done = () =>{
 }
 
 let handle_compile = () =>{
-    let  notif_id1 = ButterToast.raise({
-        content: <Cinnamon.Crisp title="Compiler Error example"
-                                 content="fcore_has given up on your code"
-                                 scheme={Cinnamon.Crisp.SCHEME_RED}/>
-    })
-    let  notif_id2 = ButterToast.raise({
-        content: <Cinnamon.Crisp title="Compiler Happy example"
-                                 content="Just joking he was happy"
-                                 scheme={Cinnamon.Crisp.SCHEME_GREEN}/>
-    })
-    window.setTimeout(()=>{
-        ButterToast.dismiss(notif_id1);
-    },3000);
+
+    if(settings.selected_program===null){
+        alert("Please select a script to compile");
+        return;
+    }
+
+    settings.server.prog_proxy.compile_program(programs_store[settings.selected_program]).then((data)=>{
+        let notifications={passed:[],failed:[]};
+        for (let item of data){
+            if(item.status==="passed"){
+                notifications.passed.push(
+                    ButterToast.raise({
+                        content: <Cinnamon.Crisp title={item.file}
+                                                 content="Compilation was successful"
+                                                 scheme={Cinnamon.Crisp.SCHEME_GREEN}/>
+                    })
+                )
+            } else if (item.status==="failed"){
+                notifications.failed.push(
+                    ButterToast.raise({
+                        content: <Cinnamon.Crisp title={item.file}
+                                                 content={item.error}
+                                                 scheme={Cinnamon.Crisp.SCHEME_RED}/>
+                    })
+                )
+            }
+        }
+        window.setTimeout(()=>{
+            for(let notif of notifications.passed){
+                ButterToast.dismiss(notif);
+            }
+        },3000);
+
+    });
+
 }
 
 if(editor_open) {
