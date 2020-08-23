@@ -15,7 +15,7 @@ export default function programsProxy(server_url, token) {
         store.dispatch(editProgram(_this.server_url+'program/'+program.id, program, _this.config));
     };
 
-    this.download_all_programs = () =>{
+    this.load_all = () =>{
         store.dispatch(loadAllPrograms(_this.server_url+'program/none', _this.config));
     };
 

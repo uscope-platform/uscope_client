@@ -41,65 +41,45 @@ let AuthApp = (props) =>{
 
     const [init_phase, set_init_phase] = useState(states.APP_CHOICE);
 
+
+    let load_resource = (resource) =>{
+        let digest = localStorage.getItem(resource.key);
+        if(resource.store === undefined || digest === null){
+            resource.proxy.load_all();
+            resource.proxy.get_hash().then((res)=>{
+                localStorage.setItem(resource.key, res);
+            });
+        } else{
+            resource.proxy.get_hash().then((res)=>{
+                if(digest!==res){
+                    resource.proxy.load_all();
+                    localStorage.setItem(resource.key, res);
+                }
+            });
+        }
+    }
+
     useEffect(()=>{
-        let app_digest = localStorage.getItem('Applications-hash');
-        if(applications === undefined || app_digest === null){
-            settings.server.app_proxy.loadAllApplications();
-            settings.server.app_proxy.get_applications_hash().then((res)=>{
-                localStorage.setItem('Applications-hash', res);
-            });
-        } else{
-            settings.server.app_proxy.get_applications_hash().then((res)=>{
-                if(app_digest!==res){
-                    settings.server.app_proxy.loadAllApplications();
-                    localStorage.setItem('Applications-hash', res);
-                }
-            });
-        }
+        let resources = [{
+            key:'Applications-hash',
+            proxy:settings.server.app_proxy,
+            store:applications
+        }, {
+            key:'Peripherals-hash',
+            proxy:settings.server.periph_proxy,
+            store:peripherals
+        }, {
+            key:'Script-hash',
+            proxy:settings.server.script_proxy,
+            store:scripts
+        }, {
+            key:'Programs-hash',
+            proxy:settings.server.prog_proxy,
+            store:programs
+        }]
 
-        let periph_digest = localStorage.getItem('Peripherals-hash');
-        if(peripherals ===undefined || periph_digest === null){
-            settings.server.periph_proxy.loadAllPeripherals();
-            settings.server.periph_proxy.get_peripherals_hash().then((res)=>{
-                localStorage.setItem('Peripherals-hash', res);
-            });
-        } else{
-            settings.server.periph_proxy.get_peripherals_hash().then((res)=>{
-                if(periph_digest!==res){
-                    settings.server.periph_proxy.loadAllPeripherals();
-                    localStorage.setItem('Peripherals-hash', res);
-                }
-            });
-        }
-
-        let script_digest = localStorage.getItem('Script-hash');
-        if(scripts === undefined || script_digest === null){
-            settings.server.script_proxy.download_all_scripts();
-            settings.server.script_proxy.get_hash().then((res)=>{
-                localStorage.setItem('Script-hash', res);
-            });
-        } else{
-            settings.server.script_proxy.get_hash().then((res)=>{
-                if(script_digest!==res){
-                    settings.server.script_proxy.download_all_scripts();
-                    localStorage.setItem('Script-hash', res);
-                }
-            });
-        }
-
-        let programs_digest = localStorage.getItem('Programs-hash');
-        if(programs === undefined || programs_digest === null){
-            settings.server.prog_proxy.download_all_programs();
-            settings.server.prog_proxy.get_hash().then((res)=>{
-                localStorage.setItem('Programs-hash', res);
-            });
-        } else{
-            settings.server.prog_proxy.get_hash().then((res)=>{
-                if(programs_digest!==res){
-                    settings.server.prog_proxy.download_all_programs();
-                    localStorage.setItem('Programs-hash', res);
-                }
-            });
+        for(let i of resources){
+            load_resource(i);
         }
 
     },[])
@@ -178,7 +158,6 @@ let AuthApp = (props) =>{
             return (
                 <div className="App">
                     <ApplicationChooser done={handleApplicationChosen}/>
-
                 </div>
             );
         case states.NORMAL:

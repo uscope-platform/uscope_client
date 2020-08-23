@@ -37,11 +37,11 @@ export default function peripheralProxy(server_url, token) {
         store.dispatch(sendRegister(_this.server_url+'registers/'+register.peripheral+'/value', register, _this.config))
     };
 
-    this.loadAllPeripherals = () =>{
+    this.load_all = () =>{
         store.dispatch(loadPeripherals(_this.server_url+'registers/all_peripheral/descriptions', _this.config))
     };
 
-    this.get_peripherals_hash = () =>{
+    this.get_hash = () =>{
         return new Promise(function (resolve, reject) {
             axios.get(_this.server_url+'registers/digest', _this.config)
                 .then(res => {

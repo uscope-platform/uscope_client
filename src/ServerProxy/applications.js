@@ -13,7 +13,7 @@ export default function applicationProxy(server_url, token) {
     this.server_url = server_url;
     this.config = {headers: { Authorization: `Bearer ${token}` }};
 
-    this.loadAllApplications = () =>{
+    this.load_all = () =>{
         store.dispatch(loadApplications(_this.server_url+'application/all/specs', _this.config))
     };
 
@@ -31,7 +31,7 @@ export default function applicationProxy(server_url, token) {
         store.dispatch(setChannelSetting(_this.server_url+'plot/channels/params', message, _this.config));
     };
 
-    this.get_applications_hash = () =>{
+    this.get_hash = () =>{
         return new Promise(function (resolve, reject) {
             axios.get(_this.server_url+'application/digest', _this.config)
                 .then(res => {

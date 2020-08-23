@@ -15,7 +15,7 @@ export default function scriptsProxy(server_url, token) {
         store.dispatch(editScript(_this.server_url+'script/'+script.id, script, _this.config));
     };
 
-    this.download_all_scripts = () =>{
+    this.load_all = () =>{
         store.dispatch(loadAllScripts(_this.server_url+'script/none', _this.config));
     };
 
