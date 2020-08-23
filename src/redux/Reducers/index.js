@@ -4,10 +4,10 @@ import plotReducer from "./plotReducer";
 import registerValuesReducer from "./registerReducer"
 import settingsReducer from "./settingsReducer";
 import viewsReducer from "./viewsReducer";
-import modalsReducer from "./modalsReducer";
 import PeripheralsReducer from './PeripheralsReducer'
 import {scriptsReducer, scriptsWorkspaceReducer} from "./scriptsReducer";
 import ApplicationsReducer from './applicationsReducer'
+import programsReducer from "./ProgramsReducer";
 
 export default combineReducers({
     plot: plotReducer,
@@ -15,8 +15,8 @@ export default combineReducers({
     peripherals:PeripheralsReducer,
     views: viewsReducer,
     settings : settingsReducer,
-    modals : modalsReducer,
     applications : ApplicationsReducer,
+    programs : programsReducer,
     scripts: scriptsReducer,
     scriptsWorkspace: scriptsWorkspaceReducer
     });

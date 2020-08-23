@@ -4,6 +4,7 @@ import plotProxy from "./plot";
 import creatorProxy from "./creator";
 import scriptsProxy from "./scripts"
 import authProxy from "./auth"
+import programsProxy from "./programs";
 
 export default function serverProxy(server_url, token) {
     this.server_url = server_url;
@@ -13,5 +14,6 @@ export default function serverProxy(server_url, token) {
     this.creator_proxy = new creatorProxy(this.server_url, token);
     this.script_proxy = new scriptsProxy(this.server_url, token);
     this.auth_proxy = new authProxy(this.server_url, token);
+    this.prog_proxy = new programsProxy(this.server_url, token);
 }
 

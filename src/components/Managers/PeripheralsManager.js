@@ -37,7 +37,7 @@ let PeripheralsManager = (props)=>{
     },[dispatch]);
 
     let handleOnSelect = (selection) => {
-        if(!selection.allSelected && selection.selectedCount===1){
+        if(selection.selectedCount===1){
             dispatch(setSetting(["current_peripheral", selection.selectedRows[0].peripheral_name]))
         } else if(selection.selectedCount===0) {
             dispatch(setSetting(["current_peripheral", null]))

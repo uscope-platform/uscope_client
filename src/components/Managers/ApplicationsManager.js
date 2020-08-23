@@ -33,7 +33,7 @@ let  ApplicationsManager = props =>{
     },[dispatch]);
 
     let handleOnSelect = (selection) => {
-        if(!selection.allSelected && selection.selectedCount===1){
+        if(selection.selectedCount===1){
             dispatch(setSetting(["current_application", selection.selectedRows[0].application_name]))
         } else if(selection.selectedCount===0) {
             dispatch(setSetting(["current_application", null]))

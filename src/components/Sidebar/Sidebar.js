@@ -6,6 +6,7 @@ import PeripheralsSidebar from "./Peripheral/PeripheralsSidebar";
 import ApplicationSidebar from "./Application/ApplicationSidebar";
 import PlotSidebar from "./Plot/PlotSidebar";
 import ScriptSidebar from "./Script/ScriptSidebar";
+import ProgramSidebar from "./Program/ProgramSidebar";
 
 let  Sidebar = props =>{
 
@@ -27,6 +28,12 @@ let  Sidebar = props =>{
             return(
                 <SidebarLayout>
                     <ScriptSidebar/>
+                </SidebarLayout>
+            );
+        case "/program_manager":
+            return (
+                <SidebarLayout>
+                    <ProgramSidebar/>
                 </SidebarLayout>
             );
         case "/plot":

@@ -1,25 +1,25 @@
 import React from 'react';
 
-import ScriptEditSidebar from "./ScriptEditSidebar";
+import ProgramEditSidebar from "./ProgramEditSidebar";
 import {useSelector} from "react-redux";
 import {BlockTitle, SidebarContentLayout} from "../../UI_elements";
 
 
 
-let  ScriptSidebar = props =>{
+let  ProgramSidebar = props =>{
 
     const settings = useSelector(state => state.settings);
 
-    if(!settings.selected_script)
+    if(!settings.selected_program)
         return (
             <SidebarContentLayout peripheral>
-                <BlockTitle>Scripts actions</BlockTitle>
+                <BlockTitle>Program actions</BlockTitle>
             </SidebarContentLayout>
         );
 
     return(
-        <ScriptEditSidebar selected_script={settings.selected_script}/>
+        <ProgramEditSidebar selected_program={settings.selected_program}/>
     );
 };
 
-export default ScriptSidebar;
+export default ProgramSidebar;

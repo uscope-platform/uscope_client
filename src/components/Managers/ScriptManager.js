@@ -53,16 +53,16 @@ let ScriptManager = (props) =>{
     const [editor_open, set_editor_open] = useState(false);
 
     let handleOnSelect = (selection) => {
-        if(!selection.allSelected && selection.selectedCount===1){
+        if(selection.selectedCount===1){
             dispatch(setSetting(["selected_script", selection.selectedRows[0].id]));
         } else if(selection.selectedCount===0) {
             dispatch(setSetting(["selected_script", null]));
         }
     };
 
-    let handleAddRow = () =>{
-        let ids = Object.values(scripts_store).map(a => a.id).sort();
+    let get_next_id =(ids) => {
         let id = null;
+        if(ids.length === 0) return 1;
         for(var i = 1; i < ids.length; i++) {
             if(ids[i] - ids[i-1] !== 1) {
                 id = ids[i-1]+1;
@@ -70,6 +70,12 @@ let ScriptManager = (props) =>{
         }
         if(id===null)
             id = ids.length+1;
+
+    }
+
+    let handleAddRow = () =>{
+        let ids = Object.values(scripts_store).map(a => a.id).sort();
+        let id = get_next_id(ids);
 
         let new_script = { id:id, name:'new script_'+id, path:`new script_${id}.js`, script_content:'', triggers:''};
         settings.server.script_proxy.upload_script(new_script);

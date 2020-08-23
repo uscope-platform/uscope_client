@@ -16,9 +16,6 @@ export const SEND_REGISTER = 'SEND_REGISTER';
 export const SET_SETTING = 'SET_PARAMETER_VALUE';
 //                  VIEWS ACTIONS
 export const LOAD_VIEWS = 'LOAD_VIEWS';
-//                  MODAL ACTIONS
-export const SHOW_MODAL = "SHOW_MODAL";
-export const HIDE_MODAL = "HIDE_MODAL";
 //                   SCRIPTS ACTIONS
 export const ADD_SCRIPT = "ADD_SCRIPT";
 export const REMOVE_SCRIPT = "REMOVE_SCRIPT";
@@ -36,3 +33,8 @@ export const LOAD_APPLICATIONS = 'LOAD_APPLICATIONS';
 export const ADD_APPLICATION = 'ADD_APPLICATION';
 export const EDIT_APPLICATION = 'EDIT_APPLICATION';
 export const REMOVE_APPLICATION = 'REMOVE_APPLICATION';
+//                  FCORE PROGRAMS
+export const ADD_PROGRAM = "ADD_PROGRAM";
+export const REMOVE_PROGRAM = "REMOVE_PROGRAM";
+export const LOAD_ALL_PROGRAMS = "LOAD_ALL_PROGRAM";
+export const EDIT_PROGRAM = "EDIT_PROGRAM";

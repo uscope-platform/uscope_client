@@ -10,7 +10,9 @@ const initial_state = {
     current_application:null,
     selected_script:null,
     script_editor_title:null,
-    current_view_requires_sidebar: true
+    current_view_requires_sidebar: true,
+    selected_program: null,
+    program_editor_title: null
 };
 
 let settingsReducer = function (state = initial_state, action) {
