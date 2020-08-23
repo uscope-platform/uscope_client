@@ -2,10 +2,10 @@ import React, {useState} from "react";
 import {BlockLayout, Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements";
 import DataTable from "react-data-table-component";
 import {TableStyle} from "./TableStyles";
-import ScriptsEditor from "./ScriptsEditor";
 import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import ProgramsEditor from "../Editors/Programs/ProgramsEditor";
+import ButterToast, { POS_TOP, POS_RIGHT, Cinnamon} from "butter-toast";
 
 let columns = [
     {
@@ -31,8 +31,13 @@ let columns = [
     }
 ];
 
-let ProgramsManager = props =>{
 
+const compile_status_position = {
+    vertical: POS_TOP,
+    horizontal: POS_RIGHT
+};
+
+let ProgramsManager = props =>{
     const programs_store = useSelector(state => state.programs);
     const settings = useSelector(state => state.settings);
 
@@ -97,6 +102,22 @@ let handle_edit_done = () =>{
     set_editor_open(false);
 }
 
+let handle_compile = () =>{
+    let  notif_id1 = ButterToast.raise({
+        content: <Cinnamon.Crisp title="Compiler Error example"
+                                 content="fcore_has given up on your code"
+                                 scheme={Cinnamon.Crisp.SCHEME_RED}/>
+    })
+    let  notif_id2 = ButterToast.raise({
+        content: <Cinnamon.Crisp title="Compiler Happy example"
+                                 content="Just joking he was happy"
+                                 scheme={Cinnamon.Crisp.SCHEME_GREEN}/>
+    })
+    window.setTimeout(()=>{
+        ButterToast.dismiss(notif_id1);
+    },3000);
+}
+
 if(editor_open) {
 return (
     <ManagerLayout>
@@ -109,10 +130,14 @@ return (
 
 return(
 <ManagerLayout>
+    <ButterToast
+        position={compile_status_position}
+    />
     <ManagerButtonsLayout>
         <Button style={{margin:"0 1rem"}} onClick={handleAddRow}>Add Program</Button>
         <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}>Remove Program</Button>
         <Button style={{margin:"0 1rem"}} onClick={handleScriptEdit}>Edit Program</Button>
+        <Button style={{margin:"0 1rem"}} onClick={handle_compile}>Compile Program</Button>
     </ManagerButtonsLayout>
     <BlockLayout centered>
         <DataTable
