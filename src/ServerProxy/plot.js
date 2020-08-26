@@ -1,5 +1,5 @@
 import store from "../store";
-import {fetchData, loadChanels} from "../redux/Actions/plotActions";
+import {disable_channel, enable_channel, fetchData, loadChanels} from "../redux/Actions/plotActions";
 import axios from "axios";
 
 export default function plotProxy(server_url, token) {
@@ -12,11 +12,7 @@ export default function plotProxy(server_url, token) {
     };
     
     this.fetchData = function () {
-        const state = store.getState();
-        let channels = state.plot.data.map((data)=>{
-            return data.visible
-        });
-        store.dispatch(fetchData(_this.server_url+'plot/channels/data',channels,_this.config))
+        store.dispatch(fetchData(_this.server_url+'plot/channels/data',_this.config))
     };
 
 
@@ -36,6 +32,14 @@ export default function plotProxy(server_url, token) {
                 reject(err.message);
             })
         });
+    }
+
+    this.enable_channel = (channel) => {
+        store.dispatch(enable_channel(_this.server_url+'plot/channels/enable',channel,_this.config));
+    }
+
+    this.disable_channel = (channel) => {
+        store.dispatch(disable_channel(_this.server_url+'plot/channels/disable',channel,_this.config));
     }
 }
 

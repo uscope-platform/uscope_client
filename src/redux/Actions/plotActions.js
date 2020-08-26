@@ -11,7 +11,17 @@ import {
 import axios from "axios";
 
 
-export const enableChannel = (channel) =>{
+export const enable_channel = (server_url, channel, config) =>{
+    return dispatch => {
+        axios.get(server_url+"/"+channel, config).then(res => {
+            dispatch(enableChannelDone(channel));
+        }).catch(err => {
+            alert(err.message);
+        });
+    };
+}
+
+const enableChannelDone = (channel) =>{
     return{
         type: ENABLE_CHANNEL,
         payload:{
@@ -21,7 +31,17 @@ export const enableChannel = (channel) =>{
     }
 };
 
-export const disableChannel = (channel) =>{
+export const disable_channel = (server_url, channel, config) =>{
+    return dispatch => {
+        axios.get(server_url+"/"+channel, config).then(res => {
+            dispatch(disableChannelDone(channel));
+        }).catch(err => {
+            alert(err.message);
+        });
+    };
+}
+
+const disableChannelDone = (channel) =>{
     return {
         type: DISABLE_CHANNEL,
         payload:{
@@ -89,17 +109,9 @@ export const setChannelSettingDone = (settings) =>({
 });
 
 
-export const fetchData = (server_url, channels, config) => {
+export const fetchData = (server_url, config) => {
     return dispatch => {
-
-        let options = {
-            params: {
-                channels: JSON.stringify(channels)
-            }
-        };
-
-        options = {...options, ...config};
-        axios.get(server_url, options).then(res => {
+        axios.get(server_url, config).then(res => {
             dispatch(fetchDataDone(res.data));
         }).catch(err => {
             alert(err.message);
