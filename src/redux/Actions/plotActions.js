@@ -1,6 +1,5 @@
 import {
-    DISABLE_CHANNEL,
-    ENABLE_CHANNEL,
+    SET_CHANNEL_STATUS,
     FETCH_DATA,
     LOAD_CHANNELS,
     PLOT_PAUSE,
@@ -11,45 +10,26 @@ import {
 import axios from "axios";
 
 
-export const enable_channel = (server_url, channel, config) =>{
+export const setChannelStatus = (server_url, status, config) =>{
     return dispatch => {
-        axios.get(server_url+"/"+channel, config).then(res => {
-            dispatch(enableChannelDone(channel));
+        axios.post(server_url,status, config).then(res => {
+            dispatch(setChannelStatusDone(status));
         }).catch(err => {
             alert(err.message);
         });
     };
 }
 
-const enableChannelDone = (channel) =>{
+const setChannelStatusDone = (status) =>{
     return{
-        type: ENABLE_CHANNEL,
+        type: SET_CHANNEL_STATUS,
         payload:{
-            channel: channel,
+            channel: status,
             enabled: true
         }
     }
 };
 
-export const disable_channel = (server_url, channel, config) =>{
-    return dispatch => {
-        axios.get(server_url+"/"+channel, config).then(res => {
-            dispatch(disableChannelDone(channel));
-        }).catch(err => {
-            alert(err.message);
-        });
-    };
-}
-
-const disableChannelDone = (channel) =>{
-    return {
-        type: DISABLE_CHANNEL,
-        payload:{
-            channel: channel,
-            enabled: false
-        }
-    }
-};
 
 export const loadChanels = (server_url, config) => {
     return dispatch => {

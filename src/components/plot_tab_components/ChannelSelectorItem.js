@@ -10,16 +10,12 @@ const Centering = styled.div`
 `
 
 let  ChannelSelectorItem = props => {
-    const settings = useSelector(state => state.settings);
     const [enabled, set_enabled] = useState(false);
 
     function handleChannelStateChange(event){
         set_enabled(event.target.checked)
-        if(event.target.checked){
-            settings.server.plot_proxy.enable_channel(parseInt(event.target.name)-1);
-        } else{
-            settings.server.plot_proxy.disable_channel(parseInt(event.target.name)-1);
-        }
+        let channel_status = {id:parseInt(event.target.name)-1, status:event.target.checked}
+        props.onStatusChange(channel_status);
     }
 
     return(

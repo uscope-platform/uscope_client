@@ -1,6 +1,5 @@
 import {
-    DISABLE_CHANNEL,
-    ENABLE_CHANNEL,
+    SET_CHANNEL_STATUS,
     FETCH_DATA,
     LOAD_CHANNELS,
     PLOT_PAUSE,
@@ -71,14 +70,12 @@ const initial_state = {
 
 let plotReducer = function (state = initial_state, action) {
     switch (action.type) {
-        case ENABLE_CHANNEL:
+        case SET_CHANNEL_STATUS:
             return produce(state, draftState => {
-                draftState['data'][action.payload.channel]['visible'] = action.payload.enabled;
-                draftState['datarevision'] += 1;
-            });
-        case DISABLE_CHANNEL:
-            return produce(state, draftState => {
-                draftState['data'][action.payload.channel]['visible'] = action.payload.enabled;
+                let chs = action.payload.channel
+                for(let idx in chs){
+                    draftState['data'][idx]['visible'] = chs[idx];
+                }
                 draftState['datarevision'] += 1;
             });
         case LOAD_CHANNELS:

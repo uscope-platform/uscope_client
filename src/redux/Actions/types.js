@@ -1,6 +1,5 @@
 //                  PLOT ACTONS
-export const ENABLE_CHANNEL = 'ENABLE_CHANNELS';
-export const DISABLE_CHANNEL = 'DISABLE_CHANNELS';
+export const SET_CHANNEL_STATUS = 'SET_CHANNEL_STATUS';
 export const LOAD_CHANNELS = 'LOAD_CHANNELS';
 export const PLOT_PLAY = 'PLOT_PLAY';
 export const PLOT_PAUSE = 'PLOT_PAUSE';
