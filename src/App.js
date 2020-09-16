@@ -16,6 +16,7 @@ let App = (props) =>{
     // unimore:http://155.185.48.185/uscope/
     // debug:http://0.0.0.0:8989/uscope/
     // unnc:http://10.190.0.74:4999/uscope/
+    // unuk:http://10.190.0.74:4999/uscope/
 
     const [server, set_server] = useState(new serverProxy('http://0.0.0.0:8989/uscope/', ''));
     const [logged, set_logged] = useState(false);
@@ -24,7 +25,7 @@ let App = (props) =>{
 
     const done = useCallback((login_credentials)=>{
         server.auth_proxy.sign_in(login_credentials).then((token) =>{
-            let uScope_server = new serverProxy('http://0.0.0.0:8989/uscope/',token.access_token); //home: http://192.168.1.2/uscope/ unimore:http://155.185.48.185/uscope/ docker:http://172.18.0.1:4999/uscope/ unnc:http://10.190.0.74:4999/uscope/
+            let uScope_server = new serverProxy('http://0.0.0.0:8989/uscope/',token.access_token);
             if(token.login_token){
                 localStorage.setItem('login_token', JSON.stringify(token.login_token));
             }
