@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-
+import store from "../../../store";
 import {useDispatch, useSelector} from "react-redux";
 
 import {
@@ -11,51 +11,23 @@ import {
 
 import {saveScriptsWorkspace} from "../../../redux/Actions/scriptsActions";
 
+// THIS HACK IS NEEDED BECAUSE useDispatch IS THROWING A FIT IN THIS CASE FOR SOME REASON
+// I SUSPECT A BUG
+let dispatchSaveWorkspace = workspace =>{
+    store.dispatch(saveScriptsWorkspace(workspace))
+}
 
 let  EnablesProperties = props =>{
     const settings = useSelector(state => state.settings);
     const applications = useSelector(state => state.applications)
 
-    let dispatch = useDispatch;
     const [n_enables, ] = useState(applications[settings['application']]['n_enables']);
-    const [enable_values, set_enable_values] = useState(Array(applications[settings['application']]['n_enables']));
     const [clock_frequency, ] = useState(applications[settings['application']]['clock_frequency']);
 
-
-    let handle_change = (event) =>{
-
-        let new_enable_vals = enable_values;
-        new_enable_vals[event.target.name] = event.target.value;
-        set_enable_values(new_enable_vals);
-    }
-
-    let handle_close = (event) =>{
-        let value = clock_frequency.replace(' ', '');
-
-        let timebase_reg = {};
-        timebase_reg['name'] = 'freq';
-        timebase_reg['peripheral'] = 'enable_generator';
-        timebase_reg['value'] = parse_number(value);
-
-        let phases = Array.from({length: n_enables}, (x,i) => i).map((reg, i) => {
-            let ret_val = {};
-            ret_val['name'] = 'pha_'+(i+1);
-            ret_val['peripheral'] = 'enable_generator';
-            ret_val['value'] = Math.round(parseFloat(enable_values[i].replace(' ', ''))*timebase_reg.value);
-            return ret_val;
-        });
-
-        settings.server.periph_proxy.setRegisterValue(timebase_reg);
-
-        // eslint-disable-next-line
-        for(let i of phases){
-            settings.server.periph_proxy.setRegisterValue(i);
-        }
-    }
-
-    let parse_number = (raw_value) =>{
+    let parse_number = (raw_value) => {
         let numeric_value = 0;
         if(isNaN(parseFloat(raw_value[raw_value.length -1]))){
+            debugger;
             numeric_value = raw_value.slice(0,raw_value.length-1);
             switch (raw_value[raw_value.length-1]) {
                 case 'M':
@@ -76,12 +48,34 @@ let  EnablesProperties = props =>{
                     break;
             }
         } else{
-
             numeric_value = Math.round(clock_frequency/parseFloat(raw_value));
         }
-        dispatch(saveScriptsWorkspace({fsw:parseFloat(raw_value)}));
         return numeric_value
 
+    };
+
+    let handle_submit = (event) =>{
+        event.preventDefault();
+        let timebase_reg = {};
+        timebase_reg['name'] = 'freq';
+        timebase_reg['peripheral'] = 'enable_generator';
+        let workspace = {fsw:parseFloat(event.target.frequency.value)}
+        dispatchSaveWorkspace(workspace);
+        timebase_reg['value'] = parse_number(event.target.frequency.value);
+        let phases = [...event.target.elements].slice(1,-1).map((reg, i) => {
+            debugger;
+            let ret_val = {};
+            ret_val['name'] = 'pha_'+(i+1);
+            ret_val['peripheral'] = 'enable_generator';
+            ret_val['value'] = Math.round(parseFloat(reg.value.replace(' ', ''))*timebase_reg.value);
+            return ret_val;
+        });
+        settings.server.periph_proxy.setRegisterValue(timebase_reg);
+
+        // eslint-disable-next-line
+        for(let i of phases){
+            settings.server.periph_proxy.setRegisterValue(i);
+        }
     };
 
     return (
@@ -89,15 +83,19 @@ let  EnablesProperties = props =>{
             <SidebarBlockTitleLayout>
                 <label style={{fontSize:'20px',fontWeight:600}}>{"Timebase Settings"}</label>
             </SidebarBlockTitleLayout>
-                <FormLayout>
-                    <InputField inline name='frequency' onChange={handle_change} label="Frequency"/>
-                    {
-                        Array.from({length:n_enables}, (x,i) => i).map((reg, i) => {
-                            return <InputField inline name={i} onChange={handle_change} label={'enable_'+(i+1)}/>
-                        })
-                    }
-                    <Button onClick={handle_close}>Submit changes</Button>
-                </FormLayout>
+
+                <form onSubmit={handle_submit}>
+                    <FormLayout>
+                        <InputField inline name='frequency' label="Frequency"/>
+                        {
+                            Array.from({length:n_enables}, (x,i) => i).map((reg, i) => {
+                                return <InputField inline name={'pha_'+(i+1)} label={'enable_'+(i+1)}/>
+                            })
+                        }
+                        <Button type='submit' >Submit changes</Button>
+                    </FormLayout>
+                </form>
+
         </SidebarBlockLayout>
     );
 };
