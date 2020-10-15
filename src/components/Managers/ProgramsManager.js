@@ -96,84 +96,92 @@ let ProgramsManager = props =>{
         dispatch(setSetting(["program_editor_title", program.path]));
 
 
-};
+    };
 
-let handle_edit_done = () =>{
-    set_editor_open(false);
-}
-
-let handle_compile = () =>{
-
-    if(settings.selected_program===null){
-        alert("Please select a script to compile");
-        return;
+    let handle_edit_done = () =>{
+        set_editor_open(false);
     }
 
-    settings.server.prog_proxy.compile_program(programs_store[settings.selected_program]).then((data)=>{
-        let notifications={passed:[],failed:[]};
-        for (let item of data){
-            if(item.status==="passed"){
-                notifications.passed.push(
-                    ButterToast.raise({
-                        content: <Cinnamon.Crisp title={item.file}
-                                                 content="Compilation was successful"
-                                                 scheme={Cinnamon.Crisp.SCHEME_GREEN}/>
-                    })
-                )
-            } else if (item.status==="failed"){
-                notifications.failed.push(
-                    ButterToast.raise({
-                        content: <Cinnamon.Crisp title={item.file}
-                                                 content={item.error}
-                                                 scheme={Cinnamon.Crisp.SCHEME_RED}/>
-                    })
-                )
-            }
+    let handle_compile = () =>{
+
+        if(settings.selected_program===null){
+            alert("Please select a script to compile");
+            return;
         }
-        window.setTimeout(()=>{
-            for(let notif of notifications.passed){
-                ButterToast.dismiss(notif);
+
+        settings.server.prog_proxy.compile_program(programs_store[settings.selected_program]).then((data)=>{
+            let notifications={passed:[],failed:[]};
+            for (let item of data){
+                if(item.status==="passed"){
+                    notifications.passed.push(
+                        ButterToast.raise({
+                            content: <Cinnamon.Crisp title={item.file}
+                                                     content="Compilation was successful"
+                                                     scheme={Cinnamon.Crisp.SCHEME_GREEN}/>
+                        })
+                    )
+                } else if (item.status==="failed"){
+                    notifications.failed.push(
+                        ButterToast.raise({
+                            content: <Cinnamon.Crisp title={item.file}
+                                                     content={item.error}
+                                                     scheme={Cinnamon.Crisp.SCHEME_RED}/>
+                        })
+                    )
+                }
             }
-        },3000);
+            window.setTimeout(()=>{
+                for(let notif of notifications.passed){
+                    ButterToast.dismiss(notif);
+                }
+            },3000);
 
-    });
+        });
 
-}
+    }
 
-if(editor_open) {
-return (
+    let handle_apply_program = () =>{
+        let program = Object.values(programs_store).find(x => x.id === settings.selected_program);
+        program.core_address = '0x40400000';
+        settings.server.prog_proxy.apply_program(program);
+    };
+
+
+    if(editor_open) {
+    return (
+        <ManagerLayout>
+            <ProgramsEditor done={handle_edit_done} />
+        </ManagerLayout>
+    );
+    }
+
+
+
+    return(
     <ManagerLayout>
-        <ProgramsEditor done={handle_edit_done} />
-    </ManagerLayout>
-);
-}
-
-
-
-return(
-<ManagerLayout>
-    <ButterToast
-        position={compile_status_position}
-    />
-    <ManagerButtonsLayout>
-        <Button style={{margin:"0 1rem"}} onClick={handleAddRow}>Add Program</Button>
-        <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}>Remove Program</Button>
-        <Button style={{margin:"0 1rem"}} onClick={handleScriptEdit}>Edit Program</Button>
-        <Button style={{margin:"0 1rem"}} onClick={handle_compile}>Compile Program</Button>
-    </ManagerButtonsLayout>
-    <BlockLayout centered>
-        <DataTable
-            title='Programs'
-            data={Object.values(programs_store)}
-            columns={columns}
-            customStyles={TableStyle}
-            theme="uScopeTableTheme"
-            selectableRows
-            onSelectedRowsChange={handleOnSelect}
+        <ButterToast
+            position={compile_status_position}
         />
-    </BlockLayout>
-</ManagerLayout>
-);
+        <ManagerButtonsLayout>
+            <Button style={{margin:"0 1rem"}} onClick={handleAddRow}>Add Program</Button>
+            <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}>Remove Program</Button>
+            <Button style={{margin:"0 1rem"}} onClick={handleScriptEdit}>Edit Program</Button>
+            <Button style={{margin:"0 1rem"}} onClick={handle_compile}>Compile Program</Button>
+            <Button style={{margin:"0 1rem"}} onClick={handle_apply_program}>Load Program</Button>
+        </ManagerButtonsLayout>
+        <BlockLayout centered>
+            <DataTable
+                title='Programs'
+                data={Object.values(programs_store)}
+                columns={columns}
+                customStyles={TableStyle}
+                theme="uScopeTableTheme"
+                selectableRows
+                onSelectedRowsChange={handleOnSelect}
+            />
+        </BlockLayout>
+    </ManagerLayout>
+    );
 };
 
 

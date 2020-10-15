@@ -41,8 +41,14 @@ export default function programsProxy(server_url, token) {
         })
     };
 
+    this.apply_program = (program) => {
+        return new Promise(function (resolve, reject) {
+            axios.post(_this.server_url+'program/Apply/'+program.id, program, _this.config).then(res => {
+                resolve(res.data);
+            }).catch(err => {
+                alert(err.message);
+            });
+        })
+    }
+
 }
-
-
-
-
