@@ -1,7 +1,5 @@
 import React, {useState} from 'react';
 
-import {disableChannel, enableChannel} from "../../redux/Actions/plotActions";
-import {useDispatch, useSelector} from "react-redux";
 import {Checkbox} from "../UI_elements";
 import styled from "styled-components";
 

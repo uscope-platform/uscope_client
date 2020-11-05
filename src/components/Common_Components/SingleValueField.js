@@ -35,9 +35,13 @@ let SingleValueField = props => {
                 <Trash color='white' onClick={localRemoveHandler}/>
             </LayoutWrapper>
         );
-    } else{
+    } else if(props.value){
         return(
-            <InputField description={props.description} value={props.value} ID={props.ID} name={props.name} label={props.name}/>
+            <InputField description={props.description} value={props.value} placeholder={props.placeholder} ID={props.ID} name={props.name} label={props.name}/>
+        );
+    } else {
+        return(
+            <InputField description={props.description} value={props.value} placeholder={props.placeholder} ID={props.ID} name={props.name} label={props.name}/>
         );
     }
 };

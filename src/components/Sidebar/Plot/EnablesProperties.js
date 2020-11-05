@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import store from "../../../store";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 
 import {
     Button, FormLayout,

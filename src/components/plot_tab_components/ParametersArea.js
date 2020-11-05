@@ -93,7 +93,7 @@ let  ParametersArea = props =>{
                         parameters.map((param, i) => {
                         if(param.visible){
                             return(
-                                <SingleValueField key={i} name={param.parameter_id} value={param.value} description={param.description}/>
+                                <SingleValueField key={i} name={param.parameter_id} placeholder={param.value} description={param.description}/>
                             );
                         } else{
                             return null;

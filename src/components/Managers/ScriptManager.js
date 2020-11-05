@@ -70,7 +70,7 @@ let ScriptManager = (props) =>{
         }
         if(id===null)
             id = ids.length+1;
-
+        return id
     }
 
     let handleAddRow = () =>{
