@@ -13,8 +13,8 @@ let  PeripheralsSidebar = props =>{
     const [image, set_image] = useState(null);
 
     let handle_add_peripheral = (event) =>{
-        if (event.key === "Enter") {
 
+        if (event.key === "Enter") {
             let peripheral = create_peripheral(event.target.value)
             settings.server.creator_proxy.createPeripheral(peripheral, image);
         }

@@ -24,7 +24,7 @@ import {
     create_irv,
     create_macro,
     create_parameter,
-    create_peripheral
+    create_peripheral_entry
 } from "../../../utilities/ApplicationUtilities";
 
 
@@ -60,7 +60,7 @@ let  ApplicationEditSidebar = props =>{
                     set_new_parameter(false);
                     break;
                 case"peripheral":
-                    edit = {application:settings.current_application, peripheral:create_peripheral(event.target.value), action:"add_peripheral"};
+                    edit = {application:settings.current_application, peripheral:create_peripheral_entry(event.target.value), action:"add_peripheral"};
                     set_new_parameter(false);
                     break;
                 case "misc":

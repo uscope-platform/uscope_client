@@ -33,7 +33,7 @@ export let create_parameter = (name) =>{
     }
 }
 
-export let create_peripheral = (name) =>{
+export let create_peripheral_entry = (name) =>{
     return {
         name: name,
         peripheral_id: name.replace(/\s/g, "_").toLowerCase(),
@@ -45,3 +45,21 @@ export let create_peripheral = (name) =>{
     }
 }
 
+
+export let create_application = (name) =>{
+    let app = {}
+    app[name] = {
+        application_name: name,
+        bitstream: '',
+        channels: [],
+        clock_frequency: 100000000,
+        initial_registers_values: [],
+        macro: [],
+        n_enables: 0,
+        parameters: [],
+        peripherals: [],
+        timebase_address: ''
+    };
+
+    return app;
+}
