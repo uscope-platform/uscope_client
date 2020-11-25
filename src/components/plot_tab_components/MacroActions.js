@@ -20,7 +20,9 @@ let  MacroActions = props =>{
 
     const applications = useSelector(state => state.applications)
     const settings = useSelector(state => state.settings);
-    const actions = applications[settings['application']]['macro']
+    const actions = applications[settings['application']]['macro'];
+    const peripheral_specs = useSelector( state => state.peripherals);
+    const app_peripherals = applications[settings['application']]['peripherals'];
     const registers_redux = useSelector(state => state.registerValues);
     let parameters = applications[settings["application"]].parameters;
     const scripts_workspace = useSelector(state => state.scriptsWorkspace);
@@ -44,9 +46,17 @@ let  MacroActions = props =>{
             let bulk_registers = [];
             // eslint-disable-next-line
             for(let reg in registers){
-                let [periph_name, reg_name] = reg.split('.');
-                bulk_registers.push({name:reg_name, peripheral:periph_name, value:registers[reg]})
+                let [periph_id, reg_id] = reg.split('.');
+                let periph = app_peripherals.filter((periph)=>{
+                    return periph.peripheral_id === periph_id;
+                })[0];
+                let reg_offset = peripheral_specs[periph.spec_id].registers.filter((reg)=>{
+                    return reg.ID === reg_id;
+                })[0].offset;
+                let address = parseInt(periph.base_address)+parseInt(reg_offset);
+                bulk_registers.push({address:address, value:registers[reg]})
             }
+
             settings.server.periph_proxy.bulkRegisterWrite({payload:bulk_registers});
         }
     };

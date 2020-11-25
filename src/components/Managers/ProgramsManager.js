@@ -64,7 +64,7 @@ let ProgramsManager = props =>{
         }
         if(id===null)
             id = ids.length+1;
-
+        return id;
     }
 
     let handleAddRow = () =>{
@@ -142,7 +142,7 @@ let ProgramsManager = props =>{
 
     let handle_apply_program = () =>{
         let program = Object.values(programs_store).find(x => x.id === settings.selected_program);
-        program.core_address = '0x40400000';
+        program.core_address = '0x83c00000';
         settings.server.prog_proxy.apply_program(program);
     };
 
