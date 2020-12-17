@@ -30,7 +30,6 @@ let  MacroActions = props =>{
 
     let onClick = (event) => {
         let scriptTrigger = event.target.name;
-
         let trigger = Object.values(scripts).filter((script)=>{
             return script.triggers.includes(scriptTrigger);
         });
@@ -53,8 +52,22 @@ let  MacroActions = props =>{
                 let reg_offset = peripheral_specs[periph.spec_id].registers.filter((reg)=>{
                     return reg.ID === reg_id;
                 })[0].offset;
-                let address = parseInt(periph.base_address)+parseInt(reg_offset);
-                bulk_registers.push({address:address, value:registers[reg]})
+                if(periph.proxied){
+                    if(periph.proxy_type==='rtcu'){
+                        let address = parseInt(periph.base_address)+parseInt(reg_offset);
+                        bulk_registers.push({address:parseInt(periph.proxy_address), value:registers[reg]});
+                        bulk_registers.push({address:parseInt(periph.proxy_address)+4, value:address});
+
+                    } else if(periph.proxy_type === 'axis_const'){
+                        let address = parseInt(periph.base_address)+parseInt(reg_offset);
+                        bulk_registers.push({address:parseInt(periph.proxy_address)+4, value:address});
+                        bulk_registers.push({address:parseInt(periph.proxy_address), value:registers[reg]});
+                    }
+                } else{
+                    let address = parseInt(periph.base_address)+parseInt(reg_offset);
+                    bulk_registers.push({address:address, value:registers[reg]})
+                }
+
             }
 
             settings.server.periph_proxy.bulkRegisterWrite({payload:bulk_registers});
