@@ -13,6 +13,23 @@ let ApplicationsReducer = function (state = [], action) {
             });
         case EDIT_APPLICATION:
             switch (action.payload.action) {
+                case "add_channel_group":
+                    return produce(state, draftState => {
+                        draftState[action.payload.application]["channel_groups"].push(action.payload.group);
+                    });
+                case "edit_channel_group":
+                    return produce(state, draftState => {
+                        let target = draftState[action.payload.application]["channel_groups"].filter((item)=>{
+                            return item['group_name'] === action.payload.group;
+                        })[0];
+                        target[action.payload.field] = action.payload.value;
+                    });
+                case "remove_channel_group":
+                    return produce(state, draftState => {
+                        draftState[action.payload.application]["channel_groups"] = draftState[action.payload.application]["channel_groups"].filter((item)=>{
+                            return item['group_name'] !== action.payload.group;
+                        });
+                    });
                 case "add_channel":
                     return produce(state, draftState => {
                         draftState[action.payload.application]["channels"].push(action.payload.channel);

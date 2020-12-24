@@ -3,19 +3,23 @@ import {useSelector} from "react-redux";
 import {Label} from "../Label";
 import {CaretDown, CaretUp} from "grommet-icons";
 import {InputField} from "../InputField";
-import {Checkbox} from "../checkbox";
+
 
 import {Button} from "../Button";
-import {SidebarCollapsableContentLayout, SidebarCollapsableNameLayout} from "..";
+import {MultiSelect, SidebarCollapsableContentLayout, SidebarCollapsableNameLayout} from "..";
 
-export let  PlotChannelProperties = props =>{
+export let  PlotChannelGroupProperties = props =>{
 
     const settings = useSelector(state => state.settings);
+    const channels = useSelector(state => state.applications[props.application].channels)
 
     const [is_open, set_is_open] = useState(false);
+    const [channels_list, set_channels_list] = useState([]);
     const [edit_name, set_edit_name] = useState(false);
 
-
+    let options = channels.map((ch)=>{
+        return {label:ch.name, value:ch.id}
+    });
 
     let handleOpen = ()=>{
         set_is_open(true);
@@ -27,7 +31,7 @@ export let  PlotChannelProperties = props =>{
 
     let handleEditNameChange = (event) => {
         if(event.key==="Enter"){
-            let edit = {application:props.application, channel:props.channel.name, field:event.target.name, value:event.target.value, action:"edit_channel"};
+            let edit = {application:props.application, group:props.group.group_name, field:event.target.name, value:event.target.value, action:"edit_channel_group"};
             settings.server.app_proxy.edit_application(edit);
             set_edit_name(false);
         }else if(event.key ==="Escape"){
@@ -40,20 +44,24 @@ export let  PlotChannelProperties = props =>{
     }
 
     let handleChange = (event)=>{
-        let edit = {application:props.application, channel:props.channel.name, field:event.target.name, value:event.target.checked, action:"edit_channel"};
-        settings.server.app_proxy.edit_application(edit);
+        if(event.length<=6){
+            set_channels_list(event);
+            let edit = {application:props.application, group:props.group.group_name, field:"channels", value:event, action:"edit_channel_group"};
+            settings.server.app_proxy.edit_application(edit);
+        }
+
     }
 
     let handleonKeyDown = (event) =>{
         let edit = {}
         if(event.key==="Enter"|| event.key ==="Tab"){
-            edit = {application:props.application, channel:props.channel.name, field:event.target.name, value:event.target.value, action:"edit_channel"};
+            edit = {application:props.application, group:props.group.group_name, field:event.target.name, value:event.target.value, action:"edit_channel_group"};
             settings.server.app_proxy.edit_application(edit);
         }
     }
 
     let handleRemoveRegister= (event) =>{
-        let edit = {application:props.application, channel:props.channel.name, action:"remove_channel"};
+        let edit = {application:props.application, group:props.group.group_name, action:"remove_channel_group"};
         settings.server.app_proxy.edit_application(edit);
     }
 
@@ -61,11 +69,9 @@ export let  PlotChannelProperties = props =>{
         if(is_open)
             return(
                 <SidebarCollapsableContentLayout>
-                    <InputField inline name='id' defaultValue={props.channel.id} onKeyDown={handleonKeyDown} label="Channel ID"/>
-                    <InputField inline name='phys_width' defaultValue={props.channel.phys_width} onKeyDown={handleonKeyDown} label="Physical width"/>
-                    <InputField inline name='max_value' defaultValue={props.channel.max_value} onKeyDown={handleonKeyDown} label="Maximum Value"/>
-                    <InputField inline name='min_value' defaultValue={props.channel.min_value} onKeyDown={handleonKeyDown} label="Minimum Value"/>
-                    <Checkbox name='enabled' value={props.channel.enabled} onChange={handleChange} label="Enabled by default"/>
+                    <InputField name='group_id' defaultValue={props.group.group_id} onKeyDown={handleonKeyDown} label="ID"/>
+                    <MultiSelect onChange={handleChange} value={channels_list} options={options} label="Content"/>
+
                     <Button onClick={handleRemoveRegister} >Remove</Button>
                 </SidebarCollapsableContentLayout>
             )
@@ -76,8 +82,8 @@ export let  PlotChannelProperties = props =>{
         <>
             <SidebarCollapsableNameLayout>
                 {edit_name
-                    ? <InputField compact name="name" defaultValue={props.channel.name} onKeyDown={handleEditNameChange} label={props.channel.name}/>
-                    : <Label onDoubleClick={handleEditName}>{props.channel.name}</Label>
+                    ? <InputField compact name="group_name" defaultValue={props.group.group_name} onKeyDown={handleEditNameChange} label={props.group.group_name}/>
+                    : <Label onDoubleClick={handleEditName}>{props.group.group_name}</Label>
                 }
 
                 {is_open

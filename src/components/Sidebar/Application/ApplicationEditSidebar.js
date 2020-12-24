@@ -20,12 +20,13 @@ import {
 import {Add} from "grommet-icons";
 
 import {
-    create_channel,
+    create_channel, create_channel_group,
     create_irv,
     create_macro,
     create_parameter,
     create_peripheral_entry
 } from "../../../utilities/ApplicationUtilities";
+import {PlotChannelGroupProperties} from "../../UI_elements/SidebarComponents/PlotChannelGroupProperties";
 
 
 let  ApplicationEditSidebar = props =>{
@@ -38,11 +39,17 @@ let  ApplicationEditSidebar = props =>{
     const [new_parameter, set_new_parameter] = useState(false);
     const [new_peripheral, set_new_peripheral] = useState(false);
     const [new_misc, set_new_misc] = useState(false);
+    const [new_ch_group, set_new_ch_group] = useState(false);
 
     let handle_add_item_done = (event) =>{
         let edit = {};
         if(event.key==="Enter"|| event.key ==="Tab"){
             switch (event.target.name) {
+                case "ch_group":
+                    debugger;
+                    edit = {application:settings.current_application, group:create_channel_group(event.target.value), action:"add_channel_group"};
+                    set_new_ch_group(false);
+                    break;
                 case "channel":
                     edit = {application:settings.current_application, channel:create_channel(event.target.value), action:"add_channel"};
                     set_new_channel(false);
@@ -94,6 +101,9 @@ let  ApplicationEditSidebar = props =>{
             case "misc":
                 set_new_misc(true);
                 break;
+            case "ch_group":
+                set_new_ch_group(true);
+                break;
             default:
                 return;
         }
@@ -125,22 +135,41 @@ let  ApplicationEditSidebar = props =>{
 
             <SidebarBlockLayout>
                 <SidebarBlockTitleLayout>
-                    <label style={{fontSize:'20px',fontWeight:600}}>{"Channels"}</label>
-                    <Add id="channel" size={"medium"} onClick={handle_add_item} color='white'/>
+                    <label style={{fontSize:'20px',fontWeight:600}}>{"Channel Groups"}</label>
+                    <Add id="ch_group" size={"medium"} onClick={handle_add_item} color='white'/>
                 </SidebarBlockTitleLayout>
-                    {new_channel &&
-                        <InputField name="channel" compact label="Channel Name" onKeyDown={handle_add_item_done}/>
+                    {new_ch_group &&
+                        <InputField name="ch_group" compact label="Channel Group Name" onKeyDown={handle_add_item_done}/>
                     }
                 <StyledScrollbar>
                         {
-                            applications[settings.current_application].channels.map((channel)=>{
+                            applications[settings.current_application].channel_groups.map((group)=>{
                                 return(
-                                    <PlotChannelProperties application={settings.current_application} channel={channel}/>
+                                    <PlotChannelGroupProperties application={settings.current_application} group={group}/>
                                 )
                             })
                         }
-                    </StyledScrollbar>
-                </SidebarBlockLayout>
+                </StyledScrollbar>
+            </SidebarBlockLayout>
+
+            <SidebarBlockLayout>
+                <SidebarBlockTitleLayout>
+                    <label style={{fontSize:'20px',fontWeight:600}}>{"Channels"}</label>
+                    <Add id="channel" size={"medium"} onClick={handle_add_item} color='white'/>
+                </SidebarBlockTitleLayout>
+                {new_channel &&
+                <InputField name="channel" compact label="Channel Name" onKeyDown={handle_add_item_done}/>
+                }
+                <StyledScrollbar>
+                    {
+                        applications[settings.current_application].channels.map((channel)=>{
+                            return(
+                                <PlotChannelProperties application={settings.current_application} channel={channel}/>
+                            )
+                        })
+                    }
+                </StyledScrollbar>
+            </SidebarBlockLayout>
 
             <SidebarBlockLayout>
                 <SidebarBlockTitleLayout>

@@ -10,7 +10,7 @@ export {ColorTheme} from "./ColorTheme"
 export {Checkbox} from "./checkbox"
 export {BlockTitle} from "./BlockTitle"
 export {Button} from "./Button"
-
+export {MultiSelect} from "./MultiSelect"
 
 export {ApplicationLayout} from "./Layouts/ApplicationLayout"
 export {BlockLayout} from "./Layouts/BlockLayout"

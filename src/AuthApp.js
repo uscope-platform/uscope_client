@@ -91,9 +91,14 @@ let AuthApp = (props) =>{
             dispatch(setSetting(["application", e]));
             let peripherals = Object.values(app.peripherals);
             dispatch(loadViews(peripherals))
+            initializePlotState(app);
             initializeRegisterStore(peripherals);
         });
     };
+
+    let initializePlotState = (app) =>{
+
+    }
 
     let initializeRegisterStore = (peripherals) =>{
 
