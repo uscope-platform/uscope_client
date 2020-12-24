@@ -6,7 +6,7 @@ import {InputField} from "../InputField";
 
 
 import {Button} from "../Button";
-import {MultiSelect, SidebarCollapsableContentLayout, SidebarCollapsableNameLayout} from "..";
+import {Checkbox, MultiSelect, SidebarCollapsableContentLayout, SidebarCollapsableNameLayout} from "..";
 
 export let  PlotChannelGroupProperties = props =>{
 
@@ -39,6 +39,11 @@ export let  PlotChannelGroupProperties = props =>{
         }
     }
 
+    let handleChangeDefault = (event)=>{
+        let edit = {application:props.application, group:props.group.group_name, field:event.target.name, value:event.target.checked, action:"edit_channel_group"};
+        settings.server.app_proxy.edit_application(edit);
+    }
+
     let handleClose = ()=>{
         set_is_open(false);
     }
@@ -66,15 +71,19 @@ export let  PlotChannelGroupProperties = props =>{
     }
 
     let renderChannelContent = (props) =>{
-        if(is_open)
-            return(
+        if(is_open) {
+            let is_default = props.group.default;
+            return (
                 <SidebarCollapsableContentLayout>
-                    <InputField name='group_id' defaultValue={props.group.group_id} onKeyDown={handleonKeyDown} label="ID"/>
+                    <InputField name='group_id' defaultValue={props.group.group_id} onKeyDown={handleonKeyDown}
+                                label="ID"/>
                     <MultiSelect onChange={handleChange} value={channels_list} options={options} label="Content"/>
+                    <Checkbox name='default' value={is_default} onChange={handleChangeDefault} label="Default group"/>
 
-                    <Button onClick={handleRemoveRegister} >Remove</Button>
+                    <Button onClick={handleRemoveRegister}>Remove</Button>
                 </SidebarCollapsableContentLayout>
             )
+        }
         return null;
     }
 

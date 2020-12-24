@@ -50,7 +50,8 @@ export let create_channel_group = (name) =>{
     return{
         group_name: name,
         group_id: name.replace(/\s/g, "_").toLowerCase(),
-        channels:[]
+        channels:[],
+        default:false
     }
 }
 export let create_application = (name) =>{
