@@ -12,7 +12,7 @@ let  ChannelSelectorItem = props => {
 
     function handleChannelStateChange(event){
         set_enabled(event.target.checked)
-        let channel_status = {id:parseInt(event.target.name)-1, status:event.target.checked}
+        let channel_status = {id:event.target.name, status:event.target.checked}
         props.onStatusChange(channel_status);
     }
 

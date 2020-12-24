@@ -5,7 +5,7 @@ import {
     PLOT_PAUSE,
     PLOT_PLAY,
     PLOT_STOP,
-    SET_CHANNEL_SETTING
+    SET_CHANNEL_SETTING, INITIALIZE_CHANNELS
 } from "../Actions/types";
 import produce from "immer";
 
@@ -27,10 +27,10 @@ for(let i = 0; i<6;i++){
 
 const initial_state = {
     data:base_data,
-        loading_done:false,
-        plot_running:false,
-        datarevision:0,
-        parameters:{
+    loading_done:false,
+    plot_running:false,
+    datarevision:0,
+    parameters:{
         memory_depth: 1024
     },
     layout: {
@@ -70,12 +70,24 @@ const initial_state = {
 
 let plotReducer = function (state = initial_state, action) {
     switch (action.type) {
+        case INITIALIZE_CHANNELS:
+            return produce(state, draftState =>{
+                draftState['data'] = action.payload;
+                draftState['datarevision'] += 1;
+            });
         case SET_CHANNEL_STATUS:
             return produce(state, draftState => {
                 let chs = action.payload.channel
-                for(let idx in chs){
-                    draftState['data'][idx]['visible'] = chs[idx];
-                }
+                draftState['data'] = draftState['data'].filter(item=>{
+                    if(item.spec.id in chs){
+                        let new_item = item;
+                        new_item.visible = chs[item.spec.id];
+                        return new_item;
+                    } else {
+                        return item
+                    }
+                })
+                chs = draftState['data'];
                 draftState['datarevision'] += 1;
             });
         case LOAD_CHANNELS:

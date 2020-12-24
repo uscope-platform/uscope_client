@@ -5,7 +5,7 @@ import {
     PLOT_PAUSE,
     PLOT_PLAY,
     PLOT_STOP,
-    SET_CHANNEL_SETTING
+    SET_CHANNEL_SETTING, INITIALIZE_CHANNELS
 } from "./types";
 import axios from "axios";
 
@@ -52,6 +52,13 @@ export const plotPlay = () =>{
         payload:{
             value: true
         }
+    }
+};
+
+export const initialize_channels = (data) =>{
+    return{
+        type: INITIALIZE_CHANNELS,
+        payload: data
     }
 };
 

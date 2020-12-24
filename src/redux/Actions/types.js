@@ -6,6 +6,7 @@ export const PLOT_PAUSE = 'PLOT_PAUSE';
 export const PLOT_STOP = 'PLOT_STOP';
 export const FETCH_DATA = 'FETCH_DATA';
 export const SET_CHANNEL_SETTING = "SET_CHANNEL_SETTING";
+export const INITIALIZE_CHANNELS = "INITIALIZE_CHANNELS";
 //                   PARAMETERS ACTIONS
 export const SAVE_PARAMETER =  'SEND_PARAMETER';
 //                   REGISTERS ACTIONS
