@@ -79,9 +79,9 @@ let plotReducer = function (state = initial_state, action) {
             return produce(state, draftState => {
                 let chs = action.payload.channel
                 draftState['data'] = draftState['data'].filter(item=>{
-                    if(item.spec.id in chs){
+                    if(item.spec.number in chs){
                         let new_item = item;
-                        new_item.visible = chs[item.spec.id];
+                        new_item.visible = chs[item.spec.number];
                         return new_item;
                     } else {
                         return item
@@ -103,9 +103,6 @@ let plotReducer = function (state = initial_state, action) {
                     console.log(channel_payload.channel)
                     for(let item of draftState['data']){
                         if(parseInt(item.spec.number)===channel_payload.channel){
-                            console.log(parseInt(item.spec.number))
-                            console.log('===')
-                            console.log(channel_payload.channel)
                             item.y = channel_payload.data;
                         }
 
