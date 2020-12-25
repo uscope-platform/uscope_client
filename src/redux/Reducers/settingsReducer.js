@@ -6,6 +6,7 @@ const initial_state = {
     refreshRate: 125,
     edit_application_mode:false,
     edit_application_name: "",
+    default_ch_group:'',
     current_peripheral:null,
     current_application:null,
     selected_script:null,

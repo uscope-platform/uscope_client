@@ -18,6 +18,7 @@ import './App.css';
 import {ApplicationLayout} from "./components/UI_elements";
 import Sidebar from "./components/Sidebar/Sidebar";
 import {initialize_channels} from "./redux/Actions/plotActions";
+import {create_plot_channel, get_channels_from_group} from "./utilities/PlotUtilities";
 
 
 const states = Object.freeze({
@@ -99,27 +100,13 @@ let AuthApp = (props) =>{
 
 
     let initializePlotState = (app) =>{
-        let create_channel = (ch) =>{
-            return({
-                x: Array.from(Array(1024).keys()),
-                y:  Array(1024).fill(0),
-                type: 'scatter',
-                mode: 'lines',
-                name: ch.name,
-                visible: ch.enabled,
-                spec:ch
-            })
-        }
+
         let channels_list = [];
         if(app.channel_groups && app.channel_groups.length>0){
             for(let group of app.channel_groups){
                 if(group.default){
-                    for(let ch of group.channels){
-                        let selected_ch = app.channels.filter((item)=>{
-                            return item.id === ch.value;
-                        })
-                        channels_list.push(selected_ch[0])
-                    }
+                    dispatch(setSetting(["default_ch_group", group]));
+                    channels_list = get_channels_from_group(group, app.channels);
                 }
             }
         } else {
@@ -127,8 +114,9 @@ let AuthApp = (props) =>{
         }
         let ch_obj = [];
         for(let channel of channels_list){
-            ch_obj.push(create_channel(channel))
+            ch_obj.push(create_plot_channel(channel))
         }
+
         dispatch(initialize_channels(ch_obj));
     }
 

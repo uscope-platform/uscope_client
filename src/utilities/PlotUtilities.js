@@ -1,0 +1,23 @@
+
+export let create_plot_channel = (ch) =>{
+    return({
+        x: Array.from(Array(1024).keys()),
+        y:  Array(1024).fill(0),
+        type: 'scatter',
+        mode: 'lines',
+        name: ch.name,
+        visible: ch.enabled,
+        spec:ch
+    })
+}
+
+export let get_channels_from_group = (group, channels) => {
+    let channels_list = []
+    for(let ch of group.channels) {
+        let selected_ch = channels.filter((item) => {
+            return item.id === ch.value;
+        })
+        channels_list.push(selected_ch[0])
+    }
+    return channels_list;
+ }
