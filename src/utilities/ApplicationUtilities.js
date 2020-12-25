@@ -4,6 +4,8 @@ export let create_channel = (name) =>{
         name: name,
         id: name.replace(/\s/g, "_").toLowerCase(),
         phys_width:16,
+        number: 0,
+        mux_setting: 0,
         enabled: false,
         max_value: "1000",
         min_value: "0"

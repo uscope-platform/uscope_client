@@ -98,8 +98,18 @@ let plotReducer = function (state = initial_state, action) {
 
         case FETCH_DATA:
             return produce(state, draftState => {
+                debugger;
                 for(let channel_payload of action.payload){
-                    draftState['data'][channel_payload.channel]['y'] = channel_payload.data;
+                    console.log(channel_payload.channel)
+                    for(let item of draftState['data']){
+                        if(parseInt(item.spec.number)===channel_payload.channel){
+                            console.log(parseInt(item.spec.number))
+                            console.log('===')
+                            console.log(channel_payload.channel)
+                            item.y = channel_payload.data;
+                        }
+
+                    }
                 }
                 draftState['datarevision'] += 1;
             });

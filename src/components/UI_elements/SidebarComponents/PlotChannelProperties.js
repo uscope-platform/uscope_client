@@ -62,6 +62,8 @@ export let  PlotChannelProperties = props =>{
             return(
                 <SidebarCollapsableContentLayout>
                     <InputField inline name='id' defaultValue={props.channel.id} onKeyDown={handleonKeyDown} label="Channel ID"/>
+                    <InputField inline name='number' defaultValue={props.channel.number} onKeyDown={handleonKeyDown} label="Channel Number"/>
+                    <InputField inline name='mux_setting' defaultValue={props.channel.mux_setting} onKeyDown={handleonKeyDown} label="Mux Setting"/>
                     <InputField inline name='phys_width' defaultValue={props.channel.phys_width} onKeyDown={handleonKeyDown} label="Physical width"/>
                     <InputField inline name='max_value' defaultValue={props.channel.max_value} onKeyDown={handleonKeyDown} label="Maximum Value"/>
                     <InputField inline name='min_value' defaultValue={props.channel.min_value} onKeyDown={handleonKeyDown} label="Minimum Value"/>
