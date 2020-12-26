@@ -96,6 +96,7 @@ let  EnablesProperties = props =>{
         for(let item of channels){
             ch_obj.push(create_plot_channel(item))
         }
+        dispatch(initialize_channels(ch_obj));
         //SET UP MUXES FOR NEW GROUP
         if(scope_mux_address){
             let components = [];
@@ -109,8 +110,14 @@ let  EnablesProperties = props =>{
             }
             settings.server.periph_proxy.bulkRegisterWrite({payload:[{address:scope_mux_address, value:word}]});
         }
+        //SET  UP CHANNEL WIDTHS
+        let widths = []
+        for(let item of channels){
+            widths.push(parseInt(item.phys_width));
+        }
+        settings.server.plot_proxy.set_channel_widths(widths);
 
-        dispatch(initialize_channels(ch_obj));
+
     };
 
     return (

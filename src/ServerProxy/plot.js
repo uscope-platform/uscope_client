@@ -38,6 +38,13 @@ export default function plotProxy(server_url, token) {
         store.dispatch(setChannelStatus(_this.server_url+'plot/channels/status',channel,_this.config));
     }
 
+    this.set_channel_widths = (widths) => {
+        axios.post(_this.server_url+'plot/channels/widths', {widths}, _this.config).then(res => {
+            return res;
+        }).catch(err => {
+            alert(err.message);
+        });
+    }
 }
 
 

@@ -115,7 +115,7 @@ let AuthApp = (props) =>{
         for(let channel of channels_list){
             ch_obj.push(create_plot_channel(channel))
         }
-
+        dispatch(initialize_channels(ch_obj));
         //SET UP MUXES FOR NEW GROUP
         let scope_mux_address = parseInt(app['scope_mux_address']);
         if(scope_mux_address){
@@ -130,8 +130,13 @@ let AuthApp = (props) =>{
             }
             settings.server.periph_proxy.bulkRegisterWrite({payload:[{address:scope_mux_address, value:word}]});
         }
+        // SET UP CHANNEL WIDTHS
+        let widths = []
+        for(let item of channels_list){
+            widths.push(parseInt(item.phys_width));
+        }
+        settings.server.plot_proxy.set_channel_widths(widths);
 
-        dispatch(initialize_channels(ch_obj));
     }
 
     let initializeRegisterStore = (peripherals) =>{
