@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 
 import {Checkbox} from "../UI_elements";
 import styled from "styled-components";

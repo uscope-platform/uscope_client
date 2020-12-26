@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import ChannelSelectorItem from "./ChannelSelectorItem";
 import {useSelector} from "react-redux";
 import {BlockLayout, BlockTitle} from "../UI_elements";
-import {get_channel_mux_from_id, get_channel_number_from_id} from "../../utilities/PlotUtilities";
+import {get_channel_number_from_id} from "../../utilities/PlotUtilities";
 
 let ChannelSelector = function(props) {
     const settings = useSelector(state => state.settings);

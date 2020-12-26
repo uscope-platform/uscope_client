@@ -81,7 +81,7 @@ let  MacroActions = props =>{
                 {actions.map((macro) => {
                     return(
                         <div style={{margin:'0.5rem'}}>
-                            <Button key={macro.trigger} className="macro_action_buttons" name={macro.trigger} onClick={onClick}>{macro.name}</Button>
+                            <Button key={macro.name} className="macro_action_buttons" name={macro.trigger} onClick={onClick}>{macro.name}</Button>
                         </div>
                     );
                 })}
