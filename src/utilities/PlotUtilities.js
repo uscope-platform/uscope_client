@@ -21,3 +21,16 @@ export let get_channels_from_group = (group, channels) => {
     }
     return channels_list;
  }
+
+export let get_channel_number_from_id = (id, channels) => {
+    for(let item of channels){
+        if(item.spec.id === id) return item.spec.number
+    }
+}
+
+
+export let get_channel_mux_from_id = (id, channels) => {
+    for(let item of channels){
+        if(item.spec.id === id) return item.spec.mux_setting;
+    }
+}

@@ -43,7 +43,6 @@ let AuthApp = (props) =>{
 
     const [init_phase, set_init_phase] = useState(states.APP_CHOICE);
 
-
     let load_resource = (resource) =>{
         let digest = localStorage.getItem(resource.key);
         if(resource.store === undefined || digest === null){
@@ -115,6 +114,21 @@ let AuthApp = (props) =>{
         let ch_obj = [];
         for(let channel of channels_list){
             ch_obj.push(create_plot_channel(channel))
+        }
+
+        //SET UP MUXES FOR NEW GROUP
+        let scope_mux_address = parseInt(app['scope_mux_address']);
+        if(scope_mux_address){
+            let components = [];
+            for(let item of channels_list){
+                let channel_mux = parseInt(item.mux_setting)<<4*item.number;
+                components.push(channel_mux);
+            }
+            let word = 0x1000000;
+            for(let item of components){
+                word |= item;
+            }
+            settings.server.periph_proxy.bulkRegisterWrite({payload:[{address:scope_mux_address, value:word}]});
         }
 
         dispatch(initialize_channels(ch_obj));

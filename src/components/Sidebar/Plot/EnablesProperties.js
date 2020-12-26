@@ -28,6 +28,8 @@ let  EnablesProperties = props =>{
     const [clock_frequency, ] = useState(applications_list[settings['application']]['clock_frequency']);
     const [timebase_addr, ] = useState(applications_list[settings['application']]['timebase_address']);
     const [channelGroups, ] = useState(applications_list[settings['application']]['channel_groups']);
+    const [scope_mux_address, ] = useState(parseInt(applications_list[settings['application']]['scope_mux_address']));
+
     const peripheral_specs = useSelector( state => state.peripherals);
 
     let parse_number = (raw_value) => {
@@ -80,18 +82,32 @@ let  EnablesProperties = props =>{
     }
 
     let handleChGroupChange = (event) => {
-        debugger;
         let group_name = event.target.value;
         let group = []
+        //GET GROUP OBJECT
         for(let item of application.channel_groups){
             if(item.group_name === group_name) {
                 group = item;
             }
         }
+        //GET SET UP PLOT WITH NEW CHANNELS
         let channels = get_channels_from_group(group, application.channels);
         let ch_obj = [];
         for(let item of channels){
             ch_obj.push(create_plot_channel(item))
+        }
+        //SET UP MUXES FOR NEW GROUP
+        if(scope_mux_address){
+            let components = [];
+            for(let item of channels){
+                let channel_mux = parseInt(item.mux_setting)<<4*item.number;
+                components.push(channel_mux);
+            }
+            let word = 0x1000000;
+            for(let item of components){
+                word |= item;
+            }
+            settings.server.periph_proxy.bulkRegisterWrite({payload:[{address:scope_mux_address, value:word}]});
         }
 
         dispatch(initialize_channels(ch_obj));

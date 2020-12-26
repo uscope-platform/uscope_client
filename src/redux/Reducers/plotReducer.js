@@ -98,7 +98,6 @@ let plotReducer = function (state = initial_state, action) {
 
         case FETCH_DATA:
             return produce(state, draftState => {
-                debugger;
                 for(let channel_payload of action.payload){
                     console.log(channel_payload.channel)
                     for(let item of draftState['data']){
