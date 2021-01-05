@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import ChannelSelectorItem from "./ChannelSelectorItem";
 import {useSelector} from "react-redux";
@@ -8,23 +8,26 @@ import {get_channel_number_from_id} from "../../utilities/PlotUtilities";
 let ChannelSelector = function(props) {
     const settings = useSelector(state => state.settings);
     const channels_data = useSelector(state => state.plot.data);
-    const [channel_state, set_channel_state] = useState({});
+
 
     useEffect(()=>{
+        let new_ch_state = get_state();
+        settings.server.plot_proxy.set_channel_status(new_ch_state);
+    },[])
+
+    let get_state = ()=>{
         let new_ch_state = {}
         channels_data.map(chan => {
             new_ch_state[chan.spec.number] = chan.visible;
             return 0;
         })
-        set_channel_state(new_ch_state);
-        settings.server.plot_proxy.set_channel_status(new_ch_state);
-    },[])
+        return new_ch_state;
+    }
 
     let handle_status_change = status =>{
-        let new_state = channel_state;
-        let channel_number = get_channel_number_from_id(parseInt(status.id), channels_data);
+        let new_state = get_state();
+        let channel_number = get_channel_number_from_id(status.id, channels_data);
         new_state[parseInt(channel_number)] = status.status;
-        set_channel_state(new_state);
         settings.server.plot_proxy.set_channel_status(new_state);
     }
 

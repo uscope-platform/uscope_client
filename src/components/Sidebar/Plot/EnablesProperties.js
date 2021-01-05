@@ -24,6 +24,7 @@ let  EnablesProperties = props =>{
     const dispatch = useDispatch();
     const settings = useSelector(state => state.settings);
     const applications_list = useSelector(state => state.applications);
+    const channels_data = useSelector(state => state.plot.data);
     const [application, ] = useState(applications_list[settings['application']])
     const [clock_frequency, ] = useState(applications_list[settings['application']]['clock_frequency']);
     const [timebase_addr, ] = useState(applications_list[settings['application']]['timebase_address']);
@@ -116,8 +117,14 @@ let  EnablesProperties = props =>{
             widths.push(parseInt(item.phys_width));
         }
         settings.server.plot_proxy.set_channel_widths(widths);
+        // SET NEW CHANNELS status
+        let new_ch_state = {}
 
-
+        channels_data.map(chan => {
+            new_ch_state[chan.spec.number] = chan.visible;
+            return 0;
+        })
+        settings.server.plot_proxy.set_channel_status(new_ch_state);
     };
 
     return (
