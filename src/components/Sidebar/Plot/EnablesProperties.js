@@ -10,6 +10,7 @@ import {
 import styled from "styled-components";
 import {create_plot_channel, get_channels_from_group} from "../../../utilities/PlotUtilities";
 import {initialize_channels} from "../../../redux/Actions/plotActions";
+import {setSetting} from "../../../redux/Actions/SettingsActions";
 
 const ChoicesWrapper = styled.div`
     display: grid;
@@ -60,6 +61,7 @@ let  EnablesProperties = props =>{
         }
         let divisor = Math.round(Math.ceil(60e3/numeric_value));
         let sample_time = 60e3/divisor;
+        dispatch(setSetting(["sampling_period", sample_time]));
         return divisor;
 
     };
@@ -149,6 +151,7 @@ let  EnablesProperties = props =>{
                                 }
                             </Select>
                         </ChoicesWrapper>
+                        <Label>Effective Sampling frequency: {settings.sampling_period}</Label>
                         <Button type='submit' >Submit changes</Button>
                     </FormLayout>
                 </form>

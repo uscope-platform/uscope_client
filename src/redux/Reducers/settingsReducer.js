@@ -13,7 +13,8 @@ const initial_state = {
     script_editor_title:null,
     current_view_requires_sidebar: true,
     selected_program: null,
-    program_editor_title: null
+    program_editor_title: null,
+    sampling_period:0
 };
 
 let settingsReducer = function (state = initial_state, action) {

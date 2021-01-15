@@ -20,10 +20,10 @@ let CaptureProperties = props =>{
         let data = channels.data.map((ch)=>{
             return ch.y;
         });
-        let csv_content = `${channels.data[0].name},${channels.data[1].name},${channels.data[2].name},${channels.data[3].name},${channels.data[4].name},${channels.data[5].name}\n`
+        let csv_content = `time,${channels.data[0].name},${channels.data[1].name},${channels.data[2].name},${channels.data[3].name},${channels.data[4].name},${channels.data[5].name}\n`
         for(let i = 0; i<data[0].length; i++){
 
-            csv_content += `${data[0][i]},${data[1][i]},${data[2][i]},${data[3][i]},${data[4][i]},${data[5][i]}\n`
+            csv_content += `${channels.data[0].x[i]/settings.sampling_period},${data[0][i]},${data[1][i]},${data[2][i]},${data[3][i]},${data[4][i]},${data[5][i]}\n`
         }
 
         let [month, day, year]    = new Date().toLocaleDateString("en-US").split("/");
