@@ -58,14 +58,16 @@ let  EnablesProperties = props =>{
         } else{
             numeric_value = parseFloat(raw_value);
         }
-        return Math.round(clock_frequency/numeric_value)
+        let divisor = Math.round(Math.ceil(60e3/numeric_value));
+        let sample_time = 60e3/divisor;
+        return divisor;
 
     };
 
     let handle_submit = (event) =>{
         event.preventDefault();
         let sample_period = parse_number(event.target.frequency.value);
-        let sample_phase = Math.round(parseFloat(event.target.phase.value)*sample_period);
+        let sample_phase = Math.round(1);
         let bulk_registers = [];
 
         let reg_offset = peripheral_specs['enable_generator_1'].registers.filter((reg)=>{
