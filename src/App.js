@@ -10,6 +10,7 @@ import {useDispatch} from "react-redux";
 import {setSetting} from "./redux/Actions/SettingsActions";
 import {ThemeProvider} from "styled-components";
 import {ColorTheme} from "./components/UI_elements";
+const { REACT_APP_SERVER} = process.env;
 
 let App = (props) =>{
     // home: http://192.168.1.2/uscope/
@@ -18,20 +19,23 @@ let App = (props) =>{
     // unnc:http://10.190.0.74:4999/uscope/
     // unuk:http://10.156.16.205:8989/uscope/
 
-    const [server, set_server] = useState(new serverProxy(window.location+'uscope/', ''));
+    const [server, set_server] = useState(new serverProxy(REACT_APP_SERVER, ''));
     const [logged, set_logged] = useState(false);
     const dispatch = useDispatch();
 
 
     const done = useCallback((login_credentials)=>{
         server.auth_proxy.sign_in(login_credentials).then((token) =>{
-            let uScope_server = new serverProxy(window.location+'uscope/',token.access_token);
+            let uScope_server = new serverProxy(REACT_APP_SERVER,token.access_token);
+
             if(token.login_token){
                 localStorage.setItem('login_token', JSON.stringify(token.login_token));
             }
             set_server(uScope_server);
             dispatch(setSetting(["server", uScope_server]));
             set_logged(true);
+        }).catch(()=>{
+            localStorage.removeItem('login_token');
         });
     }, []);
 
