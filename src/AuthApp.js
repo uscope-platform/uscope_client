@@ -94,6 +94,7 @@ let AuthApp = (props) =>{
             dispatch(loadViews(peripherals))
             initializePlotState(app);
             initializeRegisterStore(peripherals);
+        }).catch(error =>{
         });
     };
 

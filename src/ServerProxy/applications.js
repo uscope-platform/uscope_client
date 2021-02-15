@@ -22,7 +22,9 @@ export default function applicationProxy(server_url, token) {
             axios.get(_this.server_url+'application/set/'+app_name, _this.config)
                 .then(res => {
                     resolve(res.data);
-                })
+                }).catch(error => {
+                    reject(error);
+                });
         });
     };
 

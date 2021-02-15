@@ -10,7 +10,7 @@ import {useDispatch} from "react-redux";
 import {setSetting} from "./redux/Actions/SettingsActions";
 import {ThemeProvider} from "styled-components";
 import {ColorTheme} from "./components/UI_elements";
-const { REACT_APP_SERVER} = process.env;
+
 
 let App = (props) =>{
     // home: http://192.168.1.2/uscope/
