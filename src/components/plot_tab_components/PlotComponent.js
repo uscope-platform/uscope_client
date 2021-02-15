@@ -34,7 +34,7 @@ let  PlotComponent = props =>{
         <ComponentStyle>
             <Plot
                 data={channels.data}
-                layout={channels.layout}
+                layout={{...channels.layout,...settings.plot_palette}}
                 config={channels.configs}
                 datarevision={props.datarevision}
             />

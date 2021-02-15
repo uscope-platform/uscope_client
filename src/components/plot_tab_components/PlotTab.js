@@ -7,6 +7,7 @@ import PlotComponent from "./PlotComponent";
 import ParametersArea from "./ParametersArea";
 import MacroActions from "./MacroActions";
 import styled from "styled-components";
+import {ColorTheme} from "../UI_elements";
 
 
 const ComponentLayout = styled.div`
@@ -24,7 +25,7 @@ let PlotTab = function (props) {
         return(
             <ComponentLayout>
                 <ChannelSelector channels={channels}/>
-                <PlotComponent refreshRate={settings.refreshRate}/>
+                <PlotComponent palette={{colorway:ColorTheme.plot_palette}} refreshRate={settings.refreshRate}/>
                 <ParametersArea />
                 <MacroActions />
             </ComponentLayout>

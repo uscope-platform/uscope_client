@@ -1,11 +1,4 @@
-let plot_palette = [
-    "rgb(161, 201,244)",
-    "rgb(141, 229,161)",
-    "rgb(255, 159,155)",
-    "rgb(208, 187,255)",
-    "rgb(255, 254,163)",
-    "rgb(185, 242,240)",
-]
+
 
 export let create_plot_channel = (ch) =>{
     return({

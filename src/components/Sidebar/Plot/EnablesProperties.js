@@ -27,7 +27,6 @@ let  EnablesProperties = props =>{
     const applications_list = useSelector(state => state.applications);
     const channels_data = useSelector(state => state.plot.data);
     const [application, ] = useState(applications_list[settings['application']])
-    const [clock_frequency, ] = useState(applications_list[settings['application']]['clock_frequency']);
     const [timebase_addr, ] = useState(applications_list[settings['application']]['timebase_address']);
     const [channelGroups, ] = useState(applications_list[settings['application']]['channel_groups']);
     const [scope_mux_address, ] = useState(parseInt(applications_list[settings['application']]['scope_mux_address']));

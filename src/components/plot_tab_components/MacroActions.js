@@ -80,7 +80,7 @@ let  MacroActions = props =>{
             <ButtonGrid>
                 {actions.map((macro) => {
                     return(
-                        <div style={{margin:'0.5rem'}}>
+                        <div key={macro.name} style={{margin:'0.5rem'}}>
                             <Button key={macro.name} className="macro_action_buttons" name={macro.trigger} onClick={onClick}>{macro.name}</Button>
                         </div>
                     );

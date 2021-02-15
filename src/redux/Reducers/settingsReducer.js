@@ -1,5 +1,6 @@
 import {SET_SETTING} from "../Actions/types";
 import produce from "immer";
+import {ColorTheme} from "../../components/UI_elements";
 
 const initial_state = {
     default_tab: "Plot",
@@ -14,7 +15,8 @@ const initial_state = {
     current_view_requires_sidebar: true,
     selected_program: null,
     program_editor_title: null,
-    sampling_period:0
+    sampling_period:0,
+    plot_palette:ColorTheme.plot_palette
 };
 
 let settingsReducer = function (state = initial_state, action) {
