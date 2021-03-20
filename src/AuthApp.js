@@ -195,6 +195,12 @@ let AuthApp = (props) =>{
             type: "program_manager",
             user_accessible: true
         }]));
+        dispatch(loadViews([{
+            name: "Platform Manager",
+            peripheral_id: "platform_manager",
+            type: "platform_manager",
+            user_accessible: true
+        }]));
         set_init_phase(states.NORMAL)
     };
 

@@ -5,7 +5,7 @@ import creatorProxy from "./creator";
 import scriptsProxy from "./scripts"
 import authProxy from "./auth"
 import programsProxy from "./programs";
-
+import platformProxy from "./platform";
 export default function serverProxy(server_url, token) {
     this.server_url = server_url;
     this.app_proxy = new applicationProxy(this.server_url, token);
@@ -15,5 +15,6 @@ export default function serverProxy(server_url, token) {
     this.script_proxy = new scriptsProxy(this.server_url, token);
     this.auth_proxy = new authProxy(this.server_url, token);
     this.prog_proxy = new programsProxy(this.server_url, token);
+    this.platform_proxy = new platformProxy(this.server_url, token);
 }
 

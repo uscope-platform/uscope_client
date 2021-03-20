@@ -1,12 +1,12 @@
 import React, {Suspense} from 'react';
 
-
 const PlotTab = React.lazy(() => import('./plot_tab_components/PlotTab'));
 const RegisterTab = React.lazy(() => import('./register_tab_components/Register_tab'));
 const ScriptManager = React.lazy(() => import('./Managers/ScriptManager'));
 const PeripheralsManager = React.lazy(() => import('./Managers/PeripheralsManager'));
 const ApplicationsManager = React.lazy(() => import('./Managers/ApplicationsManager'));
 const ProgramsManager = React.lazy(()=> import('./Managers/ProgramsManager'));
+const PlatformManager = React.lazy(()=> import('./Managers/PlatformManager'));
 
 let TabContent = props => {
     if(props.tab.type==='Scope'){
@@ -43,6 +43,12 @@ let TabContent = props => {
         return (
             <Suspense fallback={<div>Loading...</div>}>
                 <ProgramsManager />
+            </Suspense>
+        );
+    }else if(props.tab.type ==='platform_manager'){
+        return (
+            <Suspense fallback={<div>Loading...</div>}>
+                <PlatformManager />
             </Suspense>
         );
     }else{
