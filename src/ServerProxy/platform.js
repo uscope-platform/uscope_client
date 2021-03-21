@@ -50,4 +50,7 @@ export default function platformProxy(server_url, token) {
         });
     }
 
+    this.restore_database = (db_file) =>{
+        axios.post(_this.db_server_url+'import',db_file, _this.config);
+    }
 }

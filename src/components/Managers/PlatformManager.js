@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useLocation} from "react-router";
 
 import {useDispatch, useSelector} from "react-redux"
@@ -25,6 +25,8 @@ let  PlatformManager = props =>{
     const settings = useSelector(state => state.settings);
 
     const dispatch = useDispatch();
+
+    const databaseFile = useRef(null)
 
     useEffect(()=>{
         settings.server.platform_proxy.get_users_list().then((response)=>{
@@ -66,8 +68,21 @@ let  PlatformManager = props =>{
 
     }
 
-    let handleRestoreDatabse = (event) =>{
+    let handleRestoreButton = event =>{
+        databaseFile.current.click();
+    }
 
+    let handleRestoreDatabse = (event) =>{
+        let file = event.target.files[0]
+        let reader = new FileReader();
+        reader.readAsText(file)
+        reader.onload = (event) =>{
+            let content = JSON.parse(event.target.result);
+            settings.server.platform_proxy.restore_database(content);
+        }
+        reader.onerror = (event) =>{
+            alert(event.target.error.message);
+        }
     }
 
     return(
@@ -75,7 +90,7 @@ let  PlatformManager = props =>{
             <ManagerButtonsLayout>
                 <Button style={{margin:"0 1rem"}} onClick={handleRemoveUser}>Remove User</Button>
                 <Button style={{margin:"0 1rem"}} onClick={handleDumpDatabse}>Dump Database</Button>
-                <Button style={{margin:"0 1rem"}} onClick={handleRestoreDatabse}>Restore Database</Button>
+                <Button style={{margin:"0 1rem"}} onClick={handleRestoreButton}>Restore Database</Button>
             </ManagerButtonsLayout>
             <BlockLayout centered>
                 <DataTable
@@ -88,7 +103,7 @@ let  PlatformManager = props =>{
                     onSelectedRowsChange={handleOnSelect}
                 />
             </BlockLayout>
-
+            <input type='file' id='dbFile' ref={databaseFile} onChange={handleRestoreDatabse} style={{display: 'none'}}/>
         </ManagerLayout>
     );
 };
