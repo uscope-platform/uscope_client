@@ -1,4 +1,10 @@
-import {EDIT_APPLICATION, LOAD_APPLICATIONS, REMOVE_APPLICATION, SAVE_PARAMETER} from "../Actions/types";
+import {
+    ADD_APPLICATION,
+    EDIT_APPLICATION,
+    LOAD_APPLICATIONS,
+    REMOVE_APPLICATION,
+    SAVE_PARAMETER
+} from "../Actions/types";
 import produce from "immer";
 
 
@@ -144,6 +150,8 @@ let ApplicationsReducer = function (state = [], action) {
             return produce(state, draftState => {
                 delete draftState[action.payload];
             });
+        case ADD_APPLICATION:
+            return {...state, ...action.payload}
         default:
             return state;
     }
