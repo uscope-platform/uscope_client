@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import store from "../store";
-import {editPeripheral, removePeripheral} from "../redux/Actions/peripheralsActions";
+import {addPeripheral, editPeripheral, removePeripheral} from "../redux/Actions/peripheralsActions";
 
 export default function creatorProxy(server_url, token) {
     this.server_url = server_url;
@@ -23,17 +23,13 @@ export default function creatorProxy(server_url, token) {
                         'Authorization': `Bearer ${token}`
                     }}
             ).then(() =>{
-                axios.post(this.server_url+'tab_creator/create_peripheral',{payload:peripheral, image:true}, this.config).catch(err => {
-                    alert(err.message);
-                })
+                store.dispatch(addPeripheral(this.server_url+'tab_creator/create_peripheral',{payload:peripheral, image:true}, this.config))
             }).catch(function (response) {
                 //handle error
                 console.log(response);
             });
         } else{
-            axios.post(this.server_url+'tab_creator/create_peripheral',{payload:peripheral, image:false},this.config).catch(err => {
-                alert(err.message);
-            })
+            store.dispatch(addPeripheral(this.server_url+'tab_creator/create_peripheral',{payload:peripheral, image:false}, this.config))
         }
 
     };

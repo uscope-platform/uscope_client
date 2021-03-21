@@ -1,4 +1,4 @@
-import {EDIT_PERIPHERAL, LOAD_PERIPHERALS, REMOVE_PERIPHERAL} from "../Actions/types";
+import {ADD_PERIPHERAL, EDIT_PERIPHERAL, LOAD_PERIPHERALS, REMOVE_PERIPHERAL} from "../Actions/types";
 import produce from "immer";
 
 
@@ -7,6 +7,7 @@ let PeripheralsReducer = function (state = null, action) {
         case LOAD_PERIPHERALS:
             state = action.payload;
             return state;
+
         case EDIT_PERIPHERAL:
             switch (action.payload.action) {
                 case "edit_register":
@@ -50,6 +51,9 @@ let PeripheralsReducer = function (state = null, action) {
             return produce(state, draftState => {
                 delete draftState[action.payload];
             });
+
+        case ADD_PERIPHERAL:
+            return {...state, ...action.payload.payload}
         default:
             return state;
     }

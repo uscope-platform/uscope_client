@@ -1,4 +1,4 @@
-import {EDIT_PERIPHERAL, LOAD_PERIPHERALS, REMOVE_PERIPHERAL} from "./types";
+import { ADD_PERIPHERAL, EDIT_PERIPHERAL, LOAD_PERIPHERALS, REMOVE_PERIPHERAL} from "./types";
 import axios from 'axios';
 
 
@@ -46,4 +46,20 @@ export const removePeripheral = (server_url, peripheral, config) =>{
 const removePeripheralDone = peripheral =>({
   type: REMOVE_PERIPHERAL,
   payload:peripheral
+});
+
+
+export const addPeripheral = (server_url, peripheral_obj, config) =>{
+    return dispatch => {
+        axios.post(server_url, peripheral_obj, config).then(res => {
+            dispatch(addPeripheralDone(peripheral_obj));
+        }).catch(err => {
+            alert(err.message);
+        });
+    };
+};
+
+const addPeripheralDone = peripheral_obj =>({
+    type: ADD_PERIPHERAL,
+    payload:peripheral_obj
 });
