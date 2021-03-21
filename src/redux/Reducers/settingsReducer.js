@@ -17,6 +17,7 @@ const initial_state = {
     program_editor_title: null,
     selected_user:null,
     refresh_user_view:false,
+    app_stage:null,
     sampling_period:0,
     plot_palette:ColorTheme.plot_palette
 };

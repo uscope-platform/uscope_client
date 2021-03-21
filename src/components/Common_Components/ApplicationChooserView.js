@@ -19,7 +19,7 @@ const Title = styled.h1`
 font-size: 2em;
 `
 
-let ApplicationChooser = props =>{
+let ApplicationChooserView = props =>{
 
     const applications = useSelector(state => state.applications);
 
@@ -49,4 +49,4 @@ let ApplicationChooser = props =>{
 }
 
 
-export default ApplicationChooser;
+export default ApplicationChooserView;
