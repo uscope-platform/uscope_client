@@ -88,6 +88,7 @@ let  ApplicationsManager = props =>{
         settings.server.app_proxy.createApplication(JSON.parse(content), null);
     };
 
+    const rowSelectCritera = row => row.application_name === settings.current_application;
 
     return(
         <ManagerLayout>
@@ -105,6 +106,7 @@ let  ApplicationsManager = props =>{
                     customStyles={TableStyle}
                     selectableRows
                     onSelectedRowsChange={handleOnSelect}
+                    selectableRowSelected={rowSelectCritera}
                 />
             </BlockLayout>
 

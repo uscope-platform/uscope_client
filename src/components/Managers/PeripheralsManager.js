@@ -95,6 +95,9 @@ let PeripheralsManager = (props)=>{
         settings.server.creator_proxy.createPeripheral(JSON.parse(content), null);
     };
 
+    const rowSelectCritera = row => row.peripheral_name === settings.current_peripheral;
+
+
     return(
         <ManagerLayout>
             <ManagerButtonsLayout>
@@ -111,6 +114,7 @@ let PeripheralsManager = (props)=>{
                     theme="uScopeTableTheme"
                     selectableRows
                     onSelectedRowsChange={handleOnSelect}
+                    selectableRowSelected={rowSelectCritera}
                 />
             </BlockLayout>
         </ManagerLayout>

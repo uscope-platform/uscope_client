@@ -110,6 +110,8 @@ let ScriptManager = (props) =>{
             );
     }
 
+    const rowSelectCritera = row => row.id === settings.selected_script;
+
     return(
     <ManagerLayout>
         <ManagerButtonsLayout>
@@ -126,6 +128,7 @@ let ScriptManager = (props) =>{
                 theme="uScopeTableTheme"
                 selectableRows
                 onSelectedRowsChange={handleOnSelect}
+                selectableRowSelected={rowSelectCritera}
             />
         </BlockLayout>
     </ManagerLayout>

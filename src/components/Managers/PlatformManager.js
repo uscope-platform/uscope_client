@@ -85,6 +85,9 @@ let  PlatformManager = props =>{
         }
     }
 
+    const rowSelectCritera = row => row.user === settings.selected_user;
+
+
     return(
         <ManagerLayout>
             <ManagerButtonsLayout>
@@ -101,6 +104,7 @@ let  PlatformManager = props =>{
                     customStyles={TableStyle}
                     selectableRows
                     onSelectedRowsChange={handleOnSelect}
+                    selectableRowSelected={rowSelectCritera}
                 />
             </BlockLayout>
             <input type='file' id='dbFile' ref={databaseFile} onChange={handleRestoreDatabse} style={{display: 'none'}}/>

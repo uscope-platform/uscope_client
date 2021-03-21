@@ -155,6 +155,7 @@ let ProgramsManager = props =>{
     );
     }
 
+    const rowSelectCritera = row => row.id === settings.selected_program;
 
 
     return(
@@ -178,6 +179,7 @@ let ProgramsManager = props =>{
                 theme="uScopeTableTheme"
                 selectableRows
                 onSelectedRowsChange={handleOnSelect}
+                selectableRowSelected={rowSelectCritera}
             />
         </BlockLayout>
     </ManagerLayout>
