@@ -18,7 +18,7 @@ let App = (props) =>{
     // debug:http://0.0.0.0:8989/uscope/
     // unnc:http://10.190.0.74:4999/uscope/
     // unuk:http://10.156.16.205:8989/uscope/
-
+    console.log();
     const [server, set_server] = useState(new serverProxy(process.env.REACT_APP_SERVER, ''));
     const [logged, set_logged] = useState(false);
     const dispatch = useDispatch();

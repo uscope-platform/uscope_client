@@ -21,25 +21,21 @@ let columns = [
 let  PlatformManager = props =>{
     const location = useLocation();
     const [users, setUsers] = useState([])
+    const [refreshList, setRefreshList] = useState(false)
     const settings = useSelector(state => state.settings);
 
     const dispatch = useDispatch();
 
     useEffect(()=>{
         settings.server.platform_proxy.get_users_list().then((response)=>{
-
             let users_list = response.map(item=>{
-                debugger;
                 return {user:item};
             })
-            debugger;
             setUsers(users_list)
         })
-
-    },[location])
+    },[dispatch, location, settings.refresh_user_view, refreshList])
 
     let handleOnSelect = (selection) => {
-        debugger;
         if(selection.selectedCount===1){
             dispatch(setSetting(["selected_user", selection.selectedRows[0].user]));
         } else if(selection.selectedCount===0) {
@@ -49,12 +45,13 @@ let  PlatformManager = props =>{
     };
 
     let handleRemoveUser = (event) =>{
-        debugger;
+        settings.server.platform_proxy.remove_user({user:settings.selected_user}).then((response)=>{
+            setRefreshList(!refreshList);
+        })
     }
 
     let handleDumpDatabse = () =>{
         settings.server.platform_proxy.dump_database().then((response)=>{
-            debugger;
             var encodedUri = encodeURI('data:text/json;charset=utf-8,'+ JSON.stringify(response));
             var link = document.createElement("a");
             link.setAttribute("href", encodedUri);

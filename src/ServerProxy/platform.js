@@ -10,6 +10,26 @@ export default function platformProxy(server_url, token) {
 
     this.config = {headers: { Authorization: `Bearer ${token}` }};
 
+    this.add_user = user =>{
+        return new Promise((resolve, reject) => {
+            axios.post(this.auth_server_url+'user', user, _this.config).then(res =>{
+                resolve(res.data);
+            }).catch(err=>{
+                reject(err.message);
+            })
+        });
+    };
+
+    this.remove_user = user =>{
+        return new Promise((resolve, reject) => {
+            axios.delete(this.auth_server_url+'user', {..._this.config, data:user}).then(res =>{
+                resolve(res.data);
+            }).catch(err=>{
+                reject(err.message);
+            })
+        });
+    };
+
     this.get_users_list = ()=>{
         return new Promise((resolve, reject) => {
             axios.get(_this.auth_server_url+'user', _this.config).then(res =>{

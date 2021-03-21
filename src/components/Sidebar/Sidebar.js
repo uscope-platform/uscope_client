@@ -7,6 +7,7 @@ import ApplicationSidebar from "./Application/ApplicationSidebar";
 import PlotSidebar from "./Plot/PlotSidebar";
 import ScriptSidebar from "./Script/ScriptSidebar";
 import ProgramSidebar from "./Program/ProgramSidebar";
+import PlatformSidebar from "./Platform/PlatformSidebar";
 
 let  Sidebar = props =>{
 
@@ -40,6 +41,12 @@ let  Sidebar = props =>{
             return(
                 <SidebarLayout>
                     <PlotSidebar/>
+                </SidebarLayout>
+            );
+        case "/platform_manager":
+            return(
+                <SidebarLayout>
+                    <PlatformSidebar/>
                 </SidebarLayout>
             );
         default:

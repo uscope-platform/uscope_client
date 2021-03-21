@@ -15,6 +15,8 @@ const initial_state = {
     current_view_requires_sidebar: true,
     selected_program: null,
     program_editor_title: null,
+    selected_user:null,
+    refresh_user_view:false,
     sampling_period:0,
     plot_palette:ColorTheme.plot_palette
 };
