@@ -133,7 +133,6 @@ let ApplicationChooser = (props) =>{
             type: "platform_manager",
             user_accessible: true
         }]));
-        debugger;
         dispatch(setSetting(["app_stage", "NORMAL"]));
     };
 

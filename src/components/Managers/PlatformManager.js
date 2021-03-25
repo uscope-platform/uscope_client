@@ -12,9 +12,13 @@ import {setSetting} from "../../redux/Actions/SettingsActions";
 
 let columns = [
     {
-        selector: 'user',
+        selector: 'username',
         name: 'Username',
         sortable: true,
+    },
+    {
+        selector: 'role',
+        name: 'Role'
     }
 ];
 
@@ -30,16 +34,13 @@ let  PlatformManager = props =>{
 
     useEffect(()=>{
         settings.server.platform_proxy.get_users_list().then((response)=>{
-            let users_list = response.map(item=>{
-                return {user:item};
-            })
-            setUsers(users_list)
+            setUsers(response)
         })
     },[dispatch, location, settings.refresh_user_view, refreshList])
 
     let handleOnSelect = (selection) => {
         if(selection.selectedCount===1){
-            dispatch(setSetting(["selected_user", selection.selectedRows[0].user]));
+            dispatch(setSetting(["selected_user", selection.selectedRows[0].username]));
         } else if(selection.selectedCount===0) {
             dispatch(setSetting(["selected_user", null]));
         }
@@ -85,7 +86,7 @@ let  PlatformManager = props =>{
         }
     }
 
-    const rowSelectCritera = row => row.user === settings.selected_user;
+    const rowSelectCritera = row => row.username === settings.selected_user;
 
 
     return(

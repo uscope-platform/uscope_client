@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import {Label} from "../Label";
-import styled from "styled-components";
 import {CaretDown, CaretUp} from "grommet-icons";
 import {InputField} from "../InputField";
 import {Checkbox} from "../checkbox";
@@ -8,15 +7,9 @@ import {Checkbox} from "../checkbox";
 import {useSelector} from "react-redux";
 import {Button} from "../Button";
 import {SidebarCollapsableContentLayout, SidebarCollapsableNameLayout} from "..";
-import {Select} from "../Select";
+import {SelectField} from "../Select";
 
-const ChoicesWrapper = styled.div`
-    display: grid;
-    grid-template-columns: repeat(2, auto);
-    grid-gap: 0.3rem;
-    justify-content: space-between;
-    align-items: start;
-`
+
 
 export let  ApplicationPeripheralProperties = props =>{
 
@@ -74,21 +67,15 @@ export let  ApplicationPeripheralProperties = props =>{
     }
 
     let renderContent = (props) =>{
+        let peripherals_list = Object.entries(peripherals).map((periph)=>{
+            return periph[0];
+        })
         if(is_open)
             return(
                 <SidebarCollapsableContentLayout>
                     <InputField inline name='peripheral_id' defaultValue={props.peripheral.peripheral_id} onKeyDown={handleonKeyDown} label="Peripheral id"/>
-                    <ChoicesWrapper>
-                        <Label>peripheral ID</Label>
-                        <Select name="spec_id" defaultValue={props.peripheral.spec_id} onChange={handleIDChange}>
-                            <option value="spec_id" hidden>Peripheral type</option>
-                            {
-                                Object.entries(peripherals).map((name,i) => (
-                                    <option key={i} >{name[0]}</option>
-                                ))
-                            }
-                        </Select>
-                    </ChoicesWrapper>
+                    <SelectField label="peripheral ID" onChange={handleIDChange} defaultValue={props.peripheral.spec_id}
+                                 name="spec_id" placeholder="Peripheral type" options={peripherals_list}/>
                     <InputField inline name='base_address' defaultValue={props.peripheral.base_address} onKeyDown={handleonKeyDown} label="Base Address"/>
                     <InputField inline name='type' defaultValue={props.peripheral.type} onKeyDown={handleonKeyDown} label="Type"/>
                     <Checkbox name='proxied' value={props.peripheral.proxied} onChange={handleChange} label="Proxied Peripheral"/>
