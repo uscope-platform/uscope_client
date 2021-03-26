@@ -11,16 +11,11 @@ import {setSetting} from "./redux/Actions/SettingsActions";
 import {ThemeProvider} from "styled-components";
 import {ColorTheme} from "./components/UI_elements";
 
-
 let App = (props) =>{
-    // home: http://192.168.1.2/uscope/
-    // unimore:http://155.185.48.185/uscope/
-    // debug:http://0.0.0.0:8989/uscope/
-    // unnc:http://10.190.0.74:4999/uscope/
-    // unuk:http://10.156.16.205:8989/uscope/
-    console.log();
+
     const [server, set_server] = useState(new serverProxy(process.env.REACT_APP_SERVER, ''));
     const [logged, set_logged] = useState(false);
+    const [onboarding_needed, set_onboarding_needed] = useState(true);
     const dispatch = useDispatch();
 
 
@@ -39,7 +34,22 @@ let App = (props) =>{
         });
     }, []);
 
+
+
     useEffect(()=>{
+
+        server.platform_proxy.need_onboarding().then(response =>{
+            set_onboarding_needed(response['onboarding_needed']);
+            if(onboarding_needed) {
+                dispatch(setSetting(["server", server]));
+                set_logged(true);
+            }
+
+        });
+        automated_login();
+    },[])
+
+    let automated_login = () =>{
         let token = JSON.parse(localStorage.getItem('login_token'));
         if(token){
             if (Date.now() > token.expiry){
@@ -49,12 +59,17 @@ let App = (props) =>{
                 localStorage.removeItem('login_token');
             }
         }
-    },[done])
+    }
+
+    let onboarding_done = () =>{
+        set_logged(false);
+        set_onboarding_needed(false);
+    }
 
     return(
         <ThemeProvider theme={ColorTheme}>
             <div className="App">
-                {logged? <AuthApp />:<LoginPage server={server} done={done}/>}
+                {logged? <AuthApp onboarding_done={onboarding_done} needs_onboarding={onboarding_needed}/>:<LoginPage server={server} done={done}/>}
             </div>
         </ThemeProvider>
     )

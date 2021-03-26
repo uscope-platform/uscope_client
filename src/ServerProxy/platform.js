@@ -30,6 +30,26 @@ export default function platformProxy(server_url, token) {
         });
     };
 
+    this.need_onboarding = () =>{
+        return new Promise((resolve, reject) => {
+            axios.get(this.auth_server_url+'onboarding').then(res =>{
+                resolve(res.data);
+            }).catch(err=>{
+                reject(err.message);
+            })
+        });
+    };
+
+    this.do_onboarding = user =>{
+        return new Promise((resolve, reject) => {
+            axios.post(this.auth_server_url+'onboarding', user, _this.config).then(res =>{
+                resolve(res.data);
+            }).catch(err=>{
+                reject(err.message);
+            })
+        });
+    };
+
     this.get_users_list = ()=>{
         return new Promise((resolve, reject) => {
             axios.get(_this.auth_server_url+'user', _this.config).then(res =>{

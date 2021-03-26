@@ -19,13 +19,22 @@ let  PlatformSidebar = props =>{
     const dispatch = useDispatch()
 
     let handle_add_user = (event) =>{
+
         event.preventDefault();
         let username = event.target.user.value;
         let pass = event.target.pass.value;
         let role = event.target.role.value;
-        settings.server.platform_proxy.add_user({user:username,password:pass, role:role}).then(res =>{
-            dispatch(setSetting(["refresh_user_view", !settings.refresh_user_view]));
-        })
+        if(props.onboarding){
+            settings.server.platform_proxy.do_onboarding({user:username,password:pass, role:role}).then(res =>{
+                dispatch(setSetting(["refresh_user_view", !settings.refresh_user_view]));
+            })
+            props.onboarding_done();
+        } else{
+            settings.server.platform_proxy.add_user({user:username,password:pass, role:role}).then(res =>{
+                dispatch(setSetting(["refresh_user_view", !settings.refresh_user_view]));
+            })
+        }
+
     };
 
     if(!settings.selected_program)

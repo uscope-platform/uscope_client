@@ -13,9 +13,9 @@ import ApplicationChooser from "./components/AppChooser";
 //////  STYLE IMPORTS
 import './App.css';
 
-
 import {ApplicationLayout} from "./components/UI_elements";
 import Sidebar from "./components/Sidebar/Sidebar";
+import OnboardingView from "./components/Onboarding";
 
 
 let AuthApp = (props) =>{
@@ -67,14 +67,29 @@ let AuthApp = (props) =>{
             store:programs
         }]
 
-        for(let i of resources){
-            load_resource(i);
+        if(props.needs_onboarding){
+            dispatch(setSetting(["app_stage", "ONBOARDING"]));
+        } else{
+            for(let i of resources){
+                load_resource(i);
+            }
+            dispatch(setSetting(["app_stage", "APP_CHOICE"]));
         }
-        dispatch(setSetting(["app_stage", "APP_CHOICE"]));
+
+
+
+
+
     },[])
 
 
     switch (settings.app_stage) {
+        case "ONBOARDING":
+            return(
+                <div className="App">
+                    <OnboardingView onboarding_done={props.onboarding_done} />
+                </div>
+            );
         case "APP_CHOICE":
             return (
                 <div className="App">

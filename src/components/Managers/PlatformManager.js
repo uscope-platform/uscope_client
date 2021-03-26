@@ -55,8 +55,8 @@ let  PlatformManager = props =>{
 
     let handleDumpDatabse = () =>{
         settings.server.platform_proxy.dump_database().then((response)=>{
-            var encodedUri = encodeURI('data:text/json;charset=utf-8,'+ JSON.stringify(response));
-            var link = document.createElement("a");
+            let encodedUri = encodeURI('data:text/json;charset=utf-8,'+ JSON.stringify(response));
+            let link = document.createElement("a");
             link.setAttribute("href", encodedUri);
             link.setAttribute("download", "dump.db");
             link.setAttribute("id", "csv_download_link");
