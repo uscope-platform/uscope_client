@@ -40,13 +40,14 @@ let App = (props) =>{
 
         server.platform_proxy.need_onboarding().then(response =>{
             set_onboarding_needed(response['onboarding_needed']);
-            if(onboarding_needed) {
+            if(response['onboarding_needed']) {
                 dispatch(setSetting(["server", server]));
                 set_logged(true);
+            } else{
+                automated_login();
             }
-
         });
-        automated_login();
+
     },[])
 
     let automated_login = () =>{

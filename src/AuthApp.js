@@ -66,7 +66,6 @@ let AuthApp = (props) =>{
             proxy:settings.server.prog_proxy,
             store:programs
         }]
-
         if(props.needs_onboarding){
             dispatch(setSetting(["app_stage", "ONBOARDING"]));
         } else{
