@@ -3,23 +3,25 @@ import {sendRegister} from "../redux/Actions/RegisterActions";
 import {loadPeripherals} from "../redux/Actions/peripheralsActions";
 import store from "../store";
 
-export default function peripheralProxy(server_url, token) {
-    let _this = this;
-    this.server_url = server_url;
-    this.config = {headers: { Authorization: `Bearer ${token}` }};
 
-    this.getPeripheralRegisters = function (peripheral_name) {
-        return new Promise(function (resolve, reject) {
-            axios.get(_this.server_url+'registers/'+peripheral_name+'/descriptions', _this.config)
+let peripheralProxy = class{
+    constructor(server_url, token) {
+        this.server_url = server_url;
+        this.config = {headers: { Authorization: `Bearer ${token}` }};
+    }
+
+    getPeripheralRegisters =  (peripheral_name) => {
+        return new Promise( (resolve, reject) => {
+            axios.get(this.server_url+'registers/'+peripheral_name+'/descriptions', this.config)
                 .then(res => {
                     resolve(res.data);
                 })
         });
     };
 
-    this.bulkRegisterWrite = (registers) =>{
-        return new Promise(function (resolve, reject) {
-            axios.post(_this.server_url+'registers/bulk_write', registers,_this.config)
+    bulkRegisterWrite = (registers) =>{
+        return new Promise( (resolve, reject) => {
+            axios.post(this.server_url+'registers/bulk_write', registers, this.config)
                 .then(res => {
                     resolve(res.data);
                 })
@@ -33,24 +35,24 @@ export default function peripheralProxy(server_url, token) {
      * @param {String} register.peripheral - Name of the peripheral whose register has to be set.
      * @param {Number} register.value - Value to set the register to.
      */
-    this.setRegisterValue = (register) => {
-        store.dispatch(sendRegister(_this.server_url+'registers/'+register.peripheral+'/value', register, _this.config))
+    setRegisterValue = (register) => {
+        store.dispatch(sendRegister(this.server_url+'registers/'+register.peripheral+'/value', register, this.config))
     };
 
-    this.load_all = () =>{
-        store.dispatch(loadPeripherals(_this.server_url+'registers/all_peripheral/descriptions', _this.config))
+    load_all = () =>{
+        store.dispatch(loadPeripherals(this.server_url+'registers/all_peripheral/descriptions', this.config))
     };
 
-    this.get_hash = () =>{
-        return new Promise(function (resolve, reject) {
-            axios.get(_this.server_url+'registers/digest', _this.config)
+    get_hash = () =>{
+        return new Promise( (resolve, reject) => {
+            axios.get(this.server_url+'registers/digest', this.config)
                 .then(res => {
                     resolve(res.data);
                 })
         });
     }
-}
 
+};
 
-
+export default peripheralProxy;
 

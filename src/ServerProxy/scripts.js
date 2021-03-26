@@ -2,38 +2,37 @@ import axios from "axios"
 import store from "../store";
 import {addScript, editScript, loadAllScripts, removeScript} from "../redux/Actions/scriptsActions"
 
-export default function scriptsProxy(server_url, token) {
-    let _this = this;
-    this.server_url = server_url;
-    this.config = {headers: { Authorization: `Bearer ${token}` }};
+let scriptsProxy = class{
+    constructor(server_url, token) {
+        this.server_url = server_url;
+        this.config = {headers: { Authorization: `Bearer ${token}` }};
+    }
 
-    this.upload_script = function (script) {
-        store.dispatch(addScript(_this.server_url+'script/'+script.id, script, _this.config));
+    upload_script = (script) => {
+        store.dispatch(addScript(this.server_url+'script/'+script.id, script, this.config));
     };
 
-    this.edit_script = function (script) {
-        store.dispatch(editScript(_this.server_url+'script/'+script.id, script, _this.config));
+    edit_script = (script) => {
+        store.dispatch(editScript(this.server_url+'script/'+script.id, script, this.config));
     };
 
-    this.load_all = () =>{
-        store.dispatch(loadAllScripts(_this.server_url+'script/none', _this.config));
+    load_all = () =>{
+        store.dispatch(loadAllScripts(this.server_url+'script/none', this.config));
     };
 
-    this.get_hash = () =>{
-        return new Promise(function (resolve, reject) {
-            axios.get(_this.server_url+'script/hash', _this.config)
+    get_hash = () =>{
+        return new Promise( (resolve, reject) => {
+            axios.get(this.server_url+'script/hash', this.config)
                 .then(res => {
                     resolve(res.data);
                 })
         });
     };
 
-    this.delete_script = function (script) {
-        store.dispatch(removeScript(_this.server_url+'script/'+script.id, script, _this.config));
+    delete_script = (script) => {
+        store.dispatch(removeScript(this.server_url+'script/'+script.id, script, this.config));
     };
 
 }
 
-
-
-
+export default scriptsProxy;

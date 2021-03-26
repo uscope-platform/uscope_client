@@ -1,18 +1,17 @@
-//import store from "../store";
-
 import axios from "axios";
 
-export default function platformProxy(server_url, token) {
-    let _this = this;
+let platformProxy = class{
+    constructor(server_url, token) {
+        this.auth_server_url = server_url+'auth/';
+        this.db_server_url = server_url+'database/';
 
-    this.auth_server_url = server_url+'auth/';
-    this.db_server_url = server_url+'database/';
+        this.config = {headers: { Authorization: `Bearer ${token}` }};
+    }
 
-    this.config = {headers: { Authorization: `Bearer ${token}` }};
 
-    this.add_user = user =>{
+    add_user = user =>{
         return new Promise((resolve, reject) => {
-            axios.post(this.auth_server_url+'user', user, _this.config).then(res =>{
+            axios.post(this.auth_server_url+'user', user, this.config).then(res =>{
                 resolve(res.data);
             }).catch(err=>{
                 reject(err.message);
@@ -20,9 +19,9 @@ export default function platformProxy(server_url, token) {
         });
     };
 
-    this.remove_user = user =>{
+    remove_user = user =>{
         return new Promise((resolve, reject) => {
-            axios.delete(this.auth_server_url+'user', {..._this.config, data:user}).then(res =>{
+            axios.delete(this.auth_server_url+'user', {...this.config, data:user}).then(res =>{
                 resolve(res.data);
             }).catch(err=>{
                 reject(err.message);
@@ -30,7 +29,7 @@ export default function platformProxy(server_url, token) {
         });
     };
 
-    this.need_onboarding = () =>{
+    need_onboarding = () =>{
         return new Promise((resolve, reject) => {
             axios.get(this.auth_server_url+'onboarding').then(res =>{
                 resolve(res.data);
@@ -40,9 +39,9 @@ export default function platformProxy(server_url, token) {
         });
     };
 
-    this.do_onboarding = user =>{
+    do_onboarding = user =>{
         return new Promise((resolve, reject) => {
-            axios.post(this.auth_server_url+'onboarding', user, _this.config).then(res =>{
+            axios.post(this.auth_server_url+'onboarding', user, this.config).then(res =>{
                 resolve(res.data);
             }).catch(err=>{
                 reject(err.message);
@@ -50,9 +49,9 @@ export default function platformProxy(server_url, token) {
         });
     };
 
-    this.get_users_list = ()=>{
+    get_users_list = ()=>{
         return new Promise((resolve, reject) => {
-            axios.get(_this.auth_server_url+'user', _this.config).then(res =>{
+            axios.get(this.auth_server_url+'user', this.config).then(res =>{
                 resolve(res.data);
             }).catch(err=>{
                 reject(err.message);
@@ -60,9 +59,9 @@ export default function platformProxy(server_url, token) {
         });
     }
 
-    this.dump_database = () =>{
+    dump_database = () =>{
         return new Promise((resolve, reject) => {
-            axios.get(_this.db_server_url+'export', _this.config).then(res =>{
+            axios.get(this.db_server_url+'export', this.config).then(res =>{
                 resolve(res.data);
             }).catch(err=>{
                 reject(err.message);
@@ -70,7 +69,10 @@ export default function platformProxy(server_url, token) {
         });
     }
 
-    this.restore_database = (db_file) =>{
-        axios.post(_this.db_server_url+'import',db_file, _this.config);
+    restore_database = (db_file) =>{
+        axios.post(this.db_server_url+'import',db_file, this.config);
     }
+
 }
+
+export default platformProxy;
