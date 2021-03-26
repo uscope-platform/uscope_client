@@ -19,6 +19,8 @@ const initial_state = {
     refresh_user_view:false,
     app_stage:"WAITING",
     logged:false,
+    server_url: process.env.REACT_APP_SERVER,
+    auth_config:null,
     sampling_period:0,
     plot_palette:ColorTheme.plot_palette
 };

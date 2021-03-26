@@ -4,36 +4,39 @@ import axios from "axios";
 import store from "../store";
 import {addPeripheral, editPeripheral, removePeripheral} from "../redux/Actions/peripheralsActions";
 
-
-let creatorProxy = class  {
-    constructor(server_url, token) {
-        this.server_url = server_url;
-        this.token = token
-        this.config = {headers: { Authorization: `Bearer ${token}` }};
-    }
+let CreatorProxy = class  {
 
     createPeripheral = (peripheral, image) => {
         if(image!==null){
             let formData = new FormData();
             formData.append("file", image, image.name);
 
-            axios.post(this.server_url+'tab_creator/diagram',
+            let state = store.getState();
+            debugger;
+            let local_headers = {
+                'accept': 'application/json',
+                'Accept-Language': 'en-US,en;q=0.8',
+                'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
+            };
+
+            axios.post(state.settings.server_url+'tab_creator/diagram',
                 formData,
                 {
-                    headers: {
-                        'accept': 'application/json',
-                        'Accept-Language': 'en-US,en;q=0.8',
-                        'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
-                        'Authorization': `Bearer ${this.token}`
-                    }}
+                    headers:{
+                        ...local_headers,
+                        ...state.settings.auth_config.headers
+                    }
+                }
             ).then(() =>{
-                store.dispatch(addPeripheral(this.server_url+'tab_creator/create_peripheral',{payload:peripheral, image:true}, this.config))
+                let state = store.getState();
+                store.dispatch(addPeripheral(state.settings.server_url+'tab_creator/create_peripheral',{payload:peripheral, image:true}, state.settings.auth_config))
             }).catch((response) => {
                 //handle error
                 console.log(response);
             });
         } else{
-            store.dispatch(addPeripheral(this.server_url+'tab_creator/create_peripheral',{payload:peripheral, image:false}, this.config))
+            let state = store.getState();
+            store.dispatch(addPeripheral(state.settings.server_url+'tab_creator/create_peripheral',{payload:peripheral, image:false}, state.settings.auth_config))
         }
 
     };
@@ -42,26 +45,36 @@ let creatorProxy = class  {
         let formData = new FormData();
         formData.append("file", image, image.name);
 
-        axios.post(this.server_url+'tab_creator/diagram',
+        let state = store.getState();
+        let local_headers = {
+            'accept': 'application/json',
+            'Accept-Language': 'en-US,en;q=0.8',
+            'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
+        };
+
+        axios.post(state.settings.server_url+'tab_creator/diagram',
             formData,
             {
-                headers: {
-                    'accept': 'application/json',
-                    'Accept-Language': 'en-US,en;q=0.8',
-                    'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
-                    'Authorization': `Bearer ${this.token}`
-                }}
+                headers:{
+                    ...local_headers,
+                    ...state.settings.auth_config.headers
+                }
+            }
         ).then(() =>{})
     }
 
     edit_peripheral = (edit) => {
-        store.dispatch(editPeripheral(this.server_url+'tab_creator/edit_peripheral', edit, this.config));
+
+        let state = store.getState();
+        store.dispatch(editPeripheral(state.settings.server_url+'tab_creator/edit_peripheral', edit, state.settings.auth_config));
     };
 
     removePeripheral = (peripheral) => {
-        store.dispatch(removePeripheral(this.server_url+'tab_creator/remove_peripheral/'+ peripheral, peripheral, this.config))
+
+        let state = store.getState();
+        store.dispatch(removePeripheral(state.settings.server_url+'tab_creator/remove_peripheral/'+ peripheral, peripheral, state.settings.auth_config))
     };
 
 }
 
-export default creatorProxy;
+export default CreatorProxy;

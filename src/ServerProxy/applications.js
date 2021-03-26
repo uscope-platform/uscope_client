@@ -8,19 +8,17 @@ import {
     removeApplication
 } from "../redux/Actions/applicationActions";
 
- let applicationProxy = class {
-     constructor(server_url, token) {
-         this.server_url = server_url;
-         this.config = {headers: { Authorization: `Bearer ${token}` }};
-     }
+ let ApplicationProxy = class {
 
      load_all = () =>{
-         store.dispatch(loadApplications(this.server_url+'application/all/specs', this.config))
+         let state = store.getState();
+         store.dispatch(loadApplications(state.settings.server_url+'application/all/specs', state.settings.auth_config))
      };
 
      setApplication = (app_name) => {
          return new Promise( (resolve, reject) => {
-             axios.get(this.server_url+'application/set/'+app_name, this.config)
+             let state = store.getState();
+             axios.get(state.settings.server_url+'application/set/'+app_name, state.settings.auth_config)
                  .then(res => {
                      resolve(res.data);
                  }).catch(error => {
@@ -30,13 +28,15 @@ import {
      };
 
      setChannelLimits = (min_val, max_val, id) =>{
+         let state = store.getState();
          let message = [{name:'min_value', channel_id:id, value:min_val},{name:'min_value', channel_id:id, value:min_val}];
-         store.dispatch(setChannelSetting(this.server_url+'plot/channels/params', message, this.config));
+         store.dispatch(setChannelSetting(state.settings.server_url+'plot/channels/params', message, state.settings.auth_config));
      };
 
      get_hash = () =>{
          return new Promise( (resolve, reject) => {
-             axios.get(this.server_url+'application/digest', this.config)
+             let state = store.getState();
+             axios.get(state.settings.server_url+'application/digest', state.settings.auth_config)
                  .then(res => {
                      resolve(res.data);
                  })
@@ -44,20 +44,23 @@ import {
      };
 
      createApplication = (application_obj) => {
-         store.dispatch(addApplication(this.server_url+'application/add', application_obj, this.config));
+         let state = store.getState();
+         store.dispatch(addApplication(state.settings.server_url+'application/add', application_obj, state.settings.auth_config));
      };
 
      edit_application = (edit) => {
-         store.dispatch(editApplication(this.server_url+'application/edit', edit, this.config));
+         let state = store.getState();
+         store.dispatch(editApplication(state.settings.server_url+'application/edit', edit, state.settings.auth_config));
      };
 
      removeApplication = (application) =>{
-         store.dispatch(removeApplication(this.server_url+'application/remove/'+application, application, this.config));
+         let state = store.getState();
+         store.dispatch(removeApplication(state.settings.server_url+'application/remove/'+application, application, state.settings.auth_config));
      };
  };
 
 
 
-export default applicationProxy;
+export default ApplicationProxy;
 
 

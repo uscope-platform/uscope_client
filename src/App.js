@@ -13,16 +13,17 @@ import {ColorTheme} from "./components/UI_elements";
 
 let App = (props) =>{
 
-    const [server, set_server] = useState(new serverProxy(process.env.REACT_APP_SERVER, ''));
+    const [server, set_server] = useState(new serverProxy());
     const [logged, set_logged] = useState(false);
     const [onboarding_needed, set_onboarding_needed] = useState(true);
     const dispatch = useDispatch();
 
-
     const done = useCallback((login_credentials)=>{
         server.auth_proxy.sign_in(login_credentials).then((token) =>{
-            let uScope_server = new serverProxy(process.env.REACT_APP_SERVER,token.access_token);
+            let uScope_server = new serverProxy();
 
+            dispatch(setSetting(["access_token", token.access_token]));
+            dispatch(setSetting(["auth_config", {headers: { Authorization: `Bearer ${token.access_token}` }}]));
             if(token.login_token){
                 localStorage.setItem('login_token', JSON.stringify(token.login_token));
             }
@@ -37,6 +38,7 @@ let App = (props) =>{
 
 
     useEffect(()=>{
+        dispatch(setSetting(["server_url", process.env.REACT_APP_SERVER]));
 
         server.platform_proxy.need_onboarding().then(response =>{
             set_onboarding_needed(response['onboarding_needed']);

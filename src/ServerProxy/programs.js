@@ -2,27 +2,27 @@ import axios from "axios"
 import store from "../store";
 import {addProgram, editProgram, loadAllPrograms, removeProgram} from "../redux/Actions/ProgramsActions";
 
-let programsProxy = class{
-    constructor(server_url, token) {
-        this.server_url = server_url;
-        this.config = {headers: { Authorization: `Bearer ${token}` }};
-    }
+let ProgramsProxy = class{
 
     upload_program =  (program) => {
-        store.dispatch(addProgram(this.server_url+'program/'+program.id, program, this.config));
+        let state = store.getState();
+        store.dispatch(addProgram(state.settings.server_url+'program/'+program.id, program, state.settings.auth_config));
     };
 
     edit_program =  (program) => {
-        store.dispatch(editProgram(this.server_url+'program/'+program.id, program, this.config));
+        let state = store.getState();
+        store.dispatch(editProgram(state.settings.server_url+'program/'+program.id, program, state.settings.auth_config));
     };
 
     load_all = () =>{
-        store.dispatch(loadAllPrograms(this.server_url+'program/none', this.config));
+        let state = store.getState();
+        store.dispatch(loadAllPrograms(state.settings.server_url+'program/none', state.settings.auth_config));
     };
 
     get_hash = () =>{
         return new Promise( (resolve, reject) => {
-            axios.get(this.server_url+'program/hash', this.config)
+            let state = store.getState();
+            axios.get(state.settings.server_url+'program/hash', state.settings.auth_config)
                 .then(res => {
                     resolve(res.data);
                 })
@@ -30,12 +30,14 @@ let programsProxy = class{
     };
 
     delete_program = (program) => {
-        store.dispatch(removeProgram(this.server_url+'program/'+program.id, program, this.config));
+        let state = store.getState();
+        store.dispatch(removeProgram(state.settings.server_url+'program/'+program.id, program, state.settings.auth_config));
     };
 
     compile_program = (program) =>{
         return new Promise( (resolve, reject) => {
-            axios.get(this.server_url+'program/compile/'+program.id, this.config)
+            let state = store.getState();
+            axios.get(state.settings.server_url+'program/compile/'+program.id, state.settings.auth_config)
                 .then(res =>{
                     resolve(res.data);
                 })
@@ -44,7 +46,8 @@ let programsProxy = class{
 
     apply_program = (program) => {
         return new Promise( (resolve, reject) => {
-            axios.post(this.server_url+'program/Apply/'+program.id, program, this.config).then(res => {
+            let state = store.getState();
+            axios.post(state.settings.server_url+'program/Apply/'+program.id, program, state.settings.auth_config).then(res => {
                 resolve(res.data);
             }).catch(err => {
                 alert(err.message);
@@ -53,4 +56,4 @@ let programsProxy = class{
     }
 }
 
-export default programsProxy;
+export default ProgramsProxy;

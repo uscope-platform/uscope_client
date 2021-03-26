@@ -79,7 +79,7 @@ let  PeripheralEditSidebar = props =>{
                     : <Label onDoubleClick={handleEditVersion}>{"Version: "+peripherals[settings.current_peripheral].version}</Label>
                 }
             </TitleLayout>
-            <PeripheralImage image={settings.server.server_url + peripherals[settings.current_peripheral].image} done={handleEditImage}/>
+            <PeripheralImage image={settings.server_url + peripherals[settings.current_peripheral].image} done={handleEditImage}/>
                 <SidebarBlockLayout>
                     <SidebarBlockTitleLayout>
                         <label style={{fontSize:'20px',fontWeight:600}}>{"Registers"}</label>

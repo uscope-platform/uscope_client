@@ -2,27 +2,27 @@ import axios from "axios"
 import store from "../store";
 import {addScript, editScript, loadAllScripts, removeScript} from "../redux/Actions/scriptsActions"
 
-let scriptsProxy = class{
-    constructor(server_url, token) {
-        this.server_url = server_url;
-        this.config = {headers: { Authorization: `Bearer ${token}` }};
-    }
+let ScriptsProxy = class{
 
     upload_script = (script) => {
-        store.dispatch(addScript(this.server_url+'script/'+script.id, script, this.config));
+        let state = store.getState();
+        store.dispatch(addScript(state.settings.server_url+'script/'+script.id, script, state.settings.auth_config));
     };
 
     edit_script = (script) => {
-        store.dispatch(editScript(this.server_url+'script/'+script.id, script, this.config));
+        let state = store.getState();
+        store.dispatch(editScript(state.settings.server_url+'script/'+script.id, script, state.settings.auth_config));
     };
 
     load_all = () =>{
-        store.dispatch(loadAllScripts(this.server_url+'script/none', this.config));
+        let state = store.getState();
+        store.dispatch(loadAllScripts(state.settings.server_url+'script/none', state.settings.auth_config));
     };
 
     get_hash = () =>{
         return new Promise( (resolve, reject) => {
-            axios.get(this.server_url+'script/hash', this.config)
+            let state = store.getState();
+            axios.get(state.settings.server_url+'script/hash', state.settings.auth_config)
                 .then(res => {
                     resolve(res.data);
                 })
@@ -30,9 +30,10 @@ let scriptsProxy = class{
     };
 
     delete_script = (script) => {
-        store.dispatch(removeScript(this.server_url+'script/'+script.id, script, this.config));
+        let state = store.getState();
+        store.dispatch(removeScript(state.settings.server_url+'script/'+script.id, script, state.settings.auth_config));
     };
 
 }
 
-export default scriptsProxy;
+export default ScriptsProxy;

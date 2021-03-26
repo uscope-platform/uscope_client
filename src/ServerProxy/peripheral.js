@@ -4,15 +4,12 @@ import {loadPeripherals} from "../redux/Actions/peripheralsActions";
 import store from "../store";
 
 
-let peripheralProxy = class{
-    constructor(server_url, token) {
-        this.server_url = server_url;
-        this.config = {headers: { Authorization: `Bearer ${token}` }};
-    }
+let PeripheralProxy = class{
 
     getPeripheralRegisters =  (peripheral_name) => {
         return new Promise( (resolve, reject) => {
-            axios.get(this.server_url+'registers/'+peripheral_name+'/descriptions', this.config)
+            let state = store.getState();
+            axios.get(state.settings.server_url+'registers/'+peripheral_name+'/descriptions', state.settings.auth_config)
                 .then(res => {
                     resolve(res.data);
                 })
@@ -21,7 +18,8 @@ let peripheralProxy = class{
 
     bulkRegisterWrite = (registers) =>{
         return new Promise( (resolve, reject) => {
-            axios.post(this.server_url+'registers/bulk_write', registers, this.config)
+            let state = store.getState();
+            axios.post(state.settings.server_url+'registers/bulk_write', registers, state.settings.auth_config)
                 .then(res => {
                     resolve(res.data);
                 })
@@ -36,16 +34,19 @@ let peripheralProxy = class{
      * @param {Number} register.value - Value to set the register to.
      */
     setRegisterValue = (register) => {
-        store.dispatch(sendRegister(this.server_url+'registers/'+register.peripheral+'/value', register, this.config))
+        let state = store.getState();
+        store.dispatch(sendRegister(state.settings.server_url+'registers/'+register.peripheral+'/value', register, state.settings.auth_config))
     };
 
     load_all = () =>{
-        store.dispatch(loadPeripherals(this.server_url+'registers/all_peripheral/descriptions', this.config))
+        let state = store.getState();
+        store.dispatch(loadPeripherals(state.settings.server_url+'registers/all_peripheral/descriptions', state.settings.auth_config))
     };
 
     get_hash = () =>{
         return new Promise( (resolve, reject) => {
-            axios.get(this.server_url+'registers/digest', this.config)
+            let state = store.getState();
+            axios.get(state.settings.server_url+'registers/digest', state.settings.auth_config)
                 .then(res => {
                     resolve(res.data);
                 })
@@ -54,5 +55,5 @@ let peripheralProxy = class{
 
 };
 
-export default peripheralProxy;
+export default PeripheralProxy;
 

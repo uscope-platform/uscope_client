@@ -10,11 +10,11 @@ import ApplicationsReducer from './applicationsReducer'
 import programsReducer from "./ProgramsReducer";
 
 export default combineReducers({
+    settings : settingsReducer,
     plot: plotReducer,
     registerValues: registerValuesReducer,
     peripherals:PeripheralsReducer,
     views: viewsReducer,
-    settings : settingsReducer,
     applications : ApplicationsReducer,
     programs : programsReducer,
     scripts: scriptsReducer,

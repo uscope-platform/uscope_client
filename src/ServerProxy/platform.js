@@ -1,17 +1,12 @@
 import axios from "axios";
+import store from "../store";
 
-let platformProxy = class{
-    constructor(server_url, token) {
-        this.auth_server_url = server_url+'auth/';
-        this.db_server_url = server_url+'database/';
-
-        this.config = {headers: { Authorization: `Bearer ${token}` }};
-    }
-
+let PlatformProxy = class{
 
     add_user = user =>{
         return new Promise((resolve, reject) => {
-            axios.post(this.auth_server_url+'user', user, this.config).then(res =>{
+            let state = store.getState();
+            axios.post(    state.settings.server_url+'auth/user', user, state.settings.auth_config).then(res =>{
                 resolve(res.data);
             }).catch(err=>{
                 reject(err.message);
@@ -21,7 +16,8 @@ let platformProxy = class{
 
     remove_user = user =>{
         return new Promise((resolve, reject) => {
-            axios.delete(this.auth_server_url+'user', {...this.config, data:user}).then(res =>{
+            let state = store.getState();
+            axios.delete(state.settings.server_url+'auth/user', {...state.settings.auth_config, data:user}).then(res =>{
                 resolve(res.data);
             }).catch(err=>{
                 reject(err.message);
@@ -31,7 +27,8 @@ let platformProxy = class{
 
     need_onboarding = () =>{
         return new Promise((resolve, reject) => {
-            axios.get(this.auth_server_url+'onboarding').then(res =>{
+            let state = store.getState();
+            axios.get(state.settings.server_url+'auth/onboarding').then(res =>{
                 resolve(res.data);
             }).catch(err=>{
                 reject(err.message);
@@ -41,7 +38,8 @@ let platformProxy = class{
 
     do_onboarding = user =>{
         return new Promise((resolve, reject) => {
-            axios.post(this.auth_server_url+'onboarding', user, this.config).then(res =>{
+            let state = store.getState();
+            axios.post(state.settings.server_url+'auth/onboarding', user, state.settings.auth_config).then(res =>{
                 resolve(res.data);
             }).catch(err=>{
                 reject(err.message);
@@ -51,7 +49,8 @@ let platformProxy = class{
 
     get_users_list = ()=>{
         return new Promise((resolve, reject) => {
-            axios.get(this.auth_server_url+'user', this.config).then(res =>{
+            let state = store.getState();
+            axios.get(state.settings.server_url+'auth/user', state.settings.auth_config).then(res =>{
                 resolve(res.data);
             }).catch(err=>{
                 reject(err.message);
@@ -61,7 +60,8 @@ let platformProxy = class{
 
     dump_database = () =>{
         return new Promise((resolve, reject) => {
-            axios.get(this.db_server_url+'export', this.config).then(res =>{
+            let state = store.getState();
+            axios.get(state.settings.server_url+'database/export', state.settings.auth_config).then(res =>{
                 resolve(res.data);
             }).catch(err=>{
                 reject(err.message);
@@ -70,9 +70,10 @@ let platformProxy = class{
     }
 
     restore_database = (db_file) =>{
-        axios.post(this.db_server_url+'import',db_file, this.config);
+        let state = store.getState();
+        axios.post(state.settings.server_url+'database/import',db_file, state.settings.auth_config);
     }
 
 }
 
-export default platformProxy;
+export default PlatformProxy;

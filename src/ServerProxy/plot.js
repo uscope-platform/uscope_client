@@ -2,23 +2,22 @@ import store from "../store";
 import { fetchData, loadChanels, setChannelStatus} from "../redux/Actions/plotActions";
 import axios from "axios";
 
-let plotProxy = class{
-    constructor(server_url, token) {
-        this.server_url = server_url;
-        this.config = {headers: { Authorization: `Bearer ${token}` }};
-    }
+let PlotProxy = class{
 
     getChannelsInfo = () => {
-        store.dispatch(loadChanels(this.server_url+'plot/channels/specs',this.config));
+        let state = store.getState();
+        store.dispatch(loadChanels(state.settings.server_url+'plot/channels/specs',state.settings.auth_config));
     };
 
     fetchData = () =>  {
-        store.dispatch(fetchData(this.server_url+'plot/channels/data',this.config))
+        let state = store.getState();
+        store.dispatch(fetchData(state.settings.server_url+'plot/channels/data',state.settings.auth_config))
     };
 
 
     setCapture =  (capture_lenght) =>  {
-        axios.post(this.server_url+'plot/capture', {length: capture_lenght}, this.config).then(res => {
+        let state = store.getState();
+        axios.post(state.settings.server_url+'plot/capture', {length: capture_lenght}, state.settings.auth_config).then(res => {
             return res;
         }).catch(err => {
             alert(err.message);
@@ -27,7 +26,8 @@ let plotProxy = class{
 
     get_captured_data = () =>{
         return new Promise((resolve, reject) => {
-            axios.get(this.server_url+'/plot/capture', this.config).then(res =>{
+            let state = store.getState();
+            axios.get(state.settings.server_url+'/plot/capture', state.settings.auth_config).then(res =>{
                 resolve(res.data);
             }).catch(err=>{
                 reject(err.message);
@@ -36,11 +36,13 @@ let plotProxy = class{
     }
 
     set_channel_status = (channel) => {
-        store.dispatch(setChannelStatus(this.server_url+'plot/channels/status',channel, this.config));
+        let state = store.getState();
+        store.dispatch(setChannelStatus(state.settings.server_url+'plot/channels/status',channel, state.settings.auth_config));
     }
 
     set_channel_widths = (widths) => {
-        axios.post(this.server_url+'plot/channels/widths', {widths}, this.config).then(res => {
+        let state = store.getState();
+        axios.post(state.settings.server_url+'plot/channels/widths', {widths}, state.settings.auth_config).then(res => {
             return res;
         }).catch(err => {
             alert(err.message);
@@ -50,6 +52,6 @@ let plotProxy = class{
 }
 
 
-export default plotProxy;
+export default PlotProxy;
 
 

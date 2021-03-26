@@ -1,15 +1,14 @@
 import axios from "axios"
+import store from "../store";
 
 
 
-let authProxy = class {
-    constructor(server_url) {
-      this.server_url = server_url+'auth/';
-    }
+let AuthProxy = class {
 
     sign_in = (credentials) => {
         return new Promise((resolve, reject) => {
-            axios.post(this.server_url+'login', credentials)
+            let state = store.getState();
+            axios.post(state.settings.server_url+'auth/login', credentials)
                 .then(res => {
                     resolve(res.data);
                 }).catch(
@@ -27,5 +26,5 @@ let authProxy = class {
 
 
 
-export default authProxy;
+export default AuthProxy;
 
