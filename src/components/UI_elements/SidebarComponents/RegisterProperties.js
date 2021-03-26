@@ -8,7 +8,8 @@ import {Radio} from "../Radio";
 import {TextArea} from "../TextArea";
 import {useSelector} from "react-redux";
 import {Button} from "../Button";
-import {SidebarCollapsableContentLayout, SidebarCollapsableNameLayout} from "..";
+import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
+import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
 
 const ChoicesWrapper = styled.div`
     display: grid;

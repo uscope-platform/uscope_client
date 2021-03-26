@@ -6,7 +6,8 @@ import {InputField} from "../InputField";
 import {Checkbox} from "../checkbox";
 
 import {Button} from "../Button";
-import {SidebarCollapsableContentLayout, SidebarCollapsableNameLayout} from "..";
+import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
+import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
 
 export let  ParameterProperties = props =>{
 

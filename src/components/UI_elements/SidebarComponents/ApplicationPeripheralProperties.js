@@ -6,7 +6,8 @@ import {Checkbox} from "../checkbox";
 
 import {useSelector} from "react-redux";
 import {Button} from "../Button";
-import {SidebarCollapsableContentLayout, SidebarCollapsableNameLayout} from "..";
+import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
+import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
 import {SelectField} from "../Select";
 
 

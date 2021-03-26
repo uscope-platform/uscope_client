@@ -6,7 +6,10 @@ import {InputField} from "../InputField";
 
 
 import {Button} from "../Button";
-import {Checkbox, MultiSelect, SidebarCollapsableContentLayout, SidebarCollapsableNameLayout} from "..";
+import {Checkbox} from "../checkbox"
+import {MultiSelect} from "../MultiSelect";
+import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
+import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
 
 export let  PlotChannelGroupProperties = props =>{
 

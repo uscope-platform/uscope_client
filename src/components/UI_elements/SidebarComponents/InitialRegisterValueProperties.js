@@ -5,7 +5,8 @@ import {CaretDown, CaretUp} from "grommet-icons";
 import {InputField} from "../InputField";
 
 import {Button} from "../Button";
-import {SidebarCollapsableContentLayout, SidebarCollapsableNameLayout} from "..";
+import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
+import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
 
 export let  InitialRegisterValue = props =>{
 
