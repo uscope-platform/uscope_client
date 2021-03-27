@@ -97,42 +97,53 @@ let ApplicationChooser = (props) =>{
 
     let loadResources = () => {
         settings.server.plot_proxy.getChannelsInfo();
-        dispatch(loadViews([{
-            name: "Plot",
-            peripheral_id: "plot",
-            type: "Scope",
-            user_accessible: true
-        }]))
-        dispatch(loadViews([{
-            name: "Script manager",
-            peripheral_id: "script_manager",
-            type: "script_manager",
-            user_accessible: true
-        }]))
-        dispatch(loadViews([{
-            name: "Peripherals manager",
-            peripheral_id: "peripherals_manager",
-            type: "peripherals_manager",
-            user_accessible: true
-        }]))
-        dispatch(loadViews([{
-            name: "Applications manager",
-            peripheral_id: "applications_manager",
-            type: "applications_manager",
-            user_accessible: true
-        }]));
-        dispatch(loadViews([{
-            name: "Program Manager",
-            peripheral_id: "program_manager",
-            type: "program_manager",
-            user_accessible: true
-        }]));
-        dispatch(loadViews([{
-            name: "Platform Manager",
-            peripheral_id: "platform_manager",
-            type: "platform_manager",
-            user_accessible: true
-        }]));
+        debugger;
+        let role_mapping = {admin:1, user:2, operator:3};
+        let role = role_mapping[settings.user_role]
+        if(role<=3){
+            dispatch(loadViews([{
+                name: "Plot",
+                peripheral_id: "plot",
+                type: "Scope",
+                user_accessible: true
+            }]))
+        }
+        if(role<=2){
+            dispatch(loadViews([{
+                name: "Script manager",
+                peripheral_id: "script_manager",
+                type: "script_manager",
+                user_accessible: true
+            }]))
+            dispatch(loadViews([{
+                name: "Applications manager",
+                peripheral_id: "applications_manager",
+                type: "applications_manager",
+                user_accessible: true
+            }]));
+            dispatch(loadViews([{
+                name: "Program Manager",
+                peripheral_id: "program_manager",
+                type: "program_manager",
+                user_accessible: true
+            }]));
+        }
+        if(role<=1){
+            dispatch(loadViews([{
+                name: "Peripherals manager",
+                peripheral_id: "peripherals_manager",
+                type: "peripherals_manager",
+                user_accessible: true
+            }]))
+
+            dispatch(loadViews([{
+                name: "Platform Manager",
+                peripheral_id: "platform_manager",
+                type: "platform_manager",
+                user_accessible: true
+            }]));
+        }
+
         dispatch(setSetting(["app_stage", "NORMAL"]));
     };
 
