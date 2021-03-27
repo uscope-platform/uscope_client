@@ -13,22 +13,21 @@ import {ColorTheme} from "./components/UI_elements";
 
 let App = (props) =>{
 
-    const [server, set_server] = useState(new serverProxy());
+    const [server] = useState(new serverProxy());
     const [logged, set_logged] = useState(false);
     const [onboarding_needed, set_onboarding_needed] = useState(true);
     const dispatch = useDispatch();
 
     const done = useCallback((login_credentials)=>{
         server.auth_proxy.sign_in(login_credentials).then((token) =>{
-            let uScope_server = new serverProxy();
-
-            dispatch(setSetting(["access_token", token.access_token]));
-            dispatch(setSetting(["auth_config", {headers: { Authorization: `Bearer ${token.access_token}` }}]));
             if(token.login_token){
                 localStorage.setItem('login_token', JSON.stringify(token.login_token));
             }
-            set_server(uScope_server);
-            dispatch(setSetting(["server", uScope_server]));
+
+            dispatch(setSetting(["user_role", token.role]));
+            dispatch(setSetting(["access_token", token.access_token]));
+            dispatch(setSetting(["auth_config", {headers: { Authorization: `Bearer ${token.access_token}` }}]));
+
             set_logged(true);
         }).catch(()=>{
             localStorage.removeItem('login_token');
@@ -39,20 +38,20 @@ let App = (props) =>{
 
     useEffect(()=>{
         dispatch(setSetting(["server_url", process.env.REACT_APP_SERVER]));
+        dispatch(setSetting(["server", new serverProxy()]));
 
         server.platform_proxy.need_onboarding().then(response =>{
             set_onboarding_needed(response['onboarding_needed']);
             if(response['onboarding_needed']) {
-                dispatch(setSetting(["server", server]));
                 set_logged(true);
             } else{
-                automated_login();
+                try_automated_login();
             }
         });
 
     },[])
 
-    let automated_login = () =>{
+    let try_automated_login = () =>{
         let token = JSON.parse(localStorage.getItem('login_token'));
         if(token){
             if (Date.now() > token.expiry){

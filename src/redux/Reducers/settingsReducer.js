@@ -21,6 +21,7 @@ const initial_state = {
     logged:false,
     server_url: process.env.REACT_APP_SERVER,
     auth_config:null,
+    user_role:null,
     sampling_period:0,
     plot_palette:ColorTheme.plot_palette
 };
