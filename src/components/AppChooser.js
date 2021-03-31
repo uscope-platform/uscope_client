@@ -97,7 +97,6 @@ let ApplicationChooser = (props) =>{
 
     let loadResources = () => {
         settings.server.plot_proxy.getChannelsInfo();
-        debugger;
         let role_mapping = {admin:1, user:2, operator:3};
         let role = role_mapping[settings.user_role]
         if(role<=3){

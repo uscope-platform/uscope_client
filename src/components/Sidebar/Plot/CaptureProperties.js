@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import {
     Button, FormLayout,
     InputField,
@@ -10,10 +10,8 @@ import {useSelector} from "react-redux";
 let CaptureProperties = props =>{
     const settings = useSelector(state => state.settings);
     const channels = useSelector(state => state.plot);
-    const [n_buffers, set_n_buffers] = useState("");
 
     let handle_change = (event) =>{
-        set_n_buffers(event.target.value);
     };
 
     let handle_close = (event) =>{
