@@ -81,7 +81,6 @@ let AuthApp = (props) =>{
 
     useEffect(()=>{
         if(settings.loaded_peripherals && settings.loaded_scripts &&settings.loaded_applications && settings.loaded_programs){
-            debugger;
             if(Object.keys(applications).length !== 0){
                 dispatch(setSetting(["app_stage", "APP_CHOICE"]));
             }else {

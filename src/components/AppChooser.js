@@ -65,11 +65,15 @@ let ApplicationChooser = (props) =>{
             settings.server.periph_proxy.bulkRegisterWrite({payload:[{address:scope_mux_address, value:word}]});
         }
         // SET UP CHANNEL WIDTHS
-        let widths = []
-        for(let item of channels_list){
-            widths.push(parseInt(item.phys_width));
+
+        if(channels_list.length !== 0){
+            let widths = []
+            for(let item of channels_list){
+                widths.push(parseInt(item.phys_width));
+            }
+            settings.server.plot_proxy.set_channel_widths(widths);
         }
-        settings.server.plot_proxy.set_channel_widths(widths);
+
 
     }
 
