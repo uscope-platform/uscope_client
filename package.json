@@ -33,7 +33,7 @@
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "PORT=3004 react-scripts start",
     "build": "react-scripts build",
-    "build:dev": "env-cmd -f .env.development npm run build",
+    "build:staging": "env-cmd -f .env.staging npm run build",
     "test": "jest",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 9009 -s public",
