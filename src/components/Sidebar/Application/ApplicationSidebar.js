@@ -19,6 +19,12 @@ let  ApplicationSidebar = props =>{
         if (event.key === "Enter") {
             let app = create_application(event.target.value);
             settings.server.app_proxy.createApplication(app);
+            debugger;
+            if(props.onboarding){
+                let url = window.location;
+                url.replace("/applications_manager", '');
+                window.location.href = url;
+            }
         }
     };
 

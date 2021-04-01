@@ -1,11 +1,13 @@
 import { ADD_PERIPHERAL, EDIT_PERIPHERAL, LOAD_PERIPHERALS, REMOVE_PERIPHERAL} from "./types";
 import axios from 'axios';
+import {setSetting} from "./SettingsActions";
 
 
 export const loadPeripherals = (server_url, config) => {
     return dispatch => {
         axios.get(server_url, config).then(res => {
             dispatch(loadPeripheralsDone(res.data));
+            dispatch(setSetting(["loaded_peripherals", true]));
         }).catch(err => {
             alert(err.message);
         });

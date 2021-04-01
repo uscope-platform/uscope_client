@@ -22,6 +22,10 @@ const initial_state = {
     server_url: process.env.REACT_APP_SERVER,
     auth_config:null,
     user_role:null,
+    loaded_peripherals: false,
+    loaded_scripts: false,
+    loaded_applications: false,
+    loaded_programs: false,
     sampling_period:0,
     plot_palette:ColorTheme.plot_palette
 };

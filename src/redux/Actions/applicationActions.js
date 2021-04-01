@@ -1,5 +1,6 @@
 import {ADD_APPLICATION, EDIT_APPLICATION, LOAD_APPLICATIONS, REMOVE_APPLICATION, SAVE_PARAMETER} from "./types";
 import axios from 'axios';
+import {setSetting} from "./SettingsActions";
 
 
 export const saveParameter = (parameter) => ({
@@ -16,6 +17,7 @@ export const loadApplications = (server_url, config) => {
     return dispatch => {
         axios.get(server_url, config).then(res => {
             dispatch(loadApplicationsDone(res.data));
+            dispatch(setSetting(["loaded_applications", true]));
         }).catch(err => {
             alert(err.message);
         });
