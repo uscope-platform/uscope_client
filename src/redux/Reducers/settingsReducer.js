@@ -27,7 +27,7 @@ const initial_state = {
     loaded_applications: false,
     loaded_programs: false,
     sampling_period:0,
-    plot_palette:ColorTheme.plot_palette
+    plot_palette:{colorway:ColorTheme.plot_palette}
 };
 
 let settingsReducer = function (state = initial_state, action) {

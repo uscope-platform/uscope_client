@@ -6,6 +6,9 @@ import storage from 'redux-persist/lib/storage'
 import hardSet from "redux-persist/lib/stateReconciler/hardSet";
 import rootReducer from './redux/Reducers';
 
+// TODO: immer AutoFreeze breaks plotly because plotly modifies his inputs!!! that are passes through redux
+import { setAutoFreeze } from 'immer';
+setAutoFreeze(false);
 
 const initialState = {
 
