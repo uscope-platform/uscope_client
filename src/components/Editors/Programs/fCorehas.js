@@ -13,7 +13,7 @@ export class fCoreRules extends window.ace.acequire(
                 },
                 {
                     token : "string",
-                    regex : "^ldr|^nop|^add(i)?|^sub(i)?|^mul(i)?|^ldc|^stop|^itf|^fti|^ble|^bgt|^bne|^beq|^mov"
+                    regex : "^ldr|^nop|^add|^sub|^mul|^ldc|^stop|^itf|^fti|^ble|^bgt|^bne|^beq|^mov|^satn|^satp|^and|^or|^not"
                 },
                 {
                     token : "comment",
