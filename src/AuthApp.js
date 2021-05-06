@@ -32,6 +32,7 @@ let AuthApp = (props) =>{
 
     const dispatch = useDispatch();
     const history = useHistory();
+
     let load_resource = (resource) =>{
         let digest = localStorage.getItem(resource.key);
         if(resource.store === undefined || digest === null){
@@ -44,6 +45,8 @@ let AuthApp = (props) =>{
                 if(digest!==res){
                     resource.proxy.load_all();
                     localStorage.setItem(resource.key, res);
+                } else{
+                    dispatch(setSetting([resource.loaded_flag, true]));
                 }
             });
         }
@@ -53,19 +56,23 @@ let AuthApp = (props) =>{
         let resources = [{
             key:'Applications-hash',
             proxy:settings.server.app_proxy,
-            store:applications
+            store:applications,
+            loaded_flag:'loaded_applications'
         }, {
             key:'Peripherals-hash',
             proxy:settings.server.periph_proxy,
-            store:peripherals
+            store:peripherals,
+            loaded_flag:'loaded_peripherals'
         }, {
             key:'Script-hash',
             proxy:settings.server.script_proxy,
-            store:scripts
+            store:scripts,
+            loaded_flag:'loaded_scripts'
         }, {
             key:'Programs-hash',
             proxy:settings.server.prog_proxy,
-            store:programs
+            store:programs,
+            loaded_flag:'loaded_programs'
         }]
         if(props.needs_onboarding){
             dispatch(setSetting(["app_stage", "ONBOARDING"]));

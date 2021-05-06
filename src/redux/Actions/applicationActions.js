@@ -64,7 +64,7 @@ const removeApplicationDone = application =>({
 
 export const addApplication = (server_url, application_obj, config) =>{
     return dispatch => {
-        axios.post(server_url, application_obj, config).then(res => {
+        return axios.post(server_url, application_obj, config).then(res => {
             dispatch(addApplicationDone(application_obj));
         }).catch(err => {
             alert(err.message);

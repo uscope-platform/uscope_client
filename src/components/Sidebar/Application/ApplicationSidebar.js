@@ -19,11 +19,13 @@ let  ApplicationSidebar = props =>{
 
         if (event.key === "Enter") {
             let app = create_application(event.target.value);
-            settings.server.app_proxy.createApplication(app);
-            if(props.onboarding){
-                routerHistory.push("/")
-                window.location.reload(true);
-            }
+            settings.server.app_proxy.createApplication(app).then(data =>{
+                if(props.onboarding){
+                    routerHistory.push("/")
+                    window.location.reload(true);
+
+                }
+            });
         }
     };
 

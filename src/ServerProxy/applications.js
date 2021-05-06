@@ -45,12 +45,16 @@ import {
 
      createApplication = (application_obj) => {
          let state = store.getState();
-         store.dispatch(addApplication(state.settings.server_url+'application/add', application_obj, state.settings.auth_config));
+         return new Promise((resolve, reject) => {
+             store.dispatch(addApplication(state.settings.server_url+'application/add', application_obj, state.settings.auth_config)).then(data =>{
+                 resolve(data);
+             })
+         });
      };
 
      edit_application = (edit) => {
          let state = store.getState();
-         store.dispatch(editApplication(state.settings.server_url+'application/edit', edit, state.settings.auth_config));
+         store.dispatch(editApplication(state.settings.server_url + 'application/edit',edit,state.settings.auth_config))
      };
 
      removeApplication = (application) =>{
