@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../uscope_react/.idea/uscope_react.iml" filepath="$PROJECT_DIR$/../uscope_react/.idea/uscope_react.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../uscope_client/.idea/uscope_client.iml" filepath="$PROJECT_DIR$/../uscope_client/.idea/uscope_client.iml" />
     </modules>
   </component>
 </project>
