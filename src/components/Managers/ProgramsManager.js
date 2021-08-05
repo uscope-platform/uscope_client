@@ -24,11 +24,6 @@ let columns = [
         name: 'Program Type',
         sort: true,
     },
-    {
-        selector: 'path',
-        name: 'Program Filename',
-        grow:3
-    }
 ];
 
 
@@ -71,7 +66,7 @@ let ProgramsManager = props =>{
 
         let ids = Object.values(programs_store).map(a => a.id).sort();
         let id = get_next_id(ids);
-        let new_program= { id:id, name:'new program_'+id, path:`new program_${id}.s`, program_content:'', program_type:''};
+        let new_program= { id:id, name:'new program_'+id, program_content:'', program_type:''};
         settings.server.prog_proxy.upload_program(new_program);
 
     };
@@ -93,7 +88,7 @@ let ProgramsManager = props =>{
 
         let program = Object.values(programs_store).find(x => x.id === settings.selected_program);
         set_editor_open(true);
-        dispatch(setSetting(["program_editor_title", program.path]));
+        dispatch(setSetting(["program_editor_title", program.name]));
 
 
     };
