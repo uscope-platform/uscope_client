@@ -4,6 +4,7 @@ import {Button} from "../../UI_elements"
 
 import "ace-builds/src-min-noconflict/mode-javascript";
 import "ace-builds/src-min-noconflict/theme-dracula";
+import "ace-builds/src-min-noconflict/mode-c_cpp"
 import {useSelector} from "react-redux";
 import styled from "styled-components";
 import fCoreMode from "./fCorehas";
@@ -24,21 +25,26 @@ let ProgramsEditor = props =>{
     const programs = useSelector(state => state.programs);
     const settings = useSelector(state => state.settings);
     const [editor_content, set_editor_content] = useState("");
+    const [language, set_language] = useState('');
 
     useEffect(()=>{
         if (aceEditor.current) {
-            aceEditor.current.editor.getSession().setMode(new fCoreMode());
+            if(language ==="asm"){
+                aceEditor.current.editor.getSession().setMode(new fCoreMode());
+            } else if(language ==="C") {
+                aceEditor.current.editor.getSession().setMode("ace/mode/c_cpp");
+            }
 
         }
 
-    },[])
+    },[language])
 
     let handle_change = (newValue) => {
         set_editor_content(newValue);
     };
 
     let handle_submit = (event) => {
-        let prog = Object.values(programs).find(x => x.path === settings.program_editor_title);
+        let prog = Object.values(programs).find(x => x.name === settings.program_editor_title);
         prog = {program:prog.id, field:'program_content', value:editor_content}
 
         settings.server.prog_proxy.edit_program(prog);
@@ -47,10 +53,11 @@ let ProgramsEditor = props =>{
 
     let handle_load = (editor) => {
 
-        let prog =Object.values(programs).find(x => x.path === settings.program_editor_title);
+        let prog =Object.values(programs).find(x => x.name === settings.program_editor_title);
         if(typeof prog !== 'undefined' && prog !== null){
             editor.setValue(prog.program_content);
             set_editor_content(prog.program_content);
+            set_language(prog.program_type);
         }
 
     };
