@@ -17,7 +17,6 @@ let BitstreamsReducer = function (state = [], action) {
             return  state;
         case EDIT_BITSTREAM:
             return produce(state, draftState => {
-                debugger;
                 draftState[action.payload.id][action.payload.field.name] = action.payload.field.value;
             });
         default:

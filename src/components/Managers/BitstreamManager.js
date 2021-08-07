@@ -1,10 +1,11 @@
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import {BlockLayout, Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements";
 import DataTable from "react-data-table-component";
 import {TableStyle} from "./TableStyles";
 import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../../redux/Actions/SettingsActions";
-import ProgramsEditor from "../Editors/Programs/ProgramsEditor";
+import {handle_file_chosen} from "../../utilities/BitstreamUtilities";
+
 
 let columns = [
     {
@@ -22,8 +23,12 @@ let columns = [
 
 
 let BitstreamManager = props =>{
+
+    const inputFile = useRef(null)
     const bitstreams_store = useSelector(state => state.bitstreams);
     const settings = useSelector(state => state.settings);
+
+    const [bitstream_object, set_bitstream_object] = useState({})
 
     const dispatch = useDispatch();
 
@@ -53,18 +58,27 @@ let BitstreamManager = props =>{
 
         let ids = Object.values(bitstreams_store).map(a => a.id).sort();
         let id = get_next_id(ids);
-        let new_bitstream= { id:id, name:'new_bitstream_'+id};
-        settings.server.bitstream_proxy.upload_bitstream(new_bitstream);
+        set_bitstream_object({ id:id, name:'new_bitstream_'+id});
+        inputFile.current.click();
+
 
     };
 
     let handleRemoveRow = (event) =>{
 
-    let removed = Object.values(bitstreams_store).find(x => x.id === settings.selected_bitstream);
-    settings.server.bitstream_proxy.delete_bitstream(removed)
-    dispatch(setSetting(["selected_bitstream", null]));
+        let removed = Object.values(bitstreams_store).find(x => x.id === settings.selected_bitstream);
+        settings.server.bitstream_proxy.delete_bitstream(removed)
+        dispatch(setSetting(["selected_bitstream", null]));
 
     };
+
+    let upload_file = (event) => {
+        handle_file_chosen( inputFile).then((file_content =>{
+            bitstream_object['content'] = file_content;
+            settings.server.bitstream_proxy.upload_bitstream(bitstream_object);
+        }));
+    }
+
 
 
     const rowSelectCritera = row => row.id === settings.selected_bitstream;
@@ -88,6 +102,7 @@ let BitstreamManager = props =>{
                 selectableRowSelected={rowSelectCritera}
             />
         </BlockLayout>
+        <input type='file' id='bitstream_chooser' ref={inputFile} onChange={upload_file} style={{display: 'none'}}/>
     </ManagerLayout>
     );
 };
