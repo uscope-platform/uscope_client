@@ -11,6 +11,7 @@ const initial_state = {
     current_peripheral:null,
     current_application:null,
     selected_script:null,
+    selected_bitstream:null,
     script_editor_title:null,
     current_view_requires_sidebar: true,
     selected_program: null,

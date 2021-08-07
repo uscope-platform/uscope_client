@@ -4,14 +4,14 @@ import {addBitstream, editBitstream, loadAllBitstreams, removeBitstream} from ".
 
 let BitstreamsProxy = class{
 
-    upload_script = (script) => {
+    upload_bitstream = (bitstream) => {
         let state = store.getState();
-        store.dispatch(addBitstream(state.settings.server_url+'bitstream/'+script.id, script, state.settings.auth_config));
+        store.dispatch(addBitstream(state.settings.server_url+'bitstream/'+bitstream.id, bitstream, state.settings.auth_config));
     };
 
-    edit_script = (script) => {
+    edit_bitstream = (bitstream) => {
         let state = store.getState();
-        store.dispatch(editBitstream(state.settings.server_url+'bitstream/'+script.id, script, state.settings.auth_config));
+        store.dispatch(editBitstream(state.settings.server_url+'bitstream/'+bitstream.id, bitstream, state.settings.auth_config));
     };
 
     load_all = () =>{
@@ -29,9 +29,9 @@ let BitstreamsProxy = class{
         });
     };
 
-    delete_script = (script) => {
+    delete_bitstream = (bitstream) => {
         let state = store.getState();
-        store.dispatch(removeBitstream(state.settings.server_url+'bitstream/'+script.id, script, state.settings.auth_config));
+        store.dispatch(removeBitstream(state.settings.server_url+'bitstream/'+bitstream.id, bitstream, state.settings.auth_config));
     };
 
 }

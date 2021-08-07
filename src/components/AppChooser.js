@@ -130,6 +130,12 @@ let ApplicationChooser = (props) =>{
                 type: "program_manager",
                 user_accessible: true
             }]));
+            dispatch(loadViews([{
+                name: "Bitstream Manager",
+                peripheral_id: "bitstream_manager",
+                type: "bitstream_manager",
+                user_accessible: true
+            }]));
         }
         if(role<=1){
             dispatch(loadViews([{

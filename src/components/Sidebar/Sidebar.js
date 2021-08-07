@@ -8,6 +8,7 @@ import PlotSidebar from "./Plot/PlotSidebar";
 import ScriptSidebar from "./Script/ScriptSidebar";
 import ProgramSidebar from "./Program/ProgramSidebar";
 import PlatformSidebar from "./Platform/PlatformSidebar";
+import BitstreamSidebar from "./Bitstream/BitstreamSidebar";
 
 let  Sidebar = props =>{
 
@@ -47,6 +48,12 @@ let  Sidebar = props =>{
             return(
                 <SidebarLayout>
                     <PlatformSidebar/>
+                </SidebarLayout>
+            );
+        case "/bitstream_manager":
+            return(
+                <SidebarLayout>
+                    <BitstreamSidebar/>
                 </SidebarLayout>
             );
         default:

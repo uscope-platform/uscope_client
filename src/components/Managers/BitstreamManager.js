@@ -5,36 +5,33 @@ import {TableStyle} from "./TableStyles";
 import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import ProgramsEditor from "../Editors/Programs/ProgramsEditor";
-import ButterToast, { POS_TOP, POS_RIGHT, Cinnamon} from "butter-toast";
 
 let columns = [
     {
         selector: 'id',
-        name: 'Program ID',
+        name: 'Bitstream ID',
         sort: true
     },
     {
         selector: 'name',
-        name: 'Program Name',
+        name: 'Bitstream Name',
         sort: true,
         grow:2
     }
 ];
 
 
-let ProgramsManager = props =>{
-    const programs_store = useSelector(state => state.programs);
+let BitstreamManager = props =>{
+    const bitstreams_store = useSelector(state => state.bitstreams);
     const settings = useSelector(state => state.settings);
-
-    const [editor_open, set_editor_open] = useState(false);
 
     const dispatch = useDispatch();
 
     let handleOnSelect = (selection) => {
         if(selection.selectedCount===1){
-            dispatch(setSetting(["selected_program", selection.selectedRows[0].id]));
+            dispatch(setSetting(["selected_bitstream", selection.selectedRows[0].id]));
         } else if(selection.selectedCount===0) {
-            dispatch(setSetting(["selected_program", null]));
+            dispatch(setSetting(["selected_bitstream", null]));
         }
 
     };
@@ -54,108 +51,35 @@ let ProgramsManager = props =>{
 
     let handleAddRow = () =>{
 
-        let ids = Object.values(programs_store).map(a => a.id).sort();
+        let ids = Object.values(bitstreams_store).map(a => a.id).sort();
         let id = get_next_id(ids);
-        let new_program= { id:id, name:'new program_'+id, program_content:'', program_type:''};
-        settings.server.prog_proxy.upload_program(new_program);
+        let new_bitstream= { id:id, name:'new_bitstream_'+id};
+        settings.server.bitstream_proxy.upload_bitstream(new_bitstream);
 
     };
 
     let handleRemoveRow = (event) =>{
 
-    let removed = Object.values(programs_store).find(x => x.id === settings.selected_program);
-    settings.server.prog_proxy.delete_program(removed);
-    dispatch(setSetting(["selected_program", null]));
+    let removed = Object.values(bitstreams_store).find(x => x.id === settings.selected_bitstream);
+    settings.server.bitstream_proxy.delete_bitstream(removed)
+    dispatch(setSetting(["selected_bitstream", null]));
 
     };
 
-    let handleScriptEdit = () => {
 
-        if(settings.selected_program===null){
-            alert("Please select a script to edit");
-            return;
-        }
-
-        let program = Object.values(programs_store).find(x => x.id === settings.selected_program);
-        set_editor_open(true);
-        dispatch(setSetting(["program_editor_title", program.name]));
-
-
-    };
-
-    let handle_edit_done = () =>{
-        set_editor_open(false);
-    }
-
-    let handle_compile = () =>{
-
-        if(settings.selected_program===null){
-            alert("Please select a script to compile");
-            return;
-        }
-
-        settings.server.prog_proxy.compile_program(programs_store[settings.selected_program]).then((data)=>{
-            let notifications={passed:[],failed:[]};
-            for (let item of data){
-                if(item.status==="passed"){
-                    notifications.passed.push(
-                        ButterToast.raise({
-                            content: <Cinnamon.Crisp title={item.file}
-                                                     content="Compilation was successful"
-                                                     scheme={Cinnamon.Crisp.SCHEME_GREEN}/>
-                        })
-                    )
-                } else if (item.status==="failed"){
-                    notifications.failed.push(
-                        ButterToast.raise({
-                            content: <Cinnamon.Crisp title={item.file}
-                                                     content={item.error}
-                                                     scheme={Cinnamon.Crisp.SCHEME_RED}/>
-                        })
-                    )
-                }
-            }
-            window.setTimeout(()=>{
-                for(let notif of notifications.passed){
-                    ButterToast.dismiss(notif);
-                }
-            },3000);
-
-        });
-
-    }
-
-    let handle_apply_program = () =>{
-        let program = Object.values(programs_store).find(x => x.id === settings.selected_program);
-        program.core_address = '0x83c00000';
-        settings.server.prog_proxy.apply_program(program);
-    };
-
-
-    if(editor_open) {
-    return (
-        <ManagerLayout>
-            <ProgramsEditor done={handle_edit_done} />
-        </ManagerLayout>
-    );
-    }
-
-    const rowSelectCritera = row => row.id === settings.selected_program;
+    const rowSelectCritera = row => row.id === settings.selected_bitstream;
 
 
     return(
     <ManagerLayout>
         <ManagerButtonsLayout>
-            <Button style={{margin:"0 1rem"}} onClick={handleAddRow}>Add Program</Button>
-            <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}>Remove Program</Button>
-            <Button style={{margin:"0 1rem"}} onClick={handleScriptEdit}>Edit Program</Button>
-            <Button style={{margin:"0 1rem"}} onClick={handle_compile}>Compile Program</Button>
-            <Button style={{margin:"0 1rem"}} onClick={handle_apply_program}>Load Program</Button>
+            <Button style={{margin:"0 1rem"}} onClick={handleAddRow}>Add Bitstream</Button>
+            <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}>Remove Bitstream</Button>
         </ManagerButtonsLayout>
         <BlockLayout centered>
             <DataTable
-                title='Programs'
-                data={Object.values(programs_store)}
+                title='Bitstreams'
+                data={Object.values(bitstreams_store)}
                 columns={columns}
                 customStyles={TableStyle}
                 theme="uScopeTableTheme"
@@ -169,4 +93,4 @@ let ProgramsManager = props =>{
 };
 
 
-export default ProgramsManager;
+export default BitstreamManager;

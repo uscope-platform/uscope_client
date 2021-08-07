@@ -7,6 +7,7 @@ const PeripheralsManager = React.lazy(() => import('./Managers/PeripheralsManage
 const ApplicationsManager = React.lazy(() => import('./Managers/ApplicationsManager'));
 const ProgramsManager = React.lazy(()=> import('./Managers/ProgramsManager'));
 const PlatformManager = React.lazy(()=> import('./Managers/PlatformManager'));
+const BitstreamManager = React.lazy(()=> import('./Managers/BitstreamManager'));
 
 let TabContent = props => {
     if(props.tab.type==='Scope'){
@@ -19,6 +20,12 @@ let TabContent = props => {
         return (
             <Suspense fallback={<div>Loading...</div>}>
                 <RegisterTab content={props.tab}/>
+            </Suspense>
+        );
+    }else if(props.tab.type ==='bitstream_manager'){
+        return (
+            <Suspense fallback={<div>Loading...</div>}>
+                <BitstreamManager />
             </Suspense>
         );
     }else if(props.tab.type ==='script_manager'){
