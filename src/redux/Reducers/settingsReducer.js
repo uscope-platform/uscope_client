@@ -25,6 +25,7 @@ const initial_state = {
     loaded_peripherals: false,
     loaded_scripts: false,
     loaded_applications: false,
+    loaded_bitstreams: false,
     loaded_programs: false,
     sampling_period:0,
     plot_palette:{colorway:ColorTheme.plot_palette}

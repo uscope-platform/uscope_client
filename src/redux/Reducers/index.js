@@ -8,8 +8,10 @@ import PeripheralsReducer from './PeripheralsReducer'
 import {scriptsReducer, scriptsWorkspaceReducer} from "./scriptsReducer";
 import ApplicationsReducer from './applicationsReducer'
 import programsReducer from "./ProgramsReducer";
+import BitstreamsReducer from "./bitstreamsReducer";
 
 export default combineReducers({
+    bitstreams:BitstreamsReducer,
     settings : settingsReducer,
     plot: plotReducer,
     registerValues: registerValuesReducer,

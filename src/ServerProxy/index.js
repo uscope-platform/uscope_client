@@ -6,7 +6,7 @@ import ScriptsProxy from "./scripts"
 import AuthProxy from "./auth"
 import ProgramsProxy from "./programs";
 import PlatformProxy from "./platform";
-
+import BitstreamsProxy from "./bitstreams"
 
 export default function serverProxy() {
     this.app_proxy = new ApplicationProxy();
@@ -17,5 +17,6 @@ export default function serverProxy() {
     this.auth_proxy = new AuthProxy();
     this.prog_proxy = new ProgramsProxy();
     this.platform_proxy = new PlatformProxy();
+    this.bitstream_proxy = new BitstreamsProxy();
 }
 

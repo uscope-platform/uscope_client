@@ -26,6 +26,7 @@ let AuthApp = (props) =>{
     const plot = useSelector(state => state.plot);
     const scripts = useSelector(state => state.scripts);
     const programs = useSelector(state => state.programs);
+    const bitstreams = useSelector(state => state.bitstreams);
     const settings = useSelector(state => state.settings);
     const peripherals = useSelector(state => state.peripherals);
     const applications = useSelector(state => state.applications);
@@ -73,6 +74,11 @@ let AuthApp = (props) =>{
             proxy:settings.server.prog_proxy,
             store:programs,
             loaded_flag:'loaded_programs'
+        }, {
+            key:'Bitstreams-hash',
+            proxy:settings.server.bitstream_proxy,
+            store:bitstreams,
+            loaded_flag:'loaded_bitstreams'
         }]
         if(props.needs_onboarding){
             dispatch(setSetting(["app_stage", "ONBOARDING"]));
@@ -101,7 +107,7 @@ let AuthApp = (props) =>{
                 history.push('applications_manager')
             }
         }
-    },[settings.loaded_applications, settings.loaded_peripherals, settings.loaded_programs, settings.loaded_scripts])
+    },[settings.loaded_applications, settings.loaded_peripherals, settings.loaded_programs, settings.loaded_scripts, settings.loaded_bitstreams])
 
 
     switch (settings.app_stage) {
