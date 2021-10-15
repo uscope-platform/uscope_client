@@ -109,7 +109,7 @@ let ScriptManager = (props) =>{
 
         let script = Object.values(scripts_store).find(x => x.id === settings.selected_script);
         set_editor_open(true);
-        dispatch(setSetting(["script_editor_title", script.path]));
+        dispatch(setSetting(["script_editor_title", script.name]));
     };
 
     let handle_edit_done = () =>{
