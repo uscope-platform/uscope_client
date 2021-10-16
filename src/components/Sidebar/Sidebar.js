@@ -23,7 +23,7 @@ let  Sidebar = props =>{
         case "/applications_manager":
             return(
                 <SidebarLayout>
-                    <ApplicationSidebar onboarding={props.onboarding}/>
+                    <ApplicationSidebar/>
                 </SidebarLayout>
             );
         case "/script_manager":

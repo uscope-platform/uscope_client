@@ -16,9 +16,8 @@ import './App.css';
 import {ApplicationLayout} from "./components/UI_elements";
 import Sidebar from "./components/Sidebar/Sidebar";
 import OnboardingView from "./components/Onboarding";
-import {loadViews} from "./redux/Actions/ViewsActions";
+import {create_application} from "./utilities/ApplicationUtilities";
 
-const ApplicationsManager = React.lazy(() => import('./components/Managers/ApplicationsManager'));
 
 let AuthApp = (props) =>{
 
@@ -32,7 +31,6 @@ let AuthApp = (props) =>{
     const applications = useSelector(state => state.applications);
 
     const dispatch = useDispatch();
-    const history = useHistory();
 
     let load_resource = (resource) =>{
         let digest = localStorage.getItem(resource.key);
@@ -97,14 +95,10 @@ let AuthApp = (props) =>{
             if(Object.keys(applications).length !== 0){
                 dispatch(setSetting(["app_stage", "APP_CHOICE"]));
             }else {
-                dispatch(loadViews([{
-                    name: "Applications manager",
-                    peripheral_id: "applications_manager",
-                    type: "applications_manager",
-                    user_accessible: true
-                }]));
-                dispatch(setSetting(["app_stage", "FALLBACK_MANAGER"]));
-                history.push('applications_manager')
+                let app = create_application("default");
+                settings.server.app_proxy.createApplication(app).then(data =>{
+                    dispatch(setSetting(["app_stage", "APP_CHOICE"]));
+                });
             }
         }
     },[settings.loaded_applications, settings.loaded_peripherals, settings.loaded_programs, settings.loaded_scripts, settings.loaded_bitstreams])
@@ -128,18 +122,6 @@ let AuthApp = (props) =>{
                 <div className="App">
                     <ApplicationChooser />
                 </div>
-            );
-        case "FALLBACK_MANAGER":
-            return (
-                <div className="App">
-                    <Suspense fallback={<div>Loading...</div>}>
-                        <ApplicationLayout name="plot_tab" sidebarNeeded={true}>
-                            <ApplicationsManager onboarding/>
-                            <Sidebar onboarding/>
-                        </ApplicationLayout>
-                    </Suspense>
-                </div>
-
             );
 
         case "NORMAL":
