@@ -30,7 +30,7 @@ export const setChannelStatus = (server_url, status, config) =>{
         axios.post(server_url,status, config).then(res => {
             dispatch(setChannelStatusDone(status));
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while setting a channel status\n' + err.message);
         });
     };
 }
@@ -51,7 +51,8 @@ export const loadChanels = (server_url, config) => {
         axios.get(server_url, config).then(res => {
             dispatch(loadChanelsDone(res.data));
         }).catch(err => {
-            alert(err.message);
+            console.log(err)
+            alert('ERROR: error while loading channels info\n' + err.message);
         });
     };
 };
@@ -100,7 +101,7 @@ export const setChannelSetting = (server_url, settings, config) => {
         axios.post(server_url, settings, config).then(res => {
             dispatch(setChannelSettingDone(settings));
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while changing channel settings\n' + err.message);
         });
     };
 };
@@ -116,7 +117,7 @@ export const fetchData = (server_url, config) => {
         axios.get(server_url, config).then(res => {
             dispatch(fetchDataDone(res.data));
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while fetching channel data\n' + err.message);
         });
     };
 };

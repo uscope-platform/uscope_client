@@ -21,7 +21,7 @@ export const sendRegister = (server_url ,register, config) => {
         axios.post(server_url,{payload:register}, config).then(() => {
             dispatch(sendRegisterDone(register));
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while sending a resiter to the server\n' + err.message);
         });
     };
 };

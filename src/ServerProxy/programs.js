@@ -65,7 +65,7 @@ let ProgramsProxy = class{
             axios.post(state.settings.server_url+'program/Apply/'+program.id, program, state.settings.auth_config).then(res => {
                 resolve(res.data);
             }).catch(err => {
-                alert(err.message);
+                alert('ERROR: error while loading a program on the core' + err.message);
             });
         })
     }

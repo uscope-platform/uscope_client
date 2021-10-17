@@ -14,8 +14,8 @@
 // limitations under the License.
 
 //       REACT IMPORTS
-import React, {Suspense, useEffect} from 'react';
-import {Redirect, Route, useHistory} from 'react-router-dom'
+import React, {useEffect} from 'react';
+import {Redirect, Route} from 'react-router-dom'
 
 //       REDUX IMPORTS
 import {useDispatch, useSelector} from "react-redux";

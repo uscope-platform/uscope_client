@@ -22,7 +22,7 @@ export const addBitstream = (server_url, script, config) =>{
         axios.post(server_url, script, config).then(res => {
             dispatch(AddBitstreamDone(script));
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while adding a bitstream\n' + err.message);
         });
     };
 };
@@ -38,7 +38,7 @@ export const editBitstream = (server_url, script, config) =>{
         axios.patch(server_url,script, config).then(res => {
             dispatch(editBitstreamDone(script));
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while editing a bitstream\n' + err.message);
             dispatch(editBitstreamDone(script));
         });
     };
@@ -54,7 +54,7 @@ export const removeBitstream = (server_url, script, config) =>{
         axios.delete(server_url, config).then(res => {
             dispatch(removeBitstreamDone(script));
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while removing a bitstream\n' + err.message);
         });
     };
 };
@@ -71,7 +71,7 @@ export const loadAllBitstreams = (server_url, config) =>{
             dispatch(loadAllBitstreamsDone(res.data));
             dispatch(setSetting(["loaded_bitstreams", true]));
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while loading all bitstreams\n' + err.message);
         });
     };
 };

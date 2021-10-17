@@ -29,7 +29,7 @@ export const addScript = (server_url, script, config) =>{
         axios.post(server_url, script, config).then(res => {
             dispatch(AddScriptDone(script));
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while adding a script\n' + err.message);
         });
     };
 };
@@ -45,7 +45,7 @@ export const editScript = (server_url, script, config) =>{
         axios.patch(server_url,script, config).then(res => {
             dispatch(editScriptDone(script));
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while editing a script\n' + err.message);
             dispatch(editScriptDone(script));
         });
     };
@@ -61,7 +61,7 @@ export const removeScript = (server_url, script, config) =>{
         axios.delete(server_url, config).then(res => {
             dispatch(removeScriptDone(script));
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while removing a script\n' +err.message);
         });
     };
 };
@@ -78,7 +78,7 @@ export const loadAllScripts = (server_url, config) =>{
             dispatch(loadAllScriptsDone(res.data));
             dispatch(setSetting(["loaded_scripts", true]));
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while loading all scripts\n' + err.message);
         });
     };
 };

@@ -34,7 +34,7 @@ export const loadApplications = (server_url, config) => {
             dispatch(loadApplicationsDone(res.data));
             dispatch(setSetting(["loaded_applications", true]));
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while loading all applications\n' + err.message);
         });
     };
 };
@@ -51,7 +51,7 @@ export const editApplication = (server_url,edit, config) => {
         axios.post(server_url, edit, config).then(res => {
             dispatch(editApplicationDone(edit));
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while editing an application\n' + err.message);
         });
     };
 };
@@ -67,7 +67,7 @@ export const removeApplication = (server_url, application, config) =>{
         axios.get(server_url, config).then(res => {
             dispatch(removeApplicationDone(application));
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while removing an application\n' + err.message);
         });
     };
 };
@@ -82,7 +82,7 @@ export const addApplication = (server_url, application_obj, config) =>{
         return axios.post(server_url, application_obj, config).then(res => {
             dispatch(addApplicationDone(application_obj));
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while adding an application\n' + err.message);
         });
     };
 };

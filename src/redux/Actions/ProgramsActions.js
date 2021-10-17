@@ -22,7 +22,7 @@ export const addProgram = (server_url, program, config) =>{
         axios.post(server_url, program, config).then(res => {
             dispatch(AddProgramDone(program));
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while adding a program\n' + err.message);
         });
     };
 };
@@ -38,7 +38,7 @@ export const editProgram = (server_url, program, config) =>{
         axios.patch(server_url,program, config).then(res => {
             dispatch(editProgramDone(program));
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while editing a program\n' + err.message);
             dispatch(editProgramDone(program));
         });
     };
@@ -54,7 +54,7 @@ export const removeProgram = (server_url, program, config) =>{
         axios.delete(server_url, config).then(res => {
             dispatch(removeProgramDone(program));
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while removing a program\n' + err.message);
         });
     };
 };
@@ -71,7 +71,7 @@ export const loadAllPrograms = (server_url, config) =>{
             dispatch(loadAllProgramsDone(res.data));
             dispatch(setSetting(["loaded_programs", true]));
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while loading all programs\n' + err.message);
         });
     };
 };

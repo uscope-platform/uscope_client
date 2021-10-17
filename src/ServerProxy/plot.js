@@ -35,7 +35,7 @@ let PlotProxy = class{
         axios.post(state.settings.server_url+'plot/capture', {length: capture_lenght}, state.settings.auth_config).then(res => {
             return res;
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while setting up capture\n' + err.message);
         });
     };
 
@@ -60,7 +60,7 @@ let PlotProxy = class{
         axios.post(state.settings.server_url+'plot/channels/widths', {widths}, state.settings.auth_config).then(res => {
             return res;
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while setting up channel widths\n' + err.message);
         });
     }
 

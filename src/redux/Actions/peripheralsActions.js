@@ -24,7 +24,7 @@ export const loadPeripherals = (server_url, config) => {
             dispatch(loadPeripheralsDone(res.data));
             dispatch(setSetting(["loaded_peripherals", true]));
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while loading all peripherals\n' + err.message);
         });
     };
 };
@@ -39,7 +39,7 @@ export const editPeripheral = (server_url, edit, config) => {
         axios.post(server_url, edit, config).then(res => {
             dispatch(editPeripheralDone(edit));
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while editing a peripheral\n' + err.message);
         });
     };
 };
@@ -55,7 +55,7 @@ export const removePeripheral = (server_url, peripheral, config) =>{
         axios.get(server_url, config).then(res => {
             dispatch(removePeripheralDone(peripheral));
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while removing a peripheral\n' + err.message);
         });
     };
 };
@@ -71,7 +71,7 @@ export const addPeripheral = (server_url, peripheral_obj, config) =>{
         axios.post(server_url, peripheral_obj, config).then(res => {
             dispatch(addPeripheralDone(peripheral_obj));
         }).catch(err => {
-            alert(err.message);
+            alert('ERROR: error while adding a peripheral\n' + err.message);
         });
     };
 };
