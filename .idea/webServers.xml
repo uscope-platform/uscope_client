@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="662ce2a2-6ae0-4fee-9eb0-06beeca27145" name="uzed">
+        <fileTransfer rootFolder="/home/root" accessType="SFTP" host="uscope_0.local" port="22" sshConfigId="610af5a0-1375-4e15-aedf-5e32e2ce66f5" sshConfig="root@uscope_0.local:22 agent" authAgent="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

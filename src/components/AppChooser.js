@@ -34,20 +34,24 @@ let ApplicationChooser = (props) =>{
     const applications = useSelector(state => state.applications);
     const dispatch = useDispatch();
     const [app, set_application] = useState({});
+
+
     let handleApplicationChosen = e =>{
         settings.server.app_proxy.setApplication(e).then(()=>{
+            debugger;
             set_application(applications[e]);
             dispatch(setSetting(["application", e]));
-            let peripherals = Object.values(app.peripherals);
+            let peripherals = Object.values(applications[e].peripherals);
             dispatch(loadViews(peripherals))
-            initializePlotState(app);
-            settings.server.plot_proxy.getChannelsInfo(handle_loading_channels_done);
+            initializePlotState(applications[e]);
+            settings.server.plot_proxy.getChannelsInfo(function(){handle_loading_channels_done(peripherals);});
         }).catch(error =>{
+            console.log("Error: error while choosing application");
         });
     };
 
-    let handle_loading_channels_done = () =>{
-        initializeRegisterStore(Object.values(app.peripherals));
+    let handle_loading_channels_done = (periph) =>{
+        initializeRegisterStore(periph);
     }
 
     let initializePlotState = (app) =>{
