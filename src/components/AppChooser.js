@@ -14,7 +14,7 @@
 // limitations under the License.
 
 //       REACT IMPORTS
-import React from 'react';
+import React, {useState} from 'react';
 //       REDUX IMPORTS
 import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../redux/Actions/SettingsActions";
@@ -33,20 +33,22 @@ let ApplicationChooser = (props) =>{
     const settings = useSelector(state => state.settings);
     const applications = useSelector(state => state.applications);
     const dispatch = useDispatch();
-
+    const [app, set_application] = useState({});
     let handleApplicationChosen = e =>{
         settings.server.app_proxy.setApplication(e).then(()=>{
-            let app = applications[e];
+            set_application(applications[e]);
             dispatch(setSetting(["application", e]));
             let peripherals = Object.values(app.peripherals);
             dispatch(loadViews(peripherals))
             initializePlotState(app);
-            settings.server.plot_proxy.getChannelsInfo();
-            initializeRegisterStore(peripherals);
+            settings.server.plot_proxy.getChannelsInfo(handle_loading_channels_done);
         }).catch(error =>{
         });
     };
 
+    let handle_loading_channels_done = () =>{
+        initializeRegisterStore(Object.values(app.peripherals));
+    }
 
     let initializePlotState = (app) =>{
 

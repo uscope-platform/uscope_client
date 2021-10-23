@@ -45,19 +45,7 @@ const setChannelStatusDone = (status) =>{
     }
 };
 
-
-export const loadChanels = (server_url, config) => {
-    return dispatch => {
-        axios.get(server_url, config).then(res => {
-            dispatch(loadChanelsDone(res.data));
-        }).catch(err => {
-            console.log(err)
-            alert('ERROR: error while loading channels info\n' + err.message);
-        });
-    };
-};
-
-const loadChanelsDone = channels => ({
+export const loadChanels = channels => ({
     type: LOAD_CHANNELS,
     payload: channels
 });

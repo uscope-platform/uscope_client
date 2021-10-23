@@ -19,9 +19,15 @@ import axios from "axios";
 
 let PlotProxy = class{
 
-    getChannelsInfo = () => {
+    getChannelsInfo = (loading_done_handler) => {
         let state = store.getState();
-        store.dispatch(loadChanels(state.settings.server_url+'plot/channels/specs',state.settings.auth_config));
+        axios.get(state.settings.server_url+'plot/channels/specs', state.settings.auth_config).then(res => {
+            store.dispatch(loadChanels(res.data));
+            loading_done_handler();
+        }).catch(err => {
+            console.log(err)
+            alert('ERROR: error while loading channels info\n' + err.message);
+        });
     };
 
     fetchData = () =>  {
