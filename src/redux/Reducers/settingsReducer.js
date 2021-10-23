@@ -33,7 +33,6 @@ const initial_state = {
     program_editor_title: null,
     selected_user:null,
     refresh_user_view:false,
-    app_stage:"WAITING",
     logged:false,
     server_url: process.env.REACT_APP_SERVER,
     auth_config:null,

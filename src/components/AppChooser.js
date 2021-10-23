@@ -170,8 +170,7 @@ let ApplicationChooser = (props) =>{
                 user_accessible: true
             }]));
         }
-
-        dispatch(setSetting(["app_stage", "NORMAL"]));
+        props.choice_done();
     };
 
     return (

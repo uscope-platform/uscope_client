@@ -14,7 +14,7 @@
 // limitations under the License.
 
 //       REACT IMPORTS
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Redirect, Route} from 'react-router-dom'
 
 //       REDUX IMPORTS
@@ -46,7 +46,7 @@ let AuthApp = (props) =>{
     const applications = useSelector(state => state.applications);
 
     const dispatch = useDispatch();
-
+    const [app_stage, set_app_stage] = useState("WAITING");
     let load_resource = (resource) =>{
         let digest = localStorage.getItem(resource.key);
         if(resource.store === undefined || digest === null){
@@ -65,6 +65,10 @@ let AuthApp = (props) =>{
             });
         }
     }
+
+    let app_choice_done = ()=>{
+        set_app_stage("NORMAL");
+    };
 
     useEffect(()=>{
         let resources = [{
@@ -94,12 +98,12 @@ let AuthApp = (props) =>{
             loaded_flag:'loaded_bitstreams'
         }]
         if(props.needs_onboarding){
-            dispatch(setSetting(["app_stage", "ONBOARDING"]));
+            set_app_stage("ONBOARDING");
         } else{
             for(let i of resources){
                 load_resource(i);
             }
-            dispatch(setSetting(["app_stage", "RESOURCE_LOADING"]));
+            set_app_stage("RESOURCE_LOADING");
         }
 
     },[])
@@ -108,18 +112,18 @@ let AuthApp = (props) =>{
     useEffect(()=>{
         if(settings.loaded_peripherals && settings.loaded_scripts &&settings.loaded_applications && settings.loaded_programs && settings.loaded_bitstreams){
             if(Object.keys(applications).length !== 0){
-                dispatch(setSetting(["app_stage", "APP_CHOICE"]));
+                set_app_stage("APP_CHOICE");
             }else {
                 let app = create_application("default");
                 settings.server.app_proxy.createApplication(app).then(data =>{
-                    dispatch(setSetting(["app_stage", "APP_CHOICE"]));
+                    set_app_stage("APP_CHOICE");
                 });
             }
         }
     },[settings.loaded_applications, settings.loaded_peripherals, settings.loaded_programs, settings.loaded_scripts, settings.loaded_bitstreams])
 
 
-    switch (settings.app_stage) {
+    switch (app_stage) {
         case "ONBOARDING":
             return(
                 <div className="App">
@@ -135,7 +139,7 @@ let AuthApp = (props) =>{
         case "APP_CHOICE":
             return (
                 <div className="App">
-                    <ApplicationChooser />
+                    <ApplicationChooser choice_done={app_choice_done}/>
                 </div>
             );
 
