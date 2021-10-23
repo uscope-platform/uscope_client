@@ -85,13 +85,11 @@ let App = (props) =>{
     }
 
     return(
-        <BrowserRouter>
-            <ThemeProvider theme={ColorTheme}>
-                <div className="App">
-                    {logged? <AuthApp onboarding_done={onboarding_done} needs_onboarding={onboarding_needed}/>:<LoginPage server={server} done={done}/>}
-                </div>
-            </ThemeProvider>
-        </BrowserRouter>
+        <ThemeProvider theme={ColorTheme}>
+            <div className="App">
+                {logged? <AuthApp onboarding_done={onboarding_done} needs_onboarding={onboarding_needed}/>:<LoginPage server={server} done={done}/>}
+            </div>
+        </ThemeProvider>
     )
 
 }
