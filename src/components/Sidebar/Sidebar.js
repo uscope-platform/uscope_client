@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React from 'react';
-import {withRouter} from "react-router";
+import {withRouter} from "react-router-dom";
 
 import {SidebarLayout} from "../UI_elements";
 import PeripheralsSidebar from "./Peripheral/PeripheralsSidebar";
