@@ -15,6 +15,7 @@
 
 //       REACT IMPORTS
 import React, {useCallback, useEffect, useState} from 'react';
+import {BrowserRouter} from "react-router-dom";
 //      APP RELATED IMPORTS
 import serverProxy from "./ServerProxy";
 import AuthApp from "./AuthApp";
@@ -84,11 +85,13 @@ let App = (props) =>{
     }
 
     return(
-        <ThemeProvider theme={ColorTheme}>
-            <div className="App">
-                {logged? <AuthApp onboarding_done={onboarding_done} needs_onboarding={onboarding_needed}/>:<LoginPage server={server} done={done}/>}
-            </div>
-        </ThemeProvider>
+        <BrowserRouter>
+            <ThemeProvider theme={ColorTheme}>
+                <div className="App">
+                    {logged? <AuthApp onboarding_done={onboarding_done} needs_onboarding={onboarding_needed}/>:<LoginPage server={server} done={done}/>}
+                </div>
+            </ThemeProvider>
+        </BrowserRouter>
     )
 
 }
