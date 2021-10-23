@@ -15,7 +15,7 @@
 
 //       REACT IMPORTS
 import React, {useEffect, useState} from 'react';
-import {BrowserRouter, Redirect, Route, Switch} from 'react-router-dom'
+import {Redirect, Route} from 'react-router-dom'
 
 //       REDUX IMPORTS
 import {useDispatch, useSelector} from "react-redux";
@@ -151,30 +151,26 @@ let AuthApp = (props) =>{
             } else {
                 return (
                     <div className="App">
-                        <BrowserRouter>
-                            <ApplicationLayout name="plot_tab" sidebarNeeded={settings.current_view_requires_sidebar}>
-                                <Navbar views={views}/>
-                                    <Switch>
-                                        {views.map((tab, i) => {
-                                            if(tab.user_accessible){
-                                                return(
-                                                    <Route
-                                                        key={tab.peripheral_id}
-                                                        path={'/'+tab.peripheral_id}
-                                                        exact
-                                                        render={(props) => <TabContent className="main_content_tab" tab={tab}/>}
-                                                    />
+                        <ApplicationLayout name="plot_tab" sidebarNeeded={settings.current_view_requires_sidebar}>
+                            <Navbar views={views}/>
+                            {views.map((tab, i) => {
+                                if(tab.user_accessible){
+                                    return(
+                                        <Route
+                                            key={tab.peripheral_id}
+                                            path={'/'+tab.peripheral_id}
+                                            exact
+                                            render={(props) => <TabContent className="main_content_tab" tab={tab}/>}
+                                        />
 
-                                                )
-                                            } else {
-                                                return null;
-                                            }
-                                        })}
-                                    </Switch>
-                                <Sidebar />
-                            </ApplicationLayout>
-                            <Redirect exact from="/" to="plot" />
-                        </BrowserRouter>
+                                    )
+                                } else {
+                                    return null;
+                                }
+                            })}
+                            <Sidebar />
+                        </ApplicationLayout>
+                        <Redirect exact from="/" to="plot" />
                     </div>
                 );
             }

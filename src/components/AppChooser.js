@@ -14,7 +14,7 @@
 // limitations under the License.
 
 //       REACT IMPORTS
-import React from 'react';
+import React, {useState} from 'react';
 //       REDUX IMPORTS
 import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../redux/Actions/SettingsActions";
@@ -33,11 +33,13 @@ let ApplicationChooser = (props) =>{
     const settings = useSelector(state => state.settings);
     const applications = useSelector(state => state.applications);
     const dispatch = useDispatch();
-
+    const [app, set_application] = useState({});
 
 
     let handleApplicationChosen = e =>{
         settings.server.app_proxy.setApplication(e).then(()=>{
+            debugger;
+            set_application(applications[e]);
             dispatch(setSetting(["application", e]));
             let peripherals = Object.values(applications[e].peripherals);
             dispatch(loadViews(peripherals))

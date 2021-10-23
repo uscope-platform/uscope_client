@@ -15,7 +15,6 @@
 
 //       REACT IMPORTS
 import React, {useCallback, useEffect, useState} from 'react';
-import {BrowserRouter} from "react-router-dom";
 //      APP RELATED IMPORTS
 import serverProxy from "./ServerProxy";
 import AuthApp from "./AuthApp";

@@ -30,7 +30,9 @@ import './fonts/montserrat-v14-latin-ext_latin-500.woff2'
 ReactDOM.render(
     <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-            <App />
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
         </PersistGate>
     </Provider>,
     document.getElementById('root')
