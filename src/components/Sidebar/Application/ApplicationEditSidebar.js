@@ -61,7 +61,6 @@ let  ApplicationEditSidebar = props =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
             switch (event.target.name) {
                 case "ch_group":
-                    debugger;
                     edit = {application:settings.current_application, group:create_channel_group(event.target.value), action:"add_channel_group"};
                     set_new_ch_group(false);
                     break;

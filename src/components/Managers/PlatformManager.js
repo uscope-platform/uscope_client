@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React, {useEffect, useRef, useState} from 'react';
-import {useLocation} from "react-router";
+import {useLocation} from "react-router-dom";
 
 import {useDispatch, useSelector} from "react-redux"
 import {BlockLayout, Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements"

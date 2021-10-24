@@ -32,7 +32,6 @@ let ProgramEditSidebar = props =>{
     let handleTypeChange = (event) =>{
         let edit = {program:props.selected_program, field:event.target.name, value:event.target.value}
         settings.server.prog_proxy.edit_program(edit);
-        debugger;
     }
 
     let allowed_types = ["asm", "C"];
