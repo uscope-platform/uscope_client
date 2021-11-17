@@ -20,7 +20,8 @@ export let handle_file_chosen = (inputFile) =>{
         if (file) {
             let reader = new FileReader();
             reader.onload = function (evt) {
-                resolve(reader.result.split(',')[1])
+                let result = {'content':reader.result.split(',')[1], name:file.name}
+                resolve(result)
             }
             reader.readAsDataURL(file);
         }

@@ -88,8 +88,9 @@ let BitstreamManager = props =>{
     };
 
     let upload_file = (event) => {
-        handle_file_chosen( inputFile).then((file_content =>{
-            bitstream_object['content'] = file_content;
+        handle_file_chosen( inputFile).then((file =>{
+            bitstream_object['content'] = file.content;
+            bitstream_object['name'] = file.name.replace(".bit", "")
             settings.server.bitstream_proxy.upload_bitstream(bitstream_object);
         }));
     }
