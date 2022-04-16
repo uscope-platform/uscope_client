@@ -39,9 +39,6 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-
-
-
 const actionSanitizer = (action) => (
     action.type === 'FETCH_DATA' && action.data ?
         { ...action, data: '<<DATA_BLOB>>' } : action
@@ -61,7 +58,6 @@ const store = createStore(
         applyMiddleware(...middleware)
     )
 );
-
 
 
 export default store;

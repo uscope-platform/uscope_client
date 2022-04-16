@@ -16,12 +16,13 @@
 import React from 'react';
 
 import {BlockLayout, BlockTitle, Button} from "../UI_elements"
-import {useDispatch, useSelector} from "react-redux";
-import {context_cleaner, parseFunction} from "../../user_script_launcher";
+import {useSelector} from "react-redux";
 
-import {saveScriptsWorkspace} from "../../redux/Actions/scriptsActions";
 import styled from "styled-components";
 
+import {run_script} from "../../client_core";
+
+import store from "../../store";
 
 const ButtonGrid = styled.div`
     display: flex;
@@ -31,60 +32,16 @@ const ButtonGrid = styled.div`
 `
 
 let  MacroActions = props =>{
-    const scripts = useSelector(state => state.scripts);
 
     const applications = useSelector(state => state.applications)
     const settings = useSelector(state => state.settings);
     const actions = applications[settings['application']]['macro'];
-    const peripheral_specs = useSelector( state => state.peripherals);
-    const app_peripherals = applications[settings['application']]['peripherals'];
-    const registers_redux = useSelector(state => state.registerValues);
     let parameters = applications[settings["application"]].parameters;
-    const scripts_workspace = useSelector(state => state.scriptsWorkspace);
-    const dispatch = useDispatch();
 
     let onClick = (event) => {
-        let scriptTrigger = event.target.name;
-        let trigger = Object.values(scripts).filter((script)=>{
-            return script.triggers.includes(scriptTrigger);
-        });
-        let content = trigger[0].script_content;
-
-        let context = context_cleaner(registers_redux, parameters, "");
-        context["workspace"] = scripts_workspace;
-        let {workspace, registers} = parseFunction(content)(null, context);
-        if(workspace!== null){
-            dispatch(saveScriptsWorkspace(workspace))
-        }
-        if(registers!== null){
-            let bulk_registers = [];
-            // eslint-disable-next-line
-            for(let reg in registers){
-                let [periph_id, reg_id] = reg.split('.');
-                let periph = app_peripherals.filter((periph)=>{
-                    return periph.peripheral_id === periph_id;
-                })[0];
-                let reg_offset = peripheral_specs[periph.spec_id].registers.filter((reg)=>{
-                    return reg.ID === reg_id;
-                })[0].offset;
-                if(periph.proxied){
-                    if(periph.proxy_type==='rtcu'){
-                        let address = parseInt(periph.base_address)+parseInt(reg_offset);
-                        bulk_registers.push({address:parseInt(periph.proxy_address), value:registers[reg]});
-                        bulk_registers.push({address:parseInt(periph.proxy_address)+4, value:address});
-
-                    } else if(periph.proxy_type === 'axis_const'){
-                        let address = parseInt(periph.base_address)+parseInt(reg_offset);
-                        bulk_registers.push({address:parseInt(periph.proxy_address)+4, value:address});
-                        bulk_registers.push({address:parseInt(periph.proxy_address), value:registers[reg]});
-                    }
-                } else{
-                    let address = parseInt(periph.base_address)+parseInt(reg_offset);
-                    bulk_registers.push({address:address, value:registers[reg]})
-                }
-
-            }
-
+        let trigger_str = event.target.name;
+        let bulk_registers = run_script(store, trigger_str, parameters, "");
+        if(bulk_registers !== null){
             settings.server.periph_proxy.bulkRegisterWrite({payload:bulk_registers});
         }
     };
