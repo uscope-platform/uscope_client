@@ -13,5 +13,5 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export {run_script, run_parameter_script} from './script_runner'
+export {run_script, run_parameter_script, initialize_parameter} from './script_runner'
 

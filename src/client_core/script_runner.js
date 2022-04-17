@@ -18,6 +18,10 @@ import {context_cleaner, parseFunction} from "../user_script_launcher";
 import {saveParameter} from "../redux/Actions/applicationActions";
 
 
+let obj_is_empty = (obj) => {
+    return Object.keys(obj).length === 0
+}
+
 const translate_registers = (store, registers) => {
     const state = store.getState();
     const app_peripherals = state.applications[state.settings['application']]['peripherals'];
@@ -67,8 +71,18 @@ export const run_script = (store, trigger_string, parameters, current_parameter)
 
     let context = context_cleaner(old_registers, parameters, current_parameter);
     context["workspace"] = state.scriptsWorkspace;
+    let first_arg = null;
 
-    let {workspace, registers} = parseFunction(content)(null, context);
+    if(current_parameter !== ""){
+        parameters.map(item => {
+            if(item.parameter_id === current_parameter){
+                first_arg = item.value;
+            }
+            return false;
+        });
+    }
+
+    let {workspace, registers} = parseFunction(content)(first_arg, context);
 
     let bulk_registers = {};
     if(registers!== null) {
@@ -89,13 +103,50 @@ export const run_parameter_script = (store, parameter) => {
     let floatValue = parseFloat(parameter.value);
     let objIndex = parameters.findIndex((obj => obj.parameter_id === parameter.name));
     if(parameter.value!=="" && parameters[objIndex].value !==floatValue){
-        //Retrive relevant script content
-
+        //update parameters variable
+        parameters[objIndex].value = floatValue;
+        // run parameter script
         let bulk_registers = run_script(store, parameters[objIndex].trigger, parameters,  parameter.name);
         if(bulk_registers !== null){
             settings.server.periph_proxy.bulkRegisterWrite({payload:bulk_registers});
         }
-
+        //update value of parameter in redux
         store.dispatch(saveParameter({name:parameter.name, value:floatValue, app:settings["application"]}))
     }
+};
+
+
+export const initialize_parameter = (store, parameter) => {
+    const state = store.getState();
+    const scripts = state.scripts;
+    let old_registers = state.registerValues;
+    let parameters = state.applications[state.settings['application']].parameters;
+    let scripts_workspace = state.scriptsWorkspace;
+
+    let trigger = Object.values(scripts).filter((script)=>{
+        return script.triggers.includes(parameter.trigger);
+    });
+
+    if(trigger[0] ===undefined){
+        return;
+    }
+    let content = trigger[0].script_content;
+
+    //Parse the script into a callable function and execute it
+    let context = context_cleaner(old_registers, parameters, parameter.parameter_name);
+    context['workspace'] = scripts_workspace;
+    let {workspace, registers} = parseFunction(content)(parameter.value, context);
+    if(workspace &&  !obj_is_empty(workspace)){
+        store.dispatch(saveScriptsWorkspace(workspace));
+    }
+
+    let bulk_registers = null;
+    if(registers && !obj_is_empty(registers)) {
+        bulk_registers = translate_registers(store, registers);
+    }
+
+    if(bulk_registers && !obj_is_empty(bulk_registers)){
+        store.settings.server.periph_proxy.bulkRegisterWrite({payload:bulk_registers});
+    }
+
 };

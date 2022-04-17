@@ -30,7 +30,7 @@ let context_cleaner = (registers, parameters, current_parameter) =>{
     //purge parameters context of unwanted and potentially dangerous fields
     let parameters_context = {};
     parameters.map((param) => {
-        if(current_parameter!==param.parameter_name){
+        if(current_parameter!==param.parameter_id){
             parameters_context[param.parameter_id] = param.value;
         }
         return null;
