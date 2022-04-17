@@ -30,7 +30,6 @@ let  ParametersArea = props =>{
     //This effect hook initialized the parameters values
     useEffect(() => {
         for(let elem of parameters){
-            //initialize_parameter(store, elem);
             let local_elem = elem;
             local_elem.name = elem.parameter_id;
             run_parameter_script(store, local_elem);

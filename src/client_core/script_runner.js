@@ -14,13 +14,46 @@
 // limitations under the License.
 
 import {saveScriptsWorkspace} from "../redux/Actions/scriptsActions";
-import {context_cleaner, parseFunction} from "../user_script_launcher";
 import {saveParameter} from "../redux/Actions/applicationActions";
 
 
-let obj_is_empty = (obj) => {
-    return Object.keys(obj).length === 0
-}
+
+let parseFunction = function (string) {
+    let funcReg = /function (\S*) *\(([^()]*)\)[ \n\t]*{(.*)}/gmi;
+    let match = funcReg.exec(string.replace(/(\r\n|\n|\r)/gm, ""));
+    if(match) {
+        // eslint-disable-next-line
+        return new Function(match[2].split(','), match[3]);
+    }
+    return null;
+};
+
+
+
+let context_cleaner = (registers, parameters, current_parameter) =>{
+    //purge register context of unwanted and potentially dangerous fields
+    let register_context = {};
+
+    // eslint-disable-next-line
+    for(let periph in registers){
+        let new_periph = {};
+        // eslint-disable-next-line
+        for(let element in registers[periph]){
+            new_periph[element] = registers[periph][element];
+        }
+        register_context[periph] = new_periph;
+    }
+
+    //purge parameters context of unwanted and potentially dangerous fields
+    let parameters_context = {};
+    parameters.map((param) => {
+        if(current_parameter!==param.parameter_id){
+            parameters_context[param.parameter_id] = param.value;
+        }
+        return null;
+    });
+    return {registers:register_context, parameters:parameters_context};
+};
 
 const translate_registers = (store, registers) => {
     const state = store.getState();
