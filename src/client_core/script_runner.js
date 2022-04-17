@@ -114,39 +114,3 @@ export const run_parameter_script = (store, parameter) => {
         store.dispatch(saveParameter({name:parameter.name, value:floatValue, app:settings["application"]}))
     }
 };
-
-
-export const initialize_parameter = (store, parameter) => {
-    const state = store.getState();
-    const scripts = state.scripts;
-    let old_registers = state.registerValues;
-    let parameters = state.applications[state.settings['application']].parameters;
-    let scripts_workspace = state.scriptsWorkspace;
-
-    let trigger = Object.values(scripts).filter((script)=>{
-        return script.triggers.includes(parameter.trigger);
-    });
-
-    if(trigger[0] ===undefined){
-        return;
-    }
-    let content = trigger[0].script_content;
-
-    //Parse the script into a callable function and execute it
-    let context = context_cleaner(old_registers, parameters, parameter.parameter_name);
-    context['workspace'] = scripts_workspace;
-    let {workspace, registers} = parseFunction(content)(parameter.value, context);
-    if(workspace &&  !obj_is_empty(workspace)){
-        store.dispatch(saveScriptsWorkspace(workspace));
-    }
-
-    let bulk_registers = null;
-    if(registers && !obj_is_empty(registers)) {
-        bulk_registers = translate_registers(store, registers);
-    }
-
-    if(bulk_registers && !obj_is_empty(bulk_registers)){
-        store.settings.server.periph_proxy.bulkRegisterWrite({payload:bulk_registers});
-    }
-
-};

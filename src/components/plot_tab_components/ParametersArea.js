@@ -18,7 +18,7 @@ import React, {useEffect} from 'react';
 import {BlockLayout, BlockTitle, Button, FormLayout} from "../UI_elements"
 import {useSelector} from "react-redux";
 import SingleValueField from "../Common_Components/SingleValueField";
-import {run_parameter_script, initialize_parameter} from "../../client_core";
+import {run_parameter_script} from "../../client_core";
 import store from "../../store";
 
 let  ParametersArea = props =>{
@@ -30,7 +30,10 @@ let  ParametersArea = props =>{
     //This effect hook initialized the parameters values
     useEffect(() => {
         for(let elem of parameters){
-            initialize_parameter(store, elem);
+            //initialize_parameter(store, elem);
+            let local_elem = elem;
+            local_elem.name = elem.parameter_id;
+            run_parameter_script(store, local_elem);
         }
     }, []);
 
