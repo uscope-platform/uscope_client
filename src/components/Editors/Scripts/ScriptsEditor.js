@@ -17,8 +17,10 @@ import React, {useState} from "react";
 import AceEditor from "react-ace";
 import {Button} from "../../UI_elements"
 
+import "ace-builds/webpack-resolver";
 import "ace-builds/src-min-noconflict/mode-javascript";
 import "ace-builds/src-min-noconflict/theme-dracula";
+import "ace-builds/src-min-noconflict/ext-language_tools"
 import {useSelector} from "react-redux";
 import styled from "styled-components";
 
@@ -31,6 +33,8 @@ const Editor = styled(AceEditor)`
         font-family: inherit;
     }
 `;
+
+
 let ScriptsEditor = props =>{
     const scripts_store = useSelector(state => state.scripts);
     const settings = useSelector(state => state.settings);
@@ -55,7 +59,7 @@ let ScriptsEditor = props =>{
             set_editor_content(script.script_content);
         }
     };
-
+    
     return(
         <>
             <Title>{settings.script_editor_title}</Title>
@@ -69,6 +73,11 @@ let ScriptsEditor = props =>{
                 name="UNIQUE_ID_OF_DIV"
                 value={editor_content}
                 editorProps={{ $blockScrolling: true }}
+                setOptions={{
+                    enableBasicAutocompletion: true,
+                    enableSnippets: true,
+                    enableLiveAutocompletion: true
+                }}
             />
             <Button variant="success" onClick={handle_submit}>Submit</Button>
         </>
