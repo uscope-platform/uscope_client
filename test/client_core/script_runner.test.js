@@ -197,7 +197,6 @@ function start_trigger_cl(parameters, context) {
     let duty_lim_low = 0.1;
     let duty_lim_high = 0.9;
     
-    console.log(period);
     registers['adc_proc_1.cmp_thr_1'] = 6;
     
     return {workspace:null, registers:registers};
