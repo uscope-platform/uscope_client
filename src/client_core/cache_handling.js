@@ -18,11 +18,11 @@
 
 import {setSetting} from "../redux/Actions/SettingsActions";
 import {store} from "./index"
-import {get_applications_hash, load_all_applications} from './applications_proxy'
-import {get_peripherals_hash, load_all_peripherals} from "./peripherals_proxy";
-import {get_scripts_hash, load_all_scripts} from "./scripts_proxy";
-import {get_programs_hash, load_all_programs} from "./programs_proxy";
-import {get_bitstreams_hash,load_all_bitstreams} from "./bitstreams_proxy";
+import {get_applications_hash, load_all_applications} from './proxy/applications'
+import {get_peripherals_hash, load_all_peripherals} from "./proxy/peripherals";
+import {get_scripts_hash, load_all_scripts} from "./proxy/scripts";
+import {get_programs_hash, load_all_programs} from "./proxy/programs";
+import {get_bitstreams_hash,load_all_bitstreams} from "./proxy/bitstreams";
 
 export const refresh_caches = () =>{
     let state = store.getState();

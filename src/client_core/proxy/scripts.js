@@ -14,14 +14,15 @@
 // limitations under the License.
 
 
-import {backend_get, dispatch_redux_thunk_get} from "./backend_proxy";
-import {loadAllPrograms} from "../redux/Actions/ProgramsActions";
+import {backend_get, dispatch_redux_thunk_get} from "./backend";
+import {loadAllScripts} from "../../redux/Actions/scriptsActions";
 
 
-export const get_programs_hash = () =>{
-    return backend_get('program/hash',)
+
+export const get_scripts_hash = () =>{
+    return backend_get('script/hash')
 };
 
-export const load_all_programs = () => {
-    dispatch_redux_thunk_get(loadAllPrograms,'program/none');
+export const load_all_scripts = () => {
+    dispatch_redux_thunk_get(loadAllScripts,'script/none');
 }

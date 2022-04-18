@@ -14,14 +14,14 @@
 // limitations under the License.
 
 
-import {backend_get, dispatch_redux_thunk_get} from "./backend_proxy";
-import {loadAllBitstreams} from "../redux/Actions/bitstreamsActions";
+import {backend_get, dispatch_redux_thunk_get} from "./backend";
+import {loadPeripherals} from "../../redux/Actions/peripheralsActions";
 
 
-export const get_bitstreams_hash = () =>{
-    return backend_get('bitstream/hash')
+export const get_peripherals_hash = () =>{
+    return backend_get('registers/digest')
 };
 
-export const load_all_bitstreams = () => {
-    dispatch_redux_thunk_get(loadAllBitstreams,'bitstream/none');
+export const load_all_peripherals = () => {
+    dispatch_redux_thunk_get(loadPeripherals,'registers/all_peripheral/descriptions');
 }

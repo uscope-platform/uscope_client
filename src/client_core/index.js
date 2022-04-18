@@ -18,8 +18,7 @@
 
 
 export {run_script, run_parameter_script} from './script_runner'
-export {get_applications_hash} from './applications_proxy'
-export {set_address, set_auth_config} from './backend_proxy'
+export {set_address, set_auth_config} from './proxy/backend'
 export {refresh_caches} from './cache_handling'
 
 export let store = null;
