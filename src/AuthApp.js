@@ -19,7 +19,6 @@ import {Redirect, Route} from 'react-router-dom'
 
 //       REDUX IMPORTS
 import {useDispatch, useSelector} from "react-redux";
-import {setSetting} from "./redux/Actions/SettingsActions";
 
 //      APP RELATED IMPORTS
 import TabContent from "./components/TabContent";
@@ -31,9 +30,10 @@ import './App.css';
 import {ApplicationLayout} from "./components/UI_elements";
 import Sidebar from "./components/Sidebar/Sidebar";
 import OnboardingView from "./components/Onboarding";
-import {create_application} from "./utilities/ApplicationUtilities";
+import {create_application_object} from "./utilities/ApplicationUtilities";
 
-import {refresh_caches} from "./client_core";
+import {create_application, refresh_caches} from "./client_core";
+import {setSetting} from "./redux/Actions/SettingsActions";
 
 let AuthApp = (props) =>{
 
@@ -41,6 +41,7 @@ let AuthApp = (props) =>{
     const plot = useSelector(state => state.plot);
     const settings = useSelector(state => state.settings);
     const applications = useSelector(state => state.applications);
+    const dispatch = useDispatch();
 
     const [app_stage, set_app_stage] = useState("WAITING");
 
@@ -64,13 +65,15 @@ let AuthApp = (props) =>{
             if(Object.keys(applications).length !== 0){
                 set_app_stage("APP_CHOICE");
             }else {
-                let app = create_application("default");
-                settings.server.app_proxy.createApplication(app).then(data =>{
-                    set_app_stage("APP_CHOICE");
-                });
+                dispatch(setSetting(["application_creation_in_progress", true]));
+                let app = create_application_object("default");
+                create_application(app);
             }
         }
-    },[settings.loaded_applications, settings.loaded_peripherals, settings.loaded_programs, settings.loaded_scripts, settings.loaded_bitstreams])
+        if(!settings.application_creation_in_progress){
+            set_app_stage("APP_CHOICE");
+        }
+    },[settings.loaded_applications, settings.loaded_peripherals, settings.loaded_programs, settings.loaded_scripts, settings.loaded_bitstreams, settings.initial_application_creation_done])
 
 
     switch (app_stage) {

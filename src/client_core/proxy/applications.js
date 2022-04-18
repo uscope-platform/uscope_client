@@ -14,9 +14,8 @@
 // limitations under the License.
 
 
-import {backend_get, dispatch_redux_thunk_get} from "./backend";
-
-import {loadApplications} from "../../redux/Actions/applicationActions";
+import {backend_get, dispatch_redux_thunk_get, dispatch_redux_thunk_post} from "./backend";
+import {addApplication, editApplication, loadApplications, removeApplication} from "../../redux/Actions/applicationActions";
 
 export const get_applications_hash = () =>{
     return backend_get('application/digest')
@@ -24,4 +23,20 @@ export const get_applications_hash = () =>{
 
 export const load_all_applications = () => {
     dispatch_redux_thunk_get(loadApplications,'application/all/specs');
+}
+
+export const create_application = (application) => {
+    return dispatch_redux_thunk_post(addApplication, 'application/add', application);
+}
+
+export const edit_application = (edit) => {
+    dispatch_redux_thunk_post(editApplication, 'application/edit', edit);
+}
+
+export const remove_application = (application) => {
+    dispatch_redux_thunk_post(removeApplication, 'application/remove/'+application, application);
+}
+
+export const set_application = (application_name) => {
+    return backend_get('application/set/' + application_name);
 }

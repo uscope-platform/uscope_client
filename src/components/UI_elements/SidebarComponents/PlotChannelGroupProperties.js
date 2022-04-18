@@ -25,6 +25,7 @@ import {Checkbox} from "../checkbox"
 import {MultiSelect} from "../MultiSelect";
 import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
 import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
+import {edit_application} from "../../../client_core";
 
 export let  PlotChannelGroupProperties = props =>{
 
@@ -50,7 +51,7 @@ export let  PlotChannelGroupProperties = props =>{
     let handleEditNameChange = (event) => {
         if(event.key==="Enter"){
             let edit = {application:props.application, group:props.group.group_name, field:event.target.name, value:event.target.value, action:"edit_channel_group"};
-            settings.server.app_proxy.edit_application(edit);
+            edit_application(edit)
             set_edit_name(false);
         }else if(event.key ==="Escape"){
             set_edit_name(false);
@@ -59,7 +60,7 @@ export let  PlotChannelGroupProperties = props =>{
 
     let handleChangeDefault = (event)=>{
         let edit = {application:props.application, group:props.group.group_name, field:event.target.name, value:event.target.checked, action:"edit_channel_group"};
-        settings.server.app_proxy.edit_application(edit);
+        edit_application(edit)
     }
 
     let handleClose = ()=>{
@@ -70,7 +71,7 @@ export let  PlotChannelGroupProperties = props =>{
         if(event.length<=6){
             set_channels_list(event);
             let edit = {application:props.application, group:props.group.group_name, field:"channels", value:event, action:"edit_channel_group"};
-            settings.server.app_proxy.edit_application(edit);
+            edit_application(edit)
         }
 
     }
@@ -79,13 +80,13 @@ export let  PlotChannelGroupProperties = props =>{
         let edit = {}
         if(event.key==="Enter"|| event.key ==="Tab"){
             edit = {application:props.application, group:props.group.group_name, field:event.target.name, value:event.target.value, action:"edit_channel_group"};
-            settings.server.app_proxy.edit_application(edit);
+            edit_application(edit)
         }
     }
 
     let handleRemoveRegister= (event) =>{
         let edit = {application:props.application, group:props.group.group_name, action:"remove_channel_group"};
-        settings.server.app_proxy.edit_application(edit);
+        edit_application(edit)
     }
 
     let renderChannelContent = (props) =>{

@@ -70,7 +70,7 @@ export let create_channel_group = (name) =>{
         default:false
     }
 }
-export let create_application = (name) =>{
+export let create_application_object = (name) =>{
     let app = {}
     app[name] = {
         application_name: name,

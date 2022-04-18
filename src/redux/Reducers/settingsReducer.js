@@ -43,6 +43,7 @@ const initial_state = {
     loaded_bitstreams: false,
     loaded_programs: false,
     sampling_period:0,
+    application_creation_in_progress:false,
     plot_palette:{colorway:ColorTheme.plot_palette}
 };
 

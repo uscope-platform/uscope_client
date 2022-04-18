@@ -14,7 +14,7 @@
 // limitations under the License.
 
 //       REACT IMPORTS
-import React, {useState} from 'react';
+import React from 'react';
 //       REDUX IMPORTS
 import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../redux/Actions/SettingsActions";
@@ -27,6 +27,7 @@ import {initialize_channels} from "../redux/Actions/plotActions";
 import {create_plot_channel, get_channels_from_group} from "../utilities/PlotUtilities";
 import ApplicationChooserView from "./Common_Components/ApplicationChooserView";
 
+import {set_application} from "../client_core"
 
 let ApplicationChooser = (props) =>{
 
@@ -36,7 +37,7 @@ let ApplicationChooser = (props) =>{
 
 
     let handleApplicationChosen = e =>{
-        settings.server.app_proxy.setApplication(e).then(()=>{
+        set_application(e).then(()=>{
             dispatch(setSetting(["application", e]));
             let peripherals = Object.values(applications[e].peripherals);
             dispatch(loadViews(peripherals))

@@ -56,3 +56,7 @@ export const dispatch_redux_thunk_get = (action, endpoint) => {
 
 }
 
+export const dispatch_redux_thunk_post = (action, endpoint, data) => {
+    store.dispatch(action(server_address + endpoint, data, auth_config))
+
+}

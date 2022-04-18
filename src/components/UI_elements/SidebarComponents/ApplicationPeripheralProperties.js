@@ -24,13 +24,13 @@ import {Button} from "../Button";
 import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
 import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
 import {SelectField} from "../Select";
+import {edit_application} from "../../../client_core";
 
 
 
 export let  ApplicationPeripheralProperties = props =>{
 
     const peripherals = useSelector(state => state.peripherals);
-    const settings = useSelector(state => state.settings);
 
     const [is_open, set_is_open] = useState(false);
     const [edit_name, set_edit_name] = useState(false);
@@ -48,7 +48,7 @@ export let  ApplicationPeripheralProperties = props =>{
     let handleEditNameChange = (event) => {
         if(event.key==="Enter"){
             let edit = {application:props.application, peripheral:props.peripheral.name, field:event.target.name, value:event.target.value, action:"edit_peripheral"};
-            settings.server.app_proxy.edit_application(edit);
+            edit_application(edit)
             set_edit_name(false);
         }else if(event.key ==="Escape"){
             set_edit_name(false);
@@ -61,25 +61,27 @@ export let  ApplicationPeripheralProperties = props =>{
 
     let handleChange = (event)=>{
         let edit = {application:props.application, peripheral:props.peripheral.name, field:event.target.name, value:event.target.checked, action:"edit_peripheral"};
-        settings.server.app_proxy.edit_application(edit);
+        edit_application(edit)
+
     }
 
     let handleIDChange = (event)=>{
         let edit = {application:props.application, peripheral:props.peripheral.name, field:event.target.name, value:event.target.value, action:"edit_peripheral"};
-        settings.server.app_proxy.edit_application(edit);
+        edit_application(edit)
     }
 
     let handleonKeyDown = (event) =>{
         let edit = {}
         if(event.key==="Enter"|| event.key ==="Tab"){
             edit = {application:props.application, peripheral:props.peripheral.name, field:event.target.name, value:event.target.value, action:"edit_peripheral"};
-            settings.server.app_proxy.edit_application(edit);
+            edit_application(edit)
+
         }
     }
 
     let handleRemoveRegister= (event) =>{
         let edit = {application:props.application, peripheral:props.peripheral.name, action:"remove_peripheral"};
-        settings.server.app_proxy.edit_application(edit);
+        edit_application(edit)
     }
 
     let renderContent = (props) =>{

@@ -14,14 +14,27 @@
 // limitations under the License.
 
 
-import {backend_get, dispatch_redux_thunk_get} from "./backend";
-import {loadAllBitstreams} from "../../redux/Actions/bitstreamsActions";
+import {backend_get, dispatch_redux_thunk_get, dispatch_redux_thunk_post} from "./backend";
+import {addBitstream, editBitstream, loadAllBitstreams, removeBitstream} from "../../redux/Actions/bitstreamsActions";
+import store from "../../store";
 
 
 export const get_bitstreams_hash = () =>{
-    return backend_get('bitstream/hash')
+    return backend_get('bitstream/digest')
 };
 
 export const load_all_bitstreams = () => {
     dispatch_redux_thunk_get(loadAllBitstreams,'bitstream/none');
+}
+
+export const upload_bitstream = (bitstream) => {
+    dispatch_redux_thunk_post(addBitstream, 'bitstream/'+bitstream.id, bitstream);
+}
+
+export const edit_bitstream = (bitstream) => {
+    dispatch_redux_thunk_post(editBitstream, 'bitstream/'+bitstream.id, bitstream);
+}
+
+export const delete_bitstream = (bitstream) => {
+    dispatch_redux_thunk_post(removeBitstream, 'bitstream/'+bitstream.id, bitstream);
 }

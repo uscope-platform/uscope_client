@@ -14,7 +14,6 @@
 // limitations under the License.
 
 import React, {useState} from "react";
-import {useSelector} from "react-redux";
 import {Label} from "../Label";
 import {CaretDown, CaretUp} from "grommet-icons";
 import {InputField} from "../InputField";
@@ -22,10 +21,10 @@ import {InputField} from "../InputField";
 import {Button} from "../Button";
 import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
 import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
+import {edit_application} from "../../../client_core";
 
 export let  ApplicationMiscFieldProperties = props =>{
 
-    const settings = useSelector(state => state.settings);
 
     const [is_open, set_is_open] = useState(false);
     const [edit_name, set_edit_name] = useState(false);
@@ -43,7 +42,7 @@ export let  ApplicationMiscFieldProperties = props =>{
     let handleEditNameChange = (event) => {
         if(event.key==="Enter"){
             let edit = {application:props.application, field: {old_name:props.field.name, name:event.target.value}, action:"edit_misc"};
-            settings.server.app_proxy.edit_application(edit);
+            edit_application(edit)
             set_edit_name(false);
         }else if(event.key ==="Escape"){
             set_edit_name(false);
@@ -58,13 +57,13 @@ export let  ApplicationMiscFieldProperties = props =>{
         let edit = {}
         if(event.key==="Enter"|| event.key ==="Tab"){
             edit = {application:props.application, field: {old_name:null, name:props.field.name, value:event.target.value}, action:"edit_misc"};
-            settings.server.app_proxy.edit_application(edit);
+            edit_application(edit)
         }
     }
 
     let handleRemoveRegister= (event) =>{
         let edit = {application:props.application, field:{name:props.field.name}, action:"remove_misc"};
-        settings.server.app_proxy.edit_application(edit);
+        edit_application(edit)
     }
 
     let renderChannelContent = (props) =>{

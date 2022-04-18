@@ -42,6 +42,7 @@ import {
     create_peripheral_entry
 } from "../../../utilities/ApplicationUtilities";
 import {PlotChannelGroupProperties} from "../../UI_elements/SidebarComponents/PlotChannelGroupProperties";
+import {edit_application} from "../../../client_core";
 
 
 let  ApplicationEditSidebar = props =>{
@@ -91,7 +92,7 @@ let  ApplicationEditSidebar = props =>{
                 default:
                     return;
             }
-            settings.server.app_proxy.edit_application(edit);
+            edit_application(edit)
         }
     }
 

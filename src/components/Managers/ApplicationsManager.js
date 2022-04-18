@@ -22,6 +22,7 @@ import {setSetting} from "../../redux/Actions/SettingsActions";
 
 import DataTable from 'react-data-table-component';
 import {TableStyle} from './TableStyles'
+import {create_application, remove_application} from "../../client_core";
 
 
 let columns = [
@@ -56,7 +57,7 @@ let  ApplicationsManager = props =>{
 
 
     let  handleRemoveRow = (event) =>{
-        settings.server.app_proxy.removeApplication(settings.current_application);
+        remove_application(settings.current_application);
         dispatch(setSetting(["current_application", null]))
     };
 
@@ -99,7 +100,7 @@ let  ApplicationsManager = props =>{
     };
 
     let addApplication = (content) => {
-        settings.server.app_proxy.createApplication(JSON.parse(content), null);
+        create_application(JSON.parse(content));
     };
 
     const rowSelectCritera = row => row.application_name === settings.current_application;

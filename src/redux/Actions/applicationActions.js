@@ -81,6 +81,7 @@ export const addApplication = (server_url, application_obj, config) =>{
     return dispatch => {
         return axios.post(server_url, application_obj, config).then(res => {
             dispatch(addApplicationDone(application_obj));
+            dispatch(setSetting(["application_creation_in_progress", false]));
         }).catch(err => {
             alert('ERROR: error while adding an application\n' + err.message);
         });

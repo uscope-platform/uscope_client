@@ -31,7 +31,6 @@ export const refresh_caches = () =>{
     refresh_resource_cache("scripts_cache", state.scripts, load_all_scripts , get_scripts_hash, "loaded_scripts");
     refresh_resource_cache("programs_cache",state.programs, load_all_programs , get_programs_hash, "loaded_programs");
     refresh_resource_cache("bitstreams_cache",state.bitstreams, load_all_bitstreams , get_bitstreams_hash, "loaded_bitstreams");
-
 };
 
 

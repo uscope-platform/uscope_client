@@ -23,7 +23,8 @@ import {BlockTitle, InputField, SidebarContentLayout} from "../../UI_elements";
 
 
 import ApplicationEditSidebar from "./ApplicationEditSidebar";
-import {create_application} from "../../../utilities/ApplicationUtilities";
+import {create_application_object} from "../../../utilities/ApplicationUtilities";
+import {create_application} from "../../../client_core";
 
 
 let  ApplicationSidebar = props =>{
@@ -31,8 +32,8 @@ let  ApplicationSidebar = props =>{
 
     let handle_add_application = (event) =>{
         if (event.key === "Enter") {
-            let app = create_application(event.target.value);
-            settings.server.app_proxy.createApplication(app).then();
+            let app = create_application_object(event.target.value);
+            create_application(app);
         }
     };
 
