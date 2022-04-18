@@ -15,7 +15,7 @@
 
 import axios from "axios"
 import store from "../store";
-import {addProgram, editProgram, loadAllPrograms, removeProgram} from "../redux/Actions/ProgramsActions";
+import {addProgram, editProgram, removeProgram} from "../redux/Actions/ProgramsActions";
 
 let ProgramsProxy = class{
 
@@ -27,21 +27,6 @@ let ProgramsProxy = class{
     edit_program =  (program) => {
         let state = store.getState();
         store.dispatch(editProgram(state.settings.server_url+'program/'+program.id, program, state.settings.auth_config));
-    };
-
-    load_all = () =>{
-        let state = store.getState();
-        store.dispatch(loadAllPrograms(state.settings.server_url+'program/none', state.settings.auth_config));
-    };
-
-    get_hash = () =>{
-        return new Promise( (resolve, reject) => {
-            let state = store.getState();
-            axios.get(state.settings.server_url+'program/hash', state.settings.auth_config)
-                .then(res => {
-                    resolve(res.data);
-                })
-        });
     };
 
     delete_program = (program) => {

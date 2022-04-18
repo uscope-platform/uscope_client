@@ -19,12 +19,16 @@ import React, {useCallback, useEffect, useState} from 'react';
 import serverProxy from "./ServerProxy";
 import AuthApp from "./AuthApp";
 import LoginPage from "./components/Common_Components/LoginPage";
+import store from "./store";
+import {set_address, set_auth_config, set_redis_store} from "./client_core";
+
 //////  STYLE IMPORTS
 import './App.css';
 import {useDispatch} from "react-redux";
 import {setSetting} from "./redux/Actions/SettingsActions";
 import {ThemeProvider} from "styled-components";
 import {ColorTheme} from "./components/UI_elements";
+
 
 let App = (props) =>{
 
@@ -42,7 +46,7 @@ let App = (props) =>{
             dispatch(setSetting(["user_role", token.role]));
             dispatch(setSetting(["access_token", token.access_token]));
             dispatch(setSetting(["auth_config", {headers: { Authorization: `Bearer ${token.access_token}` }}]));
-
+            set_auth_config({headers: { Authorization: `Bearer ${token.access_token}` }});
             set_logged(true);
         }).catch(()=>{
             localStorage.removeItem('login_token');
@@ -53,6 +57,8 @@ let App = (props) =>{
 
     useEffect(()=>{
         dispatch(setSetting(["server_url", process.env.REACT_APP_SERVER]));
+        set_address(process.env.REACT_APP_SERVER);
+        set_redis_store(store);
         dispatch(setSetting(["server", new serverProxy()]));
 
         server.platform_proxy.need_onboarding().then(response =>{

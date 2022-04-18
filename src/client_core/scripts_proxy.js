@@ -14,16 +14,15 @@
 // limitations under the License.
 
 
+import {backend_get, dispatch_redux_thunk_get} from "./backend_proxy";
+import {loadAllScripts} from "../redux/Actions/scriptsActions";
 
 
 
-export {run_script, run_parameter_script} from './script_runner'
-export {get_applications_hash} from './applications_proxy'
-export {set_address, set_auth_config} from './backend_proxy'
-export {refresh_caches} from './cache_handling'
+export const get_scripts_hash = () =>{
+    return backend_get('script/hash')
+};
 
-export let store = null;
-
-export const set_redis_store = (rs) => {
-    store = rs;
+export const load_all_scripts = () => {
+    dispatch_redux_thunk_get(loadAllScripts,'script/none');
 }

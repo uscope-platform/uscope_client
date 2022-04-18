@@ -14,16 +14,14 @@
 // limitations under the License.
 
 
+import {backend_get, dispatch_redux_thunk_get} from "./backend_proxy";
+import {loadPeripherals} from "../redux/Actions/peripheralsActions";
 
 
+export const get_peripherals_hash = () =>{
+    return backend_get('registers/digest')
+};
 
-export {run_script, run_parameter_script} from './script_runner'
-export {get_applications_hash} from './applications_proxy'
-export {set_address, set_auth_config} from './backend_proxy'
-export {refresh_caches} from './cache_handling'
-
-export let store = null;
-
-export const set_redis_store = (rs) => {
-    store = rs;
+export const load_all_peripherals = () => {
+    dispatch_redux_thunk_get(loadPeripherals,'registers/all_peripheral/descriptions');
 }

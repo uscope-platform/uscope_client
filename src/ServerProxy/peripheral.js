@@ -15,7 +15,6 @@
 
 import axios from "axios"
 import {sendRegister} from "../redux/Actions/RegisterActions";
-import {loadPeripherals} from "../redux/Actions/peripheralsActions";
 import store from "../store";
 
 
@@ -53,20 +52,6 @@ let PeripheralProxy = class{
         store.dispatch(sendRegister(state.settings.server_url+'registers/'+register.peripheral+'/value', register, state.settings.auth_config))
     };
 
-    load_all = () =>{
-        let state = store.getState();
-        store.dispatch(loadPeripherals(state.settings.server_url+'registers/all_peripheral/descriptions', state.settings.auth_config))
-    };
-
-    get_hash = () =>{
-        return new Promise( (resolve, reject) => {
-            let state = store.getState();
-            axios.get(state.settings.server_url+'registers/digest', state.settings.auth_config)
-                .then(res => {
-                    resolve(res.data);
-                })
-        });
-    }
 
 };
 

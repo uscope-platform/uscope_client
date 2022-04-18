@@ -19,16 +19,11 @@ import {setChannelSetting} from "../redux/Actions/plotActions";
 import {
     addApplication,
     editApplication,
-    loadApplications,
     removeApplication
 } from "../redux/Actions/applicationActions";
 
  let ApplicationProxy = class {
 
-     load_all = () =>{
-         let state = store.getState();
-         store.dispatch(loadApplications(state.settings.server_url+'application/all/specs', state.settings.auth_config))
-     };
 
      setApplication = (app_name) => {
          return new Promise( (resolve, reject) => {
@@ -46,16 +41,6 @@ import {
          let state = store.getState();
          let message = [{name:'min_value', channel_id:id, value:min_val},{name:'min_value', channel_id:id, value:min_val}];
          store.dispatch(setChannelSetting(state.settings.server_url+'plot/channels/params', message, state.settings.auth_config));
-     };
-
-     get_hash = () =>{
-         return new Promise( (resolve, reject) => {
-             let state = store.getState();
-             axios.get(state.settings.server_url+'application/digest', state.settings.auth_config)
-                 .then(res => {
-                     resolve(res.data);
-                 })
-         });
      };
 
      createApplication = (application_obj) => {

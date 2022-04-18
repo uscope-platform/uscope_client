@@ -59,7 +59,7 @@ let ScriptsEditor = props =>{
             set_editor_content(script.script_content);
         }
     };
-    
+
     return(
         <>
             <Title>{settings.script_editor_title}</Title>

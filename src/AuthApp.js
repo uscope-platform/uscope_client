@@ -33,80 +33,30 @@ import Sidebar from "./components/Sidebar/Sidebar";
 import OnboardingView from "./components/Onboarding";
 import {create_application} from "./utilities/ApplicationUtilities";
 
+import {refresh_caches} from "./client_core";
 
 let AuthApp = (props) =>{
 
     const views = useSelector(state => state.views);
     const plot = useSelector(state => state.plot);
-    const scripts = useSelector(state => state.scripts);
-    const programs = useSelector(state => state.programs);
-    const bitstreams = useSelector(state => state.bitstreams);
     const settings = useSelector(state => state.settings);
-    const peripherals = useSelector(state => state.peripherals);
     const applications = useSelector(state => state.applications);
 
-    const dispatch = useDispatch();
     const [app_stage, set_app_stage] = useState("WAITING");
-    let load_resource = (resource) =>{
-        let digest = localStorage.getItem(resource.key);
-        if(resource.store === undefined || digest === null){
-            resource.proxy.load_all();
-            resource.proxy.get_hash().then((res)=>{
-                localStorage.setItem(resource.key, res);
-            });
-        } else{
-            resource.proxy.get_hash().then((res)=>{
-                if(digest!==res){
-                    resource.proxy.load_all();
-                    localStorage.setItem(resource.key, res);
-                } else{
-                    dispatch(setSetting([resource.loaded_flag, true]));
-                }
-            });
-        }
-    }
 
     let app_choice_done = ()=>{
         set_app_stage("NORMAL");
     };
 
     useEffect(()=>{
-        let resources = [{
-            key:'Applications-hash',
-            proxy:settings.server.app_proxy,
-            store:applications,
-            loaded_flag:'loaded_applications'
-        }, {
-            key:'Peripherals-hash',
-            proxy:settings.server.periph_proxy,
-            store:peripherals,
-            loaded_flag:'loaded_peripherals'
-        }, {
-            key:'Script-hash',
-            proxy:settings.server.script_proxy,
-            store:scripts,
-            loaded_flag:'loaded_scripts'
-        }, {
-            key:'Programs-hash',
-            proxy:settings.server.prog_proxy,
-            store:programs,
-            loaded_flag:'loaded_programs'
-        }, {
-            key:'Bitstreams-hash',
-            proxy:settings.server.bitstream_proxy,
-            store:bitstreams,
-            loaded_flag:'loaded_bitstreams'
-        }]
         if(props.needs_onboarding){
             set_app_stage("ONBOARDING");
         } else{
-            for(let i of resources){
-                load_resource(i);
-            }
+            refresh_caches();
             set_app_stage("RESOURCE_LOADING");
         }
 
-    },[])
+    },[props.needs_onboarding])
 
 
     useEffect(()=>{
