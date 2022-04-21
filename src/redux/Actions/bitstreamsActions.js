@@ -67,9 +67,10 @@ const removeBitstreamDone = bitstream =>({
 
 export const loadAllBitstreams = (server_url, config) =>{
     return dispatch => {
-        axios.get(server_url, config).then(res => {
+        return axios.get(server_url, config).then(res => {
             dispatch(loadAllBitstreamsDone(res.data));
             dispatch(setSetting(["loaded_bitstreams", true]));
+            return res.data;
         }).catch(err => {
             alert('ERROR: error while loading all bitstreams\n' + err.message);
         });

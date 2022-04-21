@@ -23,5 +23,5 @@ export const get_programs_hash = () =>{
 };
 
 export const load_all_programs = () => {
-    dispatch_redux_thunk_get(loadAllPrograms,'program/none');
+    return dispatch_redux_thunk_get(loadAllPrograms,'program/none');
 }

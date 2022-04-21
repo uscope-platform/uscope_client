@@ -24,7 +24,7 @@ export const get_bitstreams_hash = () =>{
 };
 
 export const load_all_bitstreams = () => {
-    dispatch_redux_thunk_get(loadAllBitstreams,'bitstream/none');
+    return dispatch_redux_thunk_get(loadAllBitstreams,'bitstream/none');
 }
 
 export const upload_bitstream = (bitstream) => {

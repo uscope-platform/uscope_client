@@ -22,7 +22,7 @@ export const get_applications_hash = () =>{
 };
 
 export const load_all_applications = () => {
-    dispatch_redux_thunk_get(loadApplications,'application/all/specs');
+    return dispatch_redux_thunk_get(loadApplications,'application/all/specs');
 }
 
 export const create_application = (application) => {

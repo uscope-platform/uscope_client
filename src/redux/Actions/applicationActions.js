@@ -28,11 +28,11 @@ export const saveParameter = (parameter) => ({
 });
 
 export const loadApplications = (server_url, config) => {
-
-    return dispatch => {
-        axios.get(server_url, config).then(res => {
+    return (dispatch, getState) => {
+        return axios.get(server_url, config).then(res => {
             dispatch(loadApplicationsDone(res.data));
             dispatch(setSetting(["loaded_applications", true]));
+            return res.data;
         }).catch(err => {
             alert('ERROR: error while loading all applications\n' + err.message);
         });

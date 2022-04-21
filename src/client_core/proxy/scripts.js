@@ -24,5 +24,5 @@ export const get_scripts_hash = () =>{
 };
 
 export const load_all_scripts = () => {
-    dispatch_redux_thunk_get(loadAllScripts,'script/none');
+    return dispatch_redux_thunk_get(loadAllScripts,'script/none');
 }

@@ -74,9 +74,10 @@ const removeScriptDone = script =>({
 
 export const loadAllScripts = (server_url, config) =>{
     return dispatch => {
-        axios.get(server_url, config).then(res => {
+        return axios.get(server_url, config).then(res => {
             dispatch(loadAllScriptsDone(res.data));
             dispatch(setSetting(["loaded_scripts", true]));
+            return res.data;
         }).catch(err => {
             alert('ERROR: error while loading all scripts\n' + err.message);
         });

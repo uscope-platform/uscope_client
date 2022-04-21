@@ -26,29 +26,40 @@ import {get_bitstreams_hash,load_all_bitstreams} from "./proxy/bitstreams";
 
 export const refresh_caches = () =>{
     let state = store.getState();
-    refresh_resource_cache("application_cache", state.applications, load_all_applications , get_applications_hash, "loaded_applications");
-    refresh_resource_cache("peripheral_cache", state.peripherals, load_all_peripherals, get_peripherals_hash, "loaded_peripherals");
-    refresh_resource_cache("scripts_cache", state.scripts, load_all_scripts , get_scripts_hash, "loaded_scripts");
-    refresh_resource_cache("programs_cache",state.programs, load_all_programs , get_programs_hash, "loaded_programs");
-    refresh_resource_cache("bitstreams_cache",state.bitstreams, load_all_bitstreams , get_bitstreams_hash, "loaded_bitstreams");
+    let refresh_ops = [];
+
+    refresh_ops.push(refresh_resource_cache("application_cache", state.applications, load_all_applications , get_applications_hash, "loaded_applications"));
+    refresh_ops.push(refresh_resource_cache("peripheral_cache", state.peripherals, load_all_peripherals, get_peripherals_hash, "loaded_peripherals"));
+    refresh_ops.push(refresh_resource_cache("scripts_cache", state.scripts, load_all_scripts , get_scripts_hash, "loaded_scripts"));
+    refresh_ops.push(refresh_resource_cache("programs_cache",state.programs, load_all_programs , get_programs_hash, "loaded_programs"));
+    refresh_ops.push(refresh_resource_cache("bitstreams_cache",state.bitstreams, load_all_bitstreams , get_bitstreams_hash, "loaded_bitstreams"));
+    return Promise.all(refresh_ops);
 };
 
 
 let refresh_resource_cache = (key,resource, load_fcn, hash_fcn, flag) => {
-    let digest = localStorage.getItem(key);
-    if(resource === undefined || digest === null){
-        load_fcn();
-        hash_fcn().then((res)=>{
-            localStorage.setItem(key, res);
-        });
-    } else{
-        hash_fcn().then((res)=>{
-            if(digest!==res){
-                load_fcn();
-                localStorage.setItem(key, res);
-            } else{
-                store.dispatch(setSetting([flag, true]));
-            }
-        });
-    }
+    return new Promise((resolve, reject) =>{
+        let digest = localStorage.getItem(key);
+        if(resource === undefined || digest === null){
+            load_fcn().then((res)=>{
+                hash_fcn().then((res)=>{
+                    localStorage.setItem(key, res);
+                    resolve()
+                });
+            })
+        } else{
+            hash_fcn().then((hash_res)=>{
+                if(digest!==hash_res){
+                    load_fcn().then((load_res)=>{
+                        localStorage.setItem(key, hash_res);
+                        resolve()
+                    })
+                } else{
+                    store.dispatch(setSetting([flag, true]));
+                    resolve()
+                }
+            });
+        }
+    })
+
 }

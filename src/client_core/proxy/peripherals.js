@@ -23,5 +23,5 @@ export const get_peripherals_hash = () =>{
 };
 
 export const load_all_peripherals = () => {
-    dispatch_redux_thunk_get(loadPeripherals,'registers/all_peripheral/descriptions');
+    return dispatch_redux_thunk_get(loadPeripherals,'registers/all_peripheral/descriptions');
 }

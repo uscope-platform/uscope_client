@@ -52,11 +52,10 @@ export const backend_post = (endpoint, data) => {
 }
 
 export const dispatch_redux_thunk_get = (action, endpoint) => {
-    store.dispatch(action(server_address + endpoint, auth_config))
-
+    return store.dispatch(action(server_address + endpoint, auth_config));
 }
 
 export const dispatch_redux_thunk_post = (action, endpoint, data) => {
-    store.dispatch(action(server_address + endpoint, data, auth_config))
+    return store.dispatch(action(server_address + endpoint, data, auth_config))
 
 }
