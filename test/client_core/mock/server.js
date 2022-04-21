@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import { setupServer } from 'msw/node'
-import { handlers } from './cache_handling'
+import { cache_handlers } from './cache_handling_api'
+import {applications_api} from "./applications_api";
 
-export const server = setupServer(...handlers)
+export const server = setupServer(...cache_handlers, ...applications_api)

@@ -16,7 +16,7 @@
 import { rest } from 'msw'
 
 
-export const handlers = [
+export const cache_handlers = [
 
     rest.get('test_server/application/digest', (req, res, ctx) => {
         // If authenticated, return a mocked user details

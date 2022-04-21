@@ -46,7 +46,7 @@ const loadApplicationsDone = parameters => ({
 export const editApplication = (server_url,edit, config) => {
 
     return dispatch => {
-        axios.post(server_url, edit, config).then(res => {
+        return axios.post(server_url, edit, config).then(res => {
             dispatch(editApplicationDone(edit));
         }).catch(err => {
             alert('ERROR: error while editing an application\n' + err.message);
@@ -62,7 +62,7 @@ const editApplicationDone = edit => ({
 
 export const removeApplication = (server_url, application, config) =>{
     return dispatch => {
-        axios.get(server_url, config).then(res => {
+        return axios.get(server_url, config).then(res => {
             dispatch(removeApplicationDone(application));
         }).catch(err => {
             alert('ERROR: error while removing an application\n' + err.message);

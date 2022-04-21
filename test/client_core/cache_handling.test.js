@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {refresh_caches, set_address, set_redis_store} from "../../src/client_core";
+import {refresh_caches} from "../../src/client_core";
 import {mock_store, initial_redux_state} from "./mock/redux_store";
 
 
@@ -74,10 +74,10 @@ let check_test_results = (promise_result, redux_reference, test_case) => {
 
 }
 
-test("hard_load", () => {
 
-    set_address("test_server/");
-    set_redis_store(mock_store);
+
+test("hard_load", () => {
+    localStorage.clear();
     return refresh_caches().then((res)=>{
         let redux_reference = {
             "applications":[{application_obj:true}],
@@ -103,8 +103,6 @@ test("valid", () => {
     });
     //setup server
     mock_store.dispatch({type: 'RESET_STORE'});
-    set_address("test_server/");
-    set_redis_store(mock_store);
     return refresh_caches().then((res)=>{
         check_test_results(res, initial_redux_state, "valid");
     });
@@ -121,8 +119,6 @@ test("refresh", () => {
     });
     //setup server
     mock_store.dispatch({type: 'RESET_STORE'});
-    set_address("test_server/");
-    set_redis_store(mock_store);
     return refresh_caches().then((res)=>{
         let redux_reference = {
             "applications":[{application_obj:true}],

@@ -30,11 +30,11 @@ export const create_application = (application) => {
 }
 
 export const edit_application = (edit) => {
-    dispatch_redux_thunk_post(editApplication, 'application/edit', edit);
+    return dispatch_redux_thunk_post(editApplication, 'application/edit', edit);
 }
 
 export const remove_application = (application) => {
-    dispatch_redux_thunk_post(removeApplication, 'application/remove/'+application, application);
+    return dispatch_redux_thunk_post(removeApplication, 'application/remove/'+application, application);
 }
 
 export const set_application = (application_name) => {
