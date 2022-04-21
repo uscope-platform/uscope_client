@@ -15,7 +15,6 @@
 
 import {ADD_APPLICATION, EDIT_APPLICATION, LOAD_APPLICATIONS, REMOVE_APPLICATION, SAVE_PARAMETER} from "./types";
 import axios from 'axios';
-import {setSetting} from "./SettingsActions";
 
 
 export const saveParameter = (parameter) => ({
@@ -31,7 +30,6 @@ export const loadApplications = (server_url, config) => {
     return (dispatch, getState) => {
         return axios.get(server_url, config).then(res => {
             dispatch(loadApplicationsDone(res.data));
-            dispatch(setSetting(["loaded_applications", true]));
             return res.data;
         }).catch(err => {
             alert('ERROR: error while loading all applications\n' + err.message);
@@ -81,7 +79,7 @@ export const addApplication = (server_url, application_obj, config) =>{
     return dispatch => {
         return axios.post(server_url, application_obj, config).then(res => {
             dispatch(addApplicationDone(application_obj));
-            dispatch(setSetting(["application_creation_in_progress", false]));
+            return res;
         }).catch(err => {
             alert('ERROR: error while adding an application\n' + err.message);
         });

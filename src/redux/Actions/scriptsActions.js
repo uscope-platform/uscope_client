@@ -15,7 +15,6 @@
 
 import {ADD_SCRIPT, EDIT_SCRIPT, LOAD_ALL_SCRIPTS, REMOVE_SCRIPT, SAVE_SCRIPT_WORKSPACE} from "./types";
 import axios from "axios";
-import {setSetting} from "./SettingsActions";
 
 
 export const saveScriptsWorkspace = (workspace) => ({
@@ -76,7 +75,6 @@ export const loadAllScripts = (server_url, config) =>{
     return dispatch => {
         return axios.get(server_url, config).then(res => {
             dispatch(loadAllScriptsDone(res.data));
-            dispatch(setSetting(["loaded_scripts", true]));
             return res.data;
         }).catch(err => {
             alert('ERROR: error while loading all scripts\n' + err.message);

@@ -28,23 +28,23 @@ export const refresh_caches = () =>{
     let state = store.getState();
     let refresh_ops = [];
 
-    refresh_ops.push(refresh_resource_cache("application_cache", state.applications, load_all_applications , get_applications_hash, "loaded_applications"));
-    refresh_ops.push(refresh_resource_cache("peripheral_cache", state.peripherals, load_all_peripherals, get_peripherals_hash, "loaded_peripherals"));
-    refresh_ops.push(refresh_resource_cache("scripts_cache", state.scripts, load_all_scripts , get_scripts_hash, "loaded_scripts"));
-    refresh_ops.push(refresh_resource_cache("programs_cache",state.programs, load_all_programs , get_programs_hash, "loaded_programs"));
-    refresh_ops.push(refresh_resource_cache("bitstreams_cache",state.bitstreams, load_all_bitstreams , get_bitstreams_hash, "loaded_bitstreams"));
+    refresh_ops.push(refresh_resource_cache("application_cache", state.applications, load_all_applications , get_applications_hash));
+    refresh_ops.push(refresh_resource_cache("peripheral_cache", state.peripherals, load_all_peripherals, get_peripherals_hash));
+    refresh_ops.push(refresh_resource_cache("scripts_cache", state.scripts, load_all_scripts , get_scripts_hash));
+    refresh_ops.push(refresh_resource_cache("programs_cache",state.programs, load_all_programs , get_programs_hash));
+    refresh_ops.push(refresh_resource_cache("bitstreams_cache",state.bitstreams, load_all_bitstreams , get_bitstreams_hash));
     return Promise.all(refresh_ops);
 };
 
 
-let refresh_resource_cache = (key,resource, load_fcn, hash_fcn, flag) => {
+let refresh_resource_cache = (key,resource, load_fcn, hash_fcn) => {
     return new Promise((resolve, reject) =>{
         let digest = localStorage.getItem(key);
         if(resource === undefined || digest === null){
-            load_fcn().then((res)=>{
-                hash_fcn().then((res)=>{
-                    localStorage.setItem(key, res);
-                    resolve()
+            load_fcn().then((load_res)=>{
+                hash_fcn().then((hash_res)=>{
+                    localStorage.setItem(key, hash_res);
+                    resolve({data:load_res, hash:hash_res, status:"hard_load"})
                 });
             })
         } else{
@@ -52,11 +52,10 @@ let refresh_resource_cache = (key,resource, load_fcn, hash_fcn, flag) => {
                 if(digest!==hash_res){
                     load_fcn().then((load_res)=>{
                         localStorage.setItem(key, hash_res);
-                        resolve()
+                        resolve({data:load_res, hash:hash_res, status:"refresh"})
                     })
                 } else{
-                    store.dispatch(setSetting([flag, true]));
-                    resolve()
+                    resolve({data:null, hash:hash_res, status:"valid"})
                 }
             });
         }

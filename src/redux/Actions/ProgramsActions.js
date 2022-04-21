@@ -15,7 +15,6 @@
 
 import {ADD_PROGRAM, EDIT_PROGRAM, LOAD_ALL_PROGRAMS, REMOVE_PROGRAM} from "./types";
 import axios from "axios";
-import {setSetting} from "./SettingsActions";
 
 export const addProgram = (server_url, program, config) =>{
     return dispatch => {
@@ -69,7 +68,6 @@ export const loadAllPrograms = (server_url, config) =>{
     return dispatch => {
         return axios.get(server_url, config).then(res => {
             dispatch(loadAllProgramsDone(res.data));
-            dispatch(setSetting(["loaded_programs", true]));
             return res.data;
         }).catch(err => {
             alert('ERROR: error while loading all programs\n' + err.message);

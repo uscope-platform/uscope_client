@@ -28,11 +28,6 @@ function serverProxy() {
 
 let settings_init = {
     application:'SicDrive',
-    loaded_peripherals: false,
-    loaded_scripts: false,
-    loaded_applications: false,
-    loaded_bitstreams: false,
-    loaded_programs: false,
     server:new serverProxy()
 }
 

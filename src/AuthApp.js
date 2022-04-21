@@ -18,7 +18,7 @@ import React, {useEffect, useState} from 'react';
 import {Redirect, Route} from 'react-router-dom'
 
 //       REDUX IMPORTS
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 
 //      APP RELATED IMPORTS
 import TabContent from "./components/TabContent";
@@ -33,15 +33,13 @@ import OnboardingView from "./components/Onboarding";
 import {create_application_object} from "./utilities/ApplicationUtilities";
 
 import {create_application, refresh_caches} from "./client_core";
-import {setSetting} from "./redux/Actions/SettingsActions";
 
 let AuthApp = (props) =>{
 
     const views = useSelector(state => state.views);
     const plot = useSelector(state => state.plot);
     const settings = useSelector(state => state.settings);
-    const applications = useSelector(state => state.applications);
-    const dispatch = useDispatch();
+
 
     const [app_stage, set_app_stage] = useState("WAITING");
 
@@ -53,27 +51,24 @@ let AuthApp = (props) =>{
         if(props.needs_onboarding){
             set_app_stage("ONBOARDING");
         } else{
-            refresh_caches();
+            refresh_caches().then((res) =>{
+                if(res[0].status ==="valid"){
+                    set_app_stage("APP_CHOICE");
+                } else if(Object.keys(res[0].data).length !== 0) {
+                    set_app_stage("APP_CHOICE");
+                } else {
+                    let app = create_application_object("default");
+                    create_application(app).then(() => {
+                        set_app_stage("APP_CHOICE");
+                    });
+                }
+
+            });
             set_app_stage("RESOURCE_LOADING");
         }
 
     },[props.needs_onboarding])
 
-
-    useEffect(()=>{
-        if(settings.loaded_peripherals && settings.loaded_scripts &&settings.loaded_applications && settings.loaded_programs && settings.loaded_bitstreams){
-            if(Object.keys(applications).length !== 0){
-                set_app_stage("APP_CHOICE");
-            }else {
-                dispatch(setSetting(["application_creation_in_progress", true]));
-                let app = create_application_object("default");
-                create_application(app);
-            }
-        }
-        if(!settings.application_creation_in_progress){
-            set_app_stage("APP_CHOICE");
-        }
-    },[settings.loaded_applications, settings.loaded_peripherals, settings.loaded_programs, settings.loaded_scripts, settings.loaded_bitstreams, settings.initial_application_creation_done])
 
 
     switch (app_stage) {

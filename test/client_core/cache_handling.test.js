@@ -15,7 +15,6 @@
 
 import {refresh_caches, set_address, set_redis_store} from "../../src/client_core";
 import {mock_store, initial_redux_state} from "./mock/redux_store";
-import {LOAD_ALL_SCRIPTS} from "../../src/redux/Actions/types";
 
 
 const localStorageMock = (function() {
@@ -51,7 +50,13 @@ Object.defineProperty(window, 'localStorage', {
 
 
 
-let check_test_results = (redux_reference) => {
+let check_test_results = (promise_result, redux_reference, test_case) => {
+    expect(promise_result[0].status).toBe(test_case)
+    expect(promise_result[1].status).toBe(test_case)
+    expect(promise_result[2].status).toBe(test_case)
+    expect(promise_result[3].status).toBe(test_case)
+    expect(promise_result[4].status).toBe(test_case)
+
     let storage_state = localStorage.get_state();
     let state = mock_store.getState();
 
@@ -67,11 +72,6 @@ let check_test_results = (redux_reference) => {
     expect(state.bitstreams).toStrictEqual(redux_reference.bitstreams);
     expect(state.programs).toStrictEqual(redux_reference.programs);
 
-    expect(state.settings.loaded_applications).toBeTruthy();
-    expect(state.settings.loaded_peripherals).toBeTruthy();
-    expect(state.settings.loaded_scripts).toBeTruthy();
-    expect(state.settings.loaded_programs).toBeTruthy();
-    expect(state.settings.loaded_bitstreams).toBeTruthy();
 }
 
 test("hard_load", () => {
@@ -86,13 +86,13 @@ test("hard_load", () => {
             "bitstreams":[{bitstream_obj:true}],
             "programs":[{programs_obj:true}]
         }
-        check_test_results(redux_reference); 
+        check_test_results(res, redux_reference, "hard_load");
     });
 })
 
 
 
-test("no_load", () => {
+test("valid", () => {
     localStorage.clear();
     localStorage.initialize({
         "peripheral_cache": "94c46594-3bb9-4fae-b6aa-a61e03a288e2",
@@ -106,11 +106,11 @@ test("no_load", () => {
     set_address("test_server/");
     set_redis_store(mock_store);
     return refresh_caches().then((res)=>{
-        check_test_results(initial_redux_state); 
+        check_test_results(res, initial_redux_state, "valid");
     });
 })
 
-test("soft_load", () => {
+test("refresh", () => {
     localStorage.clear();
     localStorage.initialize({
         "peripheral_cache": "94c3d594-3bb9-4fae-b6aa-a61e03a288e2",
@@ -131,6 +131,6 @@ test("soft_load", () => {
             "bitstreams":[{bitstream_obj:true}],
             "programs":[{programs_obj:true}]
         }
-        check_test_results(redux_reference); 
+        check_test_results(res, redux_reference, "refresh");
     });
 })

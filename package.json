@@ -31,7 +31,7 @@
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "start": "PORT=3004 react-scripts start",
+    "start": "PORT=3004 react-scripts --openssl-legacy-provider start",
     "build": "react-scripts build",
     "build:staging": "env-cmd -f .env.staging npm run build",
     "build_debugging": "env-cmd -f .env.debugging npm run build",

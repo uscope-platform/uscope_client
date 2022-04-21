@@ -15,7 +15,6 @@
 
 import {ADD_BITSTREAM, EDIT_BITSTREAM, LOAD_ALL_BITSTREAMS, REMOVE_BITSTREAM} from "./types";
 import axios from "axios";
-import {setSetting} from "./SettingsActions";
 
 export const addBitstream = (server_url, script, config) =>{
     return dispatch => {
@@ -69,7 +68,6 @@ export const loadAllBitstreams = (server_url, config) =>{
     return dispatch => {
         return axios.get(server_url, config).then(res => {
             dispatch(loadAllBitstreamsDone(res.data));
-            dispatch(setSetting(["loaded_bitstreams", true]));
             return res.data;
         }).catch(err => {
             alert('ERROR: error while loading all bitstreams\n' + err.message);
