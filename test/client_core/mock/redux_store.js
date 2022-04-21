@@ -211,6 +211,11 @@ let scripts_init = {
 
 }
 
+let bitstream_init = {1:{
+        "id": 1,
+        "name": "test.bin"
+    }}
+
 const rootReducer = (state, action) => {
     if (action.type === 'RESET_STORE') {
         return mock_reducer(initial_redux_state, action)
@@ -236,7 +241,7 @@ export const initial_redux_state = {
     applications: applications_init,
     settings: settings_init,
     scripts: scripts_init,
-    bitstreams: {},
+    bitstreams: bitstream_init,
     plot: {},
     registerValues: {},
     views: {},

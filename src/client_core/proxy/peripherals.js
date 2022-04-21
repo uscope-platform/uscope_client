@@ -14,7 +14,7 @@
 // limitations under the License.
 
 
-import {backend_get, dispatch_redux_thunk_get} from "./backend";
+import {backend_get, dispatch_redux_thunk} from "./backend";
 import {loadPeripherals} from "../../redux/Actions/peripheralsActions";
 
 
@@ -23,5 +23,5 @@ export const get_peripherals_hash = () =>{
 };
 
 export const load_all_peripherals = () => {
-    return dispatch_redux_thunk_get(loadPeripherals,'registers/all_peripheral/descriptions');
+    return dispatch_redux_thunk(loadPeripherals,'registers/all_peripheral/descriptions');
 }

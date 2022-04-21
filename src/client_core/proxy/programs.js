@@ -14,7 +14,7 @@
 // limitations under the License.
 
 
-import {backend_get, dispatch_redux_thunk_get} from "./backend";
+import {backend_get, dispatch_redux_thunk} from "./backend";
 import {loadAllPrograms} from "../../redux/Actions/ProgramsActions";
 
 
@@ -23,5 +23,5 @@ export const get_programs_hash = () =>{
 };
 
 export const load_all_programs = () => {
-    return dispatch_redux_thunk_get(loadAllPrograms,'program/none');
+    return dispatch_redux_thunk(loadAllPrograms,'program/none');
 }

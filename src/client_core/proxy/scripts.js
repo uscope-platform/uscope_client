@@ -14,7 +14,7 @@
 // limitations under the License.
 
 
-import {backend_get, dispatch_redux_thunk_get} from "./backend";
+import {backend_get, dispatch_redux_thunk} from "./backend";
 import {loadAllScripts} from "../../redux/Actions/scriptsActions";
 
 
@@ -24,5 +24,5 @@ export const get_scripts_hash = () =>{
 };
 
 export const load_all_scripts = () => {
-    return dispatch_redux_thunk_get(loadAllScripts,'script/none');
+    return dispatch_redux_thunk(loadAllScripts,'script/none');
 }

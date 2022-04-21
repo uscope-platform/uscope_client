@@ -21,6 +21,7 @@ export {run_script, run_parameter_script} from './script_runner'
 export {set_address, set_auth_config} from './proxy/backend'
 export {refresh_caches} from './cache_handling'
 export {create_application, edit_application, remove_application, set_application} from './proxy/applications'
+export {upload_bitstream, delete_bitstream, edit_bitstream} from './proxy/bitstreams'
 
 export let store = null;
 
