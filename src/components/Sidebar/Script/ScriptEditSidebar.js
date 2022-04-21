@@ -33,9 +33,9 @@ let ScriptEditSidebar = props =>{
                 <label style={{fontSize:'20px',fontWeight:600}}>{"Script Peripherals"}</label>
             </SidebarBlockTitleLayout>
             <FormLayout>
-                <ScriptProperties server={settings.server} script={props.selected_script} field_name='name' field_value={scripts[props.selected_script].name}/>
-                <ScriptProperties server={settings.server} script={props.selected_script} field_name='path' field_value={scripts[props.selected_script].path}/>
-                <ScriptProperties server={settings.server} script={props.selected_script} field_name='triggers' field_value={scripts[props.selected_script].triggers}/>
+                <ScriptProperties script={props.selected_script} field_name='name' field_value={scripts[props.selected_script].name}/>
+                <ScriptProperties script={props.selected_script} field_name='path' field_value={scripts[props.selected_script].path}/>
+                <ScriptProperties script={props.selected_script} field_name='triggers' field_value={scripts[props.selected_script].triggers}/>
             </FormLayout>
         </SidebarBlockLayout>
     )

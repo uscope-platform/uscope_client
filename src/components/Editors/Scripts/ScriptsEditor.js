@@ -24,6 +24,8 @@ import "ace-builds/src-min-noconflict/ext-language_tools"
 import {useSelector} from "react-redux";
 import styled from "styled-components";
 
+import {edit_script} from "../../../client_core";
+
 const Title = styled.h1`
   margin-right: auto;
   margin-left: auto;
@@ -48,7 +50,7 @@ let ScriptsEditor = props =>{
         let script = Object.values(scripts_store).find(x => x.id === settings.selected_script);
         script = {script:script.id, field:'script_content', value:editor_content}
 
-        settings.server.script_proxy.edit_script(script);
+        edit_script(script);
         props.done();
     };
 

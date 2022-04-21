@@ -207,6 +207,13 @@ let scripts_init = {
         path: null,
         script_content: test_script,
         triggers: 'fp_dta_trg'
+    },
+    '3': {
+        id: 3,
+        name: 'test_script',
+        path: null,
+        script_content: "",
+        triggers: 'test_trigger'
     }
 
 }

@@ -15,22 +15,22 @@
 
 import {rest} from 'msw'
 
-export let bitstream_creation_data = null;
-export let bitstream_removal_data = null;
-export let edit_bitstream_data = null;
+export let script_creation_data = null;
+export let script_removal_data = null;
+export let script_edit_data = null;
 
-export const bitstreams_api = [
+export const scripts_api = [
 
-    rest.post('/test_server/bitstream/:bitstream_id', (req, res, ctx) => {
-        bitstream_creation_data = {id:req.params.bitstream_id, body:req.body};
+    rest.post('/test_server/script/:script_id', (req, res, ctx) => {
+        script_creation_data = {id:req.params.script_id, body:req.body};
         return res(
             ctx.text("ok"),
             ctx.status(200)
         )
     }),
 
-    rest.patch('/test_server/bitstream/:bitstream_id',(req, res, ctx) =>{
-        edit_bitstream_data = {id:req.params.bitstream_id, body:req.body};
+    rest.patch('/test_server/script/:script_id',(req, res, ctx) =>{
+        script_edit_data = {id:req.params.script_id, body:req.body};
 
         return res(
             ctx.text("ok"),
@@ -38,8 +38,8 @@ export const bitstreams_api = [
         )
     }),
 
-    rest.delete('/test_server/bitstream/:bitstream_id', (req, res, ctx) => {
-        bitstream_removal_data =  req.params.bitstream_id;
+    rest.delete('/test_server/script/:script_id', (req, res, ctx) => {
+        script_removal_data =  req.params.script_id;
         return res(
             ctx.text("ok"),
             ctx.status(200)

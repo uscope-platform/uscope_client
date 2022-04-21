@@ -14,9 +14,6 @@
 // limitations under the License.
 
 
-
-
-import {setSetting} from "../redux/Actions/SettingsActions";
 import {store} from "./index"
 import {get_applications_hash, load_all_applications} from './proxy/applications'
 import {get_peripherals_hash, load_all_peripherals} from "./proxy/peripherals";

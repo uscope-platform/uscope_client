@@ -37,6 +37,22 @@ test("bitstream_addition", () => {
     })
 })
 
+test("bitstream_edit", () => {
+
+    let  edit = {id:1, field:{name:"name", value:"edited_test"}}
+    return edit_bitstream(edit).then(()=>{
+        let state = mock_store.getState();
+
+        let check_data = {
+            id: '1',
+            body:{id:1, field:{name:"name", value:"edited_test"}}
+        }
+        expect(state.bitstreams[1]).toStrictEqual({ "id": 1, "name": "edited_test"});
+        expect(edit_bitstream_data).toStrictEqual(check_data);
+    })
+})
+
+
 
 test("bitstream_deletion", () => {
     let bitstream_obj = {
@@ -50,20 +66,6 @@ test("bitstream_deletion", () => {
     })
 })
 
-
-test("bitstream_edit", () => {
-
-    let  edit = {id:1, field:{name:"name", value:"edited_test"}}
-    return edit_bitstream(edit).then(()=>{
-        let state = mock_store.getState();
-        let check_bitstream_obj = {
-            "id": 1,
-            "name": "edited_test"
-        }
-        expect(state.bitstreams[1]).toStrictEqual(check_bitstream_obj);
-        expect(edit_bitstream_data).toStrictEqual(edit);
-    })
-})
 
 
 

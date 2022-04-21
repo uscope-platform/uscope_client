@@ -15,7 +15,7 @@
 
 
 import {backend_get, dispatch_redux_thunk} from "./backend";
-import {loadAllScripts} from "../../redux/Actions/scriptsActions";
+import {addScript, editScript, loadAllScripts, removeScript} from "../../redux/Actions/scriptsActions";
 
 
 
@@ -25,4 +25,16 @@ export const get_scripts_hash = () =>{
 
 export const load_all_scripts = () => {
     return dispatch_redux_thunk(loadAllScripts,'script/none');
+}
+
+export const upload_script = (script) => {
+    return dispatch_redux_thunk(addScript, 'script/'+script.id, script)
+}
+
+export const edit_script = (script) => {
+    return dispatch_redux_thunk(editScript, 'script/'+script.script, script)
+}
+
+export const delete_script = (script) => {
+    return dispatch_redux_thunk(removeScript, 'script/'+script.id, script)
 }

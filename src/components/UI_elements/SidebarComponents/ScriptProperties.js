@@ -15,7 +15,7 @@
 
 import React from "react";
 
-
+import {edit_script} from "../../../client_core";
 import {InputField} from "../InputField";
 
 export let  ScriptProperties = props =>{
@@ -25,7 +25,7 @@ export let  ScriptProperties = props =>{
         let edit = {}
         if(event.key==="Enter"|| event.key ==="Tab"){
             edit = {script:props.script, field:event.target.name, value:event.target.value}
-            props.server.script_proxy.edit_script(edit);
+            edit_script(edit);
         }
     }
 

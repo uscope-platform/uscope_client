@@ -25,7 +25,7 @@ export const saveScriptsWorkspace = (workspace) => ({
 
 export const addScript = (server_url, script, config) =>{
     return dispatch => {
-        axios.post(server_url, script, config).then(res => {
+        return axios.post(server_url, script, config).then(res => {
             dispatch(AddScriptDone(script));
         }).catch(err => {
             alert('ERROR: error while adding a script\n' + err.message);
@@ -41,7 +41,7 @@ const AddScriptDone = script =>({
 
 export const editScript = (server_url, script, config) =>{
     return dispatch => {
-        axios.patch(server_url,script, config).then(res => {
+        return axios.patch(server_url,script, config).then(res => {
             dispatch(editScriptDone(script));
         }).catch(err => {
             alert('ERROR: error while editing a script\n' + err.message);
@@ -57,7 +57,7 @@ const editScriptDone = script =>({
 
 export const removeScript = (server_url, script, config) =>{
     return dispatch => {
-        axios.delete(server_url, config).then(res => {
+        return axios.delete(server_url, config).then(res => {
             dispatch(removeScriptDone(script));
         }).catch(err => {
             alert('ERROR: error while removing a script\n' +err.message);
