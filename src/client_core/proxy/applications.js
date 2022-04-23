@@ -16,27 +16,28 @@
 
 import {backend_get, dispatch_redux_thunk} from "./backend";
 import {addApplication, editApplication, loadApplications, removeApplication} from "../../redux/Actions/applicationActions";
+import {api_dictionary} from './api_dictionary'
 
 export const get_applications_hash = () =>{
-    return backend_get('application/digest')
+    return backend_get(api_dictionary.applications.get_hash)
 };
 
 export const load_all_applications = () => {
-    return dispatch_redux_thunk(loadApplications,'application/all/specs');
+    return dispatch_redux_thunk(loadApplications,api_dictionary.applications.load_all);
 }
 
 export const create_application = (application) => {
-    return dispatch_redux_thunk(addApplication, 'application/add', application);
+    return dispatch_redux_thunk(addApplication, api_dictionary.applications.add, application);
 }
 
 export const edit_application = (edit) => {
-    return dispatch_redux_thunk(editApplication, 'application/edit', edit);
+    return dispatch_redux_thunk(editApplication, api_dictionary.applications.edit, edit);
 }
 
 export const remove_application = (application) => {
-    return dispatch_redux_thunk(removeApplication, 'application/remove/'+application, application);
+    return dispatch_redux_thunk(removeApplication, api_dictionary.applications.remove+'/'+application, application);
 }
 
 export const set_application = (application_name) => {
-    return backend_get('application/set/' + application_name);
+    return backend_get(api_dictionary.applications.set + '/' + application_name);
 }

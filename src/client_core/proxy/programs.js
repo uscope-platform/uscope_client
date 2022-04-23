@@ -17,33 +17,34 @@
 import {backend_get, backend_post, dispatch_redux_thunk} from "./backend";
 import {addProgram, editProgram, loadAllPrograms, removeProgram} from "../../redux/Actions/ProgramsActions";
 
+import {api_dictionary} from './api_dictionary'
 
 export const get_programs_hash = () =>{
-    return backend_get('program/hash',)
+    return backend_get(api_dictionary.programs.get_hash)
 };
 
 export const load_all_programs = () => {
-    return dispatch_redux_thunk(loadAllPrograms,'program/none');
+    return dispatch_redux_thunk(loadAllPrograms,api_dictionary.programs.load_all);
 }
 
 export const upload_program =  (program) => {
-    return dispatch_redux_thunk(addProgram, 'program/'+program.id, program)
+    return dispatch_redux_thunk(addProgram, api_dictionary.programs.add+'/'+program.id, program)
 };
 
 export const edit_program =  (program) => {
-    return dispatch_redux_thunk(editProgram, 'program/'+program.program, program)
+    return dispatch_redux_thunk(editProgram, api_dictionary.programs.edit+'/'+program.program, program)
 };
 
 export const delete_program = (program) => {
-    return dispatch_redux_thunk(removeProgram, 'program/'+program.id, program)
+    return dispatch_redux_thunk(removeProgram, api_dictionary.programs.delete+'/'+program.id, program)
 };
 
 export const compile_program = (program) =>{
-    return backend_get('program/compile/'+program.id)
+    return backend_get(api_dictionary.programs.compile+'/'+program.id)
 };
 
 export const apply_program = (program) => {
-    return backend_post('program/Apply/'+program.id, program).then((res)=>{
+    return backend_post(api_dictionary.programs.apply+'/'+program.id, program).then((res)=>{
         return res;
     }).catch((err)=>{
         alert('ERROR: error while loading a program on the core' + err.message);

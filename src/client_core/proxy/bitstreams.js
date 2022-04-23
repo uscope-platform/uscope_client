@@ -16,25 +16,24 @@
 
 import {backend_get, dispatch_redux_thunk} from "./backend";
 import {addBitstream, editBitstream, loadAllBitstreams, removeBitstream} from "../../redux/Actions/bitstreamsActions";
-
+import {api_dictionary} from './api_dictionary'
 
 export const get_bitstreams_hash = () =>{
-    return backend_get('bitstream/digest')
+    return backend_get(api_dictionary.bitstream.get_hash)
 };
 
 export const load_all_bitstreams = () => {
-    return dispatch_redux_thunk(loadAllBitstreams,'bitstream/none');
+    return dispatch_redux_thunk(loadAllBitstreams, api_dictionary.bitstream.load_all);
 }
 
 export const upload_bitstream = (bitstream) => {
-    return dispatch_redux_thunk(addBitstream, 'bitstream/'+bitstream.id, bitstream);
+    return dispatch_redux_thunk(addBitstream, api_dictionary.bitstream.add +'/'+bitstream.id, bitstream);
 }
 
 export const edit_bitstream = (bitstream) => {
-    return dispatch_redux_thunk(editBitstream, 'bitstream/'+bitstream.id, bitstream);
+    return dispatch_redux_thunk(editBitstream, api_dictionary.bitstream.edit +'/'+bitstream.id, bitstream);
 }
 
 export const delete_bitstream = (bitstream) => {
-    let a = dispatch_redux_thunk(removeBitstream, 'bitstream/'+bitstream.id, bitstream);
-    return a;
+    return dispatch_redux_thunk(removeBitstream, api_dictionary.bitstream.delete +'/'+bitstream.id, bitstream);
 }

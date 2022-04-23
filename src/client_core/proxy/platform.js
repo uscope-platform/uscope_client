@@ -15,31 +15,32 @@
 
 import {backend_delete, backend_get, backend_post} from "./backend";
 
+import {api_dictionary} from './api_dictionary'
 
 export const add_user = user =>{
-    return backend_post('auth/user', user);
+    return backend_post(api_dictionary.platform.users.add, user);
 }
 
 export const remove_user = user =>{
-    return backend_delete('auth/user', user);
+    return backend_delete(api_dictionary.platform.users.delete, user);
 }
 
 export const need_onboarding = () =>{
-    return backend_get("auth/onboarding");
+    return backend_get(api_dictionary.platform.users.need_onboarding);
 }
 
 export const  do_onboarding = user =>{
-    return backend_post('auth/onboarding', user);
+    return backend_post(api_dictionary.platform.users.do_onboarding, user);
 }
 
 export const get_users_list = () =>{
-    return backend_get("auth/user");
+    return backend_get(api_dictionary.platform.users.get_list);
 }
 
 export const dump_database = () =>{
-    return backend_get('database/export');
+    return backend_get(api_dictionary.platform.db.dump);
 }
 
 export const restore_database = db_file =>{
-    return backend_post('database/import', db_file);
+    return backend_post(api_dictionary.platform.db.restore, db_file);
 }

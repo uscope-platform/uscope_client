@@ -14,32 +14,29 @@
 // limitations under the License.
 
 import store from "../../store";
-import axios from "axios";
 import {fetchData, loadChanels, setChannelStatus} from "../../redux/Actions/plotActions";
 import {backend_get, backend_post, dispatch_redux_thunk} from "./backend";
 
-
-
+import {api_dictionary} from './api_dictionary'
 
 export const get_channel_info = (loading_done_handler) => {
-    let state = store.getState();
-    axios.get(state.settings.server_url+'plot/channels/specs', state.settings.auth_config).then(res => {
+    backend_get(api_dictionary.plot.get_info).then(res => {
         store.dispatch(loadChanels(res.data));
         loading_done_handler();
     }).catch(err => {
         console.log(err)
         alert('ERROR: error while loading channels info\n' + err.message);
-    });
+    })
 };
 
 export const fetch_data = () =>  {
-    return dispatch_redux_thunk(fetchData, 'plot/channels/data')
+    return dispatch_redux_thunk(fetchData, api_dictionary.plot.fetch_data)
 };
 
 
 export const set_capture =  (capture_lenght) =>  {
     return new Promise((resolve, reject)=>{
-        backend_post('plot/capture', {length: capture_lenght}).then((res) => {
+        backend_post(api_dictionary.plot.set_capture, {length: capture_lenght}).then((res) => {
             resolve(res)
         }).catch((err) =>{
             alert('ERROR: error while setting up capture\n' + err.message);
@@ -49,16 +46,16 @@ export const set_capture =  (capture_lenght) =>  {
 };
 
 export const get_captured_data = () =>{
-    return backend_get('/plot/capture');
+    return backend_get(api_dictionary.plot.get_capture);
 }
 
 export const set_channel_status = (channel) => {
-    return dispatch_redux_thunk(setChannelStatus, 'plot/channels/status', channel);
+    return dispatch_redux_thunk(setChannelStatus, api_dictionary.plot.set_channel_status, channel);
 }
 
 export const set_channel_widths = (widths) => {
     return new Promise((resolve, reject)=>{
-        backend_post('plot/channels/widths', {widths}).then((res) => {
+        backend_post(api_dictionary.plot.set_widths, {widths}).then((res) => {
             resolve(res)
         }).catch((err) =>{
             alert('ERROR: error while setting up channel widths\n' + err.message);

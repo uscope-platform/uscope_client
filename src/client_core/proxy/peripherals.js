@@ -18,32 +18,31 @@ import {backend_get, backend_post, backend_post_config, dispatch_redux_thunk} fr
 import {addPeripheral, editPeripheral, loadPeripherals, removePeripheral} from "../../redux/Actions/peripheralsActions";
 import {sendRegister} from "../../redux/Actions/RegisterActions";
 
-
+import {api_dictionary} from './api_dictionary'
 
 export const get_peripherals_hash = () =>{
-    return backend_get('registers/digest')
+    return backend_get(api_dictionary.peripherals.get_hash)
 };
 
 export const load_all_peripherals = () => {
-    return dispatch_redux_thunk(loadPeripherals,'registers/all_peripheral/descriptions');
+    return dispatch_redux_thunk(loadPeripherals,api_dictionary.peripherals.load_all);
 }
 
 
 export const get_peripheral_registers =  (peripheral_name) => {
-    return backend_get('registers/'+peripheral_name+'/descriptions');
+    return backend_get(api_dictionary.peripherals.get_registers(peripheral_name));
 };
 
 export const bulk_register_write = (registers) =>{
-    return backend_post('registers/bulk_write', registers);
+    return backend_post(api_dictionary.peripherals.bulk_write, registers);
 };
 
 export const set_register_value = (register) => {
-    return dispatch_redux_thunk(sendRegister, 'registers/'+register.peripheral+'/value', register);
+    return dispatch_redux_thunk(sendRegister, api_dictionary.peripherals.set_register(register.peripheral), register);
 };
 
-
 export const create_peripheral = (peripheral) => {
-    return dispatch_redux_thunk(addPeripheral, 'tab_creator/create_peripheral', {payload:peripheral});
+    return dispatch_redux_thunk(addPeripheral, api_dictionary.peripherals.add, {payload:peripheral});
 };
 
 export const send_image = (image, periph) => {
@@ -56,7 +55,7 @@ export const send_image = (image, periph) => {
         'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
     };
 
-    return  backend_post_config('tab_creator/diagram', formData, local_headers).then((res) =>{
+    return  backend_post_config(api_dictionary.peripherals.image, formData, local_headers).then((res) =>{
        return res;
     }).catch((err) => {
         console.log(err);
@@ -64,9 +63,9 @@ export const send_image = (image, periph) => {
 }
 
 export const edit_peripheral = (edit) => {
-    return dispatch_redux_thunk(editPeripheral, "tab_creator/edit_peripheral", edit);
+    return dispatch_redux_thunk(editPeripheral, api_dictionary.peripherals.edit, edit);
 };
 
 export const remove_peripheral = (peripheral) => {
-    return dispatch_redux_thunk(removePeripheral, 'tab_creator/remove_peripheral/'+ peripheral, peripheral)
+    return dispatch_redux_thunk(removePeripheral, api_dictionary.peripherals.delete+'/'+ peripheral, peripheral)
 };

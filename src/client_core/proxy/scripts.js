@@ -17,24 +17,24 @@
 import {backend_get, dispatch_redux_thunk} from "./backend";
 import {addScript, editScript, loadAllScripts, removeScript} from "../../redux/Actions/scriptsActions";
 
-
+import {api_dictionary} from './api_dictionary'
 
 export const get_scripts_hash = () =>{
-    return backend_get('script/hash')
+    return backend_get(api_dictionary.scripts.get_hash)
 };
 
 export const load_all_scripts = () => {
-    return dispatch_redux_thunk(loadAllScripts,'script/none');
+    return dispatch_redux_thunk(loadAllScripts,api_dictionary.scripts.load_all);
 }
 
 export const upload_script = (script) => {
-    return dispatch_redux_thunk(addScript, 'script/'+script.id, script)
+    return dispatch_redux_thunk(addScript, api_dictionary.scripts.add+'/'+script.id, script)
 }
 
 export const edit_script = (script) => {
-    return dispatch_redux_thunk(editScript, 'script/'+script.script, script)
+    return dispatch_redux_thunk(editScript, api_dictionary.scripts.edit+'/'+script.script, script)
 }
 
 export const delete_script = (script) => {
-    return dispatch_redux_thunk(removeScript, 'script/'+script.id, script)
+    return dispatch_redux_thunk(removeScript, api_dictionary.scripts.delete+'/'+script.id, script)
 }

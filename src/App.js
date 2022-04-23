@@ -90,7 +90,7 @@ let App = (props) =>{
     return(
         <ThemeProvider theme={ColorTheme}>
             <div className="App">
-                {logged? <AuthApp onboarding_done={onboarding_done} needs_onboarding={onboarding_needed}/>:<LoginPage server={server} done={done}/>}
+                {logged? <AuthApp onboarding_done={onboarding_done} needs_onboarding={onboarding_needed}/>:<LoginPage done={done}/>}
             </div>
         </ThemeProvider>
     )
