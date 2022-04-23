@@ -30,7 +30,7 @@ let  PeripheralsSidebar = props =>{
 
         if (event.key === "Enter") {
             let peripheral = create_peripheral(event.target.value)
-            settings.server.creator_proxy.createPeripheral(peripheral, image);
+            create_peripheral(peripheral, image);
         }
     };
 

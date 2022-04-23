@@ -35,8 +35,9 @@ const loadPeripheralsDone = parameters => ({
 
 export const editPeripheral = (server_url, edit, config) => {
     return dispatch => {
-        axios.post(server_url, edit, config).then(res => {
+        return axios.post(server_url, edit, config).then(res => {
             dispatch(editPeripheralDone(edit));
+            return res;
         }).catch(err => {
             alert('ERROR: error while editing a peripheral\n' + err.message);
         });
@@ -51,8 +52,9 @@ const editPeripheralDone = edit => ({
 
 export const removePeripheral = (server_url, peripheral, config) =>{
     return dispatch => {
-        axios.get(server_url, config).then(res => {
+        return axios.get(server_url, config).then(res => {
             dispatch(removePeripheralDone(peripheral));
+            return res;
         }).catch(err => {
             alert('ERROR: error while removing a peripheral\n' + err.message);
         });
@@ -67,8 +69,9 @@ const removePeripheralDone = peripheral =>({
 
 export const addPeripheral = (server_url, peripheral_obj, config) =>{
     return dispatch => {
-        axios.post(server_url, peripheral_obj, config).then(res => {
+        return axios.post(server_url, peripheral_obj, config).then(res => {
             dispatch(addPeripheralDone(peripheral_obj));
+            return res;
         }).catch(err => {
             alert('ERROR: error while adding a peripheral\n' + err.message);
         });

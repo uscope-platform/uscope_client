@@ -31,7 +31,7 @@ import {
 import {BlockTitle} from "../../UI_elements/";
 import PeripheralImage from "./PeripheralImage";
 import {Add} from "grommet-icons";
-
+import {send_image, edit_peripheral} from "../../../client_core";
 
 const TitleLayout = styled.div`
   margin-left: auto;
@@ -46,10 +46,11 @@ let  PeripheralEditSidebar = props =>{
     const [new_register, set_new_register] = useState(false);
 
     let handleEditImage = (image) =>{
-        settings.server.creator_proxy.send_image(image);
+        send_image(image);
         //SEND CHANGE COMMAND TO THE SERVER
         let edit ={peripheral:settings.current_peripheral, action:"change_image", path:image.name};
-        settings.server.creator_proxy.edit_peripheral(edit);
+
+        edit_peripheral(edit);
     }
 
     let handleEditVersion = () =>{
@@ -62,7 +63,7 @@ let  PeripheralEditSidebar = props =>{
         } else if (event.key ==="Enter"){
             set_edit_label(false);
             let edit ={peripheral:settings.current_peripheral, action:"edit_version", version:parseFloat(event.target.value)};
-            settings.server.creator_proxy.edit_peripheral(edit);
+            edit_peripheral(edit);
         }
 
     }
@@ -75,7 +76,7 @@ let  PeripheralEditSidebar = props =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
             let reg_name = event.target.value;
             let edit ={peripheral:settings.current_peripheral, action:"add_register",register:create_register(reg_name,"single")};
-            settings.server.creator_proxy.edit_peripheral(edit);
+            edit_peripheral(edit);
             set_new_register(false);
         } else if (event.key ==="Escape"){
             set_new_register(false);

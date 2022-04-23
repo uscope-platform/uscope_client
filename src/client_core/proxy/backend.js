@@ -16,6 +16,7 @@
 
 import axios from "axios";
 import {store} from "../index"
+import {addPeripheral} from "../../redux/Actions/peripheralsActions";
 
 let server_address = null;
 let auth_config = null;
@@ -48,6 +49,23 @@ export const backend_post = (endpoint, data) => {
             }).catch(error => {
                 reject(error);
             });
+    });
+}
+
+export const backend_post_config = (endpoint, data, local_config) => {
+    return new Promise( (resolve, reject) => {
+        axios.post(server_address + endpoint, data,
+            {
+                headers:{
+                    ...local_config,
+                    ...auth_config
+                }
+            })
+            .then(res => {
+                resolve(res.data);
+            }).catch(error => {
+            reject(error);
+        });
     });
 }
 

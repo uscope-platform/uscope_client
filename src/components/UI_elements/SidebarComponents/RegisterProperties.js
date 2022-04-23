@@ -25,6 +25,7 @@ import {useSelector} from "react-redux";
 import {Button} from "../Button";
 import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
 import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
+import {edit_peripheral} from "../../../client_core"
 
 const ChoicesWrapper = styled.div`
     display: grid;
@@ -54,7 +55,7 @@ export let  RegisterProperties = props =>{
     let handleEditNameChange = (event) => {
         if(event.key==="Enter"){
             let edit = {peripheral:props.peripheral, register:props.register.register_name, field:"register_name", value:event.target.value,action:"edit_register"};
-            settings.server.creator_proxy.edit_peripheral(edit);
+            edit_peripheral(edit);
             set_edit_name(false);
         }else if(event.key ==="Escape"){
             set_edit_name(false);
@@ -108,7 +109,7 @@ export let  RegisterProperties = props =>{
             default:
                 return;
         }
-        settings.server.creator_proxy.edit_peripheral(edit);
+        edit_peripheral(edit);
     }
 
     let handleonKeyDown = (event) =>{
@@ -119,7 +120,7 @@ export let  RegisterProperties = props =>{
                 case "offset":
                 case "description":
                     edit = {peripheral:props.peripheral, register:props.register.register_name, field:event.target.name, value:event.target.value,action:"edit_register"};
-                    settings.server.creator_proxy.edit_peripheral(edit);
+                    edit_peripheral(edit);
                     break;
                 case "field_descriptions":
                 case "field_names":
@@ -128,7 +129,7 @@ export let  RegisterProperties = props =>{
                     else if(event.key!=="Tab")
                         return;
                     edit = {peripheral:props.peripheral, register:props.register.register_name, field:event.target.name, value:event.target.value.split('\n'),action:"edit_register"};
-                    settings.server.creator_proxy.edit_peripheral(edit);
+                    edit_peripheral(edit);
                     break;
                 default:
                     return;
@@ -138,7 +139,7 @@ export let  RegisterProperties = props =>{
 
     let handleRemoveRegister= (event) =>{
         let edit = {peripheral:props.peripheral, register:props.register.register_name, action:"remove_register"};
-        settings.server.creator_proxy.edit_peripheral(edit);
+        edit_peripheral(edit);
     }
 
     let renderContent = (props) =>{

@@ -14,10 +14,10 @@
 // limitations under the License.
 
 
-import {backend_get, backend_post, dispatch_redux_thunk} from "./backend";
-import {loadPeripherals} from "../../redux/Actions/peripheralsActions";
-import store from "../../store";
+import {backend_get, backend_post, backend_post_config, dispatch_redux_thunk} from "./backend";
+import {addPeripheral, editPeripheral, loadPeripherals, removePeripheral} from "../../redux/Actions/peripheralsActions";
 import {sendRegister} from "../../redux/Actions/RegisterActions";
+
 
 
 export const get_peripherals_hash = () =>{
@@ -39,4 +39,54 @@ export const bulk_register_write = (registers) =>{
 
 export const set_register_value = (register) => {
     return dispatch_redux_thunk(sendRegister, 'registers/'+register.peripheral+'/value', register);
+};
+
+
+export const create_peripheral = (peripheral, image) => {
+    if(image!==null){
+        let formData = new FormData();
+        formData.append("file", image, image.name);
+
+        let local_headers = {
+            'accept': 'application/json',
+            'Accept-Language': 'en-US,en;q=0.8',
+            'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
+        };
+
+        return  backend_post_config('tab_creator/diagram', formData, local_headers).then(() =>{
+            return dispatch_redux_thunk(addPeripheral, 'tab_creator/create_peripheral',{payload:peripheral, image:true}).then((res)=>{
+                return res;
+            })
+        }).catch((err) => {
+            console.log(err);
+        })
+    } else{
+        return dispatch_redux_thunk(addPeripheral, 'tab_creator/create_peripheral', {payload:peripheral, image:false});
+    }
+
+};
+
+export const send_image = (image) => {
+    let formData = new FormData();
+    formData.append("file", image, image.name);
+
+    let local_headers = {
+        'accept': 'application/json',
+        'Accept-Language': 'en-US,en;q=0.8',
+        'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
+    };
+
+    return  backend_post_config('tab_creator/diagram', formData, local_headers).then((res) =>{
+       return res;
+    }).catch((err) => {
+        console.log(err);
+    })
+}
+
+export const edit_peripheral = (edit) => {
+    return dispatch_redux_thunk(editPeripheral, "tab_creator/edit_peripheral", edit);
+};
+
+export const remove_peripheral = (peripheral) => {
+    return dispatch_redux_thunk(removePeripheral, 'tab_creator/remove_peripheral/'+ peripheral, peripheral)
 };

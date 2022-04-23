@@ -24,6 +24,7 @@ import {TableStyle} from './TableStyles'
 import {BlockLayout, Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements"
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
+import {create_peripheral, remove_peripheral} from "../../client_core"
 
 let columns = [
     {
@@ -65,7 +66,7 @@ let PeripheralsManager = (props)=>{
 
 
     let handleRemoveRow = (event) =>{
-        settings.server.creator_proxy.removePeripheral(settings.current_peripheral);
+        remove_peripheral(settings.current_peripheral);
         dispatch(setSetting(["current_peripheral", null]))
     };
 
@@ -107,7 +108,7 @@ let PeripheralsManager = (props)=>{
     };
 
     let addPeripheral = (content) => {
-        settings.server.creator_proxy.createPeripheral(JSON.parse(content), null);
+        create_peripheral(JSON.parse(content), null);
     };
 
     const rowSelectCritera = row => row.peripheral_name === settings.current_peripheral;
