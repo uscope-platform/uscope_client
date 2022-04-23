@@ -42,31 +42,11 @@ export const set_register_value = (register) => {
 };
 
 
-export const create_peripheral = (peripheral, image) => {
-    if(image!==null){
-        let formData = new FormData();
-        formData.append("file", image, image.name);
-
-        let local_headers = {
-            'accept': 'application/json',
-            'Accept-Language': 'en-US,en;q=0.8',
-            'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
-        };
-
-        return  backend_post_config('tab_creator/diagram', formData, local_headers).then(() =>{
-            return dispatch_redux_thunk(addPeripheral, 'tab_creator/create_peripheral',{payload:peripheral, image:true}).then((res)=>{
-                return res;
-            })
-        }).catch((err) => {
-            console.log(err);
-        })
-    } else{
-        return dispatch_redux_thunk(addPeripheral, 'tab_creator/create_peripheral', {payload:peripheral, image:false});
-    }
-
+export const create_peripheral = (peripheral) => {
+    return dispatch_redux_thunk(addPeripheral, 'tab_creator/create_peripheral', {payload:peripheral});
 };
 
-export const send_image = (image) => {
+export const send_image = (image, periph) => {
     let formData = new FormData();
     formData.append("file", image, image.name);
 

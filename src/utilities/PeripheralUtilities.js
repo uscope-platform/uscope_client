@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export let create_peripheral = (name) => {
+export let create_peripheral_obj = (name) => {
     //The peripheral image path is set directly by the server, as doing anything else would create unnecessary coupling
     return{
         [name]: {

@@ -108,7 +108,7 @@ let PeripheralsManager = (props)=>{
     };
 
     let addPeripheral = (content) => {
-        create_peripheral(JSON.parse(content), null);
+        create_peripheral(JSON.parse(content));
     };
 
     const rowSelectCritera = row => row.peripheral_name === settings.current_peripheral;

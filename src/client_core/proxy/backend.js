@@ -16,7 +16,6 @@
 
 import axios from "axios";
 import {store} from "../index"
-import {addPeripheral} from "../../redux/Actions/peripheralsActions";
 
 let server_address = null;
 let auth_config = null;

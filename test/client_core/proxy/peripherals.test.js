@@ -71,32 +71,6 @@ test("set register value", () =>{
 })
 
 
-
-test("create peripheral with image", () =>{
-    let periph = {
-        test: {
-            peripheral_name: "test",
-            version: 0.1,
-            registers: []
-        }
-    }
-    let image = new File(["TEST FILE IMAGE DUMMY"], "filename");
-    return create_peripheral(periph, image).then((res)=>{
-        // THE IMAGE CAN NOT BE TESTED EASILY, SO IT IS NOT
-        expect(created_peripheral).toStrictEqual({
-            image:true,
-            payload:{
-                test: {
-                    peripheral_name: "test",
-                    version: 0.1,
-                    registers: []
-                }
-            }
-        });
-    })
-})
-
-
 test("create peripheral without image", () =>{
     let periph = {
         test: {
@@ -105,10 +79,9 @@ test("create peripheral without image", () =>{
             registers: []
         }
     }
-    return create_peripheral(periph, null).then((res)=>{
+    return create_peripheral(periph).then((res)=>{
 
         expect(created_peripheral).toStrictEqual({
-            image:false,
             payload:{
                 test: {
                     peripheral_name: "test",

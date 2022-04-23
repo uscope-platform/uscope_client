@@ -20,7 +20,8 @@ import PeripheralEditSidebar from "./PeripheralEditSidebar";
 
 import {BlockTitle, InputField, SidebarContentLayout} from "../../UI_elements";
 import PeripheralImage from "./PeripheralImage";
-import {create_peripheral} from "../../../utilities/PeripheralUtilities";
+import {create_peripheral_obj} from "../../../utilities/PeripheralUtilities";
+import {create_peripheral, send_image} from "../../../client_core";
 
 let  PeripheralsSidebar = props =>{
     const settings = useSelector(state => state.settings);
@@ -29,8 +30,10 @@ let  PeripheralsSidebar = props =>{
     let handle_add_peripheral = (event) =>{
 
         if (event.key === "Enter") {
-            let peripheral = create_peripheral(event.target.value)
-            create_peripheral(peripheral, image);
+            let peripheral = create_peripheral_obj(event.target.value)
+            create_peripheral(peripheral).then((res) =>{
+                send_image(image, event.target.value);
+            });
         }
     };
 

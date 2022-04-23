@@ -46,7 +46,7 @@ let  PeripheralEditSidebar = props =>{
     const [new_register, set_new_register] = useState(false);
 
     let handleEditImage = (image) =>{
-        send_image(image);
+        send_image(image, settings.current_peripheral);
         //SEND CHANGE COMMAND TO THE SERVER
         let edit ={peripheral:settings.current_peripheral, action:"change_image", path:image.name};
 
