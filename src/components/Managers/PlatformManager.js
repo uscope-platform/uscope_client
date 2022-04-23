@@ -24,6 +24,7 @@ import DataTable from 'react-data-table-component';
 import {TableStyle} from './TableStyles'
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
+import {remove_user, get_users_list, dump_database, restore_database} from '../../client_core'
 
 let columns = [
     {
@@ -48,7 +49,7 @@ let  PlatformManager = props =>{
     const databaseFile = useRef(null)
 
     useEffect(()=>{
-        settings.server.platform_proxy.get_users_list().then((response)=>{
+        get_users_list().then((response)=>{
             setUsers(response)
         })
     },[dispatch, location, settings.refresh_user_view, refreshList])
@@ -63,13 +64,13 @@ let  PlatformManager = props =>{
     };
 
     let handleRemoveUser = (event) =>{
-        settings.server.platform_proxy.remove_user({user:settings.selected_user}).then((response)=>{
+        remove_user({user:settings.selected_user}).then((response)=>{
             setRefreshList(!refreshList);
         })
     }
 
     let handleDumpDatabse = () =>{
-        settings.server.platform_proxy.dump_database().then((response)=>{
+        dump_database().then((response)=>{
             let encodedUri = encodeURI('data:text/json;charset=utf-8,'+ JSON.stringify(response));
             let link = document.createElement("a");
             link.setAttribute("href", encodedUri);
@@ -94,7 +95,7 @@ let  PlatformManager = props =>{
         reader.readAsText(file)
         reader.onload = (event) =>{
             let content = JSON.parse(event.target.result);
-            settings.server.platform_proxy.restore_database(content);
+            restore_database(content);
         }
         reader.onerror = (event) =>{
             alert(event.target.error.message);

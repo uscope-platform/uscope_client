@@ -26,7 +26,7 @@ import {
 import {setSetting} from "../../../redux/Actions/SettingsActions";
 import {SelectField} from "../../UI_elements/Select";
 
-
+import {add_user, do_onboarding} from "../../../client_core";
 
 let  PlatformSidebar = props =>{
 
@@ -40,12 +40,12 @@ let  PlatformSidebar = props =>{
         let pass = event.target.pass.value;
         let role = event.target.role.value;
         if(props.onboarding){
-            settings.server.platform_proxy.do_onboarding({user:username,password:pass, role:role}).then(res =>{
+            do_onboarding({user:username,password:pass, role:role}).then(res =>{
                 dispatch(setSetting(["refresh_user_view", !settings.refresh_user_view]));
             })
             props.onboarding_done();
         } else{
-            settings.server.platform_proxy.add_user({user:username,password:pass, role:role}).then(res =>{
+            add_user({user:username,password:pass, role:role}).then(res =>{
                 dispatch(setSetting(["refresh_user_view", !settings.refresh_user_view]));
             })
         }

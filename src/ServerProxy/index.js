@@ -14,11 +14,8 @@
 // limitations under the License.
 
 import PlotProxy from "./plot";
-import AuthProxy from "./auth"
-import PlatformProxy from "./platform";
 
 export default function serverProxy() {
     this.plot_proxy = new PlotProxy();
-    this.platform_proxy = new PlatformProxy();
 }
 

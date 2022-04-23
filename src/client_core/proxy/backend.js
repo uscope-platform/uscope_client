@@ -51,6 +51,17 @@ export const backend_post = (endpoint, data) => {
     });
 }
 
+export const backend_delete = (endpoint, data) => {
+    return new Promise( (resolve, reject) => {
+        axios.delete(server_address + endpoint, {...auth_config, data:data})
+            .then(res => {
+                resolve(res.data);
+            }).catch(error => {
+            reject(error);
+        });
+    });
+}
+
 export const backend_post_config = (endpoint, data, local_config) => {
     return new Promise( (resolve, reject) => {
         axios.post(server_address + endpoint, data,

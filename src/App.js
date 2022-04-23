@@ -20,7 +20,7 @@ import serverProxy from "./ServerProxy";
 import AuthApp from "./AuthApp";
 import LoginPage from "./components/Common_Components/LoginPage";
 import store from "./store";
-import {set_address, set_auth_config, set_redis_store, sign_in} from "./client_core";
+import {set_address, set_auth_config, set_redis_store, sign_in, need_onboarding} from "./client_core";
 
 //////  STYLE IMPORTS
 import './App.css';
@@ -61,7 +61,7 @@ let App = (props) =>{
         set_redis_store(store);
         dispatch(setSetting(["server", new serverProxy()]));
 
-        server.platform_proxy.need_onboarding().then(response =>{
+        need_onboarding().then(response =>{
             set_onboarding_needed(response['onboarding_needed']);
             if(response['onboarding_needed']) {
                 set_logged(true);
