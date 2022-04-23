@@ -25,6 +25,7 @@ export {upload_bitstream, delete_bitstream, edit_bitstream} from './proxy/bitstr
 export {upload_script, delete_script, edit_script} from './proxy/scripts'
 export {edit_program, upload_program, delete_program, compile_program, apply_program} from './proxy/programs'
 export {get_peripheral_registers, bulk_register_write, set_register_value, create_peripheral, send_image, edit_peripheral, remove_peripheral} from './proxy/peripherals'
+export {sign_in} from './auth'
 
 export let store = null;
 

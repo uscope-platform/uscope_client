@@ -1,4 +1,4 @@
-// Copyright 2021 University of Nottingham Ningbo China
+// Copyright 2021 Filippo Savi
 // Author: Filippo Savi <filssavi@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,12 +13,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import PlotProxy from "./plot";
-import AuthProxy from "./auth"
-import PlatformProxy from "./platform";
+import {backend_post} from "./proxy/backend";
 
-export default function serverProxy() {
-    this.plot_proxy = new PlotProxy();
-    this.platform_proxy = new PlatformProxy();
-}
-
+export const sign_in = (credentials) => {
+    return new Promise((resolve, reject) => {
+        backend_post("auth/login", credentials).then((res)=>{
+            resolve(res);
+        }).catch((err)=>{
+            alert("login failed");
+            reject("Login Failed");
+        })
+    });
+};

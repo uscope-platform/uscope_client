@@ -20,7 +20,7 @@ import serverProxy from "./ServerProxy";
 import AuthApp from "./AuthApp";
 import LoginPage from "./components/Common_Components/LoginPage";
 import store from "./store";
-import {set_address, set_auth_config, set_redis_store} from "./client_core";
+import {set_address, set_auth_config, set_redis_store, sign_in} from "./client_core";
 
 //////  STYLE IMPORTS
 import './App.css';
@@ -38,7 +38,7 @@ let App = (props) =>{
     const dispatch = useDispatch();
 
     const done = useCallback((login_credentials)=>{
-        server.auth_proxy.sign_in(login_credentials).then((token) =>{
+        sign_in(login_credentials).then((token) =>{
             if(token.login_token){
                 localStorage.setItem('login_token', JSON.stringify(token.login_token));
             }
