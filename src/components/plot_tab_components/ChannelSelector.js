@@ -22,14 +22,16 @@ import {get_channel_number_from_id} from "../../utilities/PlotUtilities";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import {useDispatch} from "react-redux";
 
+import {set_channel_status} from "../../client_core";
+
 let ChannelSelector = function(props) {
-    const settings = useSelector(state => state.settings);
+
     const channels_data = useSelector(state => state.plot.data);
     const dispatch = useDispatch();
 
     useEffect(()=>{
         let new_ch_state = get_state();
-        settings.server.plot_proxy.set_channel_status(new_ch_state);
+        set_channel_status(new_ch_state);
     },[])
 
     let get_state = ()=>{
@@ -45,7 +47,7 @@ let ChannelSelector = function(props) {
         let new_state = get_state();
         let channel_number = get_channel_number_from_id(status.id, channels_data);
         new_state[parseInt(channel_number)] = status.status;
-        settings.server.plot_proxy.set_channel_status(new_state);
+        set_channel_status(new_state);
 
         let palette = [];
         for(let item in new_state){

@@ -26,7 +26,7 @@ import styled from "styled-components";
 import {create_plot_channel, get_channels_from_group} from "../../../utilities/PlotUtilities";
 import {initialize_channels} from "../../../redux/Actions/plotActions";
 import {setSetting} from "../../../redux/Actions/SettingsActions";
-import {bulk_register_write} from "../../../client_core";
+import {bulk_register_write, set_channel_widths, set_channel_status} from "../../../client_core";
 
 const ChoicesWrapper = styled.div`
     display: grid;
@@ -136,7 +136,7 @@ let  EnablesProperties = props =>{
         for(let item of channels){
             widths.push(parseInt(item.phys_width));
         }
-        settings.server.plot_proxy.set_channel_widths(widths);
+        set_channel_widths(widths);
         // SET NEW CHANNELS status
         let new_ch_state = {}
 
@@ -144,7 +144,7 @@ let  EnablesProperties = props =>{
             new_ch_state[chan.spec.number] = chan.visible;
             return 0;
         })
-        settings.server.plot_proxy.set_channel_status(new_ch_state);
+        set_channel_status(new_ch_state);
     };
 
     return (

@@ -16,7 +16,6 @@
 //       REACT IMPORTS
 import React, {useCallback, useEffect, useState} from 'react';
 //      APP RELATED IMPORTS
-import serverProxy from "./ServerProxy";
 import AuthApp from "./AuthApp";
 import LoginPage from "./components/Common_Components/LoginPage";
 import store from "./store";
@@ -32,7 +31,7 @@ import {ColorTheme} from "./components/UI_elements";
 
 let App = (props) =>{
 
-    const [server] = useState(new serverProxy());
+
     const [logged, set_logged] = useState(false);
     const [onboarding_needed, set_onboarding_needed] = useState(true);
     const dispatch = useDispatch();
@@ -59,7 +58,6 @@ let App = (props) =>{
         dispatch(setSetting(["server_url", process.env.REACT_APP_SERVER]));
         set_address(process.env.REACT_APP_SERVER);
         set_redis_store(store);
-        dispatch(setSetting(["server", new serverProxy()]));
 
         need_onboarding().then(response =>{
             set_onboarding_needed(response['onboarding_needed']);

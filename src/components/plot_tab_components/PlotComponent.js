@@ -22,6 +22,8 @@ import {useSelector} from "react-redux";
 import styled from "styled-components";
 import PlotControls from "./PlotControls";
 
+import {fetch_data} from '../../client_core'
+
 const Plot = createPlotlyComponent(Plotly);
 
 const ComponentStyle = styled.div`
@@ -37,7 +39,7 @@ let  PlotComponent = props =>{
 
     let  handleRefresh = () =>{
         if(channels.plot_running){
-            settings.server.plot_proxy.fetchData();
+            fetch_data();
         }
     };
 

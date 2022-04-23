@@ -27,7 +27,7 @@ import {initialize_channels} from "../redux/Actions/plotActions";
 import {create_plot_channel, get_channels_from_group} from "../utilities/PlotUtilities";
 import ApplicationChooserView from "./Common_Components/ApplicationChooserView";
 
-import {set_application, bulk_register_write, get_peripheral_registers} from "../client_core"
+import {set_application, bulk_register_write, get_peripheral_registers, get_channel_info, set_channel_widths} from "../client_core"
 
 let ApplicationChooser = (props) =>{
 
@@ -42,7 +42,7 @@ let ApplicationChooser = (props) =>{
             let peripherals = Object.values(applications[e].peripherals);
             dispatch(loadViews(peripherals))
             initializePlotState(applications[e]);
-            settings.server.plot_proxy.getChannelsInfo(function(){handle_loading_channels_done(peripherals);});
+            get_channel_info(function(){handle_loading_channels_done(peripherals);});
         }).catch(error =>{
             console.log("Error: error while choosing application");
         });
@@ -91,7 +91,7 @@ let ApplicationChooser = (props) =>{
             for(let item of channels_list){
                 widths.push(parseInt(item.phys_width));
             }
-            settings.server.plot_proxy.set_channel_widths(widths);
+            set_channel_widths(widths);
         }
 
 
