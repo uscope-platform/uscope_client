@@ -27,7 +27,7 @@ import {initialize_channels} from "../redux/Actions/plotActions";
 import {create_plot_channel, get_channels_from_group} from "../utilities/PlotUtilities";
 import ApplicationChooserView from "./Common_Components/ApplicationChooserView";
 
-import {set_application} from "../client_core"
+import {set_application, bulk_register_write, get_peripheral_registers} from "../client_core"
 
 let ApplicationChooser = (props) =>{
 
@@ -82,7 +82,7 @@ let ApplicationChooser = (props) =>{
             for(let item of components){
                 word |= item;
             }
-            settings.server.periph_proxy.bulkRegisterWrite({payload:[{address:scope_mux_address, value:word}]});
+            bulk_register_write({payload: [{address: scope_mux_address, value: word}]}).then();
         }
         // SET UP CHANNEL WIDTHS
 
@@ -101,7 +101,7 @@ let ApplicationChooser = (props) =>{
 
         Promise.all(peripherals.map((tab) =>{
             if(tab.user_accessible && tab.type==="Registers"){
-                return settings.server.periph_proxy.getPeripheralRegisters(tab.peripheral_id);
+                return get_peripheral_registers(tab.peripheral_id);
             }
             return 'Not Needed';
         })).then((result) =>{

@@ -15,7 +15,7 @@
 
 import {saveScriptsWorkspace} from "../redux/Actions/scriptsActions";
 import {saveParameter} from "../redux/Actions/applicationActions";
-
+import {bulk_register_write} from "./proxy/peripherals";
 
 
 let parseFunction = function (string) {
@@ -140,10 +140,15 @@ export const run_parameter_script = (store, parameter) => {
         parameters[objIndex].value = floatValue;
         // run parameter script
         let bulk_registers = run_script(store, parameters[objIndex].trigger, parameters,  parameter.name);
-        if(bulk_registers !== null){
-            settings.server.periph_proxy.bulkRegisterWrite({payload:bulk_registers});
-        }
         //update value of parameter in redux
         store.dispatch(saveParameter({name:parameter.name, value:floatValue, app:settings["application"]}))
+
+        if(bulk_registers !== null){
+            return bulk_register_write({payload: bulk_registers}).then();
+        } else {
+            return new Promise((resolve, reject) =>{
+                resolve();
+            });
+        }
     }
 };

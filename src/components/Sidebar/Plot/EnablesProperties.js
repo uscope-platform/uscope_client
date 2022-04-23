@@ -26,6 +26,7 @@ import styled from "styled-components";
 import {create_plot_channel, get_channels_from_group} from "../../../utilities/PlotUtilities";
 import {initialize_channels} from "../../../redux/Actions/plotActions";
 import {setSetting} from "../../../redux/Actions/SettingsActions";
+import {bulk_register_write} from "../../../client_core";
 
 const ChoicesWrapper = styled.div`
     display: grid;
@@ -97,7 +98,7 @@ let  EnablesProperties = props =>{
         })[0].offset;
         address = parseInt(timebase_addr)+parseInt(reg_offset);
         bulk_registers.push({address:address, value:sample_phase})
-        settings.server.periph_proxy.bulkRegisterWrite({payload:bulk_registers});
+        bulk_register_write({payload: bulk_registers}).then();
     }
 
     let handleChGroupChange = (event) => {
@@ -127,7 +128,8 @@ let  EnablesProperties = props =>{
             for(let item of components){
                 word |= item;
             }
-            settings.server.periph_proxy.bulkRegisterWrite({payload:[{address:scope_mux_address, value:word}]});
+
+            bulk_register_write({payload: [{address: scope_mux_address, value: word}]}).then();
         }
         //SET  UP CHANNEL WIDTHS
         let widths = []

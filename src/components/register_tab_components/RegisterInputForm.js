@@ -21,6 +21,8 @@ import SingleValueField from "../Common_Components/SingleValueField";
 import TwoValuesField from "../Common_Components/TwoValuesField";
 import {useSelector} from "react-redux";
 
+import {set_register_value} from "../../client_core";
+
 function arraysEqual(a,b) {
     /*
         Array-aware equality checker:
@@ -55,7 +57,7 @@ let RegisterInputForm  = props => {
                 let idx = props.registers.findIndex((obj => obj.register_name === register.name));
                 let intValue = parseFloat(register.value);
                 if(register.value!=="" && props.registers[idx].value !==intValue){
-                    settings.server.periph_proxy.setRegisterValue({name:register.name, peripheral:props.parent_peripheral, value:intValue})
+                    set_register_value({name:register.name, peripheral:props.parent_peripheral, value:intValue})
                 }
             }else {
                 for(let item of register.classList){ // eslint-disable-line no-unused-vars
@@ -69,7 +71,7 @@ let RegisterInputForm  = props => {
                         }else if(fld_idx===2){
                             currentValue = [first_field_value, currentValue];
                             if(register.value!=="" && !arraysEqual( props.registers[reg_idx].value, currentValue)) {
-                                settings.server.periph_proxy.setRegisterValue({name:reg_id, peripheral:props.parent_peripheral, value:currentValue[0]+(currentValue[1]<<16)});
+                                set_register_value({name:reg_id, peripheral:props.parent_peripheral, value:currentValue[0]+(currentValue[1]<<16)});
                             }
                         }
 

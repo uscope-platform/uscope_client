@@ -18,8 +18,9 @@ import axios from "axios";
 
 export const sendRegister = (server_url ,register, config) => {
     return dispatch => {
-        axios.post(server_url,{payload:register}, config).then(() => {
+        return axios.post(server_url,{payload:register}, config).then(resp => {
             dispatch(sendRegisterDone(register));
+            return resp;
         }).catch(err => {
             alert('ERROR: error while sending a resiter to the server\n' + err.message);
         });

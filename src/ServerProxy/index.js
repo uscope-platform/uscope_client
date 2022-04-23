@@ -13,14 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import PeripheralProxy from "./peripheral";
 import PlotProxy from "./plot";
 import CreatorProxy from "./creator";
 import AuthProxy from "./auth"
 import PlatformProxy from "./platform";
 
 export default function serverProxy() {
-    this.periph_proxy = new PeripheralProxy();
     this.plot_proxy = new PlotProxy();
     this.creator_proxy = new CreatorProxy();
     this.auth_proxy = new AuthProxy();

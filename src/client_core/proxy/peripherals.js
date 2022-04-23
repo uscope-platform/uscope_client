@@ -14,8 +14,10 @@
 // limitations under the License.
 
 
-import {backend_get, dispatch_redux_thunk} from "./backend";
+import {backend_get, backend_post, dispatch_redux_thunk} from "./backend";
 import {loadPeripherals} from "../../redux/Actions/peripheralsActions";
+import store from "../../store";
+import {sendRegister} from "../../redux/Actions/RegisterActions";
 
 
 export const get_peripherals_hash = () =>{
@@ -25,3 +27,16 @@ export const get_peripherals_hash = () =>{
 export const load_all_peripherals = () => {
     return dispatch_redux_thunk(loadPeripherals,'registers/all_peripheral/descriptions');
 }
+
+
+export const get_peripheral_registers =  (peripheral_name) => {
+    return backend_get('registers/'+peripheral_name+'/descriptions');
+};
+
+export const bulk_register_write = (registers) =>{
+    return backend_post('registers/bulk_write', registers);
+};
+
+export const set_register_value = (register) => {
+    return dispatch_redux_thunk(sendRegister, 'registers/'+register.peripheral+'/value', register);
+};

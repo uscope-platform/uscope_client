@@ -15,13 +15,15 @@
 
 
 import {run_script, run_parameter_script} from '../../src/client_core/index'
-import {mock_store, register_writes} from "./mock/redux_store";
+import {mock_store} from "./mock/redux_store";
+import {bulk_write_data_check} from "./mock/peripherals_api";
 
 
 
 test('run_parameter_script', () => {
-    run_parameter_script(mock_store,{name:"deadtime_correction", value:"3e-6"});
-    expect(register_writes).toStrictEqual([{address:0x43c00254, value:6}]);
+    return run_parameter_script(mock_store,{name:"deadtime_correction", value:"3e-6"}).then((res)=>{
+        expect(bulk_write_data_check).toStrictEqual({payload:[{address:0x43c00254, value:6}]})
+    });
 })
 
 test('run_script', () => {

@@ -13,22 +13,8 @@ import thunk from "redux-thunk";
 export let register_writes = [];
 
 
-let MockProxy = class {
-    bulkRegisterWrite = (action) =>{
-        for (const register of action.payload) {
-            register_writes.push(register);
-        }
-    };
-};
-
-function serverProxy() {
-    this.periph_proxy = new MockProxy();
-}
-
-
 let settings_init = {
-    application:'SicDrive',
-    server:new serverProxy()
+    application:'SicDrive'
 }
 
 let applications_init = {

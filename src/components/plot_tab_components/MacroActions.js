@@ -23,6 +23,8 @@ import styled from "styled-components";
 import {run_script} from "../../client_core";
 
 import store from "../../store";
+import {bulk_register_write} from "../../client_core";
+
 
 const ButtonGrid = styled.div`
     display: flex;
@@ -42,7 +44,7 @@ let  MacroActions = props =>{
         let trigger_str = event.target.name;
         let bulk_registers = run_script(store, trigger_str, parameters, "");
         if(bulk_registers !== null){
-            settings.server.periph_proxy.bulkRegisterWrite({payload:bulk_registers});
+            bulk_register_write({payload: bulk_registers}).then();
         }
     };
 
