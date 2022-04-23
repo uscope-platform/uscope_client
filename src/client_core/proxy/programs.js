@@ -14,8 +14,8 @@
 // limitations under the License.
 
 
-import {backend_get, dispatch_redux_thunk} from "./backend";
-import {loadAllPrograms} from "../../redux/Actions/ProgramsActions";
+import {backend_get, backend_post, dispatch_redux_thunk} from "./backend";
+import {addProgram, editProgram, loadAllPrograms, removeProgram} from "../../redux/Actions/ProgramsActions";
 
 
 export const get_programs_hash = () =>{
@@ -24,4 +24,29 @@ export const get_programs_hash = () =>{
 
 export const load_all_programs = () => {
     return dispatch_redux_thunk(loadAllPrograms,'program/none');
+}
+
+export const upload_program =  (program) => {
+    return dispatch_redux_thunk(addProgram, 'program/'+program.id, program)
+};
+
+export const edit_program =  (program) => {
+    return dispatch_redux_thunk(editProgram, 'program/'+program.program, program)
+};
+
+export const delete_program = (program) => {
+    return dispatch_redux_thunk(removeProgram, 'program/'+program.id, program)
+};
+
+export const compile_program = (program) =>{
+    return backend_get('program/compile/'+program.id)
+};
+
+export const apply_program = (program) => {
+    return backend_post('program/Apply/'+program.id, program).then((res)=>{
+        return res;
+    }).catch((err)=>{
+        alert('ERROR: error while loading a program on the core' + err.message);
+        return err;
+    })
 }

@@ -18,5 +18,6 @@ import { cache_handlers } from './cache_handling_api'
 import {applications_api} from "./applications_api";
 import {bitstreams_api} from "./bitstreams_api";
 import {scripts_api} from "./scripts_api";
+import {programs_api} from "./programs_api";
 
-export const server = setupServer(...cache_handlers, ...applications_api, ...bitstreams_api, ...scripts_api)
+export const server = setupServer(...cache_handlers, ...applications_api, ...bitstreams_api, ...scripts_api, ...programs_api)

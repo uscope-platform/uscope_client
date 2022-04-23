@@ -17,7 +17,6 @@ import PeripheralProxy from "./peripheral";
 import PlotProxy from "./plot";
 import CreatorProxy from "./creator";
 import AuthProxy from "./auth"
-import ProgramsProxy from "./programs";
 import PlatformProxy from "./platform";
 
 export default function serverProxy() {
@@ -25,7 +24,6 @@ export default function serverProxy() {
     this.plot_proxy = new PlotProxy();
     this.creator_proxy = new CreatorProxy();
     this.auth_proxy = new AuthProxy();
-    this.prog_proxy = new ProgramsProxy();
     this.platform_proxy = new PlatformProxy();
 }
 

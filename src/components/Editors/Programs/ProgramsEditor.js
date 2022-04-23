@@ -24,7 +24,7 @@ import {useSelector} from "react-redux";
 import styled from "styled-components";
 import fCoreMode from "./fCorehas";
 
-
+import {edit_program} from "../../../client_core";
 
 const Title = styled.h1`
   margin-right: auto;
@@ -61,8 +61,7 @@ let ProgramsEditor = props =>{
     let handle_submit = (event) => {
         let prog = Object.values(programs).find(x => x.name === settings.program_editor_title);
         prog = {program:prog.id, field:'program_content', value:editor_content}
-
-        settings.server.prog_proxy.edit_program(prog);
+        edit_program(prog);
         props.done();
     };
 

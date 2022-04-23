@@ -15,6 +15,7 @@
 
 import React from "react";
 import {InputField} from "../InputField";
+import {edit_program} from "../../../client_core";
 
 export let  ProgramProperties = props =>{
 
@@ -23,7 +24,7 @@ export let  ProgramProperties = props =>{
         let edit = {}
         if(event.key==="Enter"|| event.key ==="Tab"){
             edit = {program:props.program, field:event.target.name, value:event.target.value}
-            props.server.prog_proxy.edit_program(edit);
+            edit_program(edit);
         }
     }
 

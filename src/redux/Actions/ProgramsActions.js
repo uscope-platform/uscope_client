@@ -18,8 +18,9 @@ import axios from "axios";
 
 export const addProgram = (server_url, program, config) =>{
     return dispatch => {
-        axios.post(server_url, program, config).then(res => {
+        return axios.post(server_url, program, config).then(res => {
             dispatch(AddProgramDone(program));
+            return res;
         }).catch(err => {
             alert('ERROR: error while adding a program\n' + err.message);
         });
@@ -34,8 +35,9 @@ const AddProgramDone = program =>({
 
 export const editProgram = (server_url, program, config) =>{
     return dispatch => {
-        axios.patch(server_url,program, config).then(res => {
+        return axios.patch(server_url,program, config).then(res => {
             dispatch(editProgramDone(program));
+            return res;
         }).catch(err => {
             alert('ERROR: error while editing a program\n' + err.message);
             dispatch(editProgramDone(program));
@@ -50,8 +52,9 @@ const editProgramDone = program =>({
 
 export const removeProgram = (server_url, program, config) =>{
     return dispatch => {
-        axios.delete(server_url, config).then(res => {
+        return axios.delete(server_url, config).then(res => {
             dispatch(removeProgramDone(program));
+            return res;
         }).catch(err => {
             alert('ERROR: error while removing a program\n' + err.message);
         });

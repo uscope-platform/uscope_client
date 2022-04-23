@@ -21,6 +21,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import ProgramsEditor from "../Editors/Programs/ProgramsEditor";
 import ButterToast, { POS_TOP, POS_RIGHT, Cinnamon} from "butter-toast";
+import {upload_program, delete_program, apply_program, compile_program} from "../../client_core";
 
 let columns = [
     {
@@ -82,14 +83,13 @@ let ProgramsManager = props =>{
         let ids = Object.values(programs_store).map(a => a.id).sort();
         let id = get_next_id(ids);
         let new_program= { id:id, name:'new program_'+id, program_content:'', program_type:''};
-        settings.server.prog_proxy.upload_program(new_program);
-
+        upload_program(new_program);
     };
 
     let handleRemoveRow = (event) =>{
 
     let removed = Object.values(programs_store).find(x => x.id === settings.selected_program);
-    settings.server.prog_proxy.delete_program(removed);
+    delete_program(removed);
     dispatch(setSetting(["selected_program", null]));
 
     };
@@ -119,7 +119,7 @@ let ProgramsManager = props =>{
             return;
         }
 
-        settings.server.prog_proxy.compile_program(programs_store[settings.selected_program]).then((data)=>{
+        compile_program(programs_store[settings.selected_program]).then((data)=>{
             let notifications={passed:[],failed:[]};
             for (let item of data){
                 if(item.status==="passed"){
@@ -153,7 +153,7 @@ let ProgramsManager = props =>{
     let handle_apply_program = () =>{
         let program = Object.values(programs_store).find(x => x.id === settings.selected_program);
         program.core_address = '0x83c00000';
-        settings.server.prog_proxy.apply_program(program);
+        apply_program(program).then();
     };
 
 
