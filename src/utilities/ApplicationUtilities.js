@@ -57,8 +57,7 @@ export let create_peripheral_entry = (name) =>{
         base_address: '0',
         proxied: false,
         proxy_address:'0',
-        type: 'Registers',
-        user_accessible: false
+        type: 'Registers'
     }
 }
 

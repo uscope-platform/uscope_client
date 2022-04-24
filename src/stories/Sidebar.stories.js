@@ -227,8 +227,7 @@ const app_example = {
             base_address: '0x43c00100',
             image_src: 'static/Images/ADC_processing.png',
             type: 'Registers',
-            proxied: false,
-            user_accessible: true
+            proxied: false
         },
         {
             base_address: '0x43c00000',
@@ -236,24 +235,21 @@ const app_example = {
             name: 'SPI',
             proxied: false,
             peripheral_id: 'SPI',
-            type: 'Registers',
-            user_accessible: true
+            type: 'Registers'
         },
         {
             base_address: '0x43c00300',
             name: 'GPIO',
             proxied: false,
             peripheral_id: 'GPIO',
-            type: 'Registers',
-            user_accessible: false
+            type: 'Registers'
         },
         {
             base_address: '0x43c00400',
             name: 'enable generator',
             proxied: false,
             peripheral_id: 'enable_generator',
-            type: 'Registers',
-            user_accessible: false
+            type: 'Registers'
         }
     ],
 

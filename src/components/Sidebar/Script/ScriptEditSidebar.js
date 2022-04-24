@@ -24,7 +24,6 @@ import {ScriptProperties} from "../../UI_elements/SidebarComponents/ScriptProper
 
 
 let ScriptEditSidebar = props =>{
-    const settings = useSelector(state => state.settings);
     const scripts = useSelector(state => state.scripts);
 
     return(

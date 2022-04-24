@@ -27,33 +27,40 @@ const ComponentLayout = styled.div`
 
 let  Navbar = props =>{
 
-    let link_default_style = {
-        display:"block",
-        backgroundColor: ColorTheme.dark_theme.level_1,
-        color: "white",
-        textDecoration: "none",
-        marginTop: "0.5rem",
-        borderRadius: "0.5rem",
-        paddingLeft: "0.5rem",
-    }
+    let link_stile = ({isActive}) =>{
+        if(isActive){
+            return  {
+                display:"block",
+                backgroundColor: ColorTheme.dark_theme.level_3,
+                color: "white",
+                textDecoration: "none",
+                marginTop: "0.5rem",
+                borderRadius: "0.5rem",
+                paddingLeft: "0.5rem",
+            }
 
-    let link_active_style = {
-        backgroundColor: ColorTheme.dark_theme.level_3
+        } else {
+            return  {
+                display:"block",
+                backgroundColor: ColorTheme.dark_theme.level_1,
+                color: "white",
+                textDecoration: "none",
+                marginTop: "0.5rem",
+                borderRadius: "0.5rem",
+                paddingLeft: "0.5rem",
+            }
+        }
     }
     return(
         <ComponentLayout>
             <Image src="assets/logo.svg" alt='µScope Logo'/>
             <Image src="assets/name.svg" alt='µScope Name'/>
             {props.views.map((tab, i) => {
-                if(tab.user_accessible){
                     return(
-                        <NavLink style={link_default_style} activeStyle={link_active_style} key={tab.peripheral_id} to={'/'+tab.peripheral_id} className="nav-link">
+                        <NavLink style={link_stile} key={tab.peripheral_id} to={'/'+tab.peripheral_id} className="nav-link">
                             {tab.name}
                         </NavLink>
                     )
-                } else {
-                    return null;
-                }
             })}
         </ComponentLayout>
 

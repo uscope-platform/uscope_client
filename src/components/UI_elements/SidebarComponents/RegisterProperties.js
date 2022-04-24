@@ -21,7 +21,6 @@ import {InputField} from "../InputField";
 import {Checkbox} from "../checkbox";
 import {Radio} from "../Radio";
 import {TextArea} from "../TextArea";
-import {useSelector} from "react-redux";
 import {Button} from "../Button";
 import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
 import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
@@ -36,8 +35,6 @@ const ChoicesWrapper = styled.div`
 `
 
 export let  RegisterProperties = props =>{
-
-    const settings = useSelector(state => state.settings);
 
     const [is_open, set_is_open] = useState(false);
     const [edit_name, set_edit_name] = useState(false);

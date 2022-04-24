@@ -14,7 +14,6 @@
 // limitations under the License.
 
 import React, {useState} from "react";
-import {useSelector} from "react-redux";
 import {Label} from "../Label";
 import {CaretDown, CaretUp} from "grommet-icons";
 import {InputField} from "../InputField";

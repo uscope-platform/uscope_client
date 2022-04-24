@@ -15,7 +15,7 @@
 
 //       REACT IMPORTS
 import React, {useEffect, useState} from 'react';
-import {Redirect, Route} from 'react-router-dom'
+import {Navigate, Route} from 'react-router-dom'
 
 //       REDUX IMPORTS
 import {useSelector} from "react-redux";
@@ -33,17 +33,19 @@ import OnboardingView from "./components/Onboarding";
 import {create_application_object} from "./utilities/ApplicationUtilities";
 
 import {create_application, refresh_caches} from "./client_core";
+import {Routes} from "react-router";
 
 let AuthApp = (props) =>{
 
-    const views = useSelector(state => state.views);
     const plot = useSelector(state => state.plot);
     const settings = useSelector(state => state.settings);
 
+    const [views, set_views] = useState([]);
 
     const [app_stage, set_app_stage] = useState("WAITING");
 
     let app_choice_done = ()=>{
+        populate_views();
         set_app_stage("NORMAL");
     };
 
@@ -69,6 +71,54 @@ let AuthApp = (props) =>{
 
     },[props.needs_onboarding])
 
+
+    let populate_views = () => {
+        let local_views = [];
+        let role_mapping = {admin:1, user:2, operator:3};
+        let role = role_mapping[settings.user_role]
+        if(role<=3){
+            local_views.push({
+                name: "Plot",
+                peripheral_id: "plot",
+                type: "Scope"
+            });
+        }
+        if(role<=2){
+            local_views.push({
+                name: "Script manager",
+                peripheral_id: "script_manager",
+                type: "script_manager"
+            });
+            local_views.push({
+                name: "Applications manager",
+                peripheral_id: "applications_manager",
+                type: "applications_manager"
+            });
+            local_views.push({
+                name: "Program Manager",
+                peripheral_id: "program_manager",
+                type: "program_manager"
+            });
+            local_views.push({
+                name: "Bitstream Manager",
+                peripheral_id: "bitstream_manager",
+                type: "bitstream_manager"
+            });
+        }
+        if(role<=1){
+            local_views.push({
+                name: "Peripherals manager",
+                peripheral_id: "peripherals_manager",
+                type: "peripherals_manager"
+            });
+            local_views.push({
+                name: "Platform Manager",
+                peripheral_id: "platform_manager",
+                type: "platform_manager"
+            });
+        }
+        set_views(local_views);
+    }
 
 
     switch (app_stage) {
@@ -101,24 +151,24 @@ let AuthApp = (props) =>{
                     <div className="App">
                         <ApplicationLayout name="plot_tab" sidebarNeeded={settings.current_view_requires_sidebar}>
                             <Navbar views={views}/>
+                            <Routes>
                             {views.map((tab, i) => {
-                                if(tab.user_accessible){
-                                    return(
-                                        <Route
-                                            key={tab.peripheral_id}
-                                            path={'/'+tab.peripheral_id}
-                                            exact
-                                            render={(props) => <TabContent className="main_content_tab" tab={tab}/>}
-                                        />
-
-                                    )
-                                } else {
-                                    return null;
-                                }
+                                return(
+                                    <Route
+                                        key={tab.peripheral_id}
+                                        path={'/'+tab.peripheral_id}
+                                        element={<TabContent className="main_content_tab" tab={tab}/>}
+                                    />
+                                )
                             })}
+                            <Route
+                                path="*"
+                                element={<Navigate to="/plot" />}
+                            />
+                            </Routes>
                             <Sidebar />
+
                         </ApplicationLayout>
-                        <Redirect exact from="/" to="plot" />
                     </div>
                 );
             }

@@ -4,7 +4,6 @@ import settingsReducer from "../../../src/redux/Reducers/settingsReducer";
 import plotReducer from "../../../src/redux/Reducers/plotReducer";
 import registerValuesReducer from "../../../src/redux/Reducers/registerReducer";
 import PeripheralsReducer from "../../../src/redux/Reducers/PeripheralsReducer";
-import viewsReducer from "../../../src/redux/Reducers/viewsReducer";
 import ApplicationsReducer from "../../../src/redux/Reducers/applicationsReducer";
 import programsReducer from "../../../src/redux/Reducers/ProgramsReducer";
 import {scriptsReducer, scriptsWorkspaceReducer} from "../../../src/redux/Reducers/scriptsReducer";
@@ -115,8 +114,7 @@ let applications_init = {
                 proxied: false,
                 proxy_address: '0',
                 spec_id: 'ADC_processing',
-                type: 'Registers',
-                user_accessible: false
+                type: 'Registers'
             }
         ],
         scope_mux_address: '0x43c00300',
@@ -231,7 +229,6 @@ export const mock_reducer = combineReducers({
     plot: plotReducer,
     registerValues: registerValuesReducer,
     peripherals:PeripheralsReducer,
-    views: viewsReducer,
     applications : ApplicationsReducer,
     programs : programsReducer,
     scripts: scriptsReducer,
@@ -247,7 +244,6 @@ export const initial_redux_state = {
     programs : programs_init,
     plot: {},
     registerValues: {},
-    views: {},
     scriptsWorkspace: {}
 };
 

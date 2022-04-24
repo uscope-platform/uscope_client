@@ -16,7 +16,6 @@
 import React, {Suspense} from 'react';
 
 const PlotTab = React.lazy(() => import('./plot_tab_components/PlotTab'));
-const RegisterTab = React.lazy(() => import('./register_tab_components/Register_tab'));
 const ScriptManager = React.lazy(() => import('./Managers/ScriptManager'));
 const PeripheralsManager = React.lazy(() => import('./Managers/PeripheralsManager'));
 const ApplicationsManager = React.lazy(() => import('./Managers/ApplicationsManager'));
@@ -31,13 +30,7 @@ let TabContent = props => {
                 <PlotTab content={props.tab}/>
             </Suspense>
         );
-    } else if(props.tab.type==='Registers') {
-        return (
-            <Suspense fallback={<div>Loading...</div>}>
-                <RegisterTab content={props.tab}/>
-            </Suspense>
-        );
-    }else if(props.tab.type ==='bitstream_manager'){
+    } else if(props.tab.type ==='bitstream_manager'){
         return (
             <Suspense fallback={<div>Loading...</div>}>
                 <BitstreamManager />

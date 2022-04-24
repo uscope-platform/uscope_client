@@ -29,7 +29,6 @@ import {edit_application} from "../../../client_core";
 
 export let  PlotChannelGroupProperties = props =>{
 
-    const settings = useSelector(state => state.settings);
     const channels = useSelector(state => state.applications[props.application].channels)
 
     const [is_open, set_is_open] = useState(false);

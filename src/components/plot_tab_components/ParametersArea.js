@@ -27,7 +27,7 @@ let  ParametersArea = props =>{
 
     let parameters = applications[settings["application"]].parameters;
 
-    //This effect hook initialized the parameters values
+    //This effect hook initializes the parameters values
     useEffect(() => {
         for(let elem of parameters){
             let local_elem = elem;
@@ -39,10 +39,10 @@ let  ParametersArea = props =>{
 
     let handleSubmit = event => {
         event.preventDefault();
-        for(let parameter of event.target){ // eslint-disable-line no-unused-vars
+        for(let parameter of event.target){
             //Parse parameter value and find out if it has changed
             if(parameter.value !== ""){
-                run_parameter_script(store, parameter);
+                run_parameter_script(store, parameter).then();
             }
         }
     };

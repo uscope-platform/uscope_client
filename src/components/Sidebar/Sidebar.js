@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React from 'react';
-import {withRouter} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 
 import {SidebarLayout} from "../UI_elements";
 import PeripheralsSidebar from "./Peripheral/PeripheralsSidebar";
@@ -26,9 +26,9 @@ import PlatformSidebar from "./Platform/PlatformSidebar";
 import BitstreamSidebar from "./Bitstream/BitstreamSidebar";
 
 let  Sidebar = props =>{
+    let location = useLocation();
 
-
-    switch (props.location.pathname) {
+    switch (location.pathname) {
         case "/peripherals_manager":
             return(
                 <SidebarLayout>
@@ -76,4 +76,4 @@ let  Sidebar = props =>{
     }
 };
 
-export default withRouter(Sidebar);
+export default Sidebar;
