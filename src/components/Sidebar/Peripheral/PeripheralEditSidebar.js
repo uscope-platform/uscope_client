@@ -29,9 +29,8 @@ import {
     StyledScrollbar
 } from "../../UI_elements";
 import {BlockTitle} from "../../UI_elements/";
-import PeripheralImage from "./PeripheralImage";
 import {Add} from "grommet-icons";
-import {send_image, edit_peripheral} from "../../../client_core";
+import {edit_peripheral} from "../../../client_core";
 
 const TitleLayout = styled.div`
   margin-left: auto;
@@ -44,14 +43,6 @@ let  PeripheralEditSidebar = props =>{
 
     const [edit_label, set_edit_label] = useState(false);
     const [new_register, set_new_register] = useState(false);
-
-    let handleEditImage = (image) =>{
-        send_image(image, settings.current_peripheral);
-        //SEND CHANGE COMMAND TO THE SERVER
-        let edit ={peripheral:settings.current_peripheral, action:"change_image", path:image.name};
-
-        edit_peripheral(edit);
-    }
 
     let handleEditVersion = () =>{
         set_edit_label(true);
@@ -95,25 +86,24 @@ let  PeripheralEditSidebar = props =>{
                     : <Label onDoubleClick={handleEditVersion}>{"Version: "+peripherals[settings.current_peripheral].version}</Label>
                 }
             </TitleLayout>
-            <PeripheralImage image={settings.server_url + peripherals[settings.current_peripheral].image} done={handleEditImage}/>
-                <SidebarBlockLayout>
-                    <SidebarBlockTitleLayout>
-                        <label style={{fontSize:'20px',fontWeight:600}}>{"Registers"}</label>
-                        <Add id="register" size={"medium"} onClick={handle_add_register} color='white'/>
-                    </SidebarBlockTitleLayout>
-                    {new_register &&
-                    <InputField name="register" compact label="Channel Name" onKeyDown={handle_add_register_done}/>
+            <SidebarBlockLayout>
+                <SidebarBlockTitleLayout>
+                    <label style={{fontSize:'20px',fontWeight:600}}>{"Registers"}</label>
+                    <Add id="register" size={"medium"} onClick={handle_add_register} color='white'/>
+                </SidebarBlockTitleLayout>
+                {new_register &&
+                <InputField name="register" compact label="Channel Name" onKeyDown={handle_add_register_done}/>
+                }
+                <StyledScrollbar>
+                    {
+                        peripherals[settings.current_peripheral].registers.map((reg)=>{
+                            return(
+                                <RegisterProperties peripheral={settings.current_peripheral} register={reg}/>
+                            )
+                        })
                     }
-                    <StyledScrollbar>
-                        {
-                            peripherals[settings.current_peripheral].registers.map((reg)=>{
-                                return(
-                                    <RegisterProperties peripheral={settings.current_peripheral} register={reg}/>
-                                )
-                            })
-                        }
-                    </StyledScrollbar>
-                </SidebarBlockLayout>
+                </StyledScrollbar>
+            </SidebarBlockLayout>
         </SidebarContentLayout>
     );
 };

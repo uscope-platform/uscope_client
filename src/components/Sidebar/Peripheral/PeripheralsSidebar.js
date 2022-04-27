@@ -13,41 +13,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from 'react';
+import React from 'react';
 
 import {useSelector} from "react-redux";
 import PeripheralEditSidebar from "./PeripheralEditSidebar";
 
 import {BlockTitle, InputField, SidebarContentLayout} from "../../UI_elements";
-import PeripheralImage from "./PeripheralImage";
 import {create_peripheral_obj} from "../../../utilities/PeripheralUtilities";
-import {create_peripheral, send_image} from "../../../client_core";
+import {create_peripheral} from "../../../client_core";
 
 let  PeripheralsSidebar = props =>{
     const settings = useSelector(state => state.settings);
-    const [image, set_image] = useState(null);
+
 
     let handle_add_peripheral = (event) =>{
 
         if (event.key === "Enter") {
             let peripheral = create_peripheral_obj(event.target.value)
-            create_peripheral(peripheral).then((res) =>{
-                send_image(image, event.target.value);
-            });
+            create_peripheral(peripheral).then();
         }
     };
 
-    let handleImageChoiceDone = (image) =>{
-        set_image(image);
-    };
 
     if(!settings.current_peripheral)
         return (
             <SidebarContentLayout peripheral>
                 <BlockTitle>Peripheral actions</BlockTitle>
-                <PeripheralImage done={handleImageChoiceDone}/>
                 <InputField compact label="Add a peripheral" onKeyDown={handle_add_peripheral}/>
-
             </SidebarContentLayout>
         );
 

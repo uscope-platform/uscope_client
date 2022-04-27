@@ -45,13 +45,6 @@ let PeripheralsReducer = function (state = null, action) {
                         });
                         return draftState
                     });
-                case "change_image":
-                    return produce(state, draftState => {
-                        let periph = draftState[action.payload.peripheral]
-                        let image_path = periph.image.substring(0, periph.image.lastIndexOf("/"));
-                        periph.image = image_path+"/"+action.payload.path;
-                        return draftState
-                    });
                 case "edit_version":
                     return produce(state, draftState => {
                         draftState[action.payload.peripheral]["version"] = action.payload.version;

@@ -14,7 +14,7 @@
 // limitations under the License.
 
 
-import {backend_get, backend_post, backend_post_config, dispatch_redux_thunk} from "./backend";
+import {backend_get, backend_post, dispatch_redux_thunk} from "./backend";
 import {addPeripheral, editPeripheral, loadPeripherals, removePeripheral} from "../../redux/Actions/peripheralsActions";
 import {sendRegister} from "../../redux/Actions/RegisterActions";
 
@@ -44,23 +44,6 @@ export const set_register_value = (register) => {
 export const create_peripheral = (peripheral) => {
     return dispatch_redux_thunk(addPeripheral, api_dictionary.peripherals.add, {payload:peripheral});
 };
-
-export const send_image = (image, periph) => {
-    let formData = new FormData();
-    formData.append("file", image, image.name);
-
-    let local_headers = {
-        'accept': 'application/json',
-        'Accept-Language': 'en-US,en;q=0.8',
-        'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
-    };
-
-    return  backend_post_config(api_dictionary.peripherals.image, formData, local_headers).then((res) =>{
-       return res;
-    }).catch((err) => {
-        console.log(err);
-    })
-}
 
 export const edit_peripheral = (edit) => {
     return dispatch_redux_thunk(editPeripheral, api_dictionary.peripherals.edit, edit);
