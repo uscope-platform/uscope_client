@@ -21,8 +21,9 @@ import {scripts_api} from "./scripts_api";
 import {programs_api} from "./programs_api";
 import {peripherals_api} from "./peripherals_api";
 import {auth_api} from "./auth_api";
+import {platform_api} from "./platform_api";
 
 
 export const server = setupServer(...cache_handlers, ...applications_api,
     ...bitstreams_api, ...scripts_api, ...programs_api, ...peripherals_api,
-    ...auth_api)
+    ...auth_api, ...platform_api)
