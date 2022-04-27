@@ -13,16 +13,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { setupServer } from 'msw/node'
-import { cache_handlers } from './cache_handling_api'
-import {applications_api} from "./applications_api";
-import {bitstreams_api} from "./bitstreams_api";
-import {scripts_api} from "./scripts_api";
-import {programs_api} from "./programs_api";
-import {peripherals_api} from "./peripherals_api";
-import {auth_api} from "./auth_api";
+import {backend_post} from "./backend";
 
-
-export const server = setupServer(...cache_handlers, ...applications_api,
-    ...bitstreams_api, ...scripts_api, ...programs_api, ...peripherals_api,
-    ...auth_api)
+export const sign_in = (credentials) => {
+    return new Promise((resolve, reject) => {
+        backend_post("auth/login", credentials).then((res)=>{
+            resolve(res);
+        }).catch((err)=>{
+            alert("login failed");
+            reject(err);
+        })
+    });
+};

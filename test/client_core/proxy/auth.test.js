@@ -13,16 +13,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { setupServer } from 'msw/node'
-import { cache_handlers } from './cache_handling_api'
-import {applications_api} from "./applications_api";
-import {bitstreams_api} from "./bitstreams_api";
-import {scripts_api} from "./scripts_api";
-import {programs_api} from "./programs_api";
-import {peripherals_api} from "./peripherals_api";
-import {auth_api} from "./auth_api";
+
+import { sign_in} from "../../../src/client_core";
 
 
-export const server = setupServer(...cache_handlers, ...applications_api,
-    ...bitstreams_api, ...scripts_api, ...programs_api, ...peripherals_api,
-    ...auth_api)
+
+
+test("auth_sucess", () => {
+    return sign_in({user:"test", password:"success"}).then((resp) =>{
+        expect(resp).toBe("ok");
+    })
+})
+
+let alert_message = "";
+test("auth_fail", () => {
+    jest.spyOn(window, 'alert').mockImplementation((msg) => {alert_message = msg;});
+
+    return sign_in({user:"test", password:"fail"}).catch((err) =>{
+        expect(err.response.data).toBe("FAILED");
+        expect(err.response.status).toBe(401);
+        expect(alert_message).toBe("login failed");
+    })
+})

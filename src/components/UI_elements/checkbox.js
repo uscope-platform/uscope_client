@@ -35,7 +35,7 @@ export let  Checkbox = props =>{
             <Label inline={props.inline}>{props.label}</Label>
             <InputCheckbox
                 name={props.name}
-                checked={props.value?"true":""}
+                checked={props.value?true:false}
                 type="checkbox"
                 onChange={e => props.onChange(e)}
                 style={props.style}

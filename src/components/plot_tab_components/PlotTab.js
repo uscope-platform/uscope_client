@@ -23,6 +23,7 @@ import ParametersArea from "./ParametersArea";
 import MacroActions from "./MacroActions";
 import styled from "styled-components";
 import {ColorTheme} from "../UI_elements";
+import TerminalComponent from "./Terminal";
 
 
 const ComponentLayout = styled.div`
@@ -38,12 +39,15 @@ let PlotTab = function (props) {
     const settings = useSelector(state => state.settings);
 
         return(
-            <ComponentLayout>
-                <ChannelSelector channels={channels}/>
-                <PlotComponent palette={{colorway:ColorTheme.plot_palette}} refreshRate={settings.refreshRate}/>
-                <ParametersArea />
-                <MacroActions />
-            </ComponentLayout>
+            <>
+                <ComponentLayout>
+                    <ChannelSelector channels={channels}/>
+                    <PlotComponent palette={{colorway:ColorTheme.plot_palette}} refreshRate={settings.refreshRate}/>
+                    <ParametersArea />
+                    <MacroActions />
+                </ComponentLayout>
+                <TerminalComponent/>
+            </>
         );
 };
 

@@ -9,6 +9,7 @@
     "env-cmd": "^10.1.0",
     "grommet-icons": "^4.4.0",
     "immer": "^9.0.1",
+    "javascript-terminal": "^1.1.1",
     "plotly.js": "^2.11.1",
     "plotly.js-basic-dist": "^2.11.1",
     "plotly.js-dist": "^2.11.1",
@@ -27,11 +28,13 @@
     "redux-devtools-extension": "^2.13.8",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
-    "styled-components": "^5.1.1"
+    "styled-components": "^5.1.1",
+    "xterm": "^4.18.0",
+    "xterm-addon-fit": "^0.5.0"
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "start": "PORT=3004 react-scripts --openssl-legacy-provider start",
+    "start": "PORT=3004 GENERATE_SOURCEMAP=false react-scripts --openssl-legacy-provider start",
     "build": "react-scripts build",
     "build:staging": "env-cmd -f .env.staging npm run build",
     "build_debugging": "env-cmd -f .env.debugging npm run build",
@@ -65,6 +68,8 @@
     "@storybook/react": "^6.2.7",
     "eslint-plugin-react-hooks": "^4.4.0",
     "faker": "^6.6.6",
+    "identity-obj-proxy": "^3.0.0",
+    "jest-canvas-mock": "^2.3.1",
     "jest-cli": "^27.5.1",
     "jest-puppeteer": "^6.1.0",
     "msw": "^0.39.2",

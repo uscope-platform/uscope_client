@@ -16,7 +16,6 @@
 //       REACT IMPORTS
 import React, {useEffect, useState} from 'react';
 import {Navigate, Route} from 'react-router-dom'
-
 //       REDUX IMPORTS
 import {useSelector} from "react-redux";
 
@@ -24,6 +23,7 @@ import {useSelector} from "react-redux";
 import TabContent from "./components/TabContent";
 import Navbar from "./components/Navbar";
 import ApplicationChooser from "./components/AppChooser";
+
 //////  STYLE IMPORTS
 import './App.css';
 
@@ -151,23 +151,24 @@ let AuthApp = (props) =>{
                     <div className="App">
                         <ApplicationLayout name="plot_tab" sidebarNeeded={settings.current_view_requires_sidebar}>
                             <Navbar views={views}/>
-                            <Routes>
-                            {views.map((tab, i) => {
-                                return(
+                            <div>
+                                <Routes>
+                                    {views.map((tab, i) => {
+                                        return(
+                                            <Route
+                                                key={tab.peripheral_id}
+                                                path={'/'+tab.peripheral_id}
+                                                element={<TabContent className="main_content_tab" tab={tab}/>}
+                                            />
+                                        )
+                                    })}
                                     <Route
-                                        key={tab.peripheral_id}
-                                        path={'/'+tab.peripheral_id}
-                                        element={<TabContent className="main_content_tab" tab={tab}/>}
+                                        path="*"
+                                        element={<Navigate to="/plot" />}
                                     />
-                                )
-                            })}
-                            <Route
-                                path="*"
-                                element={<Navigate to="/plot" />}
-                            />
-                            </Routes>
+                                </Routes>
+                            </div>
                             <Sidebar />
-
                         </ApplicationLayout>
                     </div>
                 );

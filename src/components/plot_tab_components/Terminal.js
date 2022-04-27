@@ -13,16 +13,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { setupServer } from 'msw/node'
-import { cache_handlers } from './cache_handling_api'
-import {applications_api} from "./applications_api";
-import {bitstreams_api} from "./bitstreams_api";
-import {scripts_api} from "./scripts_api";
-import {programs_api} from "./programs_api";
-import {peripherals_api} from "./peripherals_api";
-import {auth_api} from "./auth_api";
+import React, {useEffect, useRef} from "react";
+import {init_terminal} from "../../client_core";
+import 'xterm/css/xterm.css';
 
+let TerminalComponent = props =>{
 
-export const server = setupServer(...cache_handlers, ...applications_api,
-    ...bitstreams_api, ...scripts_api, ...programs_api, ...peripherals_api,
-    ...auth_api)
+    const term = useRef(null);
+
+    useEffect(()=>{
+        term.current = init_terminal();
+    },[])
+
+    return(
+        <div id="xterm" style={{ height: "25vh", width: "100%" }} />
+    )
+};
+
+export default TerminalComponent;
