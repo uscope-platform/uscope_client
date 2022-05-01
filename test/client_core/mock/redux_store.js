@@ -8,6 +8,7 @@ import ApplicationsReducer from "../../../src/redux/Reducers/applicationsReducer
 import programsReducer from "../../../src/redux/Reducers/ProgramsReducer";
 import {scriptsReducer, scriptsWorkspaceReducer} from "../../../src/redux/Reducers/scriptsReducer";
 import thunk from "redux-thunk";
+import {up_application} from "../../../src/client_core";
 
 export let register_writes = [];
 
@@ -16,8 +17,7 @@ let settings_init = {
     application:'SicDrive'
 }
 
-let applications_init = {
-    SicDrive: {
+let test_application = {
         application_name: 'SicDrive',
         bitstream: 'scm.bin',
         channel_groups: [],
@@ -119,9 +119,12 @@ let applications_init = {
         ],
         scope_mux_address: '0x43c00300',
         timebase_address: '0x43c00304'
-    }
 }
 
+
+let applications_init = {
+    SicDrive: new up_application(test_application)
+}
 
 let peripherals_init = {
     ADC_processing: {

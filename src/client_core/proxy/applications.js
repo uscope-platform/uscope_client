@@ -15,15 +15,32 @@
 
 
 import {backend_get, dispatch_redux_thunk} from "./backend";
-import {addApplication, editApplication, loadApplications, removeApplication} from "../../redux/Actions/applicationActions";
+import {
+    addApplication,
+    editApplication,
+    loadApplications,
+    loadApplicationsDone,
+    removeApplication
+} from "../../redux/Actions/applicationActions";
 import {api_dictionary} from './api_dictionary'
+import {up_application} from "../data_models/up_application";
+import {store} from "../index";
 
 export const get_applications_hash = () =>{
     return backend_get(api_dictionary.applications.get_hash)
 };
 
 export const load_all_applications = () => {
-    return dispatch_redux_thunk(loadApplications,api_dictionary.applications.load_all);
+    return backend_get(api_dictionary.applications.load_all).then(res=>{
+        let apps_dict = {}
+        for (let item in res) {
+            let app = new up_application(res[item])
+            apps_dict[app.application_name] = app
+        }
+        store.dispatch(loadApplicationsDone(apps_dict));
+        return apps_dict;
+    })
+
 }
 
 export const create_application = (application) => {

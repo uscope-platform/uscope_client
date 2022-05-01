@@ -15,40 +15,13 @@
 
 import {refresh_caches} from "../../src/client_core";
 import {mock_store, initial_redux_state} from "./mock/redux_store";
-
-
-const localStorageMock = (function() {
-    let state = {
-        "test_item": 123
-    }
-
-    return {
-        getItem: function(key) {
-            return state[key] || null
-        },
-        setItem: function(key, value) {
-            state[key] = value.toString()
-        },
-        removeItem: function(key) {
-            delete state[key]
-        },
-        clear: function() {
-            state = {}
-        },
-        initialize: function(s) {
-            state = s
-        },
-        get_state: function (){
-            return state;
-        }
-    }
-})()
-
-Object.defineProperty(window, 'localStorage', {
-    value: localStorageMock
-})
-
-
+import {
+    applications_init,
+    bitstream_init,
+    peripherals_init,
+    programs_init,
+    scripts_init
+} from "./mock/cache_handling_api";
 
 let check_test_results = (promise_result, redux_reference, test_case) => {
     expect(promise_result[0].status).toBe(test_case)
@@ -57,16 +30,15 @@ let check_test_results = (promise_result, redux_reference, test_case) => {
     expect(promise_result[3].status).toBe(test_case)
     expect(promise_result[4].status).toBe(test_case)
 
-    let storage_state = localStorage.get_state();
     let state = mock_store.getState();
 
-    expect(storage_state.application_cache).toBe("9bcb1e2d-dc4c-44cb-be5d-3897f288c617");
-    expect(storage_state.peripheral_cache).toBe("94c46594-3bb9-4fae-b6aa-a61e03a288e2");
-    expect(storage_state.bitstreams_cache).toBe("74478cc1-fdb7-486a-975c-129c71400530");
-    expect(storage_state.programs_cache).toBe("d0f84519-10da-4ada-8727-8bd6a0f608e0");
-    expect(storage_state.scripts_cache).toBe("9701008d-c511-4ded-94b3-b08748a6e066");
+    expect(localStorage.getItem("application_cache")).toBe("9bcb1e2d-dc4c-44cb-be5d-3897f288c617");
+    expect(localStorage.getItem("peripheral_cache")).toBe("94c46594-3bb9-4fae-b6aa-a61e03a288e2");
+    expect(localStorage.getItem("bitstreams_cache")).toBe("74478cc1-fdb7-486a-975c-129c71400530");
+    expect(localStorage.getItem("programs_cache")).toBe("d0f84519-10da-4ada-8727-8bd6a0f608e0");
+    expect(localStorage.getItem("scripts_cache")).toBe("9701008d-c511-4ded-94b3-b08748a6e066");
 
-    expect(state.applications).toStrictEqual(redux_reference.applications);
+    expect(state.applications).toMatchObject(redux_reference.applications);
     expect(state.peripherals).toStrictEqual(redux_reference.peripherals);
     expect(state.scripts).toStrictEqual(redux_reference.scripts);
     expect(state.bitstreams).toStrictEqual(redux_reference.bitstreams);
@@ -74,19 +46,19 @@ let check_test_results = (promise_result, redux_reference, test_case) => {
 
 }
 
+const expected_store = {
+    "applications":applications_init,
+    "peripherals":[peripherals_init],
+    "scripts":[scripts_init],
+    "bitstreams":[bitstream_init],
+    "programs":[programs_init]
+}
 
 
 test("hard_load", () => {
     localStorage.clear();
     return refresh_caches().then((res)=>{
-        let redux_reference = {
-            "applications":[{application_obj:true}],
-            "peripherals":[{peripheral_obj:true}],
-            "scripts":[{scripts_obj:true}],
-            "bitstreams":[{bitstream_obj:true}],
-            "programs":[{programs_obj:true}]
-        }
-        check_test_results(res, redux_reference, "hard_load");
+        check_test_results(res, expected_store, "hard_load");
     });
 })
 
@@ -94,13 +66,13 @@ test("hard_load", () => {
 
 test("valid", () => {
     localStorage.clear();
-    localStorage.initialize({
-        "peripheral_cache": "94c46594-3bb9-4fae-b6aa-a61e03a288e2",
-        "application_cache": "9bcb1e2d-dc4c-44cb-be5d-3897f288c617",
-        "bitstreams_cache": "74478cc1-fdb7-486a-975c-129c71400530",
-        "programs_cache": "d0f84519-10da-4ada-8727-8bd6a0f608e0",
-        "scripts_cache": "9701008d-c511-4ded-94b3-b08748a6e066"
-    });
+
+    localStorage.setItem("peripheral_cache", "94c46594-3bb9-4fae-b6aa-a61e03a288e2")
+    localStorage.setItem("application_cache", "9bcb1e2d-dc4c-44cb-be5d-3897f288c617")
+    localStorage.setItem("bitstreams_cache", "74478cc1-fdb7-486a-975c-129c71400530")
+    localStorage.setItem("programs_cache", "d0f84519-10da-4ada-8727-8bd6a0f608e0")
+    localStorage.setItem("scripts_cache", "9701008d-c511-4ded-94b3-b08748a6e066")
+
     //setup server
     mock_store.dispatch({type: 'RESET_STORE'});
     return refresh_caches().then((res)=>{
@@ -110,23 +82,16 @@ test("valid", () => {
 
 test("refresh", () => {
     localStorage.clear();
-    localStorage.initialize({
-        "peripheral_cache": "94c3d594-3bb9-4fae-b6aa-a61e03a288e2",
-        "application_cache": "9bc23e2d-dc4c-44cb-be5d-3897f288c617",
-        "bitstreams_cache": "74472cc1-fdb7-486a-975c-129c71400530",
-        "programs_cache": "d0f8e19-10da-4ada-8727-8bd6a0f608e0",
-        "scripts_cache": "9701028d-c511-4ded-94b3-b08748a6e066"
-    });
+
+    localStorage.setItem("peripheral_cache", "94c3d594-3bb9-4fae-b6aa-a61e03a288e2")
+    localStorage.setItem("application_cache", "9bc23e2d-dc4c-44cb-be5d-3897f288c617")
+    localStorage.setItem("bitstreams_cache", "74472cc1-fdb7-486a-975c-129c71400530")
+    localStorage.setItem("programs_cache", "d0f8e19-10da-4ada-8727-8bd6a0f608e0")
+    localStorage.setItem("scripts_cache", "9701028d-c511-4ded-94b3-b08748a6e066")
+
     //setup server
     mock_store.dispatch({type: 'RESET_STORE'});
     return refresh_caches().then((res)=>{
-        let redux_reference = {
-            "applications":[{application_obj:true}],
-            "peripherals":[{peripheral_obj:true}],
-            "scripts":[{scripts_obj:true}],
-            "bitstreams":[{bitstream_obj:true}],
-            "programs":[{programs_obj:true}]
-        }
-        check_test_results(res, redux_reference, "refresh");
+        check_test_results(res, expected_store, "refresh");
     });
 })

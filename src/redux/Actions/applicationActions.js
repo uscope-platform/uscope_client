@@ -37,7 +37,7 @@ export const loadApplications = (server_url, config) => {
     };
 };
 
-const loadApplicationsDone = parameters => ({
+export const loadApplicationsDone = parameters => ({
     type: LOAD_APPLICATIONS,
     payload: parameters
 });
@@ -54,7 +54,7 @@ export const editApplication = (server_url,edit, config) => {
     };
 };
 
-const editApplicationDone = edit => ({
+export const editApplicationDone = edit => ({
     type: EDIT_APPLICATION,
     payload: edit
 });
@@ -70,7 +70,7 @@ export const removeApplication = (server_url, application, config) =>{
     };
 };
 
-const removeApplicationDone = application =>({
+export const removeApplicationDone = application =>({
     type: REMOVE_APPLICATION,
     payload:application
 });
@@ -86,7 +86,7 @@ export const addApplication = (server_url, application_obj, config) =>{
     };
 };
 
-const addApplicationDone = application =>({
+export const addApplicationDone = application =>({
     type: ADD_APPLICATION,
     payload:application
 });
