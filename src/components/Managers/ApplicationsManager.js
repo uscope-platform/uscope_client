@@ -22,7 +22,7 @@ import {setSetting} from "../../redux/Actions/SettingsActions";
 
 import DataTable from 'react-data-table-component';
 import {TableStyle} from './TableStyles'
-import {create_application, remove_application} from "../../client_core";
+import {create_application, remove_application, up_application} from "../../client_core";
 
 
 let columns = [
@@ -100,7 +100,8 @@ let  ApplicationsManager = props =>{
     };
 
     let addApplication = (content) => {
-        create_application(JSON.parse(content));
+        let app_obj = new up_application(JSON.parse(content));
+        create_application(app_obj);
     };
 
     const rowSelectCritera = row => row.application_name === settings.current_application;

@@ -14,10 +14,9 @@
 // limitations under the License.
 
 
-import {backend_get, dispatch_redux_thunk} from "./backend";
+import {backend_get, backend_post, dispatch_redux_thunk} from "./backend";
 import {
-    addApplication,
-    editApplication,
+    addApplicationDone,
     loadApplicationsDone,
     removeApplication
 } from "../../redux/Actions/applicationActions";
@@ -43,11 +42,10 @@ export const load_all_applications = () => {
 }
 
 export const create_application = (application) => {
-    return dispatch_redux_thunk(addApplication, api_dictionary.applications.add, application);
-}
-
-export const edit_application = (edit) => {
-    return dispatch_redux_thunk(editApplication, api_dictionary.applications.edit, edit);
+    let app_obj = application._get_app();
+    return backend_post(api_dictionary.applications.add, app_obj).then(()=>{
+        store.dispatch(addApplicationDone({[application.application_name]:application}));
+    });
 }
 
 export const remove_application = (application) => {

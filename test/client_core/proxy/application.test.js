@@ -14,14 +14,13 @@
 // limitations under the License.
 
 
-import {create_application, remove_application, edit_application} from "../../../src/client_core";
+import {create_application, remove_application, up_application} from "../../../src/client_core";
 import {mock_store} from "../mock/redux_store";
-import {create_application_object, create_irv} from "../../../src/utilities/ApplicationUtilities";
-import {created_app_data, removed_app, edit_app_data} from "../mock/applications_api";
+import {created_app_data, removed_app} from "../mock/applications_api";
 
 
 test("application_creation", () => {
-    let app = create_application_object("default");
+    let app = up_application.construct_empty("default");
     return create_application(app).then((res) =>{
         let check_app = {"default": {
                 application_name: "default",
@@ -38,7 +37,7 @@ test("application_creation", () => {
             }};
         expect(created_app_data).toStrictEqual(check_app);
         let state = mock_store.getState();
-        expect(state.applications.default).toStrictEqual(check_app.default)
+        expect(state.applications.default._get_app().default).toStrictEqual(check_app.default)
     })
 })
 
@@ -48,17 +47,5 @@ test("application_removal", () => {
         let state = mock_store.getState();
         expect(state.applications).not.toHaveProperty("SicDrive");
         expect(removed_app).toBe("SicDrive");
-    })
-})
-
-
-test("application_edit", () => {
-    let og_app = mock_store.getState().applications.SicDrive
-    let edit = {application:"SicDrive", irv:create_irv("0x320"), action:"add_irv"};
-    return edit_application(edit).then(()=>{
-        og_app.initial_registers_values.push(create_irv("0x320"));
-        expect(edit_app_data).toStrictEqual(edit);
-        expect( mock_store.getState().applications.SicDrive).toStrictEqual(og_app);
-
     })
 })

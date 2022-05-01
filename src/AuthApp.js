@@ -32,7 +32,7 @@ import Sidebar from "./components/Sidebar/Sidebar";
 import OnboardingView from "./components/Onboarding";
 import {create_application_object} from "./utilities/ApplicationUtilities";
 
-import {create_application, refresh_caches} from "./client_core";
+import {create_application, refresh_caches, up_application} from "./client_core";
 import {Routes} from "react-router";
 
 let AuthApp = (props) =>{
@@ -59,7 +59,7 @@ let AuthApp = (props) =>{
                 } else if(Object.keys(res[0].data).length !== 0) {
                     set_app_stage("APP_CHOICE");
                 } else {
-                    let app = create_application_object("default");
+                    let app = up_application.construct_empty("default");
                     create_application(app).then(() => {
                         set_app_stage("APP_CHOICE");
                     });

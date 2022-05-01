@@ -282,6 +282,7 @@ test("add_peripheral", () => {
                         name: "test_periph",
                         peripheral_id:"test_periph",
                         proxied:false,
+                        spec_id:"",
                         proxy_address:"0",
                         type:"Registers"
                     }],
@@ -295,6 +296,7 @@ test("add_peripheral", () => {
                     name: "test_periph",
                     peripheral_id:"test_periph",
                     proxied:false,
+                    spec_id:"",
                     proxy_address:"0",
                     type:"Registers"
                 }
@@ -541,6 +543,7 @@ test("edit_peripheral", () => {
                             name: "test_periph",
                             peripheral_id:"test_p",
                             proxied:false,
+                            spec_id:"",
                             proxy_address:"0",
                             type:"Registers"
                         }],

@@ -26,33 +26,11 @@ export const saveParameter = (parameter) => ({
     }
 });
 
-export const loadApplications = (server_url, config) => {
-    return (dispatch, getState) => {
-        return axios.get(server_url, config).then(res => {
-            dispatch(loadApplicationsDone(res.data));
-            return res.data;
-        }).catch(err => {
-            alert('ERROR: error while loading all applications\n' + err.message);
-        });
-    };
-};
-
 export const loadApplicationsDone = parameters => ({
     type: LOAD_APPLICATIONS,
     payload: parameters
 });
 
-
-export const editApplication = (server_url,edit, config) => {
-
-    return dispatch => {
-        return axios.post(server_url, edit, config).then(res => {
-            dispatch(editApplicationDone(edit));
-        }).catch(err => {
-            alert('ERROR: error while editing an application\n' + err.message);
-        });
-    };
-};
 
 export const editApplicationDone = edit => ({
     type: EDIT_APPLICATION,
