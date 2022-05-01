@@ -23,7 +23,6 @@ import {Button} from "../Button";
 import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
 import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
 
-import {edit_application} from "../../../client_core";
 
 export let  PlotChannelProperties = props =>{
 
@@ -42,9 +41,10 @@ export let  PlotChannelProperties = props =>{
 
     let handleEditNameChange = (event) => {
         if(event.key==="Enter"){
-            let edit = {application:props.application, channel:props.channel.name, field:event.target.name, value:event.target.value, action:"edit_channel"};
-            edit_application(edit)
-            set_edit_name(false);
+            props.application.edit_channel(props.channel.name, event.target.name, event.target.value).then(()=>{
+                props.forceUpdate();
+                set_edit_name(false);
+            });
         }else if(event.key ==="Escape"){
             set_edit_name(false);
         }
@@ -55,21 +55,23 @@ export let  PlotChannelProperties = props =>{
     }
 
     let handleChange = (event)=>{
-        let edit = {application:props.application, channel:props.channel.name, field:event.target.name, value:event.target.checked, action:"edit_channel"};
-        edit_application(edit)
+        props.application.edit_channel(props.channel.name, event.target.name, event.target.checked).then(()=>{
+            props.forceUpdate();
+        });
     }
 
     let handleonKeyDown = (event) =>{
-        let edit = {}
         if(event.key==="Enter"|| event.key ==="Tab"){
-            edit = {application:props.application, channel:props.channel.name, field:event.target.name, value:event.target.value, action:"edit_channel"};
-            edit_application(edit)
+            props.application.edit_channel(props.channel.name, event.target.name, event.target.value).then(()=>{
+                props.forceUpdate();
+            });
         }
     }
 
     let handleRemoveRegister= (event) =>{
-        let edit = {application:props.application, channel:props.channel.name, action:"remove_channel"};
-        edit_application(edit)
+        props.application.remove_channel(props.channel.name).then(()=>{
+            props.forceUpdate();
+        });
     }
 
     let renderChannelContent = (props) =>{

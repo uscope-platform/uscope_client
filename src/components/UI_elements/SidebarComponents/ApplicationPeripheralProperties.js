@@ -24,7 +24,6 @@ import {Button} from "../Button";
 import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
 import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
 import {SelectField} from "../Select";
-import {edit_application} from "../../../client_core";
 
 
 
@@ -47,9 +46,11 @@ export let  ApplicationPeripheralProperties = props =>{
 
     let handleEditNameChange = (event) => {
         if(event.key==="Enter"){
-            let edit = {application:props.application, peripheral:props.peripheral.name, field:event.target.name, value:event.target.value, action:"edit_peripheral"};
-            edit_application(edit)
-            set_edit_name(false);
+            props.application.edit_peripheral(props.peripheral.name,event.target.name, event.target.value).then(()=>{
+                props.forceUpdate();
+                set_edit_name(false);
+            });
+
         }else if(event.key ==="Escape"){
             set_edit_name(false);
         }
@@ -60,28 +61,28 @@ export let  ApplicationPeripheralProperties = props =>{
     }
 
     let handleChange = (event)=>{
-        let edit = {application:props.application, peripheral:props.peripheral.name, field:event.target.name, value:event.target.checked, action:"edit_peripheral"};
-        edit_application(edit)
-
+        props.application.edit_peripheral(props.peripheral.name,event.target.name, event.target.checked).then(()=>{
+            props.forceUpdate();
+        });
     }
 
     let handleIDChange = (event)=>{
-        let edit = {application:props.application, peripheral:props.peripheral.name, field:event.target.name, value:event.target.value, action:"edit_peripheral"};
-        edit_application(edit)
+        props.application.edit_peripheral(props.peripheral.name,event.target.name, event.target.value).then(()=>{
+            props.forceUpdate();
+        });
     }
 
     let handleonKeyDown = (event) =>{
-        let edit = {}
         if(event.key==="Enter"|| event.key ==="Tab"){
-            edit = {application:props.application, peripheral:props.peripheral.name, field:event.target.name, value:event.target.value, action:"edit_peripheral"};
-            edit_application(edit)
-
+            props.application.edit_peripheral(props.peripheral.name,event.target.name, event.target.value).then(()=>{
+                props.forceUpdate();
+            });
         }
     }
 
-    let handleRemoveRegister= (event) =>{
-        let edit = {application:props.application, peripheral:props.peripheral.name, action:"remove_peripheral"};
-        edit_application(edit)
+    let handleRemoveRegister= (event) =>{        props.application.remove_peripheral(props.peripheral.name).then(()=>{
+            props.forceUpdate();
+        });
     }
 
     let renderContent = (props) =>{
@@ -92,7 +93,7 @@ export let  ApplicationPeripheralProperties = props =>{
             return(
                 <SidebarCollapsableContentLayout>
                     <InputField inline name='peripheral_id' defaultValue={props.peripheral.peripheral_id} onKeyDown={handleonKeyDown} label="Peripheral id"/>
-                    <SelectField label="peripheral ID" onChange={handleIDChange} defaultValue={props.peripheral.spec_id}
+                    <SelectField label="IP type" onChange={handleIDChange} defaultValue={props.peripheral.spec_id}
                                  name="spec_id" placeholder="Peripheral type" options={peripherals_list}/>
                     <InputField inline name='base_address' defaultValue={props.peripheral.base_address} onKeyDown={handleonKeyDown} label="Base Address"/>
                     <InputField inline name='type' defaultValue={props.peripheral.type} onKeyDown={handleonKeyDown} label="Type"/>

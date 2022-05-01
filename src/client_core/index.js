@@ -22,7 +22,7 @@ export {refresh_caches} from './cache_handling'
 export {init_terminal} from './terminal/terminal'
 // SERVER PROXY
 export {set_address, set_auth_config} from './proxy/backend'
-export {create_application, edit_application, remove_application, set_application} from './proxy/applications'
+export {create_application, remove_application, set_application} from './proxy/applications'
 export {upload_bitstream, delete_bitstream, edit_bitstream} from './proxy/bitstreams'
 export {upload_script, delete_script, edit_script} from './proxy/scripts'
 export {edit_program, upload_program, delete_program, compile_program, apply_program} from './proxy/programs'

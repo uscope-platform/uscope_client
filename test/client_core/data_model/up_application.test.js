@@ -559,6 +559,73 @@ test("edit_peripheral", () => {
 });
 
 
+test("edit_misc_param_value", () => {
+    let app = up_application.construct_empty("default");
+    return app.add_remote().then(() => {
+        return app.set_misc_param("test_param").then(() => {
+            return app.edit_misc_param("test_param",52, false).then(() => {
+                let check_app = {
+                    "default": {
+                        application_name: "default",
+                        bitstream: '',
+                        channels: [],
+                        channel_groups: [],
+                        clock_frequency: 100000000,
+                        initial_registers_values: [],
+                        macro: [],
+                        n_enables: 0,
+                        parameters: [],
+                        peripherals: [],
+                        timebase_address: '',
+                        test_param: 52,
+                    }
+                };
+
+                expect(edit_app_data).toStrictEqual({
+                    action: "edit_misc", application: "default", field:{old_name:null, name:"test_param", value:52}
+                });
+                let state = mock_store.getState();
+                expect(state.applications.default._get_app().default).toStrictEqual(check_app.default);
+            });
+        });
+    });
+});
+
+
+test("edit_misc_rename", () => {
+    let app = up_application.construct_empty("default");
+    return app.add_remote().then(() => {
+        return app.set_misc_param("test_param").then(() => {
+            return app.edit_misc_param("test_param","test_2", true).then(() => {
+                let check_app = {
+                    "default": {
+                        application_name: "default",
+                        bitstream: '',
+                        channels: [],
+                        channel_groups: [],
+                        clock_frequency: 100000000,
+                        initial_registers_values: [],
+                        macro: [],
+                        n_enables: 0,
+                        parameters: [],
+                        peripherals: [],
+                        timebase_address: '',
+                        test_2: 0,
+                    }
+                };
+
+                expect(edit_app_data).toStrictEqual({
+                    action: "edit_misc", application: "default", field:{old_name:"test_param", name:"test_2"}
+                });
+                let state = mock_store.getState();
+                expect(state.applications.default._get_app().default).toStrictEqual(check_app.default);
+            });
+        });
+    });
+});
+
+
+
 test("remove_channel", () => {
     let app = up_application.construct_empty("default");
     return app.add_remote().then(() => {

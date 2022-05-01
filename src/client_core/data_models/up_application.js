@@ -23,7 +23,7 @@ import {
 } from "../../utilities/ApplicationUtilities";
 import {backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
-import {addApplicationDone} from "../../redux/Actions/applicationActions";
+import {addApplicationDone, editApplicationDone} from "../../redux/Actions/applicationActions";
 
 
 export class up_application {
@@ -106,21 +106,21 @@ export class up_application {
     }
 
     ////////////////////////////////////////////////////
-    edit_channel = (ch_id, field_name, field_value) =>{
+    edit_channel = (channel_name, field_name, field_value) =>{
         let [channel] = this.channels.filter((ch) =>{
-            return ch.id === ch_id;
+            return ch.name === channel_name;
         })
         channel[field_name] = field_value;
-        let edit = {application:this.application_name, channel:ch_id, field:field_name, value:field_value, action:"edit_channel"};
+        let edit = {application:this.application_name, channel:channel_name, field:field_name, value:field_value, action:"edit_channel"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
-    edit_channel_group = (chg_id, field_name,field_value) =>{
+    edit_channel_group = (chg_name, field_name,field_value) =>{
         let [group] = this.channel_groups.filter((chg) =>{
-            return chg.group_id === chg_id;
+            return chg.group_name === chg_name;
         })
         group[field_name] = field_value;
-        let edit = {application:this.application_name, group:chg_id, field:field_name, value:field_value, action:"edit_channel_group"};
+        let edit = {application:this.application_name, group:chg_name, field:field_name, value:field_value, action:"edit_channel_group"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -155,16 +155,31 @@ export class up_application {
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
-    edit_peripheral = (periph_id, field_name, field_value) => {
+    edit_peripheral = (periph_name, field_name, field_value) => {
 
         let [periph] = this.peripherals.filter((p) =>{
-            return p.peripheral_id === periph_id;
+            return p.name === periph_name;
         })
 
         periph[field_name] = field_value;
-        let edit = {application:this.application_name, peripheral:periph_id, field:field_name, value:field_value, action:"edit_peripheral"};
+        let edit = {application:this.application_name, peripheral:periph_name, field:field_name, value:field_value, action:"edit_peripheral"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
+
+    edit_misc_param = (param_name, param_value, rename_param) =>{
+
+        let edit = {}
+        if(rename_param){
+            edit =  {application:this.application_name, field: {old_name:param_name, name:param_value}, action:"edit_misc"};
+            this[param_value] = this[param_name];
+            delete this[param_name];
+        } else {
+            edit = {application:this.application_name, field: {old_name:null, name:param_name, value:param_value}, action:"edit_misc"};
+            this[param_name] = param_value;
+        }
+        return backend_post(api_dictionary.applications.edit, edit);
+    }
+
 
     ////////////////////////////////////////////////////
     remove_channel = (ch_id) =>{
@@ -227,6 +242,7 @@ export class up_application {
     remove_misc_field = (field_name) =>{
         delete this[field_name]
         let edit = {application:this.application_name, field:{name:field_name}, action:"remove_misc"};
+        store.dispatch(editApplicationDone(edit));
         return backend_post(api_dictionary.applications.edit, edit);
     }
 

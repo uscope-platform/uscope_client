@@ -25,11 +25,10 @@ import {Checkbox} from "../checkbox"
 import {MultiSelect} from "../MultiSelect";
 import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
 import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
-import {edit_application} from "../../../client_core";
 
 export let  PlotChannelGroupProperties = props =>{
 
-    const channels = useSelector(state => state.applications[props.application].channels)
+    const channels = useSelector(state => state.applications[props.application.application_name].channels)
 
     const [is_open, set_is_open] = useState(false);
     const [channels_list, set_channels_list] = useState([]);
@@ -49,17 +48,19 @@ export let  PlotChannelGroupProperties = props =>{
 
     let handleEditNameChange = (event) => {
         if(event.key==="Enter"){
-            let edit = {application:props.application, group:props.group.group_name, field:event.target.name, value:event.target.value, action:"edit_channel_group"};
-            edit_application(edit)
-            set_edit_name(false);
+            props.application.edit_channel_group(props.group.group_name, event.target.name, event.target.value).then(()=>{
+                props.forceUpdate();
+                set_edit_name(false);
+            });
         }else if(event.key ==="Escape"){
             set_edit_name(false);
         }
     }
 
     let handleChangeDefault = (event)=>{
-        let edit = {application:props.application, group:props.group.group_name, field:event.target.name, value:event.target.checked, action:"edit_channel_group"};
-        edit_application(edit)
+        props.application.edit_channel_group(props.group.group_name, event.target.name, event.target.checked).then(()=>{
+            props.forceUpdate();
+        });
     }
 
     let handleClose = ()=>{
@@ -69,23 +70,25 @@ export let  PlotChannelGroupProperties = props =>{
     let handleChange = (event)=>{
         if(event.length<=6){
             set_channels_list(event);
-            let edit = {application:props.application, group:props.group.group_name, field:"channels", value:event, action:"edit_channel_group"};
-            edit_application(edit)
+            props.application.edit_channel_group(props.group.group_name, "channels", event).then(()=>{
+                props.forceUpdate();
+            });
         }
 
     }
 
     let handleonKeyDown = (event) =>{
-        let edit = {}
         if(event.key==="Enter"|| event.key ==="Tab"){
-            edit = {application:props.application, group:props.group.group_name, field:event.target.name, value:event.target.value, action:"edit_channel_group"};
-            edit_application(edit)
+            props.application.edit_channel_group(props.group.group_name, event.target.name, event.target.value).then(()=>{
+                props.forceUpdate();
+            });
         }
     }
 
     let handleRemoveRegister= (event) =>{
-        let edit = {application:props.application, group:props.group.group_name, action:"remove_channel_group"};
-        edit_application(edit)
+        props.application.remove_channel_groups(props.group.group_name).then(()=>{
+            props.forceUpdate();
+        });
     }
 
     let renderChannelContent = (props) =>{

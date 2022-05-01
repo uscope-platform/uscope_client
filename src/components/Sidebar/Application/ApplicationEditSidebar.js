@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from 'react';
+import React, {useReducer, useState} from 'react';
 
 import {useSelector} from "react-redux";
 
@@ -34,20 +34,17 @@ import {
 
 import {Add} from "grommet-icons";
 
-import {
-    create_channel, create_channel_group,
-    create_irv,
-    create_macro,
-    create_parameter,
-    create_peripheral_entry
-} from "../../../utilities/ApplicationUtilities";
 import {PlotChannelGroupProperties} from "../../UI_elements/SidebarComponents/PlotChannelGroupProperties";
-import {edit_application} from "../../../client_core";
+import {up_application} from "../../../client_core";
 
 
 let  ApplicationEditSidebar = props =>{
     const settings = useSelector(state => state.settings);
     const applications = useSelector(state => state.applications)
+    const [, forceUpdate] = useReducer(x => x + 1, 0);
+
+
+    const selected_app = new up_application(applications[settings.current_application]);
 
     const [new_channel, set_new_channel] = useState(false);
     const [new_irv, set_new_irv] = useState(false);
@@ -58,41 +55,40 @@ let  ApplicationEditSidebar = props =>{
     const [new_ch_group, set_new_ch_group] = useState(false);
 
     let handle_add_item_done = (event) =>{
-        let edit = {};
         if(event.key==="Enter"|| event.key ==="Tab"){
             switch (event.target.name) {
                 case "ch_group":
-                    edit = {application:settings.current_application, group:create_channel_group(event.target.value), action:"add_channel_group"};
+                    selected_app.add_channel_group(event.target.value);
                     set_new_ch_group(false);
                     break;
                 case "channel":
-                    edit = {application:settings.current_application, channel:create_channel(event.target.value), action:"add_channel"};
+                    selected_app.add_channel(event.target.value);
                     set_new_channel(false);
                     break;
                 case "irv":
-                    edit = {application:settings.current_application, irv:create_irv(event.target.value), action:"add_irv"};
+                    selected_app.add_irv(event.target.value);
                     set_new_irv(false);
                     break;
                 case"macro":
-                    edit = {application:settings.current_application, macro:create_macro(event.target.value), action:"add_macro"};
+                    selected_app.add_macro(event.target.value);
                     set_new_macro(false);
                     break;
                 case"parameter":
-                    edit = {application:settings.current_application, parameter:create_parameter(event.target.value), action:"add_parameter"};
+                    selected_app.add_parameter(event.target.value);
                     set_new_parameter(false);
                     break;
                 case"peripheral":
-                    edit = {application:settings.current_application, peripheral:create_peripheral_entry(event.target.value), action:"add_peripheral"};
+                    selected_app.add_peripheral(event.target.value);
                     set_new_parameter(false);
                     break;
                 case "misc":
-                    edit = {application:settings.current_application, field: {name:event.target.value, value:"0"}, action:"add_misc"};
+                    selected_app.set_misc_param(event.target.value);
                     set_new_misc(false);
                     break;
                 default:
                     return;
             }
-            edit_application(edit)
+            forceUpdate();
         }
     }
 
@@ -126,27 +122,12 @@ let  ApplicationEditSidebar = props =>{
 
 
 
-    let render_misc_fields = () =>{
-        let fields_list = [];
-        for(let field_name in applications[settings.current_application]){
-            let value = applications[settings.current_application][field_name];
-            if(!Array.isArray(value))
-                fields_list.push({name:field_name, value:value})
-        }
-
-        return fields_list.map((field)=>{
-            return(
-                <ApplicationMiscFieldProperties application={settings.current_application} field={field}/>
-            )
-        })
-    }
-
     if(!settings.current_application)
         return <></>;
 
     return (
         <SidebarContentLayout application>
-            <BlockTitle>{applications[settings.current_application].application_name}</BlockTitle>
+            <BlockTitle>{selected_app.application_name}</BlockTitle>
 
             <SidebarBlockLayout>
                 <SidebarBlockTitleLayout>
@@ -158,9 +139,9 @@ let  ApplicationEditSidebar = props =>{
                     }
                 <StyledScrollbar>
                         {
-                            applications[settings.current_application].channel_groups.map((group)=>{
+                            selected_app.channel_groups.map((group)=>{
                                 return(
-                                    <PlotChannelGroupProperties application={settings.current_application} group={group}/>
+                                    <PlotChannelGroupProperties application={selected_app} forceUpdate={forceUpdate} group={group}/>
                                 )
                             })
                         }
@@ -177,9 +158,9 @@ let  ApplicationEditSidebar = props =>{
                 }
                 <StyledScrollbar>
                     {
-                        applications[settings.current_application].channels.map((channel)=>{
+                        selected_app.channels.map((channel)=>{
                             return(
-                                <PlotChannelProperties application={settings.current_application} channel={channel}/>
+                                <PlotChannelProperties application={selected_app} forceUpdate={forceUpdate} channel={channel}/>
                             )
                         })
                     }
@@ -196,9 +177,9 @@ let  ApplicationEditSidebar = props =>{
                 }
                 <StyledScrollbar>
                     {
-                        applications[settings.current_application].initial_registers_values.map((irv)=>{
+                        selected_app.initial_registers_values.map((irv)=>{
                             return(
-                                <InitialRegisterValue application={settings.current_application} irv={irv}/>
+                                <InitialRegisterValue application={selected_app} forceUpdate={forceUpdate} irv={irv}/>
                             )
                         })
                     }
@@ -215,9 +196,9 @@ let  ApplicationEditSidebar = props =>{
                 }
                 <StyledScrollbar>
                     {
-                        applications[settings.current_application].macro.map((macro)=>{
+                        selected_app.macro.map((macro)=>{
                             return(
-                                <MacroProperties application={settings.current_application} macro={macro}/>
+                                <MacroProperties application={selected_app} forceUpdate={forceUpdate} macro={macro}/>
                             )
                         })
                     }
@@ -234,9 +215,9 @@ let  ApplicationEditSidebar = props =>{
                 }
                 <StyledScrollbar>
                     {
-                        applications[settings.current_application].parameters.map((parameter)=>{
+                        selected_app.parameters.map((parameter)=>{
                             return(
-                                <ParameterProperties application={settings.current_application} parameter={parameter}/>
+                                <ParameterProperties application={selected_app} forceUpdate={forceUpdate} parameter={parameter}/>
                             )
                         })
                     }
@@ -253,9 +234,9 @@ let  ApplicationEditSidebar = props =>{
                 }
                 <StyledScrollbar>
                     {
-                        applications[settings.current_application].peripherals.map((peripheral)=>{
+                        selected_app.peripherals.map((peripheral)=>{
                             return(
-                                <ApplicationPeripheralProperties application={settings.current_application} peripheral={peripheral}/>
+                                <ApplicationPeripheralProperties application={selected_app} forceUpdate={forceUpdate} peripheral={peripheral}/>
                             )
                         })
                     }
@@ -272,7 +253,10 @@ let  ApplicationEditSidebar = props =>{
                 }
                 <StyledScrollbar>
                     {
-                        render_misc_fields()
+                        Object.keys(selected_app).map((key, index) =>{
+                            if(!Array.isArray(selected_app[key]) && typeof selected_app[key] !== 'function')
+                                return <ApplicationMiscFieldProperties application={selected_app} forceUpdate={forceUpdate} field={{name:key, value:selected_app[key]}}/>
+                        })
                     }
                 </StyledScrollbar>
             </SidebarBlockLayout>

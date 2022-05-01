@@ -22,16 +22,12 @@ import {Checkbox} from "../checkbox";
 import {Button} from "../Button";
 import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
 import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
-import {edit_application} from "../../../client_core";
 
 export let  ParameterProperties = props =>{
 
 
-
     const [is_open, set_is_open] = useState(false);
     const [edit_name, set_edit_name] = useState(false);
-
-
 
     let handleOpen = ()=>{
         set_is_open(true);
@@ -43,9 +39,10 @@ export let  ParameterProperties = props =>{
 
     let handleEditNameChange = (event) => {
         if(event.key==="Enter"){
-            let edit = {application:props.application, parameter:props.parameter.parameter_id, field:event.target.name, value:event.target.value, action:"edit_parameter"};
-            edit_application(edit)
-            set_edit_name(false);
+            props.application.edit_parameters(props.parameter.parameter_id, event.target.name, event.target.value).then(()=>{
+                props.forceUpdate();
+                set_edit_name(false);
+            });
         }else if(event.key ==="Escape"){
             set_edit_name(false);
         }
@@ -56,21 +53,23 @@ export let  ParameterProperties = props =>{
     }
 
     let handleChange = (event)=>{
-        let edit = {application:props.application, parameter:props.parameter.parameter_id, field:event.target.name, value:event.target.checked, action:"edit_parameter"};
-        edit_application(edit)
+        props.application.edit_parameters(props.parameter.parameter_id, event.target.name, event.target.checked).then(()=>{
+            props.forceUpdate();
+        });
     }
 
     let handleonKeyDown = (event) =>{
-        let edit = {}
         if(event.key==="Enter"|| event.key ==="Tab"){
-            edit = {application:props.application, parameter:props.parameter.parameter_id, field:event.target.name, value:event.target.value, action:"edit_parameter"};
-            edit_application(edit)
+            props.application.edit_parameters(props.parameter.parameter_id, event.target.name, event.target.value).then(()=>{
+                props.forceUpdate();
+            });
         }
     }
 
     let handleRemoveRegister= (event) =>{
-        let edit = {application:props.application, parameter:props.parameter.parameter_id, action:"remove_parameter"};
-        edit_application(edit)
+        props.application.remove_parameter(props.parameter.parameter_id).then(()=>{
+            props.forceUpdate();
+        });
     }
 
     let renderChannelContent = (props) =>{

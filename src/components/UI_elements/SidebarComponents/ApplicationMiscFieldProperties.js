@@ -21,7 +21,6 @@ import {InputField} from "../InputField";
 import {Button} from "../Button";
 import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
 import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
-import {edit_application} from "../../../client_core";
 
 export let  ApplicationMiscFieldProperties = props =>{
 
@@ -41,8 +40,9 @@ export let  ApplicationMiscFieldProperties = props =>{
 
     let handleEditNameChange = (event) => {
         if(event.key==="Enter"){
-            let edit = {application:props.application, field: {old_name:props.field.name, name:event.target.value}, action:"edit_misc"};
-            edit_application(edit)
+            props.application.edit_misc_param(props.field.name,event.target.value, true).then(()=>{
+                props.forceUpdate();
+            });
             set_edit_name(false);
         }else if(event.key ==="Escape"){
             set_edit_name(false);
@@ -54,16 +54,16 @@ export let  ApplicationMiscFieldProperties = props =>{
     }
 
     let handleonKeyDown = (event) =>{
-        let edit = {}
         if(event.key==="Enter"|| event.key ==="Tab"){
-            edit = {application:props.application, field: {old_name:null, name:props.field.name, value:event.target.value}, action:"edit_misc"};
-            edit_application(edit)
+            props.application.edit_misc_param(props.field.name,event.target.value, false).then(()=>{
+                props.forceUpdate();
+            });
         }
     }
 
     let handleRemoveRegister= (event) =>{
-        let edit = {application:props.application, field:{name:props.field.name}, action:"remove_misc"};
-        edit_application(edit)
+        props.application.remove_misc_field(props.field.name);
+        props.forceUpdate();
     }
 
     let renderChannelContent = (props) =>{

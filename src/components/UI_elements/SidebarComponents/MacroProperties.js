@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from "react";
+import React, {useState, us} from "react";
 import {Label} from "../Label";
 import {CaretDown, CaretUp} from "grommet-icons";
 import {InputField} from "../InputField";
@@ -21,14 +21,13 @@ import {InputField} from "../InputField";
 import {Button} from "../Button";
 import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
 import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
-import {edit_application} from "../../../client_core";
+
 
 export let  MacroProperties = props =>{
 
 
     const [is_open, set_is_open] = useState(false);
     const [edit_name, set_edit_name] = useState(false);
-
 
 
     let handleOpen = ()=>{
@@ -41,8 +40,9 @@ export let  MacroProperties = props =>{
 
     let handleEditNameChange = (event) => {
         if(event.key==="Enter"){
-            let edit = {application:props.application, name:props.macro.name, field:event.target.name, value:event.target.value, action:"edit_macro"};
-            edit_application(edit)
+            props.application.edit_macro(props.macro.name, event.target.name, event.target.value).then(()=>{
+                props.forceUpdate();
+            });
             set_edit_name(false);
         }else if(event.key ==="Escape"){
             set_edit_name(false);
@@ -54,16 +54,17 @@ export let  MacroProperties = props =>{
     }
 
     let handleonKeyDown = (event) =>{
-        let edit = {}
         if(event.key==="Enter"|| event.key ==="Tab"){
-            edit = {application:props.application, name:props.macro.name, field:event.target.name, value:event.target.value, action:"edit_macro"};
-            edit_application(edit)
+            props.application.edit_macro(props.macro.name, event.target.name, event.target.value).then(()=>{
+                props.forceUpdate();
+            });
         }
     }
 
     let handleRemoveRegister= (event) =>{
-        let edit = {application:props.application, name:props.macro.name, action:"remove_macro"};
-        edit_application(edit)
+        props.application.remove_macro(props.macro.name).then(()=>{
+            props.forceUpdate();
+        });
     }
 
     let renderChannelContent = (props) =>{

@@ -21,7 +21,6 @@ import {InputField} from "../InputField";
 import {Button} from "../Button";
 import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
 import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
-import {edit_application} from "../../../client_core";
 
 export let  InitialRegisterValue = props =>{
 
@@ -40,8 +39,9 @@ export let  InitialRegisterValue = props =>{
 
     let handleEditNameChange = (event) => {
         if(event.key==="Enter"){
-            let edit = {application:props.application, address:props.irv.address, field:event.target.name, value:event.target.value, action:"edit_irv"};
-            edit_application(edit)
+            props.application.edit_irv(props.irv.address,event.target.name, event.target.value).then(()=>{
+                props.forceUpdate();
+            });
             set_edit_name(false);
         }else if(event.key ==="Escape"){
             set_edit_name(false);
@@ -55,14 +55,16 @@ export let  InitialRegisterValue = props =>{
     let handleonKeyDown = (event) =>{
         let edit = {}
         if(event.key==="Enter"|| event.key ==="Tab"){
-            edit = {application:props.application, address:props.irv.address, field:event.target.name, value:event.target.value, action:"edit_irv"};
-            edit_application(edit)
+            props.application.edit_irv(props.irv.address,event.target.name, event.target.value).then(()=>{
+                props.forceUpdate();
+            });
         }
     }
 
     let handleRemoveRegister= (event) =>{
-        let edit = {application:props.application, address:props.irv.address, action:"remove_irv"};
-        edit_application(edit)
+        props.application.remove_irv(props.irv.address).then(()=>{
+            props.forceUpdate();
+        });
     }
 
     let renderChannelContent = (props) =>{

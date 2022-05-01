@@ -18,7 +18,6 @@ import {backend_get, dispatch_redux_thunk} from "./backend";
 import {
     addApplication,
     editApplication,
-    loadApplications,
     loadApplicationsDone,
     removeApplication
 } from "../../redux/Actions/applicationActions";
