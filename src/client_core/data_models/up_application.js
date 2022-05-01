@@ -23,7 +23,7 @@ import {
 } from "../../utilities/ApplicationUtilities";
 import {backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
-import {addApplicationDone, editApplicationDone} from "../../redux/Actions/applicationActions";
+import {addApplication, editApplication} from "../../redux/Actions/applicationActions";
 
 
 export class up_application {
@@ -53,7 +53,7 @@ export class up_application {
     }
 
     add_remote = () => {
-        store.dispatch(addApplicationDone({[this.application_name]:this}))
+        store.dispatch(addApplication({[this.application_name]:this}))
         return backend_post(api_dictionary.applications.add, this._get_app());
     }
 
@@ -100,7 +100,7 @@ export class up_application {
     set_misc_param = (param_name) =>{
         let edit = {application:this.application_name, field: {name:param_name, value:"0"}, action:"add_misc"};
         this[param_name] = 0;
-        store.dispatch(addApplicationDone({[this.application_name]:this}))
+        store.dispatch(addApplication({[this.application_name]:this}))
         return backend_post(api_dictionary.applications.edit, edit);
 
     }
@@ -242,7 +242,7 @@ export class up_application {
     remove_misc_field = (field_name) =>{
         delete this[field_name]
         let edit = {application:this.application_name, field:{name:field_name}, action:"remove_misc"};
-        store.dispatch(editApplicationDone(edit));
+        store.dispatch(editApplication(edit));
         return backend_post(api_dictionary.applications.edit, edit);
     }
 

@@ -26,47 +26,26 @@ export const saveParameter = (parameter) => ({
     }
 });
 
-export const loadApplicationsDone = parameters => ({
+export const loadApplications = parameters => ({
     type: LOAD_APPLICATIONS,
     payload: parameters
 });
 
 
-export const editApplicationDone = edit => ({
+export const addApplication = application =>({
+    type: ADD_APPLICATION,
+    payload:application
+});
+
+export const editApplication = edit => ({
     type: EDIT_APPLICATION,
     payload: edit
 });
 
-
-export const removeApplication = (server_url, application, config) =>{
-    return dispatch => {
-        return axios.get(server_url, config).then(res => {
-            dispatch(removeApplicationDone(application));
-        }).catch(err => {
-            alert('ERROR: error while removing an application\n' + err.message);
-        });
-    };
-};
-
-export const removeApplicationDone = application =>({
+export const removeApplication = application =>({
     type: REMOVE_APPLICATION,
     payload:application
 });
 
-export const addApplication = (server_url, application_obj, config) =>{
-    return dispatch => {
-        return axios.post(server_url, application_obj, config).then(res => {
-            dispatch(addApplicationDone(application_obj));
-            return res;
-        }).catch(err => {
-            alert('ERROR: error while adding an application\n' + err.message);
-        });
-    };
-};
-
-export const addApplicationDone = application =>({
-    type: ADD_APPLICATION,
-    payload:application
-});
 
 
