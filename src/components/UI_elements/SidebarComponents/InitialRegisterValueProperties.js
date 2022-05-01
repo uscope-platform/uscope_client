@@ -53,7 +53,6 @@ export let  InitialRegisterValue = props =>{
     }
 
     let handleonKeyDown = (event) =>{
-        let edit = {}
         if(event.key==="Enter"|| event.key ==="Tab"){
             props.application.edit_irv(props.irv.address,event.target.name, event.target.value).then(()=>{
                 props.forceUpdate();

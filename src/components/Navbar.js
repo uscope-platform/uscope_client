@@ -55,13 +55,13 @@ let  Navbar = props =>{
         <ComponentLayout>
             <Image src="assets/logo.svg" alt='µScope Logo'/>
             <Image src="assets/name.svg" alt='µScope Name'/>
-            {props.views.map((tab, i) => {
-                    return(
-                        <NavLink style={link_stile} key={tab.peripheral_id} to={'/'+tab.peripheral_id} className="nav-link">
-                            {tab.name}
-                        </NavLink>
-                    )
-            })}
+            <NavLink style={link_stile} key="plot" to='/' className="nav-link">Plot</NavLink>
+            <NavLink style={link_stile} key="script_manager" to='/script_manager' className="nav-link">Script Manager</NavLink>
+            <NavLink style={link_stile} key="applications_manager" to='/applications_manager' className="nav-link">Applications Manager</NavLink>
+            <NavLink style={link_stile} key="program_manager" to='/program_manager' className="nav-link">Programs Manager</NavLink>
+            <NavLink style={link_stile} key="bitstream_manager" to='/bitstream_manager' className="nav-link">Bitstreams Manager</NavLink>
+            <NavLink style={link_stile} key="peripherals_manager" to='/peripherals_manager' className="nav-link">Peripherals Manager</NavLink>
+            <NavLink style={link_stile} key="platform_manager" to='/platform_manager' className="nav-link">Platform Manager</NavLink>
         </ComponentLayout>
 
     );

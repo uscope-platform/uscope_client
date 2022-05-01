@@ -15,7 +15,7 @@
 
 //       REACT IMPORTS
 import React, {useEffect, useState} from 'react';
-import {Navigate, Route} from 'react-router-dom'
+import {Route} from 'react-router-dom'
 //       REDUX IMPORTS
 import {useSelector} from "react-redux";
 
@@ -153,19 +153,13 @@ let AuthApp = (props) =>{
                             <Navbar views={views}/>
                             <div>
                                 <Routes>
-                                    {views.map((tab, i) => {
-                                        return(
-                                            <Route
-                                                key={tab.peripheral_id}
-                                                path={'/'+tab.peripheral_id}
-                                                element={<TabContent className="main_content_tab" tab={tab}/>}
-                                            />
-                                        )
-                                    })}
-                                    <Route
-                                        path="*"
-                                        element={<Navigate to="/plot" />}
-                                    />
+                                    <Route key="plot" path='/' element={<TabContent className="main_content_tab" tab={views[0]}/>}/>
+                                    <Route key="script_manager" path='/script_manager' element={<TabContent className="main_content_tab" tab={views[1]}/>}/>
+                                    <Route key="applications_manager" path='/applications_manager' element={<TabContent className="main_content_tab" tab={views[2]}/>}/>
+                                    <Route key="program_manager" path='/program_manager' element={<TabContent className="main_content_tab" tab={views[3]}/>}/>
+                                    <Route key="bitstream_manager" path='/bitstream_manager' element={<TabContent className="main_content_tab" tab={views[4]}/>}/>
+                                    <Route key="peripherals_manager" path='/peripherals_manager' element={<TabContent className="main_content_tab" tab={views[5]}/>}/>
+                                    <Route key="platform_manager" path='/platform_manager' element={<TabContent className="main_content_tab" tab={views[6]}/>}/>
                                 </Routes>
                             </div>
                             <Sidebar />
