@@ -24,7 +24,9 @@ import {TableStyle} from './TableStyles'
 import {BlockLayout, Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements"
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
-import {create_peripheral, remove_peripheral} from "../../client_core"
+import {remove_peripheral} from "../../client_core"
+import {up_peripheral} from "../../client_core/data_models/up_peripheral";
+import {addPeripheralDone} from "../../redux/Actions/peripheralsActions";
 
 let columns = [
     {
@@ -108,7 +110,13 @@ let PeripheralsManager = (props)=>{
     };
 
     let addPeripheral = (content) => {
-        create_peripheral(JSON.parse(content));
+        let imported_periph = JSON.parse(content);
+        for(const item in imported_periph){
+            let periph = new up_peripheral(imported_periph[item]);
+            periph.add_remote().then(()=>{
+                dispatch(addPeripheralDone(periph));
+            })
+        }
     };
 
     const rowSelectCritera = row => row.peripheral_name === settings.current_peripheral;

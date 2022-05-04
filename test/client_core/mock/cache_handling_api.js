@@ -125,7 +125,6 @@ export const applications_init = {
 
 export const peripherals_init = {
     ADC_processing: {
-        image: 'static/Images/ADC_processing.png',
         peripheral_name: 'ADC_processing',
         registers: [
             {
@@ -248,7 +247,7 @@ export const cache_handlers = [
     rest.get('test_server/registers/all_peripheral/descriptions', (req, res, ctx) => {
         // If authenticated, return a mocked user details
         return res(
-            ctx.json([peripherals_init]),
+            ctx.json(peripherals_init),
             ctx.status(200)
         )
     }),

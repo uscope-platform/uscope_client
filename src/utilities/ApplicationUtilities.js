@@ -70,21 +70,3 @@ export let create_channel_group = (name) =>{
         default:false
     }
 }
-export let create_application_object = (name) =>{
-    let app = {}
-    app[name] = {
-        application_name: name,
-        bitstream: '',
-        channels: [],
-        channel_groups:[],
-        clock_frequency: 100000000,
-        initial_registers_values: [],
-        macro: [],
-        n_enables: 0,
-        parameters: [],
-        peripherals: [],
-        timebase_address: ''
-    };
-
-    return app;
-}

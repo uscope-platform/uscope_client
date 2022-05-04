@@ -22,7 +22,8 @@ import {setSetting} from "../../redux/Actions/SettingsActions";
 
 import DataTable from 'react-data-table-component';
 import {TableStyle} from './TableStyles'
-import {create_application, remove_application, up_application} from "../../client_core";
+import {remove_application, up_application} from "../../client_core";
+import {addApplication} from "../../redux/Actions/applicationActions";
 
 
 let columns = [
@@ -91,7 +92,7 @@ let  ApplicationsManager = props =>{
 
             reader.onload = readerEvent => {
                 let content = readerEvent.target.result; // this is the content!
-                addApplication(content)
+                handle_application_add(content)
             }
         };
         document.body.appendChild(input);
@@ -99,9 +100,15 @@ let  ApplicationsManager = props =>{
 
     };
 
-    let addApplication = (content) => {
-        let app_obj = new up_application(JSON.parse(content));
-        create_application(app_obj);
+    let handle_application_add = (content) => {
+
+        let imported_apps = JSON.parse(content);
+        for(const item in imported_apps){
+            let app = new up_application(imported_apps[item]);
+            app.add_remote().then(()=>{
+                addApplication(app);
+            })
+        }
     };
 
     const rowSelectCritera = row => row.application_name === settings.current_application;

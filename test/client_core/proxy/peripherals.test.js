@@ -1,16 +1,16 @@
 import {
     bulk_register_write,
-    create_peripheral,
     get_peripheral_registers,
-    set_register_value
+    set_register_value,
+    edit_peripheral,
+    remove_peripheral
 } from "../../../src/client_core";
 import {
     bulk_write_data_check,
-    created_peripheral, edit_peripheral_data,
-    peripheral_image, remove_peripheral_data,
+    edit_peripheral_data,
+    remove_peripheral_data,
     set_register_data
 } from "../mock/peripherals_api";
-import {edit_peripheral, remove_peripheral} from "../../../src/client_core/proxy/peripherals";
 import {mock_store} from "../mock/redux_store";
 
 
@@ -70,28 +70,6 @@ test("set register value", () =>{
     })
 })
 
-
-test("create peripheral without image", () =>{
-    let periph = {
-        test: {
-            peripheral_name: "test",
-            version: 0.1,
-            registers: []
-        }
-    }
-    return create_peripheral(periph).then((res)=>{
-
-        expect(created_peripheral).toStrictEqual({
-            payload:{
-                test: {
-                    peripheral_name: "test",
-                    version: 0.1,
-                    registers: []
-                }
-            }
-        });
-    })
-})
 
 test("edit peripheral", () =>{
 

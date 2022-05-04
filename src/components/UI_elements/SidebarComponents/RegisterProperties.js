@@ -51,7 +51,7 @@ export let  RegisterProperties = props =>{
 
     let handleEditNameChange = (event) => {
         if(event.key==="Enter"){
-            let edit = {peripheral:props.peripheral, register:props.register.register_name, field:"register_name", value:event.target.value,action:"edit_register"};
+            let edit = {peripheral:props.peripheral.peripheral_name, register:props.register.register_name, field:"register_name", value:event.target.value,action:"edit_register"};
             edit_peripheral(edit);
             set_edit_name(false);
         }else if(event.key ==="Escape"){
@@ -68,7 +68,7 @@ export let  RegisterProperties = props =>{
         let value = ""
         switch (event.target.name) {
             case "type":
-                edit = {peripheral:props.peripheral, register:props.register.register_name, field:"register_format", value:event.target.id, action:"edit_register"};
+                edit = {peripheral:props.peripheral.peripheral_name, register:props.register.register_name, field:"register_format", value:event.target.id, action:"edit_register"};
                 break;
             case "direction_read":
                 if(event.target.checked){
@@ -84,7 +84,7 @@ export let  RegisterProperties = props =>{
                         value = ""
                     }
                 }
-                edit = {peripheral:props.peripheral, register:props.register.register_name, field:"direction", value:value,action:"edit_register"};
+                edit = {peripheral:props.peripheral.peripheral_name, register:props.register.register_name, field:"direction", value:value,action:"edit_register"};
                 break;
             case "direction_write":
                 if(event.target.checked){
@@ -101,7 +101,7 @@ export let  RegisterProperties = props =>{
                     }
                 }
 
-                edit = {peripheral:props.peripheral, register:props.register.register_name, field:"direction", value:value,action:"edit_register"};
+                edit = {peripheral:props.peripheral.peripheral_name, register:props.register.register_name, field:"direction", value:value,action:"edit_register"};
                 break;
             default:
                 return;
@@ -116,7 +116,7 @@ export let  RegisterProperties = props =>{
                 case "ID":
                 case "offset":
                 case "description":
-                    edit = {peripheral:props.peripheral, register:props.register.register_name, field:event.target.name, value:event.target.value,action:"edit_register"};
+                    edit = {peripheral:props.peripheral.peripheral_name, register:props.register.register_name, field:event.target.name, value:event.target.value,action:"edit_register"};
                     edit_peripheral(edit);
                     break;
                 case "field_descriptions":
@@ -125,7 +125,7 @@ export let  RegisterProperties = props =>{
                         event.preventDefault();
                     else if(event.key!=="Tab")
                         return;
-                    edit = {peripheral:props.peripheral, register:props.register.register_name, field:event.target.name, value:event.target.value.split('\n'),action:"edit_register"};
+                    edit = {peripheral:props.peripheral.peripheral_name, register:props.register.register_name, field:event.target.name, value:event.target.value.split('\n'),action:"edit_register"};
                     edit_peripheral(edit);
                     break;
                 default:
@@ -135,8 +135,8 @@ export let  RegisterProperties = props =>{
     }
 
     let handleRemoveRegister= (event) =>{
-        let edit = {peripheral:props.peripheral, register:props.register.register_name, action:"remove_register"};
-        edit_peripheral(edit);
+        props.peripheral.remove_register(props.register.register_name);
+        props.forceUpdate();
     }
 
     let renderContent = (props) =>{

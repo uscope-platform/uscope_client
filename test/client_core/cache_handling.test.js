@@ -39,7 +39,7 @@ let check_test_results = (promise_result, redux_reference, test_case) => {
     expect(localStorage.getItem("scripts_cache")).toBe("9701008d-c511-4ded-94b3-b08748a6e066");
 
     expect(state.applications).toMatchObject(redux_reference.applications);
-    expect(state.peripherals).toStrictEqual(redux_reference.peripherals);
+    expect(state.peripherals).toMatchObject(redux_reference.peripherals);
     expect(state.scripts).toStrictEqual(redux_reference.scripts);
     expect(state.bitstreams).toStrictEqual(redux_reference.bitstreams);
     expect(state.programs).toStrictEqual(redux_reference.programs);
@@ -48,7 +48,7 @@ let check_test_results = (promise_result, redux_reference, test_case) => {
 
 const expected_store = {
     "applications":applications_init,
-    "peripherals":[peripherals_init],
+    "peripherals":peripherals_init,
     "scripts":[scripts_init],
     "bitstreams":[bitstream_init],
     "programs":[programs_init]

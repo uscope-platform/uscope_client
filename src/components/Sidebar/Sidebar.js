@@ -53,7 +53,7 @@ let  Sidebar = props =>{
                     <ProgramSidebar/>
                 </SidebarLayout>
             );
-        case "/plot":
+        case "/":
             return(
                 <SidebarLayout>
                     <PlotSidebar/>

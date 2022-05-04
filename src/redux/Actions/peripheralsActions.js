@@ -17,20 +17,9 @@ import { ADD_PERIPHERAL, EDIT_PERIPHERAL, LOAD_PERIPHERALS, REMOVE_PERIPHERAL} f
 import axios from 'axios';
 
 
-export const loadPeripherals = (server_url, config) => {
-    return dispatch => {
-        return axios.get(server_url, config).then(res => {
-            dispatch(loadPeripheralsDone(res.data));
-            return res.data;
-        }).catch(err => {
-            alert('ERROR: error while loading all peripherals\n' + err.message);
-        });
-    };
-};
-
-const loadPeripheralsDone = parameters => ({
+export const loadPeripheralsDone = peripherals => ({
     type: LOAD_PERIPHERALS,
-    payload: parameters
+    payload: peripherals
 });
 
 export const editPeripheral = (server_url, edit, config) => {
@@ -78,7 +67,7 @@ export const addPeripheral = (server_url, peripheral_obj, config) =>{
     };
 };
 
-const addPeripheralDone = peripheral_obj =>({
+export const addPeripheralDone = peripheral_obj =>({
     type: ADD_PERIPHERAL,
     payload:peripheral_obj
 });

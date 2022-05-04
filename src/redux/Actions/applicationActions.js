@@ -14,7 +14,6 @@
 // limitations under the License.
 
 import {ADD_APPLICATION, EDIT_APPLICATION, LOAD_APPLICATIONS, REMOVE_APPLICATION, SAVE_PARAMETER} from "./types";
-import axios from 'axios';
 
 
 export const saveParameter = (parameter) => ({

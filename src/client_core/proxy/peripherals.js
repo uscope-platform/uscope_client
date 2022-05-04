@@ -15,19 +15,34 @@
 
 
 import {backend_get, backend_post, dispatch_redux_thunk} from "./backend";
-import {addPeripheral, editPeripheral, loadPeripherals, removePeripheral} from "../../redux/Actions/peripheralsActions";
+import {
+    addPeripheral,
+    editPeripheral,
+    loadPeripheralsDone,
+    removePeripheral
+} from "../../redux/Actions/peripheralsActions";
 import {sendRegister} from "../../redux/Actions/RegisterActions";
 
 import {api_dictionary} from './api_dictionary'
+import {store} from "../index";
+import {up_peripheral} from "../data_models/up_peripheral";
 
 export const get_peripherals_hash = () =>{
     return backend_get(api_dictionary.peripherals.get_hash)
 };
 
 export const load_all_peripherals = () => {
-    return dispatch_redux_thunk(loadPeripherals,api_dictionary.peripherals.load_all);
-}
+    return backend_get(api_dictionary.peripherals.load_all).then(res=>{
+        let periph_dict = {}
+        for (let item in res) {
+            let periph = new up_peripheral(res[item])
+            periph_dict[periph.peripheral_name] = periph
+        }
+        store.dispatch(loadPeripheralsDone(periph_dict));
+        return periph_dict;
+    })
 
+}
 
 export const get_peripheral_registers =  (peripheral_name) => {
     return backend_get(api_dictionary.peripherals.get_registers(peripheral_name));
@@ -39,10 +54,6 @@ export const bulk_register_write = (registers) =>{
 
 export const set_register_value = (register) => {
     return dispatch_redux_thunk(sendRegister, api_dictionary.peripherals.set_register(register.peripheral), register);
-};
-
-export const create_peripheral = (peripheral) => {
-    return dispatch_redux_thunk(addPeripheral, api_dictionary.peripherals.add, {payload:peripheral});
 };
 
 export const edit_peripheral = (edit) => {

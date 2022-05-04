@@ -13,12 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from 'react';
+import React, {useState, useReducer} from 'react';
 
 import styled from "styled-components";
 
 import {useSelector} from "react-redux";
-import {create_register} from "../../../utilities/PeripheralUtilities";
 import {
     InputField,
     Label,
@@ -30,7 +29,7 @@ import {
 } from "../../UI_elements";
 import {BlockTitle} from "../../UI_elements/";
 import {Add} from "grommet-icons";
-import {edit_peripheral} from "../../../client_core";
+import {up_peripheral} from "../../../client_core/data_models/up_peripheral";
 
 const TitleLayout = styled.div`
   margin-left: auto;
@@ -43,6 +42,9 @@ let  PeripheralEditSidebar = props =>{
 
     const [edit_label, set_edit_label] = useState(false);
     const [new_register, set_new_register] = useState(false);
+    const [, forceUpdate] = useReducer(x => x + 1, 0);
+
+    const selected_peripheral = new up_peripheral(peripherals[settings.current_peripheral]);
 
     let handleEditVersion = () =>{
         set_edit_label(true);
@@ -52,9 +54,8 @@ let  PeripheralEditSidebar = props =>{
         if(event.key ==="Escape"){
             set_edit_label(false);
         } else if (event.key ==="Enter"){
-            set_edit_label(false);
-            let edit ={peripheral:settings.current_peripheral, action:"edit_version", version:parseFloat(event.target.value)};
-            edit_peripheral(edit);
+            set_edit_label(false)
+            selected_peripheral.set_version(event.target.value);
         }
 
     }
@@ -65,9 +66,7 @@ let  PeripheralEditSidebar = props =>{
 
     let handle_add_register_done = (event) => {
         if(event.key==="Enter"|| event.key ==="Tab"){
-            let reg_name = event.target.value;
-            let edit ={peripheral:settings.current_peripheral, action:"add_register",register:create_register(reg_name,"single")};
-            edit_peripheral(edit);
+            selected_peripheral.add_register(event.target.value)
             set_new_register(false);
         } else if (event.key ==="Escape"){
             set_new_register(false);
@@ -98,7 +97,7 @@ let  PeripheralEditSidebar = props =>{
                     {
                         peripherals[settings.current_peripheral].registers.map((reg)=>{
                             return(
-                                <RegisterProperties peripheral={settings.current_peripheral} register={reg}/>
+                                <RegisterProperties peripheral={selected_peripheral} forceUpdate={forceUpdate} register={reg}/>
                             )
                         })
                     }

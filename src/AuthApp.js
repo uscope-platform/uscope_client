@@ -30,10 +30,10 @@ import './App.css';
 import {ApplicationLayout} from "./components/UI_elements";
 import Sidebar from "./components/Sidebar/Sidebar";
 import OnboardingView from "./components/Onboarding";
-import {create_application_object} from "./utilities/ApplicationUtilities";
 
-import {create_application, refresh_caches, up_application} from "./client_core";
+import {refresh_caches, up_application} from "./client_core";
 import {Routes} from "react-router";
+import {addApplication} from "./redux/Actions/applicationActions";
 
 let AuthApp = (props) =>{
 
@@ -60,9 +60,10 @@ let AuthApp = (props) =>{
                     set_app_stage("APP_CHOICE");
                 } else {
                     let app = up_application.construct_empty("default");
-                    create_application(app).then(() => {
+                    app.add_remote().then(()=>{
+                        addApplication(app);
                         set_app_stage("APP_CHOICE");
-                    });
+                    })
                 }
 
             });

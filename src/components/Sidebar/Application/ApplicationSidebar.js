@@ -20,7 +20,8 @@ import {BlockTitle, InputField, SidebarContentLayout} from "../../UI_elements";
 
 
 import ApplicationEditSidebar from "./ApplicationEditSidebar";
-import {create_application, up_application} from "../../../client_core";
+import {up_application} from "../../../client_core";
+import {addApplication} from "../../../redux/Actions/applicationActions";
 
 
 let  ApplicationSidebar = props =>{
@@ -29,7 +30,9 @@ let  ApplicationSidebar = props =>{
     let handle_add_application = (event) =>{
         if (event.key === "Enter") {
             let app = up_application.construct_empty(event.target.value);
-            create_application(app);
+            app.add_remote().then(()=>{
+                addApplication(app);
+            })
         }
     };
 
