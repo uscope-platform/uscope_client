@@ -2,7 +2,6 @@ import {
     bulk_register_write,
     get_peripheral_registers,
     set_register_value,
-    edit_peripheral,
     remove_peripheral
 } from "../../../src/client_core";
 import {
@@ -67,25 +66,6 @@ test("set register value", () =>{
             }
         }
         expect(set_register_data).toStrictEqual(check_data);
-    })
-})
-
-
-test("edit peripheral", () =>{
-
-    let edit = {
-        application:"test",
-        peripheral:"ADC_processing",
-        field:"version",
-        value:3,
-        action:"edit_peripheral"
-    };
-    let initial_val = mock_store.getState().peripherals["ADC_processing"];
-    return edit_peripheral(edit).then((res)=>{
-        initial_val.version = 3;
-        let new_val = mock_store.getState().peripherals["ADC_processing"];
-        expect(new_val).toStrictEqual(initial_val);
-        expect(edit_peripheral_data).toStrictEqual(edit);
     })
 })
 

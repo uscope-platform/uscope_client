@@ -26,7 +26,7 @@ import {setSetting} from "../../redux/Actions/SettingsActions";
 
 import {remove_peripheral} from "../../client_core"
 import {up_peripheral} from "../../client_core/data_models/up_peripheral";
-import {addPeripheralDone} from "../../redux/Actions/peripheralsActions";
+import {addPeripheral} from "../../redux/Actions/peripheralsActions";
 
 let columns = [
     {
@@ -114,7 +114,7 @@ let PeripheralsManager = (props)=>{
         for(const item in imported_periph){
             let periph = new up_peripheral(imported_periph[item]);
             periph.add_remote().then(()=>{
-                dispatch(addPeripheralDone(periph));
+                dispatch(addPeripheral(periph));
             })
         }
     };

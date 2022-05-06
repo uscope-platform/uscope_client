@@ -13,29 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ADD_PERIPHERAL, EDIT_PERIPHERAL, LOAD_PERIPHERALS, REMOVE_PERIPHERAL} from "./types";
+import { ADD_PERIPHERAL, LOAD_PERIPHERALS, REMOVE_PERIPHERAL} from "./types";
 import axios from 'axios';
 
 
-export const loadPeripheralsDone = peripherals => ({
+export const loadPeripherals = peripherals => ({
     type: LOAD_PERIPHERALS,
     payload: peripherals
-});
-
-export const editPeripheral = (server_url, edit, config) => {
-    return dispatch => {
-        return axios.post(server_url, edit, config).then(res => {
-            dispatch(editPeripheralDone(edit));
-            return res;
-        }).catch(err => {
-            alert('ERROR: error while editing a peripheral\n' + err.message);
-        });
-    };
-};
-
-const editPeripheralDone = edit => ({
-    type: EDIT_PERIPHERAL,
-    payload: edit
 });
 
 
@@ -55,19 +39,7 @@ const removePeripheralDone = peripheral =>({
   payload:peripheral
 });
 
-
-export const addPeripheral = (server_url, peripheral_obj, config) =>{
-    return dispatch => {
-        return axios.post(server_url, peripheral_obj, config).then(res => {
-            dispatch(addPeripheralDone(peripheral_obj));
-            return res;
-        }).catch(err => {
-            alert('ERROR: error while adding a peripheral\n' + err.message);
-        });
-    };
-};
-
-export const addPeripheralDone = peripheral_obj =>({
+export const addPeripheral = peripheral_obj =>({
     type: ADD_PERIPHERAL,
     payload:peripheral_obj
 });

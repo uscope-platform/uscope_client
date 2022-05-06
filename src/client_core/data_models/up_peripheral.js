@@ -19,14 +19,17 @@
 import {store} from "../index";
 import {backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
-import {addPeripheralDone} from "../../redux/Actions/peripheralsActions";
-import {create_register} from "../../utilities/PeripheralUtilities";
+import {addPeripheral} from "../../redux/Actions/peripheralsActions";
+import {up_register} from "./up_register";
 
 export class up_peripheral {
     constructor(periph_data_obj) {
         this.peripheral_name = periph_data_obj.peripheral_name;
         this.version = periph_data_obj.version;
-        this.registers = periph_data_obj.registers;
+        this.registers = [];
+        for(const item of periph_data_obj.registers){
+            this.registers.push(new up_register(item));
+        }
     }
 
     static construct_empty(periph_name){
@@ -35,31 +38,28 @@ export class up_peripheral {
     }
 
     add_remote = () => {
-        store.dispatch(addPeripheralDone({payload:{[this.peripheral_name]:this}}))
+        store.dispatch(addPeripheral({payload:{[this.peripheral_name]:this}}))
         return backend_post(api_dictionary.peripherals.add, {payload:this._get_periph()});
     }
 
     add_register = (reg_name) =>{
-        let reg = create_register(reg_name,"single");
+        let reg = up_register.construct_empty(reg_name);
         this.registers.push(reg);
-
+        store.dispatch(addPeripheral({payload:{[this.peripheral_name]:this}}))
         let edit ={peripheral:this.peripheral_name, action:"add_register",register:reg};
         return backend_post(api_dictionary.peripherals.edit, edit);
     }
 
-    edit_register = (reg_name, field_name, field_value) =>{
-        let [reg] = this.registers.filter((reg) => {
-            return reg.register_name === reg_name;
-        })
-        reg[field_name] = field_value;
-        let edit = {peripheral:this.peripheral_name, register:reg_name, field:field_name, value:field_value, action:"edit_register"};
+    edit_register = (register, field_name, field_value) =>{
+        let edit = {peripheral:this.peripheral_name, register:register.register_name, field:field_name, value:field_value, action:"edit_register"};
+        register[field_name] = field_value;
         return backend_post(api_dictionary.peripherals.edit, edit)
     }
 
     set_version = (ver) =>{
         this.version = ver;
         let edit ={peripheral:this.peripheral_name, action:"edit_version", version:parseFloat(ver)};
-        store.dispatch(addPeripheralDone({payload:{[this.peripheral_name]:this}}))
+        store.dispatch(addPeripheral({payload:{[this.peripheral_name]:this}}))
         return backend_post(api_dictionary.peripherals.edit, edit);
     };
 
@@ -68,11 +68,11 @@ export class up_peripheral {
     };
 
     remove_register = (reg_id) =>{
-        let idx  = this.registers.filter((i) =>{
+        let idx  = this.registers.indexOf(this.registers.filter((i) =>{
             return i.ID === reg_id;
-        })
+        })[0]);
         this.registers.splice(idx,1);
-
+        store.dispatch(addPeripheral({payload:{[this.peripheral_name]:this}}))
         let edit = {peripheral:this.peripheral_name, register:reg_id, action:"remove_register"};
         return backend_post(api_dictionary.peripherals.edit, edit);
     };

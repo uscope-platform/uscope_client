@@ -522,46 +522,6 @@ test("edit_parameter", () => {
     });
 });
 
-test("edit_peripheral", () => {
-    let app = up_application.construct_empty("default");
-    return app.add_remote().then(() => {
-        return app.add_peripheral("test_periph").then(() => {
-            return app.edit_peripheral("test_periph", "peripheral_id", "test_p").then(() => {
-                let check_app = {
-                    "default": {
-                        application_name: "default",
-                        bitstream: '',
-                        channels: [],
-                        channel_groups: [],
-                        clock_frequency: 100000000,
-                        initial_registers_values: [],
-                        macro: [],
-                        n_enables: 0,
-                        parameters: [],
-                        peripherals: [{
-                            base_address:"0",
-                            name: "test_periph",
-                            peripheral_id:"test_p",
-                            proxied:false,
-                            spec_id:"",
-                            proxy_address:"0",
-                            type:"Registers"
-                        }],
-                        timebase_address: ''
-                    }
-                };
-
-                expect(edit_app_data).toStrictEqual({
-                    action: "edit_peripheral", application: "default", peripheral: "test_periph", field:"peripheral_id", value:"test_p"
-                });
-                let state = mock_store.getState();
-                expect(state.applications.default._get_app().default).toStrictEqual(check_app.default);
-            });
-        });
-    });
-});
-
-
 test("edit_misc_param_value", () => {
     let app = up_application.construct_empty("default");
     return app.add_remote().then(() => {

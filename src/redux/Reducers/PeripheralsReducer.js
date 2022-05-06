@@ -13,55 +13,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {ADD_PERIPHERAL, EDIT_PERIPHERAL, LOAD_PERIPHERALS, REMOVE_PERIPHERAL} from "../Actions/types";
-import produce from "immer";
-
+import {ADD_PERIPHERAL, LOAD_PERIPHERALS, REMOVE_PERIPHERAL} from "../Actions/types";
 
 let PeripheralsReducer = function (state = null, action) {
     switch (action.type) {
         case LOAD_PERIPHERALS:
             state = action.payload;
             return state;
-
-        case EDIT_PERIPHERAL:
-            switch (action.payload.action) {
-                case "edit_register":
-                    return produce(state, draftState => {
-                        let reg = draftState[action.payload.peripheral]["registers"].filter((item)=>{
-                            return item.register_name===action.payload.register;
-                        })[0];
-                        reg[action.payload.field] = action.payload.value;
-                        return draftState
-                    });
-                case "add_register":
-                    return produce(state, draftState => {
-                        draftState[action.payload.peripheral]["registers"].push(action.payload.register)
-                        return draftState
-                    });
-                case "remove_register":
-                    return produce(state, draftState => {
-                        draftState[action.payload.peripheral]["registers"] = draftState[action.payload.peripheral]["registers"].filter((item) => {
-                            return item.register_name !== action.payload.register;
-                        });
-                        return draftState
-                    });
-                case "edit_version":
-                    return produce(state, draftState => {
-                        draftState[action.payload.peripheral]["version"] = action.payload.version;
-                        return draftState
-                    });
-                default:
-                    return state;
-
-            }
-
-        case REMOVE_PERIPHERAL:
-            return produce(state, draftState => {
-                delete draftState[action.payload];
-            });
-
         case ADD_PERIPHERAL:
             return {...state, ...action.payload.payload}
+        case REMOVE_PERIPHERAL:
+            return  Object.keys(state)
+                .filter(key => {
+                    return key !== action.payload;
+                })
+                .reduce((obj, key) => {
+                    obj[key] = state[key];
+                    return obj;
+                }, {});
         default:
             return state;
     }

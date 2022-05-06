@@ -20,7 +20,7 @@ import PeripheralEditSidebar from "./PeripheralEditSidebar";
 
 import {BlockTitle, InputField, SidebarContentLayout} from "../../UI_elements";
 import {up_peripheral} from "../../../client_core/data_models/up_peripheral";
-import {addPeripheralDone} from "../../../redux/Actions/peripheralsActions";
+import {addPeripheral} from "../../../redux/Actions/peripheralsActions";
 
 let  PeripheralsSidebar = props =>{
     const settings = useSelector(state => state.settings);
@@ -32,7 +32,7 @@ let  PeripheralsSidebar = props =>{
         if (event.key === "Enter") {
             let peripheral = up_peripheral.construct_empty(event.target.value);
             peripheral.add_remote().then(()=>{
-                dispatch(addPeripheralDone(peripheral));
+                dispatch(addPeripheral(peripheral));
             })
 
         }

@@ -23,7 +23,7 @@ import {
 } from "../../utilities/ApplicationUtilities";
 import {backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
-import {addApplication, editApplication} from "../../redux/Actions/applicationActions";
+import {addApplication} from "../../redux/Actions/applicationActions";
 
 
 export class up_application {
@@ -242,7 +242,7 @@ export class up_application {
     remove_misc_field = (field_name) =>{
         delete this[field_name]
         let edit = {application:this.application_name, field:{name:field_name}, action:"remove_misc"};
-        store.dispatch(editApplication(edit));
+        store.dispatch(addApplication({[this.application_name]:this}))
         return backend_post(api_dictionary.applications.edit, edit);
     }
 

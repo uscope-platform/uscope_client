@@ -58,11 +58,10 @@ test("add_register", () => {
                             ID:"test_reg",
                             description:"",
                             direction:"",
-                            field_descriptions:[],
-                            field_names:[],
                             offset:"0x0",
                             register_format:"single",
-                            register_name:"test_reg"
+                            register_name:"test_reg",
+                            value:0
                         }]
                     }
                 }};
@@ -70,14 +69,13 @@ test("add_register", () => {
                 ID:"test_reg",
                 description:"",
                 direction:"",
-                field_descriptions:[],
-                field_names:[],
                 offset:"0x0",
                 register_format:"single",
-                register_name:"test_reg"
+                register_name:"test_reg",
+                value:0
                 }});
             let state = mock_store.getState();
-            expect(state.peripherals.test._get_periph()).toStrictEqual(check_periph.payload)
+            expect(state.peripherals.test._get_periph()).toMatchObject(check_periph.payload)
         });
     });
 });
@@ -130,7 +128,7 @@ test("edit_register", () => {
     let periph = up_peripheral.construct_empty("test");
     return periph.add_remote().then(()=>{
         return periph.add_register("test_reg").then(() => {
-            return periph.edit_register("test_reg", "description", "TEST EDIT").then(() => {
+            return periph.edit_register(periph.registers[0], "description", "TEST EDIT").then(() => {
                 let check_periph =  {payload:{
                         test:{
                             peripheral_name:"test",
@@ -139,17 +137,16 @@ test("edit_register", () => {
                                 ID:"test_reg",
                                 description:"TEST EDIT",
                                 direction:"",
-                                field_descriptions:[],
-                                field_names:[],
                                 offset:"0x0",
                                 register_format:"single",
-                                register_name:"test_reg"
+                                register_name:"test_reg",
+                                value:0
                             }]
                         }
                     }};
                 expect(edit_peripheral_data).toStrictEqual({ action: "edit_register", peripheral:"test", register:"test_reg", field:"description", value:"TEST EDIT"})
                 let state = mock_store.getState();
-                expect(state.peripherals.test._get_periph()).toStrictEqual(check_periph.payload)
+                expect(state.peripherals.test._get_periph()).toMatchObject(check_periph.payload)
             });
         });
     });
