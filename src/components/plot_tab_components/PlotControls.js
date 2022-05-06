@@ -19,7 +19,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {Pause, Play, Stop} from 'grommet-icons'
 import {plotPause, plotPlay, plotStop} from "../../redux/Actions/plotActions";
 import styled from "styled-components";
-import {bulk_register_write} from "../../client_core";
+import {up_peripheral} from "../../client_core";
 
 const ComponentStyle = styled.div`
   display: flex;
@@ -46,7 +46,7 @@ let  PlotControls = props =>{
                 let address = parseInt(timebase_addr);
                 let bulk_registers = []
                 bulk_registers.push({address:address, value:1})
-                bulk_register_write({payload: bulk_registers}).then();
+                up_peripheral.bulk_register_write({payload: bulk_registers}).then();
                 dispatch(plotPlay());
                 break;
             case "pause":

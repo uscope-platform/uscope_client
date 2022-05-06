@@ -20,10 +20,9 @@ import {useSelector} from "react-redux";
 
 import styled from "styled-components";
 
-import {run_script} from "../../client_core";
+import {run_script, up_peripheral} from "../../client_core";
 
 import store from "../../store";
-import {bulk_register_write} from "../../client_core";
 
 
 const ButtonGrid = styled.div`
@@ -44,7 +43,7 @@ let  MacroActions = props =>{
         let trigger_str = event.target.name;
         let bulk_registers = run_script(store, trigger_str, parameters, "");
         if(bulk_registers !== null){
-            bulk_register_write({payload: bulk_registers}).then();
+            up_peripheral.bulk_register_write({payload: bulk_registers}).then();
         }
     };
 

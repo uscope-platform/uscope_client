@@ -19,9 +19,6 @@ import {addScript, editScript, loadAllScripts, removeScript} from "../../redux/A
 
 import {api_dictionary} from './api_dictionary'
 
-export const get_scripts_hash = () =>{
-    return backend_get(api_dictionary.scripts.get_hash)
-};
 
 export const load_all_scripts = () => {
     return dispatch_redux_thunk(loadAllScripts,api_dictionary.scripts.load_all);

@@ -19,9 +19,6 @@ import {addProgram, editProgram, loadAllPrograms, removeProgram} from "../../red
 
 import {api_dictionary} from './api_dictionary'
 
-export const get_programs_hash = () =>{
-    return backend_get(api_dictionary.programs.get_hash)
-};
 
 export const load_all_programs = () => {
     return dispatch_redux_thunk(loadAllPrograms,api_dictionary.programs.load_all);

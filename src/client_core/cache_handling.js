@@ -14,22 +14,50 @@
 // limitations under the License.
 
 
-import {store} from "./index"
-import {get_applications_hash, load_all_applications} from './proxy/applications'
-import {get_peripherals_hash, load_all_peripherals} from "./proxy/peripherals";
-import {get_scripts_hash, load_all_scripts} from "./proxy/scripts";
-import {get_programs_hash, load_all_programs} from "./proxy/programs";
-import {get_bitstreams_hash,load_all_bitstreams} from "./proxy/bitstreams";
+import {store, up_application, up_peripheral} from "./index"
+import {load_all_scripts} from "./proxy/scripts";
+import {load_all_programs} from "./proxy/programs";
+import {load_all_bitstreams} from "./proxy/bitstreams";
+import {backend_get} from "./proxy/backend";
+import {api_dictionary} from "./proxy/api_dictionary";
+import {loadApplications} from "../redux/Actions/applicationActions";
+import {loadPeripherals} from "../redux/Actions/peripheralsActions";
+
+let load_all_applications = () => {
+    return backend_get(api_dictionary.applications.load_all).then(res=>{
+        let apps_dict = {}
+        for (let item in res) {
+            let app = new up_application(res[item])
+            apps_dict[app.application_name] = app
+        }
+        store.dispatch(loadApplications(apps_dict));
+        return apps_dict;
+    })
+
+}
+
+let load_all_peripherals = () => {
+    return backend_get(api_dictionary.peripherals.load_all).then(res=>{
+        let periph_dict = {}
+        for (let item in res) {
+            let periph = new up_peripheral(res[item])
+            periph_dict[periph.peripheral_name] = periph
+        }
+        store.dispatch(loadPeripherals(periph_dict));
+        return periph_dict;
+    })
+
+}
 
 export const refresh_caches = () =>{
     let state = store.getState();
     let refresh_ops = [];
 
-    refresh_ops.push(refresh_resource_cache("application_cache", state.applications, load_all_applications , get_applications_hash));
-    refresh_ops.push(refresh_resource_cache("peripheral_cache", state.peripherals, load_all_peripherals, get_peripherals_hash));
-    refresh_ops.push(refresh_resource_cache("scripts_cache", state.scripts, load_all_scripts , get_scripts_hash));
-    refresh_ops.push(refresh_resource_cache("programs_cache",state.programs, load_all_programs , get_programs_hash));
-    refresh_ops.push(refresh_resource_cache("bitstreams_cache",state.bitstreams, load_all_bitstreams , get_bitstreams_hash));
+    refresh_ops.push(refresh_resource_cache("application_cache", state.applications, load_all_applications ,()=>{return backend_get(api_dictionary.applications.get_hash)}));
+    refresh_ops.push(refresh_resource_cache("peripheral_cache", state.peripherals, load_all_peripherals,()=>{return backend_get(api_dictionary.peripherals.get_hash)}));
+    refresh_ops.push(refresh_resource_cache("scripts_cache", state.scripts, load_all_scripts , ()=>{return backend_get(api_dictionary.scripts.get_hash)}));
+    refresh_ops.push(refresh_resource_cache("programs_cache",state.programs, load_all_programs , ()=>{return backend_get(api_dictionary.programs.get_hash)}));
+    refresh_ops.push(refresh_resource_cache("bitstreams_cache",state.bitstreams, load_all_bitstreams , ()=>{return backend_get(api_dictionary.bitstream.get_hash)}));
     return Promise.all(refresh_ops);
 };
 
@@ -59,3 +87,4 @@ let refresh_resource_cache = (key,resource, load_fcn, hash_fcn) => {
     })
 
 }
+

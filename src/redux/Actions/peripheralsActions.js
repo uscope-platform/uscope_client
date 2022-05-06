@@ -14,7 +14,6 @@
 // limitations under the License.
 
 import { ADD_PERIPHERAL, LOAD_PERIPHERALS, REMOVE_PERIPHERAL} from "./types";
-import axios from 'axios';
 
 
 export const loadPeripherals = peripherals => ({
@@ -22,19 +21,7 @@ export const loadPeripherals = peripherals => ({
     payload: peripherals
 });
 
-
-export const removePeripheral = (server_url, peripheral, config) =>{
-    return dispatch => {
-        return axios.get(server_url, config).then(res => {
-            dispatch(removePeripheralDone(peripheral));
-            return res;
-        }).catch(err => {
-            alert('ERROR: error while removing a peripheral\n' + err.message);
-        });
-    };
-};
-
-const removePeripheralDone = peripheral =>({
+export const removePeripheral = peripheral =>({
   type: REMOVE_PERIPHERAL,
   payload:peripheral
 });

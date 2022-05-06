@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {edit_peripheral, up_application} from "../../../src/client_core";
-import {created_app_data, edit_app_data} from "../mock/applications_api";
+import {up_application} from "../../../src/client_core";
+import {created_app_data, edit_app_data, removed_app} from "../mock/applications_api";
 import {mock_store} from "../mock/redux_store";
 
 
@@ -809,3 +809,15 @@ test("remove_misc_param", () => {
         });
     });
 });
+
+
+test("application_removal", () => {
+    let app = up_application.construct_empty("default");
+    return app.add_remote().then(() => {
+        up_application.delete_application("default").then(()=>{
+            let state = mock_store.getState();
+            expect(state.applications).not.toHaveProperty("default");
+            expect(removed_app).toBe("default");
+        });
+    });
+})

@@ -17,9 +17,9 @@
 
 
 import {store} from "../index";
-import {backend_post} from "../proxy/backend";
+import {backend_get, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
-import {addPeripheral} from "../../redux/Actions/peripheralsActions";
+import {addPeripheral, removePeripheral} from "../../redux/Actions/peripheralsActions";
 import {up_register} from "./up_register";
 
 export class up_peripheral {
@@ -76,6 +76,16 @@ export class up_peripheral {
         let edit = {peripheral:this.peripheral_name, register:reg_id, action:"remove_register"};
         return backend_post(api_dictionary.peripherals.edit, edit);
     };
+
+    static delete_periperal(periph){
+        return backend_get(api_dictionary.peripherals.delete+'/'+ periph).then(()=>{
+            store.dispatch(removePeripheral(periph));
+        })
+    }
+
+    static bulk_register_write(data){
+        return backend_post(api_dictionary.peripherals.bulk_write, data);
+    }
 
     _get_periph = () =>{
         return {[this.peripheral_name]:{

@@ -24,9 +24,7 @@ import {TableStyle} from './TableStyles'
 import {BlockLayout, Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements"
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
-import {remove_peripheral} from "../../client_core"
-import {up_peripheral} from "../../client_core/data_models/up_peripheral";
-import {addPeripheral} from "../../redux/Actions/peripheralsActions";
+import {up_peripheral} from "../../client_core"
 
 let columns = [
     {
@@ -68,8 +66,9 @@ let PeripheralsManager = (props)=>{
 
 
     let handleRemoveRow = (event) =>{
-        remove_peripheral(settings.current_peripheral);
-        dispatch(setSetting(["current_peripheral", null]))
+        up_peripheral.delete_periperal(settings.current_peripheral).then(()=>{
+            dispatch(setSetting(["current_peripheral", null]))
+        })
     };
 
     let handleExport = (event) =>{

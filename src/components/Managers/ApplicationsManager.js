@@ -22,7 +22,7 @@ import {setSetting} from "../../redux/Actions/SettingsActions";
 
 import DataTable from 'react-data-table-component';
 import {TableStyle} from './TableStyles'
-import {remove_application, up_application} from "../../client_core";
+import {up_application} from "../../client_core";
 import {addApplication} from "../../redux/Actions/applicationActions";
 
 
@@ -58,8 +58,9 @@ let  ApplicationsManager = props =>{
 
 
     let  handleRemoveRow = (event) =>{
-        remove_application(settings.current_application);
-        dispatch(setSetting(["current_application", null]))
+        up_application.delete_application(settings.current_application).then(()=>{
+            dispatch(setSetting(["current_application", null]))
+        });
     };
 
     let handleExport = (event) =>{

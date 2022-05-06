@@ -21,9 +21,9 @@ import {
     create_macro,
     create_parameter, create_peripheral_entry
 } from "../../utilities/ApplicationUtilities";
-import {backend_post} from "../proxy/backend";
+import {backend_get, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
-import {addApplication} from "../../redux/Actions/applicationActions";
+import {addApplication, removeApplication} from "../../redux/Actions/applicationActions";
 
 
 export class up_application {
@@ -57,6 +57,9 @@ export class up_application {
         return backend_post(api_dictionary.applications.add, this._get_app());
     }
 
+    set_active = () => {
+        return backend_get(api_dictionary.applications.set + '/' + this.application_name)
+    }
 
     add_channel = (ch_name) =>{
         let ch = create_channel(ch_name)
@@ -246,17 +249,22 @@ export class up_application {
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
-   static _get_nonstandard_fields(obj){
-      return Object.keys(obj).filter((field)=>{
+    static delete_application(app){
+        return backend_get(api_dictionary.applications.remove+'/'+app).then(()=>{
+            store.dispatch(removeApplication(app));
+        })
+    }
 
-          let is_not_function = typeof obj[field] !== 'function';
-          let is_standard_field = ["application_name","bitstream", "channels", "channel_groups","clock_frequency",
-              "initial_registers_values", "macro", "n_enables", "parameters", "peripherals", "timebase_address"
-          ].includes(field);
-          return !is_standard_field && is_not_function;
-       })
-   }
+    static _get_nonstandard_fields(obj){
+        return Object.keys(obj).filter((field)=>{
 
+            let is_not_function = typeof obj[field] !== 'function';
+            let is_standard_field = ["application_name","bitstream", "channels", "channel_groups","clock_frequency",
+                "initial_registers_values", "macro", "n_enables", "parameters", "peripherals", "timebase_address"
+            ].includes(field);
+            return !is_standard_field && is_not_function;
+        })
+    }
 
     _get_app = () =>{
         let misc_params = up_application._get_nonstandard_fields(this);

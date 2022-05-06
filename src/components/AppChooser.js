@@ -24,7 +24,11 @@ import {initialize_channels} from "../redux/Actions/plotActions";
 import {create_plot_channel, get_channels_from_group} from "../utilities/PlotUtilities";
 import ApplicationChooserView from "./Common_Components/ApplicationChooserView";
 
-import {set_application, bulk_register_write, get_channel_info, set_channel_widths} from "../client_core"
+import {
+    get_channel_info,
+    set_channel_widths,
+    up_application, up_peripheral
+} from "../client_core"
 
 let ApplicationChooser = (props) =>{
 
@@ -33,7 +37,8 @@ let ApplicationChooser = (props) =>{
 
 
     let handleApplicationChosen = e =>{
-        set_application(e).then(()=>{
+        let app = new up_application(applications[e]);
+        app.set_active().then(()=>{
             dispatch(setSetting(["application", e]));
             let peripherals = Object.values(applications[e].peripherals);
             initializePlotState(applications[e]);
@@ -77,7 +82,7 @@ let ApplicationChooser = (props) =>{
             for(let item of components){
                 word |= item;
             }
-            bulk_register_write({payload: [{address: scope_mux_address, value: word}]}).then();
+            up_peripheral.bulk_register_write({payload: [{address: scope_mux_address, value: word}]}).then();
         }
         // SET UP CHANNEL WIDTHS
 

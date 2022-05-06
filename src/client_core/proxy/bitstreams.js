@@ -14,13 +14,10 @@
 // limitations under the License.
 
 
-import {backend_get, dispatch_redux_thunk} from "./backend";
+import {dispatch_redux_thunk} from "./backend";
 import {addBitstream, editBitstream, loadAllBitstreams, removeBitstream} from "../../redux/Actions/bitstreamsActions";
 import {api_dictionary} from './api_dictionary'
 
-export const get_bitstreams_hash = () =>{
-    return backend_get(api_dictionary.bitstream.get_hash)
-};
 
 export const load_all_bitstreams = () => {
     return dispatch_redux_thunk(loadAllBitstreams, api_dictionary.bitstream.load_all);

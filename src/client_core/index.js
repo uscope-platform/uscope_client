@@ -22,17 +22,15 @@ export {refresh_caches} from './cache_handling'
 export {init_terminal} from './terminal/terminal'
 // SERVER PROXY
 export {set_address, set_auth_config} from './proxy/backend'
-export {create_application, remove_application, set_application} from './proxy/applications'
 export {upload_bitstream, delete_bitstream, edit_bitstream} from './proxy/bitstreams'
 export {upload_script, delete_script, edit_script} from './proxy/scripts'
 export {edit_program, upload_program, delete_program, compile_program, apply_program} from './proxy/programs'
-export {get_peripheral_registers, bulk_register_write, set_register_value, remove_peripheral} from './proxy/peripherals'
 export {sign_in} from './proxy/auth'
 export {add_user, remove_user, get_users_list, dump_database, restore_database, do_onboarding, need_onboarding} from './proxy/platform'
 export {fetch_data, get_captured_data, set_capture, get_channel_info, set_channel_status, set_channel_widths} from './proxy/plot'
 // DATA MODEL
 export {up_application} from './data_models/up_application'
-
+export {up_peripheral} from './data_models/up_peripheral'
 export let store = null;
 
 export const set_redis_store = (rs) => {

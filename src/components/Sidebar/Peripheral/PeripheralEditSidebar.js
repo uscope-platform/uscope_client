@@ -29,7 +29,7 @@ import {
 } from "../../UI_elements";
 import {BlockTitle} from "../../UI_elements/";
 import {Add} from "grommet-icons";
-import {up_peripheral} from "../../../client_core/data_models/up_peripheral";
+import {up_peripheral} from "../../../client_core";
 
 const TitleLayout = styled.div`
   margin-left: auto;

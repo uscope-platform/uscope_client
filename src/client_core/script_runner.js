@@ -15,7 +15,7 @@
 
 import {saveScriptsWorkspace} from "../redux/Actions/scriptsActions";
 import {saveParameter} from "../redux/Actions/applicationActions";
-import {bulk_register_write} from "./proxy/peripherals";
+import {up_peripheral} from "./data_models/up_peripheral";
 
 
 let parseFunction = function (string) {
@@ -144,7 +144,7 @@ export const run_parameter_script = (store, parameter) => {
         store.dispatch(saveParameter({name:parameter.name, value:floatValue, app:settings["application"]}))
 
         if(bulk_registers !== null){
-            return bulk_register_write({payload: bulk_registers}).then();
+            return up_peripheral.bulk_register_write({payload: bulk_registers}).then();
         } else {
             return new Promise((resolve, reject) =>{
                 resolve();

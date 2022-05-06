@@ -14,8 +14,12 @@
 // limitations under the License.
 
 import {mock_store} from "../mock/redux_store";
-import {up_peripheral} from "../../../src/client_core/data_models/up_peripheral";
-import {created_peripheral, edit_peripheral_data} from "../mock/peripherals_api";
+import {up_peripheral} from "../../../src/client_core";
+import {
+    created_peripheral,
+    edit_peripheral_data,
+    remove_peripheral_data
+} from "../mock/peripherals_api";
 
 test("peripheral creation", () => {
     let periph = up_peripheral.construct_empty("test");
@@ -151,3 +155,15 @@ test("edit_register", () => {
         });
     });
 });
+
+
+test("remove peripheral", () =>{
+    let periph = up_peripheral.construct_empty("test");
+    return periph.add_remote().then(()=>{
+        return up_peripheral.delete_periperal("test").then(() => {
+            expect(remove_peripheral_data).toBe("test");
+            let peripherals = mock_store.getState().peripherals;
+            expect(peripherals).not.toHaveProperty("test");
+        });
+    })
+})

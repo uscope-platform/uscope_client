@@ -19,7 +19,7 @@ import {useDispatch, useSelector} from "react-redux";
 import PeripheralEditSidebar from "./PeripheralEditSidebar";
 
 import {BlockTitle, InputField, SidebarContentLayout} from "../../UI_elements";
-import {up_peripheral} from "../../../client_core/data_models/up_peripheral";
+import {up_peripheral} from "../../../client_core";
 import {addPeripheral} from "../../../redux/Actions/peripheralsActions";
 
 let  PeripheralsSidebar = props =>{
