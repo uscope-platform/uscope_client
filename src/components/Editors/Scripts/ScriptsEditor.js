@@ -24,7 +24,7 @@ import "ace-builds/src-min-noconflict/ext-language_tools"
 import {useSelector} from "react-redux";
 import styled from "styled-components";
 
-import {edit_script} from "../../../client_core";
+import {up_script} from "../../../client_core/data_models/up_script";
 
 const Title = styled.h1`
   margin-right: auto;
@@ -47,11 +47,10 @@ let ScriptsEditor = props =>{
     };
 
     let handle_submit = (event) => {
-        let script = Object.values(scripts_store).find(x => x.id === settings.selected_script);
-        script = {script:script.id, field:'script_content', value:editor_content}
-
-        edit_script(script);
-        props.done();
+        let script = new up_script(Object.values(scripts_store).find(x => x.id === settings.selected_script));
+        script.set_content(editor_content).then(()=>{
+            props.done();
+        });
     };
 
     let handle_load = (editor) => {

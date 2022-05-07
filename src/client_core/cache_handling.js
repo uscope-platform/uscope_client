@@ -15,13 +15,14 @@
 
 
 import {store, up_application, up_peripheral} from "./index"
-import {load_all_scripts} from "./proxy/scripts";
 import {load_all_programs} from "./proxy/programs";
 import {load_all_bitstreams} from "./proxy/bitstreams";
 import {backend_get} from "./proxy/backend";
 import {api_dictionary} from "./proxy/api_dictionary";
 import {loadApplications} from "../redux/Actions/applicationActions";
 import {loadPeripherals} from "../redux/Actions/peripheralsActions";
+import {loadAllScripts} from "../redux/Actions/scriptsActions";
+import {up_script} from "./data_models/up_script";
 
 let load_all_applications = () => {
     return backend_get(api_dictionary.applications.load_all).then(res=>{
@@ -45,6 +46,18 @@ let load_all_peripherals = () => {
         }
         store.dispatch(loadPeripherals(periph_dict));
         return periph_dict;
+    })
+
+}
+
+let load_all_scripts = () => {
+    return backend_get(api_dictionary.scripts.load_all).then(res=>{
+        let scripts_dict = {}
+        for (let item in res) {
+            scripts_dict[item] = new up_script(res[item]);
+        }
+        store.dispatch(loadAllScripts(scripts_dict));
+        return scripts_dict;
     })
 
 }

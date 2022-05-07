@@ -25,7 +25,7 @@ import {BlockLayout, Button, ManagerButtonsLayout, ManagerLayout} from "../UI_el
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
 import ScriptsEditor from "../Editors/Scripts/ScriptsEditor";
-import {upload_script, delete_script} from "../../client_core";
+import {up_script} from "../../client_core/data_models/up_script";
 
 let columns = [
     {
@@ -88,17 +88,14 @@ let ScriptManager = (props) =>{
     }
 
     let handleAddRow = () =>{
-        let ids = Object.values(scripts_store).map(a => a.id).sort();
-        let id = get_next_id(ids);
-
-        let new_script = { id:id, name:'new script_'+id, path:`new script_${id}.js`, script_content:'', triggers:''};
-        upload_script(new_script);
+        let id = get_next_id(Object.values(scripts_store).map(a => a.id).sort());
+        let script = up_script.construct_empty(id);
+        script.add_remote().then();
     };
 
     let handleRemoveRow = (event) =>{
-        let removed = Object.values(scripts_store).find(x => x.id === settings.selected_script);
-        delete_script(removed);
         dispatch(setSetting(["selected_script", null]));
+        up_script.delete_script(scripts_store[settings.selected_script]).then();
     };
 
     let handleScriptEdit = () => {

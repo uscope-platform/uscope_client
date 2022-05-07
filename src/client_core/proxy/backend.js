@@ -62,15 +62,9 @@ export const backend_delete = (endpoint, data) => {
     });
 }
 
-export const backend_post_config = (endpoint, data, local_config) => {
+export const backend_patch = (endpoint, data) => {
     return new Promise( (resolve, reject) => {
-        axios.post(server_address + endpoint, data,
-            {
-                headers:{
-                    ...local_config,
-                    ...auth_config
-                }
-            })
+        axios.patch(server_address + endpoint, data, auth_config)
             .then(res => {
                 resolve(res.data);
             }).catch(error => {
@@ -78,6 +72,10 @@ export const backend_post_config = (endpoint, data, local_config) => {
         });
     });
 }
+
+
+
+
 
 export const dispatch_redux_thunk = (action, endpoint, data) => {
     if(data) {

@@ -13,8 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {ADD_SCRIPT, EDIT_SCRIPT, LOAD_ALL_SCRIPTS, REMOVE_SCRIPT, SAVE_SCRIPT_WORKSPACE} from "./types";
-import axios from "axios";
+import {ADD_SCRIPT, LOAD_ALL_SCRIPTS, REMOVE_SCRIPT, SAVE_SCRIPT_WORKSPACE} from "./types";
 
 
 export const saveScriptsWorkspace = (workspace) => ({
@@ -22,67 +21,17 @@ export const saveScriptsWorkspace = (workspace) => ({
     payload:workspace
 });
 
-
-export const addScript = (server_url, script, config) =>{
-    return dispatch => {
-        return axios.post(server_url, script, config).then(res => {
-            dispatch(AddScriptDone(script));
-        }).catch(err => {
-            alert('ERROR: error while adding a script\n' + err.message);
-        });
-    };
-};
-
-const AddScriptDone = script =>({
+export const AddScript = script =>({
     type: ADD_SCRIPT,
     payload:script
 });
 
-
-export const editScript = (server_url, script, config) =>{
-    return dispatch => {
-        return axios.patch(server_url,script, config).then(res => {
-            dispatch(editScriptDone(script));
-        }).catch(err => {
-            alert('ERROR: error while editing a script\n' + err.message);
-            dispatch(editScriptDone(script));
-        });
-    };
-};
-
-const editScriptDone = script =>({
-    type: EDIT_SCRIPT,
-    payload:script
-});
-
-export const removeScript = (server_url, script, config) =>{
-    return dispatch => {
-        return axios.delete(server_url, config).then(res => {
-            dispatch(removeScriptDone(script));
-        }).catch(err => {
-            alert('ERROR: error while removing a script\n' +err.message);
-        });
-    };
-};
-
-const removeScriptDone = script =>({
+export const removeScript = script =>({
     type: REMOVE_SCRIPT,
     payload:script
 });
 
-
-export const loadAllScripts = (server_url, config) =>{
-    return dispatch => {
-        return axios.get(server_url, config).then(res => {
-            dispatch(loadAllScriptsDone(res.data));
-            return res.data;
-        }).catch(err => {
-            alert('ERROR: error while loading all scripts\n' + err.message);
-        });
-    };
-};
-
-const loadAllScriptsDone = script =>({
+export const loadAllScripts = script =>({
     type: LOAD_ALL_SCRIPTS,
     payload:script
 });

@@ -15,17 +15,16 @@
 
 import React from "react";
 
-import {edit_script} from "../../../client_core";
 import {InputField} from "../InputField";
+import {up_script} from "../../../client_core/data_models/up_script";
 
 export let  ScriptProperties = props =>{
 
 
     let handleonKeyDown = (event) =>{
-        let edit = {}
         if(event.key==="Enter"|| event.key ==="Tab"){
-            edit = {script:props.script, field:event.target.name, value:event.target.value}
-            edit_script(edit);
+            let scr = new up_script(props.script);
+            scr.edit_field(event.target.name, event.target.value);
         }
     }
 

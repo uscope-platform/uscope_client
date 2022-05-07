@@ -256,7 +256,7 @@ export const cache_handlers = [
     rest.get('test_server/script/none', (req, res, ctx) => {
         // If authenticated, return a mocked user details
         return res(
-            ctx.json([scripts_init]),
+            ctx.json(scripts_init),
             ctx.status(200)
         )
     }),

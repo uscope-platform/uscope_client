@@ -13,27 +13,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {ADD_SCRIPT, EDIT_SCRIPT, LOAD_ALL_SCRIPTS, REMOVE_SCRIPT, SAVE_SCRIPT_WORKSPACE} from "../Actions/types";
-import produce from "immer";
+import {ADD_SCRIPT, LOAD_ALL_SCRIPTS, REMOVE_SCRIPT, SAVE_SCRIPT_WORKSPACE} from "../Actions/types";
 
 
 let scriptsReducer = function (state = [], action) {
     switch (action.type) {
         case ADD_SCRIPT:
-            return produce(state, draftState => {
-                draftState[action.payload.id] = action.payload;
-            });
+            return {...state, ...{[action.payload.id]:action.payload}}
         case REMOVE_SCRIPT:
-            return produce(state, draftState => {
-                delete draftState[action.payload.id];
-            });
+            return  Object.keys(state)
+                .filter(key => {
+                    return key !== action.payload.id.toString();
+                })
+                .reduce((obj, key) => {
+                    obj[key] = state[key];
+                    return obj;
+                }, {});
         case LOAD_ALL_SCRIPTS:
             state = action.payload;
             return  state;
-        case EDIT_SCRIPT:
-            return produce(state, draftState => {
-                draftState[action.payload.script][action.payload.field] = action.payload.value;
-            });
         default:
             return state;
     }
