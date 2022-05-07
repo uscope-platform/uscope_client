@@ -24,7 +24,6 @@ export {init_terminal} from './terminal/terminal'
 export {set_address, set_auth_config} from './proxy/backend'
 export {upload_bitstream, delete_bitstream, edit_bitstream} from './proxy/bitstreams'
 
-export {edit_program, upload_program, delete_program, compile_program, apply_program} from './proxy/programs'
 export {sign_in} from './proxy/auth'
 export {add_user, remove_user, get_users_list, dump_database, restore_database, do_onboarding, need_onboarding} from './proxy/platform'
 export {fetch_data, get_captured_data, set_capture, get_channel_info, set_channel_status, set_channel_widths} from './proxy/plot'

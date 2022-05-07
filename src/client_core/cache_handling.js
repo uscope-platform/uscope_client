@@ -15,7 +15,6 @@
 
 
 import {store, up_application, up_peripheral} from "./index"
-import {load_all_programs} from "./proxy/programs";
 import {load_all_bitstreams} from "./proxy/bitstreams";
 import {backend_get} from "./proxy/backend";
 import {api_dictionary} from "./proxy/api_dictionary";
@@ -23,6 +22,8 @@ import {loadApplications} from "../redux/Actions/applicationActions";
 import {loadPeripherals} from "../redux/Actions/peripheralsActions";
 import {loadAllScripts} from "../redux/Actions/scriptsActions";
 import {up_script} from "./data_models/up_script";
+import {up_program} from "./data_models/up_program";
+import {loadAllPrograms} from "../redux/Actions/ProgramsActions";
 
 let load_all_applications = () => {
     return backend_get(api_dictionary.applications.load_all).then(res=>{
@@ -59,8 +60,20 @@ let load_all_scripts = () => {
         store.dispatch(loadAllScripts(scripts_dict));
         return scripts_dict;
     })
-
 }
+
+let load_all_programs = () => {
+    return backend_get(api_dictionary.programs.load_all).then(res=>{
+        let programs_dict = {}
+        for (let item in res) {
+            programs_dict[item] = new up_program(res[item]);
+        }
+        store.dispatch(loadAllPrograms(programs_dict));
+        return programs_dict;
+    })
+}
+
+
 
 export const refresh_caches = () =>{
     let state = store.getState();

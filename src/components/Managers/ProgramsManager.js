@@ -21,7 +21,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import ProgramsEditor from "../Editors/Programs/ProgramsEditor";
 import ButterToast, { POS_TOP, POS_RIGHT, Cinnamon} from "butter-toast";
-import {upload_program, delete_program, apply_program, compile_program} from "../../client_core";
+import {up_program} from "../../client_core/data_models/up_program";
 
 let columns = [
     {
@@ -56,6 +56,8 @@ let ProgramsManager = props =>{
 
     const dispatch = useDispatch();
 
+    const selected_program = new up_program(programs_store[settings.selected_program]);
+
     let handleOnSelect = (selection) => {
         if(selection.selectedCount===1){
             dispatch(setSetting(["selected_program", selection.selectedRows[0].id]));
@@ -80,18 +82,14 @@ let ProgramsManager = props =>{
 
     let handleAddRow = () =>{
 
-        let ids = Object.values(programs_store).map(a => a.id).sort();
-        let id = get_next_id(ids);
-        let new_program= { id:id, name:'new program_'+id, program_content:'', program_type:''};
-        upload_program(new_program);
+        let id = get_next_id(Object.values(programs_store).map(a => a.id).sort());
+        let program = up_program.construct_empty(id);
+        program.add_remote().then();
     };
 
     let handleRemoveRow = (event) =>{
-
-    let removed = Object.values(programs_store).find(x => x.id === settings.selected_program);
-    delete_program(removed);
-    dispatch(setSetting(["selected_program", null]));
-
+        dispatch(setSetting(["selected_program", null]));
+        up_program.delete_program(selected_program).then();
     };
 
     let handleScriptEdit = () => {
@@ -119,7 +117,7 @@ let ProgramsManager = props =>{
             return;
         }
 
-        compile_program(programs_store[settings.selected_program]).then((data)=>{
+        selected_program.compile().then((data)=>{
             let notifications={passed:[],failed:[]};
             for (let item of data){
                 if(item.status==="passed"){
@@ -151,9 +149,8 @@ let ProgramsManager = props =>{
     }
 
     let handle_apply_program = () =>{
-        let program = Object.values(programs_store).find(x => x.id === settings.selected_program);
-        program.core_address = '0x83c00000';
-        apply_program(program).then();
+        let core_address = '0x83c00000';
+        selected_program.load(core_address).then();
     };
 
 

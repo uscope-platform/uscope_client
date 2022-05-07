@@ -19,17 +19,13 @@ import {
     SidebarBlockLayout,
     SidebarBlockTitleLayout
 } from "../../UI_elements";
-import {useSelector} from "react-redux";
 import{ProgramProperties} from "../../UI_elements/SidebarComponents/ProgramProperties";
 import {SelectField} from "../../UI_elements/Select";
-import {edit_program} from "../../../client_core";
 
 let ProgramEditSidebar = props =>{
-    const programs = useSelector(state => state.programs);
 
     let handleTypeChange = (event) =>{
-        let edit = {program:props.selected_program, field:event.target.name, value:event.target.value}
-        edit_program(edit);
+        props.selected_program.edit_field(event.target.name, event.target.value).then();
     }
 
     let allowed_types = ["asm", "C"];
@@ -39,8 +35,8 @@ let ProgramEditSidebar = props =>{
                 <label style={{fontSize:'20px',fontWeight:600}}>{"Program"}</label>
             </SidebarBlockTitleLayout>
             <FormLayout>
-                <ProgramProperties  program={props.selected_program} field_name='name' field_value={programs[props.selected_program].name}/>
-                <SelectField label="Program type" onChange={handleTypeChange} defaultValue={programs[props.selected_program].program_type}
+                <ProgramProperties  program={props.selected_program} field_name='name' field_value={props.selected_program.name}/>
+                <SelectField label="Program type" onChange={handleTypeChange} defaultValue={props.selected_program.program_type}
                              name="program_type" placeholder="Program type" options={allowed_types}/>
             </FormLayout>
         </SidebarBlockLayout>

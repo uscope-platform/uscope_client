@@ -39,11 +39,19 @@ let check_test_results = (promise_result, redux_reference, test_case) => {
     expect(localStorage.getItem("scripts_cache")).toBe("9701008d-c511-4ded-94b3-b08748a6e066");
 
     expect(state.applications).toMatchObject(redux_reference.applications);
-    expect(state.peripherals).toMatchObject(redux_reference.peripherals);
-    expect(state.scripts).toMatchObject(redux_reference.scripts);
-    expect(state.bitstreams).toStrictEqual(redux_reference.bitstreams);
-    expect(state.programs).toStrictEqual(redux_reference.programs);
+    expect(state.applications["SicDrive"].constructor.name).toBe("up_application");
 
+    expect(state.peripherals).toMatchObject(redux_reference.peripherals);
+    expect(state.peripherals['ADC_processing'].constructor.name).toBe("up_peripheral");
+
+    expect(state.scripts).toMatchObject(redux_reference.scripts);
+    expect(state.scripts[1].constructor.name).toBe("up_script");
+
+    expect(state.bitstreams).toStrictEqual(redux_reference.bitstreams);
+
+    expect(state.programs).toMatchObject(redux_reference.programs);
+    expect(state.programs[1].constructor.name).toBe("up_program");
+    let e = 0;
 }
 
 const expected_store = {
@@ -51,7 +59,7 @@ const expected_store = {
     "peripherals":peripherals_init,
     "scripts":scripts_init,
     "bitstreams":[bitstream_init],
-    "programs":[programs_init]
+    "programs":programs_init
 }
 
 

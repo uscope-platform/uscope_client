@@ -13,23 +13,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {ADD_PROGRAM, EDIT_PROGRAM, LOAD_ALL_PROGRAMS, REMOVE_PROGRAM} from "../Actions/types";
-import produce from "immer";
+import {ADD_PROGRAM, LOAD_ALL_PROGRAMS, REMOVE_PROGRAM} from "../Actions/types";
 
 let programsReducer = function (state = [], action) {
     switch (action.type) {
         case ADD_PROGRAM:
-            return produce(state, draftState => {
-                draftState[action.payload.id] = action.payload;
-            });
-        case EDIT_PROGRAM:
-            return produce(state, draftState => {
-                draftState[action.payload.program][action.payload.field] = action.payload.value;
-            });
+            return {...state, ...{[action.payload.id]:action.payload}}
         case REMOVE_PROGRAM:
-            return produce(state, draftState => {
-                delete draftState[action.payload.id];
-            });
+            return  Object.keys(state)
+                .filter(key => {
+                    return key !== action.payload.id.toString();
+                })
+                .reduce((obj, key) => {
+                    obj[key] = state[key];
+                    return obj;
+                }, {});
         case LOAD_ALL_PROGRAMS:
             state = action.payload;
             return state;

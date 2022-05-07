@@ -18,12 +18,15 @@ import React from 'react';
 import ProgramEditSidebar from "./ProgramEditSidebar";
 import {useSelector} from "react-redux";
 import {BlockTitle, SidebarContentLayout} from "../../UI_elements";
+import {up_program} from "../../../client_core/data_models/up_program";
 
 
 
 let  ProgramSidebar = props =>{
 
     const settings = useSelector(state => state.settings);
+    const programs = useSelector(state => state.programs);
+
 
     if(!settings.selected_program)
         return (
@@ -32,8 +35,9 @@ let  ProgramSidebar = props =>{
             </SidebarContentLayout>
         );
 
+    const selected_program = new up_program(programs[settings.selected_program]);
     return(
-        <ProgramEditSidebar selected_program={settings.selected_program}/>
+        <ProgramEditSidebar selected_program={selected_program}/>
     );
 };
 

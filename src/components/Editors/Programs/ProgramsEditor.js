@@ -24,7 +24,7 @@ import {useSelector} from "react-redux";
 import styled from "styled-components";
 import fCoreMode from "./fCorehas";
 
-import {edit_program} from "../../../client_core";
+import {up_program} from "../../../client_core/data_models/up_program";
 
 const Title = styled.h1`
   margin-right: auto;
@@ -59,10 +59,10 @@ let ProgramsEditor = props =>{
     };
 
     let handle_submit = (event) => {
-        let prog = Object.values(programs).find(x => x.name === settings.program_editor_title);
-        prog = {program:prog.id, field:'program_content', value:editor_content}
-        edit_program(prog);
-        props.done();
+        let prog = new up_program(Object.values(programs).find(x => x.name === settings.program_editor_title));
+        prog.set_content(editor_content).then(()=>{
+            props.done();
+        })
     };
 
     let handle_load = (editor) => {

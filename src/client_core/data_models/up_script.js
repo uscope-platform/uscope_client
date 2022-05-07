@@ -41,11 +41,7 @@ export class up_script {
     }
 
     set_content = (content) => {
-        this.script_content = content;
-        store.dispatch(AddScript(this));
-
-        let edit = {script:this.id, field:'script_content', value:content};
-        return backend_patch(api_dictionary.scripts.edit+'/'+this.id,edit)
+        return this.edit_field("script_content", content);
     }
 
     edit_field = (field, value) => {

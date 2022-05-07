@@ -15,16 +15,13 @@
 
 import React from "react";
 import {InputField} from "../InputField";
-import {edit_program} from "../../../client_core";
 
 export let  ProgramProperties = props =>{
 
 
     let handleonKeyDown = (event) =>{
-        let edit = {}
         if(event.key==="Enter"|| event.key ==="Tab"){
-            edit = {program:props.program, field:event.target.name, value:event.target.value}
-            edit_program(edit);
+            props.program.edit_field(event.target.name, event.target.value);
         }
     }
 

@@ -8,7 +8,9 @@ import ApplicationsReducer from "../../../src/redux/Reducers/applicationsReducer
 import programsReducer from "../../../src/redux/Reducers/ProgramsReducer";
 import {scriptsReducer, scriptsWorkspaceReducer} from "../../../src/redux/Reducers/scriptsReducer";
 import thunk from "redux-thunk";
-import {up_application} from "../../../src/client_core";
+import {up_application, up_peripheral} from "../../../src/client_core";
+import {up_script} from "../../../src/client_core/data_models/up_script";
+import {up_program} from "../../../src/client_core/data_models/up_program";
 
 export let register_writes = [];
 
@@ -126,31 +128,33 @@ let applications_init = {
     SicDrive: new up_application(test_application)
 }
 
+let test_peripheral =  {
+    image: 'static/Images/ADC_processing.png',
+    peripheral_name: 'ADC_processing',
+    registers: [
+        {
+            ID: 'cmp_thr_1',
+            description: 'This register controls the thresholds for the low (latching mode) and low-falling (normal mode) thresholds, for the filtered (lower word) and fast acting (higher word) comparators',
+            direction: 'R/W',
+            field_descriptions: [
+                'Threshold for the filtered comparator',
+                'Threshold for the fast acting comparator'
+            ],
+            field_names: [
+                'Filtered threshold',
+                'Fast threshold'
+            ],
+            offset: '0x0',
+            register_format: 'words',
+            register_name: 'Comparators threshold 1',
+            value: 0
+        }
+    ],
+    version: '0.1'
+}
+
 let peripherals_init = {
-    ADC_processing: {
-        image: 'static/Images/ADC_processing.png',
-        peripheral_name: 'ADC_processing',
-        registers: [
-            {
-                ID: 'cmp_thr_1',
-                description: 'This register controls the thresholds for the low (latching mode) and low-falling (normal mode) thresholds, for the filtered (lower word) and fast acting (higher word) comparators',
-                direction: 'R/W',
-                field_descriptions: [
-                    'Threshold for the filtered comparator',
-                    'Threshold for the fast acting comparator'
-                ],
-                field_names: [
-                    'Filtered threshold',
-                    'Fast threshold'
-                ],
-                offset: '0x0',
-                register_format: 'words',
-                register_name: 'Comparators threshold 1',
-                value: 0
-            }
-        ],
-        version: '0.1'
-    }
+    ADC_processing: new up_peripheral(test_peripheral)
 }
 
 
@@ -181,27 +185,27 @@ function start_trigger_cl(parameters, context) {
 `
 
 let scripts_init = {
-    '1': {
+    '1': new up_script({
         id: 1,
         name: 'test_trigger',
         path: null,
         script_content: test_script,
         triggers: 'test_trigger'
-    },
-    '2': {
+    }),
+    '2': new up_script({
         id: 2,
         name: 'fp_dta',
         path: null,
         script_content: test_script,
         triggers: 'fp_dta_trg'
-    },
-    '3': {
+    }),
+    '3': new up_script({
         id: 3,
         name: 'test_script',
         path: null,
         script_content: "",
         triggers: 'test_trigger'
-    }
+    })
 
 }
 
@@ -211,12 +215,12 @@ let bitstream_init = {1:{
     }}
 
 let programs_init = {
-    1:{
+    1:new up_program({
         "id": 1,
         "name": "new_program_1",
         "program_content": "iocbnojrenjcor",
         "program_type": "asm"
-    }
+    })
 }
 
 const rootReducer = (state, action) => {
