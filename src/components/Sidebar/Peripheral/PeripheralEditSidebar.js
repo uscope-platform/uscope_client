@@ -44,7 +44,6 @@ let  PeripheralEditSidebar = props =>{
     const [new_register, set_new_register] = useState(false);
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
-    const selected_peripheral = new up_peripheral(peripherals[settings.current_peripheral]);
 
     let handleEditVersion = () =>{
         set_edit_label(true);
@@ -55,7 +54,7 @@ let  PeripheralEditSidebar = props =>{
             set_edit_label(false);
         } else if (event.key ==="Enter"){
             set_edit_label(false)
-            selected_peripheral.set_version(event.target.value);
+            props.selected_peripheral.set_version(event.target.value).then();
         }
 
     }
@@ -66,7 +65,7 @@ let  PeripheralEditSidebar = props =>{
 
     let handle_add_register_done = (event) => {
         if(event.key==="Enter"|| event.key ==="Tab"){
-            selected_peripheral.add_register(event.target.value)
+            props.selected_peripheral.add_register(event.target.value).then();
             set_new_register(false);
         } else if (event.key ==="Escape"){
             set_new_register(false);
@@ -97,7 +96,7 @@ let  PeripheralEditSidebar = props =>{
                     {
                         peripherals[settings.current_peripheral].registers.map((reg)=>{
                             return(
-                                <RegisterProperties peripheral={selected_peripheral} forceUpdate={forceUpdate} register={reg}/>
+                                <RegisterProperties peripheral={props.selected_peripheral} forceUpdate={forceUpdate} register={reg}/>
                             )
                         })
                     }

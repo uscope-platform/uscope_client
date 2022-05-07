@@ -28,6 +28,8 @@ import {addApplication, removeApplication} from "../../redux/Actions/application
 
 export class up_application {
     constructor(app_data_obj) {
+        if(!app_data_obj)
+            return;
         this.application_name = app_data_obj.application_name;
         this.bitstream = app_data_obj.bitstream;
         this.channels = app_data_obj.channels;

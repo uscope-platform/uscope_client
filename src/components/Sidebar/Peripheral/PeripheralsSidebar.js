@@ -15,31 +15,28 @@
 
 import React from 'react';
 
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import PeripheralEditSidebar from "./PeripheralEditSidebar";
 
 import {BlockTitle, InputField, SidebarContentLayout} from "../../UI_elements";
 import {up_peripheral} from "../../../client_core";
-import {addPeripheral} from "../../../redux/Actions/peripheralsActions";
 
 let  PeripheralsSidebar = props =>{
-    const settings = useSelector(state => state.settings);
 
-    const dispatch = useDispatch();
+    const selected_peripheral =  useSelector(state => new up_peripheral(state.peripherals[state.settings.current_peripheral]))
+
 
     let handle_add_peripheral = (event) =>{
 
         if (event.key === "Enter") {
             let peripheral = up_peripheral.construct_empty(event.target.value);
-            peripheral.add_remote().then(()=>{
-                dispatch(addPeripheral(peripheral));
-            })
+            peripheral.add_remote().then();
 
         }
     };
 
 
-    if(!settings.current_peripheral)
+    if(!selected_peripheral.peripheral_name)
         return (
             <SidebarContentLayout peripheral>
                 <BlockTitle>Peripheral actions</BlockTitle>
@@ -48,7 +45,7 @@ let  PeripheralsSidebar = props =>{
         );
 
     return(
-        <PeripheralEditSidebar/>
+        <PeripheralEditSidebar selected_peripheral={selected_peripheral}/>
     );
 };
 

@@ -21,22 +21,18 @@ import {BlockTitle, InputField, SidebarContentLayout} from "../../UI_elements";
 
 import ApplicationEditSidebar from "./ApplicationEditSidebar";
 import {up_application} from "../../../client_core";
-import {addApplication} from "../../../redux/Actions/applicationActions";
 
 
 let  ApplicationSidebar = props =>{
-    const settings = useSelector(state => state.settings);
+    const selected_application =  useSelector(state => new up_application(state.applications[state.settings.current_application]))
 
     let handle_add_application = (event) =>{
         if (event.key === "Enter") {
-            let app = up_application.construct_empty(event.target.value);
-            app.add_remote().then(()=>{
-                addApplication(app);
-            })
+            up_application.construct_empty(event.target.value).add_remote().then();
         }
     };
 
-    if(!settings.current_application)
+    if(!selected_application.application_name)
         return (
             <SidebarContentLayout application>
                 <BlockTitle>Applications actions</BlockTitle>
@@ -45,7 +41,7 @@ let  ApplicationSidebar = props =>{
         );
 
     return(
-        <ApplicationEditSidebar/>
+        <ApplicationEditSidebar selected_application={selected_application}/>
     );
 };
 

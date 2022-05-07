@@ -28,7 +28,7 @@ import {up_peripheral} from "../../client_core"
 
 let columns = [
     {
-        selector: row => row.application_name,
+        selector: row => row.peripheral_name,
         name: 'Peripheral Name',
         sort: true,
         grow:2

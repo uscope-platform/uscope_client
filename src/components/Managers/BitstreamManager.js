@@ -20,7 +20,7 @@ import {TableStyle} from "./TableStyles";
 import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import {handle_file_chosen} from "../../utilities/BitstreamUtilities";
-import {delete_bitstream, upload_bitstream} from "../../client_core";
+import {up_bitstream} from "../../client_core/data_models/up_bitstream";
 
 let columns = [
     {
@@ -46,6 +46,8 @@ let BitstreamManager = props =>{
     const [bitstream_object, set_bitstream_object] = useState({})
 
     const dispatch = useDispatch();
+
+    const selected_bitstream = new up_bitstream(bitstreams_store[settings.selected_bitstream]);
 
     let handleOnSelect = (selection) => {
         if(selection.selectedCount===1){
@@ -81,9 +83,8 @@ let BitstreamManager = props =>{
 
     let handleRemoveRow = (event) =>{
 
-        let removed = Object.values(bitstreams_store).find(x => x.id === settings.selected_bitstream);
-        delete_bitstream(removed);
         dispatch(setSetting(["selected_bitstream", null]));
+        up_bitstream.delete_bitstream(selected_bitstream).then();
 
     };
 
@@ -91,7 +92,8 @@ let BitstreamManager = props =>{
         handle_file_chosen( inputFile).then((file =>{
             bitstream_object['content'] = file.content;
             bitstream_object['name'] = file.name.replace(".bit", "")
-            upload_bitstream(bitstream_object);
+            let bitstream = new up_bitstream(bitstream_object);
+            bitstream.add_remote().then();
         }));
     }
 

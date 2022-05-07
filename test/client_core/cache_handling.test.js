@@ -47,7 +47,8 @@ let check_test_results = (promise_result, redux_reference, test_case) => {
     expect(state.scripts).toMatchObject(redux_reference.scripts);
     expect(state.scripts[1].constructor.name).toBe("up_script");
 
-    expect(state.bitstreams).toStrictEqual(redux_reference.bitstreams);
+    expect(state.bitstreams).toMatchObject(redux_reference.bitstreams);
+    expect(state.bitstreams[1].constructor.name).toBe("up_bitstream");
 
     expect(state.programs).toMatchObject(redux_reference.programs);
     expect(state.programs[1].constructor.name).toBe("up_program");
@@ -58,7 +59,7 @@ const expected_store = {
     "applications":applications_init,
     "peripherals":peripherals_init,
     "scripts":scripts_init,
-    "bitstreams":[bitstream_init],
+    "bitstreams":bitstream_init,
     "programs":programs_init
 }
 

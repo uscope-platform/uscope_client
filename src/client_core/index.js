@@ -22,7 +22,6 @@ export {refresh_caches} from './cache_handling'
 export {init_terminal} from './terminal/terminal'
 // SERVER PROXY
 export {set_address, set_auth_config} from './proxy/backend'
-export {upload_bitstream, delete_bitstream, edit_bitstream} from './proxy/bitstreams'
 
 export {sign_in} from './proxy/auth'
 export {add_user, remove_user, get_users_list, dump_database, restore_database, do_onboarding, need_onboarding} from './proxy/platform'

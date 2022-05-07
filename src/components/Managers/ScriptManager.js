@@ -26,7 +26,6 @@ import {setSetting} from "../../redux/Actions/SettingsActions";
 
 import ScriptsEditor from "../Editors/Scripts/ScriptsEditor";
 import {up_script} from "../../client_core/data_models/up_script";
-import {up_program} from "../../client_core/data_models/up_program";
 
 let columns = [
     {

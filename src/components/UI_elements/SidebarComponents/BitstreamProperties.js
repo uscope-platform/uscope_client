@@ -15,16 +15,12 @@
 
 import React from "react";
 import {InputField} from "../InputField";
-import {edit_bitstream} from "../../../client_core";
 
 export let  BitstreamProperties = props =>{
 
-
     let handleonKeyDown = (event) =>{
-        let edit = {}
         if(event.key==="Enter"|| event.key ==="Tab"){
-            edit = {id:props.bitstream, field:{name:event.target.name, value:event.target.value}}
-            edit_bitstream(edit)
+            props.bitstream.edit_field(event.target.name, event.target.value);
         }
     }
 

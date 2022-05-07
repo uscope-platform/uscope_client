@@ -24,6 +24,9 @@ import {up_register} from "./up_register";
 
 export class up_peripheral {
     constructor(periph_data_obj) {
+        if(!periph_data_obj)
+            return null;
+
         this.peripheral_name = periph_data_obj.peripheral_name;
         this.version = periph_data_obj.version;
         this.registers = [];

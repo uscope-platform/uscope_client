@@ -20,7 +20,6 @@ import {Button} from "../../UI_elements"
 import "ace-builds/src-min-noconflict/mode-javascript";
 import "ace-builds/src-min-noconflict/theme-dracula";
 import "ace-builds/src-min-noconflict/mode-c_cpp"
-import {useSelector} from "react-redux";
 import styled from "styled-components";
 import fCoreMode from "./fCorehas";
 
@@ -36,7 +35,6 @@ const Editor = styled(AceEditor)`
 
 let ProgramsEditor = props =>{
     const aceEditor = useRef(null)
-    const settings = useSelector(state => state.settings);
     const [editor_content, set_editor_content] = useState("");
     const [language, set_language] = useState('');
 

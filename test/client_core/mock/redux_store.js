@@ -11,6 +11,7 @@ import thunk from "redux-thunk";
 import {up_application, up_peripheral} from "../../../src/client_core";
 import {up_script} from "../../../src/client_core/data_models/up_script";
 import {up_program} from "../../../src/client_core/data_models/up_program";
+import {up_bitstream} from "../../../src/client_core/data_models/up_bitstream";
 
 export let register_writes = [];
 
@@ -209,10 +210,11 @@ let scripts_init = {
 
 }
 
-let bitstream_init = {1:{
+let bitstream_init = {1:new up_bitstream({
         "id": 1,
         "name": "test.bin"
-    }}
+    })
+}
 
 let programs_init = {
     1:new up_program({

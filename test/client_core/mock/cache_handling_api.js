@@ -289,7 +289,7 @@ export const cache_handlers = [
     rest.get('test_server/bitstream/none', (req, res, ctx) => {
         // If authenticated, return a mocked user details
         return res(
-            ctx.json([bitstream_init]),
+            ctx.json(bitstream_init),
             ctx.status(200)
 
         )

@@ -24,18 +24,15 @@ import {up_program} from "../../../client_core/data_models/up_program";
 
 let  ProgramSidebar = props =>{
 
-    const settings = useSelector(state => state.settings);
-    const programs = useSelector(state => state.programs);
+    const selected_program =  useSelector(state => new up_program(state.programs[state.settings.selected_program]))
 
-
-    if(!settings.selected_program)
+    if(!selected_program)
         return (
             <SidebarContentLayout peripheral>
                 <BlockTitle>Program actions</BlockTitle>
             </SidebarContentLayout>
         );
 
-    const selected_program = new up_program(programs[settings.selected_program]);
     return(
         <ProgramEditSidebar selected_program={selected_program}/>
     );
