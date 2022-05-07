@@ -15,14 +15,19 @@
 
 import React from "react";
 import {
-    FormLayout,
+    FormLayout, InputField,
     SidebarBlockLayout,
     SidebarBlockTitleLayout
 } from "../../UI_elements";
-import{ProgramProperties} from "../../UI_elements/SidebarComponents/ProgramProperties";
 import {SelectField} from "../../UI_elements/Select";
 
 let ProgramEditSidebar = props =>{
+
+    let handle_name_change = (event) =>{
+        if(event.key==="Enter"|| event.key ==="Tab"){
+            props.selected_program.edit_field(event.target.name, event.target.value);
+        }
+    }
 
     let handleTypeChange = (event) =>{
         props.selected_program.edit_field(event.target.name, event.target.value).then();
@@ -35,7 +40,7 @@ let ProgramEditSidebar = props =>{
                 <label style={{fontSize:'20px',fontWeight:600}}>{"Program"}</label>
             </SidebarBlockTitleLayout>
             <FormLayout>
-                <ProgramProperties  program={props.selected_program} field_name='name' field_value={props.selected_program.name}/>
+                <InputField inline name='name' placeholder={props.selected_program.name} onKeyDown={handle_name_change} label={props.selected_program.name}/>
                 <SelectField label="Program type" onChange={handleTypeChange} defaultValue={props.selected_program.program_type}
                              name="program_type" placeholder="Program type" options={allowed_types}/>
             </FormLayout>

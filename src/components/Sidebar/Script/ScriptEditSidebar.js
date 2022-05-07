@@ -15,16 +15,19 @@
 
 import React from "react";
 import {
-    FormLayout,
+    FormLayout, InputField,
     SidebarBlockLayout,
     SidebarBlockTitleLayout
 } from "../../UI_elements";
-import {useSelector} from "react-redux";
-import {ScriptProperties} from "../../UI_elements/SidebarComponents/ScriptProperties";
 
 
 let ScriptEditSidebar = props =>{
-    const scripts = useSelector(state => state.scripts);
+
+    let handle_edit_field = (event) => {
+        if(event.key==="Enter"|| event.key ==="Tab"){
+            props.selected_script.edit_field(event.target.name, event.target.value);
+        }
+    }
 
     return(
         <SidebarBlockLayout padding={'1rem'}>
@@ -32,9 +35,9 @@ let ScriptEditSidebar = props =>{
                 <label style={{fontSize:'20px',fontWeight:600}}>{"Script Peripherals"}</label>
             </SidebarBlockTitleLayout>
             <FormLayout>
-                <ScriptProperties script={scripts[props.selected_script]} field_name='name' field_value={scripts[props.selected_script].name}/>
-                <ScriptProperties script={scripts[props.selected_script]} field_name='path' field_value={scripts[props.selected_script].path}/>
-                <ScriptProperties script={scripts[props.selected_script]} field_name='triggers' field_value={scripts[props.selected_script].triggers}/>
+                <InputField inline name='name' placeholder={props.selected_script.name} onKeyDown={handle_edit_field} label='name'/>
+                <InputField inline name='path' placeholder={props.selected_script.path} onKeyDown={handle_edit_field} label='path'/>
+                <InputField inline name='triggers' placeholder={props.selected_script.triggers} onKeyDown={handle_edit_field} label='triggers'/>
             </FormLayout>
         </SidebarBlockLayout>
     )

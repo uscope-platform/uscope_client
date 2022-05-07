@@ -17,31 +17,12 @@ import { rest } from 'msw'
 
 export let bulk_write_data_check= null;
 export let set_register_data = null;
-export let peripheral_image = null;
 export let created_peripheral = null;
 export let edit_peripheral_data = null;
 export let remove_peripheral_data = null;
 
 export const peripherals_api = [
-    rest.get('/test_server/registers/:periph_name/descriptions', (req, res, ctx) => {
-        return res(
-            ctx.json({
-                peripheral_name: req.params.periph_name,
-                registers: {
-                    "reg_1": [7594],
-                    "reg_2": [8810]
-                }
-            }),
-            ctx.status(200)
-        )
-    }),
 
-    rest.post('/test_server/registers/:periph_name/value', (req, res, ctx) => {
-        set_register_data = {name:req.params.periph_name, body:req.body};
-        return res(
-            ctx.status(200)
-        )
-    }),
 
     rest.post('/test_server/registers/bulk_write', (req, res, ctx) => {
         bulk_write_data_check = req.body;
@@ -50,12 +31,6 @@ export const peripherals_api = [
         )
     }),
 
-    rest.post('/test_server/tab_creator/diagram', (req, res, ctx) => {
-        peripheral_image = req.body;
-        return res(
-            ctx.status(200)
-        )
-    }),
 
     rest.post('/test_server/tab_creator/create_peripheral', (req, res, ctx) => {
         created_peripheral = req.body;

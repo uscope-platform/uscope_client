@@ -32,11 +32,8 @@ export const api_dictionary = {
     peripherals:{
         get_hash: 'registers/digest',
         load_all: 'registers/all_peripheral/descriptions',
-        get_registers: (reg_name) =>{return 'registers/'+reg_name+'/descriptions'},
         bulk_write: 'registers/bulk_write',
-        set_register: (reg_name) =>{return 'registers/'+ reg_name +'/value'},
         add: 'tab_creator/create_peripheral',
-        image: 'tab_creator/diagram',
         edit: 'tab_creator/edit_peripheral',
         delete: 'tab_creator/remove_peripheral'
     },

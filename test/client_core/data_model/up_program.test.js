@@ -15,9 +15,12 @@
 
 import {mock_store} from "../mock/redux_store";
 import {up_program} from "../../../src/client_core/data_models/up_program";
-import {created_program_data, edit_program_data, removed_program_data} from "../mock/programs_api";
-import {up_script} from "../../../src/client_core/data_models/up_script";
-import {script_edit_data} from "../mock/scripts_api";
+import {
+    applied_program_data, compile_program_data,
+    created_program_data,
+    edit_program_data,
+    removed_program_data
+} from "../mock/programs_api";
 
 
 
@@ -87,3 +90,30 @@ test("delete program", () => {
 })
 
 
+test("compile program", () => {
+    let program = up_program.construct_empty(10);
+    return program.add_remote().then(()=>{
+        return program.compile().then(()=>{
+            expect(compile_program_data).toStrictEqual("10");
+        })
+    })
+})
+
+test("load program", () => {
+    let program = up_program.construct_empty(10);
+    return program.add_remote().then(()=>{
+        return program.load('0x83c00000').then(()=>{
+            let check_obj = {
+                body: {
+                    core_address: "0x83c00000",
+                    id: 10,
+                    name: "new program_10",
+                    program_content: "",
+                    program_type: ""
+                },
+                id: "10"
+            }
+            expect(applied_program_data).toStrictEqual(check_obj);
+        })
+    })
+})

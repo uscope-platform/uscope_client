@@ -16,11 +16,10 @@
 import React, {useRef} from "react";
 import {
     Button,
-    FormLayout,
+    FormLayout, InputField,
     SidebarBlockLayout,
     SidebarBlockTitleLayout
 } from "../../UI_elements";
-import {BitstreamProperties} from "../../UI_elements/SidebarComponents/BitstreamProperties";
 import {handle_file_chosen} from "../../../utilities/BitstreamUtilities";
 
 
@@ -34,6 +33,12 @@ let BitstreamEditSidebar = props =>{
             props.selected_bitstream.edit_field("file_content", file_content.content)
         }));
     }
+
+    let handle_change_name = (event) =>{
+        if(event.key==="Enter"|| event.key ==="Tab"){
+            props.selected_bitstream.edit_field(event.target.name, event.target.value);
+        }
+    }
     let handle_open_file_chooser = (event) =>{
         inputFile.current.click();
     }
@@ -44,7 +49,7 @@ let BitstreamEditSidebar = props =>{
                 <label style={{fontSize:'20px',fontWeight:600}}>{"Bitstreams"}</label>
             </SidebarBlockTitleLayout>
             <FormLayout>
-                <BitstreamProperties  bitstream={props.selected_bitstream} field_name='name' field_value={props.selected_bitstream.name}/>
+                <InputField inline name='name' placeholder={props.selected_bitstream.name} onKeyDown={handle_change_name} label='name'/>
                 <Button onClick={handle_open_file_chooser}>Change Bitstream File</Button>
             </FormLayout>
             <input type='file' id='bitstream_chooser' ref={inputFile} onChange={upload_file} style={{display: 'none'}}/>
