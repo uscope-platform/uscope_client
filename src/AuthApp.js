@@ -143,31 +143,25 @@ let AuthApp = (props) =>{
             );
 
         case "NORMAL":
-            if(!plot.loading_done){
-                return(
-                    <></>
-                )
-            } else {
-                return (
-                    <div className="App">
-                        <ApplicationLayout name="plot_tab" sidebarNeeded={settings.current_view_requires_sidebar}>
-                            <Navbar views={views}/>
-                            <div>
-                                <Routes>
-                                    <Route key="plot" path='/' element={<TabContent className="main_content_tab" tab={views[0]}/>}/>
-                                    <Route key="script_manager" path='/script_manager' element={<TabContent className="main_content_tab" tab={views[1]}/>}/>
-                                    <Route key="applications_manager" path='/applications_manager' element={<TabContent className="main_content_tab" tab={views[2]}/>}/>
-                                    <Route key="program_manager" path='/program_manager' element={<TabContent className="main_content_tab" tab={views[3]}/>}/>
-                                    <Route key="bitstream_manager" path='/bitstream_manager' element={<TabContent className="main_content_tab" tab={views[4]}/>}/>
-                                    <Route key="peripherals_manager" path='/peripherals_manager' element={<TabContent className="main_content_tab" tab={views[5]}/>}/>
-                                    <Route key="platform_manager" path='/platform_manager' element={<TabContent className="main_content_tab" tab={views[6]}/>}/>
-                                </Routes>
-                            </div>
-                            <Sidebar />
-                        </ApplicationLayout>
-                    </div>
-                );
-            }
+            return (
+                <div className="App">
+                    <ApplicationLayout name="plot_tab" sidebarNeeded={settings.current_view_requires_sidebar}>
+                        <Navbar views={views}/>
+                        <div>
+                            <Routes>
+                                <Route key="plot" path='/' element={<TabContent className="main_content_tab" tab={views[0]}/>}/>
+                                <Route key="script_manager" path='/script_manager' element={<TabContent className="main_content_tab" tab={views[1]}/>}/>
+                                <Route key="applications_manager" path='/applications_manager' element={<TabContent className="main_content_tab" tab={views[2]}/>}/>
+                                <Route key="program_manager" path='/program_manager' element={<TabContent className="main_content_tab" tab={views[3]}/>}/>
+                                <Route key="bitstream_manager" path='/bitstream_manager' element={<TabContent className="main_content_tab" tab={views[4]}/>}/>
+                                <Route key="peripherals_manager" path='/peripherals_manager' element={<TabContent className="main_content_tab" tab={views[5]}/>}/>
+                                <Route key="platform_manager" path='/platform_manager' element={<TabContent className="main_content_tab" tab={views[6]}/>}/>
+                            </Routes>
+                        </div>
+                        <Sidebar />
+                    </ApplicationLayout>
+                </div>
+            );
         default:
             return(
                 <>

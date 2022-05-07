@@ -14,7 +14,6 @@
 // limitations under the License.
 
 import {SET_SETTING} from "../Actions/types";
-import produce from "immer";
 import {ColorTheme} from "../../components/UI_elements";
 
 const initial_state = {
@@ -43,9 +42,10 @@ const initial_state = {
 let settingsReducer = function (state = initial_state, action) {
     switch (action.type) {
         case SET_SETTING:
-            return produce(state, draftState => {
-                draftState[action.payload.name] = action.payload.value;
-            });
+            return {
+                ...state,
+                [action.payload.name]:action.payload.value
+            }
         default:
             return state;
     }

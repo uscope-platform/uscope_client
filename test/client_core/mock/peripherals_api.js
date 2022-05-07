@@ -16,7 +16,6 @@
 import { rest } from 'msw'
 
 export let bulk_write_data_check= null;
-export let set_register_data = null;
 export let created_peripheral = null;
 export let edit_peripheral_data = null;
 export let remove_peripheral_data = null;

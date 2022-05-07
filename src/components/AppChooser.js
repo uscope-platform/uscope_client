@@ -25,7 +25,6 @@ import {create_plot_channel, get_channels_from_group} from "../utilities/PlotUti
 import ApplicationChooserView from "./Common_Components/ApplicationChooserView";
 
 import {
-    get_channel_info,
     set_channel_widths,
     up_application, up_peripheral
 } from "../client_core"
@@ -40,17 +39,12 @@ let ApplicationChooser = (props) =>{
         let app = new up_application(applications[e]);
         app.set_active().then(()=>{
             dispatch(setSetting(["application", e]));
-            let peripherals = Object.values(applications[e].peripherals);
             initializePlotState(applications[e]);
-            get_channel_info(function(){handle_loading_channels_done(peripherals);});
+            props.choice_done();
         }).catch(error =>{
             console.log("Error: error while choosing application");
         });
     };
-
-    let handle_loading_channels_done = () =>{
-        props.choice_done();
-    }
 
     let initializePlotState = (app) =>{
 

@@ -13,26 +13,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import store from "../../store";
-import {fetchData, loadChanels, setChannelStatus} from "../../redux/Actions/plotActions";
+import {fetchData, setChannelStatus} from "../../redux/Actions/plotActions";
 import {backend_get, backend_post, dispatch_redux_thunk} from "./backend";
 
 import {api_dictionary} from './api_dictionary'
 
-export const get_channel_info = (loading_done_handler) => {
-    backend_get(api_dictionary.plot.get_info).then(res => {
-        store.dispatch(loadChanels(res.data));
-        loading_done_handler();
-    }).catch(err => {
-        console.log(err)
-        alert('ERROR: error while loading channels info\n' + err.message);
-    })
-};
 
 export const fetch_data = () =>  {
     return dispatch_redux_thunk(fetchData, api_dictionary.plot.fetch_data)
 };
-
 
 export const set_capture =  (capture_lenght) =>  {
     return new Promise((resolve, reject)=>{

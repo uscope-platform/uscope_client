@@ -16,13 +16,11 @@
 import {
     SET_CHANNEL_STATUS,
     FETCH_DATA,
-    LOAD_CHANNELS,
     PLOT_PAUSE,
     PLOT_PLAY,
     PLOT_STOP,
-    SET_CHANNEL_SETTING, INITIALIZE_CHANNELS
+    INITIALIZE_CHANNELS
 } from "../Actions/types";
-import produce from "immer";
 
 
 let base_data = [];
@@ -30,7 +28,6 @@ let base_data = [];
 
 const initial_state = {
     data:base_data,
-    loading_done:false,
     plot_running:false,
     datarevision:0,
     parameters:{
@@ -74,70 +71,51 @@ const initial_state = {
 let plotReducer = function (state = initial_state, action) {
     switch (action.type) {
         case INITIALIZE_CHANNELS:
-            return produce(state, draftState =>{
-                draftState['data'] = action.payload;
-                draftState['datarevision'] += 1;
-            });
-        case SET_CHANNEL_STATUS:
-            return produce(state, draftState => {
-                let chs = action.payload.channel
-                draftState['data'] = draftState['data'].filter(item=>{
-                    if(item.spec.number in chs){
-                        let new_item = item;
-                        new_item.visible = chs[item.spec.number];
-                        return new_item;
-                    } else {
-                        return item
-                    }
-                })
-                chs = draftState['data'];
-                draftState['datarevision'] += 1;
-            });
-        case LOAD_CHANNELS:
-            return produce(state, draftState => {
-                draftState['settings'] = action.payload;
-                draftState['loading_done'] = true;
-            });
-
-        case FETCH_DATA:
-            return produce(state, draftState => {
-                for(let channel_payload of action.payload){
-                    for(let item of draftState['data']){
-                        if(parseInt(item.spec.number)===channel_payload.channel){
-                            item.y = channel_payload.data;
-                        }
-
-                    }
-                }
-                draftState['datarevision'] += 1;
-            });
-
+            return {...state, data:action.payload, datarevision: state.datarevision+1}
         case PLOT_PLAY:
-            return produce(state, draftState => {
-                draftState["plot_running"] = action.payload.value;
-            });
+            return {...state, plot_running: action.payload.value};
         case PLOT_PAUSE:
-            return produce(state, draftState => {
-                draftState["plot_running"] = action.payload.value;
-            });
+            return {...state, plot_running: action.payload.value};
         case PLOT_STOP:
-            return produce(state, draftState => {
-                draftState["plot_running"] = action.payload.value;
-                draftState['data'] = draftState['data'].map((channel)=>{
+            return {
+                ...state,
+                plot_running: action.payload.value,
+                data: state.data.map((channel)=>{
                     return {
                         ...channel,
                         visible: false
                     }
-                });
-                draftState['datarevision'] += 1;
-            });
-        case SET_CHANNEL_SETTING:
-            return produce(state, draftState =>{
-                // eslint-disable-next-line
-                for(let s of action.payload){
-                    draftState['settings'][s.channel_id][s.name] = s.value;
+                }),
+                datarevision: state.datarevision+1
+            }
+        case SET_CHANNEL_STATUS:
+            return {
+                ...state,
+                data: state.data.filter(item=>{
+                    if(item.spec.number in action.payload.channel){
+                        let new_item = item;
+                        new_item.visible = action.payload.channel[item.spec.number];
+                        return new_item;
+                    } else {
+                        return item
+                    }
+                }),
+                datarevision: state.datarevision+1
+            }
+        case FETCH_DATA:
+        return {
+            ...state,
+            data:state.data.map((item)=>{
+                let new_item = item;
+                for(let channel_payload of action.payload){
+                    if(parseInt(new_item.spec.number)===channel_payload.channel){
+                        new_item.y = channel_payload.data;
+                    }
                 }
-            });
+                return new_item;
+            }),
+            datarevision: state.datarevision+1
+        }
         default:
             return state;
     }

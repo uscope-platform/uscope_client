@@ -16,11 +16,10 @@
 import {
     SET_CHANNEL_STATUS,
     FETCH_DATA,
-    LOAD_CHANNELS,
     PLOT_PAUSE,
     PLOT_PLAY,
     PLOT_STOP,
-    SET_CHANNEL_SETTING, INITIALIZE_CHANNELS
+    INITIALIZE_CHANNELS
 } from "./types";
 import axios from "axios";
 
@@ -44,11 +43,6 @@ const setChannelStatusDone = (status) =>{
         }
     }
 };
-
-export const loadChanels = channels => ({
-    type: LOAD_CHANNELS,
-    payload: channels
-});
 
 export const plotPlay = () =>{
     return{
@@ -83,22 +77,6 @@ export const plotStop = () =>{
         }
     }
 };
-
-export const setChannelSetting = (server_url, settings, config) => {
-    return dispatch => {
-        axios.post(server_url, settings, config).then(res => {
-            dispatch(setChannelSettingDone(settings));
-        }).catch(err => {
-            alert('ERROR: error while changing channel settings\n' + err.message);
-        });
-    };
-};
-
-export const setChannelSettingDone = (settings) =>({
-    type: SET_CHANNEL_SETTING,
-    payload: settings
-});
-
 
 export const fetchData = (server_url, config) => {
     return dispatch => {

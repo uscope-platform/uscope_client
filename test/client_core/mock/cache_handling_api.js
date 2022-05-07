@@ -212,7 +212,6 @@ export const programs_init = {
 export const cache_handlers = [
 
     rest.get('test_server/application/digest', (req, res, ctx) => {
-        // If authenticated, return a mocked user details
         return res(
             ctx.text("9bcb1e2d-dc4c-44cb-be5d-3897f288c617"),
             ctx.status(200)
@@ -220,7 +219,6 @@ export const cache_handlers = [
     }),
 
     rest.get('test_server/application/all/specs', (req, res, ctx) => {
-        // If authenticated, return a mocked user details
         return res(
             ctx.json(applications_init),
             ctx.status(200)
@@ -229,7 +227,7 @@ export const cache_handlers = [
 
 
     rest.get('test_server/registers/digest', (req, res, ctx) => {
-        // If authenticated, return a mocked user details
+
         return res(
             ctx.text("94c46594-3bb9-4fae-b6aa-a61e03a288e2"),
             ctx.status(200)
@@ -237,7 +235,7 @@ export const cache_handlers = [
     }),
 
     rest.get('test_server/registers/all_peripheral/descriptions', (req, res, ctx) => {
-        // If authenticated, return a mocked user details
+
         return res(
             ctx.json(peripherals_init),
             ctx.status(200)
@@ -246,7 +244,7 @@ export const cache_handlers = [
 
     rest.get('test_server/script/hash', (req, res, ctx) => {
 
-        // If authenticated, return a mocked user details
+
         return res(
             ctx.text("9701008d-c511-4ded-94b3-b08748a6e066"),
             ctx.status(200)
@@ -254,7 +252,7 @@ export const cache_handlers = [
     }),
 
     rest.get('test_server/script/none', (req, res, ctx) => {
-        // If authenticated, return a mocked user details
+
         return res(
             ctx.json(scripts_init),
             ctx.status(200)
@@ -263,7 +261,7 @@ export const cache_handlers = [
 
 
     rest.get('test_server/program/hash', (req, res, ctx) => {
-        // If authenticated, return a mocked user details
+
         return res(
             ctx.text("d0f84519-10da-4ada-8727-8bd6a0f608e0"),
             ctx.status(200)
@@ -271,7 +269,7 @@ export const cache_handlers = [
     }),
 
     rest.get('test_server/program/none', (req, res, ctx) => {
-        // If authenticated, return a mocked user details
+
         return res(
             ctx.json(programs_init),
             ctx.status(200)
@@ -279,7 +277,7 @@ export const cache_handlers = [
     }),
 
     rest.get('test_server/bitstream/digest', (req, res, ctx) => {
-        // If authenticated, return a mocked user details
+
         return res(
             ctx.text("74478cc1-fdb7-486a-975c-129c71400530"),
             ctx.status(200)
@@ -287,7 +285,7 @@ export const cache_handlers = [
     }),
 
     rest.get('test_server/bitstream/none', (req, res, ctx) => {
-        // If authenticated, return a mocked user details
+
         return res(
             ctx.json(bitstream_init),
             ctx.status(200)

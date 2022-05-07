@@ -225,6 +225,17 @@ let programs_init = {
     })
 }
 
+
+let plot_init = {
+    data: {},
+    loading_done:false,
+    plot_running:false,
+    datarevision:0,
+    parameters:{
+        memory_depth: 1024
+    }
+}
+
 const rootReducer = (state, action) => {
     if (action.type === 'RESET_STORE') {
         return mock_reducer(initial_redux_state, action)
@@ -251,7 +262,7 @@ export const initial_redux_state = {
     scripts: scripts_init,
     bitstreams: bitstream_init,
     programs : programs_init,
-    plot: {},
+    plot: plot_init,
     registerValues: {},
     scriptsWorkspace: {}
 };

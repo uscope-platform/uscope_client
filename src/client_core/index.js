@@ -25,7 +25,7 @@ export {set_address, set_auth_config} from './proxy/backend'
 
 export {sign_in} from './proxy/auth'
 export {add_user, remove_user, get_users_list, dump_database, restore_database, do_onboarding, need_onboarding} from './proxy/platform'
-export {fetch_data, get_captured_data, set_capture, get_channel_info, set_channel_status, set_channel_widths} from './proxy/plot'
+export {fetch_data, get_captured_data, set_capture, set_channel_status, set_channel_widths} from './proxy/plot'
 // DATA MODEL
 export {up_application} from './data_models/up_application'
 export {up_peripheral} from './data_models/up_peripheral'
