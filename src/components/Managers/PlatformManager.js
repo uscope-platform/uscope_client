@@ -28,12 +28,12 @@ import {remove_user, get_users_list, dump_database, restore_database} from '../.
 
 let columns = [
     {
-        selector: 'username',
+        selector: row => row.username,
         name: 'Username',
         sortable: true,
     },
     {
-        selector: 'role',
+        selector: row => row.role,
         name: 'Role'
     }
 ];

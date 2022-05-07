@@ -29,23 +29,23 @@ import {up_script} from "../../client_core/data_models/up_script";
 
 let columns = [
     {
-        selector: 'id',
+        selector: row => row.id,
         name: 'Script ID',
         sort: true
     },
     {
-        selector: 'name',
+        selector: row => row.name,
         name: 'Script Name',
         sort: true,
         grow:2
     },
     {
-        selector: 'path',
+        selector: row => row.path,
         name: 'Script Filename',
         grow:3
     },
     {
-        selector: 'triggers',
+        selector: row => row.triggers,
         name: 'Script Triggers',
         grow:3
     }

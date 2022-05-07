@@ -25,18 +25,18 @@ import {upload_program, delete_program, apply_program, compile_program} from "..
 
 let columns = [
     {
-        selector: 'id',
+        selector: row => row.id,
         name: 'Program ID',
         sort: true
     },
     {
-        selector: 'name',
+        selector: row => row.name,
         name: 'Program Name',
         sort: true,
         grow:2
     },
     {
-        selector: 'program_type',
+        selector: row => row.program_type,
         name: 'Program Type',
         sort: true,
     },

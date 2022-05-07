@@ -28,13 +28,13 @@ import {up_peripheral} from "../../client_core"
 
 let columns = [
     {
-        selector: 'peripheral_name',
+        selector: row => row.application_name,
         name: 'Peripheral Name',
         sort: true,
         grow:2
     },
     {
-        selector: 'version',
+        selector: row => row.version,
         name: 'Peripheral Version'
     }
 ];

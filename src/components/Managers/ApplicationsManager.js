@@ -28,7 +28,7 @@ import {addApplication} from "../../redux/Actions/applicationActions";
 
 let columns = [
     {
-        selector: 'application_name',
+        selector: row => row.application_name,
         name: 'Application Name',
         sortable: true,
     }

@@ -24,12 +24,12 @@ import {delete_bitstream, upload_bitstream} from "../../client_core";
 
 let columns = [
     {
-        selector: 'id',
+        selector: row => row.id,
         name: 'Bitstream ID',
         sort: true
     },
     {
-        selector: 'name',
+        selector: row => row.name,
         name: 'Bitstream Name',
         sort: true,
         grow:2
