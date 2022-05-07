@@ -24,8 +24,6 @@ import {useSelector} from "react-redux";
 import styled from "styled-components";
 import fCoreMode from "./fCorehas";
 
-import {up_program} from "../../../client_core/data_models/up_program";
-
 const Title = styled.h1`
   margin-right: auto;
   margin-left: auto;
@@ -35,9 +33,9 @@ const Editor = styled(AceEditor)`
         font-family: inherit;
     }
 `;
+
 let ProgramsEditor = props =>{
     const aceEditor = useRef(null)
-    const programs = useSelector(state => state.programs);
     const settings = useSelector(state => state.settings);
     const [editor_content, set_editor_content] = useState("");
     const [language, set_language] = useState('');
@@ -59,26 +57,23 @@ let ProgramsEditor = props =>{
     };
 
     let handle_submit = (event) => {
-        let prog = new up_program(Object.values(programs).find(x => x.name === settings.program_editor_title));
-        prog.set_content(editor_content).then(()=>{
+        props.program.edit_field('program_content', editor_content).then(()=>{
             props.done();
         })
     };
 
     let handle_load = (editor) => {
-
-        let prog =Object.values(programs).find(x => x.name === settings.program_editor_title);
-        if(typeof prog !== 'undefined' && prog !== null){
-            editor.setValue(prog.program_content);
-            set_editor_content(prog.program_content);
-            set_language(prog.program_type);
+        if(typeof props.program !== 'undefined' && props.program !== null){
+            editor.setValue(props.program.program_content);
+            set_editor_content(props.program.program_content);
+            set_language(props.program.program_type);
         }
 
     };
 
     return(
         <>
-            <Title>{settings.program_editor_title}</Title>
+            <Title>{props.program.name}</Title>
             <Editor
                 ref={aceEditor}
                 mode="text"

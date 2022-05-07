@@ -58,7 +58,7 @@ test("remote add", () => {
 test("set content", () => {
     let script = up_script.construct_empty(1);
     return script.add_remote().then(()=>{
-        return script.set_content("TEST CONTENT").then(()=>{
+        return script.edit_field("script_content", "TEST CONTENT").then(()=>{
             let check_script = {
                 id:1,
                 name:"new script_1",

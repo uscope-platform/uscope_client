@@ -30,7 +30,6 @@ const initial_state = {
     script_editor_title:null,
     current_view_requires_sidebar: true,
     selected_program: null,
-    program_editor_title: null,
     selected_user:null,
     refresh_user_view:false,
     logged:false,

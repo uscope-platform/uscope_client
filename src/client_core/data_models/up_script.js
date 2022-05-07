@@ -23,6 +23,8 @@ import {AddScript, removeScript} from "../../redux/Actions/scriptsActions";
 
 export class up_script {
     constructor(script_obj) {
+        if(!script_obj)
+            return;
         this.id = script_obj.id;
         this.name = script_obj.name;
         this.path = script_obj.path;
@@ -38,10 +40,6 @@ export class up_script {
     add_remote = () => {
         store.dispatch(AddScript(this));
         return backend_post(api_dictionary.scripts.add+'/'+this.id, this._get_script());
-    }
-
-    set_content = (content) => {
-        return this.edit_field("script_content", content);
     }
 
     edit_field = (field, value) => {

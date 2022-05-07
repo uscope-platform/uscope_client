@@ -98,12 +98,7 @@ let ProgramsManager = props =>{
             alert("Please select a script to edit");
             return;
         }
-
-        let program = Object.values(programs_store).find(x => x.id === settings.selected_program);
         set_editor_open(true);
-        dispatch(setSetting(["program_editor_title", program.name]));
-
-
     };
 
     let handle_edit_done = () =>{
@@ -157,7 +152,7 @@ let ProgramsManager = props =>{
     if(editor_open) {
     return (
         <ManagerLayout>
-            <ProgramsEditor done={handle_edit_done} />
+            <ProgramsEditor program={selected_program} done={handle_edit_done} />
         </ManagerLayout>
     );
     }

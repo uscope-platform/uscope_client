@@ -42,6 +42,13 @@ export class up_program {
         return this.edit_field('program_content', content);
     }
 
+    edit_field = (field, value) => {
+        this[field] = value;
+        store.dispatch(AddProgram(this));
+        let edit = {program:this.id, field:field, value:value};
+        return backend_patch(api_dictionary.programs.edit+'/'+this.id,edit)
+    }
+
     compile = () =>{
         return backend_get(api_dictionary.programs.compile+'/'+this.id)
     };
@@ -55,13 +62,6 @@ export class up_program {
             alert('ERROR: error while loading a program on the core' + err.message);
             return err;
         })
-    }
-
-    edit_field = (field, value) => {
-        this[field] = value;
-        store.dispatch(AddProgram(this));
-        let edit = {program:this.id, field:field, value:value};
-        return backend_patch(api_dictionary.programs.edit+'/'+this.id,edit)
     }
 
     static delete_program(program){

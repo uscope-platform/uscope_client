@@ -26,6 +26,7 @@ import {setSetting} from "../../redux/Actions/SettingsActions";
 
 import ScriptsEditor from "../Editors/Scripts/ScriptsEditor";
 import {up_script} from "../../client_core/data_models/up_script";
+import {up_program} from "../../client_core/data_models/up_program";
 
 let columns = [
     {
@@ -66,6 +67,8 @@ let ScriptManager = (props) =>{
 
     const [editor_open, set_editor_open] = useState(false);
 
+    const selected_script = new up_script(scripts_store[settings.selected_script]);
+
     let handleOnSelect = (selection) => {
         if(selection.selectedCount===1){
             dispatch(setSetting(["selected_script", selection.selectedRows[0].id]));
@@ -103,10 +106,8 @@ let ScriptManager = (props) =>{
             alert("Please select a script to edit");
             return;
         }
-
-        let script = Object.values(scripts_store).find(x => x.id === settings.selected_script);
         set_editor_open(true);
-        dispatch(setSetting(["script_editor_title", script.name]));
+        dispatch(setSetting(["script_editor_title", selected_script.name]));
     };
 
     let handle_edit_done = () =>{
@@ -116,7 +117,7 @@ let ScriptManager = (props) =>{
     if(editor_open) {
         return (
             <ManagerLayout>
-                <ScriptsEditor done={handle_edit_done} />
+                <ScriptsEditor script={selected_script} done={handle_edit_done} />
             </ManagerLayout>
             );
     }
