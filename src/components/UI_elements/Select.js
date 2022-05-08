@@ -44,7 +44,7 @@ export let  SelectField = props =>{
     return(
         <SelectWrapper>
             <Label>{props.label}</Label>
-            <Select name={props.name} defaultValue={props.defaultValue} onChange={props.onChange}>
+            <Select name={props.name} id={props.name} defaultValue={props.defaultValue} onChange={props.onChange}>
                 <option value={props.name} hidden>{props.placeholder}</option>
                 {
                     props.options.map((name,i) => (

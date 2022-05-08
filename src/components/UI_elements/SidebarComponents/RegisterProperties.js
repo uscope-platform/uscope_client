@@ -19,8 +19,6 @@ import styled from "styled-components";
 import {CaretDown, CaretUp} from "grommet-icons";
 import {InputField} from "../InputField";
 import {Checkbox} from "../checkbox";
-import {Radio} from "../Radio";
-import {TextArea} from "../TextArea";
 import {Button} from "../Button";
 import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
 import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
@@ -144,15 +142,6 @@ export let  RegisterProperties = props =>{
                             <Checkbox name='direction_write' value={props.register.direction.includes("W")} onChange={handleChange} label="Write"/>
                         </div>
                     </ChoicesWrapper>
-                    <ChoicesWrapper>
-                        <Label>Register type</Label>
-                        <div>
-                            <Radio name="type" value={props.register.register_format !== "words"} onChange={handleChange} label="single" id='single'/>
-                            <Radio name="type" value={props.register.register_format === "words"} onChange={handleChange} label="words" id='words'/>
-                        </div>
-                    </ChoicesWrapper>
-                    <TextArea disabled={props.register.register_format !== "words"}  defaultValue={props.register.field_names && props.register.field_names.join('\n')} name="field_names" label="Field Names" rows={2}  onKeyDown={handleonKeyDown}/>
-                    <TextArea disabled={props.register.register_format !== "words"}  defaultValue={props.register.field_names && props.register.field_descriptions.join('\n')} name="field_descriptions" label="Field Descriptions" rows={2}  onKeyDown={handleonKeyDown}/>
                     <Button onClick={handleRemoveRegister} >Remove</Button>
                 </SidebarCollapsableContentLayout>
             )

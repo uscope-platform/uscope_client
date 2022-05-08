@@ -14,13 +14,6 @@
 // limitations under the License.
 
 import {store} from "../index";
-import {
-    create_channel,
-    create_channel_group,
-    create_irv,
-    create_macro,
-    create_parameter, create_peripheral_entry
-} from "../../utilities/ApplicationUtilities";
 import {backend_get, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
 import {addApplication, removeApplication} from "../../redux/Actions/applicationActions";
@@ -64,39 +57,73 @@ export class up_application {
     }
 
     add_channel = (ch_name) =>{
-        let ch = create_channel(ch_name)
+        let ch = {
+            name: ch_name,
+            id: ch_name.replace(/\s/g, "_").toLowerCase(),
+            phys_width:16,
+            number: 0,
+            mux_setting: 0,
+            enabled: false,
+            max_value: "1000",
+            min_value: "0"
+        };
         this.channels.push(ch);
         let edit = {application:this.application_name, channel:ch, action:"add_channel"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
     add_channel_group = (chg_name) =>{
-        let chg = create_channel_group(chg_name)
+        let chg = {
+            group_name: chg_name,
+            group_id: chg_name.replace(/\s/g, "_").toLowerCase(),
+            channels:[],
+            default:false
+        };
         this.channel_groups.push(chg);
         let edit = {application:this.application_name, group:chg, action:"add_channel_group"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
     add_irv = (irv_address) =>{
-        let irv = create_irv(irv_address)
+        let irv = {
+            address:irv_address,
+            value:"0"
+        }
         this.initial_registers_values.push(irv);
         let edit = {application:this.application_name, irv:irv, action:"add_irv"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
     add_macro = (macro_name) => {
-        let m = create_macro(macro_name);
+        let m =  {
+            name: macro_name,
+            trigger: ""
+        };
         this.macro.push(m);
         let edit = {application:this.application_name, macro:m, action:"add_macro"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
     add_parameter = (parameter_name) =>{
-        let p = create_parameter(parameter_name);
+        let p = {
+            parameter_name: parameter_name,
+            parameter_id: parameter_name.replace(/\s/g, "_").toLowerCase(),
+            trigger: '',
+            value: '0',
+            visible: false
+        };
         this.parameters.push(p)
         let edit = {application:this.application_name, parameter:p, action:"add_parameter"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
     add_peripheral = (peripheral_name) => {
-        let p = create_peripheral_entry(peripheral_name);
+        let p = {
+            name: peripheral_name,
+            peripheral_id: peripheral_name.replace(/\s/g, "_").toLowerCase(),
+            base_address: '0',
+            proxied: false,
+            proxy_address:'0',
+            type: 'Registers',
+            spec_id: ""
+        };
         let edit = {application:this.application_name, peripheral:p, action:"add_peripheral"};
         this.peripherals.push(p);
         return backend_post(api_dictionary.applications.edit, edit);

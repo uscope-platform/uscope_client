@@ -21,13 +21,12 @@ export class up_register {
         this.description = register_obj.description;
         this.direction = register_obj.direction;
         this.offset= register_obj.offset;
-        this.register_format= register_obj.register_format;
         this.value = register_obj.value;
     }
 
     static construct_empty(register_name){
         let register_obj = {ID:register_name.replace(/\s/g, "_").toLowerCase(), register_name:register_name,
-            description:"", direction:"", offset:"0x0", register_format:"single", value:0};
+            description:"", direction:"", offset:"0x0", value:0};
         return new up_register(register_obj);
     }
 
@@ -49,10 +48,6 @@ export class up_register {
 
     set_offset = (offset) => {
         this.offset = offset;
-    }
-
-    set_format = (format) => {
-        this.register_format = format;
     }
 
 }

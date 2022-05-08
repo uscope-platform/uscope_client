@@ -23,8 +23,7 @@ test("register creation", () => {
             register_name: "test register",
             description: "",
             direction: "",
-            offset: "0x0",
-            register_format:"single"
+            offset: "0x0"
         };
 
     expect(reg).toMatchObject(check_reg)
@@ -40,8 +39,7 @@ test("set_register_name", () => {
         register_name: "test rename",
         description: "",
         direction: "",
-        offset: "0x0",
-        register_format:"single"
+        offset: "0x0"
     };
 
     expect(reg).toMatchObject(check_reg)
@@ -56,8 +54,7 @@ test("set description", () => {
         register_name: "test register",
         description: "test description",
         direction: "",
-        offset: "0x0",
-        register_format:"single"
+        offset: "0x0"
     };
 
     expect(reg).toMatchObject(check_reg)
@@ -74,8 +71,7 @@ test("set direction", () => {
         register_name: "test register",
         description: "",
         direction: "RW",
-        offset: "0x0",
-        register_format:"single"
+        offset: "0x0"
     };
 
     expect(reg).toMatchObject(check_reg)
@@ -91,25 +87,7 @@ test("set offset", () => {
         register_name: "test register",
         description: "",
         direction: "",
-        offset: "0x3124",
-        register_format:"single"
-    };
-
-    expect(reg).toMatchObject(check_reg)
-})
-
-
-test("set format", () => {
-    let reg = up_register.construct_empty("test register");
-    reg.set_format("test_format")
-
-    let check_reg = {
-        ID: "test_register",
-        register_name: "test register",
-        description: "",
-        direction: "",
-        offset: "0x0",
-        register_format:"test_format"
+        offset: "0x3124"
     };
 
     expect(reg).toMatchObject(check_reg)

@@ -63,7 +63,6 @@ test("add_register", () => {
                             description:"",
                             direction:"",
                             offset:"0x0",
-                            register_format:"single",
                             register_name:"test_reg",
                             value:0
                         }]
@@ -74,7 +73,6 @@ test("add_register", () => {
                 description:"",
                 direction:"",
                 offset:"0x0",
-                register_format:"single",
                 register_name:"test_reg",
                 value:0
                 }});
@@ -142,7 +140,6 @@ test("edit_register", () => {
                                 description:"TEST EDIT",
                                 direction:"",
                                 offset:"0x0",
-                                register_format:"single",
                                 register_name:"test_reg",
                                 value:0
                             }]

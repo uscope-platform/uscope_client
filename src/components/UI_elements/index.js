@@ -13,10 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export {TextArea} from "./TextArea"
 export {StyledScrollbar} from "./StyledScrollbar"
 export {Select} from "./Select"
-export {Radio} from "./Radio"
 export {Label} from "./Label"
 export {InputField} from "./InputField"
 export {Image} from "./Image"

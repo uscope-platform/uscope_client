@@ -19,7 +19,6 @@ import DataTable from "react-data-table-component";
 import {TableStyle} from "./TableStyles";
 import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../../redux/Actions/SettingsActions";
-import {handle_file_chosen} from "../../utilities/BitstreamUtilities";
 import {up_bitstream} from "../../client_core/data_models/up_bitstream";
 
 let columns = [
@@ -89,7 +88,7 @@ let BitstreamManager = props =>{
     };
 
     let upload_file = (event) => {
-        handle_file_chosen( inputFile).then((file =>{
+        up_bitstream.get_file_content( inputFile).then((file =>{
             bitstream_object['content'] = file.content;
             bitstream_object['name'] = file.name.replace(".bit", "")
             let bitstream = new up_bitstream(bitstream_object);

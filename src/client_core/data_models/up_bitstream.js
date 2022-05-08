@@ -52,6 +52,20 @@ export class up_bitstream {
         })
     }
 
+    static get_file_content(input_file){
+        return new Promise((resolve, reject) => {
+            let file = input_file.current.files[0];
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = function (evt) {
+                    let result = {'content':reader.result.split(',')[1], name:file.name}
+                    resolve(result)
+                }
+                reader.readAsDataURL(file);
+            }
+        })
+    }
+
     _get_bitstream = () =>{
         return {
             id: this.id,

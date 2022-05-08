@@ -21,13 +21,13 @@ import {setSetting} from "../redux/Actions/SettingsActions";
 
 
 import {initialize_channels} from "../redux/Actions/plotActions";
-import {create_plot_channel, get_channels_from_group} from "../utilities/PlotUtilities";
 import ApplicationChooserView from "./Common_Components/ApplicationChooserView";
 
 import {
     set_channel_widths,
     up_application, up_peripheral
 } from "../client_core"
+import {create_plot_channel, get_channels_from_group} from "../client_core/proxy/plot";
 
 let ApplicationChooser = (props) =>{
 

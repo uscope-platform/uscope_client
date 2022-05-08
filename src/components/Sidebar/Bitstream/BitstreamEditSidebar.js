@@ -20,7 +20,7 @@ import {
     SidebarBlockLayout,
     SidebarBlockTitleLayout
 } from "../../UI_elements";
-import {handle_file_chosen} from "../../../utilities/BitstreamUtilities";
+import {up_bitstream} from "../../../client_core/data_models/up_bitstream";
 
 
 
@@ -29,7 +29,7 @@ let BitstreamEditSidebar = props =>{
     const inputFile = useRef(null)
 
     let upload_file = (event) => {
-        handle_file_chosen( inputFile).then((file_content =>{
+        up_bitstream.get_file_content( inputFile).then((file_content =>{
             props.selected_bitstream.edit_field("file_content", file_content.content)
         }));
     }

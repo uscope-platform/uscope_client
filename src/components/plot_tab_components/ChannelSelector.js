@@ -18,11 +18,11 @@ import React, {useEffect} from 'react';
 import ChannelSelectorItem from "./ChannelSelectorItem";
 import {useSelector} from "react-redux";
 import {BlockLayout, BlockTitle, ColorTheme} from "../UI_elements";
-import {get_channel_number_from_id} from "../../utilities/PlotUtilities";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import {useDispatch} from "react-redux";
 
 import {set_channel_status} from "../../client_core";
+import {get_channel_number_from_id} from "../../client_core/proxy/plot";
 
 let ChannelSelector = function(props) {
 
