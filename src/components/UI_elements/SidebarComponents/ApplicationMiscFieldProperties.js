@@ -26,27 +26,10 @@ export let  ApplicationMiscFieldProperties = props =>{
 
 
     const [is_open, set_is_open] = useState(false);
-    const [edit_name, set_edit_name] = useState(false);
-
 
 
     let handleOpen = ()=>{
         set_is_open(true);
-    }
-
-    let handleEditName = () => {
-        set_edit_name(true);
-    }
-
-    let handleEditNameChange = (event) => {
-        if(event.key==="Enter"){
-            props.application.edit_misc_param(props.field.name,event.target.value, true).then(()=>{
-                props.forceUpdate();
-            });
-            set_edit_name(false);
-        }else if(event.key ==="Escape"){
-            set_edit_name(false);
-        }
     }
 
     let handleClose = ()=>{
@@ -55,14 +38,16 @@ export let  ApplicationMiscFieldProperties = props =>{
 
     let handleonKeyDown = (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
-            props.application.edit_misc_param(props.field.name,event.target.value, false).then(()=>{
+            props.application.edit_misc_param(props.field.name,event.target.value, event.target.name==="name").then(()=>{
                 props.forceUpdate();
             });
         }
     }
 
     let handleRemoveRegister= (event) =>{
-        props.application.remove_misc_field(props.field.name);
+        props.application.remove_misc_field(props.field.name).then(()=>{
+            props.forceUpdate();
+        });
         props.forceUpdate();
     }
 
@@ -70,6 +55,7 @@ export let  ApplicationMiscFieldProperties = props =>{
         if(is_open)
             return(
                 <SidebarCollapsableContentLayout>
+                    <InputField inline name="name" defaultValue={props.field.name} onKeyDown={handleonKeyDown} label="Name"/>
                     <InputField inline name='value' defaultValue={props.field.value} onKeyDown={handleonKeyDown} label="Value"/>
                     <Button onClick={handleRemoveRegister} >Remove</Button>
                 </SidebarCollapsableContentLayout>
@@ -80,11 +66,7 @@ export let  ApplicationMiscFieldProperties = props =>{
     return(
         <>
             <SidebarCollapsableNameLayout>
-                {edit_name
-                    ? <InputField compact name={props.field.name} defaultValue={props.field.name} onKeyDown={handleEditNameChange} label={props.field.name}/>
-                    : <Label onDoubleClick={handleEditName}>{props.field.name}</Label>
-                }
-
+                <Label>{props.field.name}</Label>
                 {is_open
                     ? <CaretUp size={"small"} onClick={handleClose} color='white'/>
                     : <CaretDown size={"small"} onClick={handleOpen} color='white'/>

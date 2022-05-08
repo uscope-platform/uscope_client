@@ -29,7 +29,6 @@ import {
 } from "../../UI_elements";
 import {BlockTitle} from "../../UI_elements/";
 import {Add} from "grommet-icons";
-import {up_peripheral} from "../../../client_core";
 
 const TitleLayout = styled.div`
   margin-left: auto;
@@ -90,7 +89,7 @@ let  PeripheralEditSidebar = props =>{
                     <Add id="register" size={"medium"} onClick={handle_add_register} color='white'/>
                 </SidebarBlockTitleLayout>
                 {new_register &&
-                <InputField name="register" compact label="Channel Name" onKeyDown={handle_add_register_done}/>
+                <InputField name="register" compact label="Register Name" onKeyDown={handle_add_register_done}/>
                 }
                 <StyledScrollbar>
                     {

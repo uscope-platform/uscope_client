@@ -209,6 +209,7 @@ export class up_application {
             edit = {application:this.application_name, field: {old_name:null, name:param_name, value:param_value}, action:"edit_misc"};
             this[param_name] = param_value;
         }
+        store.dispatch(addApplication({[this.application_name]:this}))
         return backend_post(api_dictionary.applications.edit, edit);
     }
 

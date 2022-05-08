@@ -37,7 +37,6 @@ import {addApplication} from "./redux/Actions/applicationActions";
 
 let AuthApp = (props) =>{
 
-    const plot = useSelector(state => state.plot);
     const settings = useSelector(state => state.settings);
 
     const [views, set_views] = useState([]);

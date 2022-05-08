@@ -25,28 +25,11 @@ import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLa
 export let  InitialRegisterValue = props =>{
 
     const [is_open, set_is_open] = useState(false);
-    const [edit_name, set_edit_name] = useState(false);
-
-
 
     let handleOpen = ()=>{
         set_is_open(true);
     }
 
-    let handleEditName = () => {
-        set_edit_name(true);
-    }
-
-    let handleEditNameChange = (event) => {
-        if(event.key==="Enter"){
-            props.application.edit_irv(props.irv.address,event.target.name, event.target.value).then(()=>{
-                props.forceUpdate();
-            });
-            set_edit_name(false);
-        }else if(event.key ==="Escape"){
-            set_edit_name(false);
-        }
-    }
 
     let handleClose = ()=>{
         set_is_open(false);
@@ -70,7 +53,8 @@ export let  InitialRegisterValue = props =>{
         if(is_open)
             return(
                 <SidebarCollapsableContentLayout>
-                    <InputField inline name='value' defaultValue={props.irv.value} onKeyDown={handleonKeyDown} label="Value"/>
+                    <InputField inline ID="address" name="address" defaultValue={props.irv.address} onKeyDown={handleonKeyDown} label="Address"/>
+                    <InputField inline ID="value" name='value' defaultValue={props.irv.value} onKeyDown={handleonKeyDown} label="Value"/>
                     <Button onClick={handleRemoveRegister} >Remove</Button>
                 </SidebarCollapsableContentLayout>
             )
@@ -80,11 +64,7 @@ export let  InitialRegisterValue = props =>{
     return(
         <>
             <SidebarCollapsableNameLayout>
-                {edit_name
-                    ? <InputField compact name="address" defaultValue={props.irv.address} onKeyDown={handleEditNameChange} label={props.irv.address}/>
-                    : <Label onDoubleClick={handleEditName}>{props.irv.address}</Label>
-                }
-
+                <Label>{props.irv.address}</Label>
                 {is_open
                     ? <CaretUp size={"small"} onClick={handleClose} color='white'/>
                     : <CaretDown size={"small"} onClick={handleOpen} color='white'/>

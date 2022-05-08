@@ -27,25 +27,9 @@ export let  ParameterProperties = props =>{
 
 
     const [is_open, set_is_open] = useState(false);
-    const [edit_name, set_edit_name] = useState(false);
 
     let handleOpen = ()=>{
         set_is_open(true);
-    }
-
-    let handleEditName = () => {
-        set_edit_name(true);
-    }
-
-    let handleEditNameChange = (event) => {
-        if(event.key==="Enter"){
-            props.application.edit_parameters(props.parameter.parameter_id, event.target.name, event.target.value).then(()=>{
-                props.forceUpdate();
-                set_edit_name(false);
-            });
-        }else if(event.key ==="Escape"){
-            set_edit_name(false);
-        }
     }
 
     let handleClose = ()=>{
@@ -76,9 +60,10 @@ export let  ParameterProperties = props =>{
         if(is_open)
             return(
                 <SidebarCollapsableContentLayout>
-                    <InputField inline name='parameter_id' defaultValue={props.parameter.parameter_id} onKeyDown={handleonKeyDown} label="Parameter ID"/>
-                    <InputField inline name='trigger' defaultValue={props.parameter.trigger} onKeyDown={handleonKeyDown} label="Trigger"/>
-                    <InputField inline name='value' defaultValue={props.parameter.value} onKeyDown={handleonKeyDown} label="Value"/>
+                    <InputField inline ID="parameter_name" name="parameter_name" defaultValue={props.parameter.parameter_name} onKeyDown={handleonKeyDown} label="Name"/>
+                    <InputField inline ID="parameter_id" name='parameter_id' defaultValue={props.parameter.parameter_id} onKeyDown={handleonKeyDown} label="Parameter ID"/>
+                    <InputField inline ID="trigger" name='trigger' defaultValue={props.parameter.trigger} onKeyDown={handleonKeyDown} label="Trigger"/>
+                    <InputField inline ID="value" name='value' defaultValue={props.parameter.value} onKeyDown={handleonKeyDown} label="Value"/>
                     <Checkbox name='visible' value={props.parameter.visible} onChange={handleChange} label="Visible"/>
                     <Button onClick={handleRemoveRegister} >Remove</Button>
                 </SidebarCollapsableContentLayout>
@@ -89,11 +74,7 @@ export let  ParameterProperties = props =>{
     return(
         <>
             <SidebarCollapsableNameLayout>
-                {edit_name
-                    ? <InputField compact name="parameter_name" defaultValue={props.parameter.parameter_name} onKeyDown={handleEditNameChange} label={props.parameter.parameter_name}/>
-                    : <Label onDoubleClick={handleEditName}>{props.parameter.parameter_name}</Label>
-                }
-
+                <Label>{props.parameter.parameter_name}</Label>
                 {is_open
                     ? <CaretUp size={"small"} onClick={handleClose} color='white'/>
                     : <CaretDown size={"small"} onClick={handleOpen} color='white'/>

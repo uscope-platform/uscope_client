@@ -28,33 +28,15 @@ import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLa
 
 export let  PlotChannelGroupProperties = props =>{
 
-    const channels = useSelector(state => state.applications[props.application.application_name].channels)
-
     const [is_open, set_is_open] = useState(false);
     const [channels_list, set_channels_list] = useState([]);
-    const [edit_name, set_edit_name] = useState(false);
 
-    let options = channels.map((ch)=>{
+    let options = props.application.channels.map((ch)=>{
         return {label:ch.name, value:ch.id}
     });
 
     let handleOpen = ()=>{
         set_is_open(true);
-    }
-
-    let handleEditName = () => {
-        set_edit_name(true);
-    }
-
-    let handleEditNameChange = (event) => {
-        if(event.key==="Enter"){
-            props.application.edit_channel_group(props.group.group_name, event.target.name, event.target.value).then(()=>{
-                props.forceUpdate();
-                set_edit_name(false);
-            });
-        }else if(event.key ==="Escape"){
-            set_edit_name(false);
-        }
     }
 
     let handleChangeDefault = (event)=>{
@@ -96,10 +78,10 @@ export let  PlotChannelGroupProperties = props =>{
             let is_default = props.group.default;
             return (
                 <SidebarCollapsableContentLayout>
-                    <InputField name='group_id' defaultValue={props.group.group_id} onKeyDown={handleonKeyDown}
-                                label="ID"/>
-                    <MultiSelect onChange={handleChange} value={channels_list} options={options} label="Content"/>
-                    <Checkbox name='default' value={is_default} onChange={handleChangeDefault} label="Default group"/>
+                    <InputField ID="group_name" name="group_name" defaultValue={props.group.group_name} onKeyDown={handleonKeyDown} label="Name"/>
+                    <InputField ID="group_id" name='group_id' defaultValue={props.group.group_id} onKeyDown={handleonKeyDown} label="ID"/>
+                    <MultiSelect ID="content" onChange={handleChange} value={channels_list} options={options} label="Content"/>
+                    <Checkbox ID="default" name='default' value={is_default} onChange={handleChangeDefault} label="Default group"/>
 
                     <Button onClick={handleRemoveRegister}>Remove</Button>
                 </SidebarCollapsableContentLayout>
@@ -111,11 +93,7 @@ export let  PlotChannelGroupProperties = props =>{
     return(
         <>
             <SidebarCollapsableNameLayout>
-                {edit_name
-                    ? <InputField compact name="group_name" defaultValue={props.group.group_name} onKeyDown={handleEditNameChange} label={props.group.group_name}/>
-                    : <Label onDoubleClick={handleEditName}>{props.group.group_name}</Label>
-                }
-
+                <Label>{props.group.group_name}</Label>
                 {is_open
                     ? <CaretUp size={"small"} onClick={handleClose} color='white'/>
                     : <CaretDown size={"small"} onClick={handleOpen} color='white'/>

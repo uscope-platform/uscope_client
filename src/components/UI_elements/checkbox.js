@@ -32,8 +32,9 @@ export let  Checkbox = props =>{
 
     return(
         <Wrapper>
-            <Label inline={props.inline}>{props.label}</Label>
+            <Label htmlFor={props.name} inline={props.inline}>{props.label}</Label>
             <InputCheckbox
+                id={props.name}
                 name={props.name}
                 checked={props.value?true:false}
                 type="checkbox"

@@ -44,4 +44,5 @@ export {InitialRegisterValue} from "./SidebarComponents/InitialRegisterValueProp
 export {MacroProperties} from "./SidebarComponents/MacroProperties"
 export {ParameterProperties} from "./SidebarComponents/ParameterProperties"
 export {PlotChannelProperties} from "./SidebarComponents/PlotChannelProperties"
+export {PlotChannelGroupProperties} from  "./SidebarComponents/PlotChannelGroupProperties"
 export {RegisterProperties} from "./SidebarComponents/RegisterProperties"

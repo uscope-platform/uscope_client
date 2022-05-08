@@ -29,20 +29,16 @@ import {
     SidebarBlockLayout,
     SidebarBlockTitleLayout,
     SidebarContentLayout,
-    StyledScrollbar
+    StyledScrollbar,
+    PlotChannelGroupProperties
 } from "../../UI_elements";
 
 import {Add} from "grommet-icons";
-
-import {PlotChannelGroupProperties} from "../../UI_elements/SidebarComponents/PlotChannelGroupProperties";
 
 
 let  ApplicationEditSidebar = props =>{
     const settings = useSelector(state => state.settings);
     const [, forceUpdate] = useReducer(x => x + 1, 0);
-
-
-
 
     const [new_channel, set_new_channel] = useState(false);
     const [new_irv, set_new_irv] = useState(false);

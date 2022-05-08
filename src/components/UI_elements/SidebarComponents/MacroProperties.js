@@ -27,28 +27,12 @@ export let  MacroProperties = props =>{
 
 
     const [is_open, set_is_open] = useState(false);
-    const [edit_name, set_edit_name] = useState(false);
 
 
     let handleOpen = ()=>{
         set_is_open(true);
     }
-
-    let handleEditName = () => {
-        set_edit_name(true);
-    }
-
-    let handleEditNameChange = (event) => {
-        if(event.key==="Enter"){
-            props.application.edit_macro(props.macro.name, event.target.name, event.target.value).then(()=>{
-                props.forceUpdate();
-            });
-            set_edit_name(false);
-        }else if(event.key ==="Escape"){
-            set_edit_name(false);
-        }
-    }
-
+    
     let handleClose = ()=>{
         set_is_open(false);
     }
@@ -71,7 +55,8 @@ export let  MacroProperties = props =>{
         if(is_open)
             return(
                 <SidebarCollapsableContentLayout>
-                    <InputField inline name='trigger' defaultValue={props.macro.trigger} onKeyDown={handleonKeyDown} label="Trigger"/>
+                    <InputField inline ID='name' name='name' defaultValue={props.macro.name} onKeyDown={handleonKeyDown} label="Name"/>
+                    <InputField inline ID='trigger'  name='trigger' defaultValue={props.macro.trigger} onKeyDown={handleonKeyDown} label="Trigger"/>
                     <Button onClick={handleRemoveRegister} >Remove</Button>
                 </SidebarCollapsableContentLayout>
             )
@@ -81,11 +66,7 @@ export let  MacroProperties = props =>{
     return(
         <>
             <SidebarCollapsableNameLayout>
-                {edit_name
-                    ? <InputField compact name="name" defaultValue={props.macro.name} onKeyDown={handleEditNameChange} label={props.macro.name}/>
-                    : <Label onDoubleClick={handleEditName}>{props.macro.name}</Label>
-                }
-
+                <Label>{props.macro.name}</Label>
                 {is_open
                     ? <CaretUp size={"small"} onClick={handleClose} color='white'/>
                     : <CaretDown size={"small"} onClick={handleOpen} color='white'/>

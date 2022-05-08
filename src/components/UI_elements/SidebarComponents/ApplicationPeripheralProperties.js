@@ -32,28 +32,10 @@ export let  ApplicationPeripheralProperties = props =>{
     const peripherals = useSelector(state => state.peripherals);
 
     const [is_open, set_is_open] = useState(false);
-    const [edit_name, set_edit_name] = useState(false);
-
 
 
     let handleOpen = ()=>{
         set_is_open(true);
-    }
-
-    let handleEditName = () => {
-        set_edit_name(true);
-    }
-
-    let handleEditNameChange = (event) => {
-        if(event.key==="Enter"){
-            props.application.edit_peripheral(props.peripheral.name,event.target.name, event.target.value).then(()=>{
-                props.forceUpdate();
-                set_edit_name(false);
-            });
-
-        }else if(event.key ==="Escape"){
-            set_edit_name(false);
-        }
     }
 
     let handleClose = ()=>{
@@ -92,6 +74,7 @@ export let  ApplicationPeripheralProperties = props =>{
         if(is_open)
             return(
                 <SidebarCollapsableContentLayout>
+                    <InputField inline name="name" defaultValue={props.peripheral.name} onKeyDown={handleonKeyDown} label="Name"/>
                     <InputField inline name='peripheral_id' defaultValue={props.peripheral.peripheral_id} onKeyDown={handleonKeyDown} label="Peripheral id"/>
                     <SelectField label="IP type" onChange={handleIDChange} defaultValue={props.peripheral.spec_id}
                                  name="spec_id" placeholder="Peripheral type" options={peripherals_list}/>
@@ -109,11 +92,7 @@ export let  ApplicationPeripheralProperties = props =>{
     return(
         <>
             <SidebarCollapsableNameLayout>
-                {edit_name
-                    ? <InputField compact name="name" defaultValue={props.peripheral.name} onKeyDown={handleEditNameChange} label={props.peripheral.name}/>
-                    : <Label onDoubleClick={handleEditName}>{props.peripheral.name}</Label>
-                }
-
+                <Label>{props.peripheral.name}</Label>
                 {is_open
                     ? <CaretUp size={"small"} onClick={handleClose} color='white'/>
                     : <CaretDown size={"small"} onClick={handleOpen} color='white'/>

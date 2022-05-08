@@ -44,8 +44,9 @@ flex-flow: wrap;
 export let  MultiSelect = props =>{
         return (
             <Wrapper inline={props.inline}>
-                    <Label inline={props.inline}>{props.label}</Label>
+                    <Label htmlFor={props.ID} inline={props.inline}>{props.label}</Label>
                     <ReactSelect
+                        name={props.ID}
                         isMulti={true}
                         styles={Style}
                         options={props.options}

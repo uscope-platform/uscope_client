@@ -34,23 +34,15 @@ const ChoicesWrapper = styled.div`
 export let  RegisterProperties = props =>{
 
     const [is_open, set_is_open] = useState(false);
-    const [edit_name, set_edit_name] = useState(false);
-
     let handleOpen = ()=>{
         set_is_open(true);
-    }
-
-    let handleEditName = () => {
-        set_edit_name(true);
     }
 
     let handleEditNameChange = (event) => {
         if(event.key==="Enter"){
             props.peripheral.edit_register(props.register, "register_name",event.target.value).then(()=>{
-                set_edit_name(false);
+                props.forceUpdate();
             });
-        }else if(event.key ==="Escape"){
-            set_edit_name(false);
         }
     }
 
@@ -62,7 +54,9 @@ export let  RegisterProperties = props =>{
         let value = ""
         switch (event.target.name) {
             case "type":
-                props.peripheral.edit_register(props.register, "register_format", event.target.id);
+                props.peripheral.edit_register(props.register, "register_format", event.target.id).then(()=>{
+                    props.forceUpdate();
+                });
                 break;
             case "direction_read":
                 if(event.target.checked){
@@ -78,7 +72,9 @@ export let  RegisterProperties = props =>{
                         value = ""
                     }
                 }
-                props.peripheral.edit_register(props.register, "direction", value);
+                props.peripheral.edit_register(props.register, "direction", value).then(()=>{
+                    props.forceUpdate();
+                });
                 break;
             case "direction_write":
                 if(event.target.checked){
@@ -94,7 +90,9 @@ export let  RegisterProperties = props =>{
                         value = ""
                     }
                 }
-                props.peripheral.edit_register(props.register, "direction", value);
+                props.peripheral.edit_register(props.register, "direction", value).then(()=>{
+                    props.forceUpdate();
+                });
                 break;
             default:
                 return;
@@ -107,7 +105,10 @@ export let  RegisterProperties = props =>{
                 case "ID":
                 case "offset":
                 case "description":
-                    props.peripheral.edit_register(props.register, event.target.name, event.target.value);
+                case "register_name":
+                    props.peripheral.edit_register(props.register, event.target.name, event.target.value).then(()=>{
+                        props.forceUpdate();
+                    });
                     break;
                 case "field_descriptions":
                 case "field_names":
@@ -115,12 +116,15 @@ export let  RegisterProperties = props =>{
                         event.preventDefault();
                     else if(event.key!=="Tab")
                         return;
-                    props.peripheral.edit_register(props.register, event.target.name, event.target.value.split('\n'));
+                    props.peripheral.edit_register(props.register, event.target.name, event.target.value.split('\n')).then(()=>{
+                        props.forceUpdate();
+                    });
                     break;
                 default:
                     return;
             }
         }
+
     }
 
     let handleRemoveRegister= (event) =>{
@@ -132,6 +136,7 @@ export let  RegisterProperties = props =>{
         if(is_open)
             return(
                 <SidebarCollapsableContentLayout>
+                    <InputField inline name="register_name" defaultValue={props.register.register_name} onKeyDown={handleEditNameChange} label="Name"/>
                     <InputField inline name='ID' defaultValue={props.register.ID} onKeyDown={handleonKeyDown} label="Register ID"/>
                     <InputField inline name='offset' defaultValue={props.register.offset} onKeyDown={handleonKeyDown} label="Address offset"/>
                     <InputField inline name='description' defaultValue={props.register.description} onKeyDown={handleonKeyDown} label="Description"/>
@@ -151,11 +156,7 @@ export let  RegisterProperties = props =>{
     return(
         <>
             <SidebarCollapsableNameLayout>
-                {edit_name
-                    ? <InputField compact name="edit_name" defaultValue={props.register.register_name} onKeyDown={handleEditNameChange} label={props.register.register_name}/>
-                    : <Label onDoubleClick={handleEditName}>{props.register.register_name}</Label>
-                }
-
+                <Label>{props.register.register_name}</Label>
                 {is_open
                     ? <CaretUp size={"small"} onClick={handleClose} color='white'/>
                     : <CaretDown size={"small"} onClick={handleOpen} color='white'/>
