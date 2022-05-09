@@ -38,6 +38,7 @@ import {Add} from "grommet-icons";
 
 let  ApplicationEditSidebar = props =>{
     const settings = useSelector(state => state.settings);
+    const peripherals = useSelector(state => state.peripherals);
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     const [new_channel, set_new_channel] = useState(false);
@@ -230,7 +231,7 @@ let  ApplicationEditSidebar = props =>{
                     {
                         props.selected_application.peripherals.map((peripheral)=>{
                             return(
-                                <ApplicationPeripheralProperties application={props.selected_application} forceUpdate={forceUpdate} peripheral={peripheral}/>
+                                <ApplicationPeripheralProperties application={props.selected_application} peripherals={peripherals} forceUpdate={forceUpdate} peripheral={peripheral}/>
                             )
                         })
                     }

@@ -55,8 +55,8 @@ export let  ApplicationMiscFieldProperties = props =>{
         if(is_open)
             return(
                 <SidebarCollapsableContentLayout>
-                    <InputField inline name="name" defaultValue={props.field.name} onKeyDown={handleonKeyDown} label="Name"/>
-                    <InputField inline name='value' defaultValue={props.field.value} onKeyDown={handleonKeyDown} label="Value"/>
+                    <InputField inline ID="name" name="name" defaultValue={props.field.name} onKeyDown={handleonKeyDown} label="Name"/>
+                    <InputField inline ID="value"  name='value' defaultValue={props.field.value} onKeyDown={handleonKeyDown} label="Value"/>
                     <Button onClick={handleRemoveRegister} >Remove</Button>
                 </SidebarCollapsableContentLayout>
             )

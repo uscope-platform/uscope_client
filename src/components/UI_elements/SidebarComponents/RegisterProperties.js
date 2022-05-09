@@ -53,11 +53,6 @@ export let  RegisterProperties = props =>{
     let handleChange = (event)=>{
         let value = ""
         switch (event.target.name) {
-            case "type":
-                props.peripheral.edit_register(props.register, "register_format", event.target.id).then(()=>{
-                    props.forceUpdate();
-                });
-                break;
             case "direction_read":
                 if(event.target.checked){
                     if(props.register.direction.includes("W")){
@@ -110,16 +105,6 @@ export let  RegisterProperties = props =>{
                         props.forceUpdate();
                     });
                     break;
-                case "field_descriptions":
-                case "field_names":
-                    if(event.shiftKey)
-                        event.preventDefault();
-                    else if(event.key!=="Tab")
-                        return;
-                    props.peripheral.edit_register(props.register, event.target.name, event.target.value.split('\n')).then(()=>{
-                        props.forceUpdate();
-                    });
-                    break;
                 default:
                     return;
             }
@@ -128,18 +113,19 @@ export let  RegisterProperties = props =>{
     }
 
     let handleRemoveRegister= (event) =>{
-        props.peripheral.remove_register(props.register.register_name);
-        props.forceUpdate();
+        props.peripheral.remove_register(props.register.register_name).then(()=>{
+            props.forceUpdate();
+        });
     }
 
     let renderContent = (props) =>{
         if(is_open)
             return(
                 <SidebarCollapsableContentLayout>
-                    <InputField inline name="register_name" defaultValue={props.register.register_name} onKeyDown={handleEditNameChange} label="Name"/>
-                    <InputField inline name='ID' defaultValue={props.register.ID} onKeyDown={handleonKeyDown} label="Register ID"/>
-                    <InputField inline name='offset' defaultValue={props.register.offset} onKeyDown={handleonKeyDown} label="Address offset"/>
-                    <InputField inline name='description' defaultValue={props.register.description} onKeyDown={handleonKeyDown} label="Description"/>
+                    <InputField inline ID="register_name" name="register_name" defaultValue={props.register.register_name} onKeyDown={handleEditNameChange} label="Name"/>
+                    <InputField inline ID="ID" name='ID' defaultValue={props.register.ID} onKeyDown={handleonKeyDown} label="Register ID"/>
+                    <InputField inline ID="offset" name='offset' defaultValue={props.register.offset} onKeyDown={handleonKeyDown} label="Address offset"/>
+                    <InputField inline ID="description" name='description' defaultValue={props.register.description} onKeyDown={handleonKeyDown} label="Description"/>
                     <ChoicesWrapper>
                         <Label>Register access capabilities</Label>
                         <div>

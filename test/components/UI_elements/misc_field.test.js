@@ -17,7 +17,7 @@ import React from 'react'
 import 'jest-styled-components'
 import {ThemeProvider} from "styled-components";
 
-import {ColorTheme, MacroProperties} from "../../../src/components/UI_elements";
+import {ApplicationMiscFieldProperties, ColorTheme} from "../../../src/components/UI_elements";
 import {fireEvent, render, screen, waitFor} from "@testing-library/react";
 import '@testing-library/jest-dom/extend-expect'
 
@@ -30,24 +30,25 @@ let edit_macro_args = [];
 let remove_macro_args = "";
 
 let mock_application = {
-    macro:[{ name: 'test_macro', trigger: 'test trigger'}],
-    edit_macro:(a1, a2, a3) =>{
+    scope_mux_address: '0x43c00300',
+    timebase_address: '0x43c00304',
+    edit_misc_param:(a1, a2, a3) =>{
         edit_macro_args.push(a1);
         edit_macro_args.push(a2);
         edit_macro_args.push(a3);
         return Promise.resolve();
     },
-    remove_macro:(args) =>{
+    remove_misc_field:(args) =>{
         remove_macro_args = args;
         return Promise.resolve();
     },
 }
 
-test('macro', async () => {
+test('misc field', async () => {
 
     render(
         <ThemeProvider theme={ColorTheme}>
-            <MacroProperties application={mock_application} forceUpdate={forceUpdate} macro={mock_application.macro[0]}/>
+            <ApplicationMiscFieldProperties application={mock_application} forceUpdate={forceUpdate} field={{name:"scope_mux_address", value:mock_application.scope_mux_address}}/>
         </ThemeProvider>
     )
     // Check thatg the edit view is closed and open it
@@ -56,8 +57,7 @@ test('macro', async () => {
 
 
     // Test name editing
-    await test_text_field("Name", [mock_application.macro[0].name, "name", "test_change"]);
-
+    await test_name_edit();
 
     //clean up after first test;
     cleanup();
@@ -77,20 +77,20 @@ function cleanup(){
     forceUpdate.mockClear();
 }
 
-
-async function test_text_field(label, expected_edit) {
-    let field = screen.getByLabelText(label);
-    fireEvent.change(field, {target: {value: 'test_change'}});
-    fireEvent.keyDown(field, {key: 'Enter', code: 'Enter', charCode: 13})
-    expect(edit_macro_args).toStrictEqual(expected_edit);
+async function test_name_edit() {
+    let name_field = screen.getByLabelText("Name");
+    fireEvent.change(name_field,{target: {value: 'test_name_change'}} );
+    fireEvent.keyDown(name_field,{key: 'Enter', code: 'Enter', charCode: 13} )
+    expect(edit_macro_args).toStrictEqual(["scope_mux_address", "test_name_change", true]);
     await waitFor(() => expect(forceUpdate).toHaveBeenCalledTimes(1));
     expect(parent_updated).toBeTruthy();
 }
 
+
 async function test_remove_app() {
     fireEvent.click(screen.getByText("Remove"));
 
-    expect(remove_macro_args).toBe(mock_application.macro[0].name);
+    expect(remove_macro_args).toBe("scope_mux_address");
     await waitFor(() => expect(forceUpdate).toHaveBeenCalledTimes(1));
     expect(parent_updated).toBeTruthy();
 }

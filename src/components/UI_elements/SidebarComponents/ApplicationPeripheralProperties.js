@@ -19,7 +19,6 @@ import {CaretDown, CaretUp} from "grommet-icons";
 import {InputField} from "../InputField";
 import {Checkbox} from "../checkbox";
 
-import {useSelector} from "react-redux";
 import {Button} from "../Button";
 import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
 import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
@@ -29,7 +28,6 @@ import {SelectField} from "../Select";
 
 export let  ApplicationPeripheralProperties = props =>{
 
-    const peripherals = useSelector(state => state.peripherals);
 
     const [is_open, set_is_open] = useState(false);
 
@@ -62,27 +60,28 @@ export let  ApplicationPeripheralProperties = props =>{
         }
     }
 
-    let handleRemoveRegister= (event) =>{        props.application.remove_peripheral(props.peripheral.name).then(()=>{
+    let handleRemoveRegister= (event) =>{
+            props.application.remove_peripheral(props.peripheral.name).then(()=>{
             props.forceUpdate();
         });
     }
 
     let renderContent = (props) =>{
-        let peripherals_list = Object.entries(peripherals).map((periph)=>{
+        let peripherals_list = Object.entries(props.peripherals).map((periph)=>{
             return periph[0];
         })
         if(is_open)
             return(
                 <SidebarCollapsableContentLayout>
-                    <InputField inline name="name" defaultValue={props.peripheral.name} onKeyDown={handleonKeyDown} label="Name"/>
-                    <InputField inline name='peripheral_id' defaultValue={props.peripheral.peripheral_id} onKeyDown={handleonKeyDown} label="Peripheral id"/>
+                    <InputField inline ID="name" name="name" defaultValue={props.peripheral.name} onKeyDown={handleonKeyDown} label="Name"/>
+                    <InputField inline ID="peripheral_id" name='peripheral_id' defaultValue={props.peripheral.peripheral_id} onKeyDown={handleonKeyDown} label="Peripheral id"/>
                     <SelectField label="IP type" onChange={handleIDChange} defaultValue={props.peripheral.spec_id}
                                  name="spec_id" placeholder="Peripheral type" options={peripherals_list}/>
-                    <InputField inline name='base_address' defaultValue={props.peripheral.base_address} onKeyDown={handleonKeyDown} label="Base Address"/>
-                    <InputField inline name='type' defaultValue={props.peripheral.type} onKeyDown={handleonKeyDown} label="Type"/>
+                    <InputField inline ID="base_address" name='base_address' defaultValue={props.peripheral.base_address} onKeyDown={handleonKeyDown} label="Base Address"/>
+                    <InputField inline ID="type" name='type' defaultValue={props.peripheral.type} onKeyDown={handleonKeyDown} label="Type"/>
                     <Checkbox name='proxied' value={props.peripheral.proxied} onChange={handleChange} label="Proxied Peripheral"/>
-                    <InputField inline name='proxy_address' disabled={!props.peripheral.proxied} defaultValue={props.peripheral.proxy_address} onKeyDown={handleonKeyDown} label="Proxy Address"/>
-                    <InputField inline name='proxy_type' disabled={!props.peripheral.proxied} defaultValue={props.peripheral.proxy_type} onKeyDown={handleonKeyDown} label="Proxy Type"/>
+                    <InputField inline ID="proxy_address" name='proxy_address' disabled={!props.peripheral.proxied} defaultValue={props.peripheral.proxy_address} onKeyDown={handleonKeyDown} label="Proxy Address"/>
+                    <InputField inline ID="proxy_type" name='proxy_type' disabled={!props.peripheral.proxied} defaultValue={props.peripheral.proxy_type} onKeyDown={handleonKeyDown} label="Proxy Type"/>
                     <Button onClick={handleRemoveRegister} >Remove</Button>
                 </SidebarCollapsableContentLayout>
             )
