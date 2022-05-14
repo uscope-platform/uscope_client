@@ -118,6 +118,26 @@ let test_application = {
                 proxy_address: '0',
                 spec_id: 'ADC_processing',
                 type: 'Registers'
+            },
+            {
+                base_address: '0x43c00254',
+                name: 'adc_processing_ch2',
+                peripheral_id: 'adc_proc_2',
+                proxied: true,
+                proxy_type:'rtcu',
+                proxy_address: '0x42',
+                spec_id: 'ADC_processing',
+                type: 'Registers'
+            },
+            {
+                base_address: '0x43c00254',
+                name: 'adc_processing_ch3',
+                peripheral_id: 'adc_proc_3',
+                proxied: true,
+                proxy_type:'axis_const',
+                proxy_address: '0x65',
+                spec_id: 'ADC_processing',
+                type: 'Registers'
             }
         ],
         scope_mux_address: '0x43c00300',
@@ -179,6 +199,8 @@ function start_trigger_cl(parameters, context) {
     let duty_lim_high = 0.9;
     
     registers['adc_proc_1.cmp_thr_1'] = 6;
+    registers['adc_proc_2.cmp_thr_1'] = 4;
+    registers['adc_proc_3.cmp_thr_1'] = 1;
     
     return {workspace:null, registers:registers};
  

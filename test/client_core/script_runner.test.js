@@ -22,14 +22,31 @@ import {bulk_write_data_check} from "./mock/peripherals_api";
 
 test('run_parameter_script', () => {
     return run_parameter_script(mock_store,{name:"deadtime_correction", value:"3e-6"}).then((res)=>{
-        expect(bulk_write_data_check).toStrictEqual({payload:[{address:0x43c00254, value:6}]})
+        let expected_writes = [
+            {address:0x43c00254, value:6},
+            {address:0x42, value:4},
+            {address:0x46, value:0x43c00254},
+            {address:0x69, value:0x43c00254},
+            {address:0x65, value:1}
+
+        ]
+        let dbg = bulk_write_data_check;
+        expect(bulk_write_data_check).toStrictEqual({payload:expected_writes})
     });
 })
 
 test('run_script', () => {
     let state = mock_store.getState()
     let result = run_script(mock_store,"test_trigger", state.applications["SicDrive"].parameters, "");
-    expect(result).toStrictEqual([{address:0x43c00254, value:6}]);
+    let expected_writes = [
+        {address:0x43c00254, value:6},
+        {address:0x42, value:4},
+        {address:0x46, value:0x43c00254},
+        {address:0x69, value:0x43c00254},
+        {address:0x65, value:1}
+
+    ]
+    expect(result).toStrictEqual(expected_writes);
 })
 
 
