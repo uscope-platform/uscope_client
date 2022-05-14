@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import {fetchData, setChannelStatus} from "../../redux/Actions/plotActions";
-import {backend_get, backend_post, dispatch_redux_thunk} from "./backend";
+import {backend_post, dispatch_redux_thunk} from "./backend";
 
 import {api_dictionary} from './api_dictionary'
 
@@ -22,21 +22,6 @@ import {api_dictionary} from './api_dictionary'
 export const fetch_data = () =>  {
     return dispatch_redux_thunk(fetchData, api_dictionary.plot.fetch_data)
 };
-
-export const set_capture =  (capture_lenght) =>  {
-    return new Promise((resolve, reject)=>{
-        backend_post(api_dictionary.plot.set_capture, {length: capture_lenght}).then((res) => {
-            resolve(res)
-        }).catch((err) =>{
-            alert('ERROR: error while setting up capture\n' + err.message);
-            reject(err);
-        })
-    })
-};
-
-export const get_captured_data = () =>{
-    return backend_get(api_dictionary.plot.get_capture);
-}
 
 export const set_channel_status = (channel) => {
     return dispatch_redux_thunk(setChannelStatus, api_dictionary.plot.set_channel_status, channel);
@@ -52,6 +37,7 @@ export const set_channel_widths = (widths) => {
         })
     })
 }
+
 export let create_plot_channel = (ch) => {
     return ({
         x: Array.from(Array(1024).keys()),

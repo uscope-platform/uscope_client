@@ -19,34 +19,12 @@ import React from 'react';
 import EnablesProperties from "./EnablesProperties";
 import CaptureProperties from "./CaptureProperties";
 
-import {set_capture, get_captured_data} from "../../../client_core";
-
 let  PlotSidebar = props =>{
-
-    let on_capture_start = (capture_length) => {
-        set_capture(capture_length).then();
-        setTimeout(on_capture_end, 500);
-    };
-
-
-    let on_capture_end = () => {
-        get_captured_data().then((res) => {
-            if(res['elapsed'] !== 0){
-                setTimeout(on_capture_end, 1000);
-            } else {
-                let hiddenElement = document.createElement('a');
-                hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(res['data']);
-                hiddenElement.target = '_blank';
-                hiddenElement.download = 'data.csv';
-                hiddenElement.click();
-            }
-        });
-    };
 
     return (
         <>
             <EnablesProperties/>
-            <CaptureProperties done={on_capture_start} />
+            <CaptureProperties/>
         </>
     );
 

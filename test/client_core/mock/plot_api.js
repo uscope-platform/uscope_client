@@ -15,36 +15,24 @@
 
 import {rest} from "msw";
 
-let channel_info = [
-    {
-        "enabled": true,
-        "id": 2,
-        "max_value": 180,
-        "min_value": 0,
-        "mux_setting": "0",
-        "name": "Current B",
-        "number": "1",
-        "phys_width": "14"
-    },
-    {
-        "enabled": true,
-        "id": "reference_a",
-        "max_value": "1000",
-        "min_value": "0",
-        "mux_setting": "1",
-        "name": "Reference A",
-        "number": 0,
-        "phys_width": "14"
-    }
-]
-
+export let setup_widths_data = undefined;
+export let set_channel_status_data = undefined;
 
 export const plot_api = [
-
-
-    rest.get('/test_server/plot/channels/specs', (req, res, ctx) => {
+    rest.post('/test_server/plot/channels/widths', (req, res, ctx) => {
+        setup_widths_data = req.body;
+        if(req.body.widths.length===0)
+            return res(
+                ctx.status(500)
+            )
+        else
+            return res(
+                ctx.status(200)
+            )
+    }),
+    rest.post('/test_server/plot/channels/status', (req, res, ctx) => {
+        set_channel_status_data = req.body;
         return res(
-            ctx.json({data:channel_info}),
             ctx.status(200)
         )
     })

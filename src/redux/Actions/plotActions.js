@@ -26,7 +26,7 @@ import axios from "axios";
 
 export const setChannelStatus = (server_url, status, config) =>{
     return dispatch => {
-        axios.post(server_url,status, config).then(res => {
+        return axios.post(server_url,status, config).then(res => {
             dispatch(setChannelStatusDone(status));
         }).catch(err => {
             alert('ERROR: error while setting a channel status\n' + err.message);
@@ -80,7 +80,7 @@ export const plotStop = () =>{
 
 export const fetchData = (server_url, config) => {
     return dispatch => {
-        axios.get(server_url, config).then(res => {
+        return axios.get(server_url, config).then(res => {
             dispatch(fetchDataDone(res.data));
         }).catch(err => {
             alert('ERROR: error while fetching channel data\n' + err.message);
