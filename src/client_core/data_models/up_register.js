@@ -50,4 +50,14 @@ export class up_register {
         this.offset = offset;
     }
 
+    _get_register = () => {
+        return{
+            "ID": this.ID,
+            "register_name": this.register_name,
+            "description": this.description,
+            "direction": this.direction,
+            "offset": this.offset,
+            "value": this.value,
+        }
+    }
 }

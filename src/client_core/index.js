@@ -31,6 +31,8 @@ export {up_application} from './data_models/up_application'
 export {up_peripheral} from './data_models/up_peripheral'
 export let store = null;
 
+export {import_application, import_peripherals} from './data_handling/import'
+
 export const set_redis_store = (rs) => {
     store = rs;
 }

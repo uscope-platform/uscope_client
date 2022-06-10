@@ -43,7 +43,7 @@ test("remote add", () => {
                 }
             }};
 
-        expect(created_peripheral).toStrictEqual(check_periph);
+        expect(created_peripheral).toStrictEqual([check_periph]);
         let state = mock_store.getState();
         expect(state.peripherals.test._get_periph()).toStrictEqual(check_periph.payload)
     })

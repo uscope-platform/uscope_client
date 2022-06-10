@@ -16,7 +16,7 @@
 import { rest } from 'msw'
 
 export let bulk_write_data_check= null;
-export let created_peripheral = null;
+export let created_peripheral = [];
 export let edit_peripheral_data = null;
 export let remove_peripheral_data = null;
 
@@ -32,7 +32,7 @@ export const peripherals_api = [
 
 
     rest.post('/test_server/tab_creator/create_peripheral', (req, res, ctx) => {
-        created_peripheral = req.body;
+        created_peripheral.push(req.body);
         return res(
             ctx.status(200)
         )

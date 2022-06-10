@@ -1,0 +1,40 @@
+{
+  "enable_generator": {
+    "peripheral_name": "enable_generator",
+    "registers": [
+      {
+        "ID": "enable",
+        "description": "Writing 1 to this register enables the generator",
+        "direction": "RW",
+        "fields": [],
+        "offset": "0x0",
+        "register_format": "single",
+        "register_name": "enable"
+      },
+      {
+        "ID": "period",
+        "description": "Period of the enable pulses in clock cycles",
+        "direction": "RW",
+        "fields": [],
+        "offset": "0x4",
+        "register_format": "single",
+        "register_name": "period"
+      },
+      {
+        "ID": "treshold",
+        "description": "value of the counter at which the enable pulse is produced",
+        "direction": "RW",
+        "fields": [],
+        "offset": "0x8",
+        "register_format": "single",
+        "register_name": "treshold"
+      }
+    ],
+    "version": "1.0"
+  },
+  "fCore": {
+    "peripheral_name": "fCore",
+    "registers": [],
+    "version": "1.0"
+  }
+}

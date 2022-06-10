@@ -91,10 +91,14 @@ export class up_peripheral {
     }
 
     _get_periph = () =>{
+        let cleaned_registers = [];
+        for(let i of this.registers){
+            cleaned_registers.push(i._get_register());
+        }
         return {[this.peripheral_name]:{
             peripheral_name:this.peripheral_name,
             version:this.version,
-            registers:this.registers
+            registers:cleaned_registers
         }};
     }
 }
