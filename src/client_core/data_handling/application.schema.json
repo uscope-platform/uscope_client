@@ -32,7 +32,7 @@
       "items": {}
     },
     "macro": {
-      "description":"Array of user defined macros",
+      "description": "Array of user defined macros",
       "type": "array",
       "items": {}
     },
@@ -40,53 +40,67 @@
       "type": "integer"
     },
     "parameters": {
-      "description":"Array of user defined parameters",
+      "description": "Array of user defined parameters",
       "type": "array",
       "items": {}
     },
     "peripherals": {
-      "description":"Array of channels that describe a peripheral",
+      "description": "Array of channels that describe a peripheral",
       "type": "array",
-      "items":{
-          "type": "object",
-          "properties": {
-            "base_address": {
-              "description": "Base address of the peripheral, from which all other registers are located",
-              "type": "string"
-            },
-            "name": {
-              "description": "User friendly name of the peripheral",
-              "type": "string"
-            },
-            "peripheral_id": {
-              "description":"Unique ID that identifies the peripheral in the application",
-              "type": "string"
-            },
-            "proxied": {
-              "description": "True if the peripheral is only accessible through some bridge peripheral and not from the main bus",
-              "type": "boolean"
-            },
-            "proxy_address": {
-              "description": "Base address of the proxy peripheral",
-              "type": "string"
-            },
-            "spec_id": {
-              "description": "ID that links this peripheral to the relative specification",
-              "type": "string"
-            }
+      "items": {
+        "type": "object",
+        "properties": {
+          "base_address": {
+            "description": "Base address of the peripheral, from which all other registers are located",
+            "type": "string"
           },
+          "name": {
+            "description": "User friendly name of the peripheral",
+            "type": "string"
+          },
+          "peripheral_id": {
+            "description": "Unique ID that identifies the peripheral in the application",
+            "type": "string"
+          },
+          "proxied": {
+            "description": "True if the peripheral is only accessible through some bridge peripheral and not from the main bus",
+            "type": "boolean"
+          },
+          "proxy_address": {
+            "description": "Base address of the proxy peripheral",
+            "type": "string"
+          },
+          "spec_id": {
+            "description": "ID that links this peripheral to the relative specification",
+            "type": "string"
+          }
+        },
+        "required": [
+          "base_address",
+          "name",
+          "peripheral_id",
+          "proxied",
+          "spec_id"
+        ],
+        "if": {
+          "properties": {
+            "proxied": {
+              "enum": [
+                true
+              ]
+            }
+          }
+        },
+        "then": {
           "required": [
-            "base_address",
-            "name",
-            "peripheral_id",
-            "proxied",
-            "proxy_address",
-            "spec_id"
+            "proxy_address"
           ]
-        }
+        },
+        "else":true
+      }
     },
     "timebase_address": {
-      "description":"address of the main timebase generator",
+      "description": "address of the main timebase generator",
       "type": "string"
     }
   },

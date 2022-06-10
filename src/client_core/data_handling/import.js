@@ -39,10 +39,10 @@ export const import_application = (raw_json) => {
     if(valid){
         let app = new up_application(imported_app);
         return app.add_remote().then(()=>{
-            return []
+            return app
         })
     } else{
-        return Promise.reject(errors)
+        return Promise.reject(errors);
     }
 }
 
@@ -54,11 +54,11 @@ export const import_peripherals = (raw_json) => {
         for(const periph_item in imported_periph){
             let periph = new up_peripheral(imported_periph[periph_item]);
             promises.push(periph.add_remote().then(()=>{
-                return [];
+                return periph;
             }))
         }
         return Promise.all(promises);
     } else{
-        return Promise.reject(errors)
+        return Promise.reject(errors);
     }
 }

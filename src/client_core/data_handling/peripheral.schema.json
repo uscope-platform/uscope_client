@@ -63,9 +63,7 @@
               "ID",
               "description",
               "direction",
-              "fields",
               "offset",
-              "register_format",
               "register_name"
             ]
           }

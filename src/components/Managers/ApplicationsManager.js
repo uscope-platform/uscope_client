@@ -22,7 +22,7 @@ import {setSetting} from "../../redux/Actions/SettingsActions";
 
 import DataTable from 'react-data-table-component';
 import {TableStyle} from './TableStyles'
-import {up_application} from "../../client_core";
+import {up_application, import_application} from "../../client_core";
 import {addApplication} from "../../redux/Actions/applicationActions";
 
 
@@ -69,8 +69,7 @@ let  ApplicationsManager = props =>{
             return;
         }
 
-        let application = {[settings.current_application]:applications_redux[settings.current_application]};
-        let blob = new Blob([JSON.stringify(application, null, 4)], {type: "application/json"});
+        let blob = new Blob([JSON.stringify(applications_redux[settings.current_application], null, 4)], {type: "application/json"});
         let url  = URL.createObjectURL(blob);
 
         let link = document.createElement('a');
@@ -102,14 +101,11 @@ let  ApplicationsManager = props =>{
     };
 
     let handle_application_add = (content) => {
-
-        let imported_apps = JSON.parse(content);
-        for(const item in imported_apps){
-            let app = new up_application(imported_apps[item]);
-            app.add_remote().then(()=>{
-                addApplication(app);
-            })
-        }
+        import_application(content).then((app)=>{
+            addApplication(app)
+        }).catch((err)=>{
+            alert(err);
+        });
     };
 
     const rowSelectCritera = row => row.application_name === settings.current_application;
