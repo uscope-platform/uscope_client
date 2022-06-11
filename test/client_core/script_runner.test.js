@@ -14,7 +14,7 @@
 // limitations under the License.
 
 
-import {run_script, run_parameter_script} from '../../src/client_core/index'
+import {run_script, run_parameter_script} from '../../src/client_core'
 import {mock_store} from "./mock/redux_store";
 import {bulk_write_data_check} from "./mock/peripherals_api";
 

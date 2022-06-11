@@ -8,10 +8,7 @@ import ApplicationsReducer from "../../../src/redux/Reducers/applicationsReducer
 import programsReducer from "../../../src/redux/Reducers/ProgramsReducer";
 import {scriptsReducer, scriptsWorkspaceReducer} from "../../../src/redux/Reducers/scriptsReducer";
 import thunk from "redux-thunk";
-import {up_application, up_peripheral} from "../../../src/client_core";
-import {up_script} from "../../../src/client_core/data_models/up_script";
-import {up_program} from "../../../src/client_core/data_models/up_program";
-import {up_bitstream} from "../../../src/client_core/data_models/up_bitstream";
+import {up_application, up_peripheral, up_script, up_program, up_bitstream} from "../../../src/client_core";
 
 export let register_writes = [];
 

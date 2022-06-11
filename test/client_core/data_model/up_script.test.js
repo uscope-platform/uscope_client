@@ -14,10 +14,8 @@
 // limitations under the License.
 
 import {mock_store} from "../mock/redux_store";
-import {up_script} from "../../../src/client_core/data_models/up_script";
+import {up_script} from "../../../src/client_core";
 import {script_creation_data, script_edit_data, script_removal_data} from "../mock/scripts_api";
-import {store} from "../../../src/client_core";
-import {AddScript} from "../../../src/redux/Actions/scriptsActions";
 
 
 test("script creation", () => {

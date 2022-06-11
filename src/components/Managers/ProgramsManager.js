@@ -21,7 +21,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import ProgramsEditor from "../Editors/Programs/ProgramsEditor";
 import ButterToast, { POS_TOP, POS_RIGHT, Cinnamon} from "butter-toast";
-import {up_program} from "../../client_core/data_models/up_program";
+import {up_program} from "../../client_core";
 
 let columns = [
     {

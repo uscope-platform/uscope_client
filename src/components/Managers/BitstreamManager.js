@@ -19,7 +19,7 @@ import DataTable from "react-data-table-component";
 import {TableStyle} from "./TableStyles";
 import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../../redux/Actions/SettingsActions";
-import {up_bitstream} from "../../client_core/data_models/up_bitstream";
+import {up_bitstream} from "../../client_core";
 
 let columns = [
     {

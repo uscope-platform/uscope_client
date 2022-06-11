@@ -18,7 +18,7 @@ import React from 'react';
 import ProgramEditSidebar from "./ProgramEditSidebar";
 import {useSelector} from "react-redux";
 import {BlockTitle, SidebarContentLayout} from "../../UI_elements";
-import {up_program} from "../../../client_core/data_models/up_program";
+import {up_program} from "../../../client_core";
 
 
 

@@ -14,7 +14,7 @@
 // limitations under the License.
 
 
-import {up_register} from "../../../src/client_core/data_models/up_register";
+import {up_register} from "../../../src/client_core";
 
 test("register creation", () => {
     let reg = up_register.construct_empty("test register");

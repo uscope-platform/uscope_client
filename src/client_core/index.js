@@ -29,6 +29,12 @@ export {fetch_data, set_channel_status, set_channel_widths} from './proxy/plot'
 // DATA MODEL
 export {up_application} from './data_models/up_application'
 export {up_peripheral} from './data_models/up_peripheral'
+export {up_field} from './data_models/up_field'
+export {up_script} from './data_models/up_script'
+export {up_program} from './data_models/up_program'
+export {up_bitstream} from './data_models/up_bitstream'
+export {up_register} from  './data_models/up_register'
+
 export let store = null;
 
 export {import_application, import_peripherals} from './data_handling/import'

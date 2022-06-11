@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import {mock_store} from "../mock/redux_store";
-import {up_bitstream} from "../../../src/client_core/data_models/up_bitstream";
+import {up_bitstream} from "../../../src/client_core";
 import {bitstream_creation_data, bitstream_removal_data, edit_bitstream_data} from "../mock/bitstreams_api";
 
 test("bitstream creation", () => {

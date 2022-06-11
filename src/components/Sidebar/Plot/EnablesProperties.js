@@ -25,8 +25,7 @@ import {
 import styled from "styled-components";
 import {initialize_channels} from "../../../redux/Actions/plotActions";
 import {setSetting} from "../../../redux/Actions/SettingsActions";
-import {set_channel_widths, set_channel_status, up_peripheral} from "../../../client_core";
-import {create_plot_channel, get_channels_from_group} from "../../../client_core/proxy/plot";
+import {set_channel_widths, set_channel_status, up_peripheral, create_plot_channel, get_channels_from_group} from "../../../client_core";
 
 const ChoicesWrapper = styled.div`
     display: grid;

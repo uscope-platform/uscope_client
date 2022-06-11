@@ -20,7 +20,7 @@ import {
     SidebarBlockLayout,
     SidebarBlockTitleLayout
 } from "../../UI_elements";
-import {up_bitstream} from "../../../client_core/data_models/up_bitstream";
+import {up_bitstream} from "../../../client_core";
 
 
 

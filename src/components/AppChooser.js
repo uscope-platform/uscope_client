@@ -25,9 +25,11 @@ import ApplicationChooserView from "./Common_Components/ApplicationChooserView";
 
 import {
     set_channel_widths,
-    up_application, up_peripheral
+    up_application,
+    up_peripheral,
+    create_plot_channel,
+    get_channels_from_group
 } from "../client_core"
-import {create_plot_channel, get_channels_from_group} from "../client_core/proxy/plot";
 
 let ApplicationChooser = (props) =>{
 

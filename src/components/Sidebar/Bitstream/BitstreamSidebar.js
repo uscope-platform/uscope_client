@@ -18,7 +18,7 @@ import React from 'react';
 import BitstreamEditSidebar from "./BitstreamEditSidebar";
 import {useSelector} from "react-redux";
 import {BlockTitle, SidebarContentLayout} from "../../UI_elements";
-import {up_bitstream} from "../../../client_core/data_models/up_bitstream";
+import {up_bitstream} from "../../../client_core";
 
 
 

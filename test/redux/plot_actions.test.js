@@ -15,7 +15,7 @@
 
 import {mock_store} from "../client_core/mock/redux_store";
 import {initialize_channels, plotPause, plotPlay, plotStop} from "../../src/redux/Actions/plotActions";
-import {create_plot_channel} from "../../src/client_core/proxy/plot";
+import {create_plot_channel} from "../../src/client_core";
 
 
 test("plot_play/pause", () =>{

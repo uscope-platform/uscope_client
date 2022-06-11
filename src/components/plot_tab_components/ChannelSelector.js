@@ -21,8 +21,8 @@ import {BlockLayout, BlockTitle, ColorTheme} from "../UI_elements";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import {useDispatch} from "react-redux";
 
-import {set_channel_status} from "../../client_core";
-import {get_channel_number_from_id} from "../../client_core/proxy/plot";
+import {set_channel_status, get_channel_number_from_id} from "../../client_core";
+
 
 let ChannelSelector = function(props) {
 

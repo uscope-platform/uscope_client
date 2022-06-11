@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import {mock_store} from "../mock/redux_store";
-import {up_program} from "../../../src/client_core/data_models/up_program";
+import {up_program} from "../../../src/client_core";
 import {
     applied_program_data, compile_program_data,
     created_program_data,
