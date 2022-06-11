@@ -14,6 +14,8 @@
 // limitations under the License.
 
 
+import {up_field} from "./up_field";
+
 export class up_register {
     constructor(register_obj) {
         this.ID = register_obj.ID;
@@ -22,11 +24,15 @@ export class up_register {
         this.direction = register_obj.direction;
         this.offset= register_obj.offset;
         this.value = register_obj.value;
+        this.fields = [];
+        for(const item of register_obj.fields){
+            this.fields.push(new up_field(item));
+        }
     }
 
     static construct_empty(register_name){
         let register_obj = {ID:register_name.replace(/\s/g, "_").toLowerCase(), register_name:register_name,
-            description:"", direction:"", offset:"0x0", value:0};
+            description:"", direction:"", offset:"0x0", value:0, fields: []};
         return new up_register(register_obj);
     }
 
@@ -50,11 +56,24 @@ export class up_register {
         this.offset = offset;
     }
 
+    set_fields = (fields) => {
+        this.fields = fields;
+    }
+
+    add_field = (field) => {
+        this.fields.push(field);
+    }
+
     _get_register = () => {
+        let converted_fields = [];
+        for(let i of this.fields){
+            converted_fields.push(i._get_field());
+        }
         return{
             "ID": this.ID,
             "register_name": this.register_name,
             "description": this.description,
+            "fields": converted_fields,
             "direction": this.direction,
             "offset": this.offset,
             "value": this.value,

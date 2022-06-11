@@ -52,7 +52,6 @@ let check_test_results = (promise_result, redux_reference, test_case) => {
 
     expect(state.programs).toMatchObject(redux_reference.programs);
     expect(state.programs[1].constructor.name).toBe("up_program");
-    let e = 0;
 }
 
 const expected_store = {

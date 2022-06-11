@@ -45,26 +45,28 @@ test("peripherals import", () => {
             "payload":(new up_peripheral(test_periphs.enable_generator))._get_periph()
         });
         check_periphs.push({
-            "payload":(new up_peripheral(test_periphs.fCore))._get_periph()
+            "payload":(new up_peripheral(test_periphs.AdcProcessing))._get_periph()
         });
         delete check_periphs[0].payload.enable_generator.registers[0].value;
         delete check_periphs[0].payload.enable_generator.registers[1].value;
         delete check_periphs[0].payload.enable_generator.registers[2].value;
+        delete check_periphs[1].payload.AdcProcessing.registers[0].value;
         expect(created_peripheral).toStrictEqual(check_periphs);
         let state = mock_store.getState();
 
         check_periphs[0].payload.enable_generator.registers[0].value = undefined;
         check_periphs[0].payload.enable_generator.registers[1].value = undefined;
         check_periphs[0].payload.enable_generator.registers[2].value = undefined;
-
+        check_periphs[1].payload.AdcProcessing.registers[0].value = undefined;
+        let dbg = state.peripherals.AdcProcessing._get_periph();
         expect(state.peripherals.enable_generator._get_periph()).toStrictEqual(check_periphs[0].payload)
-        expect(state.peripherals.fCore._get_periph()).toStrictEqual(check_periphs[1].payload)
+        expect(state.peripherals.AdcProcessing._get_periph()).toStrictEqual(check_periphs[1].payload)
     })
 })
 
 test("peripherals verification failure", () => {
     let failing_peripherals = test_periphs;
-    delete  failing_peripherals.fCore.version;
+    delete  failing_peripherals.enable_generator.version;
     let periphs_string = JSON.stringify(failing_peripherals);
-    return expect(import_peripherals(periphs_string)).rejects.toEqual(['Error at: "/fCore" --- must have required property \'version\'']);
+    return expect(import_peripherals(periphs_string)).rejects.toEqual(['Error at: "/enable_generator" --- must have required property \'version\'']);
 })

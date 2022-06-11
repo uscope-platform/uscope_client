@@ -14,7 +14,7 @@
 // limitations under the License.
 
 
-import {up_register} from "../../../src/client_core";
+import {up_field, up_register} from "../../../src/client_core";
 
 test("register creation", () => {
     let reg = up_register.construct_empty("test register");
@@ -88,6 +88,71 @@ test("set offset", () => {
         description: "",
         direction: "",
         offset: "0x3124"
+    };
+
+    expect(reg).toMatchObject(check_reg)
+})
+
+test("set fields", () => {
+    let reg = up_register.construct_empty("test register");
+    let fields = [];
+    fields.push(up_field.construct_empty("test_1"));
+    fields.push(up_field.construct_empty("test_2"));
+    reg.set_fields(fields);
+
+    let check_reg = {
+        ID: "test_register",
+        register_name: "test register",
+        fields:[
+            {
+                name: "test_1",
+                description: "",
+                length: 1,
+                offset: 0
+            },
+            {
+                name: "test_2",
+                description: "",
+                length: 1,
+                offset: 0
+            }
+        ],
+        description: "",
+        direction: "",
+        offset: "0x0"
+    };
+
+    expect(reg).toMatchObject(check_reg)
+})
+
+
+test("add field", () => {
+    let reg = up_register.construct_empty("test register");
+    let fields = [];
+    fields.push(up_field.construct_empty("test_1"));
+    reg.set_fields(fields);
+    reg.add_field(up_field.construct_empty("test_2"));
+
+    let check_reg = {
+        ID: "test_register",
+        register_name: "test register",
+        fields:[
+            {
+                name: "test_1",
+                description: "",
+                length: 1,
+                offset: 0
+            },
+            {
+                name: "test_2",
+                description: "",
+                length: 1,
+                offset: 0
+            }
+        ],
+        description: "",
+        direction: "",
+        offset: "0x0"
     };
 
     expect(reg).toMatchObject(check_reg)

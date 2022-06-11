@@ -132,6 +132,7 @@ export const peripherals_init = {
                 description: 'This register controls the thresholds for the low (latching mode) and low-falling (normal mode) thresholds, for the filtered (lower word) and fast acting (higher word) comparators',
                 direction: 'R/W',
                 offset: '0x0',
+                fields: [],
                 register_name: 'Comparators threshold 1',
                 value: 0
             }

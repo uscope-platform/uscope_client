@@ -72,6 +72,7 @@ test("add_register", () => {
                 ID:"test_reg",
                 description:"",
                 direction:"",
+                fields: [],
                 offset:"0x0",
                 register_name:"test_reg",
                 value:0
