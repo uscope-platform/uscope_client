@@ -50,11 +50,7 @@ export let  FieldProperties = props =>{
     }
 
     let handleEditNameChange = (event) => {
-        if(event.key==="Enter"){
-            props.peripheral.edit_register(props.register, "register_name",event.target.value).then(()=>{
-                props.forceUpdate();
-            });
-        }
+
     }
 
     let handleClose = ()=>{
@@ -62,27 +58,11 @@ export let  FieldProperties = props =>{
     }
 
     let handleonKeyDown = (event) =>{
-        if(event.key==="Enter"|| event.key ==="Tab"){
-            switch (event.target.name) {
-                case "ID":
-                case "offset":
-                case "description":
-                case "register_name":
-                    props.peripheral.edit_register(props.register, event.target.name, event.target.value).then(()=>{
-                        props.forceUpdate();
-                    });
-                    break;
-                default:
-                    return;
-            }
-        }
 
     }
 
     let handleRemove= (event) =>{
-        props.peripheral.remove_register(props.register.register_name).then(()=>{
-            props.forceUpdate();
-        });
+
     }
 
 

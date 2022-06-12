@@ -15,9 +15,9 @@
 
 import {store} from "../index";
 import {up_field} from "./up_field";
-import {backend_post} from "../proxy/backend";
+import {backend_get, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
-import {upsertRegister} from "../../redux/Actions/peripheralsActions";
+import {removePeripheral, removeRegister, upsertRegister} from "../../redux/Actions/peripheralsActions";
 
 export class up_register {
     constructor(register_obj, parent_periph) {
@@ -40,28 +40,11 @@ export class up_register {
         return new up_register(register_obj, parent_periph);
     }
 
-    set_id = (id) =>{
-        this.ID = id
-    }
-
-    set_name = (name) =>{
-        this.register_name = name;
-    };
-
-    set_description = (descr) => {
+    edit_description = (descr) => {
+        let edit = {peripheral:this.parent_periph, register:this.register_name, field:"description", value:descr, action:"edit_register"};
         this.description = descr;
-    }
-
-    set_direction = (dir) => {
-        this.direction = dir
-    }
-
-    set_offset = (offset) => {
-        this.offset = offset;
-    }
-
-    set_fields = (fields) => {
-        this.fields = fields;
+        store.dispatch(upsertRegister(this, this.ID, this.parent_periph));
+        return backend_post(api_dictionary.peripherals.edit, edit)
     }
 
     edit_name = (name) =>{
@@ -71,14 +54,78 @@ export class up_register {
         return backend_post(api_dictionary.peripherals.edit, edit)
     };
 
-    edit_direction = (direction) =>{
+    edit_direction = (raw_direction) =>{
+        let direction = "";
+        switch (raw_direction.name) {
+            case "direction_read":
+                if(raw_direction.checked){
+                    if(this.direction.includes("W")){
+                        direction = "R/W"
+                    }else{
+                        direction = "R"
+                    }
+                } else{
+                    if(this.direction.includes("W")){
+                        direction = "W"
+                    }else{
+                        direction = ""
+                    }
+                }
+                break;
+            case "direction_write":
+                if(raw_direction.checked){
+                    if(this.direction.includes("R")){
+                        direction = "R/W"
+                    }else{
+                        direction = "W"
+                    }
+                } else{
+                    if(this.direction.includes("R")){
+                        direction = "R"
+                    }else{
+                        direction = ""
+                    }
+                }
+                break;
+            default:
+                return;
+        }
 
+        let edit = {peripheral:this.parent_periph, register:this.register_name, field:"direction", value:direction, action:"edit_register"};
+        this.direction = direction;
+        store.dispatch(upsertRegister(this, this.ID, this.parent_periph));
+        return backend_post(api_dictionary.peripherals.edit, edit)
+    }
+
+    edit_offset = (offset) => {
+        let edit = {peripheral:this.parent_periph, register:this.register_name, field:"offset", value:offset, action:"edit_register"};
+        this.offset = offset;
+        store.dispatch(upsertRegister(this, this.ID, this.parent_periph));
+        return backend_post(api_dictionary.peripherals.edit, edit)
+    }
+
+    edit_id = (id) =>{
+        let edit = {peripheral:this.parent_periph, register:this.register_name, field:"ID", value:id, action:"edit_register"};
+        let old_id = this.ID;
+        this.ID = id;
+        store.dispatch(upsertRegister(this, old_id, this.parent_periph));
+        return backend_post(api_dictionary.peripherals.edit, edit);
+    }
+
+    set_fields = (fields) => {
+        this.fields = fields;
     }
 
     add_field = (field) => {
         this.fields.push(field);
     }
 
+    static remove_register(periph, reg){
+        let edit = {peripheral:periph, register:reg, action:"remove_register"};
+         return backend_post(api_dictionary.peripherals.edit, edit).then(()=>{
+             store.dispatch(removeRegister(periph, reg));
+         })
+    }
     _get_register = () => {
         let converted_fields = [];
         for(let i of this.fields){

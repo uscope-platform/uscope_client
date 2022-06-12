@@ -52,13 +52,7 @@ export class up_peripheral {
         let edit ={peripheral:this.peripheral_name, action:"add_register",register:reg._get_register()};
         return backend_post(api_dictionary.peripherals.edit, edit);
     }
-
-    edit_register = (register, field_name, field_value) =>{
-        let edit = {peripheral:this.peripheral_name, register:register.register_name, field:field_name, value:field_value, action:"edit_register"};
-        register[field_name] = field_value;
-        return backend_post(api_dictionary.peripherals.edit, edit)
-    }
-
+    
     set_version = (ver) =>{
         this.version = ver;
         let edit ={peripheral:this.peripheral_name, action:"edit_version", version:parseFloat(ver)};
@@ -68,16 +62,6 @@ export class up_peripheral {
 
     edit_name = (name) =>{
 
-    };
-
-    remove_register = (reg_id) =>{
-        let idx  = this.registers.indexOf(this.registers.filter((i) =>{
-            return i.ID === reg_id;
-        })[0]);
-        this.registers.splice(idx,1);
-        store.dispatch(addPeripheral({payload:{[this.peripheral_name]:this}}))
-        let edit = {peripheral:this.peripheral_name, register:reg_id, action:"remove_register"};
-        return backend_post(api_dictionary.peripherals.edit, edit);
     };
 
     static delete_periperal(periph){

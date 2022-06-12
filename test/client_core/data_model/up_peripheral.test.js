@@ -103,59 +103,6 @@ test("edit_version", () => {
 });
 
 
-test("add_register", () => {
-    let periph = up_peripheral.construct_empty("test");
-    return periph.add_remote().then(()=>{
-        return periph.add_register("test_reg").then(() => {
-            return periph.remove_register("test_reg").then(() => {
-                let check_periph = {
-                    payload: {
-                        test: {
-                            peripheral_name: "test",
-                            version: 0.1,
-                            registers: []
-                        }
-                    }
-                };
-                expect(edit_peripheral_data).toStrictEqual({
-                    action: "remove_register", peripheral: "test", register: "test_reg"
-                });
-                let state = mock_store.getState();
-                expect(state.peripherals.test._get_periph()).toStrictEqual(check_periph.payload)
-            });
-        });
-    });
-});
-
-
-test("edit_register", () => {
-    let periph = up_peripheral.construct_empty("test");
-    return periph.add_remote().then(()=>{
-        return periph.add_register("test_reg").then(() => {
-            return periph.edit_register(periph.registers[0], "description", "TEST EDIT").then(() => {
-                let check_periph =  {payload:{
-                        test:{
-                            peripheral_name:"test",
-                            version:0.1,
-                            registers:[{
-                                ID:"test_reg",
-                                description:"TEST EDIT",
-                                direction:"",
-                                offset:"0x0",
-                                register_name:"test_reg",
-                                value:0
-                            }]
-                        }
-                    }};
-                expect(edit_peripheral_data).toStrictEqual({ action: "edit_register", peripheral:"test", register:"test_reg", field:"description", value:"TEST EDIT"})
-                let state = mock_store.getState();
-                expect(state.peripherals.test._get_periph()).toMatchObject(check_periph.payload)
-            });
-        });
-    });
-});
-
-
 test("remove peripheral", () =>{
     let periph = up_peripheral.construct_empty("test");
     return periph.add_remote().then(()=>{

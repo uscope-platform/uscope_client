@@ -14,7 +14,7 @@
 // limitations under the License.
 
 
-import {up_field, up_peripheral, up_register} from "../../../src/client_core";
+import {up_field, up_register} from "../../../src/client_core";
 import {edit_peripheral_data} from "../mock/peripherals_api";
 import {mock_store} from "../mock/redux_store";
 
@@ -31,21 +31,6 @@ test("register creation", () => {
     expect(reg).toMatchObject(check_reg)
 })
 
-
-test("set_register_name", () => {
-    let reg = up_register.construct_empty("test register", "periph_name");
-    reg.set_name("test rename")
-
-    let check_reg = {
-        ID: "test_register",
-        register_name: "test rename",
-        description: "",
-        direction: "",
-        offset: "0x0"
-    };
-
-    expect(reg).toMatchObject(check_reg)
-})
 
 test("edit name", () => {
     let reg = up_register.construct_empty("cmp_thr_1", "ADC_processing");
@@ -75,53 +60,67 @@ test("edit name", () => {
     })
 });
 
+test("edit description", () => {
+    let reg = up_register.construct_empty("cmp_thr_1", "ADC_processing");
+    return reg.edit_description("test change").then(()=>{
 
-test("set description", () => {
-    let reg = up_register.construct_empty("test register", "periph_name");
-    reg.set_description("test description")
+        let check_reg = {
+            ID: "cmp_thr_1",
+            register_name: "cmp_thr_1",
+            description: "test change",
+            direction: "",
+            offset: "0x0"
+        };
 
-    let check_reg = {
-        ID: "test_register",
-        register_name: "test register",
-        description: "test description",
-        direction: "",
-        offset: "0x0"
-    };
-
-    expect(reg).toMatchObject(check_reg)
+        expect(reg).toMatchObject(check_reg)
+        expect(edit_peripheral_data).toStrictEqual(
+            { action: "edit_register", peripheral:"ADC_processing", register:"cmp_thr_1", field:"description", value:"test change"}
+        )
+        let state = mock_store.getState();
+        expect(state.peripherals.ADC_processing._get_periph().ADC_processing.registers[0]).toMatchObject(check_reg)
+    })
 })
 
+test("edit direction", () => {
+    let reg = up_register.construct_empty("cmp_thr_1", "ADC_processing");
+    return reg.edit_direction({name:"direction_read", checked:true}).then(()=>{
 
+        let check_reg = {
+            ID: "cmp_thr_1",
+            register_name: "cmp_thr_1",
+            description: "",
+            direction: "R",
+            offset: "0x0"
+        };
 
-test("set direction", () => {
-    let reg = up_register.construct_empty("test register", "periph_name");
-    reg.set_direction("RW")
-
-    let check_reg = {
-        ID: "test_register",
-        register_name: "test register",
-        description: "",
-        direction: "RW",
-        offset: "0x0"
-    };
-
-    expect(reg).toMatchObject(check_reg)
+        expect(reg).toMatchObject(check_reg)
+        expect(edit_peripheral_data).toStrictEqual(
+            { action: "edit_register", peripheral:"ADC_processing", register:"cmp_thr_1", field:"direction", value:"R"}
+        )
+        let state = mock_store.getState();
+        expect(state.peripherals.ADC_processing._get_periph().ADC_processing.registers[0]).toMatchObject(check_reg)
+    })
 })
 
+test("edit offset", () => {
+    let reg = up_register.construct_empty("cmp_thr_1", "ADC_processing");
+    return reg.edit_offset("0x4").then(()=>{
 
-test("set offset", () => {
-    let reg = up_register.construct_empty("test register", "periph_name");
-    reg.set_offset("0x3124")
+        let check_reg = {
+            ID: "cmp_thr_1",
+            register_name: "cmp_thr_1",
+            description: "",
+            direction: "",
+            offset: "0x4"
+        };
 
-    let check_reg = {
-        ID: "test_register",
-        register_name: "test register",
-        description: "",
-        direction: "",
-        offset: "0x3124"
-    };
-
-    expect(reg).toMatchObject(check_reg)
+        expect(reg).toMatchObject(check_reg)
+        expect(edit_peripheral_data).toStrictEqual(
+            { action: "edit_register", peripheral:"ADC_processing", register:"cmp_thr_1", field:"offset", value:"0x4"}
+        )
+        let state = mock_store.getState();
+        expect(state.peripherals.ADC_processing._get_periph().ADC_processing.registers[0]).toMatchObject(check_reg)
+    })
 })
 
 test("set fields", () => {
@@ -156,6 +155,26 @@ test("set fields", () => {
     expect(reg).toMatchObject(check_reg)
 })
 
+test("edit ID", () => {
+    let reg = up_register.construct_empty("cmp_thr_1", "ADC_processing");
+    return reg.edit_id("cmp_thr_2").then(()=>{
+
+        let check_reg = {
+            ID: "cmp_thr_2",
+            register_name: "cmp_thr_1",
+            description: "",
+            direction: "",
+            offset: "0x0"
+        };
+
+        expect(reg).toMatchObject(check_reg)
+        expect(edit_peripheral_data).toStrictEqual(
+            { action: "edit_register", peripheral:"ADC_processing", register:"cmp_thr_1", field:"ID", value:"cmp_thr_2"}
+        )
+        let state = mock_store.getState();
+        expect(state.peripherals.ADC_processing._get_periph().ADC_processing.registers[0]).toMatchObject(check_reg)
+    })
+})
 
 test("add field", () => {
     let reg = up_register.construct_empty("test register", "periph_name");

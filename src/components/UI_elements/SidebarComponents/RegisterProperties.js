@@ -23,8 +23,7 @@ import {Button} from "../Button";
 import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
 import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
 import {FieldProperties} from "./FieldProperties";
-import {useSelector} from "react-redux";
-import {up_peripheral, up_register} from "../../../client_core";
+import {up_register} from "../../../client_core";
 
 const ChoicesWrapper = styled.div`
     display: grid;
@@ -55,59 +54,33 @@ export let  RegisterProperties = props =>{
     }
 
     let handleChange = (event)=>{
-        let value = ""
-        switch (event.target.name) {
-            case "direction_read":
-                if(event.target.checked){
-                    if(props.register.direction.includes("W")){
-                        value = "R/W"
-                    }else{
-                        value = "R"
-                    }
-                } else{
-                    if(props.register.direction.includes("W")){
-                        value = "W"
-                    }else{
-                        value = ""
-                    }
-                }
-                props.peripheral.edit_register(props.register, "direction", value).then(()=>{
-                    props.forceUpdate();
-                });
-                break;
-            case "direction_write":
-                if(event.target.checked){
-                    if(props.register.direction.includes("R")){
-                        value = "R/W"
-                    }else{
-                        value = "W"
-                    }
-                } else{
-                    if(props.register.direction.includes("R")){
-                        value = "R"
-                    }else{
-                        value = ""
-                    }
-                }
-                props.peripheral.edit_register(props.register, "direction", value).then(()=>{
-                    props.forceUpdate();
-                });
-                break;
-            default:
-                return;
-        }
+        register_obj.edit_direction(event.target).then(()=>{
+            props.forceUpdate();
+        });
     }
 
     let handleonKeyDown = (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
             switch (event.target.name) {
                 case "ID":
-                case "offset":
-                case "description":
-                case "register_name":
-                    props.peripheral.edit_register(props.register, event.target.name, event.target.value).then(()=>{
+                    register_obj.edit_id(event.target.value).then(()=>{
                         props.forceUpdate();
-                    });
+                    })
+                    break;
+                case "offset":
+                    register_obj.edit_offset(event.target.value).then(()=>{
+                        props.forceUpdate();
+                    })
+                    break;
+                case "description":
+                    register_obj.edit_description(event.target.value).then(()=>{
+                        props.forceUpdate();
+                    })
+                    break;
+                case "register_name":
+                    register_obj.edit_name(event.target.value).then(()=>{
+                        props.forceUpdate();
+                    })
                     break;
                 default:
                     return;
@@ -117,7 +90,7 @@ export let  RegisterProperties = props =>{
     }
 
     let handleRemoveRegister= (event) =>{
-        props.peripheral.remove_register(props.register.register_name).then(()=>{
+        up_register.remove_register(props.peripheral.peripheral_name, props.register.register_name).then(()=>{
             props.forceUpdate();
         });
     }

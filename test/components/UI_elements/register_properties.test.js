@@ -70,16 +70,22 @@ test('application peripheral properties', async () => {
     expect(screen.queryByLabelText("Name")).not.toBeInTheDocument()
     fireEvent.click(screen.getByLabelText("CaretDown"));
 
-    await test_text_field("Name", [peripheral.registers[0], "register_name", "test_change"]);
+    await test_text_field("Name", "Comparators threshold 1",{ action: "edit_register", peripheral:"ADC_processing", register:"Comparators threshold 1", field:"register_name", value:"Comparators threshold 1"});
+    cleanup()
+
+    await test_text_field("Address offset", "0x4", { action: "edit_register", peripheral:"ADC_processing", register:"Comparators threshold 1", field:"offset", value:"0x4"});
     cleanup();
 
-    await test_text_field("Address offset", [peripheral.registers[0], "offset", "test_change"]);
+    await test_text_field("Description", "Description Change",{ action: "edit_register", peripheral:"ADC_processing", register:"Comparators threshold 1", field:"description", value:"Description Change"});
     cleanup();
 
-    await test_checkbox("Read", [peripheral.registers[0], "direction", "W"]);
+    await test_text_field("Register ID", "new_id",{ action: "edit_register", peripheral:"ADC_processing", register:"Comparators threshold 1", field:"ID", value:"new_id"});
     cleanup();
 
-    await test_checkbox("Write", [peripheral.registers[0], "direction", "R"]);
+    await test_checkbox("Read", { action: "edit_register", peripheral:"ADC_processing", register:"Comparators threshold 1", field:"direction", value:"W"});
+    cleanup();
+
+    await test_checkbox("Write", { action: "edit_register", peripheral:"ADC_processing", register:"Comparators threshold 1", field:"direction", value:""});
     cleanup();
 
 
@@ -97,26 +103,26 @@ let cleanup = ()=>{
     forceUpdate.mockClear();
 }
 
-async function test_text_field(label, expected_edit) {
+async function test_text_field(label, value, expected_edit) {
     let field = screen.getByLabelText(label);
-    fireEvent.change(field, {target: {value: 'test_change'}});
+    fireEvent.change(field, {target: {value: value}});
     fireEvent.keyDown(field, {key: 'Enter', code: 'Enter', charCode: 13})
     await waitFor(() => expect(forceUpdate).toHaveBeenCalledTimes(1));
-    expect(edit_peripheral_data).toStrictEqual({ action: "edit_register", peripheral:"ADC_processing", register:"Comparators threshold 1", field:"register_name", value:"test_change"});
+    expect(edit_peripheral_data).toStrictEqual(expected_edit);
     expect(parent_updated).toBeTruthy();
 }
 
 async function test_checkbox(label, expected_edit) {
     let field = screen.getByLabelText(label);
     fireEvent.click(field);
-    expect(edit_channel_args).toStrictEqual(expected_edit);
     await waitFor(() => expect(forceUpdate).toHaveBeenCalledTimes(1));
+    expect(edit_peripheral_data).toStrictEqual(expected_edit);
     expect(parent_updated).toBeTruthy();
 }
 
 async function remove_channel() {
-    expect(remove_channel_args).toBe(peripheral.registers[0].register_name);
     await waitFor(() => expect(forceUpdate).toHaveBeenCalledTimes(1));
+    expect(edit_peripheral_data).toStrictEqual({action: "remove_register", peripheral: "ADC_processing", register: "Comparators threshold 1"});
     expect(parent_updated).toBeTruthy();
 
 }
