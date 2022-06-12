@@ -21,6 +21,7 @@ import {Button} from "../Button";
 import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
 import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
 import styled from "styled-components";
+import {up_field, up_register} from "../../../client_core";
 
 
 export const FieldPropsLayout = styled.div`
@@ -43,6 +44,7 @@ export const FieldPropsLayout = styled.div`
 
 
 export let  FieldProperties = props =>{
+    const field_obj = new up_field(props.field, props.register.register_name, props.peripheral.peripheral_name);
 
     const [is_open, set_is_open] = useState(true);
     let handleOpen = ()=>{
@@ -50,7 +52,11 @@ export let  FieldProperties = props =>{
     }
 
     let handleEditNameChange = (event) => {
-
+        if(event.key==="Enter"){
+            field_obj.edit_name(event.target.value).then(()=>{
+                props.forceUpdate();
+            });
+        }
     }
 
     let handleClose = ()=>{
@@ -58,6 +64,27 @@ export let  FieldProperties = props =>{
     }
 
     let handleonKeyDown = (event) =>{
+        if(event.key==="Enter"|| event.key ==="Tab"){
+            switch (event.target.name) {
+                case "description":
+                    field_obj.edit_description(event.target.value).then(()=>{
+                        props.forceUpdate();
+                    })
+                    break;
+                case "offset":
+                    field_obj.edit_offset(event.target.value).then(()=>{
+                        props.forceUpdate();
+                    })
+                    break;
+                case "length":
+                    field_obj.edit_length(event.target.value).then(()=>{
+                        props.forceUpdate();
+                    })
+                    break;
+                default:
+                    return;
+            }
+        }
 
     }
 

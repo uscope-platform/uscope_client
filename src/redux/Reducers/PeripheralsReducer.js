@@ -50,7 +50,18 @@ let PeripheralsReducer = function (state = null, action) {
             }))
             return state;
         case UPSERT_FIELD:
-            break;
+                state[action.parent_periph].registers = state[action.parent_periph].registers.map((reg) =>{
+                if(reg.register_name === action.parent_reg) {
+                    reg.fields = reg.fields.map((f) => {
+                        if (f.name === action.field_id) {
+                            return action.payload;
+                        } else
+                            return f;
+                    })
+                }
+                return reg;
+            });
+            return state;
         case REMOVE_REGISTER:
             Object.keys(state).map((key=>{
                 state[action.payload.periph].registers = state[action.payload.periph].registers.filter((reg) =>{

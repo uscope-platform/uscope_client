@@ -15,9 +15,9 @@
 
 import {store} from "../index";
 import {up_field} from "./up_field";
-import {backend_get, backend_post} from "../proxy/backend";
+import {backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
-import {removePeripheral, removeRegister, upsertRegister} from "../../redux/Actions/peripheralsActions";
+import {removeRegister, upsertRegister} from "../../redux/Actions/peripheralsActions";
 
 export class up_register {
     constructor(register_obj, parent_periph) {
@@ -30,7 +30,7 @@ export class up_register {
         this.value = register_obj.value;
         this.fields = [];
         for(const item of register_obj.fields){
-            this.fields.push(new up_field(item));
+            this.fields.push(new up_field(item, this.register_name, parent_periph));
         }
     }
 

@@ -14,33 +14,53 @@
 // limitations under the License.
 
 
+import {store} from "../index";
+import {upsertField} from "../../redux/Actions/peripheralsActions";
+import {backend_post} from "../proxy/backend";
+import {api_dictionary} from "../proxy/api_dictionary";
+
 export class up_field {
-    constructor(field_obj) {
+    constructor(field_obj, parent_r, parent_p) {
         this.name = field_obj.name;
+        this.parent_register = parent_r;
+        this.parent_peripheral = parent_p;
         this.description = field_obj.description;
         this.length = field_obj.length;
         this.offset = field_obj.offset;
     }
 
-    static construct_empty(field_name){
+    static construct_empty(field_name, parent_r, parent_p){
         let field_obj = {name:field_name, description:"", length:1,  offset:0};
-        return new up_field(field_obj);
+        return new up_field(field_obj, parent_r, parent_p);
     }
 
-    set_name = (name) =>{
-        this.name = name
+    edit_name = (name) =>{
+        let edit = {peripheral:this.parent_peripheral, register:this.parent_register, field:"name",field_name:this.name, value:name, action:"edit_field"};
+        let old_name = this.name;
+        this.name = name;
+        store.dispatch(upsertField(this, old_name, this.parent_register, this.parent_peripheral));
+        return backend_post(api_dictionary.peripherals.edit, edit)
     }
 
-    set_description = (description) =>{
+    edit_description = (description) =>{
+        let edit = {peripheral:this.parent_peripheral, register:this.parent_register, field:"description",field_name:this.name, value:description, action:"edit_field"};
         this.description = description;
+        store.dispatch(upsertField(this, this.name, this.parent_register, this.parent_peripheral));
+        return backend_post(api_dictionary.peripherals.edit, edit)
     };
 
-    set_length = (length) => {
-        this.length = length
+    edit_length = (length) => {
+        let edit = {peripheral:this.parent_peripheral, register:this.parent_register, field:"length",field_name:this.name, value:length, action:"edit_field"};
+        this.length = length;
+        store.dispatch(upsertField(this, this.name, this.parent_register, this.parent_peripheral));
+        return backend_post(api_dictionary.peripherals.edit, edit)
     }
 
-    set_offset = (offset) => {
+    edit_offset = (offset) => {
+        let edit = {peripheral:this.parent_peripheral, register:this.parent_register, field:"offset",field_name:this.name, value:offset, action:"edit_field"};
         this.offset = offset;
+        store.dispatch(upsertField(this, this.name, this.parent_register, this.parent_peripheral));
+        return backend_post(api_dictionary.peripherals.edit, edit)
     }
 
     _get_field = () => {

@@ -156,7 +156,14 @@ let test_peripheral =  {
             direction: 'R/W',
             offset: '0x0',
             register_name: 'Comparators threshold 1',
-            fields: [],
+            fields: [
+                {
+                    "description": "Slow comparator threshold",
+                    "length": 16,
+                    "name": "slow",
+                    "offset": 16
+                }
+            ],
             value: 0
         }
     ],

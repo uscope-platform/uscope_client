@@ -113,7 +113,7 @@ export let  RegisterProperties = props =>{
                     {
                         props.register.fields.map((field)=>{
                             return(
-                                <FieldProperties register={props.register} field={field}/>
+                                <FieldProperties peripheral={props.peripheral} register={props.register} field={field}/>
                             )
                         })
                     }

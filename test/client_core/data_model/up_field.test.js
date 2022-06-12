@@ -14,11 +14,13 @@
 // limitations under the License.
 
 import {up_field} from "../../../src/client_core";
+import {edit_peripheral_data} from "../mock/peripherals_api";
+import {mock_store} from "../mock/redux_store";
 
 test("field creation", () => {
-    let field = up_field.construct_empty("test field");
+    let field = up_field.construct_empty("slow", "Comparators threshold 1", "ADC_processing");
     let check_field = {
-            name: "test field",
+            name: "slow",
             description: "",
             length: 1,
             offset: 0
@@ -28,61 +30,85 @@ test("field creation", () => {
 })
 
 
-test("set_register_name", () => {
-    let field = up_field.construct_empty("test field");
-    field.set_name("test rename")
+test("edit description", () => {
+    let field = new up_field({name: "slow",description:"Slow comparator threshold", length:16, offset:16},"Comparators threshold 1", "ADC_processing")
+    return field.edit_description("test description edit").then(()=>{
 
-    let check_field = {
-        name: "test rename",
-        description: "",
-        length: 1,
-        offset: 0
-    };
+        let check_field = {
+            name: "slow",
+            description: "test description edit",
+            length: 16,
+            offset: 16
+        };
 
-    expect(field).toMatchObject(check_field)
+        expect(field).toMatchObject(check_field)
+        expect(edit_peripheral_data).toStrictEqual(
+            { action: "edit_field", peripheral:"ADC_processing", register:"Comparators threshold 1", field_name:'slow', field:"description", value:"test description edit"}
+        )
+        let state = mock_store.getState();
+        expect(state.peripherals.ADC_processing._get_periph().ADC_processing.registers[0].fields[0]).toMatchObject(check_field)
+    })
+
 })
-
-test("set description", () => {
-    let field = up_field.construct_empty("test field");
-    field.set_description("test description")
-
-    let check_field = {
-        name: "test field",
-        description: "test description",
-        length: 1,
-        offset: 0
-    };
-
-    expect(field).toMatchObject(check_field)
-})
-
-
 
 test("set length", () => {
-    let field = up_field.construct_empty("test field");
-    field.set_length(16)
+    let field = new up_field({name: "slow",description:"Slow comparator threshold", length:16, offset:16},"Comparators threshold 1", "ADC_processing")
+    return field.edit_length(12).then(()=>{
 
-    let check_field = {
-        name: "test field",
-        description: "",
-        length: 16,
-        offset: 0
-    };
+        let check_field = {
+            name: "slow",
+            description: "Slow comparator threshold",
+            length: 12,
+            offset: 16
+        };
 
-    expect(field).toMatchObject(check_field)
+        expect(field).toMatchObject(check_field)
+        expect(edit_peripheral_data).toStrictEqual(
+            { action: "edit_field", peripheral:"ADC_processing", register:"Comparators threshold 1", field_name:'slow', field:"length", value:12}
+        )
+        let state = mock_store.getState();
+        expect(state.peripherals.ADC_processing._get_periph().ADC_processing.registers[0].fields[0]).toMatchObject(check_field)
+    })
 })
 
 
 test("set offset", () => {
-    let field = up_field.construct_empty("test field");
-    field.set_offset(0x3124)
+    let field = new up_field({name: "slow",description:"Slow comparator threshold", length:16, offset:16},"Comparators threshold 1", "ADC_processing")
+    return field.edit_offset(14).then(()=>{
 
-    let check_field = {
-        name: "test field",
-        description: "",
-        length: 1,
-        offset: 0x3124
-    };
+        let check_field = {
+            name: "slow",
+            description: "Slow comparator threshold",
+            length: 16,
+            offset: 14
+        };
 
-    expect(field).toMatchObject(check_field)
+        expect(field).toMatchObject(check_field)
+        expect(edit_peripheral_data).toStrictEqual(
+            { action: "edit_field", peripheral:"ADC_processing", register:"Comparators threshold 1", field_name:'slow', field:"offset", value:14}
+        )
+        let state = mock_store.getState();
+        expect(state.peripherals.ADC_processing._get_periph().ADC_processing.registers[0].fields[0]).toMatchObject(check_field)
+    })
+})
+
+
+test("edit name", () => {
+    let field = new up_field({name: "slow",description:"Slow comparator threshold", length:16, offset:16},"Comparators threshold 1", "ADC_processing")
+    return field.edit_name("field_2").then(()=>{
+
+        let check_field = {
+            name: "field_2",
+            description: "Slow comparator threshold",
+            length: 16,
+            offset: 16
+        };
+
+        expect(field).toMatchObject(check_field)
+        expect(edit_peripheral_data).toStrictEqual(
+            { action: "edit_field", peripheral:"ADC_processing", register:"Comparators threshold 1", field_name:'slow', field:"name", value:"field_2"}
+        )
+        let state = mock_store.getState();
+        expect(state.peripherals.ADC_processing._get_periph().ADC_processing.registers[0].fields[0]).toMatchObject(check_field)
+    })
 })

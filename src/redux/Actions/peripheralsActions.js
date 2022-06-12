@@ -45,10 +45,11 @@ export const upsertRegister =  (register_obj, reg_id, periph) =>({
     payload:register_obj
 });
 
-export const upsertField =  (field_obj, register, periph) =>({
+export const upsertField =  (field_obj,field_id, register, periph) =>({
     type: UPSERT_FIELD,
     parent_reg:register,
-    paretn_periph: periph,
+    parent_periph: periph,
+    field_id:field_id,
     payload:field_obj
 });
 

@@ -52,7 +52,7 @@ export class up_peripheral {
         let edit ={peripheral:this.peripheral_name, action:"add_register",register:reg._get_register()};
         return backend_post(api_dictionary.peripherals.edit, edit);
     }
-    
+
     set_version = (ver) =>{
         this.version = ver;
         let edit ={peripheral:this.peripheral_name, action:"edit_version", version:parseFloat(ver)};
