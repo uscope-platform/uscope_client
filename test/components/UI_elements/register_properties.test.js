@@ -20,6 +20,7 @@ import {ThemeProvider} from "styled-components";
 import {ColorTheme, RegisterProperties} from "../../../src/components/UI_elements";
 import {fireEvent, render, screen, waitFor} from "@testing-library/react";
 import '@testing-library/jest-dom/extend-expect'
+import {edit_peripheral_data} from "../../client_core/mock/peripherals_api";
 
 let parent_updated = false;
 
@@ -34,16 +35,8 @@ let peripheral = {
             ID: 'cmp_thr_1',
             description: 'This register controls the thresholds for the low (latching mode) and low-falling (normal mode) thresholds, for the filtered (lower word) and fast acting (higher word) comparators',
             direction: 'R/W',
-            field_descriptions: [
-                'Threshold for the filtered comparator',
-                'Threshold for the fast acting comparator'
-            ],
-            field_names: [
-                'Filtered threshold',
-                'Fast threshold'
-            ],
+            fields: [],
             offset: '0x0',
-            register_format: 'words',
             register_name: 'Comparators threshold 1',
             value: 0
         }
@@ -108,8 +101,8 @@ async function test_text_field(label, expected_edit) {
     let field = screen.getByLabelText(label);
     fireEvent.change(field, {target: {value: 'test_change'}});
     fireEvent.keyDown(field, {key: 'Enter', code: 'Enter', charCode: 13})
-    expect(edit_channel_args).toStrictEqual(expected_edit);
     await waitFor(() => expect(forceUpdate).toHaveBeenCalledTimes(1));
+    expect(edit_peripheral_data).toStrictEqual({ action: "edit_register", peripheral:"ADC_processing", register:"Comparators threshold 1", field:"register_name", value:"test_change"});
     expect(parent_updated).toBeTruthy();
 }
 

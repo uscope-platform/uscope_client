@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ADD_PERIPHERAL, LOAD_PERIPHERALS, REMOVE_PERIPHERAL} from "./types";
+import {ADD_PERIPHERAL, LOAD_PERIPHERALS, REMOVE_PERIPHERAL, UPSERT_FIELD, UPSERT_REGISTER} from "./types";
 
 
 export const loadPeripherals = peripherals => ({
@@ -29,4 +29,18 @@ export const removePeripheral = peripheral =>({
 export const addPeripheral = peripheral_obj =>({
     type: ADD_PERIPHERAL,
     payload:peripheral_obj
+});
+
+export const upsertRegister =  (register_obj, reg_id, periph) =>({
+    type: UPSERT_REGISTER,
+    register_id: reg_id,
+    parent:periph,
+    payload:register_obj
+});
+
+export const upsertField =  (field_obj, register, periph) =>({
+    type: UPSERT_FIELD,
+    parent_reg:register,
+    paretn_periph: periph,
+    payload:field_obj
 });

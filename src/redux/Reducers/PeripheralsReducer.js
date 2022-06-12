@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {ADD_PERIPHERAL, LOAD_PERIPHERALS, REMOVE_PERIPHERAL} from "../Actions/types";
+import {ADD_PERIPHERAL, LOAD_PERIPHERALS, REMOVE_PERIPHERAL, UPSERT_FIELD, UPSERT_REGISTER} from "../Actions/types";
 
 let PeripheralsReducer = function (state = null, action) {
     switch (action.type) {
@@ -31,6 +31,19 @@ let PeripheralsReducer = function (state = null, action) {
                     obj[key] = state[key];
                     return obj;
                 }, {});
+        case UPSERT_REGISTER:
+            Object.keys(state).map((key=>{
+                state[action.parent].registers = state[action.parent].registers.map((reg) =>{
+                    if(reg.ID === action.register_id)
+                        return action.payload;
+                    else
+                        return reg;
+                });
+                return [];
+            }))
+            return state;
+        case UPSERT_FIELD:
+            break;
         default:
             return state;
     }

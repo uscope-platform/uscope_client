@@ -54,20 +54,7 @@ test("add_register", () => {
     let periph = up_peripheral.construct_empty("test");
     return periph.add_remote().then(()=>{
         return periph.add_register("test_reg").then(() => {
-            let check_periph =  {payload:{
-                    test:{
-                        peripheral_name:"test",
-                        version:0.1,
-                        registers:[{
-                            ID:"test_reg",
-                            description:"",
-                            direction:"",
-                            offset:"0x0",
-                            register_name:"test_reg",
-                            value:0
-                        }]
-                    }
-                }};
+
             expect(edit_peripheral_data).toStrictEqual({ action: "add_register",peripheral:"test", register:{
                 ID:"test_reg",
                 description:"",
@@ -77,8 +64,22 @@ test("add_register", () => {
                 register_name:"test_reg",
                 value:0
                 }});
+
+            let check_periph =  {
+                test:{
+                    peripheral_name:"test",
+                    version:0.1,
+                    registers:[{
+                        ID:"test_reg",
+                        description:"",
+                        direction:"",
+                        offset:"0x0",
+                        register_name:"test_reg",
+                        value:0
+                    }]
+                }};
             let state = mock_store.getState();
-            expect(state.peripherals.test._get_periph()).toMatchObject(check_periph.payload)
+            expect(state.peripherals.test._get_periph()).toMatchObject(check_periph)
         });
     });
 });

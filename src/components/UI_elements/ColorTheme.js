@@ -33,6 +33,7 @@ export const ColorTheme = {
         level_1:"#122964",
         level_2:"#1f4068",
         level_3:"#1d7097",
+        level_4:"#3FA8D9",
         accents:"#c76863"
     },
     plot_palette:[

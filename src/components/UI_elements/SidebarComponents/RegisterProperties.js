@@ -22,6 +22,9 @@ import {Checkbox} from "../checkbox";
 import {Button} from "../Button";
 import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
 import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
+import {FieldProperties} from "./FieldProperties";
+import {useSelector} from "react-redux";
+import {up_peripheral, up_register} from "../../../client_core";
 
 const ChoicesWrapper = styled.div`
     display: grid;
@@ -32,6 +35,7 @@ const ChoicesWrapper = styled.div`
 `
 
 export let  RegisterProperties = props =>{
+    const register_obj = new up_register(props.register, props.peripheral.peripheral_name);
 
     const [is_open, set_is_open] = useState(false);
     let handleOpen = ()=>{
@@ -40,7 +44,7 @@ export let  RegisterProperties = props =>{
 
     let handleEditNameChange = (event) => {
         if(event.key==="Enter"){
-            props.peripheral.edit_register(props.register, "register_name",event.target.value).then(()=>{
+            register_obj.edit_name(event.target.value).then(()=>{
                 props.forceUpdate();
             });
         }
@@ -133,6 +137,13 @@ export let  RegisterProperties = props =>{
                             <Checkbox name='direction_write' value={props.register.direction.includes("W")} onChange={handleChange} label="Write"/>
                         </div>
                     </ChoicesWrapper>
+                    {
+                        props.register.fields.map((field)=>{
+                            return(
+                                <FieldProperties register={props.register} field={field}/>
+                            )
+                        })
+                    }
                     <Button onClick={handleRemoveRegister} >Remove</Button>
                 </SidebarCollapsableContentLayout>
             )

@@ -31,7 +31,7 @@ export class up_peripheral {
         this.version = periph_data_obj.version;
         this.registers = [];
         for(const item of periph_data_obj.registers){
-            this.registers.push(new up_register(item));
+            this.registers.push(new up_register(item, periph_data_obj.peripheral_name));
         }
     }
 
@@ -46,10 +46,10 @@ export class up_peripheral {
     }
 
     add_register = (reg_name) =>{
-        let reg = up_register.construct_empty(reg_name);
+        let reg = up_register.construct_empty(reg_name, this.peripheral_name);
         this.registers.push(reg);
-        store.dispatch(addPeripheral({payload:{[this.peripheral_name]:this}}))
-        let edit ={peripheral:this.peripheral_name, action:"add_register",register:reg};
+        store.dispatch(addPeripheral({payload:{[this.peripheral_name]:this}}));
+        let edit ={peripheral:this.peripheral_name, action:"add_register",register:reg._get_register()};
         return backend_post(api_dictionary.peripherals.edit, edit);
     }
 

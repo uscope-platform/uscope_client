@@ -58,7 +58,6 @@ test("peripherals import", () => {
         check_periphs[0].payload.enable_generator.registers[1].value = undefined;
         check_periphs[0].payload.enable_generator.registers[2].value = undefined;
         check_periphs[1].payload.AdcProcessing.registers[0].value = undefined;
-        let dbg = state.peripherals.AdcProcessing._get_periph();
         expect(state.peripherals.enable_generator._get_periph()).toStrictEqual(check_periphs[0].payload)
         expect(state.peripherals.AdcProcessing._get_periph()).toStrictEqual(check_periphs[1].payload)
     })
