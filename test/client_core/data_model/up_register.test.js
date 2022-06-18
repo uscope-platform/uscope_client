@@ -207,3 +207,17 @@ test("add field", () => {
 
     expect(reg).toMatchObject(check_reg)
 })
+
+
+
+test("remove register", () => {
+    return up_register.remove_register("ADC_processing", "cmp_thr_2").then(()=>{
+
+        expect(edit_peripheral_data).toStrictEqual(
+            { action: "remove_register", peripheral:"ADC_processing", register:"cmp_thr_2"}
+        )
+        let state = mock_store.getState();
+        expect(state.peripherals.ADC_processing._get_periph().ADC_processing.registers.length).toBe(0);
+
+    })
+})

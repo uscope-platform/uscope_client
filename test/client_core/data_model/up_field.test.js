@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import {up_field} from "../../../src/client_core";
-import {edit_peripheral_data} from "../mock/peripherals_api";
+import {edit_peripheral_data, remove_peripheral_data} from "../mock/peripherals_api";
 import {mock_store} from "../mock/redux_store";
 
 test("field creation", () => {
@@ -51,7 +51,7 @@ test("edit description", () => {
 
 })
 
-test("set length", () => {
+test("edit length", () => {
     let field = new up_field({name: "slow",description:"Slow comparator threshold", length:16, offset:16},"Comparators threshold 1", "ADC_processing")
     return field.edit_length(12).then(()=>{
 
@@ -72,7 +72,7 @@ test("set length", () => {
 })
 
 
-test("set offset", () => {
+test("edit offset", () => {
     let field = new up_field({name: "slow",description:"Slow comparator threshold", length:16, offset:16},"Comparators threshold 1", "ADC_processing")
     return field.edit_offset(14).then(()=>{
 
@@ -110,5 +110,17 @@ test("edit name", () => {
         )
         let state = mock_store.getState();
         expect(state.peripherals.ADC_processing._get_periph().ADC_processing.registers[0].fields[0]).toMatchObject(check_field)
+    })
+})
+
+test("remove field", () => {
+    return up_field.remove_field("ADC_processing", "Comparators threshold 1", "slow").then(()=>{
+
+        expect(edit_peripheral_data).toStrictEqual(
+            { action: "remove_field", peripheral:"ADC_processing", register:"Comparators threshold 1", field_name:'slow'}
+        )
+        let state = mock_store.getState();
+        expect(state.peripherals.ADC_processing._get_periph().ADC_processing.registers[0].fields.length).toBe(1);
+
     })
 })

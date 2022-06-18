@@ -21,19 +21,13 @@ import {Button} from "../Button";
 import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
 import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
 import styled from "styled-components";
-import {up_field, up_register} from "../../../client_core";
+import {up_field} from "../../../client_core";
 
 
 export const FieldPropsLayout = styled.div`
   border-radius: 1rem;
   height: fit-content;
-  padding: ${props => {
-    if (props.padding) {
-        return props.padding
-    } else {
-        return '0.2rem 0 0.4rem 0.6rem';
-    }
-    }};
+  padding: 0.2rem 0 0.4rem 0.6rem;
   margin: 0.1rem 0.5rem;
   width: auto;
   display: flex;
@@ -88,8 +82,11 @@ export let  FieldProperties = props =>{
 
     }
 
-    let handleRemove= (event) =>{
 
+    let handleRemove= (event) =>{
+        up_field.remove_field(props.peripheral.peripheral_name, props.register.register_name, props.field.field_name).then(()=>{
+            props.forceUpdate();
+        });
     }
 
 

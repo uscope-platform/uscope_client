@@ -15,7 +15,7 @@
 
 import {
     ADD_PERIPHERAL,
-    LOAD_PERIPHERALS,
+    LOAD_PERIPHERALS, REMOVE_FIELD,
     REMOVE_PERIPHERAL,
     REMOVE_REGISTER,
     UPSERT_FIELD,
@@ -56,4 +56,9 @@ export const upsertField =  (field_obj,field_id, register, periph) =>({
 export const removeRegister = (peripheral, register) =>({
     type: REMOVE_REGISTER,
     payload: {periph:peripheral, reg:register}
+});
+
+export const removeField = (peripheral, register, field) =>({
+    type: REMOVE_FIELD,
+    payload: {periph:peripheral, reg:register, field:field}
 });

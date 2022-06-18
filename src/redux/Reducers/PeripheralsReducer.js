@@ -15,7 +15,7 @@
 
 import {
     ADD_PERIPHERAL,
-    LOAD_PERIPHERALS,
+    LOAD_PERIPHERALS, REMOVE_FIELD,
     REMOVE_PERIPHERAL,
     REMOVE_REGISTER,
     UPSERT_FIELD,
@@ -69,6 +69,16 @@ let PeripheralsReducer = function (state = null, action) {
                 });
                 return [];
             }))
+            return state;
+        case REMOVE_FIELD:
+            state[action.payload.periph].registers = state[action.payload.periph].registers.map((reg) =>{
+                if(reg.register_name === action.payload.reg) {
+                    reg.fields = reg.fields.filter((f) => {
+                        return f.name !== action.payload.field
+                    })
+                }
+                return reg;
+            });
             return state;
         default:
             return state;

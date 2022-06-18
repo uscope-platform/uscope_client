@@ -15,7 +15,7 @@
 
 
 import {store} from "../index";
-import {upsertField} from "../../redux/Actions/peripheralsActions";
+import {removeField, upsertField} from "../../redux/Actions/peripheralsActions";
 import {backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
 
@@ -61,6 +61,13 @@ export class up_field {
         this.offset = offset;
         store.dispatch(upsertField(this, this.name, this.parent_register, this.parent_peripheral));
         return backend_post(api_dictionary.peripherals.edit, edit)
+    }
+
+    static remove_field(periph, reg, field){
+        let edit = {peripheral:periph, register:reg,field_name:field, action:"remove_field"};
+        return backend_post(api_dictionary.peripherals.edit, edit).then(()=>{
+            store.dispatch(removeField(periph, reg, field));
+        })
     }
 
     _get_field = () => {
