@@ -31,13 +31,15 @@ import {ApplicationLayout} from "./components/UI_elements";
 import Sidebar from "./components/Sidebar/Sidebar";
 import OnboardingView from "./components/Onboarding";
 
-import {refresh_caches, up_application} from "./client_core";
+import {initialize_scripting_engine, refresh_caches, up_application} from "./client_core";
 import {Routes} from "react-router";
 import {addApplication} from "./redux/Actions/applicationActions";
 
 let AuthApp = (props) =>{
 
     const settings = useSelector(state => state.settings);
+    const peripherals = useSelector(state => state.peripherals);
+    const applications = useSelector(state => state.applications);
 
     const [views, set_views] = useState([]);
 
@@ -71,6 +73,10 @@ let AuthApp = (props) =>{
 
     },[props.needs_onboarding])
 
+    useEffect(()=>{
+        if(settings.application)
+            initialize_scripting_engine(applications[settings.application], peripherals)
+    }, [settings.application, peripherals, applications])
 
     let populate_views = () => {
         let local_views = [];

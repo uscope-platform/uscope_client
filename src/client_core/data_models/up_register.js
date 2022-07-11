@@ -126,6 +126,15 @@ export class up_register {
              store.dispatch(removeRegister(periph, reg));
          })
     }
+
+    get_fields_names = () => {
+        let f_names = []
+        for (const f of this.fields) {
+            f_names.push(f.name)
+        }
+        return f_names
+    }
+
     _get_register = () => {
         let converted_fields = [];
         for(let i of this.fields){

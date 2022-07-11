@@ -16,7 +16,7 @@
 
 
 
-import {store} from "../index";
+import {construct_proxied_register, store} from "../index";
 import {backend_get, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
 import {addPeripheral, removePeripheral} from "../../redux/Actions/peripheralsActions";
@@ -63,6 +63,22 @@ export class up_peripheral {
     edit_name = (name) =>{
 
     };
+
+    get_registers_ids = () => {
+        let regs = [];
+        for(let i of this.registers){
+            regs.push(i.ID);
+        }
+        return regs;
+    }
+
+    get_proxied_registers = () =>{
+        let registers = {}
+        for (const r of this.registers) {
+            registers[r.ID] = construct_proxied_register(r);
+        }
+        return registers;
+    }
 
     static delete_periperal(periph){
         return backend_get(api_dictionary.peripherals.delete+'/'+ periph).then(()=>{

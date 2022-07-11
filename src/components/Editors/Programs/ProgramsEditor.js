@@ -13,42 +13,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState, useEffect, useRef} from "react";
-import AceEditor from "react-ace";
+import React, {useState, useEffect} from "react";
 import {Button} from "../../UI_elements"
 
-import "ace-builds/src-min-noconflict/mode-javascript";
-import "ace-builds/src-min-noconflict/theme-dracula";
-import "ace-builds/src-min-noconflict/mode-c_cpp"
 import styled from "styled-components";
-import fCoreMode from "./fCorehas";
+
+
+import CodeMirror from '@uiw/react-codemirror';
+import {cpp} from '@codemirror/lang-cpp'
+import { dracula } from '@uiw/codemirror-theme-dracula';
 
 const Title = styled.h1`
   margin-right: auto;
   margin-left: auto;
 `
-const Editor = styled(AceEditor)`
-    * {
-        font-family: inherit;
-    }
-`;
+
 
 let ProgramsEditor = props =>{
-    const aceEditor = useRef(null)
     const [editor_content, set_editor_content] = useState("");
     const [language, set_language] = useState('');
 
     useEffect(()=>{
-        if (aceEditor.current) {
-            if(language ==="asm"){
-                aceEditor.current.editor.getSession().setMode(new fCoreMode());
-            } else if(language ==="C") {
-                aceEditor.current.editor.getSession().setMode("ace/mode/c_cpp");
-            }
-
+        if(typeof props.program !== 'undefined' && props.program !== null){
+            set_editor_content(props.program.program_content);
+            set_language(props.program.program_type);
         }
-
-    },[language])
+    },[])
 
     let handle_change = (newValue) => {
         set_editor_content(newValue);
@@ -60,30 +50,18 @@ let ProgramsEditor = props =>{
         })
     };
 
-    let handle_load = (editor) => {
-        if(typeof props.program !== 'undefined' && props.program !== null){
-            editor.setValue(props.program.program_content);
-            set_editor_content(props.program.program_content);
-            set_language(props.program.program_type);
-        }
-
-    };
-
     return(
         <>
             <Title>{props.program.name}</Title>
-            <Editor
-                ref={aceEditor}
-                mode="text"
-                width='auto'
-                theme="dracula"
-                showPrintMargin={false}
-                onChange={handle_change}
-                onLoad={handle_load}
-                name="UNIQUE_ID_OF_DIV"
+
+            <CodeMirror
                 value={editor_content}
-                editorProps={{ $blockScrolling: true }}
+                width='auto'
+                theme={dracula}
+                extensions={[cpp()]}
+                onChange={handle_change}
             />
+
             <Button variant="success" onClick={handle_submit}>Submit</Button>
         </>
     );

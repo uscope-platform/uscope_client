@@ -19,7 +19,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import AuthApp from "./AuthApp";
 import LoginPage from "./components/Common_Components/LoginPage";
 import store from "./store";
-import {set_address, set_auth_config, set_redis_store, sign_in, need_onboarding} from "./client_core";
+import {set_address, set_auth_config, set_redux_store, sign_in, need_onboarding} from "./client_core";
 
 //////  STYLE IMPORTS
 import './App.css';
@@ -57,7 +57,7 @@ let App = (props) =>{
     useEffect(()=>{
         dispatch(setSetting(["server_url", process.env.REACT_APP_SERVER]));
         set_address(process.env.REACT_APP_SERVER);
-        set_redis_store(store);
+        set_redux_store(store);
 
         need_onboarding().then(response =>{
             set_onboarding_needed(response['onboarding_needed']);
@@ -69,7 +69,7 @@ let App = (props) =>{
         });
 
     },[])
-
+    
     let try_automated_login = () =>{
         let token = JSON.parse(localStorage.getItem('login_token'));
         if(token){

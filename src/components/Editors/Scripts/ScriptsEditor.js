@@ -13,27 +13,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from "react";
-import AceEditor from "react-ace";
+import React, {useState, useEffect} from "react";
 import {Button} from "../../UI_elements"
 
-import "ace-builds/webpack-resolver";
-import "ace-builds/src-min-noconflict/mode-javascript";
-import "ace-builds/src-min-noconflict/theme-dracula";
-import "ace-builds/src-min-noconflict/ext-language_tools"
 import {useSelector} from "react-redux";
 import styled from "styled-components";
+
+import CodeMirror from '@uiw/react-codemirror';
+import { javascript } from '@codemirror/lang-javascript';
+import { dracula } from '@uiw/codemirror-theme-dracula';
+import { autocompletion } from '@codemirror/autocomplete';
+import {
+    autocompletion_engine
+} from "../../../client_core";
 
 const Title = styled.h1`
   margin-right: auto;
   margin-left: auto;
 `
-const Editor = styled(AceEditor)`
-    * {
-        font-family: inherit;
-    }
-`;
-
 
 let ScriptsEditor = props =>{
     const scripts_store = useSelector(state => state.scripts);
@@ -45,38 +42,37 @@ let ScriptsEditor = props =>{
     };
 
     let handle_submit = (event) => {
-
         props.script.edit_field("script_content", editor_content).then(()=>{
             props.done();
         });
     };
 
-    let handle_load = (editor) => {
+    useEffect(()=>{
         let script =Object.values(scripts_store).find(x => x.id === settings.selected_script);
         if(typeof script !== 'undefined' && script !== null){
-            editor.setValue(script.script_content);
             set_editor_content(script.script_content);
         }
-    };
+    },[])
+
+    function registers_completion(context) {
+        let line = context.matchBefore(/[a-zA-Z0-9_\.]+/)
+        let word = context.matchBefore(/\w*/)
+        let options = autocompletion_engine(line, context.explicit);
+        return {
+            from: word.from,
+            options: options
+        }
+    }
 
     return(
         <>
             <Title>{settings.script_editor_title}</Title>
-            <Editor
-                mode="javascript"
-                theme="dracula"
-                width='auto'
-                showPrintMargin={false}
-                onChange={handle_change}
-                onLoad={handle_load}
-                name="UNIQUE_ID_OF_DIV"
+            <CodeMirror
                 value={editor_content}
-                editorProps={{ $blockScrolling: true }}
-                setOptions={{
-                    enableBasicAutocompletion: true,
-                    enableSnippets: true,
-                    enableLiveAutocompletion: true
-                }}
+                width='auto'
+                theme={dracula}
+                extensions={[javascript({ jsx: true }),autocompletion({override: [registers_completion]})]}
+                onChange={handle_change}
             />
             <Button variant="success" onClick={handle_submit}>Submit</Button>
         </>

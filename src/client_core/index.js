@@ -17,7 +17,9 @@
 
 
 
-export {run_script, run_parameter_script} from './script_runner'
+export {run_script, run_parameter_script, initialize_scripting_engine} from './scripting/script_runner'
+export {construct_proxied_register} from './data_models/register_proxy'
+export {autocompletion_engine} from './scripting/autocompletion_engine'
 export {refresh_caches} from './cache_handling'
 export {init_terminal} from './terminal/terminal'
 // SERVER PROXY
@@ -39,6 +41,6 @@ export let store = null;
 
 export {import_application, import_peripherals} from './data_handling/import'
 
-export const set_redis_store = (rs) => {
+export const set_redux_store = (rs) => {
     store = rs;
 }

@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import {up_field} from "../../../src/client_core";
-import {edit_peripheral_data, remove_peripheral_data} from "../mock/peripherals_api";
+import {edit_peripheral_data} from "../mock/peripherals_api";
 import {mock_store} from "../mock/redux_store";
 
 test("field creation", () => {
