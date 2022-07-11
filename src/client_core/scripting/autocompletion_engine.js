@@ -19,32 +19,40 @@ export const autocompletion_engine = (line, explicit) => {
 
     if (line.from === line.to && !explicit)
         return null
-    if(line.text.includes(".")){
+    if(line.text.includes("this.")){
         let path = line.text.split(".")
         if (path.length ===2){
-            let periph = scripting_engine_peripherals[path[0]]
+            let matches = Object.keys(scripting_engine_peripherals).filter((item)=>{
+                return item.startsWith(path[1]);
+            })
+
+            return matches.map((item) => {
+                return {label: item, type: "keyword"};
+            });
+        } else if (path.length ===3){
+            let periph = scripting_engine_peripherals[path[1]]
             return Object.keys(periph).map((item) => {
                 return {label: item, type: "keyword"};
             });
-        } else if (path.length ===3) {
-            let periph = scripting_engine_peripherals[path[0]]
-            let reg = Object.keys(periph[path[1]]);
+        } else if (path.length ===4) {
+            let periph = scripting_engine_peripherals[path[1]]
+            let reg = Object.keys(periph[path[2]]);
             reg = reg.filter((item)=>{
-                return !["full_register_accessed", "full_register_value", "fields_masks"].includes(item);
+                return ![
+                    "full_register_accessed", "full_register_value", "fields_masks",
+                    "peripheral_id", "peripheral_spec_id", "register_id"
+                ].includes(item);
             })
-            return reg.map((item) => {
+            let fields = reg.map((item) => {
                     return {label: item, type: "keyword"};
             });
+            fields.push({label: "value", type: "keyword"})
+            return fields;
         }
         return null;
     } else{
-        let matches = Object.keys(scripting_engine_peripherals).filter((item)=>{
-            return item.startsWith(line.text);
-        })
-
-        return matches.map((item) => {
-            return {label: item, type: "keyword"};
-        });
+        if("this".startsWith(line.text))
+            return [{label: "this", type: "keyword"}];
     }
 
 }

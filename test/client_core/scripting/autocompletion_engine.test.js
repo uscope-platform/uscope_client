@@ -204,12 +204,24 @@ let periph = {
 }
 
 
+test('autocomplete_this', () => {
+    initialize_scripting_engine(app, periph);
+    let periph_line = {
+        "from": 204,
+        "to": 206,
+        "text": "th"
+    }
+    initialize_scripting_engine(app, periph)
+    let res = autocompletion_engine(periph_line);
+    expect(res).toStrictEqual([{"label": "this", "type": "keyword"}]);
+})
+
 test('autocomplete_peripheral', () => {
     initialize_scripting_engine(app, periph);
     let periph_line = {
         "from": 204,
-        "to": 205,
-        "text": "a"
+        "to": 210,
+        "text": "this.a"
     }
     initialize_scripting_engine(app, periph)
     let res = autocompletion_engine(periph_line);
@@ -220,8 +232,8 @@ test('autocomplete_register', () => {
     initialize_scripting_engine(app, periph);
     let register_line = {
         "from": 204,
-        "to": 213,
-        "text": "adc_test."
+        "to": 218,
+        "text": "this.adc_test."
     }
     initialize_scripting_engine(app, periph)
     let res = autocompletion_engine(register_line);
@@ -238,12 +250,16 @@ test('autocomplete_field', () => {
     initialize_scripting_engine(app, periph);
     let field_line = {
         "from": 204,
-        "to": 221,
-        "text": "adc_test.cmp_h_r."
+        "to": 226,
+        "text": "this.adc_test.cmp_h_r."
     }
     initialize_scripting_engine(app, periph)
     let res = autocompletion_engine(field_line);
-    expect(res).toStrictEqual([{"label": "fast", "type": "keyword"}, {"label": "slow", "type": "keyword"}]);
+    expect(res).toStrictEqual([
+        {"label": "fast", "type": "keyword"},
+        {"label": "slow", "type": "keyword"},
+        {"label": "value", "type": "keyword"}
+    ]);
 })
 
 
