@@ -220,7 +220,10 @@ test('scripting_engine_initialization', () => {
                 "full_register_accessed": false,
                 "full_register_value": 0,
                 "faste": 0,
-                "slow": 0
+                "slow": 0,
+                "peripheral_id": "adc_test",
+                "peripheral_spec_id": "AdcProcessing2",
+                "register_id": "cmp_low_r",
             },
             "cmp_high_f": {
                 "fields_masks": {
@@ -230,7 +233,10 @@ test('scripting_engine_initialization', () => {
                 "full_register_accessed": false,
                 "full_register_value": 0,
                 "fast": 0,
-                "slow": 0
+                "slow": 0,
+                "peripheral_id": "adc_test",
+                "peripheral_spec_id": "AdcProcessing2",
+                "register_id": "cmp_high_f",
             },
             "cmp_h_r": {
                 "fields_masks": {
@@ -240,7 +246,10 @@ test('scripting_engine_initialization', () => {
                 "full_register_accessed": false,
                 "full_register_value": 0,
                 "fast": 0,
-                "slow": 0
+                "slow": 0,
+                "peripheral_id": "adc_test",
+                "peripheral_spec_id": "AdcProcessing2",
+                "register_id": "cmp_h_r",
             },
             "cal_coeff": {
                 "fields_masks": {
@@ -248,7 +257,10 @@ test('scripting_engine_initialization', () => {
                 },
                 "full_register_accessed": false,
                 "full_register_value": 0,
-                "offset": 0
+                "offset": 0,
+                "peripheral_id": "adc_test",
+                "peripheral_spec_id": "AdcProcessing2",
+                "register_id": "cal_coeff",
             },
             "control": {
                 "fields_masks": {
@@ -268,7 +280,10 @@ test('scripting_engine_initialization', () => {
                 "fault_delay": 0,
                 "clear_fault": 0,
                 "fault_disable": 0,
-                "decimation": 0
+                "decimation": 0,
+                "peripheral_id": "adc_test",
+                "peripheral_spec_id": "AdcProcessing2",
+                "register_id": "control",
             }
         }
     }

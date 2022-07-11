@@ -18,16 +18,18 @@ import {saveParameter} from "../../redux/Actions/applicationActions";
 import {up_peripheral} from "../data_models/up_peripheral";
 import {context_cleaner, parseFunction} from "./frontend";
 import {translate_registers} from "./backend";
+import {set_write_callback} from "../data_models/register_proxy";
 
 export let scripting_engine_peripherals = {}
+let script_register_access_log = [];
 
 export const initialize_scripting_engine = (application, peripherals) =>{
     //TODO: This call is kind of redundant, this work should be done in the data_model
     let applications_peripherals = application.peripherals;
-
+    set_write_callback(register_write_callback);
     for (const p of applications_peripherals) {
         let periph = new up_peripheral(peripherals[p.spec_id])
-        scripting_engine_peripherals[p.peripheral_id] = periph.get_proxied_registers();
+        scripting_engine_peripherals[p.peripheral_id] = periph.get_proxied_registers(p.peripheral_id);
     }
 }
 
@@ -60,9 +62,9 @@ export const run_script = (store, trigger_string, parameters, current_parameter)
     if(!script_content){
         return {}
     }
-
+    script_register_access_log = [];
     let {workspace, registers} = script_content.call(scripting_engine_peripherals, first_arg, context);
-
+    let dbg = script_register_access_log;
     let bulk_registers = {};
     if(registers!== null) {
         bulk_registers = translate_registers(store, registers);
@@ -99,4 +101,8 @@ export const run_parameter_script = (store, parameter) => {
             });
         }
     }
+};
+
+const register_write_callback = (periph_id, spec_id, reg_id, access_type)=>{
+    script_register_access_log.push({periph_id:periph_id, spec_id:spec_id, reg_id:reg_id, access_type:access_type});
 };

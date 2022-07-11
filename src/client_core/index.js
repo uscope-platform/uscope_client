@@ -18,7 +18,7 @@
 
 
 export {run_script, run_parameter_script, initialize_scripting_engine} from './scripting/script_runner'
-export {construct_proxied_register} from './data_models/register_proxy'
+export {construct_proxied_register, set_write_callback} from './data_models/register_proxy'
 export {autocompletion_engine} from './scripting/autocompletion_engine'
 export {refresh_caches} from './cache_handling'
 export {init_terminal} from './terminal/terminal'

@@ -14,22 +14,34 @@
 // limitations under the License.
 
 
+export let write_callback = null;
+
+export const set_write_callback = (callback) => {
+    write_callback = callback;
+}
 const register_proxy = {
     set(obj, prop, value) {
+        let access_type = null;
         if (prop==='value'){
             obj['full_register_accessed'] = true;
             obj['full_register_value'] = value;
+            access_type = "full_reg";
         } else if(prop in obj){
             obj[prop] = value;
+            access_type = "field"
         } else {
             return false;
         }
+        if(write_callback) write_callback(obj["peripheral_id"], obj["peripheral_spec_id"], obj["register_id"], access_type);
         return true;
     }
 }
 
 class fields_object {
-    constructor(register) {
+    constructor(register, periph_id) {
+        this["register_id"] = register.ID;
+        this["peripheral_spec_id"] = register.parent_periph;
+        this["peripheral_id"] = periph_id;
         this['fields_masks'] = {}
         this['full_register_accessed'] = false;
         this['full_register_value'] = 0;
@@ -41,7 +53,7 @@ class fields_object {
 }
 
 
-export const construct_proxied_register = (reg) =>{
-    let fields = new fields_object(reg);
+export const construct_proxied_register = (reg, periph_id) =>{
+    let fields = new fields_object(reg, periph_id);
     return new Proxy(fields, register_proxy);
 }

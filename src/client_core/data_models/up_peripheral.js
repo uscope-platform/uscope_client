@@ -64,18 +64,10 @@ export class up_peripheral {
 
     };
 
-    get_registers_ids = () => {
-        let regs = [];
-        for(let i of this.registers){
-            regs.push(i.ID);
-        }
-        return regs;
-    }
-
-    get_proxied_registers = () =>{
+    get_proxied_registers = (periph_id) =>{
         let registers = {}
         for (const r of this.registers) {
-            registers[r.ID] = construct_proxied_register(r);
+            registers[r.ID] = construct_proxied_register(r, periph_id);
         }
         return registers;
     }

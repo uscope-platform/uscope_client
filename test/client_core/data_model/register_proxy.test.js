@@ -13,10 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {construct_proxied_register} from "../../../src/client_core";
+import {construct_proxied_register, set_write_callback} from "../../../src/client_core";
 
 let register = {
             ID: 'cmp_thr_1',
+            parent_periph:"test_periph_spec",
             description: 'This register controls the thresholds for the low (latching mode) and low-falling (normal mode) thresholds, for the filtered (lower word) and fast acting (higher word) comparators',
             direction: 'R/W',
             offset: '0x0',
@@ -41,18 +42,17 @@ let register = {
 
 
 test('field masks', () => {
-    let reg = construct_proxied_register(register);
+    let reg = construct_proxied_register(register, "test_periph");
     let check_masks = {
         test: 60,
         slow: 0xFFFF0000
     };
-
     expect(reg.fields_masks).toStrictEqual(check_masks);
 })
 
 
 test('access full register', () => {
-    let reg = construct_proxied_register(register);
+    let reg = construct_proxied_register(register, "test_periph");
     reg.value = 142;
     expect(reg.full_register_accessed).toBeTruthy();
     expect(reg.full_register_value).toBe(142);
@@ -60,8 +60,23 @@ test('access full register', () => {
 
 
 test('access field', () => {
-    let reg = construct_proxied_register(register);
+    let reg = construct_proxied_register(register, "test_periph");
     reg.slow = 68;
     expect(reg.full_register_accessed).not.toBeTruthy();
     expect(reg.slow).toBe(68);
+})
+
+test("access with callback", done => {
+    let reg = construct_proxied_register(register, "test_periph_id");
+    set_write_callback( (periph_id, spec_id, reg_id, access_type) =>{
+        expect(periph_id).toBe("test_periph_id");
+        expect(spec_id).toBe("test_periph_spec");
+        expect(reg_id).toBe("cmp_thr_1");
+        expect(access_type).toBe("field")
+        done();
+    });
+    reg.slow = 68;
+    expect(reg.full_register_accessed).not.toBeTruthy();
+    expect(reg.slow).toBe(68);
+
 })
