@@ -17,7 +17,7 @@ import {saveScriptsWorkspace} from "../../redux/Actions/scriptsActions";
 import {saveParameter} from "../../redux/Actions/applicationActions";
 import {up_peripheral} from "../data_models/up_peripheral";
 import {context_cleaner, parseFunction} from "./frontend";
-import {translate_registers} from "./backend";
+import {translate_legacy_registers, translate_registers} from "./backend";
 import {set_write_callback} from "../data_models/register_proxy";
 
 export let scripting_engine_peripherals = {}
@@ -29,7 +29,7 @@ export const initialize_scripting_engine = (application, peripherals) =>{
     set_write_callback(register_write_callback);
     for (const p of applications_peripherals) {
         let periph = new up_peripheral(peripherals[p.spec_id])
-        scripting_engine_peripherals[p.peripheral_id] = periph.get_proxied_registers(p.peripheral_id);
+        scripting_engine_peripherals[p.peripheral_id] = {regs:periph.get_proxied_registers(p.peripheral_id), periph_obj:p, spec_obj:periph._get_periph()[periph.peripheral_name]};
     }
 }
 
@@ -63,11 +63,17 @@ export const run_script = (store, trigger_string, parameters, current_parameter)
         return {}
     }
     script_register_access_log = [];
-    let {workspace, registers} = script_content.call(scripting_engine_peripherals, first_arg, context);
-    let dbg = script_register_access_log;
-    let bulk_registers = {};
+    let peripherals = purge_peripherals(scripting_engine_peripherals);
+    let {workspace, registers} = script_content.call(peripherals, first_arg, context);
+
+    let bulk_registers = [];
     if(registers!== null) {
-        bulk_registers = translate_registers(store, registers);
+        let regs = translate_legacy_registers(store, registers);
+        bulk_registers.push(...regs);
+    }
+
+    if(script_register_access_log.length !== 0) {
+        bulk_registers.push(...translate_registers(script_register_access_log, scripting_engine_peripherals));
     }
 
     if(workspace!== null){
@@ -106,3 +112,11 @@ export const run_parameter_script = (store, parameter) => {
 const register_write_callback = (periph_id, spec_id, reg_id, access_type)=>{
     script_register_access_log.push({periph_id:periph_id, spec_id:spec_id, reg_id:reg_id, access_type:access_type});
 };
+
+const purge_peripherals = (p) =>{
+    let purged = {}
+    for (const key in p) {
+        purged[key] = p[key].regs
+    }
+    return purged
+}

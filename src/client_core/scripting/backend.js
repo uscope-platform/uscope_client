@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export const translate_registers = (store, registers) => {
+export const translate_legacy_registers = (store, registers) => {
     const state = store.getState();
     const app_peripherals = state.applications[state.settings['application']]['peripherals'];
     const peripherals_specs = state.peripherals;
@@ -28,23 +28,54 @@ export const translate_registers = (store, registers) => {
         let reg_offset = peripherals_specs[periph.spec_id].registers.filter((reg) => {
             return reg.ID === reg_id;
         })[0].offset;
+        let address = parseInt(periph.base_address) + parseInt(reg_offset);
         if (periph.proxied) {
-            if (periph.proxy_type === 'rtcu') {
-                let address = parseInt(periph.base_address) + parseInt(reg_offset);
-                bulk_registers.push({address: parseInt(periph.proxy_address), value: registers[reg]});
-                bulk_registers.push({address: parseInt(periph.proxy_address) + 4, value: address});
-
-            } else if (periph.proxy_type === 'axis_const') {
-                let address = parseInt(periph.base_address) + parseInt(reg_offset);
-                bulk_registers.push({address: parseInt(periph.proxy_address) + 4, value: address});
-                bulk_registers.push({address: parseInt(periph.proxy_address), value: registers[reg]});
-            }
+            bulk_registers.push({type:"proxied", proxy_type:periph.proxy_type, proxy_address:parseInt(periph.proxy_address), address:address, value:registers[reg]})
         } else {
-            let address = parseInt(periph.base_address) + parseInt(reg_offset);
-            bulk_registers.push({address: address, value: registers[reg]})
+            bulk_registers.push({type:"direct", proxy_type:"", proxy_address:0, address:address, value:registers[reg]})
         }
 
     }
 
+
+
     return bulk_registers;
 };
+
+
+export const translate_registers = (write_log, peripherals) =>{
+    let writes = []
+
+    for(let item of write_log){
+
+        let periph = peripherals[item.periph_id].periph_obj
+
+        let base_addr = parseInt(periph.base_address)
+        let register_offset = parseInt(peripherals[item.periph_id].spec_obj.registers.filter((reg)=>{
+            return reg.ID === item.reg_id;
+        })[0].offset)
+        let address = base_addr + register_offset;
+        let value = null;
+        if(item.access_type === "full_reg"){
+            value = peripherals[item.periph_id].regs[item.reg_id].full_register_value;
+        } else if(item.access_type === "field"){
+            value = [];
+            for(let field in peripherals[item.periph_id].regs[item.reg_id].fields_masks) {
+                value.push({value:peripherals[item.periph_id].regs[item.reg_id][field], mask:peripherals[item.periph_id].regs[item.reg_id].fields_masks[field]})
+            }
+        } else {
+            throw new Error('Unrecognised register access type');
+        }
+
+
+
+        if(periph.proxied){
+            writes.push({type:"proxied", proxy_type:periph.proxy_type, proxy_address:parseInt(periph.proxy_address), address:address, value:value})
+        } else {
+            writes.push({type:"direct", proxy_type:"", proxy_address:0, address:address, value:value})
+        }
+
+    }
+    return writes;
+}
+

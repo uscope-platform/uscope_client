@@ -30,12 +30,12 @@ export const autocompletion_engine = (line, explicit) => {
                 return {label: item, type: "keyword"};
             });
         } else if (path.length ===3){
-            let periph = scripting_engine_peripherals[path[1]]
+            let periph = scripting_engine_peripherals[path[1]].regs
             return Object.keys(periph).map((item) => {
                 return {label: item, type: "keyword"};
             });
         } else if (path.length ===4) {
-            let periph = scripting_engine_peripherals[path[1]]
+            let periph = scripting_engine_peripherals[path[1]].regs
             let reg = Object.keys(periph[path[2]]);
             reg = reg.filter((item)=>{
                 return ![

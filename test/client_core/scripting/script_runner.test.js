@@ -25,7 +25,7 @@ let app = {
     "application_name": "SicDrive",
     "peripherals": [
         {
-            "base_address": "0",
+            "base_address": "0xAC",
             "name": "adc_test",
             "peripheral_id": "adc_test",
             "proxied": false,
@@ -37,10 +37,10 @@ let app = {
 }
 
 let periph = {
-    "AdcProcessing2": {
-        "peripheral_name": "AdcProcessing2",
-        "version": "1.0",
-        "registers": [
+    AdcProcessing2: {
+        peripheral_name: "AdcProcessing2",
+        version: "1.0",
+        registers: [
             {
                 "parent_periph": "AdcProcessing2",
                 "ID": "cmp_low_r",
@@ -211,93 +211,232 @@ let periph = {
 test('scripting_engine_initialization', () => {
     initialize_scripting_engine(app, periph)
     let expected_sep = {
-        "adc_test": {
-            "cmp_low_r": {
-                "fields_masks": {
-                    "faste": 32704,
-                    "slow": 4294901760
+        adc_test: {
+            regs:{
+                cmp_low_r: {
+                    fields_masks: {
+                        faste: 32704,
+                        slow: 4294901760
+                    },
+                    full_register_accessed: false,
+                    full_register_value: 0,
+                    faste: 0,
+                    slow: 0,
+                    peripheral_id: "adc_test",
+                    peripheral_spec_id: "AdcProcessing2",
+                    register_id: "cmp_low_r",
                 },
-                "full_register_accessed": false,
-                "full_register_value": 0,
-                "faste": 0,
-                "slow": 0,
-                "peripheral_id": "adc_test",
-                "peripheral_spec_id": "AdcProcessing2",
-                "register_id": "cmp_low_r",
+                cmp_high_f: {
+                    fields_masks: {
+                        fast: 65535,
+                        slow: 4294901760
+                    },
+                    full_register_accessed: false,
+                    full_register_value: 0,
+                    fast: 0,
+                    slow: 0,
+                    peripheral_id: "adc_test",
+                    peripheral_spec_id: "AdcProcessing2",
+                    register_id: "cmp_high_f",
+                },
+                cmp_h_r: {
+                    fields_masks: {
+                        fast: 65535,
+                        slow: 4294901760
+                    },
+                    full_register_accessed: false,
+                    full_register_value: 0,
+                    fast: 0,
+                    slow: 0,
+                    peripheral_id: "adc_test",
+                    peripheral_spec_id: "AdcProcessing2",
+                    register_id: "cmp_h_r",
+                },
+                cal_coeff: {
+                    fields_masks: {
+                        offset: 4294901760
+                    },
+                    full_register_accessed: false,
+                    full_register_value: 0,
+                    offset: 0,
+                    peripheral_id: "adc_test",
+                    peripheral_spec_id: "AdcProcessing2",
+                    register_id: "cal_coeff",
+                },
+                control: {
+                    fields_masks: {
+                        latch_mode: 6,
+                        clear_latch: 24,
+                        cal_shift: 224,
+                        fault_delay: 65280,
+                        clear_fault: 65536,
+                        fault_disable: 131072,
+                        decimation: 4278190080
+                    },
+                    full_register_accessed: false,
+                    full_register_value: 0,
+                    latch_mode: 0,
+                    clear_latch: 0,
+                    cal_shift: 0,
+                    fault_delay: 0,
+                    clear_fault: 0,
+                    fault_disable: 0,
+                    decimation: 0,
+                    peripheral_id: "adc_test",
+                    peripheral_spec_id: "AdcProcessing2",
+                    register_id: "control",
+                }
             },
-            "cmp_high_f": {
-                "fields_masks": {
-                    "fast": 65535,
-                    "slow": 4294901760
-                },
-                "full_register_accessed": false,
-                "full_register_value": 0,
-                "fast": 0,
-                "slow": 0,
-                "peripheral_id": "adc_test",
-                "peripheral_spec_id": "AdcProcessing2",
-                "register_id": "cmp_high_f",
-            },
-            "cmp_h_r": {
-                "fields_masks": {
-                    "fast": 65535,
-                    "slow": 4294901760
-                },
-                "full_register_accessed": false,
-                "full_register_value": 0,
-                "fast": 0,
-                "slow": 0,
-                "peripheral_id": "adc_test",
-                "peripheral_spec_id": "AdcProcessing2",
-                "register_id": "cmp_h_r",
-            },
-            "cal_coeff": {
-                "fields_masks": {
-                    "offset": 4294901760
-                },
-                "full_register_accessed": false,
-                "full_register_value": 0,
-                "offset": 0,
-                "peripheral_id": "adc_test",
-                "peripheral_spec_id": "AdcProcessing2",
-                "register_id": "cal_coeff",
-            },
-            "control": {
-                "fields_masks": {
-                    "latch_mode": 6,
-                    "clear_latch": 24,
-                    "cal_shift": 224,
-                    "fault_delay": 65280,
-                    "clear_fault": 65536,
-                    "fault_disable": 131072,
-                    "decimation": 4278190080
-                },
-                "full_register_accessed": false,
-                "full_register_value": 0,
-                "latch_mode": 0,
-                "clear_latch": 0,
-                "cal_shift": 0,
-                "fault_delay": 0,
-                "clear_fault": 0,
-                "fault_disable": 0,
-                "decimation": 0,
-                "peripheral_id": "adc_test",
-                "peripheral_spec_id": "AdcProcessing2",
-                "register_id": "control",
+            periph_obj:app.peripherals[0],
+            spec_obj: {
+                peripheral_name: "AdcProcessing2",
+                version: "1.0",
+                registers: [
+                    {
+                        ID: "cmp_low_r",
+                        register_name: "cmp_low_r",
+                        description: "Low and rising comparator threshold in normal mode",
+                        direction: "RW",
+                        offset: "0x4",
+                        fields: [
+                            {
+                                name: "faste",
+                                description: "uyf",
+                                length: "9",
+                                offset: "6"
+                            },
+                            {
+                                name: "slow",
+                                description: "Slow comparator threshold",
+                                length: 16,
+                                offset: 16
+                            }
+                        ]
+                    },
+                    {
+                        ID: "cmp_high_f",
+                        register_name: "cmp_high_f",
+                        description: "high and falling comparator threshold in normal mode",
+                        direction: "RW",
+                        offset: "0x8",
+                        fields: [
+                            {
+                                name: "fast",
+                                description: "Fast comparator treshold",
+                                length: 16,
+                                offset: 0
+                            },
+                            {
+                                name: "slow",
+                                description: "Slow comparator threshold",
+                                length: 16,
+                                offset: 16
+                            }
+                        ]
+                    },
+                    {
+                        ID: "cmp_h_r",
+                        register_name: "cmp_h_r",
+                        description: "High comparator threshold (rising in normal mode)",
+                        direction: "RW",
+                        offset: "0xc",
+                        fields: [
+                            {
+                                name: "fast",
+                                description: "Fast comparator treshold",
+                                length: 16,
+                                offset: 0
+                            },
+                            {
+                                name: "slow",
+                                description: "Slow comparator threshold",
+                                length: 16,
+                                offset: 16
+                            }
+                        ]
+                    },
+                    {
+                        ID: "cal_coeff",
+                        register_name: "cal_coeff",
+                        description: "Calibration coefficients",
+                        direction: "RW",
+                        offset: "0x10",
+                        fields: [
+                            {
+                                name: "offset",
+                                description: "Fast comparator treshold",
+                                length: 16,
+                                offset: 16
+                            }
+                        ]
+                    },
+                    {
+                        ID: "control",
+                        register_name: "control",
+                        description: "ADC post processing module control register",
+                        direction: "RW",
+                        offset: "0x14",
+                        fields: [
+                            {
+                                name: "latch_mode",
+                                description: "Toggles comparators between normal and latching mode",
+                                length: 2,
+                                offset: 1
+                            },
+                            {
+                                name: "clear_latch",
+                                description: "Clear comparators latch when in latching mode",
+                                length: 2,
+                                offset: 3
+                            },
+                            {
+                                name: "cal_shift",
+                                description: "Ammount of bits the data will be shifted right by (gain)",
+                                length: 3,
+                                offset: 5
+                            },
+                            {
+                                name: "fault_delay",
+                                description: "Amount of clock cycles a slow comparator must be active before triggering a fault",
+                                length: 8,
+                                offset: 8
+                            },
+                            {
+                                name: "clear_fault",
+                                description: "Clear sticky fault satus",
+                                length: 1,
+                                offset: 16
+                            },
+                            {
+                                name: "fault_disable",
+                                description: "Disable fault generation",
+                                length: 1,
+                                offset: 17
+                            },
+                            {
+                                name: "decimation",
+                                description: "Decimation ratio between input and output data",
+                                length: 8,
+                                offset: 24
+                            }
+                        ]
+                    }
+                ]
             }
         }
     }
+
     expect(scripting_engine_peripherals).toEqual(expected_sep)
 })
 
 test('run_parameter_script', () => {
     return run_parameter_script(mock_store,{name:"deadtime_correction", value:"3e-6"}).then((res)=>{
         let expected_writes = [
-            {address:0x43c00254, value:6},
-            {address:0x42, value:4},
-            {address:0x46, value:0x43c00254},
-            {address:0x69, value:0x43c00254},
-            {address:0x65, value:1}
+            {type:"direct", proxy_type:"", proxy_address:0, address:0x43c00254, value:6},
+            {type:"proxied", proxy_type:"rtcu", proxy_address:0x42, address:0x43c00254, value:4},
+            {type:"proxied", proxy_type:"axis_const", proxy_address:0x65, address:0x43c00254, value:1},
+            {type:"direct", proxy_type:"", proxy_address:0, address:0xB0, value:5},
+            {type:"direct", proxy_type:"", proxy_address:0, address:0xBC, value: [{value:3, mask:0xFFFF0000}]}
 
         ]
         expect(bulk_write_data_check).toStrictEqual({payload:expected_writes})
@@ -308,14 +447,11 @@ test('run_script', () => {
     let state = mock_store.getState()
     let result = run_script(mock_store,"test_trigger", state.applications["SicDrive"].parameters, "");
     let expected_writes = [
-        {address:0x43c00254, value:6},
-        {address:0x42, value:4},
-        {address:0x46, value:0x43c00254},
-        {address:0x69, value:0x43c00254},
-        {address:0x65, value:1}
-
+        {type:"direct", proxy_type:"", proxy_address:0, address:0x43c00254, value:6},
+        {type:"proxied", proxy_type:"rtcu", proxy_address:0x42, address:0x43c00254, value:4},
+        {type:"proxied", proxy_type:"axis_const", proxy_address:0x65, address:0x43c00254, value:1},
+        {type:"direct", proxy_type:"", proxy_address:0, address:0xB0, value:5},
+        {type:"direct", proxy_type:"", proxy_address:0, address:0xBC, value: [{value:3, mask:0xFFFF0000}]}
     ]
     expect(result).toStrictEqual(expected_writes);
 })
-
-

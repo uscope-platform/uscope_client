@@ -190,6 +190,8 @@ function start_trigger_cl(parameters, context) {
     
     let dta_correction_int = Math.round(2**16*dta_correction);
     
+    this.adc_test.cmp_low_r.value = 5;
+    this.adc_test.cal_coeff.offset = 3;
     
     let duty_lim_low = 0.1;
     let duty_lim_high = 0.9;
