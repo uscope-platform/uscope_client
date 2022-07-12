@@ -99,7 +99,7 @@ export const run_parameter_script = (store, parameter) => {
         //update value of parameter in redux
         store.dispatch(saveParameter({name:parameter.name, value:floatValue, app:settings["application"]}))
 
-        if(bulk_registers !== null){
+        if(bulk_registers !== null && bulk_registers.length !== 0){
             return up_peripheral.bulk_register_write({payload: bulk_registers}).then();
         } else {
             return new Promise((resolve, reject) =>{

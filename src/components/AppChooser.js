@@ -78,7 +78,7 @@ let ApplicationChooser = (props) =>{
             for(let item of components){
                 word |= item;
             }
-            up_peripheral.bulk_register_write({payload: [{address: scope_mux_address, value: word}]}).then();
+            up_peripheral.direct_register_write([[scope_mux_address, word]]).then();
         }
         // SET UP CHANNEL WIDTHS
 

@@ -44,9 +44,7 @@ let  PlotControls = props =>{
         switch (event.target.id) {
             case "play":
                 let address = parseInt(timebase_addr);
-                let bulk_registers = []
-                bulk_registers.push({address:address, value:1})
-                up_peripheral.bulk_register_write({payload: bulk_registers}).then();
+                up_peripheral.direct_register_write([[address, 1]]).then();
                 dispatch(plotPlay());
                 break;
             case "pause":

@@ -84,20 +84,20 @@ let  EnablesProperties = props =>{
         event.preventDefault();
         let sample_period = parse_number(event.target.frequency.value);
         let sample_phase = Math.round(1);
-        let bulk_registers = [];
+        let writes = [];
 
         let reg_offset = peripheral_specs['enable_generator_1'].registers.filter((reg)=>{
             return reg.ID === "freq";
         })[0].offset;
         let address = parseInt(timebase_addr)+parseInt(reg_offset);
-        bulk_registers.push({address:address, value:sample_period})
+        writes.push([address, sample_period])
 
         reg_offset = peripheral_specs['enable_generator_1'].registers.filter((reg)=>{
             return reg.ID === "pha_1";
         })[0].offset;
         address = parseInt(timebase_addr)+parseInt(reg_offset);
-        bulk_registers.push({address:address, value:sample_phase})
-        up_peripheral.bulk_register_write({payload: bulk_registers}).then();
+        writes.push([address, sample_phase])
+        up_peripheral.direct_register_write(writes).then();
     }
 
     let handleChGroupChange = (event) => {
@@ -127,8 +127,7 @@ let  EnablesProperties = props =>{
             for(let item of components){
                 word |= item;
             }
-
-            up_peripheral.bulk_register_write({payload: [{address: scope_mux_address, value: word}]}).then();
+            up_peripheral.direct_register_write([[scope_mux_address, word]]).then()
         }
         //SET  UP CHANNEL WIDTHS
         let widths = []
