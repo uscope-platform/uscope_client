@@ -214,9 +214,15 @@ test('scripting_engine_initialization', () => {
         adc_test: {
             regs:{
                 cmp_low_r: {
-                    fields_masks: {
-                        faste: 32704,
-                        slow: 4294901760
+                    field_specs:{
+                        faste:{
+                            length:"9",
+                            offset:"6"
+                        },
+                        slow:{
+                            length:16,
+                            offset:16
+                        }
                     },
                     full_register_accessed: false,
                     full_register_value: 0,
@@ -227,9 +233,15 @@ test('scripting_engine_initialization', () => {
                     register_id: "cmp_low_r",
                 },
                 cmp_high_f: {
-                    fields_masks: {
-                        fast: 65535,
-                        slow: 4294901760
+                    field_specs:{
+                        fast:{
+                            length:16,
+                            offset:0
+                        },
+                        slow:{
+                            length:16,
+                            offset:16
+                        }
                     },
                     full_register_accessed: false,
                     full_register_value: 0,
@@ -240,9 +252,15 @@ test('scripting_engine_initialization', () => {
                     register_id: "cmp_high_f",
                 },
                 cmp_h_r: {
-                    fields_masks: {
-                        fast: 65535,
-                        slow: 4294901760
+                    field_specs:{
+                        fast:{
+                            length:16,
+                            offset:0
+                        },
+                        slow:{
+                            length:16,
+                            offset:16
+                        }
                     },
                     full_register_accessed: false,
                     full_register_value: 0,
@@ -253,8 +271,11 @@ test('scripting_engine_initialization', () => {
                     register_id: "cmp_h_r",
                 },
                 cal_coeff: {
-                    fields_masks: {
-                        offset: 4294901760
+                    field_specs:{
+                        offset:{
+                            length:16,
+                            offset:16
+                        }
                     },
                     full_register_accessed: false,
                     full_register_value: 0,
@@ -264,14 +285,35 @@ test('scripting_engine_initialization', () => {
                     register_id: "cal_coeff",
                 },
                 control: {
-                    fields_masks: {
-                        latch_mode: 6,
-                        clear_latch: 24,
-                        cal_shift: 224,
-                        fault_delay: 65280,
-                        clear_fault: 65536,
-                        fault_disable: 131072,
-                        decimation: 4278190080
+                    field_specs:{
+                        cal_shift:{
+                                length:3,
+                                offset:5
+                        },
+                        clear_fault: {
+                            length:1,
+                            offset:16
+                        },
+                        clear_latch: {
+                            length:2,
+                            offset:3
+                        },
+                        decimation: {
+                            length:8,
+                            offset:24
+                        },
+                        fault_delay:{
+                            length:8,
+                            offset:8
+                        },
+                        fault_disable: {
+                            length:1,
+                            offset:17
+                        },
+                        latch_mode:{
+                            length:2,
+                            offset:1
+                        }
                     },
                     full_register_accessed: false,
                     full_register_value: 0,
@@ -433,10 +475,10 @@ test('run_parameter_script', () => {
     return run_parameter_script(mock_store,{name:"deadtime_correction", value:"3e-6"}).then((res)=>{
         let expected_writes = [
             {type:"direct", proxy_type:"", proxy_address:0, address:0x43c00254, value:6},
-            {type:"proxied", proxy_type:"rtcu", proxy_address:0x42, address:0x43c00254, value:4},
+            {type:"proxied", proxy_type:"rtcu", proxy_address:0x42,address:0x43c00254, value:4},
             {type:"proxied", proxy_type:"axis_const", proxy_address:0x65, address:0x43c00254, value:1},
             {type:"direct", proxy_type:"", proxy_address:0, address:0xB0, value:5},
-            {type:"direct", proxy_type:"", proxy_address:0, address:0xBC, value: [{value:3, mask:0xFFFF0000}]}
+            {type:"direct", proxy_type:"", proxy_address:0, address:0xB4, value:0x30006}
 
         ]
         expect(bulk_write_data_check).toStrictEqual({payload:expected_writes})
@@ -451,7 +493,7 @@ test('run_script', () => {
         {type:"proxied", proxy_type:"rtcu", proxy_address:0x42, address:0x43c00254, value:4},
         {type:"proxied", proxy_type:"axis_const", proxy_address:0x65, address:0x43c00254, value:1},
         {type:"direct", proxy_type:"", proxy_address:0, address:0xB0, value:5},
-        {type:"direct", proxy_type:"", proxy_address:0, address:0xBC, value: [{value:3, mask:0xFFFF0000}]}
+        {type:"direct", proxy_type:"", proxy_address:0, address:0xB4, value:0x30006}
     ]
     expect(result).toStrictEqual(expected_writes);
 })

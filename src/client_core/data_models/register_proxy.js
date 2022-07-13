@@ -32,7 +32,7 @@ const register_proxy = {
         } else {
             return false;
         }
-        if(write_callback) write_callback(obj["peripheral_id"], obj["peripheral_spec_id"], obj["register_id"], access_type);
+        if(write_callback) write_callback(obj["peripheral_id"], obj["peripheral_spec_id"], obj["register_id"], obj["field_specs"][prop], prop, access_type);
         return true;
     }
 }
@@ -42,12 +42,12 @@ class fields_object {
         this["register_id"] = register.ID;
         this["peripheral_spec_id"] = register.parent_periph;
         this["peripheral_id"] = periph_id;
-        this['fields_masks'] = {}
+        this["field_specs"] = {}
         this['full_register_accessed'] = false;
         this['full_register_value'] = 0;
         for(let item of register.fields){
             this[item.name] = 0;
-            this['fields_masks'][item.name] = ((1<<item.length)-1<<item.offset)>>>0;
+            this.field_specs[item.name] = {length:item.length, offset:item.offset};
         }
     }
 }

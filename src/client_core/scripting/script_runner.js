@@ -109,8 +109,8 @@ export const run_parameter_script = (store, parameter) => {
     }
 };
 
-const register_write_callback = (periph_id, spec_id, reg_id, access_type)=>{
-    script_register_access_log.push({periph_id:periph_id, spec_id:spec_id, reg_id:reg_id, access_type:access_type});
+const register_write_callback = (periph_id, spec_id, reg_id, field_spec, field_name, access_type)=>{
+    script_register_access_log.push({periph_id:periph_id, spec_id:spec_id, reg_id:reg_id, access_type:access_type, field_spec:field_spec, field_name:field_name});
 };
 
 const purge_peripherals = (p) =>{

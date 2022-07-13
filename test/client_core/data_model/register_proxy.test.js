@@ -41,16 +41,6 @@ let register = {
 
 
 
-test('field masks', () => {
-    let reg = construct_proxied_register(register, "test_periph");
-    let check_masks = {
-        test: 60,
-        slow: 0xFFFF0000
-    };
-    expect(reg.fields_masks).toStrictEqual(check_masks);
-})
-
-
 test('access full register', () => {
     let reg = construct_proxied_register(register, "test_periph");
     reg.value = 142;
@@ -68,11 +58,13 @@ test('access field', () => {
 
 test("access with callback", done => {
     let reg = construct_proxied_register(register, "test_periph_id");
-    set_write_callback( (periph_id, spec_id, reg_id, access_type) =>{
+    set_write_callback( (periph_id, spec_id, reg_id, field_spec, field_name, access_type) =>{
         expect(periph_id).toBe("test_periph_id");
         expect(spec_id).toBe("test_periph_spec");
         expect(reg_id).toBe("cmp_thr_1");
-        expect(access_type).toBe("field")
+        expect(access_type).toBe("field");
+        expect(field_name).toBe("slow");
+        expect(field_spec).toStrictEqual({length: 16, offset: 16});
         done();
     });
     reg.slow = 68;

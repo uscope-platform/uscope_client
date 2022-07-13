@@ -46,8 +46,8 @@ export const translate_legacy_registers = (store, registers) => {
 export const translate_registers = (write_log, peripherals) =>{
     let writes = []
 
+    //The first step is the consolidation of informations scattered here and there
     for(let item of write_log){
-
         let periph = peripherals[item.periph_id].periph_obj
 
         let base_addr = parseInt(periph.base_address)
@@ -60,22 +60,47 @@ export const translate_registers = (write_log, peripherals) =>{
             value = peripherals[item.periph_id].regs[item.reg_id].full_register_value;
         } else if(item.access_type === "field"){
             value = [];
-            for(let field in peripherals[item.periph_id].regs[item.reg_id].fields_masks) {
-                value.push({value:peripherals[item.periph_id].regs[item.reg_id][field], mask:peripherals[item.periph_id].regs[item.reg_id].fields_masks[field]})
-            }
+            value = {value:peripherals[item.periph_id].regs[item.reg_id][item.field_name], specs:item.field_spec};
         } else {
             throw new Error('Unrecognised register access type');
         }
 
-
-
         if(periph.proxied){
-            writes.push({type:"proxied", proxy_type:periph.proxy_type, proxy_address:parseInt(periph.proxy_address), address:address, value:value})
+            writes.push({type:"proxied", access_type:item.access_type, proxy_type:periph.proxy_type, proxy_address:parseInt(periph.proxy_address), address:address, value:value})
         } else {
-            writes.push({type:"direct", proxy_type:"", proxy_address:0, address:address, value:value})
+            writes.push({type:"direct", access_type:item.access_type, proxy_type:"", proxy_address:0, address:address, value:value})
         }
 
     }
+
+    // In this step all the writes to fields of the same register are combined to a single masked write
+    let register_writes = {}
+    for(const w of writes) {
+        if(w.access_type==="field")
+            if(w.address in register_writes){
+                let new_val = (((1<<w.value.specs.length)-1<<w.value.specs.offset)& (w.value.value<<w.value.specs.offset))>>>0;
+                new_val = register_writes[w.address]|new_val;
+                register_writes[w.address] = new_val;
+            } else{
+                register_writes[w.address] = (((1<<w.value.specs.length)-1<<w.value.specs.offset)& (w.value.value<<w.value.specs.offset))>>>0;
+            }
+
+    }
+
+    let replaced_writes = {}
+    for(let i = writes.length-1; i>=0; i--){
+        if(writes[i].address in register_writes){
+            if(writes[i].address in replaced_writes){
+                writes.splice(i, 1);
+            } else {
+                writes[i] =  { type: "direct", proxy_type: "", proxy_address: 0, address: writes[i].address, value: register_writes[writes[i].address]};
+                replaced_writes[writes[i].address] = true;
+            }
+        } else {
+            delete writes[i].access_type;
+        }
+    }
+
     return writes;
 }
 
