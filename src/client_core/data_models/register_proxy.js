@@ -23,14 +23,13 @@ const register_proxy = {
     set(obj, prop, value) {
         let access_type = null;
         if (prop==='value'){
-            obj['full_register_value'] = value;
             access_type = "full_reg";
         } else if(prop in obj){
-            obj[prop] = value;
             access_type = "field"
         } else {
             return false;
         }
+        obj[prop] = value;
         if(write_callback) write_callback(obj["peripheral_id"], obj["peripheral_spec_id"], obj["register_id"], obj["field_specs"][prop], prop, access_type);
         return true;
     }

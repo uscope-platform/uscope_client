@@ -57,7 +57,8 @@ export const translate_registers = (write_log, peripherals) =>{
         let address = base_addr + register_offset;
         let value = null;
         if(item.access_type === "full_reg"){
-            value = peripherals[item.periph_id].regs[item.reg_id].full_register_value;
+            value = peripherals[item.periph_id].regs[item.reg_id].value;
+            delete peripherals[item.periph_id].regs[item.reg_id].value
         } else if(item.access_type === "field"){
             value = [];
             value = {value:peripherals[item.periph_id].regs[item.reg_id][item.field_name], specs:item.field_spec};

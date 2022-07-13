@@ -58,6 +58,7 @@ export const terminal_backend = {
                 "format: clear_queue"
             ]
         }
+        script_register_access_log.length = 0;
         return []
     },
     execute_queue:(args) =>{
@@ -70,15 +71,16 @@ export const terminal_backend = {
         }
 
         let writes = translate_registers(script_register_access_log, scripting_engine_peripherals);
-        script_register_access_log = [];
+        script_register_access_log.length = 0;
+        up_peripheral.bulk_register_write({payload: writes}).then();
         return []
     },
     read:(args) =>{
         if(args[0] === "--help"){
             return [
-                "WRITE DIRECT:",
+                "READ:",
                 "This command reads the value of the specified register",
-                "format: write_direct [REGISTER]"
+                "format: read [REGISTER]"
             ]
         }
         let register = args[0];
