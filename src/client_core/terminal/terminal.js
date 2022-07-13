@@ -19,6 +19,7 @@ import 'xterm/css/xterm.css';
 
 import {terminal_backend} from './terminal_backend'
 import {xterm_colors} from "./terminal_colors";
+import {autocompletion_engine} from "../scripting/autocompletion_engine";
 
 const recognised_commands = ["write", "write_direct", "flush_queue", "read", "clear_queue"];
 
@@ -80,26 +81,40 @@ export const complete_command = () =>{
         current_line = candidates[0];
         terminal.write(candidates[0]);
     } else if(candidates.length >1){
-        if(complete_command){
-            terminal.write("\r\n")
-            candidates.map((command) =>{
-                terminal.write(" " + command);
-                return null;
-            })
-            display_prompt();
-            terminal.write(current_line);
-        } else {
-            let common_prefix = prefix(candidates);
-            display_prompt();
-            current_line = common_prefix;
-            terminal.write(common_prefix);
+        if(!complete_command){
+            current_line = prefix(candidates);
         }
-
+        terminal.write("\r\n" + xterm_colors.blue + candidates.join("   ")  +  xterm_colors.white);
+        display_prompt();
+        terminal.write(current_line);
     }
 }
 
 export const complete_address = () =>{
-
+    let tokens = current_line.split(" ")
+    switch (tokens[0]){
+        case 'write':
+        case 'write_direct':
+        case 'read':
+            // THIS OBJECT IS UNECESSARY, HOWEVER IT ALLOWS THE USE OF THE SAME INTERFACE AS IN JS SCRIPTS
+            let line = {
+                from:0,
+                to:1,
+                text:"this."+tokens[1]
+            }
+            let options = autocompletion_engine( line,true);
+            let candidates = options.map((item)=>{
+                return item.label;
+            });
+            for (let i = 0; i < candidates.length; i += 5) {
+                terminal.write("\r\n" + xterm_colors.blue + candidates.slice(i, i + 5).join("         ")  +  xterm_colors.white);
+            }
+            display_prompt();
+            terminal.write(current_line);
+            break
+        default:
+            break;
+    }
 }
 
 

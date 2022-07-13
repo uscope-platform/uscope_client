@@ -88,7 +88,6 @@ export class up_peripheral {
            payload.push({type:"direct", proxy_type:"", proxy_address:0, address:item[0], value:item[1]})
         }
         let write = {payload: payload}
-        debugger;
         return up_peripheral.bulk_register_write(write);
     }
 
