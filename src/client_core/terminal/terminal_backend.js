@@ -13,20 +13,86 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import {script_register_access_log, scripting_engine_peripherals} from "../scripting/script_runner";
+import {translate_registers} from "../scripting/backend";
+import {up_peripheral} from "../data_models/up_peripheral";
+
 export const terminal_backend = {
     write: (args) =>{
-        let i = 0;
+        if(args[0] === "--help"){
+            return [
+                "WRITE:",
+                "This command adds a write request to the queue for batch execution",
+                "NOTE: When accessing single fields the whole register gets written anyway",
+                "the default value for non accessed fields is 0",
+                "format: write [REGISTER/FIELD] [VALUE]"
+            ]
+        }
+        let register = args[0];
+        let value = args[1];
+        translate_specifier(register,value);
+        return []
     },
     write_direct:(args) =>{
-        let i = 0;
+        if(args[0] === "--help"){
+            return [
+                "WRITE DIRECT:",
+                "This command immediately writes to the specified register",
+                "NOTE: This command can only write full registers",
+                "format: write_direct [REGISTER] [VALUE]"
+            ]
+        }
+        let register = args[0];
+        let value = args[1];
+        translate_specifier(register,value);
+        let writes = translate_registers(script_register_access_log, scripting_engine_peripherals);
+        script_register_access_log.length = 0;
+        up_peripheral.bulk_register_write({payload: writes}).then();
+        return []
     },
     clear_queue:(args) =>{
-        let i = 0;
+        if(args[0] === "--help"){
+            return [
+                "CLEAR QUEUE:",
+                "This command clears the write command queue",
+                "format: clear_queue"
+            ]
+        }
+        return []
     },
-    flush_queue:(args) =>{
-        let i = 0;
+    execute_queue:(args) =>{
+        if(args[0] === "--help"){
+            return [
+                "EXECUTE QUEUE:",
+                "This command executes the write command queue",
+                "format: execute_queue"
+            ]
+        }
+
+        let writes = translate_registers(script_register_access_log, scripting_engine_peripherals);
+        script_register_access_log = [];
+        return []
     },
     read:(args) =>{
-        let i = 0;
+        if(args[0] === "--help"){
+            return [
+                "WRITE DIRECT:",
+                "This command reads the value of the specified register",
+                "format: write_direct [REGISTER]"
+            ]
+        }
+        let register = args[0];
+        return []
     }
 }
+
+const translate_specifier = (spec, value) =>{
+    let tokens = spec.split(".");
+    if(tokens.length===2)
+        tokens.push("value");
+    let reg = scripting_engine_peripherals[tokens[0]].regs[tokens[1]]
+    reg[tokens[2]] = parseInt(value);
+}
+
+//   write adc_test.cmp_high_f.value 6
+//   write_direct adc_test.cmp_high_f.value 6

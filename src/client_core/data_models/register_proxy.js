@@ -23,7 +23,6 @@ const register_proxy = {
     set(obj, prop, value) {
         let access_type = null;
         if (prop==='value'){
-            obj['full_register_accessed'] = true;
             obj['full_register_value'] = value;
             access_type = "full_reg";
         } else if(prop in obj){
@@ -43,8 +42,6 @@ class fields_object {
         this["peripheral_spec_id"] = register.parent_periph;
         this["peripheral_id"] = periph_id;
         this["field_specs"] = {}
-        this['full_register_accessed'] = false;
-        this['full_register_value'] = 0;
         for(let item of register.fields){
             this[item.name] = 0;
             this.field_specs[item.name] = {length:item.length, offset:item.offset};

@@ -21,7 +21,7 @@ import {translate_legacy_registers, translate_registers} from "./backend";
 import {set_write_callback} from "../data_models/register_proxy";
 
 export let scripting_engine_peripherals = {}
-let script_register_access_log = [];
+export let script_register_access_log = [];
 
 export const initialize_scripting_engine = (application, peripherals) =>{
     //TODO: This call is kind of redundant, this work should be done in the data_model

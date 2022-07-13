@@ -40,22 +40,6 @@ let register = {
         }
 
 
-
-test('access full register', () => {
-    let reg = construct_proxied_register(register, "test_periph");
-    reg.value = 142;
-    expect(reg.full_register_accessed).toBeTruthy();
-    expect(reg.full_register_value).toBe(142);
-})
-
-
-test('access field', () => {
-    let reg = construct_proxied_register(register, "test_periph");
-    reg.slow = 68;
-    expect(reg.full_register_accessed).not.toBeTruthy();
-    expect(reg.slow).toBe(68);
-})
-
 test("access with callback", done => {
     let reg = construct_proxied_register(register, "test_periph_id");
     set_write_callback( (periph_id, spec_id, reg_id, field_spec, field_name, access_type) =>{

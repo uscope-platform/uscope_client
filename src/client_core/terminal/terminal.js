@@ -21,7 +21,7 @@ import {terminal_backend} from './terminal_backend'
 import {xterm_colors} from "./terminal_colors";
 import {autocompletion_engine} from "../scripting/autocompletion_engine";
 
-const recognised_commands = ["write", "write_direct", "flush_queue", "read", "clear_queue"];
+const recognised_commands = Object.keys(terminal_backend);
 
 export let current_line = "";
 
@@ -134,26 +134,14 @@ export const handle_tab = () =>{
 export const execute_command = (command_line) => {
     let tokens = command_line.split(" ");
     let command =  tokens.shift();
-    let args = tokens;
-    switch (command){
-        case "write":
-            terminal_backend.write(args);
-            break;
-        case "write_direct":
-            terminal_backend.write_direct(args);
-            break;
-        case "flush_queue":
-            terminal_backend.flush_queue(args);
-            break;
-        case "read":
-            terminal_backend.read(args);
-            break;
-        case "clear_queue":
-            terminal_backend.clear_queue(args);
-            break;
-        default:
-            terminal.write("\r\n" + xterm_colors.brightRed + "Unrecognized command: " + command + xterm_colors.white);
-            break;
+    if(!recognised_commands.includes(command)){
+        terminal.write("\r\n" + xterm_colors.brightRed + "Unrecognized command: " + command + xterm_colors.white);
+        return;
+    }
+    let response = terminal_backend[command](tokens);
+
+    for (const line of response) {
+        terminal.write("\r\n" + xterm_colors.green + line + xterm_colors.white);
     }
 }
 

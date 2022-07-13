@@ -39,8 +39,7 @@ export const autocompletion_engine = (line, explicit) => {
             let reg = Object.keys(periph[path[2]]);
             reg = reg.filter((item)=>{
                 return ![
-                    "full_register_accessed", "full_register_value", "field_specs",
-                    "peripheral_id", "peripheral_spec_id", "register_id"
+                    "field_specs","peripheral_id", "peripheral_spec_id", "register_id"
                 ].includes(item);
             })
             let fields = reg.map((item) => {

@@ -224,8 +224,6 @@ test('scripting_engine_initialization', () => {
                             offset:16
                         }
                     },
-                    full_register_accessed: false,
-                    full_register_value: 0,
                     faste: 0,
                     slow: 0,
                     peripheral_id: "adc_test",
@@ -243,8 +241,6 @@ test('scripting_engine_initialization', () => {
                             offset:16
                         }
                     },
-                    full_register_accessed: false,
-                    full_register_value: 0,
                     fast: 0,
                     slow: 0,
                     peripheral_id: "adc_test",
@@ -262,8 +258,6 @@ test('scripting_engine_initialization', () => {
                             offset:16
                         }
                     },
-                    full_register_accessed: false,
-                    full_register_value: 0,
                     fast: 0,
                     slow: 0,
                     peripheral_id: "adc_test",
@@ -277,8 +271,6 @@ test('scripting_engine_initialization', () => {
                             offset:16
                         }
                     },
-                    full_register_accessed: false,
-                    full_register_value: 0,
                     offset: 0,
                     peripheral_id: "adc_test",
                     peripheral_spec_id: "AdcProcessing2",
@@ -315,8 +307,6 @@ test('scripting_engine_initialization', () => {
                             offset:1
                         }
                     },
-                    full_register_accessed: false,
-                    full_register_value: 0,
                     latch_mode: 0,
                     clear_latch: 0,
                     cal_shift: 0,
@@ -467,7 +457,6 @@ test('scripting_engine_initialization', () => {
             }
         }
     }
-
     expect(scripting_engine_peripherals).toEqual(expected_sep)
 })
 
