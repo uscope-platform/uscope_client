@@ -91,6 +91,10 @@ export class up_peripheral {
         return up_peripheral.bulk_register_write(write);
     }
 
+    static direct_register_read(address){
+        return backend_get(api_dictionary.peripherals.direct_read + '/' +address);
+    }
+
     _get_periph = () =>{
         let cleaned_registers = [];
         for(let i of this.registers){

@@ -122,20 +122,21 @@ test("test_return_key", ()=>{
     terminal._test_clear_buffer();
     const write_spy = jest.spyOn(terminal_backend, "write");
     set_current_line("write --help");
+    handle_keypress("\r").then((response)=>{
+        expect(write_spy).toHaveBeenCalledTimes(1);
+        expect(current_line).toBe("");
+        expect(terminal._test_get_content()).toStrictEqual(
+            [
+                "\r\n\u001b[32mWRITE:\u001b[37m",
+                "\r\n\u001b[32mThis command adds a write request to the queue for batch execution\u001b[37m",
+                "\r\n\u001b[32mNOTE: When accessing single fields the whole register gets written anyway\u001b[37m",
+                "\r\n\u001b[32mthe default value for non accessed fields is 0\u001b[37m",
+                "\r\n\u001b[32mformat: write [REGISTER/FIELD] [VALUE]\u001b[37m",
+                "\r\n$ "
+            ]
+        );
+    })
 
-    handle_keypress("\r")
-    expect(write_spy).toHaveBeenCalledTimes(1);
-    expect(current_line).toBe("");
-    expect(terminal._test_get_content()).toStrictEqual(
-        [
-            "\r\n\u001b[32mWRITE:\u001b[37m",
-            "\r\n\u001b[32mThis command adds a write request to the queue for batch execution\u001b[37m",
-            "\r\n\u001b[32mNOTE: When accessing single fields the whole register gets written anyway\u001b[37m",
-            "\r\n\u001b[32mthe default value for non accessed fields is 0\u001b[37m",
-            "\r\n\u001b[32mformat: write [REGISTER/FIELD] [VALUE]\u001b[37m",
-            "\r\n$ "
-        ]
-    );
 })
 
 

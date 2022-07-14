@@ -20,27 +20,33 @@ import {up_peripheral} from "../data_models/up_peripheral";
 export const terminal_backend = {
     write: (args) =>{
         if(args[0] === "--help"){
-            return [
-                "WRITE:",
-                "This command adds a write request to the queue for batch execution",
-                "NOTE: When accessing single fields the whole register gets written anyway",
-                "the default value for non accessed fields is 0",
-                "format: write [REGISTER/FIELD] [VALUE]"
-            ]
+            return new Promise((resolve)=>{
+                resolve([
+                    "WRITE:",
+                    "This command adds a write request to the queue for batch execution",
+                    "NOTE: When accessing single fields the whole register gets written anyway",
+                    "the default value for non accessed fields is 0",
+                    "format: write [REGISTER/FIELD] [VALUE]"
+                ]);
+            })
         }
         let register = args[0];
         let value = args[1];
         translate_specifier(register,value);
-        return []
+        return new Promise((resolve)=>{
+          resolve([])
+        })
     },
     write_direct:(args) =>{
         if(args[0] === "--help"){
-            return [
-                "WRITE DIRECT:",
-                "This command immediately writes to the specified register",
-                "NOTE: This command can only write full registers",
-                "format: write_direct [REGISTER] [VALUE]"
-            ]
+            return new Promise((resolve)=>{
+                resolve([
+                    "WRITE DIRECT:",
+                    "This command immediately writes to the specified register",
+                    "NOTE: This command can only write full registers",
+                    "format: write_direct [REGISTER] [VALUE]"
+                ]);
+            })
         }
         let register = args[0];
         let value = args[1];
@@ -48,43 +54,62 @@ export const terminal_backend = {
         let writes = translate_registers(script_register_access_log, scripting_engine_peripherals);
         script_register_access_log.length = 0;
         up_peripheral.bulk_register_write({payload: writes}).then();
-        return []
+        return new Promise((resolve)=>{
+            resolve([])
+        })
     },
     clear_queue:(args) =>{
         if(args[0] === "--help"){
-            return [
-                "CLEAR QUEUE:",
-                "This command clears the write command queue",
-                "format: clear_queue"
-            ]
+            return new Promise((resolve)=>{
+                resolve([
+                    "CLEAR QUEUE:",
+                    "This command clears the write command queue",
+                    "format: clear_queue"
+                ]);
+            })
         }
         script_register_access_log.length = 0;
-        return []
+        return new Promise((resolve)=>{
+            resolve([])
+        })
     },
     execute_queue:(args) =>{
         if(args[0] === "--help"){
-            return [
-                "EXECUTE QUEUE:",
-                "This command executes the write command queue",
-                "format: execute_queue"
-            ]
+            return new Promise((resolve)=>{
+                resolve([
+                    "EXECUTE QUEUE:",
+                    "This command executes the write command queue",
+                    "format: execute_queue"
+                ]);
+            })
         }
 
         let writes = translate_registers(script_register_access_log, scripting_engine_peripherals);
         script_register_access_log.length = 0;
         up_peripheral.bulk_register_write({payload: writes}).then();
-        return []
+        return new Promise((resolve)=>{
+            resolve([])
+        })
     },
     read:(args) =>{
         if(args[0] === "--help"){
-            return [
-                "READ:",
-                "This command reads the value of the specified register",
-                "format: read [REGISTER]"
-            ]
+            return new Promise((resolve)=>{
+                resolve([
+                    "READ:",
+                    "This command reads the value of the specified register",
+                    "format: read [REGISTER]"
+                ]);
+            })
         }
-        let register = args[0];
-        return []
+
+        // PERFORM A DUMMY WRITE TO OBTAIN THE CORRECT ADDRESS
+        translate_specifier(args[0],"0");
+        let access = translate_registers(script_register_access_log, scripting_engine_peripherals);
+        script_register_access_log.length = 0;
+        return up_peripheral.direct_register_read(access[0].address).then((response)=>{
+            return [response.response];
+        });
+
     }
 }
 

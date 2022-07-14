@@ -33,6 +33,7 @@ export const api_dictionary = {
         get_hash: 'registers/digest',
         load_all: 'registers/all_peripheral/descriptions',
         bulk_write: 'registers/bulk_write',
+        direct_read: 'registers/direct_read',
         add: 'tab_creator/create_peripheral',
         edit: 'tab_creator/edit_peripheral',
         delete: 'tab_creator/remove_peripheral'

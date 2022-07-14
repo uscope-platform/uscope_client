@@ -136,22 +136,34 @@ export const execute_command = (command_line) => {
     let command =  tokens.shift();
     if(!recognised_commands.includes(command)){
         terminal.write("\r\n" + xterm_colors.brightRed + "Unrecognized command: " + command + xterm_colors.white);
-        return;
+        return new Promise((resolve)=>{
+            resolve([]);
+        });
     }
-    let response = terminal_backend[command](tokens);
 
-    for (const line of response) {
-        terminal.write("\r\n" + xterm_colors.green + line + xterm_colors.white);
-    }
+    return terminal_backend[command](tokens).then((response)=>{
+        for (const line of response) {
+            terminal.write("\r\n" + xterm_colors.green + line + xterm_colors.white);
+        }
+    });
+
+
 }
 
 export const handle_return = ()=>{
     if(current_line.length>0){
-        execute_command(current_line);
-        //terminal.write("\r\nEntered command: " + current_line);
-        current_line = "";
+        return execute_command(current_line).then(()=>{
+                current_line = "";
+                display_prompt();
+            }
+        );
+    } else {
+        return new Promise((resolve)=>{
+            display_prompt();
+            resolve();
+        })
     }
-    display_prompt();
+
 };
 
 export const handle_delete = () =>{
@@ -167,7 +179,7 @@ export const handle_letter = (key) => {
 
 export const handle_keypress = (key) => {
     if (key === "\r") {
-        handle_return();
+        return handle_return();
     } else if (key === "") {
         handle_delete();
     } else if (key === "\t") {
