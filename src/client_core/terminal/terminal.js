@@ -106,11 +106,18 @@ export const complete_address = () =>{
             let candidates = options.map((item)=>{
                 return item.label;
             });
-            for (let i = 0; i < candidates.length; i += 5) {
-                terminal.write("\r\n" + xterm_colors.blue + candidates.slice(i, i + 5).join("         ")  +  xterm_colors.white);
+            if(candidates.length === 1){
+                let present_substr = tokens[1].split(".").pop()
+                let missing = candidates[0].replace(present_substr, "");
+                current_line = current_line + missing;
+                terminal.write(missing);
+            } else {
+                for (let i = 0; i < candidates.length; i += 5) {
+                    terminal.write("\r\n" + xterm_colors.blue + candidates.slice(i, i + 5).join("         ")  +  xterm_colors.white);
+                }
+                display_prompt();
+                terminal.write(current_line);
             }
-            display_prompt();
-            terminal.write(current_line);
             break
         default:
             break;

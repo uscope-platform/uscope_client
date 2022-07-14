@@ -31,7 +31,10 @@ export const autocompletion_engine = (line, explicit) => {
             });
         } else if (path.length ===3){
             let periph = scripting_engine_peripherals[path[1]].regs
-            return Object.keys(periph).map((item) => {
+            let matches = Object.keys(periph).filter((item) => {
+                return item.startsWith(path[2]);
+            });
+            return matches.map((item) => {
                 return {label: item, type: "keyword"};
             });
         } else if (path.length ===4) {
