@@ -34,6 +34,7 @@ export class up_application {
         this.parameters = app_data_obj.parameters;
         this.peripherals = app_data_obj.peripherals;
         this.timebase_address = app_data_obj.timebase_address;
+        this.soft_cores = app_data_obj.soft_cores;
 
         let nonstandard_fields =  up_application._get_nonstandard_fields(app_data_obj);
         for(let i of nonstandard_fields){
@@ -43,7 +44,7 @@ export class up_application {
 
     static construct_empty(app_name){
         let app_data_obj = {application_name:app_name, bitstream:"", channels:[],channel_groups:[],clock_frequency:100000000,
-            initial_registers_values:[], macro:[],n_enables:0,parameters:[],peripherals:[],timebase_address:""};
+            initial_registers_values:[], macro:[],n_enables:0,parameters:[],peripherals:[],timebase_address:"", soft_cores:[]};
         return new up_application(app_data_obj);
     }
 
@@ -93,6 +94,7 @@ export class up_application {
         let edit = {application:this.application_name, irv:irv, action:"add_irv"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
+
     add_macro = (macro_name) => {
         let m =  {
             name: macro_name,
@@ -102,6 +104,7 @@ export class up_application {
         let edit = {application:this.application_name, macro:m, action:"add_macro"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
+
     add_parameter = (parameter_name) =>{
         let p = {
             parameter_name: parameter_name,
@@ -114,6 +117,7 @@ export class up_application {
         let edit = {application:this.application_name, parameter:p, action:"add_parameter"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
+
     add_peripheral = (peripheral_name) => {
         let p = {
             name: peripheral_name,
@@ -126,6 +130,17 @@ export class up_application {
         };
         let edit = {application:this.application_name, peripheral:p, action:"add_peripheral"};
         this.peripherals.push(p);
+        return backend_post(api_dictionary.applications.edit, edit);
+    }
+
+    add_soft_core = (core_id) => {
+        let sc = {
+            id: core_id,
+            address: 0x0,
+            default_program:""
+        }
+        let edit = {application:this.application_name, soft_core:sc, action:"add_soft_core"};
+        this.soft_cores.push(sc);
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -213,6 +228,15 @@ export class up_application {
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
+    edit_soft_core = (core_id, field_name, field_value) =>{
+        let [core] = this.soft_cores.filter((sc) =>{
+            return sc.id === core_id;
+        })
+
+        core[field_name] = field_value;
+        let edit = {application:this.application_name, core:core_id, field:field_name, value:field_value, action:"edit_soft_core"};
+        return backend_post(api_dictionary.applications.edit, edit);
+    }
 
     ////////////////////////////////////////////////////
     remove_channel = (ch_id) =>{
@@ -224,6 +248,7 @@ export class up_application {
         let edit = {application:this.application_name, channel:ch_id, action:"remove_channel"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
+
     remove_channel_groups = (chg_id) =>{
         let idx = this.channel_groups.findIndex((chg) =>{
             return chg.group_id === chg_id;
@@ -233,6 +258,7 @@ export class up_application {
         let edit = {application:this.application_name, group:chg_id, action:"remove_channel_group"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
+
     remove_irv = (address) =>{
         let idx  = this.initial_registers_values.filter((i) =>{
             return i.address === address;
@@ -242,6 +268,7 @@ export class up_application {
         let edit = {application:this.application_name, address:address, action:"remove_irv"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
+
     remove_macro = (macro_name) => {
         let idx  = this.macro.filter((m) =>{
             return m.name === macro_name;
@@ -269,6 +296,16 @@ export class up_application {
         this.peripherals.splice(idx,1);
 
         let edit = {application:this.application_name, peripheral:periph_id, action:"remove_peripheral"};
+        return backend_post(api_dictionary.applications.edit, edit);
+    }
+
+    remove_soft_core = (core_id) => {
+        let idx = this.soft_cores.filter((sc) =>{
+            return sc.id === core_id;
+        })
+        this.soft_cores.splice(idx,1);
+
+        let edit = {application:this.application_name, core:core_id, action:"remove_soft_core"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 

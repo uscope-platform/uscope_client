@@ -37,7 +37,7 @@ export {SidebarCollapsableContentLayout} from "./Layouts/SidebarCollapsableConte
 export {SidebarContentLayout} from "./Layouts/SidebarContentLayout"
 export {SidebarLayout} from "./Layouts/SidebarLayout"
 
-
+export {ApplicationSoftCoreProperties} from "./SidebarComponents/ApplicationSoftCoreProperties"
 export {ApplicationMiscFieldProperties} from "./SidebarComponents/ApplicationMiscFieldProperties"
 export {ApplicationPeripheralProperties} from "./SidebarComponents/ApplicationPeripheralProperties"
 export {InitialRegisterValue} from "./SidebarComponents/InitialRegisterValueProperties"

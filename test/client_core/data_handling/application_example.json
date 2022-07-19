@@ -8,6 +8,7 @@
   "macro": [],
   "n_enables": 0,
   "parameters": [],
+  "soft_cores": [],
   "peripherals": [
     {
       "base_address": "0x43c00000",

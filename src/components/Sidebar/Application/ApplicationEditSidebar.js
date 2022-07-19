@@ -20,6 +20,7 @@ import {useSelector} from "react-redux";
 import {
     ApplicationMiscFieldProperties,
     ApplicationPeripheralProperties,
+    ApplicationSoftCoreProperties,
     BlockTitle,
     InitialRegisterValue,
     InputField,
@@ -39,6 +40,7 @@ import {Add} from "grommet-icons";
 let  ApplicationEditSidebar = props =>{
     const settings = useSelector(state => state.settings);
     const peripherals = useSelector(state => state.peripherals);
+    const programs = useSelector(state => state.programs)
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     const [new_channel, set_new_channel] = useState(false);
@@ -46,6 +48,7 @@ let  ApplicationEditSidebar = props =>{
     const [new_macro, set_new_macro] = useState(false);
     const [new_parameter, set_new_parameter] = useState(false);
     const [new_peripheral, set_new_peripheral] = useState(false);
+    const [new_core, set_new_core] = useState(false);
     const [new_misc, set_new_misc] = useState(false);
     const [new_ch_group, set_new_ch_group] = useState(false);
 
@@ -74,7 +77,11 @@ let  ApplicationEditSidebar = props =>{
                     break;
                 case"peripheral":
                     props.selected_application.add_peripheral(event.target.value);
-                    set_new_parameter(false);
+                    set_new_peripheral(false);
+                    break;
+                case"soft_core":
+                    props.selected_application.add_soft_core(event.target.value);
+                    set_new_core(false);
                     break;
                 case "misc":
                     props.selected_application.set_misc_param(event.target.value);
@@ -109,6 +116,9 @@ let  ApplicationEditSidebar = props =>{
                 break;
             case "ch_group":
                 set_new_ch_group(true);
+                break;
+            case"soft_core":
+                set_new_core(true);
                 break;
             default:
                 return;
@@ -232,6 +242,25 @@ let  ApplicationEditSidebar = props =>{
                         props.selected_application.peripherals.map((peripheral)=>{
                             return(
                                 <ApplicationPeripheralProperties application={props.selected_application} peripherals={peripherals} forceUpdate={forceUpdate} peripheral={peripheral}/>
+                            )
+                        })
+                    }
+                </StyledScrollbar>
+            </SidebarBlockLayout>
+
+            <SidebarBlockLayout>
+                <SidebarBlockTitleLayout>
+                    <label style={{fontSize:'20px',fontWeight:600}}>{"Soft cores"}</label>
+                    <Add id="soft_core"  size={"medium"} onClick={handle_add_item} color='white'/>
+                </SidebarBlockTitleLayout>
+                {new_core &&
+                    <InputField name="soft_core" compact label="Field Name" onKeyDown={handle_add_item_done}/>
+                }
+                <StyledScrollbar>
+                    {
+                        props.selected_application.soft_cores.map((soft_core)=>{
+                            return(
+                                <ApplicationSoftCoreProperties application={props.selected_application} core={soft_core} programs={programs} forceUpdate={forceUpdate}/>
                             )
                         })
                     }

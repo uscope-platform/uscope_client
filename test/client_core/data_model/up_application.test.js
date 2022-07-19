@@ -30,6 +30,7 @@ test("application_creation", () => {
             macro: [],
             n_enables: 0,
             parameters: [],
+            soft_cores: [],
             peripherals: [],
             timebase_address: ''
         }};
@@ -50,6 +51,7 @@ test("remote add", () => {
                 macro: [],
                 n_enables: 0,
                 parameters: [],
+                soft_cores: [],
                 peripherals: [],
                 timebase_address: ''
             }};
@@ -82,6 +84,7 @@ test("add_channel", () => {
                     clock_frequency: 100000000,
                     initial_registers_values: [],
                     macro: [],
+                    soft_cores: [],
                     n_enables: 0,
                     parameters: [],
                     peripherals: [],
@@ -129,6 +132,7 @@ test("add_channel_group", () => {
                     n_enables: 0,
                     parameters: [],
                     peripherals: [],
+                    soft_cores: [],
                     timebase_address: ''
                 }
             };
@@ -166,6 +170,7 @@ test("add_irv", () => {
                     macro: [],
                     n_enables: 0,
                     parameters: [],
+                    soft_cores: [],
                     peripherals: [],
                     timebase_address: ''
                 }
@@ -202,6 +207,7 @@ test("add_macro", () => {
                     }],
                     n_enables: 0,
                     parameters: [],
+                    soft_cores: [],
                     peripherals: [],
                     timebase_address: ''
                 }
@@ -233,6 +239,7 @@ test("add_parameter", () => {
                     clock_frequency: 100000000,
                     initial_registers_values: [],
                     macro: [],
+                    soft_cores: [],
                     n_enables: 0,
                     parameters: [{
                         parameter_id:"test_param",
@@ -276,6 +283,7 @@ test("add_peripheral", () => {
                     initial_registers_values: [],
                     macro: [],
                     n_enables: 0,
+                    soft_cores: [],
                     parameters: [],
                     peripherals: [{
                         base_address:"0",
@@ -308,6 +316,47 @@ test("add_peripheral", () => {
     });
 });
 
+
+test("add_soft_core", () => {
+    let app = up_application.construct_empty("default");
+    return app.add_remote().then(() => {
+        return app.add_soft_core("test_core").then(() => {
+            let check_app = {
+                "default": {
+                    application_name: "default",
+                    bitstream: '',
+                    channels: [],
+                    channel_groups: [],
+                    clock_frequency: 100000000,
+                    initial_registers_values: [],
+                    macro: [],
+                    soft_cores: [{
+                        id:"test_core",
+                        address: 0,
+                        default_program:""
+                    }],
+                    n_enables: 0,
+                    parameters: [],
+                    peripherals: [],
+                    timebase_address: ''
+                }
+            };
+
+            expect(edit_app_data).toStrictEqual({
+                action: "add_soft_core", application: "default", soft_core: {
+                    id:"test_core",
+                    address: 0,
+                    default_program:""
+                }
+            });
+            let state = mock_store.getState();
+            expect(state.applications.default._get_app().default).toStrictEqual(check_app.default);
+        });
+
+    });
+});
+
+
 test("set_misc_periph", () => {
     let app = up_application.construct_empty("default");
     return app.add_remote().then(() => {
@@ -324,6 +373,7 @@ test("set_misc_periph", () => {
                     n_enables: 0,
                     parameters: [],
                     peripherals: [],
+                    soft_cores: [],
                     timebase_address: '',
                     test_param:0,
                 }
@@ -369,6 +419,7 @@ test("edit_channel", () => {
                         n_enables: 0,
                         parameters: [],
                         peripherals: [],
+                        soft_cores: [],
                         timebase_address: ''
                     }
                 };
@@ -403,6 +454,7 @@ test("edit_channel_group", () => {
                         n_enables: 0,
                         parameters: [],
                         peripherals: [],
+                        soft_cores: [],
                         timebase_address: ''
                     }
                 };
@@ -436,6 +488,7 @@ test("edit_irv", () => {
                         n_enables: 0,
                         parameters: [],
                         peripherals: [],
+                        soft_cores: [],
                         timebase_address: ''
                     }
                 };
@@ -471,6 +524,7 @@ test("edit_macro", () => {
                         n_enables: 0,
                         parameters: [],
                         peripherals: [],
+                        soft_cores: [],
                         timebase_address: ''
                     }
                 };
@@ -508,12 +562,49 @@ test("edit_parameter", () => {
                             visible: false
                         }],
                         peripherals: [],
+                        soft_cores: [],
                         timebase_address: ''
                     }
                 };
 
                 expect(edit_app_data).toStrictEqual({ action: "edit_parameter", application: "default",
                     parameter:"test_param", field:"trigger", value:"test"});
+                let state = mock_store.getState();
+                expect(state.applications.default._get_app().default).toStrictEqual(check_app.default);
+            });
+        });
+
+    });
+});
+
+test("edit_soft_core", () => {
+    let app = up_application.construct_empty("default");
+    return app.add_remote().then(() => {
+        return app.add_soft_core("test_core").then(() => {
+            return app.edit_soft_core("test_core", "default_program", "test_program").then(() => {
+                let check_app = {
+                    "default": {
+                        application_name: "default",
+                        bitstream: '',
+                        channels: [],
+                        channel_groups: [],
+                        clock_frequency: 100000000,
+                        initial_registers_values: [],
+                        macro: [],
+                        soft_cores: [{
+                            id:"test_core",
+                            address: 0,
+                            default_program:"test_program"
+                        }],
+                        n_enables: 0,
+                        parameters: [],
+                        peripherals: [],
+                        timebase_address: ''
+                    }
+                };
+
+                expect(edit_app_data).toStrictEqual({ action: "edit_soft_core", application: "default",
+                    core:"test_core", field:"default_program", value:"test_program"});
                 let state = mock_store.getState();
                 expect(state.applications.default._get_app().default).toStrictEqual(check_app.default);
             });
@@ -538,6 +629,7 @@ test("edit_misc_param_value", () => {
                         macro: [],
                         n_enables: 0,
                         parameters: [],
+                        soft_cores: [],
                         peripherals: [],
                         timebase_address: '',
                         test_param: 52,
@@ -571,6 +663,7 @@ test("edit_misc_rename", () => {
                         macro: [],
                         n_enables: 0,
                         parameters: [],
+                        soft_cores: [],
                         peripherals: [],
                         timebase_address: '',
                         test_2: 0,
@@ -605,6 +698,7 @@ test("remove_channel", () => {
                         macro: [],
                         n_enables: 0,
                         parameters: [],
+                        soft_cores: [],
                         peripherals: [],
                         timebase_address: ''
                     }
@@ -638,6 +732,7 @@ test("remove_channel_group", () => {
                         macro: [],
                         n_enables: 0,
                         parameters: [],
+                        soft_cores: [],
                         peripherals: [],
                         timebase_address: ''
                     }
@@ -668,6 +763,7 @@ test("remove_irv", () => {
                         macro: [],
                         n_enables: 0,
                         parameters: [],
+                        soft_cores: [],
                         peripherals: [],
                         timebase_address: ''
                     }
@@ -700,6 +796,7 @@ test("remove_macro", () => {
                         macro: [],
                         n_enables: 0,
                         parameters: [],
+                        soft_cores: [],
                         peripherals: [],
                         timebase_address: ''
                     }
@@ -731,6 +828,7 @@ test("remove_parameter", () => {
                         macro: [],
                         n_enables: 0,
                         parameters: [],
+                        soft_cores: [],
                         peripherals: [],
                         timebase_address: ''
                     }
@@ -761,6 +859,7 @@ test("remove_peripheral", () => {
                         initial_registers_values: [],
                         macro: [],
                         n_enables: 0,
+                        soft_cores: [],
                         parameters: [],
                         peripherals: [],
                         timebase_address: ''
@@ -793,6 +892,7 @@ test("remove_misc_param", () => {
                         macro: [],
                         n_enables: 0,
                         parameters: [],
+                        soft_cores: [],
                         peripherals: [],
                         timebase_address: ''
                     }
