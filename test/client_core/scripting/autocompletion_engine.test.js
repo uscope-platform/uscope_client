@@ -12,10 +12,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import {autocompletion_engine, initialize_scripting_engine, run_parameter_script} from "../../../src/client_core";
-import {mock_store} from "../mock/redux_store";
-import {bulk_write_data_check} from "../mock/peripherals_api";
-import {scripting_engine_peripherals} from "../../../src/client_core/scripting/script_runner";
+import {autocompletion_engine, initialize_scripting_engine} from "../../../src/client_core";
 
 let app = {
     "application_name": "SicDrive",

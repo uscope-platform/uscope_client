@@ -16,6 +16,7 @@
 import {script_register_access_log, scripting_engine_peripherals} from "../scripting/script_runner";
 import {translate_registers} from "../scripting/backend";
 import {up_peripheral} from "../data_models/up_peripheral";
+import {store, up_program} from "../index";
 
 export const terminal_backend = {
     write: (args) =>{
@@ -109,7 +110,51 @@ export const terminal_backend = {
         return up_peripheral.direct_register_read(access[0].address).then((response)=>{
             return [response.response];
         });
+    },
+    load_program:(args) =>{
+        if(args[0] === "--help"){
+            return new Promise((resolve)=>{
+                resolve([
+                    "LOAD CORE:",
+                    "This command reads the value of the specified register",
+                    "format: load_program [PROGRAM ID] [CORE ID]"
+                ]);
+            })
+        }
+        let state = store.getState();
 
+        let program_id = parseInt(args[0]);
+        let selected_program = state.programs[program_id];
+        if(selected_program === undefined){
+            return new Promise((resolve, reject)=>{
+                reject([
+                    "ERROR: Specified program not found"
+                ])
+            })
+        }
+        selected_program = new up_program(state.programs[program_id]);
+
+        let core = state.applications[state.settings['application']].soft_cores.filter((core)=>{
+            return core.id === args[1];
+        });
+        if(core.length === 0){
+            return new Promise((resolve, reject)=>{
+                reject([
+                    "ERROR: Core not found"
+                ])
+            })
+        } else if (core.length > 1){
+            return new Promise((resolve, reject)=>{
+                reject([
+                    "ERROR: Found multiple cores with the same id"
+                ])
+            })
+        }
+        let address = core[0].address;
+
+        return selected_program.load(address).then((response)=>{
+            return [response.response];
+        });
     }
 }
 

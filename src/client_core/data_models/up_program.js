@@ -57,7 +57,7 @@ export class up_program {
         let program_obj = this._get_program();
         program_obj.core_address = core_address;
         return backend_post(api_dictionary.programs.apply+'/'+this.id, program_obj).then((res)=>{
-            return res;
+            return {response:""};
         }).catch((err)=>{
             alert('ERROR: error while loading a program on the core' + err.message);
             return err;

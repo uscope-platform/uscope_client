@@ -152,6 +152,10 @@ export const execute_command = (command_line) => {
         for (const line of response) {
             terminal.write("\r\n" + xterm_colors.green + line + xterm_colors.white);
         }
+    }).catch((response) =>{
+        for (const line of response) {
+            terminal.write("\r\n" + xterm_colors.brightRed + line + xterm_colors.white);
+        }
     });
 
 
