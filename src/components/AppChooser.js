@@ -30,6 +30,7 @@ import {
     create_plot_channel,
     get_channels_from_group
 } from "../client_core"
+import {set_scaling_factors} from "../client_core/proxy/plot";
 
 let ApplicationChooser = (props) =>{
 
@@ -87,9 +88,17 @@ let ApplicationChooser = (props) =>{
             for(let item of channels_list){
                 widths.push(parseInt(item.phys_width));
             }
-            set_channel_widths(widths);
+            set_channel_widths(widths).then();
         }
 
+        if(channels_list.length !== 0){
+            let sfs = []
+            for(let item of channels_list){
+                sfs.push(parseFloat(item.scaling_factor));
+            }
+            set_scaling_factors(sfs).then();
+
+        }
 
     }
 

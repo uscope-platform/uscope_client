@@ -57,7 +57,8 @@ export const api_dictionary = {
         set_capture: 'plot/capture',
         get_capture: 'plot/capture',
         set_channel_status: 'plot/channels/status',
-        set_widths: 'plot/channels/widths'
+        set_widths: 'plot/channels/widths',
+        scaling_factors: 'plot/channels/scaling_factors'
     },
     programs:{
         get_hash:'program/hash',

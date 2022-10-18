@@ -66,7 +66,8 @@ export class up_application {
             mux_setting: 0,
             enabled: false,
             max_value: "1000",
-            min_value: "0"
+            min_value: "0",
+            scaling_factor:1
         };
         this.channels.push(ch);
         let edit = {application:this.application_name, channel:ch, action:"add_channel"};

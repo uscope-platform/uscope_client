@@ -68,6 +68,7 @@ export let  PlotChannelProperties = props =>{
                     <InputField inline ID="phys_width" name='phys_width' defaultValue={props.channel.phys_width} onKeyDown={handleonKeyDown} label="Physical width"/>
                     <InputField inline ID="max_value" name='max_value' defaultValue={props.channel.max_value} onKeyDown={handleonKeyDown} label="Maximum Value"/>
                     <InputField inline ID="min_value" name='min_value' defaultValue={props.channel.min_value} onKeyDown={handleonKeyDown} label="Minimum Value"/>
+                    <InputField inline ID="scaling_factor" name='scaling_factor' defaultValue={props.channel.scaling_factor} onKeyDown={handleonKeyDown} label="Scaling Factor"/>
                     <Checkbox name='enabled' value={props.channel.enabled} onChange={handleChange} label="Enabled by default"/>
                     <Button onClick={handleRemoveRegister} >Remove</Button>
                 </SidebarCollapsableContentLayout>

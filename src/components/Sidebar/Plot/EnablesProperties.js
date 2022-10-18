@@ -26,6 +26,7 @@ import styled from "styled-components";
 import {initialize_channels} from "../../../redux/Actions/plotActions";
 import {setSetting} from "../../../redux/Actions/SettingsActions";
 import {set_channel_widths, set_channel_status, up_peripheral, create_plot_channel, get_channels_from_group} from "../../../client_core";
+import {set_scaling_factors} from "../../../client_core/proxy/plot";
 
 const ChoicesWrapper = styled.div`
     display: grid;
@@ -134,7 +135,14 @@ let  EnablesProperties = props =>{
         for(let item of channels){
             widths.push(parseInt(item.phys_width));
         }
-        set_channel_widths(widths);
+        set_channel_widths(widths).then();
+        //SET  UP SCALING FACTORS
+        let sfs = []
+        for(let item of channels){
+            sfs.push(parseFloat(item.scaling_factor));
+        }
+        set_scaling_factors(sfs).then();
+
         // SET NEW CHANNELS status
         let new_ch_state = {}
 

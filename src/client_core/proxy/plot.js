@@ -38,6 +38,18 @@ export const set_channel_widths = (widths) => {
     })
 }
 
+export const set_scaling_factors = (scaling_factors) => {
+    return new Promise((resolve, reject)=>{
+        backend_post(api_dictionary.plot.scaling_factors, {scaling_factors}).then((res) => {
+            resolve(res)
+        }).catch((err) =>{
+            alert('ERROR: error while setting up channel scaling factors\n' + err.message);
+            reject(err);
+        })
+    })
+}
+
+
 export let create_plot_channel = (ch) => {
     return ({
         x: Array.from(Array(1024).keys()),
