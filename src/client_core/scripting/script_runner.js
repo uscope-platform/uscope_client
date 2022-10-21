@@ -106,6 +106,10 @@ export const run_parameter_script = (store, parameter) => {
                 resolve();
             });
         }
+    } else {
+        return new Promise((resolve, reject) =>{
+            resolve();
+        });
     }
 };
 

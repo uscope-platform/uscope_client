@@ -13,8 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {scripting_engine_peripherals} from "./script_runner";
-
 export const context_cleaner = (registers, parameters, current_parameter) => {
     //purge register context of unwanted and potentially dangerous fields
     let register_context = {};
