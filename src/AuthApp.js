@@ -27,7 +27,6 @@ import ApplicationChooser from "./components/AppChooser";
 //////  STYLE IMPORTS
 import './App.css';
 
-import {ApplicationLayout} from "./components/UI_elements";
 import Sidebar from "./components/Sidebar/Sidebar";
 import OnboardingView from "./components/Onboarding";
 
@@ -35,7 +34,11 @@ import {initialize_scripting_engine, refresh_caches, up_application} from "./cli
 import {Routes} from "react-router";
 import {addApplication} from "./redux/Actions/applicationActions";
 
+import {DockLayout, DividerBox} from 'rc-dock'
+import "rc-dock/dist/rc-dock-dark.css";
+
 let AuthApp = (props) =>{
+
 
     const settings = useSelector(state => state.settings);
     const peripherals = useSelector(state => state.peripherals);
@@ -44,6 +47,34 @@ let AuthApp = (props) =>{
     const [views, set_views] = useState([]);
 
     const [app_stage, set_app_stage] = useState("WAITING");
+
+
+    const defaultLayout = {
+        dockbox: {
+            mode: 'horizontal',
+            children: [
+                {
+                    size: 1000,
+                    tabs: [{id: 'main_area', title: 'Main Area', content:
+                        <Routes>
+                            <Route key="plot" path='/' element={<TabContent className="main_content_tab" tab={views[0]}/>}/>
+                            <Route key="script_manager" path='/script_manager' element={<TabContent className="main_content_tab" tab={views[1]}/>}/>
+                            <Route key="applications_manager" path='/applications_manager' element={<TabContent className="main_content_tab" tab={views[2]}/>}/>
+                            <Route key="program_manager" path='/program_manager' element={<TabContent className="main_content_tab" tab={views[3]}/>}/>
+                            <Route key="bitstream_manager" path='/bitstream_manager' element={<TabContent className="main_content_tab" tab={views[4]}/>}/>
+                            <Route key="peripherals_manager" path='/peripherals_manager' element={<TabContent className="main_content_tab" tab={views[5]}/>}/>
+                            <Route key="platform_manager" path='/platform_manager' element={<TabContent className="main_content_tab" tab={views[6]}/>}/>
+                        </Routes>
+                    }],
+                },
+                {
+                    size: 200,
+                    tabs: [{id: 'properties', title: 'Properties', content: <Sidebar />}],
+                }
+            ]
+        }
+    };
+
 
     let app_choice_done = ()=>{
         populate_views();
@@ -150,21 +181,12 @@ let AuthApp = (props) =>{
         case "NORMAL":
             return (
                 <div className="App">
-                    <ApplicationLayout name="plot_tab" sidebarNeeded={settings.current_view_requires_sidebar}>
-                        <Navbar views={views}/>
-                        <div>
-                            <Routes>
-                                <Route key="plot" path='/' element={<TabContent className="main_content_tab" tab={views[0]}/>}/>
-                                <Route key="script_manager" path='/script_manager' element={<TabContent className="main_content_tab" tab={views[1]}/>}/>
-                                <Route key="applications_manager" path='/applications_manager' element={<TabContent className="main_content_tab" tab={views[2]}/>}/>
-                                <Route key="program_manager" path='/program_manager' element={<TabContent className="main_content_tab" tab={views[3]}/>}/>
-                                <Route key="bitstream_manager" path='/bitstream_manager' element={<TabContent className="main_content_tab" tab={views[4]}/>}/>
-                                <Route key="peripherals_manager" path='/peripherals_manager' element={<TabContent className="main_content_tab" tab={views[5]}/>}/>
-                                <Route key="platform_manager" path='/platform_manager' element={<TabContent className="main_content_tab" tab={views[6]}/>}/>
-                            </Routes>
-                        </div>
-                        <Sidebar />
-                    </ApplicationLayout>
+                    <DividerBox style={{position: 'absolute', left: 10, top: 10, right: 10, bottom: 10}}>
+                        <DividerBox mode='vertical' style={{width: '10%', minWidth: 100}}>
+                            <Navbar views={views}/>
+                        </DividerBox>
+                        <DockLayout defaultLayout={defaultLayout} style={{width: '90%'}}/>
+                    </DividerBox>
                 </div>
             );
         default:

@@ -17,7 +17,6 @@ import React from 'react';
 
 import ProgramEditSidebar from "./ProgramEditSidebar";
 import {useSelector} from "react-redux";
-import {BlockTitle, SidebarContentLayout} from "../../UI_elements";
 import {up_program} from "../../../client_core";
 
 
@@ -26,16 +25,10 @@ let  ProgramSidebar = props =>{
 
     const selected_program =  useSelector(state => new up_program(state.programs[state.settings.selected_program]))
 
-    if(!selected_program)
-        return (
-            <SidebarContentLayout peripheral>
-                <BlockTitle>Program actions</BlockTitle>
-            </SidebarContentLayout>
-        );
-
     return(
         <ProgramEditSidebar selected_program={selected_program}/>
     );
+
 };
 
 export default ProgramSidebar;

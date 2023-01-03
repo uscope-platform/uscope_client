@@ -18,14 +18,26 @@ import React from 'react';
 
 import EnablesProperties from "./EnablesProperties";
 import CaptureProperties from "./CaptureProperties";
+import {DockLayout} from "rc-dock";
 
 let  PlotSidebar = props =>{
+    const defaultLayout = {
+        dockbox: {
+            mode: 'vertical',
+            children: [
+                {
+                    tabs: [{id: "enable_properties", title:"Enable Properties", content: <EnablesProperties/>}],
+                },
+                {
+                    tabs: [{id: "capture_properties", title:"Capture Properties", content:<CaptureProperties/>}],
+                }
+            ]
+        }
+    };
+
 
     return (
-        <>
-            <EnablesProperties/>
-            <CaptureProperties/>
-        </>
+        <DockLayout defaultLayout={defaultLayout} style={{position: 'absolute', left: 10, top: 10, right: 10, bottom: 10}}/>
     );
 
 };

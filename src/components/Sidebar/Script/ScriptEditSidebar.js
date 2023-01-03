@@ -16,8 +16,6 @@
 import React from "react";
 import {
     FormLayout, InputField,
-    SidebarBlockLayout,
-    SidebarBlockTitleLayout
 } from "../../UI_elements";
 
 
@@ -30,16 +28,13 @@ let ScriptEditSidebar = props =>{
     }
 
     return(
-        <SidebarBlockLayout padding={'1rem'}>
-            <SidebarBlockTitleLayout>
-                <label style={{fontSize:'20px',fontWeight:600}}>{"Script Peripherals"}</label>
-            </SidebarBlockTitleLayout>
+        <div>
             <FormLayout>
                 <InputField inline name='name' placeholder={props.selected_script.name} onKeyDown={handle_edit_field} label='name'/>
                 <InputField inline name='path' placeholder={props.selected_script.path} onKeyDown={handle_edit_field} label='path'/>
                 <InputField inline name='triggers' placeholder={props.selected_script.triggers} onKeyDown={handle_edit_field} label='triggers'/>
             </FormLayout>
-        </SidebarBlockLayout>
+        </div>
     )
 };
 

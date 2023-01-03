@@ -17,7 +17,6 @@ import React from 'react';
 
 import ScriptEditSidebar from "./ScriptEditSidebar";
 import {useSelector} from "react-redux";
-import {BlockTitle, SidebarContentLayout} from "../../UI_elements";
 import {up_script} from "../../../client_core";
 
 
@@ -26,16 +25,11 @@ let  ScriptSidebar = props =>{
 
     const selected_script =  useSelector(state => new up_script(state.scripts[state.settings.selected_script]))
 
-    if(!selected_script.id)
-        return (
-            <SidebarContentLayout peripheral>
-                <BlockTitle>Scripts actions</BlockTitle>
-            </SidebarContentLayout>
+    if(selected_script.id)
+        return(
+            <ScriptEditSidebar selected_script={selected_script}/>
         );
 
-    return(
-        <ScriptEditSidebar selected_script={selected_script}/>
-    );
 };
 
 export default ScriptSidebar;

@@ -18,9 +18,7 @@ import {useDispatch, useSelector} from "react-redux";
 
 import {
     Button, FormLayout,
-    InputField, Label, Select,
-    SidebarBlockLayout,
-    SidebarBlockTitleLayout} from "../../UI_elements";
+    InputField, Label, Select} from "../../UI_elements";
 
 import styled from "styled-components";
 import {initialize_channels} from "../../../redux/Actions/plotActions";
@@ -154,31 +152,26 @@ let  EnablesProperties = props =>{
     };
 
     return (
-        <SidebarBlockLayout padding={'1rem'}>
-            <SidebarBlockTitleLayout>
-                <label style={{fontSize:'20px',fontWeight:600}}>{"Scope Sampling Settings"}</label>
-            </SidebarBlockTitleLayout>
-
-                <form onSubmit={handle_submit}>
-                    <FormLayout>
-                        <InputField inline name='frequency' label="Frequency"/>
-                        <InputField inline name={'phase'} label={'Phase'}/>
-                        <ChoicesWrapper>
-                            <Label>Channel Group</Label>
-                            <Select name="channel_group" defaultValue={settings.default_ch_group.group_name} onChange={handleChGroupChange}>
-                                {
-                                    channelGroups.map((group,i) => (
-                                        <option key={i} >{group.group_name}</option>
-                                    ))
-                                }
-                            </Select>
-                        </ChoicesWrapper>
-                        <Label>Effective Sampling frequency: {settings.sampling_period}</Label>
-                        <Button type='submit' >Submit changes</Button>
-                    </FormLayout>
-                </form>
-
-        </SidebarBlockLayout>
+        <div style={{padding:"1rem"}}>
+            <form onSubmit={handle_submit}>
+                <FormLayout>
+                    <InputField inline name='frequency' label="Frequency"/>
+                    <InputField inline name={'phase'} label={'Phase'}/>
+                    <ChoicesWrapper>
+                        <Label>Channel Group</Label>
+                        <Select name="channel_group" defaultValue={settings.default_ch_group.group_name} onChange={handleChGroupChange}>
+                            {
+                                channelGroups.map((group,i) => (
+                                    <option key={i} >{group.group_name}</option>
+                                ))
+                            }
+                        </Select>
+                    </ChoicesWrapper>
+                    <Label>Effective Sampling frequency: {settings.sampling_period}</Label>
+                    <Button type='submit' >Submit changes</Button>
+                </FormLayout>
+            </form>
+        </div>
     );
 };
 

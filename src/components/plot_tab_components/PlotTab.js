@@ -16,39 +16,71 @@
 import React from 'react';
 import {useSelector} from "react-redux";
 
-
 import ChannelSelector from "./ChannelSelector";
 import PlotComponent from "./PlotComponent";
 import ParametersArea from "./ParametersArea";
 import MacroActions from "./MacroActions";
-import styled from "styled-components";
-import {ColorTheme} from "../UI_elements";
+import {ColorTheme, StyledScrollbar} from "../UI_elements";
 import TerminalComponent from "./Terminal";
+import {DockLayout} from "rc-dock";
 
-
-const ComponentLayout = styled.div`
-  display: grid;
-  grid-template-columns: auto auto;
-  grid-auto-rows: auto;
-  align-items: center;
-  grid-gap: 1.5em;
-`
 
 let PlotTab = function (props) {
     const channels = useSelector(state => state.channels);
     const settings = useSelector(state => state.settings);
 
+
+
+    const defaultLayout = {
+        dockbox: {
+            mode: 'vertical',
+            children: [
+                {
+                    mode: 'horizontal',
+                    children: [
+                        {
+                            size:40,
+                            tabs: [{id: "ch_selector", title:"Channel Selector", content:<ChannelSelector channels={channels}/>}],
+                        },
+                        {
+
+                            tabs: [{id: "plot", title:"Scope", content:<PlotComponent palette={{colorway:ColorTheme.plot_palette}} refreshRate={settings.refreshRate}/>}],
+                        }
+                    ]
+                },
+                {
+                    mode: 'horizontal',
+                    size: 80,
+                    children: [
+                        {
+                            size:90,
+                            tabs: [{id: "parameters", title:"Parameters Section", content:
+                                <StyledScrollbar>
+                                    <ParametersArea />
+                                </StyledScrollbar>
+
+                            }],
+                        },
+                        {
+                            tabs: [{id: "macro", title:"Macro Section", content:<MacroActions />}],
+                        }
+                    ]
+                },
+                {
+                    size: 90,
+                    tabs: [{id: "terminal", title:"Terminal", content:<TerminalComponent/>}],
+                }
+            ]
+        }
+    };
+
+
         return(
-            <>
-                <ComponentLayout>
-                    <ChannelSelector channels={channels}/>
-                    <PlotComponent palette={{colorway:ColorTheme.plot_palette}} refreshRate={settings.refreshRate}/>
-                    <ParametersArea />
-                    <MacroActions />
-                </ComponentLayout>
-                <TerminalComponent/>
-            </>
+            <DockLayout defaultLayout={defaultLayout} style={{position: 'absolute', left: 10, top: 10, right: 10, bottom: 10}}/>
         );
 };
+
+
+
 
 export default PlotTab;

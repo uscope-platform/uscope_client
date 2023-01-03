@@ -16,8 +16,6 @@
 import React from "react";
 import {
     FormLayout, InputField,
-    SidebarBlockLayout,
-    SidebarBlockTitleLayout
 } from "../../UI_elements";
 import {SelectField} from "../../UI_elements/Select";
 
@@ -35,16 +33,12 @@ let ProgramEditSidebar = props =>{
 
     let allowed_types = ["asm", "C"];
     return(
-        <SidebarBlockLayout padding={'1rem'}>
-            <SidebarBlockTitleLayout>
-                <label style={{fontSize:'20px',fontWeight:600}}>{"Program"}</label>
-            </SidebarBlockTitleLayout>
+
             <FormLayout>
-                <InputField inline name='name' placeholder={props.selected_program.name} onKeyDown={handle_name_change} label={props.selected_program.name}/>
+                <InputField inline name='name' placeholder={props.selected_program.name} onKeyDown={handle_name_change} label="Name"/>
                 <SelectField label="Program type" onChange={handleTypeChange} defaultValue={props.selected_program.program_type}
                              name="program_type" placeholder="Program type" options={allowed_types}/>
             </FormLayout>
-        </SidebarBlockLayout>
     )
 };
 

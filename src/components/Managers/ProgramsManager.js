@@ -14,14 +14,14 @@
 // limitations under the License.
 
 import React, {useState} from "react";
-import {BlockLayout, Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements";
+import {Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements";
 import DataTable from "react-data-table-component";
 import {TableStyle} from "./TableStyles";
 import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import ProgramsEditor from "../Editors/Programs/ProgramsEditor";
 import ButterToast, { POS_TOP, POS_RIGHT, Cinnamon} from "butter-toast";
-import {up_program} from "../../client_core";
+import {get_next_id, up_program} from "../../client_core";
 
 let columns = [
     {
@@ -67,21 +67,7 @@ let ProgramsManager = props =>{
 
     };
 
-    let get_next_id =(ids) => {
-        let id = null;
-        if(ids.length === 0) return 1;
-        for(var i = 1; i < ids.length; i++) {
-            if(ids[i] - ids[i-1] !== 1) {
-                id = ids[i-1]+1;
-            }
-        }
-        if(id===null)
-            id = ids.length+1;
-        return id;
-    }
-
     let handleAddRow = () =>{
-
         let id = get_next_id(Object.values(programs_store).map(a => a.id).sort());
         let program = up_program.construct_empty(id);
         program.add_remote().then();
@@ -172,18 +158,16 @@ let ProgramsManager = props =>{
             <Button style={{margin:"0 1rem"}} onClick={handle_compile}>Compile Program</Button>
             <Button style={{margin:"0 1rem"}} onClick={handle_apply_program}>Load Program</Button>
         </ManagerButtonsLayout>
-        <BlockLayout centered>
-            <DataTable
-                title='Programs'
-                data={Object.values(programs_store)}
-                columns={columns}
-                customStyles={TableStyle}
-                theme="uScopeTableTheme"
-                selectableRows
-                onSelectedRowsChange={handleOnSelect}
-                selectableRowSelected={rowSelectCritera}
-            />
-        </BlockLayout>
+        <DataTable
+            title='Programs'
+            data={Object.values(programs_store)}
+            columns={columns}
+            customStyles={TableStyle}
+            theme="uScopeTableTheme"
+            selectableRows
+            onSelectedRowsChange={handleOnSelect}
+            selectableRowSelected={rowSelectCritera}
+        />
     </ManagerLayout>
     );
 };

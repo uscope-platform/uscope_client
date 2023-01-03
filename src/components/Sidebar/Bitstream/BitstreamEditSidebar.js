@@ -17,8 +17,6 @@ import React, {useRef} from "react";
 import {
     Button,
     FormLayout, InputField,
-    SidebarBlockLayout,
-    SidebarBlockTitleLayout
 } from "../../UI_elements";
 import {up_bitstream} from "../../../client_core";
 
@@ -44,16 +42,11 @@ let BitstreamEditSidebar = props =>{
     }
 
     return(
-        <SidebarBlockLayout padding={'1rem'}>
-            <SidebarBlockTitleLayout>
-                <label style={{fontSize:'20px',fontWeight:600}}>{"Bitstreams"}</label>
-            </SidebarBlockTitleLayout>
             <FormLayout>
                 <InputField inline name='name' placeholder={props.selected_bitstream.name} onKeyDown={handle_change_name} label='name'/>
                 <Button onClick={handle_open_file_chooser}>Change Bitstream File</Button>
+                <input type='file' id='bitstream_chooser' ref={inputFile} onChange={upload_file} style={{display: 'none'}}/>
             </FormLayout>
-            <input type='file' id='bitstream_chooser' ref={inputFile} onChange={upload_file} style={{display: 'none'}}/>
-        </SidebarBlockLayout>
     )
 };
 

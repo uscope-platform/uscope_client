@@ -16,8 +16,6 @@
 import React from 'react';
 
 import {useSelector} from "react-redux";
-import {BlockTitle, InputField, SidebarContentLayout} from "../../UI_elements";
-
 
 import ApplicationEditSidebar from "./ApplicationEditSidebar";
 import {up_application} from "../../../client_core";
@@ -26,23 +24,12 @@ import {up_application} from "../../../client_core";
 let  ApplicationSidebar = props =>{
     const selected_application =  useSelector(state => new up_application(state.applications[state.settings.current_application]))
 
-    let handle_add_application = (event) =>{
-        if (event.key === "Enter") {
-            up_application.construct_empty(event.target.value).add_remote().then();
-        }
-    };
-
-    if(!selected_application.application_name)
-        return (
-            <SidebarContentLayout application>
-                <BlockTitle>Applications actions</BlockTitle>
-                <InputField compact label="Add an Application" onKeyDown={handle_add_application}/>
-            </SidebarContentLayout>
+    if(selected_application.application_name)
+        return(
+                <ApplicationEditSidebar selected_application={selected_application}/>
         );
 
-    return(
-        <ApplicationEditSidebar selected_application={selected_application}/>
-    );
+
 };
 
 export default ApplicationSidebar;

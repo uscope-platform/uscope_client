@@ -15,7 +15,7 @@
 
 import React, {useEffect} from 'react';
 
-import {BlockLayout, BlockTitle, Button, FormLayout} from "../UI_elements"
+import {Button, FormLayout} from "../UI_elements"
 import {useSelector} from "react-redux";
 import SingleValueField from "../Common_Components/SingleValueField";
 import {run_parameter_script} from "../../client_core";
@@ -48,24 +48,22 @@ let  ParametersArea = props =>{
     };
 
     return(
-        <BlockLayout>
-            <BlockTitle>Parameters</BlockTitle>
-            <form onSubmit={handleSubmit}>
-                <FormLayout>
+        <form onSubmit={handleSubmit}>
+            <FormLayout>
                     {
                         parameters.map((param, i) => {
-                        if(param.visible){
-                            return(
-                                <SingleValueField key={i} name={param.parameter_id} placeholder={param.value} description={param.description}/>
-                            );
-                        } else{
-                            return null;
-                        }
-                    })}
-                    <Button> Submit </Button>
-                </FormLayout>
-            </form>
-        </BlockLayout>
+                            if(param.visible){
+                                return(
+                                    <SingleValueField key={i} name={param.parameter_id} placeholder={param.value} description={param.description}/>
+                                );
+                            } else{
+                                return null;
+                            }
+                        })
+                    }
+                <Button> Submit </Button>
+            </FormLayout>
+        </form>
     );
 };
 

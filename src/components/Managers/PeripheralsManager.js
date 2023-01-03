@@ -21,7 +21,7 @@ import DataTable from 'react-data-table-component';
 import {TableStyle} from './TableStyles'
 
 
-import {BlockLayout, Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements"
+import {Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements"
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
 import {import_peripherals, up_peripheral} from "../../client_core"
@@ -129,18 +129,16 @@ let PeripheralsManager = (props)=>{
                 <Button style={{margin:"0 1rem"}} onClick={handleImport}>Import peripheral</Button>
                 <Button style={{margin:"0 1rem"}} onClick={handleExport}>Export peripheral</Button>
             </ManagerButtonsLayout>
-            <BlockLayout centered>
-                <DataTable
-                    title='Peripherals'
-                    data={Object.values(peripherals_redux)}
-                    columns={columns}
-                    customStyles={TableStyle}
-                    theme="uScopeTableTheme"
-                    selectableRows
-                    onSelectedRowsChange={handleOnSelect}
-                    selectableRowSelected={rowSelectCritera}
-                />
-            </BlockLayout>
+            <DataTable
+                title='Peripherals'
+                data={Object.values(peripherals_redux)}
+                columns={columns}
+                customStyles={TableStyle}
+                theme="uScopeTableTheme"
+                selectableRows
+                onSelectedRowsChange={handleOnSelect}
+                selectableRowSelected={rowSelectCritera}
+            />
         </ManagerLayout>
     )
 }
