@@ -15,49 +15,36 @@
 
 import React, {useState, useReducer} from 'react';
 
-import styled from "styled-components";
-
 import {useSelector} from "react-redux";
 import {
     InputField,
-    Label,
     RegisterProperties,
-    SidebarBlockLayout,
-    SidebarBlockTitleLayout,
-    SidebarContentLayout,
-    StyledScrollbar
+    StyledScrollbar, TabbedContent, UIPanel
 } from "../../UI_elements";
-import {BlockTitle} from "../../UI_elements/";
 import {Add} from "grommet-icons";
-
-const TitleLayout = styled.div`
-  margin-left: auto;
-  margin-right: auto;
-`
+import {Responsive, WidthProvider} from "react-grid-layout";
 
 let  PeripheralEditSidebar = props =>{
+
+    const ResponsiveGridLayout = WidthProvider(Responsive);
+
     const peripherals = useSelector(state => state.peripherals);
     const settings = useSelector(state => state.settings);
 
-    const [edit_label, set_edit_label] = useState(false);
     const [new_register, set_new_register] = useState(false);
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
-
-    let handleEditVersion = () =>{
-        set_edit_label(true);
-    }
-
-    let handleEditVersionDone = (event) =>{
-        if(event.key ==="Escape"){
-            set_edit_label(false);
-        } else if (event.key ==="Enter"){
-            set_edit_label(false)
+    let handleEditVersion = (event) =>{
+        if (event.key ==="Enter"){
             props.selected_peripheral.set_version(event.target.value).then();
         }
-
     }
 
+    let handleEditName = (event) =>{
+        if (event.key ==="Enter"){
+            props.selected_peripheral.edit_name(event.target.value).then();
+        }
+    }
     let handle_add_register = () => {
         set_new_register(true);
     }
@@ -74,22 +61,16 @@ let  PeripheralEditSidebar = props =>{
     if(!settings.current_peripheral)
         return <></>;
 
-    return(
-        <SidebarContentLayout peripheral>
-            <TitleLayout>
-                <BlockTitle>{peripherals[settings.current_peripheral].peripheral_name}</BlockTitle>
-                {edit_label
-                    ? <InputField compact name="edit_version" defaultValue={peripherals[settings.current_peripheral].version} onKeyDown={handleEditVersionDone} label="Version"/>
-                    : <Label onDoubleClick={handleEditVersion}>{"Version: "+peripherals[settings.current_peripheral].version}</Label>
-                }
-            </TitleLayout>
-            <SidebarBlockLayout>
-                <SidebarBlockTitleLayout>
-                    <label style={{fontSize:'20px',fontWeight:600}}>{"Registers"}</label>
-                    <Add id="register" size={"medium"} onClick={handle_add_register} color='white'/>
-                </SidebarBlockTitleLayout>
+    let get_tabs_content = ()=>{
+        return([
+            <div>
+                <InputField inline name="edit_name" defaultValue={peripherals[settings.current_peripheral].peripheral_name} onKeyDown={handleEditName} label="Name"/>
+                <InputField inline name="edit_version" defaultValue={peripherals[settings.current_peripheral].version} onKeyDown={handleEditVersion} label="Version"/>
+            </div>,
+            <div>
+                <Add id="register" size={"medium"} onClick={handle_add_register} color='white'/>
                 {new_register &&
-                <InputField name="register" compact label="Register Name" onKeyDown={handle_add_register_done}/>
+                    <InputField name="register" compact label="Register Name" onKeyDown={handle_add_register_done}/>
                 }
                 <StyledScrollbar>
                     {
@@ -100,8 +81,27 @@ let  PeripheralEditSidebar = props =>{
                         })
                     }
                 </StyledScrollbar>
-            </SidebarBlockLayout>
-        </SidebarContentLayout>
+            </div>
+        ])
+    }
+
+    let get_tabs_names = ()=>{
+        return ["Peripheral properties", "Registers"]
+    }
+
+
+
+    return(
+
+        <ResponsiveGridLayout
+            className="layout"
+            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+        >
+            <UIPanel key="new_props" data-grid={{x: 2, y: 0, w: 24, h: 6}} level="level_2">
+                <TabbedContent names={get_tabs_names()} contents={get_tabs_content()}/>
+            </UIPanel>
+        </ResponsiveGridLayout>
     );
 };
 

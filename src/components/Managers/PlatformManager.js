@@ -17,7 +17,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {useLocation} from "react-router-dom";
 
 import {useDispatch, useSelector} from "react-redux"
-import {BlockLayout, Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements"
+import {Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements"
 
 
 import DataTable from 'react-data-table-component';
@@ -56,7 +56,9 @@ let  PlatformManager = props =>{
 
     let handleOnSelect = (selection) => {
         if(selection.selectedCount===1){
-            dispatch(setSetting(["selected_user", selection.selectedRows[0].username]));
+            if(settings.selected_user !==selection.selectedRows[0].username){
+                dispatch(setSetting(["selected_user", selection.selectedRows[0].username]));
+            }
         } else if(selection.selectedCount===0) {
             dispatch(setSetting(["selected_user", null]));
         }
@@ -112,18 +114,16 @@ let  PlatformManager = props =>{
                 <Button style={{margin:"0 1rem"}} onClick={handleDumpDatabse}>Dump Database</Button>
                 <Button style={{margin:"0 1rem"}} onClick={handleRestoreButton}>Restore Database</Button>
             </ManagerButtonsLayout>
-            <BlockLayout centered>
-                <DataTable
-                    title='Users'
-                    data={users}
-                    columns={columns}
-                    theme="uScopeTableTheme"
-                    customStyles={TableStyle}
-                    selectableRows
-                    onSelectedRowsChange={handleOnSelect}
-                    selectableRowSelected={rowSelectCritera}
-                />
-            </BlockLayout>
+            <DataTable
+                title='Users'
+                data={users}
+                columns={columns}
+                theme="uScopeTableTheme"
+                customStyles={TableStyle}
+                selectableRows
+                onSelectedRowsChange={handleOnSelect}
+                selectableRowSelected={rowSelectCritera}
+            />
             <input type='file' id='dbFile' ref={databaseFile} onChange={handleRestoreDatabse} style={{display: 'none'}}/>
         </ManagerLayout>
     );

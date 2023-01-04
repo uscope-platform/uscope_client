@@ -15,7 +15,7 @@
 
 import React from 'react';
 
-import {BlockLayout, BlockTitle, Button} from "../UI_elements"
+import {Button} from "../UI_elements"
 import {useSelector} from "react-redux";
 
 import styled from "styled-components";
@@ -48,18 +48,15 @@ let  MacroActions = props =>{
     };
 
     return(
-        <BlockLayout centered>
-            <BlockTitle>Macros</BlockTitle>
-            <ButtonGrid>
-                {actions.map((macro) => {
-                    return(
-                        <div key={macro.name} style={{margin:'0.5rem'}}>
-                            <Button key={macro.name} className="macro_action_buttons" name={macro.trigger} onClick={onClick}>{macro.name}</Button>
-                        </div>
-                    );
-                })}
-            </ButtonGrid>
-        </BlockLayout>
+        <ButtonGrid>
+            {actions.map((macro) => {
+                return(
+                    <div key={macro.name} style={{margin:'0.5rem'}}>
+                        <Button key={macro.name} className="macro_action_buttons" name={macro.trigger} onClick={onClick}>{macro.name}</Button>
+                    </div>
+                );
+            })}
+        </ButtonGrid>
     );
 };
 

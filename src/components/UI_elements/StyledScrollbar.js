@@ -20,7 +20,6 @@ import {ColorTheme} from "./ColorTheme";
 
 export let StyledScrollbar = (props) =>{
 
-
     let renderThumb = ({style, ...props}) => {
         const thumbStyle = {
             backgroundColor: ColorTheme.dark_theme.level_1
@@ -35,8 +34,8 @@ export let StyledScrollbar = (props) =>{
     return (
         <Scrollbars
             autoHeight
-            autoHeightMin={100}
-            autoHeightMax={400}
+            autoHeightMin={10}
+            autoHeightMax={4000}
             renderThumbHorizontal={renderThumb}
             renderThumbVertical={renderThumb}
             {...props}/>

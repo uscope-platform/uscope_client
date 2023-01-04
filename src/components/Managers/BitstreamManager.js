@@ -14,12 +14,12 @@
 // limitations under the License.
 
 import React, {useRef, useState} from "react";
-import {BlockLayout, Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements";
+import {Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements";
 import DataTable from "react-data-table-component";
 import {TableStyle} from "./TableStyles";
 import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../../redux/Actions/SettingsActions";
-import {up_bitstream} from "../../client_core";
+import {get_next_id, up_bitstream} from "../../client_core";
 
 let columns = [
     {
@@ -50,25 +50,14 @@ let BitstreamManager = props =>{
 
     let handleOnSelect = (selection) => {
         if(selection.selectedCount===1){
-            dispatch(setSetting(["selected_bitstream", selection.selectedRows[0].id]));
+            if(settings.selected_bitstream !==selection.selectedRows[0].id){
+                dispatch(setSetting(["selected_bitstream", selection.selectedRows[0].id]));
+            }
         } else if(selection.selectedCount===0) {
             dispatch(setSetting(["selected_bitstream", null]));
         }
 
     };
-
-    let get_next_id =(ids) => {
-        let id = null;
-        if(ids.length === 0) return 1;
-        for(var i = 1; i < ids.length; i++) {
-            if(ids[i] - ids[i-1] !== 1) {
-                id = ids[i-1]+1;
-            }
-        }
-        if(id===null)
-            id = ids.length+1;
-        return id;
-    }
 
     let handleAddRow = () =>{
 
@@ -107,18 +96,16 @@ let BitstreamManager = props =>{
             <Button style={{margin:"0 1rem"}} onClick={handleAddRow}>Add Bitstream</Button>
             <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}>Remove Bitstream</Button>
         </ManagerButtonsLayout>
-        <BlockLayout centered>
-            <DataTable
-                title='Bitstreams'
-                data={Object.values(bitstreams_store)}
-                columns={columns}
-                customStyles={TableStyle}
-                theme="uScopeTableTheme"
-                selectableRows
-                onSelectedRowsChange={handleOnSelect}
-                selectableRowSelected={rowSelectCritera}
-            />
-        </BlockLayout>
+        <DataTable
+            title='Bitstreams'
+            data={Object.values(bitstreams_store)}
+            columns={columns}
+            customStyles={TableStyle}
+            theme="uScopeTableTheme"
+            selectableRows
+            onSelectedRowsChange={handleOnSelect}
+            selectableRowSelected={rowSelectCritera}
+        />
         <input type='file' id='bitstream_chooser' ref={inputFile} onChange={upload_file} style={{display: 'none'}}/>
     </ManagerLayout>
     );

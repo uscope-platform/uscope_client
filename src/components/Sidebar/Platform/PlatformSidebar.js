@@ -17,18 +17,18 @@ import React from 'react';
 
 import {useDispatch, useSelector} from "react-redux";
 import {
-    BlockTitle,
     Button,
     FormLayout,
     InputField,
-    SidebarContentLayout
+    SelectField, UIPanel, SimpleContent
 } from "../../UI_elements";
 import {setSetting} from "../../../redux/Actions/SettingsActions";
-import {SelectField} from "../../UI_elements/Select";
 
 import {add_user, do_onboarding} from "../../../client_core";
+import {Responsive, WidthProvider} from "react-grid-layout";
 
 let  PlatformSidebar = props =>{
+    const ResponsiveGridLayout = WidthProvider(Responsive);
 
     const settings = useSelector(state => state.settings);
     const dispatch = useDispatch()
@@ -54,18 +54,27 @@ let  PlatformSidebar = props =>{
 
     if(!settings.selected_program)
         return (
-            <SidebarContentLayout peripheral>
-                <BlockTitle>Platform actions</BlockTitle>
-                <form onSubmit={handle_add_user}>
-                    <FormLayout>
-                        <InputField inline name="user" label="Username"/>
-                        <InputField inline name="pass" label="Password"/>
-                        <SelectField label="Role" defaultValue="role"
-                                     name="role" placeholder="Role" options={["admin", "user", "operator"]}/>
-                        <Button> Submit </Button>
-                    </FormLayout>
-                </form>
-            </SidebarContentLayout>
+            <ResponsiveGridLayout
+                className="layout"
+                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+                cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+                rowHeight={30}
+            >
+                <UIPanel key="platform_properties" data-grid={{x: 2, y: 0, w: 24, h: 6}} level="level_2">
+                    <SimpleContent name="Platform Properties" content={
+                        <form onSubmit={handle_add_user}>
+                            <FormLayout>
+                                <InputField inline name="user" label="Username"/>
+                                <InputField inline name="pass" label="Password"/>
+                                <SelectField label="Role" defaultValue="role"
+                                             name="role" placeholder="Role" options={["admin", "user", "operator"]}/>
+                                <Button> Submit </Button>
+                            </FormLayout>
+                        </form>
+                    }/>
+                </UIPanel>
+            </ResponsiveGridLayout>
+
         );
 
     return(

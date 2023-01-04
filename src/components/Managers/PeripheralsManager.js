@@ -21,10 +21,10 @@ import DataTable from 'react-data-table-component';
 import {TableStyle} from './TableStyles'
 
 
-import {BlockLayout, Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements"
+import {Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements"
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
-import {import_peripherals, up_peripheral} from "../../client_core"
+import {get_next_id, import_peripherals, up_peripheral} from "../../client_core"
 import {addPeripheral} from "../../redux/Actions/peripheralsActions";
 
 let columns = [
@@ -55,7 +55,9 @@ let PeripheralsManager = (props)=>{
 
     let handleOnSelect = (selection) => {
         if(selection.selectedCount===1){
-            dispatch(setSetting(["current_peripheral", selection.selectedRows[0].peripheral_name]))
+            if(settings.current_peripheral !==selection.selectedRows[0].peripheral_name){
+                dispatch(setSetting(["current_peripheral", selection.selectedRows[0].peripheral_name]));
+            }
         } else if(selection.selectedCount===0) {
             dispatch(setSetting(["current_peripheral", null]))
         } else if(selection.selectedCount>1){
@@ -102,45 +104,53 @@ let PeripheralsManager = (props)=>{
 
             reader.onload = readerEvent => {
                 let content = readerEvent.target.result; // this is the content!
-                handle_add_peripheral(content)
+                import_peripherals(content).then((periphs)=>{
+                    for(let p of periphs){
+                        addPeripheral(p);
+                    }
+                }).catch((err)=>{
+                    alert(err);
+                });
             }
         };
         document.body.appendChild(input);
         input.click();
     };
 
-    let handle_add_peripheral = (content) => {
-        import_peripherals(content).then((periphs)=>{
-            for(let p of periphs){
-                addPeripheral(p);
-            }
-        }).catch((err)=>{
-            alert(err);
-        });
-    };
 
     const rowSelectCritera = row => row.peripheral_name === settings.current_peripheral;
 
+    let handleAdd = (content) => {
+        let ids = Object.values(peripherals_redux).map((periph)=>{
+            const regex = /new_peripheral_(\d+)/g;
+            let match = Array.from(periph.peripheral_name.matchAll(regex), m => m[1]);
+            if(match.length>0){
+                return match;
+            }
+        });
+        ids = ids.filter(Boolean);
+        let id = get_next_id(ids.sort());
+        up_peripheral.construct_empty("new_peripheral_"+id).add_remote().then();
+    };
 
     return(
         <ManagerLayout>
             <ManagerButtonsLayout>
+                <Button style={{margin:"0 1rem"}} onClick={handleAdd}> Add Peripheral</Button>
                 <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}> Remove Peripheral</Button>
                 <Button style={{margin:"0 1rem"}} onClick={handleImport}>Import peripheral</Button>
                 <Button style={{margin:"0 1rem"}} onClick={handleExport}>Export peripheral</Button>
             </ManagerButtonsLayout>
-            <BlockLayout centered>
-                <DataTable
-                    title='Peripherals'
-                    data={Object.values(peripherals_redux)}
-                    columns={columns}
-                    customStyles={TableStyle}
-                    theme="uScopeTableTheme"
-                    selectableRows
-                    onSelectedRowsChange={handleOnSelect}
-                    selectableRowSelected={rowSelectCritera}
-                />
-            </BlockLayout>
+            <DataTable
+                title='Peripherals'
+                data={Object.values(peripherals_redux)}
+                columns={columns}
+                customStyles={TableStyle}
+                theme="uScopeTableTheme"
+                selectableRows
+                onSelectedRowsChange={handleOnSelect}
+                selectableRowSelected={rowSelectCritera}
+            />
         </ManagerLayout>
     )
 }

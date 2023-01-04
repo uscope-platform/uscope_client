@@ -32,6 +32,13 @@ a {
   text-decoration: none;
 }
 
+.dock-tabpane{
+  overflow: auto !important;
+}
+
+
+
+
 /* montserrat-100 - latin-ext_latin */
 @font-face {
   font-family: 'Montserrat';

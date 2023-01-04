@@ -17,7 +17,6 @@ import React from 'react';
 
 import BitstreamEditSidebar from "./BitstreamEditSidebar";
 import {useSelector} from "react-redux";
-import {BlockTitle, SidebarContentLayout} from "../../UI_elements";
 import {up_bitstream} from "../../../client_core";
 
 
@@ -26,16 +25,12 @@ let  BitstreamSidebar = props =>{
 
     const selected_bitstream =  useSelector(state => new up_bitstream(state.bitstreams[state.settings.selected_bitstream]))
 
-    if(!selected_bitstream)
-        return (
-            <SidebarContentLayout peripheral>
-                <BlockTitle>Bitstream actions</BlockTitle>
-            </SidebarContentLayout>
+    if(selected_bitstream.id)
+        return(
+            <BitstreamEditSidebar selected_bitstream={selected_bitstream}/>
         );
 
-    return(
-        <BitstreamEditSidebar selected_bitstream={selected_bitstream}/>
-    );
+
 };
 
 export default BitstreamSidebar;

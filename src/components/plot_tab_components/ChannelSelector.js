@@ -17,7 +17,7 @@ import React, {useEffect} from 'react';
 
 import ChannelSelectorItem from "./ChannelSelectorItem";
 import {useSelector} from "react-redux";
-import {BlockLayout, BlockTitle, ColorTheme} from "../UI_elements";
+import {ColorTheme} from "../UI_elements";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import {useDispatch} from "react-redux";
 
@@ -60,14 +60,13 @@ let ChannelSelector = function(props) {
     }
 
     return(
-            <BlockLayout>
-                <BlockTitle style={{gridRowEnd: 2}}>Channels</BlockTitle>
+            <div>
                     {channels_data.map((chan,i) => {
                         return(
                             <ChannelSelectorItem onStatusChange={handle_status_change} key={chan.spec.id} id={chan.spec.id} idx={i} name={chan.spec.name} value={chan.visible}/>
                         );
                     })}
-            </BlockLayout>
+            </div>
         );
 };
 

@@ -1,4 +1,4 @@
-// Copyright 2021 University of Nottingham Ningbo China
+// Copyright 2021 Filippo Savi
 // Author: Filippo Savi <filssavi@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,23 +13,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import {PanelTitle, ContentDiv} from "./UIPanel";
 
-import ScriptEditSidebar from "./ScriptEditSidebar";
-import {useSelector} from "react-redux";
-import {up_script} from "../../../client_core";
+export let SimpleContent = function (props) {
 
-
-
-let  ScriptSidebar = props =>{
-
-    const selected_script =  useSelector(state => new up_script(state.scripts[state.settings.selected_script]))
-
-    if(selected_script.id)
-        return(
-            <ScriptEditSidebar selected_script={selected_script}/>
-        );
-
+    return(
+        <div style={{  height: "100%"}}>
+            <PanelTitle selected>
+                <p>{props.name}</p>
+            </PanelTitle>
+            <ContentDiv>
+                {props.content}
+            </ContentDiv>
+        </div>
+    );
 };
-
-export default ScriptSidebar;

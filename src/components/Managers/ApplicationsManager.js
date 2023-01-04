@@ -17,12 +17,12 @@ import React, {useEffect} from 'react';
 
 import {useDispatch, useSelector} from "react-redux"
 
-import {BlockLayout, Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements"
+import {Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements"
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
 import DataTable from 'react-data-table-component';
 import {TableStyle} from './TableStyles'
-import {up_application, import_application} from "../../client_core";
+import {up_application, import_application, get_next_id} from "../../client_core";
 import {addApplication} from "../../redux/Actions/applicationActions";
 
 
@@ -50,7 +50,9 @@ let  ApplicationsManager = props =>{
 
     let handleOnSelect = (selection) => {
         if(selection.selectedCount===1){
-            dispatch(setSetting(["current_application", selection.selectedRows[0].application_name]))
+            if(settings.current_application !==selection.selectedRows[0].application_name){
+                dispatch(setSetting(["current_application", selection.selectedRows[0].application_name]));
+            }
         } else if(selection.selectedCount===0) {
             dispatch(setSetting(["current_application", null]))
         }
@@ -92,7 +94,11 @@ let  ApplicationsManager = props =>{
 
             reader.onload = readerEvent => {
                 let content = readerEvent.target.result; // this is the content!
-                handle_application_add(content)
+                import_application(content).then((app)=>{
+                    addApplication(app)
+                }).catch((err)=>{
+                    alert(err);
+                });
             }
         };
         document.body.appendChild(input);
@@ -100,12 +106,18 @@ let  ApplicationsManager = props =>{
 
     };
 
-    let handle_application_add = (content) => {
-        import_application(content).then((app)=>{
-            addApplication(app)
-        }).catch((err)=>{
-            alert(err);
+    let handleAdd = (content) => {
+        let ids = Object.values(applications_redux).map((app)=>{
+            const regex = /new_application_(\d+)/g;
+            let match = Array.from(app.application_name.matchAll(regex), m => m[1]);
+            if(match.length>0){
+                return match;
+            }
         });
+        debugger;
+        ids = ids.filter(Boolean);
+        let id = get_next_id(ids.sort());
+        up_application.construct_empty("new_application_"+id).add_remote().then();
     };
 
     const rowSelectCritera = row => row.application_name === settings.current_application;
@@ -113,22 +125,23 @@ let  ApplicationsManager = props =>{
     return(
         <ManagerLayout>
             <ManagerButtonsLayout>
+                <Button style={{margin:"0 1rem"}} onClick={handleAdd}> Add application</Button>
                 <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}> Remove application</Button>
                 <Button style={{margin:"0 1rem"}} onClick={handleImport}>Import application</Button>
                 <Button style={{margin:"0 1rem"}} onClick={handleExport}>Export application</Button>
             </ManagerButtonsLayout>
-            <BlockLayout centered>
-                <DataTable
-                    title='Applications'
-                    data={Object.values(applications_redux)}
-                    columns={columns}
-                    theme="uScopeTableTheme"
-                    customStyles={TableStyle}
-                    selectableRows
-                    onSelectedRowsChange={handleOnSelect}
-                    selectableRowSelected={rowSelectCritera}
-                />
-            </BlockLayout>
+
+            <DataTable
+                title='Applications'
+                data={Object.values(applications_redux)}
+                columns={columns}
+                theme="uScopeTableTheme"
+                customStyles={TableStyle}
+                selectableRows
+                onSelectedRowsChange={handleOnSelect}
+                selectableRowSelected={rowSelectCritera}
+            />
+
 
         </ManagerLayout>
     );

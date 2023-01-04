@@ -16,17 +16,17 @@
 import React, {useRef} from "react";
 import {
     Button,
-    FormLayout, InputField,
-    SidebarBlockLayout,
-    SidebarBlockTitleLayout
+    FormLayout, InputField, SimpleContent, UIPanel,
 } from "../../UI_elements";
 import {up_bitstream} from "../../../client_core";
+import {Responsive, WidthProvider} from "react-grid-layout";
 
 
 
 
 let BitstreamEditSidebar = props =>{
     const inputFile = useRef(null)
+    const ResponsiveGridLayout = WidthProvider(Responsive);
 
     let upload_file = (event) => {
         up_bitstream.get_file_content( inputFile).then((file_content =>{
@@ -44,16 +44,23 @@ let BitstreamEditSidebar = props =>{
     }
 
     return(
-        <SidebarBlockLayout padding={'1rem'}>
-            <SidebarBlockTitleLayout>
-                <label style={{fontSize:'20px',fontWeight:600}}>{"Bitstreams"}</label>
-            </SidebarBlockTitleLayout>
-            <FormLayout>
-                <InputField inline name='name' placeholder={props.selected_bitstream.name} onKeyDown={handle_change_name} label='name'/>
-                <Button onClick={handle_open_file_chooser}>Change Bitstream File</Button>
-            </FormLayout>
-            <input type='file' id='bitstream_chooser' ref={inputFile} onChange={upload_file} style={{display: 'none'}}/>
-        </SidebarBlockLayout>
+        <ResponsiveGridLayout
+            className="layout"
+            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+            rowHeight={30}
+        >
+            <UIPanel key="bitstream_properties" data-grid={{x: 2, y: 0, w: 24, h: 5}} level="level_2">
+                <SimpleContent name="Bitstream Properties" content={
+                    <FormLayout>
+                        <InputField inline name='name' placeholder={props.selected_bitstream.name} onKeyDown={handle_change_name} label='name'/>
+                        <Button onClick={handle_open_file_chooser}>Change Bitstream File</Button>
+                        <input type='file' id='bitstream_chooser' ref={inputFile} onChange={upload_file} style={{display: 'none'}}/>
+                    </FormLayout>
+                }/>
+            </UIPanel>
+        </ResponsiveGridLayout>
+
     )
 };
 
