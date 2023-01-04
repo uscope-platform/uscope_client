@@ -17,7 +17,7 @@ import React, {useEffect} from 'react';
 
 import ChannelSelectorItem from "./ChannelSelectorItem";
 import {useSelector} from "react-redux";
-import {BlockLayout, BlockTitle, ColorTheme} from "../UI_elements";
+import {ColorTheme} from "../UI_elements";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import {useDispatch} from "react-redux";
 

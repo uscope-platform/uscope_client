@@ -41,7 +41,6 @@ const initial_state = {
             t: 25,
         },
         width: "1024",
-        height: "auto",
         paper_bgcolor: "rgba(0,0,0,0)",
         plot_bgcolor:"#444",
         font: {

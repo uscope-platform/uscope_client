@@ -15,11 +15,13 @@
 
 import React from "react";
 import {
-    FormLayout, InputField,
+    FormLayout, InputField, SimpleContent, UIPanel,SelectField
 } from "../../UI_elements";
-import {SelectField} from "../../UI_elements/Select";
+import {Responsive, WidthProvider} from "react-grid-layout";
 
 let ProgramEditSidebar = props =>{
+
+    const ResponsiveGridLayout = WidthProvider(Responsive);
 
     let handle_name_change = (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
@@ -34,11 +36,24 @@ let ProgramEditSidebar = props =>{
     let allowed_types = ["asm", "C"];
     return(
 
-            <FormLayout>
-                <InputField inline name='name' placeholder={props.selected_program.name} onKeyDown={handle_name_change} label="Name"/>
-                <SelectField label="Program type" onChange={handleTypeChange} defaultValue={props.selected_program.program_type}
-                             name="program_type" placeholder="Program type" options={allowed_types}/>
-            </FormLayout>
+        <ResponsiveGridLayout
+            className="layout"
+            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+            rowHeight={30}
+        >
+            <UIPanel key="program_properties" data-grid={{x: 2, y: 0, w: 24, h: 5}} level="level_2">
+                <SimpleContent name="Program Properties" content={
+                    <FormLayout>
+                        <InputField inline name='name' placeholder={props.selected_program.name} onKeyDown={handle_name_change} label="Name"/>
+                        <SelectField label="Program type" onChange={handleTypeChange} defaultValue={props.selected_program.program_type}
+                                     name="program_type" placeholder="Program type" options={allowed_types}/>
+                    </FormLayout>
+                }/>
+            </UIPanel>
+        </ResponsiveGridLayout>
+
+
     )
 };
 

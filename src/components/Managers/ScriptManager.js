@@ -69,8 +69,11 @@ let ScriptManager = (props) =>{
     const selected_script = new up_script(scripts_store[settings.selected_script]);
 
     let handleOnSelect = (selection) => {
+
         if(selection.selectedCount===1){
-            dispatch(setSetting(["selected_script", selection.selectedRows[0].id]));
+            if(settings.selected_script !==selection.selectedRows[0].id){
+                dispatch(setSetting(["selected_script", selection.selectedRows[0].id]));
+            }
         } else if(selection.selectedCount===0) {
             dispatch(setSetting(["selected_script", null]));
         }

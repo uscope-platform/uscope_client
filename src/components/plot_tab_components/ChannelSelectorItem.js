@@ -20,6 +20,7 @@ import styled from "styled-components";
 
 const Centering = styled.div`
   margin: 0 auto;  
+  width: fit-content;
 `
 
 let  ChannelSelectorItem = props => {

@@ -36,6 +36,15 @@ export const ColorTheme = {
         level_4:"#3FA8D9",
         accents:"#c76863"
     },
+    background:{
+        level_1: "#121212",
+        level_2: "rgba(255,255,255,0.07)",
+        level_3: "rgba(255,255,255,0.08)",
+        level_4: "rgba(255,255,255,0.09)",
+        level_5: "rgba(255,255,255,0.11)",
+        accents: "#c76863",
+        borders: "#434343"
+    },
     plot_palette:[
         "rgb(161, 201,244)",
         "rgb(141, 229,161)",

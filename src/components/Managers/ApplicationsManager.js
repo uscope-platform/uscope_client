@@ -22,7 +22,7 @@ import {setSetting} from "../../redux/Actions/SettingsActions";
 
 import DataTable from 'react-data-table-component';
 import {TableStyle} from './TableStyles'
-import {up_application, import_application, get_next_id} from "../../client_core";
+import {up_application, import_application, get_next_id, up_peripheral} from "../../client_core";
 import {addApplication} from "../../redux/Actions/applicationActions";
 
 
@@ -50,7 +50,9 @@ let  ApplicationsManager = props =>{
 
     let handleOnSelect = (selection) => {
         if(selection.selectedCount===1){
-            dispatch(setSetting(["current_application", selection.selectedRows[0].application_name]))
+            if(settings.current_application !==selection.selectedRows[0].application_name){
+                dispatch(setSetting(["current_application", selection.selectedRows[0].application_name]));
+            }
         } else if(selection.selectedCount===0) {
             dispatch(setSetting(["current_application", null]))
         }

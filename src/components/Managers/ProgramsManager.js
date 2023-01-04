@@ -60,7 +60,9 @@ let ProgramsManager = props =>{
 
     let handleOnSelect = (selection) => {
         if(selection.selectedCount===1){
-            dispatch(setSetting(["selected_program", selection.selectedRows[0].id]));
+            if(settings.selected_program !==selection.selectedRows[0].id){
+                dispatch(setSetting(["selected_program", selection.selectedRows[0].id]));
+            }
         } else if(selection.selectedCount===0) {
             dispatch(setSetting(["selected_program", null]));
         }

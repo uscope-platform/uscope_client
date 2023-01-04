@@ -26,14 +26,14 @@ import {
     MacroProperties,
     ParameterProperties,
     PlotChannelProperties,
-    SidebarBlockLayout,
-    SidebarBlockTitleLayout,
     StyledScrollbar,
-    PlotChannelGroupProperties
+    PlotChannelGroupProperties,
+    TabbedContent,
+    UIPanel
 } from "../../UI_elements";
 
 import {Add} from "grommet-icons";
-import {DockLayout} from "rc-dock";
+import {Responsive, WidthProvider} from "react-grid-layout";
 
 let initial_new_fields_state = {
     "channel":false,
@@ -46,7 +46,6 @@ let initial_new_fields_state = {
     "ch_group":false
 };
 
-const FieldsContext = React.createContext();
 
 let  ApplicationEditSidebar = props =>{
     const settings = useSelector(state => state.settings);
@@ -58,10 +57,13 @@ let  ApplicationEditSidebar = props =>{
     const [new_fields, set_new_fields] = useState(initial_new_fields_state);
 
 
+    const ResponsiveGridLayout = WidthProvider(Responsive);
+
     let update_fields = (field, status) =>{
         let next_state = new_fields;
         next_state[field] = status;
         set_new_fields(next_state);
+        forceUpdate();
     }
 
     let handle_add_item_done = (event) =>{
@@ -105,231 +107,148 @@ let  ApplicationEditSidebar = props =>{
     }
 
 
-    const default_layout = {
-        dockbox: {
-            mode: 'vertical',
-            children: [
-                {
-                    tabs: [{id: "old", title:"Old Properties", content:
-                            (<>
-                                    <SidebarBlockLayout>
-                                        <SidebarBlockTitleLayout>
-                                            <label style={{fontSize:'20px',fontWeight:600}}>{"Channels"}</label>
-                                            <Add id="channel" size={"medium"} onClick={handle_add_item} color='white'/>
-                                        </SidebarBlockTitleLayout>
-                                        <FieldsContext.Consumer>
-                                            {(context) => (
-                                                <>
-                                                    {context.channel ?
-                                                        <InputField name="channel" compact label="Channel Name" onKeyDown={handle_add_item_done}/>:null
-                                                    }
-                                                </>
-                                            )}
-                                        </FieldsContext.Consumer>
-                                        <StyledScrollbar>
-                                            {
-                                                props.selected_application.channels.map((channel)=>{
-                                                    return(
-                                                        <PlotChannelProperties application={props.selected_application} forceUpdate={forceUpdate} channel={channel}/>
-                                                    )
-                                                })
-                                            }
-                                        </StyledScrollbar>
-                                    </SidebarBlockLayout>
+    let get_tabs_content = ()=>{
+        return([
+            <div>
+                {new_fields.channel ?
+                    <InputField name="channel" compact label="Channel Name" onKeyDown={handle_add_item_done}/>:
+                    <Add id="channel" size={"medium"} onClick={handle_add_item} color='white'/>
 
-                                    <SidebarBlockLayout>
-                                        <SidebarBlockTitleLayout>
-                                            <label style={{fontSize:'20px',fontWeight:600}}>{"Initial Register Values"}</label>
-                                            <Add id="irv"  size={"medium"} onClick={handle_add_item} color='white'/>
-                                        </SidebarBlockTitleLayout>
-                                        <FieldsContext.Consumer>
-                                            {(context) => (
-                                                <>
-                                                    {context.irv ?
-                                                        <InputField name="irv" compact label="Register Address" onKeyDown={handle_add_item_done}/>:null
-                                                    }
-                                                </>
-                                            )}
-                                        </FieldsContext.Consumer>
-                                        <StyledScrollbar>
-                                            {
-                                                props.selected_application.initial_registers_values.map((irv)=>{
-                                                    return(
-                                                        <InitialRegisterValue application={props.selected_application} forceUpdate={forceUpdate} irv={irv}/>
-                                                    )
-                                                })
-                                            }
-                                        </StyledScrollbar>
-                                    </SidebarBlockLayout>
-
-                                    <SidebarBlockLayout>
-                                        <SidebarBlockTitleLayout>
-                                            <label style={{fontSize:'20px',fontWeight:600}}>{"Macro"}</label>
-                                            <Add  id="macro" size={"medium"} onClick={handle_add_item} color='white'/>
-                                        </SidebarBlockTitleLayout>
-                                        <FieldsContext.Consumer>
-                                            {(context) => (
-                                                <>
-                                                    {context.macro ?
-                                                        <InputField name="macro" compact label="Macro Name" onKeyDown={handle_add_item_done}/> :null
-                                                    }
-                                                </>
-                                            )}
-                                        </FieldsContext.Consumer>
-                                        <StyledScrollbar>
-                                            {
-                                                props.selected_application.macro.map((macro)=>{
-                                                    return(
-                                                        <MacroProperties application={props.selected_application} forceUpdate={forceUpdate} macro={macro}/>
-                                                    )
-                                                })
-                                            }
-                                        </StyledScrollbar>
-                                    </SidebarBlockLayout>
-
-                                    <SidebarBlockLayout>
-                                        <SidebarBlockTitleLayout>
-                                            <label style={{fontSize:'20px',fontWeight:600}}>{"Parameters"}</label>
-                                            <Add id="parameter" size={"medium"} onClick={handle_add_item} color='white'/>
-                                        </SidebarBlockTitleLayout>
-
-                                        <FieldsContext.Consumer>
-                                            {(context) => (
-                                                <>
-                                                    {context.parameter ?
-                                                        <InputField name="parameter" compact label="Parameter Name" onKeyDown={handle_add_item_done}/>: null
-                                                    }
-                                                </>
-                                            )}
-                                        </FieldsContext.Consumer>
-                                        <StyledScrollbar>
-                                            {
-                                                props.selected_application.parameters.map((parameter)=>{
-                                                    return(
-                                                        <ParameterProperties application={props.selected_application} forceUpdate={forceUpdate} parameter={parameter}/>
-                                                    )
-                                                })
-                                            }
-                                        </StyledScrollbar>
-                                    </SidebarBlockLayout>
-
-                                    <SidebarBlockLayout>
-                                        <SidebarBlockTitleLayout>
-                                            <label style={{fontSize:'20px',fontWeight:600}}>{"Peripherals"}</label>
-                                            <Add id="peripheral"  size={"medium"} onClick={handle_add_item} color='white'/>
-                                        </SidebarBlockTitleLayout>
-                                        <FieldsContext.Consumer>
-                                            {(context) => (
-                                                <>
-                                                    {context.peripheral ?
-                                                        <InputField name="peripheral" compact label="Peripheral Name" onKeyDown={handle_add_item_done}/>:null
-                                                    }
-                                                </>
-                                            )}
-                                        </FieldsContext.Consumer>
-                                        <StyledScrollbar>
-                                            {
-                                                props.selected_application.peripherals.map((peripheral)=>{
-                                                    return(
-                                                        <ApplicationPeripheralProperties application={props.selected_application} peripherals={peripherals} forceUpdate={forceUpdate} peripheral={peripheral}/>
-                                                    )
-                                                })
-                                            }
-                                        </StyledScrollbar>
-                                    </SidebarBlockLayout>
-
-                                    <SidebarBlockLayout>
-                                        <SidebarBlockTitleLayout>
-                                            <label style={{fontSize:'20px',fontWeight:600}}>{"Soft cores"}</label>
-                                            <Add id="soft_core"  size={"medium"} onClick={handle_add_item} color='white'/>
-                                        </SidebarBlockTitleLayout>
-                                        <FieldsContext.Consumer>
-                                            {(context) => (
-                                                <>
-                                                    {context.soft_core ?
-                                                        <InputField name="soft_core" compact label="Field Name" onKeyDown={handle_add_item_done}/>:null
-                                                    }
-                                                </>
-                                            )}
-                                        </FieldsContext.Consumer>
-                                        <StyledScrollbar>
-                                            {
-                                                props.selected_application.soft_cores.map((soft_core)=>{
-                                                    return(
-                                                        <ApplicationSoftCoreProperties application={props.selected_application} core={soft_core} programs={programs} forceUpdate={forceUpdate}/>
-                                                    )
-                                                })
-                                            }
-                                        </StyledScrollbar>
-                                    </SidebarBlockLayout>
-
-                                    <SidebarBlockLayout>
-                                        <SidebarBlockTitleLayout>
-                                            <label style={{fontSize:'20px',fontWeight:600}}>{"Miscelaneous"}</label>
-                                            <Add id="misc"  size={"medium"} onClick={handle_add_item} color='white'/>
-                                        </SidebarBlockTitleLayout>
-                                        <FieldsContext.Consumer>
-                                            {(context) => (
-                                                <>
-                                                    {context.misc ?
-                                                        <InputField name="misc" compact label="Field Name" onKeyDown={handle_add_item_done}/>:null
-                                                    }
-                                                </>
-                                            )}
-                                        </FieldsContext.Consumer>
-
-                                        <StyledScrollbar>
-                                            {
-                                                Object.keys(props.selected_application).map((key, index) =>{
-                                                    if(!Array.isArray(props.selected_application[key]) && typeof props.selected_application[key] !== 'function')
-                                                        return <ApplicationMiscFieldProperties application={props.selected_application} forceUpdate={forceUpdate} field={{name:key, value:props.selected_application[key]}}/>
-                                                })
-                                            }
-                                        </StyledScrollbar>
-                                    </SidebarBlockLayout>
-                                </>)
-                    }],
-                },
-                {
-                    tabs: [
-                        {id: "old", title:"Old Properties", content:
-                                <div>
-                                <Add id="ch_group" size={"medium"} onClick={handle_add_item} color='white'/>
-                                <FieldsContext.Consumer>
-                                    {(context) => {
-                                        debugger;
-                                        return( <>
-                                            {context.ch_group ?
-                                                <InputField name="ch_group" compact label="Channel Group Name" onKeyDown={handle_add_item_done}/>:null
-                                            }
-                                        </>)
-                                    }}
-                                </FieldsContext.Consumer>
-                                <StyledScrollbar>
-                                    {
-                                        props.selected_application.channel_groups.map((group)=>{
-                                            return(
-                                                <PlotChannelGroupProperties application={props.selected_application} forceUpdate={forceUpdate} group={group}/>
-                                            )
-                                        })
-                                    }
-                                </StyledScrollbar>
-                            </div>
-                        }
-                    ],
                 }
-            ]
-        }
-    };
+                <StyledScrollbar>
+                    {
+                        props.selected_application.channels.map((channel)=>{
+                            return(
+                                <PlotChannelProperties application={props.selected_application} forceUpdate={forceUpdate} channel={channel}/>
+                            )
+                        })
+                    }
+                </StyledScrollbar>
+            </div>,
+            <div>
+                {new_fields.ch_group ?
+                    <InputField name="ch_group" compact label="Channel Group Name" onKeyDown={handle_add_item_done}/>:
+                    <Add id="ch_group" size={"medium"} onClick={handle_add_item} color='white'/>
+                }
+                <StyledScrollbar>
+                    {
+                        props.selected_application.channel_groups.map((group)=>{
+                            return(
+                                <PlotChannelGroupProperties application={props.selected_application} forceUpdate={forceUpdate} group={group}/>
+                            )
+                        })
+                    }
+                </StyledScrollbar>
+            </div>,
+            <div>
+                {new_fields.irv ?
+                    <InputField name="irv" compact label="Register Address" onKeyDown={handle_add_item_done}/>:
+                    <Add id="irv"  size={"medium"} onClick={handle_add_item} color='white'/>
+                }
+                <StyledScrollbar>
+                    {
+                        props.selected_application.initial_registers_values.map((irv)=>{
+                            return(
+                                <InitialRegisterValue application={props.selected_application} forceUpdate={forceUpdate} irv={irv}/>
+                            )
+                        })
+                    }
+                </StyledScrollbar>
+            </div>,
+            <div>
+                {new_fields.macro ?
+                    <InputField name="macro" compact label="Macro Name" onKeyDown={handle_add_item_done}/> :
+                    <Add  id="macro" size={"medium"} onClick={handle_add_item} color='white'/>
+                }
+                <StyledScrollbar>
+                    {
+                        props.selected_application.macro.map((macro)=>{
+                            return(
+                                <MacroProperties application={props.selected_application} forceUpdate={forceUpdate} macro={macro}/>
+                            )
+                        })
+                    }
+                </StyledScrollbar>
+            </div>,
+            <div>
+                {new_fields.parameter ?
+                    <InputField name="parameter" compact label="Parameter Name" onKeyDown={handle_add_item_done}/>:
+                    <Add id="parameter" size={"medium"} onClick={handle_add_item} color='white'/>
+                }
+                <StyledScrollbar>
+                    {
+                        props.selected_application.parameters.map((parameter)=>{
+                            return(
+                                <ParameterProperties application={props.selected_application} forceUpdate={forceUpdate} parameter={parameter}/>
+                            )
+                        })
+                    }
+                </StyledScrollbar>
+            </div>,
+            <div>
+                {new_fields.peripheral ?
+                    <InputField name="peripheral" compact label="Peripheral Name" onKeyDown={handle_add_item_done}/>:
+                    <Add id="peripheral"  size={"medium"} onClick={handle_add_item} color='white'/>
+                }
+                <StyledScrollbar>
+                    {
+                        props.selected_application.peripherals.map((peripheral)=>{
+                            return(
+                                <ApplicationPeripheralProperties application={props.selected_application} peripherals={peripherals} forceUpdate={forceUpdate} peripheral={peripheral}/>
+                            )
+                        })
+                    }
+                </StyledScrollbar>
+            </div>,
+            <div>
+                {new_fields.soft_core ?
+                    <InputField name="soft_core" compact label="Field Name" onKeyDown={handle_add_item_done}/>:
+                    <Add id="soft_core"  size={"medium"} onClick={handle_add_item} color='white'/>
+                }
+                <StyledScrollbar>
+                    {
+                        props.selected_application.soft_cores.map((soft_core)=>{
+                            return(
+                                <ApplicationSoftCoreProperties application={props.selected_application} core={soft_core} programs={programs} forceUpdate={forceUpdate}/>
+                            )
+                        })
+                    }
+                </StyledScrollbar>
+            </div>,
+            <div>
+                {new_fields.misc ?
+                    <InputField name="misc" compact label="Field Name" onKeyDown={handle_add_item_done}/>:
+                    <Add id="misc"  size={"medium"} onClick={handle_add_item} color='white'/>
+                }
+                <StyledScrollbar>
+                    {
+                        Object.keys(props.selected_application).map((key, index) =>{
+                            if(!Array.isArray(props.selected_application[key]) && typeof props.selected_application[key] !== 'function')
+                                return <ApplicationMiscFieldProperties application={props.selected_application} forceUpdate={forceUpdate} field={{name:key, value:props.selected_application[key]}}/>
+                        })
+                    }
+                </StyledScrollbar>
+            </div>
+        ])
+    }
+
+    let get_tabs_names = ()=>{
+        return ["Channels", "Channel Groups","IRV", "Macro", "Parameters", "Peripherals", "Cores", "Misc"]
+    }
 
     if(!settings.current_application)
         return <></>;
 
     return (
-        <FieldsContext.Provider value={new_fields}>
-            <DockLayout defaultLayout={default_layout} style={{position: 'absolute', left: 10, top: 10, right: 10, bottom: 10}}/>
-        </FieldsContext.Provider>
-
+        <ResponsiveGridLayout
+            className="layout"
+            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+        >
+            <UIPanel key="new_props" data-grid={{x: 2, y: 0, w: 24, h: 6}} level="level_2">
+                <TabbedContent names={get_tabs_names()} contents={get_tabs_content()}/>
+            </UIPanel>
+        </ResponsiveGridLayout>
     );
 };
 

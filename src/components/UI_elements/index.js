@@ -14,7 +14,7 @@
 // limitations under the License.
 
 export {StyledScrollbar} from "./StyledScrollbar"
-export {Select} from "./Select"
+export {Select, SelectField} from "./Select"
 export {Label} from "./Label"
 export {InputField} from "./InputField"
 export {Image} from "./Image"
@@ -46,3 +46,7 @@ export {ParameterProperties} from "./SidebarComponents/ParameterProperties"
 export {PlotChannelProperties} from "./SidebarComponents/PlotChannelProperties"
 export {PlotChannelGroupProperties} from  "./SidebarComponents/PlotChannelGroupProperties"
 export {RegisterProperties} from "./SidebarComponents/RegisterProperties"
+
+export {SimpleContent} from './panels/SimpleContent'
+export {TabbedContent} from './panels/TabbedContent'
+export {UIPanel} from './panels/UIPanel'

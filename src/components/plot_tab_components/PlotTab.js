@@ -20,63 +20,49 @@ import ChannelSelector from "./ChannelSelector";
 import PlotComponent from "./PlotComponent";
 import ParametersArea from "./ParametersArea";
 import MacroActions from "./MacroActions";
-import {ColorTheme, StyledScrollbar} from "../UI_elements";
+import {ColorTheme, UIPanel, SimpleContent} from "../UI_elements";
 import TerminalComponent from "./Terminal";
-import {DockLayout} from "rc-dock";
+import {Responsive, WidthProvider} from "react-grid-layout";
 
+const ResponsiveGridLayout = WidthProvider(Responsive);
 
 let PlotTab = function (props) {
     const channels = useSelector(state => state.channels);
     const settings = useSelector(state => state.settings);
 
-
-
-    const defaultLayout = {
-        dockbox: {
-            mode: 'vertical',
-            children: [
-                {
-                    mode: 'horizontal',
-                    children: [
-                        {
-                            size:40,
-                            tabs: [{id: "ch_selector", title:"Channel Selector", content:<ChannelSelector channels={channels}/>}],
-                        },
-                        {
-
-                            tabs: [{id: "plot", title:"Scope", content:<PlotComponent palette={{colorway:ColorTheme.plot_palette}} refreshRate={settings.refreshRate}/>}],
-                        }
-                    ]
-                },
-                {
-                    mode: 'horizontal',
-                    size: 80,
-                    children: [
-                        {
-                            size:90,
-                            tabs: [{id: "parameters", title:"Parameters Section", content:
-                                <StyledScrollbar>
-                                    <ParametersArea />
-                                </StyledScrollbar>
-
-                            }],
-                        },
-                        {
-                            tabs: [{id: "macro", title:"Macro Section", content:<MacroActions />}],
-                        }
-                    ]
-                },
-                {
-                    size: 90,
-                    tabs: [{id: "terminal", title:"Terminal", content:<TerminalComponent/>}],
-                }
-            ]
-        }
-    };
-
-
         return(
-            <DockLayout defaultLayout={defaultLayout} style={{position: 'absolute', left: 10, top: 10, right: 10, bottom: 10}}/>
+            <ResponsiveGridLayout
+                className="layout"
+                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+                cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+                rowHeight={30}
+            >
+                <UIPanel key="ch_selector" data-grid={{x: 0, y: 0, w: 3, h: 10, static: true}} level="level_2">
+                    <SimpleContent name="Channel Selector" content={
+                        <ChannelSelector channels={channels}/>
+                    }/>
+                </UIPanel>
+                <UIPanel key="props" data-grid={{x: 3, y: 0, w: 21, h: 10, static: true}} level="level_2">
+                    <SimpleContent name="Scope" content={
+                        <PlotComponent palette={{colorway:ColorTheme.plot_palette}} refreshRate={settings.refreshRate}/>
+                    }/>
+                </UIPanel>
+                <UIPanel key="parameters" data-grid={{x: 0, y: 10, w: 4, h: 9, static: true}} level="level_2">
+                    <SimpleContent name="Parameters" content={
+                        <ParametersArea />
+                    }/>
+                </UIPanel>
+                <UIPanel key="macro" data-grid={{x: 4, y: 10, w: 20, h: 9, static: true}} level="level_2">
+                    <SimpleContent name="Macro" content={
+                        <MacroActions />
+                    }/>
+                </UIPanel>
+                <UIPanel key="terminal" data-grid={{x:1, y: 19, w: 20, h: 10, static: true}} level="level_2">
+                    <SimpleContent name="Terminal" content={
+                        <TerminalComponent/>
+                    }/>
+                </UIPanel>
+            </ResponsiveGridLayout>
         );
 };
 

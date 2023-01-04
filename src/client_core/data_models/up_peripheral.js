@@ -61,7 +61,7 @@ export class up_peripheral {
     };
 
     edit_name = (name) =>{
-
+        alert("NOT IMPLEMENTED YET");
     };
 
     get_proxied_registers = (periph_id) =>{

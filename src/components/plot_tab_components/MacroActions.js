@@ -15,7 +15,7 @@
 
 import React from 'react';
 
-import {BlockLayout, BlockTitle, Button} from "../UI_elements"
+import {Button} from "../UI_elements"
 import {useSelector} from "react-redux";
 
 import styled from "styled-components";

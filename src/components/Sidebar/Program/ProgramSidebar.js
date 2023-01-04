@@ -24,10 +24,11 @@ import {up_program} from "../../../client_core";
 let  ProgramSidebar = props =>{
 
     const selected_program =  useSelector(state => new up_program(state.programs[state.settings.selected_program]))
-
-    return(
-        <ProgramEditSidebar selected_program={selected_program}/>
-    );
+    if(selected_program.id){
+        return(
+            <ProgramEditSidebar selected_program={selected_program}/>
+        );
+    }
 
 };
 

@@ -34,11 +34,14 @@ import {initialize_scripting_engine, refresh_caches, up_application} from "./cli
 import {Routes} from "react-router";
 import {addApplication} from "./redux/Actions/applicationActions";
 
-import {DockLayout, DividerBox} from 'rc-dock'
-import "rc-dock/dist/rc-dock-dark.css";
+import { Responsive, WidthProvider } from "react-grid-layout";
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
+import {UIPanel} from "./components/UI_elements/panels/UIPanel";
+
+const ResponsiveGridLayout = WidthProvider(Responsive);
 
 let AuthApp = (props) =>{
-
 
     const settings = useSelector(state => state.settings);
     const peripherals = useSelector(state => state.peripherals);
@@ -48,32 +51,6 @@ let AuthApp = (props) =>{
 
     const [app_stage, set_app_stage] = useState("WAITING");
 
-
-    const defaultLayout = {
-        dockbox: {
-            mode: 'horizontal',
-            children: [
-                {
-                    size: 1000,
-                    tabs: [{id: 'main_area', title: 'Main Area', content:
-                        <Routes>
-                            <Route key="plot" path='/' element={<TabContent className="main_content_tab" tab={views[0]}/>}/>
-                            <Route key="script_manager" path='/script_manager' element={<TabContent className="main_content_tab" tab={views[1]}/>}/>
-                            <Route key="applications_manager" path='/applications_manager' element={<TabContent className="main_content_tab" tab={views[2]}/>}/>
-                            <Route key="program_manager" path='/program_manager' element={<TabContent className="main_content_tab" tab={views[3]}/>}/>
-                            <Route key="bitstream_manager" path='/bitstream_manager' element={<TabContent className="main_content_tab" tab={views[4]}/>}/>
-                            <Route key="peripherals_manager" path='/peripherals_manager' element={<TabContent className="main_content_tab" tab={views[5]}/>}/>
-                            <Route key="platform_manager" path='/platform_manager' element={<TabContent className="main_content_tab" tab={views[6]}/>}/>
-                        </Routes>
-                    }],
-                },
-                {
-                    size: 200,
-                    tabs: [{id: 'properties', title: 'Properties', content: <Sidebar />}],
-                }
-            ]
-        }
-    };
 
 
     let app_choice_done = ()=>{
@@ -181,12 +158,30 @@ let AuthApp = (props) =>{
         case "NORMAL":
             return (
                 <div className="App">
-                    <DividerBox style={{position: 'absolute', left: 10, top: 10, right: 10, bottom: 10}}>
-                        <DividerBox mode='vertical' style={{width: '10%', minWidth: 100}}>
+                    <ResponsiveGridLayout
+                        className="layout"
+                        breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+                        cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+                        compactType='horizontal'
+                    >
+                        <div key="nav" data-grid={{x: 0, y: 0, w: 3, h: 10, static: true}}>
                             <Navbar views={views}/>
-                        </DividerBox>
-                        <DockLayout defaultLayout={defaultLayout} style={{width: '90%'}}/>
-                    </DividerBox>
+                        </div>
+                        <UIPanel key="main" data-grid={{x: 3, y: 0, w: 16, h: 10}} level="level_1">
+                            <Routes>
+                                <Route key="plot" path='/' element={<TabContent className="main_content_tab" tab={views[0]}/>}/>
+                                <Route key="script_manager" path='/script_manager' element={<TabContent className="main_content_tab" tab={views[1]}/>}/>
+                                <Route key="applications_manager" path='/applications_manager' element={<TabContent className="main_content_tab" tab={views[2]}/>}/>
+                                <Route key="program_manager" path='/program_manager' element={<TabContent className="main_content_tab" tab={views[3]}/>}/>
+                                <Route key="bitstream_manager" path='/bitstream_manager' element={<TabContent className="main_content_tab" tab={views[4]}/>}/>
+                                <Route key="peripherals_manager" path='/peripherals_manager' element={<TabContent className="main_content_tab" tab={views[5]}/>}/>
+                                <Route key="platform_manager" path='/platform_manager' element={<TabContent className="main_content_tab" tab={views[6]}/>}/>
+                            </Routes>
+                        </UIPanel>
+                        <UIPanel key="props" data-grid={{x: 19, y: 0, w: 5, h: 10}} level="level_1">
+                            <Sidebar />
+                        </UIPanel>
+                    </ResponsiveGridLayout>
                 </div>
             );
         default:

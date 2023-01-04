@@ -28,6 +28,7 @@ const Plot = createPlotlyComponent(Plotly);
 
 const ComponentStyle = styled.div`
   display: grid;
+  height: 100%;
   grid-template-columns: auto auto;
   grid-auto-rows: auto;
   grid-row-gap: 1em;
@@ -52,7 +53,7 @@ let  PlotComponent = props =>{
             <Plot
                 data={channels.data}
                 layout={{...channels.layout,...settings.plot_palette}}
-                config={channels.configs}
+                config={{...channels.config, response:true}}
                 datarevision={props.datarevision}
             />
             <PlotControls/>

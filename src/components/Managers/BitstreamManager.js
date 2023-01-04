@@ -50,7 +50,9 @@ let BitstreamManager = props =>{
 
     let handleOnSelect = (selection) => {
         if(selection.selectedCount===1){
-            dispatch(setSetting(["selected_bitstream", selection.selectedRows[0].id]));
+            if(settings.selected_bitstream !==selection.selectedRows[0].id){
+                dispatch(setSetting(["selected_bitstream", selection.selectedRows[0].id]));
+            }
         } else if(selection.selectedCount===0) {
             dispatch(setSetting(["selected_bitstream", null]));
         }
