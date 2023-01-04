@@ -17,13 +17,18 @@ import React, {useEffect} from 'react';
 
 import {useDispatch, useSelector} from "react-redux"
 
-import {Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements"
+import {
+    Button,
+    ManagerButtonsLayout,
+    ManagerLayout, TabbedContent, UIPanel
+} from "../UI_elements"
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
 import DataTable from 'react-data-table-component';
 import {TableStyle} from './TableStyles'
 import {up_application, import_application, get_next_id} from "../../client_core";
 import {addApplication} from "../../redux/Actions/applicationActions";
+import {Responsive, WidthProvider} from "react-grid-layout";
 
 
 let columns = [
@@ -54,7 +59,9 @@ let  ApplicationsManager = props =>{
                 dispatch(setSetting(["current_application", selection.selectedRows[0].application_name]));
             }
         } else if(selection.selectedCount===0) {
-            dispatch(setSetting(["current_application", null]))
+            if(settings.current_application !==null){
+                dispatch(setSetting(["current_application", null]))
+            }
         }
     };
 
@@ -122,29 +129,56 @@ let  ApplicationsManager = props =>{
 
     const rowSelectCritera = row => row.application_name === settings.current_application;
 
+
+    let get_tabs_content = ()=>{
+        return([
+            <div>
+                <ManagerLayout>
+                    <ManagerButtonsLayout>
+                        <Button style={{margin:"0 1rem"}} onClick={handleAdd}> Add application</Button>
+                        <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}> Remove application</Button>
+                        <Button style={{margin:"0 1rem"}} onClick={handleImport}>Import application</Button>
+                        <Button style={{margin:"0 1rem"}} onClick={handleExport}>Export application</Button>
+                    </ManagerButtonsLayout>
+
+                    <DataTable
+                        title='Applications'
+                        data={Object.values(applications_redux)}
+                        columns={columns}
+                        theme="uScopeTableTheme"
+                        customStyles={TableStyle}
+                        selectableRows
+                        onSelectedRowsChange={handleOnSelect}
+                        selectableRowSelected={rowSelectCritera}
+                    />
+
+
+                </ManagerLayout>
+            </div>,
+            <div>
+                <p>TEST</p>
+            </div>
+        ])
+    }
+
+    let get_tabs_names = ()=>{
+        return ["Old", "New"]
+    }
+    const ResponsiveGridLayout = WidthProvider(Responsive);
+
+
     return(
-        <ManagerLayout>
-            <ManagerButtonsLayout>
-                <Button style={{margin:"0 1rem"}} onClick={handleAdd}> Add application</Button>
-                <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}> Remove application</Button>
-                <Button style={{margin:"0 1rem"}} onClick={handleImport}>Import application</Button>
-                <Button style={{margin:"0 1rem"}} onClick={handleExport}>Export application</Button>
-            </ManagerButtonsLayout>
-
-            <DataTable
-                title='Applications'
-                data={Object.values(applications_redux)}
-                columns={columns}
-                theme="uScopeTableTheme"
-                customStyles={TableStyle}
-                selectableRows
-                onSelectedRowsChange={handleOnSelect}
-                selectableRowSelected={rowSelectCritera}
-            />
-
-
-        </ManagerLayout>
+        <ResponsiveGridLayout
+            className="layout"
+            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+        >
+            <UIPanel key="new_props" data-grid={{x: 2, y: 0, w: 24, h: 6}} level="level_2">
+                <TabbedContent names={get_tabs_names()} contents={get_tabs_content()}/>
+            </UIPanel>
+        </ResponsiveGridLayout>
     );
+
 };
 
 
