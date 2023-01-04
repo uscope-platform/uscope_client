@@ -15,29 +15,14 @@
 
 import React, {useState, useReducer} from 'react';
 
-import styled from "styled-components";
-
 import {useSelector} from "react-redux";
 import {
-    ApplicationMiscFieldProperties,
-    ApplicationPeripheralProperties, ApplicationSoftCoreProperties,
-    InitialRegisterValue,
     InputField,
-    Label, MacroProperties, ParameterProperties, PlotChannelGroupProperties, PlotChannelProperties,
     RegisterProperties,
-    SidebarBlockLayout,
-    SidebarBlockTitleLayout,
-    SidebarContentLayout,
     StyledScrollbar, TabbedContent, UIPanel
 } from "../../UI_elements";
-import {BlockTitle} from "../../UI_elements/";
 import {Add} from "grommet-icons";
 import {Responsive, WidthProvider} from "react-grid-layout";
-
-const TitleLayout = styled.div`
-  margin-left: auto;
-  margin-right: auto;
-`
 
 let  PeripheralEditSidebar = props =>{
 
@@ -46,15 +31,11 @@ let  PeripheralEditSidebar = props =>{
     const peripherals = useSelector(state => state.peripherals);
     const settings = useSelector(state => state.settings);
 
-    const [edit_label, set_edit_label] = useState(false);
     const [new_register, set_new_register] = useState(false);
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     let handleEditVersion = (event) =>{
-        if(event.key ==="Escape"){
-            set_edit_label(false);
-        } else if (event.key ==="Enter"){
-            set_edit_label(false)
+        if (event.key ==="Enter"){
             props.selected_peripheral.set_version(event.target.value).then();
         }
     }

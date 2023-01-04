@@ -22,7 +22,7 @@ import {setSetting} from "../../redux/Actions/SettingsActions";
 
 import DataTable from 'react-data-table-component';
 import {TableStyle} from './TableStyles'
-import {up_application, import_application, get_next_id, up_peripheral} from "../../client_core";
+import {up_application, import_application, get_next_id} from "../../client_core";
 import {addApplication} from "../../redux/Actions/applicationActions";
 
 

@@ -24,7 +24,7 @@ import {TableStyle} from './TableStyles'
 import {Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements"
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
-import {get_next_id, import_peripherals, up_application, up_peripheral} from "../../client_core"
+import {get_next_id, import_peripherals, up_peripheral} from "../../client_core"
 import {addPeripheral} from "../../redux/Actions/peripheralsActions";
 
 let columns = [
