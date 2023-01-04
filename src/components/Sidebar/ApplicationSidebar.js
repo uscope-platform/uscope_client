@@ -17,23 +17,21 @@ import React, {useReducer, useState} from 'react';
 
 import {useSelector} from "react-redux";
 
+
+import {up_application} from "../../client_core";
 import {
     ApplicationMiscFieldProperties,
-    ApplicationPeripheralProperties,
-    ApplicationSoftCoreProperties,
+    ApplicationPeripheralProperties, ApplicationSoftCoreProperties,
     InitialRegisterValue,
-    InputField,
-    MacroProperties,
-    ParameterProperties,
+    InputField, MacroProperties, ParameterProperties,
+    PlotChannelGroupProperties,
     PlotChannelProperties,
     StyledScrollbar,
-    PlotChannelGroupProperties,
     TabbedContent,
     UIPanel
-} from "../../UI_elements";
-
-import {Add} from "grommet-icons";
+} from "../UI_elements";
 import {Responsive, WidthProvider} from "react-grid-layout";
+import {Add} from "grommet-icons";
 
 let initial_new_fields_state = {
     "channel":false,
@@ -47,7 +45,9 @@ let initial_new_fields_state = {
 };
 
 
-let  ApplicationEditSidebar = props =>{
+let  ApplicationSidebar = props =>{
+    const selected_application =  useSelector(state => new up_application(state.applications[state.settings.current_application]))
+
     const settings = useSelector(state => state.settings);
     const peripherals = useSelector(state => state.peripherals);
     const programs = useSelector(state => state.programs);
@@ -71,28 +71,28 @@ let  ApplicationEditSidebar = props =>{
             update_fields(event.target.name, false);
             switch (event.target.name) {
                 case "ch_group":
-                    props.selected_application.add_channel_group(event.target.value);
+                    selected_application.add_channel_group(event.target.value);
                     break;
                 case "channel":
-                    props.selected_application.add_channel(event.target.value);
+                    selected_application.add_channel(event.target.value);
                     break;
                 case "irv":
-                    props.selected_application.add_irv(event.target.value);
+                    selected_application.add_irv(event.target.value);
                     break;
                 case"macro":
-                    props.selected_application.add_macro(event.target.value);
+                    selected_application.add_macro(event.target.value);
                     break;
                 case"parameter":
-                    props.selected_application.add_parameter(event.target.value);
+                    selected_application.add_parameter(event.target.value);
                     break;
                 case"peripheral":
-                    props.selected_application.add_peripheral(event.target.value);
+                    selected_application.add_peripheral(event.target.value);
                     break;
                 case"soft_core":
-                    props.selected_application.add_soft_core(event.target.value);
+                    selected_application.add_soft_core(event.target.value);
                     break;
                 case "misc":
-                    props.selected_application.set_misc_param(event.target.value);
+                    selected_application.set_misc_param(event.target.value);
                     break;
                 default:
                     return;
@@ -117,9 +117,9 @@ let  ApplicationEditSidebar = props =>{
                 }
                 <StyledScrollbar>
                     {
-                        props.selected_application.channels.map((channel)=>{
+                        selected_application.channels.map((channel)=>{
                             return(
-                                <PlotChannelProperties application={props.selected_application} forceUpdate={forceUpdate} channel={channel}/>
+                                <PlotChannelProperties application={selected_application} forceUpdate={forceUpdate} channel={channel}/>
                             )
                         })
                     }
@@ -132,9 +132,9 @@ let  ApplicationEditSidebar = props =>{
                 }
                 <StyledScrollbar>
                     {
-                        props.selected_application.channel_groups.map((group)=>{
+                        selected_application.channel_groups.map((group)=>{
                             return(
-                                <PlotChannelGroupProperties application={props.selected_application} forceUpdate={forceUpdate} group={group}/>
+                                <PlotChannelGroupProperties application={selected_application} forceUpdate={forceUpdate} group={group}/>
                             )
                         })
                     }
@@ -147,9 +147,9 @@ let  ApplicationEditSidebar = props =>{
                 }
                 <StyledScrollbar>
                     {
-                        props.selected_application.initial_registers_values.map((irv)=>{
+                        selected_application.initial_registers_values.map((irv)=>{
                             return(
-                                <InitialRegisterValue application={props.selected_application} forceUpdate={forceUpdate} irv={irv}/>
+                                <InitialRegisterValue application={selected_application} forceUpdate={forceUpdate} irv={irv}/>
                             )
                         })
                     }
@@ -162,9 +162,9 @@ let  ApplicationEditSidebar = props =>{
                 }
                 <StyledScrollbar>
                     {
-                        props.selected_application.macro.map((macro)=>{
+                        selected_application.macro.map((macro)=>{
                             return(
-                                <MacroProperties application={props.selected_application} forceUpdate={forceUpdate} macro={macro}/>
+                                <MacroProperties application={selected_application} forceUpdate={forceUpdate} macro={macro}/>
                             )
                         })
                     }
@@ -177,9 +177,9 @@ let  ApplicationEditSidebar = props =>{
                 }
                 <StyledScrollbar>
                     {
-                        props.selected_application.parameters.map((parameter)=>{
+                        selected_application.parameters.map((parameter)=>{
                             return(
-                                <ParameterProperties application={props.selected_application} forceUpdate={forceUpdate} parameter={parameter}/>
+                                <ParameterProperties application={selected_application} forceUpdate={forceUpdate} parameter={parameter}/>
                             )
                         })
                     }
@@ -192,9 +192,9 @@ let  ApplicationEditSidebar = props =>{
                 }
                 <StyledScrollbar>
                     {
-                        props.selected_application.peripherals.map((peripheral)=>{
+                        selected_application.peripherals.map((peripheral)=>{
                             return(
-                                <ApplicationPeripheralProperties application={props.selected_application} peripherals={peripherals} forceUpdate={forceUpdate} peripheral={peripheral}/>
+                                <ApplicationPeripheralProperties application={selected_application} peripherals={peripherals} forceUpdate={forceUpdate} peripheral={peripheral}/>
                             )
                         })
                     }
@@ -207,9 +207,9 @@ let  ApplicationEditSidebar = props =>{
                 }
                 <StyledScrollbar>
                     {
-                        props.selected_application.soft_cores.map((soft_core)=>{
+                        selected_application.soft_cores.map((soft_core)=>{
                             return(
-                                <ApplicationSoftCoreProperties application={props.selected_application} core={soft_core} programs={programs} forceUpdate={forceUpdate}/>
+                                <ApplicationSoftCoreProperties application={selected_application} core={soft_core} programs={programs} forceUpdate={forceUpdate}/>
                             )
                         })
                     }
@@ -222,9 +222,9 @@ let  ApplicationEditSidebar = props =>{
                 }
                 <StyledScrollbar>
                     {
-                        Object.keys(props.selected_application).map((key, index) =>{
-                            if(!Array.isArray(props.selected_application[key]) && typeof props.selected_application[key] !== 'function')
-                                return <ApplicationMiscFieldProperties application={props.selected_application} forceUpdate={forceUpdate} field={{name:key, value:props.selected_application[key]}}/>
+                        Object.keys(selected_application).map((key, index) =>{
+                            if(!Array.isArray(selected_application[key]) && typeof selected_application[key] !== 'function')
+                                return <ApplicationMiscFieldProperties application={selected_application} forceUpdate={forceUpdate} field={{name:key, value:selected_application[key]}}/>
                         })
                     }
                 </StyledScrollbar>
@@ -239,17 +239,20 @@ let  ApplicationEditSidebar = props =>{
     if(!settings.current_application)
         return <></>;
 
-    return (
-        <ResponsiveGridLayout
-            className="layout"
-            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-        >
-            <UIPanel key="new_props" data-grid={{x: 2, y: 0, w: 24, h: 6}} level="level_2">
-                <TabbedContent names={get_tabs_names()} contents={get_tabs_content()}/>
-            </UIPanel>
-        </ResponsiveGridLayout>
-    );
+    if(selected_application.application_name)
+        return(
+            <ResponsiveGridLayout
+                className="layout"
+                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+                cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+            >
+                <UIPanel key="new_props" data-grid={{x: 2, y: 0, w: 24, h: 6}} level="level_2">
+                    <TabbedContent names={get_tabs_names()} contents={get_tabs_content()}/>
+                </UIPanel>
+            </ResponsiveGridLayout>
+        );
+
+
 };
 
-export default ApplicationEditSidebar;
+export default ApplicationSidebar;

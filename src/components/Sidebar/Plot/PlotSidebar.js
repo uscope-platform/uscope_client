@@ -25,7 +25,6 @@ let  PlotSidebar = props =>{
 
     const ResponsiveGridLayout = WidthProvider(Responsive);
 
-
     return (
         <ResponsiveGridLayout
             className="layout"

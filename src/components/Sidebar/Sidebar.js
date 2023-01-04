@@ -17,13 +17,13 @@ import React from 'react';
 import {useLocation} from "react-router-dom";
 
 import {SidebarLayout} from "../UI_elements";
-import PeripheralsSidebar from "./Peripheral/PeripheralsSidebar";
-import ApplicationSidebar from "./Application/ApplicationSidebar";
+import PeripheralsSidebar from "./PeripheralsSidebar";
+import ApplicationSidebar from "./ApplicationSidebar";
 import PlotSidebar from "./Plot/PlotSidebar";
-import ScriptSidebar from "./Script/ScriptSidebar";
-import ProgramSidebar from "./Program/ProgramSidebar";
-import PlatformSidebar from "./Platform/PlatformSidebar";
-import BitstreamSidebar from "./Bitstream/BitstreamSidebar";
+import ScriptSidebar from "./ScriptSidebar";
+import ProgramSidebar from "./ProgramSidebar";
+import PlatformSidebar from "./PlatformSidebar";
+import BitstreamSidebar from "./BitstreamSidebar";
 
 let  Sidebar = props =>{
     let location = useLocation();

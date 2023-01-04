@@ -15,7 +15,7 @@
 
 //       REACT IMPORTS
 import React from 'react';
-import PlatformSidebar from "./Sidebar/Platform/PlatformSidebar";
+import PlatformSidebar from "./Sidebar/PlatformSidebar";
 
 
 let OnboardingView = (props) =>{

@@ -13,18 +13,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState, useReducer} from 'react';
+import React, {useReducer, useState} from 'react';
 
 import {useSelector} from "react-redux";
-import {
-    InputField,
-    RegisterProperties,
-    StyledScrollbar, TabbedContent, UIPanel
-} from "../../UI_elements";
-import {Add} from "grommet-icons";
-import {Responsive, WidthProvider} from "react-grid-layout";
 
-let  PeripheralEditSidebar = props =>{
+import {up_peripheral} from "../../client_core";
+import {InputField, RegisterProperties, StyledScrollbar, TabbedContent, UIPanel} from "../UI_elements";
+import {Responsive, WidthProvider} from "react-grid-layout";
+import {Add} from "grommet-icons";
+
+let  PeripheralsSidebar = props =>{
+
+    const selected_peripheral =  useSelector(state => new up_peripheral(state.peripherals[state.settings.current_peripheral]))
+
 
     const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -36,13 +37,13 @@ let  PeripheralEditSidebar = props =>{
 
     let handleEditVersion = (event) =>{
         if (event.key ==="Enter"){
-            props.selected_peripheral.set_version(event.target.value).then();
+            selected_peripheral.set_version(event.target.value).then();
         }
     }
 
     let handleEditName = (event) =>{
         if (event.key ==="Enter"){
-            props.selected_peripheral.edit_name(event.target.value).then();
+            selected_peripheral.edit_name(event.target.value).then();
         }
     }
     let handle_add_register = () => {
@@ -51,7 +52,7 @@ let  PeripheralEditSidebar = props =>{
 
     let handle_add_register_done = (event) => {
         if(event.key==="Enter"|| event.key ==="Tab"){
-            props.selected_peripheral.add_register(event.target.value).then();
+            selected_peripheral.add_register(event.target.value).then();
             set_new_register(false);
         } else if (event.key ==="Escape"){
             set_new_register(false);
@@ -76,7 +77,7 @@ let  PeripheralEditSidebar = props =>{
                     {
                         peripherals[settings.current_peripheral].registers.map((reg)=>{
                             return(
-                                <RegisterProperties peripheral={props.selected_peripheral} forceUpdate={forceUpdate} register={reg}/>
+                                <RegisterProperties peripheral={selected_peripheral} forceUpdate={forceUpdate} register={reg}/>
                             )
                         })
                     }
@@ -92,7 +93,6 @@ let  PeripheralEditSidebar = props =>{
 
 
     return(
-
         <ResponsiveGridLayout
             className="layout"
             breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
@@ -105,4 +105,4 @@ let  PeripheralEditSidebar = props =>{
     );
 };
 
-export default PeripheralEditSidebar;
+export default PeripheralsSidebar;

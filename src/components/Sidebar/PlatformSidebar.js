@@ -21,10 +21,10 @@ import {
     FormLayout,
     InputField,
     SelectField, UIPanel, SimpleContent
-} from "../../UI_elements";
-import {setSetting} from "../../../redux/Actions/SettingsActions";
+} from "../UI_elements";
+import {setSetting} from "../../redux/Actions/SettingsActions";
 
-import {add_user, do_onboarding} from "../../../client_core";
+import {add_user, do_onboarding} from "../../client_core";
 import {Responsive, WidthProvider} from "react-grid-layout";
 
 let  PlatformSidebar = props =>{
@@ -52,7 +52,7 @@ let  PlatformSidebar = props =>{
 
     };
 
-    if(!settings.selected_program)
+
         return (
             <ResponsiveGridLayout
                 className="layout"
@@ -68,7 +68,7 @@ let  PlatformSidebar = props =>{
                                 <InputField inline name="pass" label="Password"/>
                                 <SelectField label="Role" defaultValue="role"
                                              name="role" placeholder="Role" options={["admin", "user", "operator"]}/>
-                                <Button> Submit </Button>
+                                <Button> Add User </Button>
                             </FormLayout>
                         </form>
                     }/>
@@ -77,9 +77,6 @@ let  PlatformSidebar = props =>{
 
         );
 
-    return(
-        <></>
-    );
 };
 
 export default PlatformSidebar;
