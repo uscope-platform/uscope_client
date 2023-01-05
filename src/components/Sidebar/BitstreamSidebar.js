@@ -107,8 +107,8 @@ let  BitstreamSidebar = props =>{
             <UIPanel key="bitstream_actions" data-grid={{x: 2, y: 3, w: 24, h: 3, static: true}} level="level_2">
                 <SimpleContent name="Bitstream Actions" content={
                     <div style={{display:"flex", flexDirection:"column"}} >
-                        <Button style={{margin:"0 1rem"}} onClick={handleAddRow}>Add Bitstream</Button>
-                        <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}>Remove Bitstream</Button>
+                        <Button style={{margin:"0.5em 1rem"}} onClick={handleAddRow}>Add Bitstream</Button>
+                        <Button style={{margin:"0.5em 1rem"}} onClick={handleRemoveRow}>Remove Bitstream</Button>
                         <input type='file' id='bitstream_chooser' ref={inputFile} onChange={upload_file} style={{display: 'none'}}/>
                     </div>
                 }/>

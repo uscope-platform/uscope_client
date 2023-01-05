@@ -13,148 +13,104 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect} from 'react';
+import React, {useReducer, useState} from 'react';
 
-import {useDispatch, useSelector} from "react-redux"
-
-import DataTable from 'react-data-table-component';
-import {TableStyle} from './TableStyles'
+import {useSelector} from "react-redux"
 
 
-import {Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements"
-import {setSetting} from "../../redux/Actions/SettingsActions";
+import {
+    InputField,
+    RegisterProperties,
+    StyledScrollbar, TabbedContent, UIPanel
+} from "../UI_elements"
 
-import {get_next_id, import_peripherals, up_peripheral} from "../../client_core"
-import {addPeripheral} from "../../redux/Actions/peripheralsActions";
+import {up_peripheral} from "../../client_core"
+import {Responsive, WidthProvider} from "react-grid-layout";
+import {Add} from "grommet-icons";
 
-let columns = [
-    {
-        selector: row => row.peripheral_name,
-        name: 'Peripheral Name',
-        sort: true,
-        grow:2
-    },
-    {
-        selector: row => row.version,
-        name: 'Peripheral Version'
-    }
-];
 
 let PeripheralsManager = (props)=>{
 
-    const peripherals_redux = useSelector(state => state.peripherals);
+    const selected_peripheral =  useSelector(state => new up_peripheral(state.peripherals[state.settings.current_peripheral]))
+
+
+    const ResponsiveGridLayout = WidthProvider(Responsive);
+
+    const peripherals = useSelector(state => state.peripherals);
     const settings = useSelector(state => state.settings);
 
-    const dispatch = useDispatch();
+    const [new_register, set_new_register] = useState(false);
+    const [, forceUpdate] = useReducer(x => x + 1, 0);
 
-    useEffect(() => {
-       return() =>{
-           dispatch(setSetting(["current_peripheral", null]));
-       }
-    },[dispatch]);
-
-    let handleOnSelect = (selection) => {
-        if(selection.selectedCount===1){
-            if(settings.current_peripheral !==selection.selectedRows[0].peripheral_name){
-                dispatch(setSetting(["current_peripheral", selection.selectedRows[0].peripheral_name]));
-            }
-        } else if(selection.selectedCount===0) {
-            if(settings.current_peripheral !==null){
-                dispatch(setSetting(["current_peripheral", null]))
-            }
-        } else if(selection.selectedCount>1){
-            selection.selectedRows.map((row)=>{
-                return row.peripheral_name;
-            });
+    let handleEditVersion = (event) =>{
+        if (event.key ==="Enter"){
+            selected_peripheral.set_version(event.target.value).then();
         }
-    };
+    }
 
-
-    let handleRemoveRow = (event) =>{
-        up_peripheral.delete_periperal(settings.current_peripheral).then(()=>{
-            dispatch(setSetting(["current_peripheral", null]))
-        })
-    };
-
-    let handleExport = (event) =>{
-        let selected = settings.current_peripheral;
-        if(settings.current_peripheral===null){
-            alert("Please select a peripheral to Export");
-            return;
+    let handleEditName = (event) =>{
+        if (event.key ==="Enter"){
+            selected_peripheral.edit_name(event.target.value).then();
         }
+    }
+    let handle_add_register = () => {
+        set_new_register(true);
+    }
 
-        let peripheral = {[selected]:peripherals_redux[selected]};
-        let blob = new Blob([JSON.stringify(peripheral, null, 4)], {type: "application/json"});
-        let url  = URL.createObjectURL(blob);
+    let handle_add_register_done = (event) => {
+        if(event.key==="Enter"|| event.key ==="Tab"){
+            selected_peripheral.add_register(event.target.value).then();
+            set_new_register(false);
+        } else if (event.key ==="Escape"){
+            set_new_register(false);
+        }
+    }
 
-        let link = document.createElement('a');
-        link.href = url;
-        link.download = selected;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    };
+    if(!settings.current_peripheral)
+        return <></>;
 
-    let handleImport = (event) =>{
-        let input = document.createElement('input');
-        input.type = 'file';
-        input.setAttribute('style', 'display:none');
-        input.onchange = e => {
-            let file = e.target.files[0];
-            let reader = new FileReader();
-            reader.readAsText(file,'UTF-8');
-
-            reader.onload = readerEvent => {
-                let content = readerEvent.target.result; // this is the content!
-                import_peripherals(content).then((periphs)=>{
-                    for(let p of periphs){
-                        addPeripheral(p);
+    let get_tabs_content = ()=>{
+        return([
+            <div>
+                <InputField inline name="edit_name" defaultValue={peripherals[settings.current_peripheral].peripheral_name} onKeyDown={handleEditName} label="Name"/>
+                <InputField inline name="edit_version" defaultValue={peripherals[settings.current_peripheral].version} onKeyDown={handleEditVersion} label="Version"/>
+            </div>,
+            <div>
+                <Add id="register" size={"medium"} onClick={handle_add_register} color='white'/>
+                {new_register &&
+                    <InputField name="register" compact label="Register Name" onKeyDown={handle_add_register_done}/>
+                }
+                <StyledScrollbar>
+                    {
+                        peripherals[settings.current_peripheral].registers.map((reg)=>{
+                            return(
+                                <RegisterProperties peripheral={selected_peripheral} forceUpdate={forceUpdate} register={reg}/>
+                            )
+                        })
                     }
-                }).catch((err)=>{
-                    alert(err);
-                });
-            }
-        };
-        document.body.appendChild(input);
-        input.click();
-    };
+                </StyledScrollbar>
+            </div>
+        ])
+    }
+
+    let get_tabs_names = ()=>{
+        return ["Peripheral properties", "Registers"]
+    }
 
 
-    const rowSelectCritera = row => row.peripheral_name === settings.current_peripheral;
-
-    let handleAdd = (content) => {
-        let ids = Object.values(peripherals_redux).map((periph)=>{
-            const regex = /new_peripheral_(\d+)/g;
-            let match = Array.from(periph.peripheral_name.matchAll(regex), m => m[1]);
-            if(match.length>0){
-                return match;
-            }
-        });
-        ids = ids.filter(Boolean);
-        let id = get_next_id(ids.sort());
-        up_peripheral.construct_empty("new_peripheral_"+id).add_remote().then();
-    };
 
     return(
-        <ManagerLayout>
-            <ManagerButtonsLayout>
-                <Button style={{margin:"0 1rem"}} onClick={handleAdd}> Add Peripheral</Button>
-                <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}> Remove Peripheral</Button>
-                <Button style={{margin:"0 1rem"}} onClick={handleImport}>Import peripheral</Button>
-                <Button style={{margin:"0 1rem"}} onClick={handleExport}>Export peripheral</Button>
-            </ManagerButtonsLayout>
-            <DataTable
-                title='Peripherals'
-                data={Object.values(peripherals_redux)}
-                columns={columns}
-                customStyles={TableStyle}
-                theme="uScopeTableTheme"
-                selectableRows
-                onSelectedRowsChange={handleOnSelect}
-                selectableRowSelected={rowSelectCritera}
-            />
-        </ManagerLayout>
-    )
+        <ResponsiveGridLayout
+            className="layout"
+            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+            useCSSTransforms={false}
+        >
+            <UIPanel key="new_props" data-grid={{x: 2, y: 0, w: 24, h: 6, static: true}} level="level_2">
+                <TabbedContent names={get_tabs_names()} contents={get_tabs_content()}/>
+            </UIPanel>
+        </ResponsiveGridLayout>
+    );
 }
 
 export default PeripheralsManager;
