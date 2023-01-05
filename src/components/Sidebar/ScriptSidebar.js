@@ -104,7 +104,6 @@ let ScriptManager = (props) =>{
                 }/>
             </UIPanel>
         </ResponsiveGridLayout>
-
     );
 }
 

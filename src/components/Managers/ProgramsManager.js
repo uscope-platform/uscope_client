@@ -14,166 +14,82 @@
 // limitations under the License.
 
 import React, {useState} from "react";
-import {Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements";
-import DataTable from "react-data-table-component";
-import {TableStyle} from "./TableStyles";
-import {useDispatch, useSelector} from "react-redux";
-import {setSetting} from "../../redux/Actions/SettingsActions";
+import {
+    ManagerLayout,
+    UIPanel,
+    SimpleContent,
+    FormLayout,
+    InputField,
+    SelectField
+} from "../UI_elements";
+
+import {useSelector} from "react-redux";
 import ProgramsEditor from "../Editors/Programs/ProgramsEditor";
-import ButterToast, { POS_TOP, POS_RIGHT, Cinnamon} from "butter-toast";
-import {get_next_id, up_program} from "../../client_core";
+import {Responsive, WidthProvider} from "react-grid-layout";
 
-let columns = [
-    {
-        selector: row => row.id,
-        name: 'Program ID',
-        sort: true
-    },
-    {
-        selector: row => row.name,
-        name: 'Program Name',
-        sort: true,
-        grow:2
-    },
-    {
-        selector: row => row.program_type,
-        name: 'Program Type',
-        sort: true,
-    },
-];
-
-
-const compile_status_position = {
-    vertical: POS_TOP,
-    horizontal: POS_RIGHT
-};
 
 let ProgramsManager = props =>{
+
+    const ResponsiveGridLayout = WidthProvider(Responsive);
+
     const programs_store = useSelector(state => state.programs);
     const settings = useSelector(state => state.settings);
 
     const [editor_open, set_editor_open] = useState(false);
 
-    const dispatch = useDispatch();
-
-    const selected_program = new up_program(programs_store[settings.selected_program]);
-
-    let handleOnSelect = (selection) => {
-        if(selection.selectedCount===1){
-            if(settings.selected_program !==selection.selectedRows[0].id){
-                dispatch(setSetting(["selected_program", selection.selectedRows[0].id]));
-            }
-        } else if(selection.selectedCount===0) {
-            if(settings.selected_program !==null){
-                dispatch(setSetting(["selected_program", null]));
-            }
-        }
-
-    };
-
-    let handleAddRow = () =>{
-        let id = get_next_id(Object.values(programs_store).map(a => a.id).sort());
-        let program = up_program.construct_empty(id);
-        program.add_remote().then();
-    };
-
-    let handleRemoveRow = (event) =>{
-        dispatch(setSetting(["selected_program", null]));
-        up_program.delete_program(selected_program).then();
-    };
-
-    let handleScriptEdit = () => {
-
-        if(settings.selected_program===null){
-            alert("Please select a script to edit");
-            return;
-        }
-        set_editor_open(true);
-    };
 
     let handle_edit_done = () =>{
         set_editor_open(false);
     }
 
-    let handle_compile = () =>{
+    let allowed_types = ["asm", "C"];
 
-        if(settings.selected_program===null){
-            alert("Please select a script to compile");
-            return;
+    let selected_programs = Object.values(programs_store).filter((prg)=>{
+        return prg.name === settings.selected_program;
+    });
+
+    if(selected_programs && selected_programs.length===1){
+
+        let selected_program = selected_programs[0];
+        let handleTypeChange = (event) =>{
+            selected_program.edit_field(event.target.name, event.target.value).then();
+        }
+        let handle_name_change = (event) => {
+            if (event.key === "Enter" || event.key === "Tab") {
+                selected_program.edit_field(event.target.name, event.target.value);
+            }
         }
 
-        selected_program.compile().then((data)=>{
-            let notifications={passed:[],failed:[]};
-            for (let item of data){
-                if(item.status==="passed"){
-                    notifications.passed.push(
-                        ButterToast.raise({
-                            content: <Cinnamon.Crisp title={item.file}
-                                                     content="Compilation was successful"
-                                                     scheme={Cinnamon.Crisp.SCHEME_GREEN}/>
-                        })
-                    )
-                } else if (item.status==="failed"){
-                    notifications.failed.push(
-                        ButterToast.raise({
-                            content: <Cinnamon.Crisp title={item.file}
-                                                     content={item.error}
-                                                     scheme={Cinnamon.Crisp.SCHEME_RED}/>
-                        })
-                    )
-                }
-            }
-            window.setTimeout(()=>{
-                for(let notif of notifications.passed){
-                    ButterToast.dismiss(notif);
-                }
-            },3000);
+        if(editor_open) {
+            return (
+                <ManagerLayout>
+                    <ProgramsEditor program={selected_program} done={handle_edit_done} />
+                </ManagerLayout>
+            );
+        }
 
-        });
-
+        return(
+            <ResponsiveGridLayout
+                className="layout"
+                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+                cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+                rowHeight={30}
+                useCSSTransforms={false}
+            >
+                <UIPanel key="program_properties" data-grid={{x: 2, y: 0, w: 24, h: 5, static: true}} level="level_2">
+                    <SimpleContent name="Program Properties" content={
+                        <FormLayout>
+                            <InputField inline name='name' placeholder={selected_program.name} onKeyDown={handle_name_change} label="Name"/>
+                            <SelectField label="Program type" onChange={handleTypeChange} defaultValue={selected_program.program_type}
+                                         name="program_type" placeholder="Program type" options={allowed_types}/>
+                        </FormLayout>
+                    }/>
+                </UIPanel>
+            </ResponsiveGridLayout>
+        );
     }
 
-    let handle_apply_program = () =>{
-        let core_address = '0x83c00000';
-        selected_program.load(core_address).then();
-    };
 
-
-    if(editor_open) {
-    return (
-        <ManagerLayout>
-            <ProgramsEditor program={selected_program} done={handle_edit_done} />
-        </ManagerLayout>
-    );
-    }
-
-    const rowSelectCritera = row => row.id === settings.selected_program;
-
-
-    return(
-    <ManagerLayout>
-        <ButterToast
-            position={compile_status_position}
-        />
-        <ManagerButtonsLayout>
-            <Button style={{margin:"0 1rem"}} onClick={handleAddRow}>Add Program</Button>
-            <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}>Remove Program</Button>
-            <Button style={{margin:"0 1rem"}} onClick={handleScriptEdit}>Edit Program</Button>
-            <Button style={{margin:"0 1rem"}} onClick={handle_compile}>Compile Program</Button>
-            <Button style={{margin:"0 1rem"}} onClick={handle_apply_program}>Load Program</Button>
-        </ManagerButtonsLayout>
-        <DataTable
-            title='Programs'
-            data={Object.values(programs_store)}
-            columns={columns}
-            customStyles={TableStyle}
-            theme="uScopeTableTheme"
-            selectableRows
-            onSelectedRowsChange={handleOnSelect}
-            selectableRowSelected={rowSelectCritera}
-        />
-    </ManagerLayout>
-    );
 };
 
 
