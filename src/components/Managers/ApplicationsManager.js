@@ -13,31 +13,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect} from 'react';
+import React, {useEffect, useMemo} from 'react';
 
 import {useDispatch, useSelector} from "react-redux"
 
 import {
     Button,
     ManagerButtonsLayout,
-    ManagerLayout, TabbedContent, UIPanel
+    ManagerLayout, UIPanel,
+    SelectableList, SimpleContent
 } from "../UI_elements"
+
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
-import DataTable from 'react-data-table-component';
-import {TableStyle} from './TableStyles'
 import {up_application, import_application, get_next_id} from "../../client_core";
 import {addApplication} from "../../redux/Actions/applicationActions";
 import {Responsive, WidthProvider} from "react-grid-layout";
 
-
-let columns = [
-    {
-        selector: row => row.application_name,
-        name: 'Application Name',
-        sortable: true,
-    }
-];
 
 let  ApplicationsManager = props =>{
 
@@ -49,41 +41,29 @@ let  ApplicationsManager = props =>{
 
     useEffect(() => {
         return() =>{
-            dispatch(setSetting(["current_application", null]));
+            dispatch(setSetting(["selected_application", null]));
         }
     },[dispatch]);
 
-    let handleOnSelect = (selection) => {
-        if(selection.selectedCount===1){
-            if(settings.current_application !==selection.selectedRows[0].application_name){
-                dispatch(setSetting(["current_application", selection.selectedRows[0].application_name]));
-            }
-        } else if(selection.selectedCount===0) {
-            if(settings.current_application !==null){
-                dispatch(setSetting(["current_application", null]))
-            }
-        }
-    };
-
 
     let  handleRemoveRow = (event) =>{
-        up_application.delete_application(settings.current_application).then(()=>{
-            dispatch(setSetting(["current_application", null]))
+        up_application.delete_application(settings.selected_application).then(()=>{
+            dispatch(setSetting(["selected_application", null]))
         });
     };
 
     let handleExport = (event) =>{
-        if(settings.current_application===null){
+        if(settings.selected_application===null){
             alert("Please select an Application to Export");
             return;
         }
 
-        let blob = new Blob([JSON.stringify(applications_redux[settings.current_application], null, 4)], {type: "application/json"});
+        let blob = new Blob([JSON.stringify(applications_redux[settings.selected_application], null, 4)], {type: "application/json"});
         let url  = URL.createObjectURL(blob);
 
         let link = document.createElement('a');
         link.href = url;
-        link.download = settings.current_application;
+        link.download = settings.selected_application;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -127,45 +107,25 @@ let  ApplicationsManager = props =>{
         up_application.construct_empty("new_application_"+id).add_remote().then();
     };
 
-    const rowSelectCritera = row => row.application_name === settings.current_application;
+    let get_content = () =>{
+        let types = [];
+        let items = Object.values(applications_redux).map((app)=>{
+            types.push("generic");
+            return app.application_name;
+        })
 
-
-    let get_tabs_content = ()=>{
-        return([
-            <div>
-                <ManagerLayout>
-                    <ManagerButtonsLayout>
-                        <Button style={{margin:"0 1rem"}} onClick={handleAdd}> Add application</Button>
-                        <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}> Remove application</Button>
-                        <Button style={{margin:"0 1rem"}} onClick={handleImport}>Import application</Button>
-                        <Button style={{margin:"0 1rem"}} onClick={handleExport}>Export application</Button>
-                    </ManagerButtonsLayout>
-
-                    <DataTable
-                        title='Applications'
-                        data={Object.values(applications_redux)}
-                        columns={columns}
-                        theme="uScopeTableTheme"
-                        customStyles={TableStyle}
-                        selectableRows
-                        onSelectedRowsChange={handleOnSelect}
-                        selectableRowSelected={rowSelectCritera}
-                    />
-
-
-                </ManagerLayout>
-            </div>,
-            <div>
-                <p>TEST</p>
-            </div>
-        ])
+        return [items, types]
     }
 
-    let get_tabs_names = ()=>{
-        return ["Old", "New"]
-    }
+    const [names, types] = get_content();
+
+    let handleSelect = (item) =>{
+        if(settings.selected_application !==item){
+            dispatch(setSetting(["selected_application", item]));
+        }
+    };
+
     const ResponsiveGridLayout = WidthProvider(Responsive);
-
 
     return(
         <ResponsiveGridLayout
@@ -174,7 +134,17 @@ let  ApplicationsManager = props =>{
             cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
         >
             <UIPanel key="new_props" data-grid={{x: 2, y: 0, w: 24, h: 6}} level="level_2">
-                <TabbedContent names={get_tabs_names()} contents={get_tabs_content()}/>
+                <SimpleContent name="Bitstream Properties" content={
+                    <ManagerLayout>
+                        <ManagerButtonsLayout>
+                            <Button style={{margin:"0 1rem"}} onClick={handleAdd}> Add application</Button>
+                            <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}> Remove application</Button>
+                            <Button style={{margin:"0 1rem"}} onClick={handleImport}>Import application</Button>
+                            <Button style={{margin:"0 1rem"}} onClick={handleExport}>Export application</Button>
+                        </ManagerButtonsLayout>
+                        <SelectableList items={names} types={types} onSelect={handleSelect} />
+                    </ManagerLayout>
+                }/>
             </UIPanel>
         </ResponsiveGridLayout>
     );

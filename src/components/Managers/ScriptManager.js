@@ -75,7 +75,7 @@ let ScriptManager = (props) =>{
                 dispatch(setSetting(["selected_script", selection.selectedRows[0].id]));
             }
         } else if(selection.selectedCount===0) {
-            if(settings.current_application !==null){
+            if(settings.selected_script !==null){
                 dispatch(setSetting(["selected_script", null]));
             }
         }

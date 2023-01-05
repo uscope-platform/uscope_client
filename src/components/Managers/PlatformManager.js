@@ -60,7 +60,7 @@ let  PlatformManager = props =>{
                 dispatch(setSetting(["selected_user", selection.selectedRows[0].username]));
             }
         } else if(selection.selectedCount===0) {
-            if(settings.current_application !==null){
+            if(settings.selected_user !==null){
                 dispatch(setSetting(["selected_user", null]));
             }
         }

@@ -37,7 +37,7 @@ import {addApplication} from "./redux/Actions/applicationActions";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
-import {UIPanel} from "./components/UI_elements/panels/UIPanel";
+import {UIPanel} from "./components/UI_elements";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 

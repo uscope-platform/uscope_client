@@ -46,7 +46,7 @@ let initial_new_fields_state = {
 
 
 let  ApplicationSidebar = props =>{
-    const selected_application =  useSelector(state => new up_application(state.applications[state.settings.current_application]))
+    const selected_application =  useSelector(state => new up_application(state.applications[state.settings.selected_application]))
 
     const settings = useSelector(state => state.settings);
     const peripherals = useSelector(state => state.peripherals);
@@ -236,7 +236,7 @@ let  ApplicationSidebar = props =>{
         return ["Channels", "Channel Groups","IRV", "Macro", "Parameters", "Peripherals", "Cores", "Misc"]
     }
 
-    if(!settings.current_application)
+    if(!settings.selected_application)
         return <></>;
 
     if(selected_application.application_name)

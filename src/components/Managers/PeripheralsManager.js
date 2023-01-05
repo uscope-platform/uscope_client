@@ -59,7 +59,7 @@ let PeripheralsManager = (props)=>{
                 dispatch(setSetting(["current_peripheral", selection.selectedRows[0].peripheral_name]));
             }
         } else if(selection.selectedCount===0) {
-            if(settings.current_application !==null){
+            if(settings.current_peripheral !==null){
                 dispatch(setSetting(["current_peripheral", null]))
             }
         } else if(selection.selectedCount>1){
