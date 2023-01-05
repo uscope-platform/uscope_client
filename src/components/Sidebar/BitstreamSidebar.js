@@ -43,7 +43,10 @@ let  BitstreamSidebar = props =>{
 
     let handleOnSelect = (selection) => {
         if(settings.selected_bitstream !==selection){
-            dispatch(setSetting(["selected_bitstream", selection]));
+            let selected_bitstreams = Object.values(bitstreams_store).filter((bitstream)=>{
+                return bitstream.name === selection;
+            })[0];
+            dispatch(setSetting(["selected_bitstream", selected_bitstreams.id]));
         }
     };
 
@@ -98,7 +101,7 @@ let  BitstreamSidebar = props =>{
         >
             <UIPanel key="bitstream_list" data-grid={{x: 2, y: 0, w: 24, h: 3, static: true}} level="level_2">
                 <SimpleContent name="Bitstream List" content={
-                    <SelectableList items={names} types={types} selected_item={settings.selected_bitstream} onSelect={handleOnSelect} />
+                    <SelectableList items={names} types={types} selected_item={selected_bitstream.name} onSelect={handleOnSelect} />
                 }/>
             </UIPanel>
             <UIPanel key="bitstream_actions" data-grid={{x: 2, y: 3, w: 24, h: 3, static: true}} level="level_2">

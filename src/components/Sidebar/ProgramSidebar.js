@@ -37,7 +37,7 @@ let  ProgramSidebar = props =>{
 
     const programs_store = useSelector(state => state.programs);
     const settings = useSelector(state => state.settings);
-
+    const ResponsiveGridLayout = WidthProvider(Responsive);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -46,15 +46,9 @@ let  ProgramSidebar = props =>{
         }
     },[dispatch]);
 
-    const ResponsiveGridLayout = WidthProvider(Responsive);
 
-    let selected_programs = Object.values(programs_store).filter((prg)=>{
-        return prg.name === settings.selected_program;
-    });
-    let selected_program = null;
-    if(selected_programs && selected_programs.length===1) {
-        selected_program = selected_programs[0];
-    }
+    let selected_program = programs_store[settings.selected_program];
+    let selected_program_obj = new up_program(selected_program);
 
 
     let handleAddRow = () =>{
@@ -129,14 +123,17 @@ let  ProgramSidebar = props =>{
 
     let handle_apply_program = () =>{
         let core_address = '0x83c00000';
-        selected_program.load(core_address).then();
+        selected_program_obj.load(core_address).then();
     };
 
     const [names, types] = get_content();
 
     let handleSelect = (item) =>{
         if(settings.selected_program !==item){
-            dispatch(setSetting(["selected_program", item]));
+            let selected_program = Object.values(programs_store).filter((bitstream)=>{
+                return bitstream.name === item;
+            })[0];
+            dispatch(setSetting(["selected_program", selected_program.id]));
         }
     };
 
@@ -152,7 +149,7 @@ let  ProgramSidebar = props =>{
             />
             <UIPanel key="program_props" data-grid={{x: 2, y: 0, w: 24, h: 3, static: true}} level="level_2">
                 <SimpleContent name="Program List" content={
-                    <SelectableList items={names} types={types} selected_item={settings.selected_program} onSelect={handleSelect} />
+                    <SelectableList items={names} types={types} selected_item={selected_program_obj.name} onSelect={handleSelect} />
                 }/>
             </UIPanel>
             <UIPanel key="program_actions" data-grid={{x: 2, y: 3, w: 24, h: 3, static: true}} level="level_2">

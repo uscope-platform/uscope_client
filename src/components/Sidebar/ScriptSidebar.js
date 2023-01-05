@@ -22,7 +22,7 @@ import {useDispatch, useSelector} from "react-redux"
 import {Button, SelectableList, SimpleContent, UIPanel} from "../UI_elements"
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
-import {get_next_id, up_script} from "../../client_core";
+import {get_next_id, up_bitstream, up_script} from "../../client_core";
 import {Responsive, WidthProvider} from "react-grid-layout";
 
 
@@ -41,7 +41,7 @@ let ScriptManager = (props) =>{
 
     const ResponsiveGridLayout = WidthProvider(Responsive);
 
-
+    let selected_script = new up_script(scripts_store[settings.selected_bitstream]);
 
     let handleAddRow = () =>{
         let id = get_next_id(Object.values(scripts_store).map(a => a.id).sort());
@@ -78,7 +78,10 @@ let ScriptManager = (props) =>{
 
     let handleSelect = (item) =>{
         if(settings.selected_script !==item){
-            dispatch(setSetting(["selected_script", item]));
+            let selected_script = Object.values(scripts_store).filter((scr)=>{
+                return scr.name === item;
+            })[0];
+            dispatch(setSetting(["selected_script", selected_script.id]));
         }
     };
 
@@ -91,7 +94,7 @@ let ScriptManager = (props) =>{
         >
             <UIPanel key="script_props" data-grid={{x: 2, y: 0, w: 24, h: 3, static: true}} level="level_2">
                 <SimpleContent name="Script List" content={
-                    <SelectableList items={names} types={types} selected_item={settings.selected_script} onSelect={handleSelect} />
+                    <SelectableList items={names} types={types} selected_item={selected_script.name} onSelect={handleSelect} />
                 }/>
             </UIPanel>
             <UIPanel key="script_actions" data-grid={{x: 2, y: 3, w: 24, h: 3, static: true}} level="level_2">

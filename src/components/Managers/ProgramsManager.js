@@ -26,6 +26,7 @@ import {
 import {useSelector} from "react-redux";
 import ProgramsEditor from "../Editors/Programs/ProgramsEditor";
 import {Responsive, WidthProvider} from "react-grid-layout";
+import {up_program} from "../../client_core";
 
 
 let ProgramsManager = props =>{
@@ -44,51 +45,46 @@ let ProgramsManager = props =>{
 
     let allowed_types = ["asm", "C"];
 
-    let selected_programs = Object.values(programs_store).filter((prg)=>{
-        return prg.name === settings.selected_program;
-    });
+    let selected_program = programs_store[settings.selected_program];
+    let selected_program_obj = new up_program(selected_program);
 
-    if(selected_programs && selected_programs.length===1){
-
-        let selected_program = selected_programs[0];
-        let handleTypeChange = (event) =>{
-            selected_program.edit_field(event.target.name, event.target.value).then();
+    let handleTypeChange = (event) =>{
+        selected_program_obj.edit_field(event.target.name, event.target.value).then();
+    }
+    let handle_name_change = (event) => {
+        if (event.key === "Enter" || event.key === "Tab") {
+            selected_program_obj.edit_field(event.target.name, event.target.value);
         }
-        let handle_name_change = (event) => {
-            if (event.key === "Enter" || event.key === "Tab") {
-                selected_program.edit_field(event.target.name, event.target.value);
-            }
-        }
+    }
 
-        if(editor_open) {
-            return (
-                <ManagerLayout>
-                    <ProgramsEditor program={selected_program} done={handle_edit_done} />
-                </ManagerLayout>
-            );
-        }
-
-        return(
-            <ResponsiveGridLayout
-                className="layout"
-                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-                rowHeight={30}
-                useCSSTransforms={false}
-            >
-                <UIPanel key="program_properties" data-grid={{x: 2, y: 0, w: 24, h: 5, static: true}} level="level_2">
-                    <SimpleContent name="Program Properties" content={
-                        <FormLayout>
-                            <InputField inline name='name' placeholder={selected_program.name} onKeyDown={handle_name_change} label="Name"/>
-                            <SelectField label="Program type" onChange={handleTypeChange} defaultValue={selected_program.program_type}
-                                         name="program_type" placeholder="Program type" options={allowed_types}/>
-                        </FormLayout>
-                    }/>
-                </UIPanel>
-            </ResponsiveGridLayout>
+    if(editor_open) {
+        return (
+            <ManagerLayout>
+                <ProgramsEditor program={selected_program} done={handle_edit_done} />
+            </ManagerLayout>
         );
     }
 
+    if(selected_program)
+    return(
+        <ResponsiveGridLayout
+            className="layout"
+            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+            rowHeight={30}
+            useCSSTransforms={false}
+        >
+            <UIPanel key="program_properties" data-grid={{x: 2, y: 0, w: 24, h: 5, static: true}} level="level_2">
+                <SimpleContent name="Program Properties" content={
+                    <FormLayout>
+                        <InputField inline name='name' placeholder={selected_program.name} onKeyDown={handle_name_change} label="Name"/>
+                        <SelectField label="Program type" onChange={handleTypeChange} defaultValue={selected_program.program_type}
+                                     name="program_type" placeholder="Program type" options={allowed_types}/>
+                    </FormLayout>
+                }/>
+            </UIPanel>
+        </ResponsiveGridLayout>
+    );
 
 };
 

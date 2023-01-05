@@ -24,51 +24,45 @@ import {
     UIPanel
 } from "../UI_elements"
 import {Responsive, WidthProvider} from "react-grid-layout";
+import {up_script} from "../../client_core";
 
 let ScriptManager = (props) =>{
 
     const settings = useSelector(state => state.settings);
     const scripts =  useSelector(state => state.scripts);
 
-    let selected_scripts = Object.values(scripts).filter((scr)=>{
-        return scr.name === settings.selected_script;
-    });
+    let selected_script = scripts[settings.selected_script];
+    let selected_script_obj = new up_script(selected_script);
 
     const ResponsiveGridLayout = WidthProvider(Responsive);
-    debugger;
-    if(selected_scripts && selected_scripts.length===1){
 
-        debugger;
 
-        const selected_script = selected_scripts[0];
-        let handle_edit_field = (event) => {
-            if(event.key==="Enter"|| event.key ==="Tab"){
-                selected_script.edit_field(event.target.name, event.target.value);
-            }
+    let handle_edit_field = (event) => {
+        if(event.key==="Enter"|| event.key ==="Tab"){
+            selected_script_obj.edit_field(event.target.name, event.target.value);
         }
-
-        return(
-            <ResponsiveGridLayout
-                className="layout"
-                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-                rowHeight={30}
-                useCSSTransforms={false}
-            >
-                <UIPanel key="script_properties" data-grid={{x: 2, y: 0, w: 24, h: 5, static: true}} level="level_2">
-                    <SimpleContent name="Script Properties" content={
-                        <FormLayout>
-                            <InputField inline name='name' placeholder={selected_script.name} onKeyDown={handle_edit_field} label='name'/>
-                            <InputField inline name='path' placeholder={selected_script.path} onKeyDown={handle_edit_field} label='path'/>
-                            <InputField inline name='triggers' placeholder={selected_script.triggers} onKeyDown={handle_edit_field} label='triggers'/>
-                        </FormLayout>
-                    }/>
-                </UIPanel>
-            </ResponsiveGridLayout>
-        );
     }
 
-
+    if(selected_script)
+    return(
+        <ResponsiveGridLayout
+            className="layout"
+            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+            rowHeight={30}
+            useCSSTransforms={false}
+        >
+            <UIPanel key="script_properties" data-grid={{x: 2, y: 0, w: 24, h: 5, static: true}} level="level_2">
+                <SimpleContent name="Script Properties" content={
+                    <FormLayout>
+                        <InputField inline name='name' placeholder={selected_script.name} onKeyDown={handle_edit_field} label='name'/>
+                        <InputField inline name='path' placeholder={selected_script.path} onKeyDown={handle_edit_field} label='path'/>
+                        <InputField inline name='triggers' placeholder={selected_script.triggers} onKeyDown={handle_edit_field} label='triggers'/>
+                    </FormLayout>
+                }/>
+            </UIPanel>
+        </ResponsiveGridLayout>
+    );
 
 }
 
