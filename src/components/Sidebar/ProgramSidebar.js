@@ -48,6 +48,13 @@ let  ProgramSidebar = props =>{
 
     const ResponsiveGridLayout = WidthProvider(Responsive);
 
+    let selected_programs = Object.values(programs_store).filter((prg)=>{
+        return prg.name === settings.selected_program;
+    });
+    let selected_program = null;
+    if(selected_programs && selected_programs.length===1) {
+        selected_program = selected_programs[0];
+    }
 
 
     let handleAddRow = () =>{
@@ -81,15 +88,6 @@ let  ProgramSidebar = props =>{
     }
 
 
-    let selected_programs = Object.values(programs_store).filter((prg)=>{
-        return prg.name === settings.selected_program;
-    });
-    let selected_program = null;
-    if(selected_programs && selected_programs.length===1) {
-
-        selected_program = selected_programs[0];
-
-    }
 
     let handle_compile = () =>{
 
@@ -160,11 +158,11 @@ let  ProgramSidebar = props =>{
             <UIPanel key="program_actions" data-grid={{x: 2, y: 3, w: 24, h: 3, static: true}} level="level_2">
                 <SimpleContent name="Program Actions" content={
                     <div style={{display:"flex", flexDirection:"column"}} >
-                        <Button style={{margin:"0 1rem"}} onClick={handleAddRow}>Add Program</Button>
-                        <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}>Remove Program</Button>
-                        <Button style={{margin:"0 1rem"}} onClick={handleProgramEdit}>Edit Program</Button>
-                        <Button style={{margin:"0 1rem"}} onClick={handle_compile}>Compile Program</Button>
-                        <Button style={{margin:"0 1rem"}} onClick={handle_apply_program}>Load Program</Button>
+                        <Button style={{margin:"0.5em 1rem"}} onClick={handleAddRow}>Add Program</Button>
+                        <Button style={{margin:"0.5em 1rem"}} onClick={handleRemoveRow}>Remove Program</Button>
+                        <Button style={{margin:"0.5em 1rem"}} onClick={handleProgramEdit}>Edit Program</Button>
+                        <Button style={{margin:"0.5em 1rem"}} onClick={handle_compile}>Compile Program</Button>
+                        <Button style={{margin:"0.5em 1rem"}} onClick={handle_apply_program}>Load Program</Button>
                     </div>
                 }/>
             </UIPanel>
