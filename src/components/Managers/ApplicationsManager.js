@@ -104,7 +104,6 @@ let  ApplicationsManager = props =>{
     }
 
     let handle_add_item = (event) =>{
-        debugger;
         update_fields(event.target.id, true);
     }
 

@@ -13,48 +13,100 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import React, {useEffect} from 'react';
 
-import {useSelector} from "react-redux";
-import {up_script} from "../../client_core";
-import {FormLayout, InputField, SimpleContent, UIPanel} from "../UI_elements";
+import {useDispatch, useSelector} from "react-redux"
+
+
+
+import {Button, SelectableList, SimpleContent, UIPanel} from "../UI_elements"
+import {setSetting} from "../../redux/Actions/SettingsActions";
+
+import {get_next_id, up_script} from "../../client_core";
 import {Responsive, WidthProvider} from "react-grid-layout";
 
 
+let ScriptManager = (props) =>{
 
-let  ScriptSidebar = props =>{
+    const scripts_store = useSelector(state => state.scripts);
+    const settings = useSelector(state => state.settings);
 
-    const selected_script =  useSelector(state => new up_script(state.scripts[state.settings.selected_script]))
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        return() =>{
+            dispatch(setSetting(["selected_script", null]));
+        }
+    },[dispatch]);
 
     const ResponsiveGridLayout = WidthProvider(Responsive);
-    let handle_edit_field = (event) => {
-        if(event.key==="Enter"|| event.key ==="Tab"){
-            selected_script.edit_field(event.target.name, event.target.value);
+
+
+
+    let handleAddRow = () =>{
+        let id = get_next_id(Object.values(scripts_store).map(a => a.id).sort());
+        let script = up_script.construct_empty(id);
+        script.add_remote().then();
+    };
+
+    let handleRemoveRow = (event) =>{
+        dispatch(setSetting(["selected_script", null]));
+        up_script.delete_script(scripts_store[settings.selected_script]).then();
+    };
+
+    let handleScriptEdit = () => {
+        if(settings.selected_script===null){
+            alert("Please select a script to edit");
+            return;
         }
+        dispatch(setSetting(["script_editor_title", settings.selected_script]));
+    };
+
+
+    let get_content = () =>{
+        let types = [];
+        let items = Object.values(scripts_store).map((scr)=>{
+            types.push("generic");
+            return scr.name;
+        })
+
+        return [items, types]
     }
 
 
-    if(selected_script.id)
-        return(
-            <ResponsiveGridLayout
-                className="layout"
-                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-                rowHeight={30}
-                useCSSTransforms={false}
-            >
-                <UIPanel key="script_properties" data-grid={{x: 2, y: 0, w: 24, h: 5, static: true}} level="level_2">
-                    <SimpleContent name="Script Properties" content={
-                        <FormLayout>
-                            <InputField inline name='name' placeholder={selected_script.name} onKeyDown={handle_edit_field} label='name'/>
-                            <InputField inline name='path' placeholder={selected_script.path} onKeyDown={handle_edit_field} label='path'/>
-                            <InputField inline name='triggers' placeholder={selected_script.triggers} onKeyDown={handle_edit_field} label='triggers'/>
-                        </FormLayout>
-                    }/>
-                </UIPanel>
-            </ResponsiveGridLayout>
-        );
+    const [names, types] = get_content();
 
-};
+    let handleSelect = (item) =>{
+        if(settings.selected_script !==item){
+            dispatch(setSetting(["selected_script", item]));
+        }
+    };
 
-export default ScriptSidebar;
+    return(
+        <ResponsiveGridLayout
+            className="layout"
+            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+            useCSSTransforms={false}
+        >
+            <UIPanel key="script_props" data-grid={{x: 2, y: 0, w: 24, h: 3, static: true}} level="level_2">
+                <SimpleContent name="Script List" content={
+                    <SelectableList items={names} types={types} selected_item={settings.selected_script} onSelect={handleSelect} />
+                }/>
+            </UIPanel>
+            <UIPanel key="script_actions" data-grid={{x: 2, y: 3, w: 24, h: 3, static: true}} level="level_2">
+                <SimpleContent name="Script Actions" content={
+                    <div style={{display:"flex", flexDirection:"column"}} >
+                        <Button style={{margin:"0.5em 1rem"}}  onClick={handleAddRow}>Add Script</Button>
+                        <Button style={{margin:"0.5em 1rem"}}  onClick={handleRemoveRow}>Remove Script</Button>
+                        <Button  style={{margin:"0.5em 1rem"}}  onClick={handleScriptEdit}>Edit Script</Button>
+                    </div>
+                }/>
+            </UIPanel>
+        </ResponsiveGridLayout>
+
+    );
+}
+
+
+export default ScriptManager;
