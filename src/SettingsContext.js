@@ -13,18 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {PanelTitle, ContentDiv} from "./UIPanel";
 
-export let SimpleContent = function (props) {
+import {createContext} from "react";
 
-    return(
-        <div style={{  height: "100%"}}>
-            <PanelTitle selected>
-                <p style={{marginLeft:"0.5em", marginRight:"0.5em", marginTop:"0.25em"}}>{props.name}</p>
-            </PanelTitle>
-            <ContentDiv>
-                {props.content}
-            </ContentDiv>
-        </div>
-    );
-};
+
+export const SettingsContext = createContext();

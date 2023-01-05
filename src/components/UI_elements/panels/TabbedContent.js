@@ -31,7 +31,7 @@ export let TabbedContent = function (props) {
             let is_selected = {selected:i===selected};
             ret_val.push(
                 <PanelTitle {...is_selected}>
-                    <p onClick={handle_select_tab}>{props.names[i]}</p>
+                    <p style={{marginLeft:"0.5em", marginRight:"0.5em", marginTop:"0.25em"}} onClick={handle_select_tab}>{props.names[i]}</p>
                 </PanelTitle>
             )
         }

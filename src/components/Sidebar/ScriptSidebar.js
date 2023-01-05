@@ -41,8 +41,9 @@ let  ScriptSidebar = props =>{
                 breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
                 cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
                 rowHeight={30}
+                useCSSTransforms={false}
             >
-                <UIPanel key="script_properties" data-grid={{x: 2, y: 0, w: 24, h: 5}} level="level_2">
+                <UIPanel key="script_properties" data-grid={{x: 2, y: 0, w: 24, h: 5, static: true}} level="level_2">
                     <SimpleContent name="Script Properties" content={
                         <FormLayout>
                             <InputField inline name='name' placeholder={selected_script.name} onKeyDown={handle_edit_field} label='name'/>

@@ -41,6 +41,8 @@ import {UIPanel} from "./components/UI_elements";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
+
+
 let AuthApp = (props) =>{
 
     const settings = useSelector(state => state.settings);
@@ -50,8 +52,6 @@ let AuthApp = (props) =>{
     const [views, set_views] = useState([]);
 
     const [app_stage, set_app_stage] = useState("WAITING");
-
-
 
     let app_choice_done = ()=>{
         populate_views();
@@ -135,6 +135,7 @@ let AuthApp = (props) =>{
     }
 
 
+
     switch (app_stage) {
         case "ONBOARDING":
             return(
@@ -158,30 +159,33 @@ let AuthApp = (props) =>{
         case "NORMAL":
             return (
                 <div className="App">
-                    <ResponsiveGridLayout
-                        className="layout"
-                        breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                        cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-                        compactType='horizontal'
-                    >
-                        <div key="nav" data-grid={{x: 0, y: 0, w: 3, h: 10, static: true}}>
-                            <Navbar views={views}/>
-                        </div>
-                        <UIPanel key="main" data-grid={{x: 3, y: 0, w: 16, h: 10}} level="level_1">
-                            <Routes>
-                                <Route key="plot" path='/' element={<TabContent className="main_content_tab" tab={views[0]}/>}/>
-                                <Route key="script_manager" path='/script_manager' element={<TabContent className="main_content_tab" tab={views[1]}/>}/>
-                                <Route key="applications_manager" path='/applications_manager' element={<TabContent className="main_content_tab" tab={views[2]}/>}/>
-                                <Route key="program_manager" path='/program_manager' element={<TabContent className="main_content_tab" tab={views[3]}/>}/>
-                                <Route key="bitstream_manager" path='/bitstream_manager' element={<TabContent className="main_content_tab" tab={views[4]}/>}/>
-                                <Route key="peripherals_manager" path='/peripherals_manager' element={<TabContent className="main_content_tab" tab={views[5]}/>}/>
-                                <Route key="platform_manager" path='/platform_manager' element={<TabContent className="main_content_tab" tab={views[6]}/>}/>
-                            </Routes>
-                        </UIPanel>
-                        <UIPanel key="props" data-grid={{x: 19, y: 0, w: 5, h: 10}} level="level_1">
-                            <Sidebar />
-                        </UIPanel>
-                    </ResponsiveGridLayout>
+
+                        <ResponsiveGridLayout
+                            className="layout"
+                            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+                            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+                            compactType='horizontal'
+                            useCSSTransforms={false}
+                        >
+                            <div key="nav" data-grid={{x: 0, y: 0, w: 3, h: 10, static: true}}>
+                                <Navbar views={views}/>
+                            </div>
+                            <UIPanel key="main" data-grid={{x: 3, y: 0, w: 16, h: 10, static: true}} level="level_1">
+                                <Routes>
+                                    <Route key="plot" path='/' element={<TabContent className="main_content_tab" tab={views[0]}/>}/>
+                                    <Route key="script_manager" path='/script_manager' element={<TabContent className="main_content_tab" tab={views[1]}/>}/>
+                                    <Route key="applications_manager" path='/applications_manager' element={<TabContent className="main_content_tab" tab={views[2]}/>}/>
+                                    <Route key="program_manager" path='/program_manager' element={<TabContent className="main_content_tab" tab={views[3]}/>}/>
+                                    <Route key="bitstream_manager" path='/bitstream_manager' element={<TabContent className="main_content_tab" tab={views[4]}/>}/>
+                                    <Route key="peripherals_manager" path='/peripherals_manager' element={<TabContent className="main_content_tab" tab={views[5]}/>}/>
+                                    <Route key="platform_manager" path='/platform_manager' element={<TabContent className="main_content_tab" tab={views[6]}/>}/>
+                                </Routes>
+                            </UIPanel>
+                            <UIPanel key="props" data-grid={{x: 19, y: 0, w: 5, h: 10, static: true}} level="level_1">
+                                <Sidebar />
+                            </UIPanel>
+                        </ResponsiveGridLayout>
+
                 </div>
             );
         default:

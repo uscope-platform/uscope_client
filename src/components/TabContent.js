@@ -51,7 +51,7 @@ let TabContent = props => {
     }else if(props.tab.type ==='applications_manager'){
         return (
             <Suspense fallback={<div>Loading...</div>}>
-                <ApplicationsManager />
+                <ApplicationsManager selected_item={props.selected_item}/>
             </Suspense>
         );
     }else if(props.tab.type ==='program_manager'){

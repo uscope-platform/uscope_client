@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState, useMemo} from "react";
+import React from "react";
 import {SelectableListLayout} from "./SelectableListLayout";
 import {SelectableListItem} from './SelectableListItem';
 
@@ -21,28 +21,21 @@ import {SelectableListItem} from './SelectableListItem';
 export let  SelectableList = props =>{
 
 
-    let [selected_item, set_selected_item] = useState("");
     let handleSelect = (item) => {
-        set_selected_item(item);
         props.onSelect(item);
     }
-
 
     let constructListContent = (names, icons) =>{
         let ret = []
         for(let i = 0; i< names.length; i++){
-            ret.push(<SelectableListItem onSelect={handleSelect} selected={selected_item===names[i]} icon={icons[i]} name={names[i]}/>)
+            ret.push(<SelectableListItem key={names[i]} onSelect={handleSelect} selected={props.selected_item===names[i]} icon={icons[i]} name={names[i]}/>)
         }
         return ret;
     }
 
-    const items = useMemo(() => {
-        return constructListContent(props.items, props.types)
-    }, [props.items, props.types]);
-
     return(
         <SelectableListLayout>
-            {items}
+            {constructListContent(props.items, props.types)}
         </SelectableListLayout>
     );
 };

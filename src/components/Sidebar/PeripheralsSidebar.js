@@ -97,8 +97,9 @@ let  PeripheralsSidebar = props =>{
             className="layout"
             breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
             cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+            useCSSTransforms={false}
         >
-            <UIPanel key="new_props" data-grid={{x: 2, y: 0, w: 24, h: 6}} level="level_2">
+            <UIPanel key="new_props" data-grid={{x: 2, y: 0, w: 24, h: 6, static: true}} level="level_2">
                 <TabbedContent names={get_tabs_names()} contents={get_tabs_content()}/>
             </UIPanel>
         </ResponsiveGridLayout>

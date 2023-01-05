@@ -59,8 +59,9 @@ let  PlatformSidebar = props =>{
                 breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
                 cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
                 rowHeight={30}
+                useCSSTransforms={false}
             >
-                <UIPanel key="platform_properties" data-grid={{x: 2, y: 0, w: 24, h: 6}} level="level_2">
+                <UIPanel key="platform_properties" data-grid={{x: 2, y: 0, w: 24, h: 6, static: true}} level="level_2">
                     <SimpleContent name="Platform Properties" content={
                         <form onSubmit={handle_add_user}>
                             <FormLayout>
