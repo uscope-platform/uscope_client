@@ -135,13 +135,13 @@ let  PeripheralsSidebar = props =>{
             cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
             useCSSTransforms={false}
         >
-            <UIPanel key="bitstream_list" data-grid={{x: 2, y: 0, w: 24, h: 3, static: true}} level="level_2">
-                <SimpleContent name="Bitstream List" content={
+            <UIPanel key="peripherals_list" data-grid={{x: 2, y: 0, w: 24, h: 3, static: true}} level="level_2">
+                <SimpleContent name="Peripherals List" content={
                     <SelectableList items={names} types={types} selected_item={settings.current_peripheral} onSelect={handleOnSelect} />
                 }/>
             </UIPanel>
-            <UIPanel key="bitstream_actions" data-grid={{x: 2, y: 3, w: 24, h: 3, static: true}} level="level_2">
-                <SimpleContent name="Bitstream Actions" content={
+            <UIPanel key="peripherals_actions" data-grid={{x: 2, y: 3, w: 24, h: 3, static: true}} level="level_2">
+                <SimpleContent name="Peripherals Actions" content={
                     <div style={{display:"flex", flexDirection:"column"}} >
                         <Button style={{margin:"0.5em 1rem"}} onClick={handleAdd}> Add Peripheral</Button>
                         <Button style={{margin:"0.5em 1rem"}} onClick={handleRemoveRow}> Remove Peripheral</Button>

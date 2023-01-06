@@ -34,10 +34,19 @@ export let  SelectableListItem = props =>{
         props.onSelect(props.name)
     };
 
+    let get_icon_image = (icon) =>{
+        if(typeof icon === "string"){
+            return <Image style={{width:"2em"}} src={image_src} alt={alt}/>
+        } else {
+            return icon;
+        }
+    }
+
+
     return(
         <ItemLayout {...selected} onClick={handle_click}>
-            <Image style={{width:"2em"}} src={image_src} alt={alt}/>
-            <p>{props.name}</p>
+            {get_icon_image(props.icon)}
+            <p style={{cursor:"default"}}>{props.name}</p>
         </ItemLayout>
     );
 };
