@@ -25,6 +25,7 @@ import {
 } from "../UI_elements"
 import {Responsive, WidthProvider} from "react-grid-layout";
 import {up_script} from "../../client_core";
+import ScriptsEditor from "../Editors/Scripts/ScriptsEditor";
 
 let ScriptManager = (props) =>{
 
@@ -43,7 +44,12 @@ let ScriptManager = (props) =>{
         }
     }
 
+    let handle_edit_done = () =>{
+
+    }
+
     if(selected_script)
+
     return(
         <ResponsiveGridLayout
             className="layout"
@@ -52,13 +58,18 @@ let ScriptManager = (props) =>{
             rowHeight={30}
             useCSSTransforms={false}
         >
-            <UIPanel key="script_properties" data-grid={{x: 2, y: 0, w: 24, h: 5, static: true}} level="level_2">
+            <UIPanel key="script_properties" data-grid={{x: 0, y: 0, w: 24, h: 5, static: true}} level="level_2">
                 <SimpleContent name="Script Properties" content={
                     <FormLayout>
                         <InputField inline name='name' placeholder={selected_script.name} onKeyDown={handle_edit_field} label='name'/>
                         <InputField inline name='path' placeholder={selected_script.path} onKeyDown={handle_edit_field} label='path'/>
                         <InputField inline name='triggers' placeholder={selected_script.triggers} onKeyDown={handle_edit_field} label='triggers'/>
                     </FormLayout>
+                }/>
+            </UIPanel>
+            <UIPanel key="script_source" data-grid={{x: 0, y: 5, w: 24, h: 20, static: true}} level="level_2">
+                <SimpleContent name="Script Source Code" content={
+                    <ScriptsEditor script={selected_script} done={handle_edit_done} />
                 }/>
             </UIPanel>
         </ResponsiveGridLayout>

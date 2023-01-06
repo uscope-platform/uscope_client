@@ -65,7 +65,7 @@ let BitstreamManager = props =>{
             rowHeight={30}
             useCSSTransforms={false}
         >
-            <UIPanel key="bitstream_properties" data-grid={{x: 2, y: 0, w: 24, h: 5, static: true}} level="level_2">
+            <UIPanel key="bitstream_properties" data-grid={{x: 0, y: 0, w: 24, h: 5, static: true}} level="level_2">
                 <SimpleContent name="Bitstream Properties" content={
                     <FormLayout>
                         <InputField inline name='name' placeholder={selected_bitstream.name} onKeyDown={handle_change_name} label='name'/>

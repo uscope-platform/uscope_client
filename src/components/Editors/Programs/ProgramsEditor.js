@@ -16,17 +16,10 @@
 import React, {useState, useEffect} from "react";
 import {Button} from "../../UI_elements"
 
-import styled from "styled-components";
-
 
 import CodeMirror from '@uiw/react-codemirror';
 import {cpp} from '@codemirror/lang-cpp'
 import { dracula } from '@uiw/codemirror-theme-dracula';
-
-const Title = styled.h1`
-  margin-right: auto;
-  margin-left: auto;
-`
 
 
 let ProgramsEditor = props =>{
@@ -38,7 +31,7 @@ let ProgramsEditor = props =>{
             set_editor_content(props.program.program_content);
             set_language(props.program.program_type);
         }
-    },[])
+    },[props.program])
 
     let handle_change = (newValue) => {
         set_editor_content(newValue);
@@ -52,8 +45,6 @@ let ProgramsEditor = props =>{
 
     return(
         <>
-            <Title>{props.program.name}</Title>
-
             <CodeMirror
                 value={editor_content}
                 width='auto'
@@ -61,7 +52,6 @@ let ProgramsEditor = props =>{
                 extensions={[cpp()]}
                 onChange={handle_change}
             />
-
             <Button variant="success" onClick={handle_submit}>Submit</Button>
         </>
     );

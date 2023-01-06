@@ -27,10 +27,6 @@ import {
     autocompletion_engine
 } from "../../../client_core";
 
-const Title = styled.h1`
-  margin-right: auto;
-  margin-left: auto;
-`
 
 let ScriptsEditor = props =>{
     const scripts_store = useSelector(state => state.scripts);
@@ -66,7 +62,6 @@ let ScriptsEditor = props =>{
 
     return(
         <>
-            <Title>{settings.script_editor_title}</Title>
             <CodeMirror
                 value={editor_content}
                 width='auto'

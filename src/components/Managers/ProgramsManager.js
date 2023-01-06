@@ -13,9 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from "react";
+import React from "react";
 import {
-    ManagerLayout,
     UIPanel,
     SimpleContent,
     FormLayout,
@@ -36,11 +35,8 @@ let ProgramsManager = props =>{
     const programs_store = useSelector(state => state.programs);
     const settings = useSelector(state => state.settings);
 
-    const [editor_open, set_editor_open] = useState(false);
-
-
     let handle_edit_done = () =>{
-        set_editor_open(false);
+
     }
 
     let allowed_types = ["asm", "C"];
@@ -57,13 +53,6 @@ let ProgramsManager = props =>{
         }
     }
 
-    if(editor_open) {
-        return (
-            <ManagerLayout>
-                <ProgramsEditor program={selected_program} done={handle_edit_done} />
-            </ManagerLayout>
-        );
-    }
 
     if(selected_program)
     return(
@@ -74,7 +63,7 @@ let ProgramsManager = props =>{
             rowHeight={30}
             useCSSTransforms={false}
         >
-            <UIPanel key="program_properties" data-grid={{x: 2, y: 0, w: 24, h: 5, static: true}} level="level_2">
+            <UIPanel key="program_properties" data-grid={{x: 0, y: 0, w: 24, h: 5, static: true}} level="level_2">
                 <SimpleContent name="Program Properties" content={
                     <FormLayout>
                         <InputField inline name='name' placeholder={selected_program.name} onKeyDown={handle_name_change} label="Name"/>
@@ -83,6 +72,12 @@ let ProgramsManager = props =>{
                     </FormLayout>
                 }/>
             </UIPanel>
+            <UIPanel key="program_source" data-grid={{x: 0, y: 5, w: 24, h: 20, static: true}} level="level_2">
+                <SimpleContent name="Program Souce Code" content={
+                    <ProgramsEditor program={selected_program} done={handle_edit_done} />
+                }/>
+            </UIPanel>
+
         </ResponsiveGridLayout>
     );
 

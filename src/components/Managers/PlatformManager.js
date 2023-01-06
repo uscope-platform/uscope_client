@@ -63,7 +63,7 @@ let  PlatformManager = props =>{
             rowHeight={30}
             useCSSTransforms={false}
         >
-            <UIPanel key="platform_properties" data-grid={{x: 2, y: 0, w: 24, h: 6, static: true}} level="level_2">
+            <UIPanel key="platform_properties" data-grid={{x: 0, y: 0, w: 24, h: 6, static: true}} level="level_2">
                 <SimpleContent name="Platform Properties" content={
                     <form onSubmit={handle_add_user}>
                         <FormLayout>
