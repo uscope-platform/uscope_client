@@ -43,8 +43,8 @@ let  ApplicationSidebar = props =>{
     },[dispatch]);
 
 
-    let  handleRemoveRow = (event) =>{
-        up_application.delete_application(settings.selected_application).then(()=>{
+    let  handleRemove = (app) =>{
+        up_application.delete_application(app).then(()=>{
             dispatch(setSetting(["selected_application", null]))
         });
     };
@@ -98,7 +98,6 @@ let  ApplicationSidebar = props =>{
                 return match;
             }
         });
-        debugger;
         ids = ids.filter(Boolean);
         let id = get_next_id(ids.sort());
         up_application.construct_empty("new_application_"+id).add_remote().then();
@@ -131,16 +130,21 @@ let  ApplicationSidebar = props =>{
             cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
             useCSSTransforms={false}
         >
-            <UIPanel key="app_props" data-grid={{x: 2, y: 0, w: 24, h: 3, static: true}} level="level_2">
+            <UIPanel key="app_props" data-grid={{x: 0, y: 0, w: 24, h: 3, static: true}} level="level_2">
                 <SimpleContent name="Applications List" content={
-                    <SelectableList items={names} types={types} selected_item={settings.selected_application} onSelect={handleSelect} />
+                    <SelectableList
+                        items={names}
+                        types={types}
+                        selected_item={settings.selected_application}
+                        onRemove={handleRemove}
+                        onSelect={handleSelect}
+                    />
                 }/>
             </UIPanel>
-            <UIPanel key="app_actions" data-grid={{x: 2, y: 3, w: 24, h: 3, static: true}} level="level_2">
+            <UIPanel key="app_actions" data-grid={{x: 0, y: 3, w: 24, h: 3, static: true}} level="level_2">
                 <SimpleContent name="Applications Actions" content={
                     <div>
                         <Button style={{margin:"0.5em 1rem"}} onClick={handleAdd}> Add application</Button>
-                        <Button style={{margin:"0.5em 1rem"}} onClick={handleRemoveRow}> Remove application</Button>
                         <Button style={{margin:"0.5em 1rem"}} onClick={handleImport}>Import application</Button>
                         <Button style={{margin:"0.5em 1rem"}} onClick={handleExport}>Export application</Button>
                     </div>

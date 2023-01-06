@@ -40,7 +40,7 @@ let ScriptManager = (props) =>{
     },[dispatch]);
 
     const ResponsiveGridLayout = WidthProvider(Responsive);
-    
+
     let selected_script = {name:""};
     if(settings.selected_script)
         selected_script = scripts_store[settings.selected_script];
@@ -51,17 +51,12 @@ let ScriptManager = (props) =>{
         script.add_remote().then();
     };
 
-    let handleRemoveRow = (event) =>{
+    let handleRemove = (script) =>{
+        let deleted = Object.values(scripts_store).filter((scr)=>{
+            return scr.name === script;
+        })[0];
         dispatch(setSetting(["selected_script", null]));
-        up_script.delete_script(scripts_store[settings.selected_script]).then();
-    };
-
-    let handleScriptEdit = () => {
-        if(settings.selected_script===null){
-            alert("Please select a script to edit");
-            return;
-        }
-        dispatch(setSetting(["script_editor_title", settings.selected_script]));
+        up_script.delete_script(deleted).then();
     };
 
 
@@ -95,17 +90,15 @@ let ScriptManager = (props) =>{
             cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
             useCSSTransforms={false}
         >
-            <UIPanel key="script_props" data-grid={{x: 2, y: 0, w: 24, h: 3, static: true}} level="level_2">
+            <UIPanel key="script_props" data-grid={{x: 0, y: 0, w: 24, h: 6, static: true}} level="level_2">
                 <SimpleContent name="Script List" content={
-                    <SelectableList items={names} types={types} selected_item={selected_script.name} onSelect={handleSelect} />
+                    <SelectableList items={names} types={types} selected_item={selected_script.name} onRemove={handleRemove} onSelect={handleSelect} />
                 }/>
             </UIPanel>
-            <UIPanel key="script_actions" data-grid={{x: 2, y: 3, w: 24, h: 3, static: true}} level="level_2">
+            <UIPanel key="script_actions" data-grid={{x: 0, y: 6, w: 24, h: 1, static: true}} level="level_2">
                 <SimpleContent name="Script Actions" content={
                     <div style={{display:"flex", flexDirection:"column"}} >
                         <Button style={{margin:"0.5em 1rem"}}  onClick={handleAddRow}>Add Script</Button>
-                        <Button style={{margin:"0.5em 1rem"}}  onClick={handleRemoveRow}>Remove Script</Button>
-                        <Button  style={{margin:"0.5em 1rem"}}  onClick={handleScriptEdit}>Edit Script</Button>
                     </div>
                 }/>
             </UIPanel>

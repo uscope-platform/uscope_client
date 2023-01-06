@@ -20,15 +20,10 @@ import {SelectableListItem} from './SelectableListItem';
 
 export let  SelectableList = props =>{
 
-
-    let handleSelect = (item) => {
-        props.onSelect(item);
-    }
-
     let constructListContent = (names, icons) =>{
         let ret = []
         for(let i = 0; i< names.length; i++){
-            ret.push(<SelectableListItem key={names[i]} onSelect={handleSelect} selected={props.selected_item===names[i]} icon={icons[i]} name={names[i]}/>)
+            ret.push(<SelectableListItem key={names[i]}  onRemove={props.onRemove} onSelect={props.onSelect} selected={props.selected_item===names[i]} icon={icons[i]} name={names[i]}/>)
         }
         return ret;
     }

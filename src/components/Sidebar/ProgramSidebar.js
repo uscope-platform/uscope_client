@@ -51,23 +51,18 @@ let  ProgramSidebar = props =>{
     let selected_program_obj = new up_program(selected_program);
 
 
-    let handleAddRow = () =>{
+    let handleAdd = () =>{
         let id = get_next_id(Object.values(programs_store).map(a => a.id).sort());
         let program = up_program.construct_empty(id);
         program.add_remote().then();
     };
 
-    let handleRemoveRow = (event) =>{
+    let handleRemove = (program) =>{
+        let deleted = Object.values(programs_store).filter((scr)=>{
+            return scr.name === program;
+        })[0];
         dispatch(setSetting(["selected_programs", null]));
-        up_program.delete_program(programs_store[settings.selected_program]).then();
-    };
-
-    let handleProgramEdit = () => {
-        if(settings.selected_program===null){
-            alert("Please select a script to edit");
-            return;
-        }
-        dispatch(setSetting(["script_editor_title", settings.selected_program]));
+        up_program.delete_program(deleted).then();
     };
 
 
@@ -147,17 +142,15 @@ let  ProgramSidebar = props =>{
             <ButterToast
                 position={compile_status_position}
             />
-            <UIPanel key="program_props" data-grid={{x: 2, y: 0, w: 24, h: 3, static: true}} level="level_2">
+            <UIPanel key="program_props" data-grid={{x: 0, y: 0, w: 24, h: 3, static: true}} level="level_2">
                 <SimpleContent name="Program List" content={
-                    <SelectableList items={names} types={types} selected_item={selected_program_obj.name} onSelect={handleSelect} />
+                    <SelectableList items={names} types={types} selected_item={selected_program_obj.name} onRemove={handleRemove} onSelect={handleSelect} />
                 }/>
             </UIPanel>
-            <UIPanel key="program_actions" data-grid={{x: 2, y: 3, w: 24, h: 3, static: true}} level="level_2">
+            <UIPanel key="program_actions" data-grid={{x: 0, y: 3, w: 24, h: 3, static: true}} level="level_2">
                 <SimpleContent name="Program Actions" content={
                     <div style={{display:"flex", flexDirection:"column"}} >
-                        <Button style={{margin:"0.5em 1rem"}} onClick={handleAddRow}>Add Program</Button>
-                        <Button style={{margin:"0.5em 1rem"}} onClick={handleRemoveRow}>Remove Program</Button>
-                        <Button style={{margin:"0.5em 1rem"}} onClick={handleProgramEdit}>Edit Program</Button>
+                        <Button style={{margin:"0.5em 1rem"}} onClick={handleAdd}>Add Program</Button>
                         <Button style={{margin:"0.5em 1rem"}} onClick={handle_compile}>Compile Program</Button>
                         <Button style={{margin:"0.5em 1rem"}} onClick={handle_apply_program}>Load Program</Button>
                     </div>

@@ -50,7 +50,7 @@ let  BitstreamSidebar = props =>{
         }
     };
 
-    let handleAddRow = () =>{
+    let handleAdd = () =>{
 
         let ids = Object.values(bitstreams_store).map(a => a.id).sort();
         let id = get_next_id(ids);
@@ -60,10 +60,12 @@ let  BitstreamSidebar = props =>{
 
     };
 
-    let handleRemoveRow = (event) =>{
-
+    let handleRemove = (bitstream) =>{
+        let deleted = Object.values(bitstreams_store).filter((bit)=>{
+            return bit.name === bitstream;
+        })[0];
         dispatch(setSetting(["selected_bitstream", null]));
-        up_bitstream.delete_bitstream(selected_bitstream).then();
+        up_bitstream.delete_bitstream(deleted).then();
 
     };
 
@@ -99,16 +101,15 @@ let  BitstreamSidebar = props =>{
             cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
             useCSSTransforms={false}
         >
-            <UIPanel key="bitstream_list" data-grid={{x: 2, y: 0, w: 24, h: 3, static: true}} level="level_2">
+            <UIPanel key="bitstream_list" data-grid={{x: 0, y: 0, w: 24, h: 3, static: true}} level="level_2">
                 <SimpleContent name="Bitstream List" content={
-                    <SelectableList items={names} types={types} selected_item={selected_bitstream.name} onSelect={handleOnSelect} />
+                    <SelectableList items={names} types={types} selected_item={selected_bitstream.name} onRemove={handleRemove} onSelect={handleOnSelect} />
                 }/>
             </UIPanel>
-            <UIPanel key="bitstream_actions" data-grid={{x: 2, y: 3, w: 24, h: 3, static: true}} level="level_2">
+            <UIPanel key="bitstream_actions" data-grid={{x: 0, y: 3, w: 24, h: 3, static: true}} level="level_2">
                 <SimpleContent name="Bitstream Actions" content={
                     <div style={{display:"flex", flexDirection:"column"}} >
-                        <Button style={{margin:"0.5em 1rem"}} onClick={handleAddRow}>Add Bitstream</Button>
-                        <Button style={{margin:"0.5em 1rem"}} onClick={handleRemoveRow}>Remove Bitstream</Button>
+                        <Button style={{margin:"0.5em 1rem"}} onClick={handleAdd}>Add Bitstream</Button>
                         <input type='file' id='bitstream_chooser' ref={inputFile} onChange={upload_file} style={{display: 'none'}}/>
                     </div>
                 }/>

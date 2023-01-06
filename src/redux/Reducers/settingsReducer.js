@@ -23,8 +23,6 @@ const initial_state = {
     edit_application_name: "",
     default_ch_group:'',
     current_peripheral:null,
-
-    script_editor_title:null,
     current_view_requires_sidebar: true,
     selected_program: null,
     selected_application:null,

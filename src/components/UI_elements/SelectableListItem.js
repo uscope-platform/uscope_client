@@ -14,8 +14,9 @@
 // limitations under the License.
 
 import styled from 'styled-components';
-import React from "react";
+import React, {useState} from "react";
 import {Image} from "./Image";
+import {Trash} from "grommet-icons";
 
 
 
@@ -30,9 +31,26 @@ export let  SelectableListItem = props =>{
     let selected = {selected:props.selected};
     const alt = props.icon + "language icon";
 
+    let [color, set_color] = useState("white");
+    let [confirm_needed, set_confirm_needed] = useState(false);
+
     let handle_click = () =>{
         props.onSelect(props.name)
     };
+
+    let handle_remove = () =>{
+        set_color("red");
+        if(!confirm_needed){
+            set_confirm_needed(true);
+            setTimeout(() => {
+                set_confirm_needed(false);
+                set_color("white");
+            }, 1500);
+        } else{
+            props.onRemove(props.name);
+        }
+    };
+
 
     let get_icon_image = (icon) =>{
         if(typeof icon === "string"){
@@ -43,10 +61,18 @@ export let  SelectableListItem = props =>{
     }
 
 
+
     return(
-        <ItemLayout {...selected} onClick={handle_click}>
-            {get_icon_image(props.icon)}
-            <p style={{cursor:"default"}}>{props.name}</p>
+        <ItemLayout {...selected}>
+            <div></div>
+            <div onClick={handle_click} style={{display:"flex", flexGrow:1}}>
+                {get_icon_image(props.icon)}
+                <p style={{marginLeft:"0.5em", paddingTop:"6px", cursor:"default"}}>{props.name}</p>
+            </div>
+            <Trash color={color} onClick={handle_remove}/>
+
+
+
         </ItemLayout>
     );
 };
