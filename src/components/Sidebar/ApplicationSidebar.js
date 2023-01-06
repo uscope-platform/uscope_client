@@ -21,8 +21,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {get_next_id, import_application, up_application} from "../../client_core";
 import {
     Button,
-    ManagerButtonsLayout,
-    ManagerLayout,
     SelectableList,
     SimpleContent,
     UIPanel

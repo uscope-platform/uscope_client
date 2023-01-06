@@ -22,7 +22,7 @@ import {useDispatch, useSelector} from "react-redux"
 import {Button, SelectableList, SimpleContent, UIPanel} from "../UI_elements"
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
-import {get_next_id, up_bitstream, up_script} from "../../client_core";
+import {get_next_id, up_script} from "../../client_core";
 import {Responsive, WidthProvider} from "react-grid-layout";
 
 
@@ -40,8 +40,10 @@ let ScriptManager = (props) =>{
     },[dispatch]);
 
     const ResponsiveGridLayout = WidthProvider(Responsive);
-
-    let selected_script = new up_script(scripts_store[settings.selected_bitstream]);
+    
+    let selected_script = {name:""};
+    if(settings.selected_script)
+        selected_script = scripts_store[settings.selected_script];
 
     let handleAddRow = () =>{
         let id = get_next_id(Object.values(scripts_store).map(a => a.id).sort());
@@ -84,6 +86,7 @@ let ScriptManager = (props) =>{
             dispatch(setSetting(["selected_script", selected_script.id]));
         }
     };
+
 
     return(
         <ResponsiveGridLayout

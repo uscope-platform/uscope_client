@@ -13,36 +13,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useRef, useState} from "react";
+import React, {useRef} from "react";
 import {
     Button,
     FormLayout,
     InputField,
-    ManagerButtonsLayout,
-    ManagerLayout,
     SimpleContent,
     UIPanel
 } from "../UI_elements";
-import DataTable from "react-data-table-component";
-import {TableStyle} from "./TableStyles";
-import {useDispatch, useSelector} from "react-redux";
-import {setSetting} from "../../redux/Actions/SettingsActions";
-import {get_next_id, up_bitstream} from "../../client_core";
+import {useSelector} from "react-redux";
+import {up_bitstream} from "../../client_core";
 import {Responsive, WidthProvider} from "react-grid-layout";
 
-let columns = [
-    {
-        selector: row => row.id,
-        name: 'Bitstream ID',
-        sort: true
-    },
-    {
-        selector: row => row.name,
-        name: 'Bitstream Name',
-        sort: true,
-        grow:2
-    }
-];
 
 
 let BitstreamManager = props =>{
