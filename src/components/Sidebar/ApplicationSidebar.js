@@ -18,9 +18,8 @@ import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 
 
-import {get_next_id, import_application, up_application} from "../../client_core";
+import {download_json, get_next_id, import_application, up_application, upload_json} from "../../client_core";
 import {
-    Button,
     SelectableList,
     SimpleContent,
     UIPanel
@@ -28,6 +27,7 @@ import {
 import {Responsive, WidthProvider} from "react-grid-layout";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import {addApplication} from "../../redux/Actions/applicationActions";
+import {ChapterAdd, Download, Upload} from "grommet-icons";
 
 let  ApplicationSidebar = props =>{
 
@@ -50,44 +50,17 @@ let  ApplicationSidebar = props =>{
     };
 
     let handleExport = (event) =>{
-        if(settings.selected_application===null){
-            alert("Please select an Application to Export");
-            return;
-        }
 
-        let blob = new Blob([JSON.stringify(applications_redux[settings.selected_application], null, 4)], {type: "application/json"});
-        let url  = URL.createObjectURL(blob);
+        download_json(applications_redux[settings.selected_application],settings.selected_application);
 
-        let link = document.createElement('a');
-        link.href = url;
-        link.download = settings.selected_application;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
     };
 
     let handleImport = (event) =>{
-
-        let input = document.createElement('input');
-        input.type = 'file';
-        input.setAttribute('style', 'display:none');
-        input.onchange = e => {
-            let file = e.target.files[0];
-            let reader = new FileReader();
-            reader.readAsText(file,'UTF-8');
-
-            reader.onload = readerEvent => {
-                let content = readerEvent.target.result; // this is the content!
-                import_application(content).then((app)=>{
-                    addApplication(app)
-                }).catch((err)=>{
-                    alert(err);
-                });
-            }
-        };
-        document.body.appendChild(input);
-        input.click();
-
+        upload_json().then((app)=>{
+            import_application(app).then(()=>{
+                addApplication(app);
+            })
+        })
     };
 
     let handleAdd = (content) => {
@@ -123,6 +96,18 @@ let  ApplicationSidebar = props =>{
 
     const ResponsiveGridLayout = WidthProvider(Responsive);
 
+    let constructActionsBar = () =>{
+        let io_color = settings.selected_application ? "white":"gray";
+        let click_handler = settings.selected_application ? handleExport:null;
+        return(
+            <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
+                <ChapterAdd onClick={handleAdd} style={{marginLeft:"0.3em"}} color="white"/>
+                <Upload onClick={handleImport} style={{marginLeft:"0.3em"}} color="white"/>
+                <Download onClick={click_handler} style={{marginLeft:"0.3em"}} color={io_color}/>
+            </div>
+        )
+    }
+
     return(
         <ResponsiveGridLayout
             className="layout"
@@ -132,21 +117,17 @@ let  ApplicationSidebar = props =>{
         >
             <UIPanel key="app_props" data-grid={{x: 0, y: 0, w: 24, h: 3, static: true}} level="level_2">
                 <SimpleContent name="Applications List" content={
-                    <SelectableList
-                        items={names}
-                        types={types}
-                        selected_item={settings.selected_application}
-                        onRemove={handleRemove}
-                        onSelect={handleSelect}
-                    />
-                }/>
-            </UIPanel>
-            <UIPanel key="app_actions" data-grid={{x: 0, y: 3, w: 24, h: 3, static: true}} level="level_2">
-                <SimpleContent name="Applications Actions" content={
                     <div>
-                        <Button style={{margin:"0.5em 1rem"}} onClick={handleAdd}> Add application</Button>
-                        <Button style={{margin:"0.5em 1rem"}} onClick={handleImport}>Import application</Button>
-                        <Button style={{margin:"0.5em 1rem"}} onClick={handleExport}>Export application</Button>
+                        {
+                            constructActionsBar()
+                        }
+                        <SelectableList
+                            items={names}
+                            types={types}
+                            selected_item={settings.selected_application}
+                            onRemove={handleRemove}
+                            onSelect={handleSelect}
+                        />
                     </div>
                 }/>
             </UIPanel>

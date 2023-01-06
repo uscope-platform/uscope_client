@@ -13,23 +13,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 
 import {useDispatch, useSelector} from "react-redux";
-import {get_next_id, up_bitstream} from "../../client_core";
+import {get_next_id, up_bitstream, upload_raw} from "../../client_core";
 import {
-    Button,
     SelectableList,
     SimpleContent,
     UIPanel
 } from "../UI_elements";
 import {Responsive, WidthProvider} from "react-grid-layout";
 import {setSetting} from "../../redux/Actions/SettingsActions";
+import {ChapterAdd, Download, Upload} from "grommet-icons";
 
 
 let  BitstreamSidebar = props =>{
 
-    const inputFile = useRef(null)
     const bitstreams_store = useSelector(state => state.bitstreams);
     const settings = useSelector(state => state.settings);
 
@@ -55,8 +54,16 @@ let  BitstreamSidebar = props =>{
         let ids = Object.values(bitstreams_store).map(a => a.id).sort();
         let id = get_next_id(ids);
         set_bitstream_object({ id:id, name:'new_bitstream_'+id});
-        inputFile.current.click();
-
+        upload_raw().then((event)=>{
+            debugger;
+            up_bitstream.get_file_content( event).then((file =>{
+                bitstream_object['content'] = file.content;
+                bitstream_object['name'] = file.name.replace(".bit", "")
+                debugger;
+                let bitstream = new up_bitstream(bitstream_object);
+                bitstream.add_remote().then();
+            }));
+        })
 
     };
 
@@ -68,17 +75,6 @@ let  BitstreamSidebar = props =>{
         up_bitstream.delete_bitstream(deleted).then();
 
     };
-
-    let upload_file = (event) => {
-        up_bitstream.get_file_content( inputFile).then((file =>{
-            bitstream_object['content'] = file.content;
-            bitstream_object['name'] = file.name.replace(".bit", "")
-            let bitstream = new up_bitstream(bitstream_object);
-            bitstream.add_remote().then();
-        }));
-    }
-
-
 
     let get_content = () =>{
         let types = [];
@@ -94,6 +90,26 @@ let  BitstreamSidebar = props =>{
     const [names, types] = get_content();
 
 
+    let handleImport = () =>{
+
+    };
+
+    let handleExport = () =>{
+
+    };
+
+    let constructActionsBar = () =>{
+        let io_color = settings.selected_bitstream ? "white":"gray";
+        let click_handler = settings.selected_bitstream ? handleExport:null;
+        return(
+            <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
+                <ChapterAdd onClick={handleAdd} style={{marginLeft:"0.3em"}} color="white"/>
+                <Upload onClick={handleImport} style={{marginLeft:"0.3em"}} color="gray"/>
+                <Download onClick={click_handler} style={{marginLeft:"0.3em"}} color={io_color} />
+            </div>
+        )
+    }
+
     return(
         <ResponsiveGridLayout
             className="layout"
@@ -103,17 +119,16 @@ let  BitstreamSidebar = props =>{
         >
             <UIPanel key="bitstream_list" data-grid={{x: 0, y: 0, w: 24, h: 3, static: true}} level="level_2">
                 <SimpleContent name="Bitstream List" content={
-                    <SelectableList items={names} types={types} selected_item={selected_bitstream.name} onRemove={handleRemove} onSelect={handleOnSelect} />
-                }/>
-            </UIPanel>
-            <UIPanel key="bitstream_actions" data-grid={{x: 0, y: 3, w: 24, h: 3, static: true}} level="level_2">
-                <SimpleContent name="Bitstream Actions" content={
-                    <div style={{display:"flex", flexDirection:"column"}} >
-                        <Button style={{margin:"0.5em 1rem"}} onClick={handleAdd}>Add Bitstream</Button>
-                        <input type='file' id='bitstream_chooser' ref={inputFile} onChange={upload_file} style={{display: 'none'}}/>
+                    <div>
+                        {
+                            constructActionsBar()
+                        }
+                        <SelectableList items={names} types={types} selected_item={selected_bitstream.name} onRemove={handleRemove} onSelect={handleOnSelect} />
                     </div>
+
                 }/>
             </UIPanel>
+
         </ResponsiveGridLayout>
 
     );

@@ -38,6 +38,8 @@ export let store = null;
 
 export {import_application, import_peripherals} from './data_handling/import'
 export {get_next_id} from './utilities/id_management'
+export {download_json} from './utilities/downloads'
+export {upload_json, upload_raw} from './utilities/uploads'
 export const set_redux_store = (rs) => {
     store = rs;
 }

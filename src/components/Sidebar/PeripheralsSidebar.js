@@ -17,17 +17,22 @@ import React, {useEffect} from 'react';
 
 import {useDispatch, useSelector} from "react-redux";
 
-import {get_next_id, import_peripherals, up_peripheral} from "../../client_core";
+import {
+    download_json,
+    get_next_id,
+    import_peripherals,
+    up_peripheral,
+    upload_json
+} from "../../client_core";
 import {
     UIPanel,
     SimpleContent,
     SelectableList,
-    Button
-
 } from "../UI_elements";
 import {Responsive, WidthProvider} from "react-grid-layout";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import {addPeripheral} from "../../redux/Actions/peripheralsActions";
+import {ChapterAdd, Download, Upload} from "grommet-icons";
 
 let  PeripheralsSidebar = props =>{
 
@@ -60,45 +65,22 @@ let  PeripheralsSidebar = props =>{
 
     let handleExport = (event) =>{
         let selected = settings.current_peripheral;
-        if(settings.current_peripheral===null){
-            alert("Please select a peripheral to Export");
-            return;
-        }
 
         let peripheral = {[selected]:peripherals_redux[selected]};
-        let blob = new Blob([JSON.stringify(peripheral, null, 4)], {type: "application/json"});
-        let url  = URL.createObjectURL(blob);
+        download_json(peripheral,selected);
 
-        let link = document.createElement('a');
-        link.href = url;
-        link.download = selected;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
     };
 
-    let handleImport = (event) =>{
-        let input = document.createElement('input');
-        input.type = 'file';
-        input.setAttribute('style', 'display:none');
-        input.onchange = e => {
-            let file = e.target.files[0];
-            let reader = new FileReader();
-            reader.readAsText(file,'UTF-8');
-
-            reader.onload = readerEvent => {
-                let content = readerEvent.target.result; // this is the content!
-                import_peripherals(content).then((periphs)=>{
-                    for(let p of periphs){
-                        addPeripheral(p);
-                    }
-                }).catch((err)=>{
-                    alert(err);
-                });
-            }
-        };
-        document.body.appendChild(input);
-        input.click();
+    let handleImport = () =>{
+        upload_json().then((content)=>{
+            import_peripherals(content).then((periphs)=>{
+                for(let p of periphs){
+                    addPeripheral(p);
+                }
+            }).catch((err)=>{
+                alert(err);
+            });
+        })
     };
 
     let handleAdd = (content) => {
@@ -126,8 +108,19 @@ let  PeripheralsSidebar = props =>{
         return [items, types]
     }
 
-
     const [names, types] = get_content();
+
+    let constructActionsBar = () =>{
+        let io_color = settings.current_peripheral ? "white":"gray";
+        let click_handler = settings.current_peripheral ? handleExport:null;
+        return(
+            <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
+                <ChapterAdd onClick={handleAdd} style={{marginLeft:"0.3em"}} color="white"/>
+                <Upload onClick={handleImport} style={{marginLeft:"0.3em"}} color="white"/>
+                <Download onClick={click_handler} style={{marginLeft:"0.3em"}} color={io_color}/>
+            </div>
+        )
+    }
 
     return(
         <ResponsiveGridLayout
@@ -136,18 +129,13 @@ let  PeripheralsSidebar = props =>{
             cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
             useCSSTransforms={false}
         >
-            <UIPanel key="peripherals_list" data-grid={{x: 0, y: 0, w: 24, h: 3, static: true}} level="level_2">
+            <UIPanel key="peripherals_list" data-grid={{x: 0, y: 0, w: 24, h: 7, static: true}} level="level_2">
                 <SimpleContent name="Peripherals List" content={
-                    <SelectableList items={names} types={types} selected_item={settings.current_peripheral} onRemove={handleRemove} onSelect={handleOnSelect} />
-                }/>
-            </UIPanel>
-            <UIPanel key="peripherals_actions" data-grid={{x: 0, y: 3, w: 24, h: 3, static: true}} level="level_2">
-                <SimpleContent name="Peripherals Actions" content={
-                    <div style={{display:"flex", flexDirection:"column"}} >
-                        <Button style={{margin:"0.5em 1rem"}} onClick={handleAdd}> Add Peripheral</Button>
-                        <Button style={{margin:"0.5em 1rem"}} onClick={handleImport}>Import peripheral</Button>
-                        <Button style={{margin:"0.5em 1rem"}} onClick={handleExport}>Export peripheral</Button>
+                    <div>
+                        {constructActionsBar()}
+                        <SelectableList items={names} types={types} selected_item={settings.current_peripheral} onRemove={handleRemove} onSelect={handleOnSelect} />
                     </div>
+
                 }/>
             </UIPanel>
         </ResponsiveGridLayout>

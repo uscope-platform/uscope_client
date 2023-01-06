@@ -19,12 +19,12 @@ import {useDispatch, useSelector} from "react-redux"
 
 
 
-import {Button, SelectableList, SimpleContent, UIPanel} from "../UI_elements"
+import {SelectableList, SimpleContent, UIPanel} from "../UI_elements"
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
-import {get_next_id, up_script} from "../../client_core";
+import {download_json, get_next_id, up_script, upload_json} from "../../client_core";
 import {Responsive, WidthProvider} from "react-grid-layout";
-
+import {ChapterAdd, Download, Upload} from "grommet-icons";
 
 let ScriptManager = (props) =>{
 
@@ -45,7 +45,7 @@ let ScriptManager = (props) =>{
     if(settings.selected_script)
         selected_script = scripts_store[settings.selected_script];
 
-    let handleAddRow = () =>{
+    let handleAdd = () =>{
         let id = get_next_id(Object.values(scripts_store).map(a => a.id).sort());
         let script = up_script.construct_empty(id);
         script.add_remote().then();
@@ -82,6 +82,32 @@ let ScriptManager = (props) =>{
         }
     };
 
+    let handleExport = () =>{
+        download_json(selected_script, selected_script.name);
+    }
+
+    let handleImport = () =>{
+        upload_json().then((scr)=>{
+            let script = new up_script(JSON.parse(scr));
+            script.add_remote().then();
+        }).catch((err)=>{
+            alert(err);
+        })
+
+    }
+
+    let constructActionsBar = () =>{
+        let io_color = settings.selected_script ? "white":"gray";
+        let click_handler = settings.selected_script ? handleExport:null;
+        return(
+            <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
+                <ChapterAdd onClick={handleAdd} style={{marginLeft:"0.3em"}} color="white"/>
+                <Upload onClick={handleImport} style={{marginLeft:"0.3em"}} color="white"/>
+                <Download onClick={click_handler} style={{marginLeft:"0.3em"}} color={io_color}/>
+            </div>
+        )
+    }
+
 
     return(
         <ResponsiveGridLayout
@@ -90,15 +116,13 @@ let ScriptManager = (props) =>{
             cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
             useCSSTransforms={false}
         >
-            <UIPanel key="script_props" data-grid={{x: 0, y: 0, w: 24, h: 6, static: true}} level="level_2">
+            <UIPanel key="script_props" data-grid={{x: 0, y: 0, w: 24, h: 7, static: true}} level="level_2">
                 <SimpleContent name="Script List" content={
-                    <SelectableList items={names} types={types} selected_item={selected_script.name} onRemove={handleRemove} onSelect={handleSelect} />
-                }/>
-            </UIPanel>
-            <UIPanel key="script_actions" data-grid={{x: 0, y: 6, w: 24, h: 1, static: true}} level="level_2">
-                <SimpleContent name="Script Actions" content={
-                    <div style={{display:"flex", flexDirection:"column"}} >
-                        <Button style={{margin:"0.5em 1rem"}}  onClick={handleAddRow}>Add Script</Button>
+                    <div>
+                        {
+                            constructActionsBar()
+                        }
+                        <SelectableList items={names} types={types} selected_item={selected_script.name} onRemove={handleRemove} onSelect={handleSelect} />
                     </div>
                 }/>
             </UIPanel>

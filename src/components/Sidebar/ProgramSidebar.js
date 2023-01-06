@@ -16,7 +16,7 @@
 import React, {useEffect} from 'react';
 
 import {useDispatch, useSelector} from "react-redux";
-import {get_next_id, up_program} from "../../client_core";
+import {download_json, get_next_id, up_program, upload_json} from "../../client_core";
 import {
     Button,
     SelectableList,
@@ -26,6 +26,7 @@ import {
 import {Responsive, WidthProvider} from "react-grid-layout";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import ButterToast, { POS_TOP, POS_RIGHT, Cinnamon} from "butter-toast";
+import {ChapterAdd, Download, Upload} from "grommet-icons";
 
 const compile_status_position = {
     vertical: POS_TOP,
@@ -132,6 +133,33 @@ let  ProgramSidebar = props =>{
         }
     };
 
+
+    let handleExport = () =>{
+        download_json(selected_program, selected_program.name);
+    }
+
+    let handleImport = () =>{
+        upload_json().then((prg)=>{
+            let program = new up_program(JSON.parse(prg));
+            program.add_remote().then();
+        }).catch((err)=>{
+            alert(err);
+        })
+
+    }
+
+    let constructActionsBar = () =>{
+        let io_color = settings.selected_program ? "white":"gray";
+        let click_handler = settings.selected_program ? handleExport:null;
+        return(
+            <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
+                <ChapterAdd onClick={handleAdd} style={{marginLeft:"0.3em"}} color="white"/>
+                <Upload onClick={handleImport} style={{marginLeft:"0.3em"}} color="white"/>
+                <Download onClick={click_handler} style={{marginLeft:"0.3em"}} color={io_color}/>
+            </div>
+        )
+    }
+
     return(
         <ResponsiveGridLayout
             className="layout"
@@ -144,13 +172,18 @@ let  ProgramSidebar = props =>{
             />
             <UIPanel key="program_props" data-grid={{x: 0, y: 0, w: 24, h: 3, static: true}} level="level_2">
                 <SimpleContent name="Program List" content={
-                    <SelectableList items={names} types={types} selected_item={selected_program_obj.name} onRemove={handleRemove} onSelect={handleSelect} />
+                    <div>
+                        {
+                            constructActionsBar()
+                        }
+                        <SelectableList items={names} types={types} selected_item={selected_program_obj.name} onRemove={handleRemove} onSelect={handleSelect} />
+                    </div>
+
                 }/>
             </UIPanel>
             <UIPanel key="program_actions" data-grid={{x: 0, y: 3, w: 24, h: 3, static: true}} level="level_2">
                 <SimpleContent name="Program Actions" content={
                     <div style={{display:"flex", flexDirection:"column"}} >
-                        <Button style={{margin:"0.5em 1rem"}} onClick={handleAdd}>Add Program</Button>
                         <Button style={{margin:"0.5em 1rem"}} onClick={handle_compile}>Compile Program</Button>
                         <Button style={{margin:"0.5em 1rem"}} onClick={handle_apply_program}>Load Program</Button>
                     </div>

@@ -54,7 +54,7 @@ export class up_bitstream {
 
     static get_file_content(input_file){
         return new Promise((resolve, reject) => {
-            let file = input_file.current.files[0];
+            let file = input_file.target.files[0];
             if (file) {
                 let reader = new FileReader();
                 reader.onload = function (evt) {

@@ -17,7 +17,6 @@ import React, {useState, useEffect} from "react";
 import {Button} from "../../UI_elements"
 
 import {useSelector} from "react-redux";
-import styled from "styled-components";
 
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
