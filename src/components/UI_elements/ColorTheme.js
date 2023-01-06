@@ -45,6 +45,8 @@ export const ColorTheme = {
         accents: "#c76863",
         borders: "#434343"
     },
+    icons_color: "rgba(255, 255, 255, 0.87)",
+    icons_size: "2em",
     plot_palette:[
         "rgb(161, 201,244)",
         "rgb(141, 229,161)",

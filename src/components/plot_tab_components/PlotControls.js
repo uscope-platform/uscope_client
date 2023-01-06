@@ -16,10 +16,11 @@
 import React, {useState} from 'react';
 
 import {useDispatch, useSelector} from "react-redux";
-import {Pause, Play, Stop} from 'grommet-icons'
+import {MdPause, MdPlayArrow, MdStop} from 'react-icons/md'
 import {plotPause, plotPlay, plotStop} from "../../redux/Actions/plotActions";
 import styled from "styled-components";
 import {up_peripheral} from "../../client_core";
+import {ColorTheme} from "../UI_elements";
 
 const ComponentStyle = styled.div`
   display: flex;
@@ -62,15 +63,15 @@ let  PlotControls = props =>{
     return(
         <ComponentStyle>
             <IconStyle>
-                <Play id='play' color='white' onClick={onClick}/>
+                <MdPlayArrow id='play' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={onClick}/>
             </IconStyle>
 
             <IconStyle>
-                <Pause id='pause' color='white' onClick={onClick}/>
+                <MdPause id='pause' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={onClick}/>
             </IconStyle>
 
             <IconStyle>
-                <Stop id='stop' color='white' onClick={onClick}/>
+                <MdStop id='stop' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={onClick}/>
             </IconStyle>
         </ComponentStyle>
     );

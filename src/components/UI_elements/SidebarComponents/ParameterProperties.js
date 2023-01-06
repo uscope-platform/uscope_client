@@ -15,13 +15,14 @@
 
 import React, {useState} from "react";
 import {Label} from "../Label";
-import {CaretDown, CaretUp} from "grommet-icons";
+import {MdArrowDropDown, MdArrowDropUp} from "react-icons/md";
 import {InputField} from "../InputField";
 import {Checkbox} from "../checkbox";
 
 import {Button} from "../Button";
 import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
 import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
+import {ColorTheme} from "../ColorTheme";
 
 export let  ParameterProperties = props =>{
 
@@ -76,8 +77,8 @@ export let  ParameterProperties = props =>{
             <SidebarCollapsableNameLayout>
                 <Label>{props.parameter.parameter_name}</Label>
                 {is_open
-                    ? <CaretUp size={"small"} onClick={handleClose} color='white'/>
-                    : <CaretDown size={"small"} onClick={handleOpen} color='white'/>
+                    ? <MdArrowDropUp size={ColorTheme.icons_size} onClick={handleClose} color={ColorTheme.icons_color}/>
+                    : <MdArrowDropDown size={ColorTheme.icons_size} onClick={handleOpen} color={ColorTheme.icons_color}/>
                 }
             </SidebarCollapsableNameLayout>
             {

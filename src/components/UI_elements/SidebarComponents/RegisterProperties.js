@@ -16,7 +16,7 @@
 import React, {useState} from "react";
 import {Label} from "../Label";
 import styled from "styled-components";
-import {CaretDown, CaretUp} from "grommet-icons";
+import {MdArrowDropDown, MdArrowDropUp} from "react-icons/md";
 import {InputField} from "../InputField";
 import {Checkbox} from "../checkbox";
 import {Button} from "../Button";
@@ -24,6 +24,7 @@ import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableCont
 import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
 import {FieldProperties} from "./FieldProperties";
 import {up_register} from "../../../client_core";
+import {ColorTheme} from "../ColorTheme";
 
 const ChoicesWrapper = styled.div`
     display: grid;
@@ -128,8 +129,8 @@ export let  RegisterProperties = props =>{
             <SidebarCollapsableNameLayout>
                 <Label>{props.register.register_name}</Label>
                 {is_open
-                    ? <CaretUp size={"small"} onClick={handleClose} color='white'/>
-                    : <CaretDown size={"small"} onClick={handleOpen} color='white'/>
+                    ? <MdArrowDropUp size={ColorTheme.icons_size} onClick={handleClose} color={ColorTheme.icons_color}/>
+                    : <MdArrowDropDown size={ColorTheme.icons_size} onClick={handleOpen} color={ColorTheme.icons_color}/>
                 }
             </SidebarCollapsableNameLayout>
             {

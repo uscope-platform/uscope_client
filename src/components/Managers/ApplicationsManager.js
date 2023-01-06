@@ -27,12 +27,12 @@ import {
     MacroProperties,
     ParameterProperties,
     ApplicationPeripheralProperties,
-    ApplicationSoftCoreProperties, ApplicationMiscFieldProperties, TabbedContent
+    ApplicationSoftCoreProperties, ApplicationMiscFieldProperties, TabbedContent, ColorTheme
 } from "../UI_elements"
 
 import {up_application} from "../../client_core";
 import {Responsive, WidthProvider} from "react-grid-layout";
-import {Add} from "grommet-icons";
+import {MdAdd} from "react-icons/md";
 
 let initial_new_fields_state = {
     "channel":false,
@@ -113,7 +113,7 @@ let  ApplicationsManager = props =>{
             <div>
                 {new_fields.channel ?
                     <InputField name="channel" compact label="Channel Name" onKeyDown={handle_add_item_done}/>:
-                    <Add id="channel" size={"medium"} onClick={handle_add_item} color='white'/>
+                    <MdAdd id="channel" size={ColorTheme.icons_size} onClick={handle_add_item} color={ColorTheme.icons_color}/>
 
                 }
                 <StyledScrollbar>
@@ -129,7 +129,7 @@ let  ApplicationsManager = props =>{
             <div>
                 {new_fields.ch_group ?
                     <InputField name="ch_group" compact label="Channel Group Name" onKeyDown={handle_add_item_done}/>:
-                    <Add id="ch_group" size={"medium"} onClick={handle_add_item} color='white'/>
+                    <MdAdd id="ch_group" size={ColorTheme.icons_size} onClick={handle_add_item} color={ColorTheme.icons_color}/>
                 }
                 <StyledScrollbar>
                     {
@@ -144,7 +144,7 @@ let  ApplicationsManager = props =>{
             <div>
                 {new_fields.irv ?
                     <InputField name="irv" compact label="Register Address" onKeyDown={handle_add_item_done}/>:
-                    <Add id="irv"  size={"medium"} onClick={handle_add_item} color='white'/>
+                    <MdAdd id="irv" size={ColorTheme.icons_size} onClick={handle_add_item} color={ColorTheme.icons_color}/>
                 }
                 <StyledScrollbar>
                     {
@@ -159,7 +159,7 @@ let  ApplicationsManager = props =>{
             <div>
                 {new_fields.macro ?
                     <InputField name="macro" compact label="Macro Name" onKeyDown={handle_add_item_done}/> :
-                    <Add  id="macro" size={"medium"} onClick={handle_add_item} color='white'/>
+                    <MdAdd  id="macro" size={ColorTheme.icons_size} onClick={handle_add_item} color={ColorTheme.icons_color}/>
                 }
                 <StyledScrollbar>
                     {
@@ -174,7 +174,7 @@ let  ApplicationsManager = props =>{
             <div>
                 {new_fields.parameter ?
                     <InputField name="parameter" compact label="Parameter Name" onKeyDown={handle_add_item_done}/>:
-                    <Add id="parameter" size={"medium"} onClick={handle_add_item} color='white'/>
+                    <MdAdd id="parameter" size={ColorTheme.icons_size} onClick={handle_add_item} color={ColorTheme.icons_color}/>
                 }
                 <StyledScrollbar>
                     {
@@ -189,7 +189,7 @@ let  ApplicationsManager = props =>{
             <div>
                 {new_fields.peripheral ?
                     <InputField name="peripheral" compact label="Peripheral Name" onKeyDown={handle_add_item_done}/>:
-                    <Add id="peripheral"  size={"medium"} onClick={handle_add_item} color='white'/>
+                    <MdAdd id="peripheral" size={ColorTheme.icons_size} onClick={handle_add_item} color={ColorTheme.icons_color}/>
                 }
                 <StyledScrollbar>
                     {
@@ -204,7 +204,7 @@ let  ApplicationsManager = props =>{
             <div>
                 {new_fields.soft_core ?
                     <InputField name="soft_core" compact label="Field Name" onKeyDown={handle_add_item_done}/>:
-                    <Add id="soft_core"  size={"medium"} onClick={handle_add_item} color='white'/>
+                    <MdAdd id="soft_core" size={ColorTheme.icons_size} onClick={handle_add_item} color={ColorTheme.icons_color}/>
                 }
                 <StyledScrollbar>
                     {
@@ -219,7 +219,7 @@ let  ApplicationsManager = props =>{
             <div>
                 {new_fields.misc ?
                     <InputField name="misc" compact label="Field Name" onKeyDown={handle_add_item_done}/>:
-                    <Add id="misc"  size={"medium"} onClick={handle_add_item} color='white'/>
+                    <MdAdd id="misc"  size={ColorTheme.icons_size} onClick={handle_add_item} color={ColorTheme.icons_color}/>
                 }
                 <StyledScrollbar>
                     {

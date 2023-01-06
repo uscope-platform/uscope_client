@@ -20,6 +20,7 @@ import {useDispatch, useSelector} from "react-redux";
 
 import {download_json, get_next_id, import_application, up_application, upload_json} from "../../client_core";
 import {
+    ColorTheme,
     SelectableList,
     SimpleContent,
     UIPanel
@@ -27,7 +28,10 @@ import {
 import {Responsive, WidthProvider} from "react-grid-layout";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import {addApplication} from "../../redux/Actions/applicationActions";
-import {ChapterAdd, Download, Upload} from "grommet-icons";
+import {MdNoteAdd, MdDownload, MdUpload} from "react-icons/md";
+
+import {Tooltip} from "react-tooltip";
+import 'react-tooltip/dist/react-tooltip.css'
 
 let  ApplicationSidebar = props =>{
 
@@ -97,13 +101,25 @@ let  ApplicationSidebar = props =>{
     const ResponsiveGridLayout = WidthProvider(Responsive);
 
     let constructActionsBar = () =>{
-        let io_color = settings.selected_application ? "white":"gray";
+        let io_color = settings.selected_application ? ColorTheme.icons_color:"gray";
         let click_handler = settings.selected_application ? handleExport:null;
+        let export_tooltip = settings.selected_application ? <Tooltip anchorId="export_icon" content="Export Application" place="top" />:null;
         return(
             <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
-                <ChapterAdd onClick={handleAdd} style={{marginLeft:"0.3em"}} color="white"/>
-                <Upload onClick={handleImport} style={{marginLeft:"0.3em"}} color="white"/>
-                <Download onClick={click_handler} style={{marginLeft:"0.3em"}} color={io_color}/>
+                <div id="add_icon">
+                    <MdNoteAdd onClick={handleAdd} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
+                    <Tooltip anchorId="add_icon" content="Add Application" place="top" />
+                </div>
+                <div id="import_icon">
+                    <MdUpload onClick={handleImport} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
+                    <Tooltip anchorId="import_icon" content="Import Application" place="top" />
+                </div>
+                <div id="export_icon">
+                    <MdDownload onClick={click_handler} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={io_color}/>
+                    {
+                        export_tooltip
+                    }
+                </div>
             </div>
         )
     }

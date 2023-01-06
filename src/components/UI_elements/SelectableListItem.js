@@ -16,7 +16,8 @@
 import styled from 'styled-components';
 import React, {useState} from "react";
 import {Image} from "./Image";
-import {Trash} from "grommet-icons";
+import {MdDelete} from "react-icons/md";
+import {ColorTheme} from "./ColorTheme";
 
 
 
@@ -69,7 +70,7 @@ export let  SelectableListItem = props =>{
                 {get_icon_image(props.icon)}
                 <p style={{marginLeft:"0.5em", paddingTop:"6px", cursor:"default"}}>{props.name}</p>
             </div>
-            <Trash color={color} onClick={handle_remove}/>
+            <MdDelete size={ColorTheme.icons_size} onClick={handle_remove} color={ColorTheme.icons_color}/>
 
 
 

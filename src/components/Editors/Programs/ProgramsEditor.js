@@ -14,13 +14,13 @@
 // limitations under the License.
 
 import React, {useState, useEffect} from "react";
-import {Button} from "../../UI_elements"
-
 
 import CodeMirror from '@uiw/react-codemirror';
 import {cpp} from '@codemirror/lang-cpp'
 import { dracula } from '@uiw/codemirror-theme-dracula';
-
+import {Tooltip} from "react-tooltip";
+import {MdSave, MdBuild, MdCable} from 'react-icons/md'
+import {ColorTheme} from "../../UI_elements";
 
 let ProgramsEditor = props =>{
     const [editor_content, set_editor_content] = useState("");
@@ -37,14 +37,46 @@ let ProgramsEditor = props =>{
         set_editor_content(newValue);
     };
 
-    let handle_submit = (event) => {
+    let handle_save = (event) => {
+        debugger;
         props.program.edit_field('program_content', editor_content).then(()=>{
             props.done();
         })
     };
 
+    let handle_build = (event) => {
+        debugger;
+    };
+
+    let handle_load = (event) => {
+        debugger;
+    };
+
+
+
+    let constructActionsBar = () =>{
+        return(
+            <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
+                <div id="save_icon">
+                    <MdSave onClick={handle_save} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
+                    <Tooltip anchorId="save_icon" content="Save Program" place="top" />
+                </div>
+                <div id="build_icon">
+                    <MdBuild onClick={handle_build} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
+                    <Tooltip anchorId="build_icon" content="Compile Program" place="top" />
+                </div>
+                <div id="load_icon">
+                    <MdCable onClick={handle_load} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
+                    <Tooltip anchorId="load_icon" content="Load Program" place="top" />
+                </div>
+            </div>
+        )
+    }
+
+
     return(
-        <>
+        <div>
+            {constructActionsBar()}
             <CodeMirror
                 value={editor_content}
                 width='auto'
@@ -52,8 +84,7 @@ let ProgramsEditor = props =>{
                 extensions={[cpp()]}
                 onChange={handle_change}
             />
-            <Button variant="success" onClick={handle_submit}>Submit</Button>
-        </>
+        </div>
     );
 
 

@@ -15,13 +15,14 @@
 
 import React, {useState} from "react";
 import {Label} from "../Label";
-import {CaretDown, CaretUp} from "grommet-icons";
+import {MdArrowDropDown, MdArrowDropUp} from "react-icons/md";
 import {InputField} from "../InputField";
 
 import {Button} from "../Button";
 import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
 import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
 import {SelectField} from "../Select";
+import {ColorTheme} from "../ColorTheme";
 
 
 
@@ -81,8 +82,8 @@ export let  ApplicationSoftCoreProperties = props =>{
             <SidebarCollapsableNameLayout>
                 <Label>{props.core.id}</Label>
                 {is_open
-                    ? <CaretUp size={"small"} onClick={handleClose} color='white'/>
-                    : <CaretDown size={"small"} onClick={handleOpen} color='white'/>
+                    ? <MdArrowDropUp size={ColorTheme.icons_size} onClick={handleClose} color={ColorTheme.icons_color}/>
+                    : <MdArrowDropDown size={ColorTheme.icons_size} onClick={handleOpen} color={ColorTheme.icons_color}/>
                 }
             </SidebarCollapsableNameLayout>
             {

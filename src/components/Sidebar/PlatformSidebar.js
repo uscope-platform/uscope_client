@@ -20,14 +20,14 @@ import {
     Button,
     UIPanel,
     SimpleContent,
-    SelectableList
+    SelectableList, ColorTheme
 } from "../UI_elements";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
 import {dump_database, get_users_list, remove_user, restore_database} from "../../client_core";
 import {Responsive, WidthProvider} from "react-grid-layout";
 import {useLocation} from "react-router-dom";
-import {User} from "grommet-icons";
+import {MdPerson} from "react-icons/md";
 
 let  PlatformSidebar = props =>{
     const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -96,7 +96,7 @@ let  PlatformSidebar = props =>{
             } else if(user.role === "operator"){
                 color = "red";
             }
-            types.push(<User color={color} />);
+            types.push(<MdPerson size={ColorTheme.icons_size} color={color} />);
             return user.username;
         })
 

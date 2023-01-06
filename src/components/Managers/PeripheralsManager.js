@@ -19,6 +19,7 @@ import {useSelector} from "react-redux"
 
 
 import {
+    ColorTheme,
     InputField,
     RegisterProperties,
     StyledScrollbar, TabbedContent, UIPanel
@@ -26,7 +27,7 @@ import {
 
 import {up_peripheral} from "../../client_core"
 import {Responsive, WidthProvider} from "react-grid-layout";
-import {Add} from "grommet-icons";
+import {MdAdd} from "react-icons/md";
 
 
 let PeripheralsManager = (props)=>{
@@ -76,7 +77,7 @@ let PeripheralsManager = (props)=>{
                 <InputField inline name="edit_version" defaultValue={peripherals[settings.current_peripheral].version} onKeyDown={handleEditVersion} label="Version"/>
             </div>,
             <div>
-                <Add id="register" size={"medium"} onClick={handle_add_register} color='white'/>
+                <MdAdd id="register" size={ColorTheme.icons_size} onClick={handle_add_register} color={ColorTheme.icons_color}/>
                 {new_register &&
                     <InputField name="register" compact label="Register Name" onKeyDown={handle_add_register_done}/>
                 }

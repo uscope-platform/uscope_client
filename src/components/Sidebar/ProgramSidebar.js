@@ -18,7 +18,7 @@ import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {download_json, get_next_id, up_program, upload_json} from "../../client_core";
 import {
-    Button,
+    Button, ColorTheme,
     SelectableList,
     SimpleContent,
     UIPanel
@@ -26,7 +26,8 @@ import {
 import {Responsive, WidthProvider} from "react-grid-layout";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import ButterToast, { POS_TOP, POS_RIGHT, Cinnamon} from "butter-toast";
-import {ChapterAdd, Download, Upload} from "grommet-icons";
+import {Tooltip} from "react-tooltip";
+import {MdNoteAdd, MdUpload, MdDownload} from "react-icons/md";
 
 const compile_status_position = {
     vertical: POS_TOP,
@@ -69,9 +70,10 @@ let  ProgramSidebar = props =>{
 
     let get_content = () =>{
         let types = [];
-        let items = Object.values(programs_store).map((scr)=>{
-            types.push("generic");
-            return scr.name;
+        let items = Object.values(programs_store).map((prg)=>{
+            types.push(prg.program_type);
+            debugger;
+            return prg.name;
         })
 
         return [items, types]
@@ -149,16 +151,30 @@ let  ProgramSidebar = props =>{
     }
 
     let constructActionsBar = () =>{
-        let io_color = settings.selected_program ? "white":"gray";
+        let io_color = settings.selected_program ? ColorTheme.icons_color:"gray";
         let click_handler = settings.selected_program ? handleExport:null;
+        let export_tooltip = settings.selected_program ? <Tooltip anchorId="export_icon" content="Export Program" place="top" />:null;
         return(
             <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
-                <ChapterAdd onClick={handleAdd} style={{marginLeft:"0.3em"}} color="white"/>
-                <Upload onClick={handleImport} style={{marginLeft:"0.3em"}} color="white"/>
-                <Download onClick={click_handler} style={{marginLeft:"0.3em"}} color={io_color}/>
+
+                <div id="add_icon">
+                    <MdNoteAdd onClick={handleAdd} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
+                    <Tooltip anchorId="add_icon" content="Add Program" place="top" />
+                </div>
+                <div id="import_icon">
+                    <MdUpload onClick={handleImport} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
+                    <Tooltip anchorId="import_icon" content="Import Program" place="top" />
+                </div>
+                <div id="export_icon">
+                    <MdDownload onClick={click_handler} style={{marginLeft:"0.3em"}} color={io_color}/>
+                    {
+                        export_tooltip
+                    }
+                </div>
             </div>
         )
     }
+
 
     return(
         <ResponsiveGridLayout
