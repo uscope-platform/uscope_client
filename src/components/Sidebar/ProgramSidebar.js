@@ -108,15 +108,15 @@ let  ProgramSidebar = props =>{
             <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
 
                 <div id="add_icon">
-                    <MdNoteAdd onClick={handleAdd} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
+                    <MdNoteAdd onClick={handleAdd} size="2em" style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
                     <Tooltip anchorId="add_icon" content="Add Program" place="top" />
                 </div>
                 <div id="import_icon">
-                    <MdUpload onClick={handleImport} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
+                    <MdUpload onClick={handleImport} size="2em" style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
                     <Tooltip anchorId="import_icon" content="Import Program" place="top" />
                 </div>
                 <div id="export_icon">
-                    <MdDownload onClick={click_handler} style={{marginLeft:"0.3em"}} color={io_color}/>
+                    <MdDownload onClick={click_handler} size="2em" style={{marginLeft:"0.3em"}} color={io_color}/>
                     {
                         export_tooltip
                     }

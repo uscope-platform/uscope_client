@@ -22,12 +22,14 @@ import {
     SimpleContent,
     FormLayout,
     InputField,
-    SelectField
+    SelectField, ColorTheme
 } from "../UI_elements"
 
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import {Responsive, WidthProvider} from "react-grid-layout";
-import {add_user, do_onboarding} from "../../client_core";
+import {add_user, do_onboarding, download_json, dump_database, restore_database, upload_json} from "../../client_core";
+import {MdBuild, MdCable, MdDownload, MdSave, MdUpload} from "react-icons/md";
+import {Tooltip} from "react-tooltip";
 
 
 let  PlatformManager = props =>{
@@ -55,6 +57,45 @@ let  PlatformManager = props =>{
 
     };
 
+    let handle_dump_db = ()=>{
+        dump_database().then((response)=>{
+            let encodedUri = encodeURI('data:text/json;charset=utf-8,'+ JSON.stringify(response));
+            let link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "dump.db");
+            link.setAttribute("id", "csv_download_link");
+            document.body.appendChild(link);
+
+            link.click();
+            link.remove();
+
+        })
+    };
+
+    let handle_restore_db = ()=>{
+        upload_json().then((raw_json)=>{
+            let content = JSON.parse(raw_json);
+            restore_database(content).then();
+        }).catch((err)=>{
+            alert(err.message);
+        })
+    };
+
+    let constructActionsBar = () =>{
+        return(
+            <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
+                <div id="import_icon">
+                    <MdUpload onClick={handle_restore_db} size="2em" style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
+                    <Tooltip anchorId="import_icon" content="Restore Database" place="top" />
+                </div>
+                <div id="export_icon">
+                    <MdDownload onClick={handle_dump_db} size="2em" style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
+                    <Tooltip anchorId="export_icon" content="Dump Database" place="top" />
+                </div>
+            </div>
+        )
+    }
+
     return(
         <ResponsiveGridLayout
             className="layout"
@@ -63,17 +104,21 @@ let  PlatformManager = props =>{
             rowHeight={30}
             useCSSTransforms={false}
         >
-            <UIPanel key="platform_properties" data-grid={{x: 0, y: 0, w: 24, h: 6, static: true}} level="level_2">
-                <SimpleContent name="Platform Properties" content={
-                    <form onSubmit={handle_add_user}>
-                        <FormLayout>
-                            <InputField inline name="user" label="Username"/>
-                            <InputField inline name="pass" label="Password"/>
-                            <SelectField label="Role" defaultValue="role"
-                                         name="role" placeholder="Role" options={["admin", "user", "operator"]}/>
-                            <Button> Add User </Button>
-                        </FormLayout>
-                    </form>
+
+            <UIPanel key="platform_management" data-grid={{x: 0, y: 0, w: 24, h: 6, static: true}} level="level_2">
+                <SimpleContent name="Platform Management" content={
+                    <div>
+                        {constructActionsBar()}
+                        <form onSubmit={handle_add_user}>
+                            <FormLayout>
+                                <InputField inline name="user" label="Username"/>
+                                <InputField inline name="pass" label="Password"/>
+                                <SelectField label="Role" defaultValue="role"
+                                             name="role" placeholder="Role" options={["admin", "user", "operator"]}/>
+                                <Button> Add User </Button>
+                            </FormLayout>
+                        </form>
+                    </div>
                 }/>
             </UIPanel>
         </ResponsiveGridLayout>

@@ -51,39 +51,6 @@ let  PlatformSidebar = props =>{
         })
     }
 
-    let handleDumpDatabse = () =>{
-        dump_database().then((response)=>{
-            let encodedUri = encodeURI('data:text/json;charset=utf-8,'+ JSON.stringify(response));
-            let link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "dump.db");
-            link.setAttribute("id", "csv_download_link");
-            document.body.appendChild(link);
-
-            link.click();
-            link.remove();
-
-        })
-
-    }
-
-    let handleRestoreButton = event =>{
-        databaseFile.current.click();
-    }
-
-    let handleRestoreDatabse = (event) =>{
-        let file = event.target.files[0]
-        let reader = new FileReader();
-        reader.readAsText(file)
-        reader.onload = (event) =>{
-            let content = JSON.parse(event.target.result);
-            restore_database(content);
-        }
-        reader.onerror = (event) =>{
-            alert(event.target.error.message);
-        }
-    }
-
 
     let get_content = () =>{
         let types = [];
@@ -124,15 +91,6 @@ let  PlatformSidebar = props =>{
                 <UIPanel key="users_list" data-grid={{x: 0, y: 0, w: 24, h: 3, static: true}} level="level_2">
                     <SimpleContent name="Users List" content={
                         <SelectableList items={names} types={types} selected_item={settings.selected_user} onRemove={handleRemoveUser} onSelect={handleOnSelect} />
-                    }/>
-                </UIPanel>
-                <UIPanel key="users_actions" data-grid={{x: 0, y: 3, w: 24, h: 3, static: true}} level="level_2">
-                    <SimpleContent name="Users Actions" content={
-                        <div style={{display:"flex", flexDirection:"column"}} >
-                            <Button style={{margin:"0.5em 1rem"}} onClick={handleDumpDatabse}>Dump Database</Button>
-                            <Button style={{margin:"0.5em 1rem"}} onClick={handleRestoreButton}>Restore Database</Button>
-                            <input type='file' id='dbFile' ref={databaseFile} onChange={handleRestoreDatabse} style={{display: 'none'}}/>
-                        </div>
                     }/>
                 </UIPanel>
             </ResponsiveGridLayout>
