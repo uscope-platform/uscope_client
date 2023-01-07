@@ -35,10 +35,6 @@ let ProgramsManager = props =>{
     const programs_store = useSelector(state => state.programs);
     const settings = useSelector(state => state.settings);
 
-    let handle_edit_done = () =>{
-
-    }
-
     let allowed_types = ["asm", "C"];
 
     let selected_program = programs_store[settings.selected_program];
@@ -74,7 +70,7 @@ let ProgramsManager = props =>{
             </UIPanel>
             <UIPanel key="program_source" data-grid={{x: 0, y: 5, w: 24, h: 20, static: true}} level="level_2">
                 <SimpleContent name="Program Souce Code" content={
-                    <ProgramsEditor program={selected_program} done={handle_edit_done} />
+                    <ProgramsEditor program={selected_program} />
                 }/>
             </UIPanel>
 

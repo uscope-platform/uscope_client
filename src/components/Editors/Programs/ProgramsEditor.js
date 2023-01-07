@@ -22,6 +22,11 @@ import {Tooltip} from "react-tooltip";
 import {MdSave, MdBuild, MdCable} from 'react-icons/md'
 import {ColorTheme} from "../../UI_elements";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import {up_program} from "../../../client_core";
+
+
 let ProgramsEditor = props =>{
     const [editor_content, set_editor_content] = useState("");
     const [language, set_language] = useState('');
@@ -38,18 +43,29 @@ let ProgramsEditor = props =>{
     };
 
     let handle_save = (event) => {
-        debugger;
         props.program.edit_field('program_content', editor_content).then(()=>{
-            props.done();
         })
     };
 
     let handle_build = (event) => {
-        debugger;
+        let prog = new up_program(props.program);
+
+        prog.compile().then((data)=>{
+            for (let item of data){
+                if(item.status==="passed"){
+                    toast.success('✅ Compilation Successfull');
+                } else if (item.status==="failed"){
+                    toast.error(item.error);
+                }
+            }
+        });
+
     };
 
     let handle_load = (event) => {
-        debugger;
+        let core_address = '0x83c00000';
+        let prog = new up_program(props.program);
+        prog.load(core_address).then();
     };
 
 
@@ -76,6 +92,18 @@ let ProgramsEditor = props =>{
 
     return(
         <div>
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+            />
             {constructActionsBar()}
             <CodeMirror
                 value={editor_content}

@@ -70,7 +70,7 @@ export let  SelectableListItem = props =>{
                 {get_icon_image(props.icon)}
                 <p style={{marginLeft:"0.5em", paddingTop:"6px", cursor:"default"}}>{props.name}</p>
             </div>
-            <MdDelete size={ColorTheme.icons_size} onClick={handle_remove} color={ColorTheme.icons_color}/>
+            <MdDelete size={ColorTheme.icons_size} onClick={handle_remove} color={color}/>
 
 
 

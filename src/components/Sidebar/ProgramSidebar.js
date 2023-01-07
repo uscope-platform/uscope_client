@@ -25,14 +25,9 @@ import {
 } from "../UI_elements";
 import {Responsive, WidthProvider} from "react-grid-layout";
 import {setSetting} from "../../redux/Actions/SettingsActions";
-import ButterToast, { POS_TOP, POS_RIGHT, Cinnamon} from "butter-toast";
+
 import {Tooltip} from "react-tooltip";
 import {MdNoteAdd, MdUpload, MdDownload} from "react-icons/md";
-
-const compile_status_position = {
-    vertical: POS_TOP,
-    horizontal: POS_RIGHT
-};
 
 
 let  ProgramSidebar = props =>{
@@ -72,57 +67,12 @@ let  ProgramSidebar = props =>{
         let types = [];
         let items = Object.values(programs_store).map((prg)=>{
             types.push(prg.program_type);
-            debugger;
             return prg.name;
         })
 
         return [items, types]
     }
 
-
-
-    let handle_compile = () =>{
-
-        if(settings.selected_program===null){
-            alert("Please select a script to compile");
-            return;
-        }
-
-        selected_program.compile().then((data)=>{
-            let notifications={passed:[],failed:[]};
-            for (let item of data){
-                if(item.status==="passed"){
-                    notifications.passed.push(
-                        ButterToast.raise({
-                            content: <Cinnamon.Crisp title={item.file}
-                                                     content="Compilation was successful"
-                                                     scheme={Cinnamon.Crisp.SCHEME_GREEN}/>
-                        })
-                    )
-                } else if (item.status==="failed"){
-                    notifications.failed.push(
-                        ButterToast.raise({
-                            content: <Cinnamon.Crisp title={item.file}
-                                                     content={item.error}
-                                                     scheme={Cinnamon.Crisp.SCHEME_RED}/>
-                        })
-                    )
-                }
-            }
-            window.setTimeout(()=>{
-                for(let notif of notifications.passed){
-                    ButterToast.dismiss(notif);
-                }
-            },3000);
-
-        });
-
-    }
-
-    let handle_apply_program = () =>{
-        let core_address = '0x83c00000';
-        selected_program_obj.load(core_address).then();
-    };
 
     const [names, types] = get_content();
 
@@ -183,9 +133,6 @@ let  ProgramSidebar = props =>{
             cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
             useCSSTransforms={false}
         >
-            <ButterToast
-                position={compile_status_position}
-            />
             <UIPanel key="program_props" data-grid={{x: 0, y: 0, w: 24, h: 3, static: true}} level="level_2">
                 <SimpleContent name="Program List" content={
                     <div>
@@ -193,15 +140,6 @@ let  ProgramSidebar = props =>{
                             constructActionsBar()
                         }
                         <SelectableList items={names} types={types} selected_item={selected_program_obj.name} onRemove={handleRemove} onSelect={handleSelect} />
-                    </div>
-
-                }/>
-            </UIPanel>
-            <UIPanel key="program_actions" data-grid={{x: 0, y: 3, w: 24, h: 3, static: true}} level="level_2">
-                <SimpleContent name="Program Actions" content={
-                    <div style={{display:"flex", flexDirection:"column"}} >
-                        <Button style={{margin:"0.5em 1rem"}} onClick={handle_compile}>Compile Program</Button>
-                        <Button style={{margin:"0.5em 1rem"}} onClick={handle_apply_program}>Load Program</Button>
                     </div>
                 }/>
             </UIPanel>
