@@ -13,18 +13,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {useDispatch, useSelector} from "react-redux";
 import {
-    Button,
     UIPanel,
     SimpleContent,
     SelectableList, ColorTheme
 } from "../UI_elements";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
-import {dump_database, get_users_list, remove_user, restore_database} from "../../client_core";
+import {get_users_list, remove_user} from "../../client_core";
 import {Responsive, WidthProvider} from "react-grid-layout";
 import {useLocation} from "react-router-dom";
 import {MdPerson} from "react-icons/md";
@@ -35,7 +34,7 @@ let  PlatformSidebar = props =>{
     const location = useLocation();
     const settings = useSelector(state => state.settings);
     const dispatch = useDispatch()
-    const databaseFile = useRef(null)
+
     const [users, setUsers] = useState([])
     const [refreshList, setRefreshList] = useState(false)
 

@@ -27,8 +27,8 @@ import {
 
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import {Responsive, WidthProvider} from "react-grid-layout";
-import {add_user, do_onboarding, download_json, dump_database, restore_database, upload_json} from "../../client_core";
-import {MdBuild, MdCable, MdDownload, MdSave, MdUpload} from "react-icons/md";
+import {add_user, do_onboarding, dump_database, restore_database, upload_json} from "../../client_core";
+import { MdDownload, MdUpload} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
 
 

@@ -18,6 +18,8 @@ import styled from 'styled-components';
 export const UIPanel = styled.div`
   border-radius: 5px;
   overflow:hidden;
+  display: flex;
+  flex-direction: column;
   background: ${props => props.theme.background[props.level]};
   border-color: #434343;
   border-width: 2px;
@@ -39,7 +41,6 @@ export const PanelTitle = styled.div`
 export const ContentDiv = styled.div`
   overflow-y:auto;
   overflow-x: hidden;
-  height: 100%;
   border-style:solid;
   border-color: ${props => props.theme.background.borders};
   border-bottom-width: 0;

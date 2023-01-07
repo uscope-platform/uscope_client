@@ -130,7 +130,7 @@ let ScriptManager = (props) =>{
             cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
             useCSSTransforms={false}
         >
-            <UIPanel key="script_props" data-grid={{x: 0, y: 0, w: 24, h: 7, static: true}} level="level_2">
+            <UIPanel key="script_props" data-grid={{x: 0, y: 0, w: 24, h: 5, static: true}} level="level_2">
                 <SimpleContent name="Script List" content={
                     <div>
                         {

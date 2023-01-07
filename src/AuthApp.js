@@ -167,10 +167,10 @@ let AuthApp = (props) =>{
                             compactType='horizontal'
                             useCSSTransforms={false}
                         >
-                            <div key="nav" data-grid={{x: 0, y: 0, w: 3, h: 10, static: true}}>
+                            <div key="nav" data-grid={{x: 0, y: 0, w: 3, h: 8, static: true}}>
                                 <Navbar views={views}/>
                             </div>
-                            <UIPanel key="main" data-grid={{x: 3, y: 0, w: 16, h: 10, static: true}} level="level_1">
+                            <UIPanel key="main" data-grid={{x: 3, y: 0, w: 16, h: 8, static: true}} level="level_1">
                                 <Routes>
                                     <Route key="plot" path='/' element={<TabContent className="main_content_tab" tab={views[0]}/>}/>
                                     <Route key="script_manager" path='/script_manager' element={<TabContent className="main_content_tab" tab={views[1]}/>}/>
@@ -181,7 +181,7 @@ let AuthApp = (props) =>{
                                     <Route key="platform_manager" path='/platform_manager' element={<TabContent className="main_content_tab" tab={views[6]}/>}/>
                                 </Routes>
                             </UIPanel>
-                            <UIPanel key="props" data-grid={{x: 19, y: 0, w: 5, h: 10, static: true}} level="level_1">
+                            <UIPanel key="props" data-grid={{x: 19, y: 0, w: 5, h: 8, static: true}} level="level_1">
                                 <Sidebar />
                             </UIPanel>
                         </ResponsiveGridLayout>

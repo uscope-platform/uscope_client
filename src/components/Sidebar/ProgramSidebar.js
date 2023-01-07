@@ -18,7 +18,7 @@ import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {download_json, get_next_id, up_program, upload_json} from "../../client_core";
 import {
-    Button, ColorTheme,
+    ColorTheme,
     SelectableList,
     SimpleContent,
     UIPanel
