@@ -22,6 +22,7 @@ import {setSetting} from "../../redux/Actions/SettingsActions";
 import {useDispatch} from "react-redux";
 
 import {set_channel_status, get_channel_number_from_id} from "../../client_core";
+import PlotControls from "./PlotControls";
 
 
 let ChannelSelector = function(props) {
@@ -66,6 +67,7 @@ let ChannelSelector = function(props) {
                             <ChannelSelectorItem onStatusChange={handle_status_change} key={chan.spec.id} id={chan.spec.id} idx={i} name={chan.spec.name} value={chan.visible}/>
                         );
                     })}
+                <PlotControls/>
             </div>
         );
 };

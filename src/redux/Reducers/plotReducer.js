@@ -40,7 +40,9 @@ const initial_state = {
             b: 25,
             t: 25,
         },
-        width: "1024",
+        showlegend:false,
+        width: 1024,
+        height:330,
         paper_bgcolor: "rgba(0,0,0,0)",
         plot_bgcolor:"#444",
         font: {
@@ -54,6 +56,7 @@ const initial_state = {
                 gridcolor: '#777777'
         },
         yaxis: {
+            automargin: true,
             showline: true,
                 showgrid: true,
                 tickcolor: '#FFFFFF',

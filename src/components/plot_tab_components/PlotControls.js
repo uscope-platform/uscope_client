@@ -24,15 +24,9 @@ import {ColorTheme} from "../UI_elements";
 
 const ComponentStyle = styled.div`
   display: flex;
-  flex-direction: column;
-  margin-top: 2.75rem;
+  justify-content: center;
+  flex-direction: row;
 `
-
-const IconStyle = styled.div`
-  flex: 0 0 2rem;
-  
-`
-
 
 let  PlotControls = props =>{
     const settings = useSelector(state => state.settings);
@@ -62,17 +56,9 @@ let  PlotControls = props =>{
 
     return(
         <ComponentStyle>
-            <IconStyle>
-                <MdPlayArrow id='play' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={onClick}/>
-            </IconStyle>
-
-            <IconStyle>
-                <MdPause id='pause' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={onClick}/>
-            </IconStyle>
-
-            <IconStyle>
-                <MdStop id='stop' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={onClick}/>
-            </IconStyle>
+            <MdPlayArrow id='play' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={onClick}/>
+            <MdPause id='pause' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={onClick}/>
+            <MdStop id='stop' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={onClick}/>
         </ComponentStyle>
     );
 };
