@@ -48,17 +48,17 @@ let PlotTab = function (props) {
                         <PlotComponent palette={{colorway:ColorTheme.plot_palette}} refreshRate={settings.refreshRate}/>
                     }/>
                 </UIPanel>
-                <UIPanel key="parameters" data-grid={{x: 0, y: 10, w: 4, h: 9, static: true}} level="level_2">
+                <UIPanel key="parameters" data-grid={{x: 0, y: 10, w: 4, h: 7, static: true}} level="level_2">
                     <SimpleContent name="Parameters" content={
                         <ParametersArea />
                     }/>
                 </UIPanel>
-                <UIPanel key="macro" data-grid={{x: 4, y: 10, w: 20, h: 9, static: true}} level="level_2">
+                <UIPanel key="macro" data-grid={{x: 4, y: 10, w: 20, h: 7, static: true}} level="level_2">
                     <SimpleContent name="Macro" content={
                         <MacroActions />
                     }/>
                 </UIPanel>
-                <UIPanel key="terminal" data-grid={{x:1, y: 19, w: 20, h: 10, static: true}} level="level_2">
+                <UIPanel key="terminal" data-grid={{x:1, y: 17, w: 20, h: 8, static: true}} level="level_2">
                     <SimpleContent name="Terminal" content={
                         <TerminalComponent/>
                     }/>

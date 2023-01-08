@@ -164,13 +164,14 @@ let AuthApp = (props) =>{
                             className="layout"
                             breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
                             cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+                            rowHeight={30}
                             compactType='horizontal'
                             useCSSTransforms={false}
                         >
-                            <div key="nav" data-grid={{x: 0, y: 0, w: 3, h: 8, static: true}}>
+                            <div key="nav" data-grid={{x: 0, y: 0, w: 3, h: 26, static: true}}>
                                 <Navbar views={views}/>
                             </div>
-                            <UIPanel key="main" data-grid={{x: 3, y: 0, w: 16, h: 8, static: true}} level="level_1">
+                            <UIPanel key="main" data-grid={{x: 3, y: 0, w: 16, h: 26, static: true}} level="level_1">
                                 <Routes>
                                     <Route key="plot" path='/' element={<TabContent className="main_content_tab" tab={views[0]}/>}/>
                                     <Route key="script_manager" path='/script_manager' element={<TabContent className="main_content_tab" tab={views[1]}/>}/>
@@ -181,7 +182,7 @@ let AuthApp = (props) =>{
                                     <Route key="platform_manager" path='/platform_manager' element={<TabContent className="main_content_tab" tab={views[6]}/>}/>
                                 </Routes>
                             </UIPanel>
-                            <UIPanel key="props" data-grid={{x: 19, y: 0, w: 5, h: 8, static: true}} level="level_1">
+                            <UIPanel key="props" data-grid={{x: 19, y: 0, w: 5, h: 26, static: true}} level="level_1">
                                 <Sidebar />
                             </UIPanel>
                         </ResponsiveGridLayout>
