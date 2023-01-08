@@ -27,13 +27,12 @@ import {
 import {
     UIPanel,
     SimpleContent,
-    SelectableList, ColorTheme,
+    SelectableList
 } from "../UI_elements";
 import {Responsive, WidthProvider} from "react-grid-layout";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import {addPeripheral} from "../../redux/Actions/peripheralsActions";
-import {MdNoteAdd, MdDownload, MdUpload} from "react-icons/md";
-import {Tooltip} from "react-tooltip";
+import SideToolbar from "./SideToolbar";
 
 let  PeripheralsSidebar = props =>{
 
@@ -111,32 +110,6 @@ let  PeripheralsSidebar = props =>{
 
     const [names, types] = get_content();
 
-    let constructActionsBar = () =>{
-        let io_color = settings.current_peripheral ? ColorTheme.icons_color:"gray";
-        let click_handler = settings.current_peripheral ? handleExport:null;
-        let export_tooltip = settings.current_peripheral ? <Tooltip anchorId="export_icon" content="Export Peripheral" place="top" />:null;
-        return(
-            <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
-
-                <div id="add_icon">
-                    <MdNoteAdd onClick={handleAdd} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
-                    <Tooltip anchorId="add_icon" content="Add Peripheral" place="top" />
-                </div>
-                <div id="import_icon">
-                    <MdUpload onClick={handleImport} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
-                    <Tooltip anchorId="import_icon" content="Import Peripheral" place="top" />
-                </div>
-                <div id="export_icon">
-                    <MdDownload onClick={click_handler} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={io_color}/>
-                    {
-                        export_tooltip
-                    }
-                </div>
-
-            </div>
-        )
-    }
-
 
     return(
         <ResponsiveGridLayout
@@ -148,7 +121,13 @@ let  PeripheralsSidebar = props =>{
             <UIPanel key="peripherals_list" data-grid={{x: 0, y: 0, w: 24, h: 7, static: true}} level="level_2">
                 <SimpleContent name="Peripherals List" content={
                     <div>
-                        {constructActionsBar()}
+                        <SideToolbar
+                            onAdd={handleAdd}
+                            onImport={handleImport}
+                            onExport={handleExport}
+                            contentName="Peripherals"
+                            exportEnabled={settings.current_peripheral}
+                        />
                         <SelectableList items={names} types={types} selected_item={settings.current_peripheral} onRemove={handleRemove} onSelect={handleOnSelect} />
                     </div>
                 }/>

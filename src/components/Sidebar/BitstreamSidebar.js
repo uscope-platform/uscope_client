@@ -27,6 +27,7 @@ import {Responsive, WidthProvider} from "react-grid-layout";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import {MdNoteAdd, MdDownload, MdUpload} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
+import SideToolbar from "./SideToolbar";
 
 
 let  BitstreamSidebar = props =>{
@@ -100,34 +101,6 @@ let  BitstreamSidebar = props =>{
 
     };
 
-    let constructActionsBar = () =>{
-        let io_color = settings.selected_bitstream ? ColorTheme.icons_color :"gray";
-        let click_handler = settings.selected_bitstream ? handleExport:null;
-        let export_tooltip = settings.selected_bitstream ? <Tooltip anchorId="export_icon" content="Export Bitstream" place="top" />:null;
-        return(
-            <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
-
-                <div id="add_icon">
-                    <MdNoteAdd onClick={handleAdd} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
-                    <Tooltip anchorId="add_icon" content="Add Bitstream" place="top" />
-                </div>
-                <div id="import_icon">
-                    <MdUpload onClick={handleImport} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color="gray"/>
-                    <Tooltip anchorId="import_icon" content="Import Bitstream" place="top" />
-                </div>
-                <div id="export_icon">
-                    <MdDownload onClick={click_handler} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={io_color} />
-                    {
-                        export_tooltip
-                    }
-                </div>
-            </div>
-        )
-    }
-
-
-
-
 
     return(
         <ResponsiveGridLayout
@@ -139,9 +112,13 @@ let  BitstreamSidebar = props =>{
             <UIPanel key="bitstream_list" data-grid={{x: 0, y: 0, w: 24, h: 3, static: true}} level="level_2">
                 <SimpleContent name="Bitstream List" content={
                     <div>
-                        {
-                            constructActionsBar()
-                        }
+                        <SideToolbar
+                            onAdd={handleAdd}
+                            onImport={handleImport}
+                            onExport={handleExport}
+                            contentName="Bitstream"
+                            exportEnabled={settings.selected_bitstream}
+                        />
                         <SelectableList items={names} types={types} selected_item={selected_bitstream.name} onRemove={handleRemove} onSelect={handleOnSelect} />
                     </div>
 

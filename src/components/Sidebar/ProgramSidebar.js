@@ -18,7 +18,6 @@ import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {download_json, get_next_id, up_program, upload_json} from "../../client_core";
 import {
-    ColorTheme,
     SelectableList,
     SimpleContent,
     UIPanel
@@ -26,8 +25,7 @@ import {
 import {Responsive, WidthProvider} from "react-grid-layout";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
-import {Tooltip} from "react-tooltip";
-import {MdNoteAdd, MdUpload, MdDownload} from "react-icons/md";
+import SideToolbar from "./SideToolbar";
 
 
 let  ProgramSidebar = props =>{
@@ -100,30 +98,6 @@ let  ProgramSidebar = props =>{
 
     }
 
-    let constructActionsBar = () =>{
-        let io_color = settings.selected_program ? ColorTheme.icons_color:"gray";
-        let click_handler = settings.selected_program ? handleExport:null;
-        let export_tooltip = settings.selected_program ? <Tooltip anchorId="export_icon" content="Export Program" place="top" />:null;
-        return(
-            <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
-
-                <div id="add_icon">
-                    <MdNoteAdd onClick={handleAdd} size="2em" style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
-                    <Tooltip anchorId="add_icon" content="Add Program" place="top" />
-                </div>
-                <div id="import_icon">
-                    <MdUpload onClick={handleImport} size="2em" style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
-                    <Tooltip anchorId="import_icon" content="Import Program" place="top" />
-                </div>
-                <div id="export_icon">
-                    <MdDownload onClick={click_handler} size="2em" style={{marginLeft:"0.3em"}} color={io_color}/>
-                    {
-                        export_tooltip
-                    }
-                </div>
-            </div>
-        )
-    }
 
 
     return(
@@ -136,9 +110,13 @@ let  ProgramSidebar = props =>{
             <UIPanel key="program_props" data-grid={{x: 0, y: 0, w: 24, h: 3, static: true}} level="level_2">
                 <SimpleContent name="Program List" content={
                     <div>
-                        {
-                            constructActionsBar()
-                        }
+                        <SideToolbar
+                            onAdd={handleAdd}
+                            onImport={handleImport}
+                            onExport={handleExport}
+                            contentName="Program"
+                            exportEnabled={settings.selected_program}
+                        />
                         <SelectableList items={names} types={types} selected_item={selected_program_obj.name} onRemove={handleRemove} onSelect={handleSelect} />
                     </div>
                 }/>
