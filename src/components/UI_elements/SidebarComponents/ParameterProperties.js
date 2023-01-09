@@ -13,77 +13,51 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from "react";
-import {Label} from "../Label";
-import {MdArrowDropDown, MdArrowDropUp} from "react-icons/md";
+import React from "react";
 import {InputField} from "../InputField";
-import {Checkbox} from "../checkbox";
-
-import {Button} from "../Button";
-import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
-import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
-import {ColorTheme} from "../ColorTheme";
+import {up_application} from "../../../client_core";
+import {Card} from "../panels/Card";
 
 export let  ParameterProperties = props =>{
 
-
-    const [is_open, set_is_open] = useState(false);
-
-    let handleOpen = ()=>{
-        set_is_open(true);
-    }
-
-    let handleClose = ()=>{
-        set_is_open(false);
-    }
-
-    let handleChange = (event)=>{
-        props.application.edit_parameters(props.parameter.parameter_id, event.target.name, event.target.checked).then(()=>{
+    let handleChange = (target)=>{
+        let app = new up_application(props.application);
+        app.edit_parameters(props.parameter.parameter_id, target.name, target.checked).then(()=>{
             props.forceUpdate();
         });
     }
 
     let handleonKeyDown = (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
-            props.application.edit_parameters(props.parameter.parameter_id, event.target.name, event.target.value).then(()=>{
+            let app = new up_application(props.application);
+            app.edit_parameters(props.parameter.parameter_id, event.target.name, event.target.value).then(()=>{
                 props.forceUpdate();
             });
         }
     }
 
-    let handleRemoveRegister= (event) =>{
-        props.application.remove_parameter(props.parameter.parameter_id).then(()=>{
+    let handleRemove= (event) =>{
+        let app = new up_application(props.application);
+        app.remove_parameter(props.parameter.parameter_id).then(()=>{
             props.forceUpdate();
         });
     }
 
-    let renderChannelContent = (props) =>{
-        if(is_open)
-            return(
-                <SidebarCollapsableContentLayout>
-                    <InputField inline ID="parameter_name" name="parameter_name" defaultValue={props.parameter.parameter_name} onKeyDown={handleonKeyDown} label="Name"/>
-                    <InputField inline ID="parameter_id" name='parameter_id' defaultValue={props.parameter.parameter_id} onKeyDown={handleonKeyDown} label="Parameter ID"/>
-                    <InputField inline ID="trigger" name='trigger' defaultValue={props.parameter.trigger} onKeyDown={handleonKeyDown} label="Trigger"/>
-                    <InputField inline ID="value" name='value' defaultValue={props.parameter.value} onKeyDown={handleonKeyDown} label="Value"/>
-                    <Checkbox name='visible' value={props.parameter.visible} onChange={handleChange} label="Visible"/>
-                    <Button onClick={handleRemoveRegister} >Remove</Button>
-                </SidebarCollapsableContentLayout>
-            )
-        return null;
-    }
-
     return(
-        <>
-            <SidebarCollapsableNameLayout>
-                <Label>{props.parameter.parameter_name}</Label>
-                {is_open
-                    ? <MdArrowDropUp size={ColorTheme.icons_size} onClick={handleClose} color={ColorTheme.icons_color}/>
-                    : <MdArrowDropDown size={ColorTheme.icons_size} onClick={handleOpen} color={ColorTheme.icons_color}/>
-                }
-            </SidebarCollapsableNameLayout>
-            {
-                renderChannelContent(props)
-            }
-        </>
+        <Card
+            name={props.parameter.parameter_name}
+            onRemove={handleRemove}
+            selector={{
+                name:"visible",
+                label:"Visible",
+                click:handleChange,
+                value:props.parameter.visible
+            }}
+        >
+            <InputField inline ID="parameter_name" name="parameter_name" defaultValue={props.parameter.parameter_name} onKeyDown={handleonKeyDown} label="Name"/>
+            <InputField inline ID="parameter_id" name='parameter_id' defaultValue={props.parameter.parameter_id} onKeyDown={handleonKeyDown} label="Parameter ID"/>
+            <InputField inline ID="trigger" name='trigger' defaultValue={props.parameter.trigger} onKeyDown={handleonKeyDown} label="Trigger"/>
+            <InputField inline ID="value" name='value' defaultValue={props.parameter.value} onKeyDown={handleonKeyDown} label="Value"/>
+        </Card>
     );
 };

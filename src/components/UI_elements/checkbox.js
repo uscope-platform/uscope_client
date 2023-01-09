@@ -36,7 +36,7 @@ export let  Checkbox = props =>{
             <InputCheckbox
                 id={props.name}
                 name={props.name}
-                checked={props.value?true:false}
+                checked={!!props.value}
                 type="checkbox"
                 onChange={e => props.onChange(e)}
                 style={props.style}

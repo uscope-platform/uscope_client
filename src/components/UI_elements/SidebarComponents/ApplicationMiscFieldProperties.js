@@ -13,69 +13,41 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from "react";
-import {Label} from "../Label";
-import {MdArrowDropDown, MdArrowDropUp} from "react-icons/md";
+import React from "react";
 import {InputField} from "../InputField";
 
-import {Button} from "../Button";
-import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
-import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
-import {ColorTheme} from "../ColorTheme";
+import {up_application} from "../../../client_core";
+import {Card} from "../panels/Card";
 
 export let  ApplicationMiscFieldProperties = props =>{
 
 
-    const [is_open, set_is_open] = useState(false);
-
-
-    let handleOpen = ()=>{
-        set_is_open(true);
-    }
-
-    let handleClose = ()=>{
-        set_is_open(false);
-    }
 
     let handleonKeyDown = (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
-            props.application.edit_misc_param(props.field.name,event.target.value, event.target.name==="name").then(()=>{
+            let app = new up_application(props.application);
+            app.edit_misc_param(props.field.name,event.target.value, event.target.name==="name").then(()=>{
                 props.forceUpdate();
             });
         }
     }
 
-    let handleRemoveRegister= (event) =>{
-        props.application.remove_misc_field(props.field.name).then(()=>{
+    let handleRemove = (event) =>{
+        let app = new up_application(props.application);
+        app.remove_misc_field(props.field.name).then(()=>{
             props.forceUpdate();
         });
         props.forceUpdate();
     }
 
-    let renderChannelContent = (props) =>{
-        if(is_open)
-            return(
-                <SidebarCollapsableContentLayout>
-                    <InputField inline ID="name" name="name" defaultValue={props.field.name} onKeyDown={handleonKeyDown} label="Name"/>
-                    <InputField inline ID="value"  name='value' defaultValue={props.field.value} onKeyDown={handleonKeyDown} label="Value"/>
-                    <Button onClick={handleRemoveRegister} >Remove</Button>
-                </SidebarCollapsableContentLayout>
-            )
-        return null;
-    }
 
     return(
-        <>
-            <SidebarCollapsableNameLayout>
-                <Label>{props.field.name}</Label>
-                {is_open
-                    ? <MdArrowDropUp size={ColorTheme.icons_size} onClick={handleClose} color={ColorTheme.icons_color}/>
-                    : <MdArrowDropDown size={ColorTheme.icons_size} onClick={handleOpen} color={ColorTheme.icons_color}/>
-                }
-            </SidebarCollapsableNameLayout>
-            {
-                renderChannelContent(props)
-            }
-        </>
+        <Card
+            name={props.field.name}
+            onRemove={handleRemove}
+        >
+            <InputField inline ID="name" name="name" defaultValue={props.field.name} onKeyDown={handleonKeyDown} label="Name"/>
+            <InputField inline ID="value"  name='value' defaultValue={props.field.value} onKeyDown={handleonKeyDown} label="Value"/>
+        </Card>
     );
 };

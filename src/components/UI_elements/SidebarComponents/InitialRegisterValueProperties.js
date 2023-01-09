@@ -13,67 +13,40 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from "react";
-import {Label} from "../Label";
-import {MdArrowDropDown, MdArrowDropUp} from "react-icons/md";
+import React from "react";
 import {InputField} from "../InputField";
 
-import {Button} from "../Button";
-import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
-import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
-import {ColorTheme} from "../ColorTheme";
+import {up_application} from "../../../client_core";
+import {Card} from "../panels/Card";
 
 export let  InitialRegisterValue = props =>{
 
-    const [is_open, set_is_open] = useState(false);
-
-    let handleOpen = ()=>{
-        set_is_open(true);
-    }
-
-
-    let handleClose = ()=>{
-        set_is_open(false);
-    }
 
     let handleonKeyDown = (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
-            props.application.edit_irv(props.irv.address,event.target.name, event.target.value).then(()=>{
+            let app = new up_application(props.application);
+            app.edit_irv(props.irv.address,event.target.name, event.target.value).then(()=>{
                 props.forceUpdate();
             });
         }
     }
 
-    let handleRemoveRegister= (event) =>{
-        props.application.remove_irv(props.irv.address).then(()=>{
+    let handleRemove= () =>{
+        let app = new up_application(props.application);
+        app.remove_irv(props.irv.address).then(()=>{
             props.forceUpdate();
         });
     }
 
-    let renderChannelContent = (props) =>{
-        if(is_open)
-            return(
-                <SidebarCollapsableContentLayout>
-                    <InputField inline ID="address" name="address" defaultValue={props.irv.address} onKeyDown={handleonKeyDown} label="Address"/>
-                    <InputField inline ID="value" name='value' defaultValue={props.irv.value} onKeyDown={handleonKeyDown} label="Value"/>
-                    <Button onClick={handleRemoveRegister} >Remove</Button>
-                </SidebarCollapsableContentLayout>
-            )
-        return null;
-    }
+
 
     return(
-        <>
-            <SidebarCollapsableNameLayout>
-                <Label>{props.irv.address}</Label>
-                {is_open
-                    ? <MdArrowDropUp size={ColorTheme.icons_size} onClick={handleClose} color={ColorTheme.icons_color}/>
-                    : <MdArrowDropDown size={ColorTheme.icons_size} onClick={handleOpen} color={ColorTheme.icons_color}/>
-                }
-            </SidebarCollapsableNameLayout>
-            {
-                renderChannelContent(props)
-            }
-        </>
+        <Card
+            name={props.irv.address}
+            onRemove={handleRemove}
+        >
+            <InputField inline ID="address" name="address" defaultValue={props.irv.address} onKeyDown={handleonKeyDown} label="Address"/>
+            <InputField inline ID="value" name='value' defaultValue={props.irv.value} onKeyDown={handleonKeyDown} label="Value"/>
+        </Card>
     );
 };

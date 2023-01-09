@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import {CardStack} from "./panels/CardStack";
+
 export {StyledScrollbar} from "./StyledScrollbar"
 export {Select, SelectField} from "./Select"
 export {Label} from "./Label"
@@ -27,6 +29,9 @@ export {MultiSelect} from "./MultiSelect"
 export {SelectableListItem} from './SelectableListItem'
 export {SelectableListLayout} from './SelectableListLayout'
 export {SelectableList} from './SelectableList'
+export {DeleteIcon} from './DeleteIcon'
+export {ChipSelector} from './ChipSelector'
+
 
 export {ApplicationLayout} from "./Layouts/ApplicationLayout"
 export {BlockLayout} from "./Layouts/BlockLayout"
@@ -53,3 +58,6 @@ export {RegisterProperties} from "./SidebarComponents/RegisterProperties"
 export {SimpleContent} from './panels/SimpleContent'
 export {TabbedContent} from './panels/TabbedContent'
 export {UIPanel} from './panels/UIPanel'
+export {Card} from './panels/Card'
+export {CardTitle} from './panels/CardTitle'
+export {CardStack} from './panels/CardStack'

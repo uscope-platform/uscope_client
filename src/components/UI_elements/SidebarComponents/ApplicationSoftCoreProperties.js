@@ -13,82 +13,53 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from "react";
-import {Label} from "../Label";
-import {MdArrowDropDown, MdArrowDropUp} from "react-icons/md";
+import React from "react";
 import {InputField} from "../InputField";
 
-import {Button} from "../Button";
-import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
-import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
 import {SelectField} from "../Select";
-import {ColorTheme} from "../ColorTheme";
-
+import {up_application} from "../../../client_core";
+import {Card} from "../panels/Card";
 
 
 export let  ApplicationSoftCoreProperties = props =>{
 
-
-    const [is_open, set_is_open] = useState(false);
-
-
-    let handleOpen = ()=>{
-        set_is_open(true);
-    }
-
-    let handleClose = ()=>{
-        set_is_open(false);
-    }
-
     let handleProgramChange = (event)=>{
-        props.application.edit_soft_core(props.core.id,event.target.name, event.target.value).then(()=>{
+        let app = new up_application(props.application);
+        app.edit_soft_core(props.core.id,event.target.name, event.target.value).then(()=>{
             props.forceUpdate();
         });
     }
 
     let handleonKeyDown = (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
-            props.application.edit_soft_core(props.core.id,event.target.name, event.target.value).then(()=>{
+            let app = new up_application(props.application);
+            app.edit_soft_core(props.core.id,event.target.name, event.target.value).then(()=>{
                 props.forceUpdate();
             });
         }
     }
 
-    let handleRemoveCore= (event) =>{
-            props.application.remove_soft_core(props.core.id).then(()=>{
+    let handleRemove= (event) =>{
+        let app = new up_application(props.application);
+            app.remove_soft_core(props.core.id).then(()=>{
             props.forceUpdate();
         });
     }
 
-    let renderContent = (props) =>{
-        let programs_list = Object.keys(props.programs).map((prog_id)=>{
-            return props.programs[prog_id].name;
-        })
-        if(is_open)
-            return(
-                <SidebarCollapsableContentLayout>
-                    <InputField inline ID="id" name="id" defaultValue={props.core.id} onKeyDown={handleonKeyDown} label="Core ID"/>
-                    <InputField inline ID="address" name='address' defaultValue={props.core.address} onKeyDown={handleonKeyDown} label="Address"/>
-                    <SelectField label="Default Program" onChange={handleProgramChange} defaultValue={props.core.default_program}
-                                 name="default_program" placeholder="Default Program" options={programs_list}/>
-                    <Button onClick={handleRemoveCore} >Remove</Button>
-                </SidebarCollapsableContentLayout>
-            )
-        return null;
-    }
+
+    let programs_list = Object.keys(props.programs).map((prog_id)=>{
+        return props.programs[prog_id].name;
+    })
 
     return(
-        <>
-            <SidebarCollapsableNameLayout>
-                <Label>{props.core.id}</Label>
-                {is_open
-                    ? <MdArrowDropUp size={ColorTheme.icons_size} onClick={handleClose} color={ColorTheme.icons_color}/>
-                    : <MdArrowDropDown size={ColorTheme.icons_size} onClick={handleOpen} color={ColorTheme.icons_color}/>
-                }
-            </SidebarCollapsableNameLayout>
-            {
-                renderContent(props)
-            }
-        </>
+        <Card
+            name={props.core.id}
+            onRemove={handleRemove}
+        >
+            <InputField inline ID="id" name="id" defaultValue={props.core.id} onKeyDown={handleonKeyDown} label="Core ID"/>
+            <InputField inline ID="address" name='address' defaultValue={props.core.address} onKeyDown={handleonKeyDown} label="Address"/>
+            <SelectField label="Default Program" onChange={handleProgramChange} defaultValue={props.core.default_program}
+                         name="default_program" placeholder="Default Program" options={programs_list}/>
+        </Card>
     );
 };

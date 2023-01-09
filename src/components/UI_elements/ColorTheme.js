@@ -40,11 +40,12 @@ export const ColorTheme = {
         level_1: "#121212",
         level_2: "rgba(255,255,255,0.07)",
         level_3: "rgba(255,255,255,0.08)",
-        level_4: "rgba(255,255,255,0.09)",
+        level_4: "rgba(255,255,255,0.11)",
         level_5: "rgba(255,255,255,0.11)",
         accents: "#c76863",
         borders: "#434343"
     },
+    text: "rgba(255, 255, 255, 0.87)",
     icons_color: "rgba(255, 255, 255, 0.87)",
     icons_size: "2em",
     plot_palette:[

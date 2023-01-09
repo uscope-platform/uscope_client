@@ -13,13 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useReducer, useState} from 'react';
+import React, {useReducer} from 'react';
 
 import {useSelector} from "react-redux"
 
 import {
     UIPanel,
-    InputField,
     StyledScrollbar,
     PlotChannelProperties,
     PlotChannelGroupProperties,
@@ -27,27 +26,16 @@ import {
     MacroProperties,
     ParameterProperties,
     ApplicationPeripheralProperties,
-    ApplicationSoftCoreProperties, ApplicationMiscFieldProperties, TabbedContent, ColorTheme
+    ApplicationSoftCoreProperties, ApplicationMiscFieldProperties, TabbedContent, CardStack
 } from "../UI_elements"
 
-import {up_application} from "../../client_core";
+import {get_next_id, up_application} from "../../client_core";
 import {Responsive, WidthProvider} from "react-grid-layout";
-import {MdAdd} from "react-icons/md";
-
-let initial_new_fields_state = {
-    "channel":false,
-    "irv":false,
-    "macro":false,
-    "parameter":false,
-    "peripheral":false,
-    "core":false,
-    "misc":false,
-    "ch_group":false
-};
+import ManagerToolbar from "./ManagerToolbar";
 
 let  ApplicationsManager = props =>{
 
-    const selected_application =  useSelector(state => new up_application(state.applications[state.settings.selected_application]))
+    const selected_app = useSelector(state => state.applications[state.settings.selected_application])
 
 
     const settings = useSelector(state => state.settings);
@@ -55,180 +43,179 @@ let  ApplicationsManager = props =>{
     const programs = useSelector(state => state.programs);
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
-
-    const [new_fields, set_new_fields] = useState(initial_new_fields_state);
-
-
     const ResponsiveGridLayout = WidthProvider(Responsive);
 
-    let update_fields = (field, status) =>{
-        let next_state = new_fields;
-        next_state[field] = status;
-        set_new_fields(next_state);
+
+    let add_content = (name, type) =>{
+        let selected_application = new up_application(selected_app);
+        switch (type) {
+            case "channel_group":
+                selected_application.add_channel_group(name).then();
+                break;
+            case "channel":
+                selected_application.add_channel(name).then();
+                break;
+            case "irv":
+                selected_application.add_irv(name).then();
+                break;
+            case"macro":
+                selected_application.add_macro(name).then();
+                break;
+            case"parameter":
+                selected_application.add_parameter(name).then();
+                break;
+            case"peripheral":
+                selected_application.add_peripheral(name).then();
+                break;
+            case"soft_core":
+                selected_application.add_soft_core(name).then();
+                break;
+            case "misc":
+                selected_application.set_misc_param(name).then();
+                break;
+            default:
+                return;
+        }
         forceUpdate();
     }
 
-    let handle_add_item_done = (event) =>{
-        if(event.key==="Enter"|| event.key ==="Tab"){
-            update_fields(event.target.name, false);
-            switch (event.target.name) {
-                case "ch_group":
-                    selected_application.add_channel_group(event.target.value);
-                    break;
-                case "channel":
-                    selected_application.add_channel(event.target.value);
-                    break;
-                case "irv":
-                    selected_application.add_irv(event.target.value);
-                    break;
-                case"macro":
-                    selected_application.add_macro(event.target.value);
-                    break;
-                case"parameter":
-                    selected_application.add_parameter(event.target.value);
-                    break;
-                case"peripheral":
-                    selected_application.add_peripheral(event.target.value);
-                    break;
-                case"soft_core":
-                    selected_application.add_soft_core(event.target.value);
-                    break;
-                case "misc":
-                    selected_application.set_misc_param(event.target.value);
-                    break;
-                default:
-                    return;
+
+    let handle_add_new = (item_type, old_items, title_prop) =>{
+        let ids = Object.values(old_items).map((item)=>{
+            const regex = new RegExp("new_"+item_type+"_(\\d+)", 'g');
+            let match = Array.from(item[title_prop].matchAll(regex), m => m[1]);
+            if(match.length>0){
+                return match;
+            } else{
+                return null;
             }
-            forceUpdate();
-        }
+        });
+        ids = ids.filter(Boolean);
+        let name ="new_" + item_type + "_" + get_next_id(ids.sort());
+        add_content(name, item_type);
     }
 
-    let handle_add_item = (event) =>{
-        update_fields(event.target.id, true);
+    let misc_fields = [];
+    if(selected_app){
+        misc_fields = Object.keys(selected_app).map((key, index) => {
+            if (!Array.isArray(selected_app[key]) && typeof selected_app[key] !== 'function')
+                return {name:key, value:selected_app[key]}
+        });
+        misc_fields = misc_fields.filter(Boolean);
     }
 
 
     let get_tabs_content = ()=>{
         return([
             <div>
-                {new_fields.channel ?
-                    <InputField name="channel" compact label="Channel Name" onKeyDown={handle_add_item_done}/>:
-                    <MdAdd id="channel" size={ColorTheme.icons_size} onClick={handle_add_item} color={ColorTheme.icons_color}/>
-
-                }
-                <StyledScrollbar>
+                <ManagerToolbar
+                    onAdd={() =>{handle_add_new("channel", selected_app.channels, "name");}}
+                    contentName="Channel"/>
+                <CardStack>
                     {
-                        selected_application.channels.map((channel)=>{
+                        selected_app.channels.map((channel)=>{
                             return(
-                                <PlotChannelProperties application={selected_application} forceUpdate={forceUpdate} channel={channel}/>
+                                <PlotChannelProperties application={selected_app} forceUpdate={forceUpdate} channel={channel}/>
                             )
                         })
                     }
-                </StyledScrollbar>
+                </CardStack>
             </div>,
             <div>
-                {new_fields.ch_group ?
-                    <InputField name="ch_group" compact label="Channel Group Name" onKeyDown={handle_add_item_done}/>:
-                    <MdAdd id="ch_group" size={ColorTheme.icons_size} onClick={handle_add_item} color={ColorTheme.icons_color}/>
-                }
-                <StyledScrollbar>
+                <ManagerToolbar
+                    onAdd={() =>{handle_add_new("channel_group", selected_app.channel_groups, "group_name");}}
+                    contentName="Channel Group"/>
+                <CardStack>
                     {
-                        selected_application.channel_groups.map((group)=>{
+                        selected_app.channel_groups.map((group)=>{
                             return(
-                                <PlotChannelGroupProperties application={selected_application} forceUpdate={forceUpdate} group={group}/>
+                                <PlotChannelGroupProperties application={selected_app} forceUpdate={forceUpdate} group={group}/>
                             )
                         })
                     }
-                </StyledScrollbar>
+                </CardStack>
             </div>,
             <div>
-                {new_fields.irv ?
-                    <InputField name="irv" compact label="Register Address" onKeyDown={handle_add_item_done}/>:
-                    <MdAdd id="irv" size={ColorTheme.icons_size} onClick={handle_add_item} color={ColorTheme.icons_color}/>
-                }
-                <StyledScrollbar>
+                <ManagerToolbar
+                    onAdd={() =>{handle_add_new("irv", selected_app.initial_registers_values,"address");}}
+                    contentName="Initial Register Value"/>
+                <CardStack>
                     {
-                        selected_application.initial_registers_values.map((irv)=>{
+                        selected_app.initial_registers_values.map((irv)=>{
                             return(
-                                <InitialRegisterValue application={selected_application} forceUpdate={forceUpdate} irv={irv}/>
+                                <InitialRegisterValue application={selected_app} forceUpdate={forceUpdate} irv={irv}/>
                             )
                         })
                     }
-                </StyledScrollbar>
+                </CardStack>
             </div>,
             <div>
-                {new_fields.macro ?
-                    <InputField name="macro" compact label="Macro Name" onKeyDown={handle_add_item_done}/> :
-                    <MdAdd  id="macro" size={ColorTheme.icons_size} onClick={handle_add_item} color={ColorTheme.icons_color}/>
-                }
-                <StyledScrollbar>
+                <ManagerToolbar
+                    onAdd={() =>{handle_add_new("macro", selected_app.macro,"name");}}
+                    contentName="Macro"/>
+                <CardStack>
                     {
-                        selected_application.macro.map((macro)=>{
+                        selected_app.macro.map((macro)=>{
                             return(
-                                <MacroProperties application={selected_application} forceUpdate={forceUpdate} macro={macro}/>
+                                <MacroProperties application={selected_app} forceUpdate={forceUpdate} macro={macro}/>
                             )
                         })
                     }
-                </StyledScrollbar>
+                </CardStack>
             </div>,
             <div>
-                {new_fields.parameter ?
-                    <InputField name="parameter" compact label="Parameter Name" onKeyDown={handle_add_item_done}/>:
-                    <MdAdd id="parameter" size={ColorTheme.icons_size} onClick={handle_add_item} color={ColorTheme.icons_color}/>
-                }
-                <StyledScrollbar>
+                <ManagerToolbar
+                    onAdd={() =>{handle_add_new("parameter", selected_app.parameters,"parameter_name");}}
+                    contentName="Parameter"/>
+                <CardStack>
                     {
-                        selected_application.parameters.map((parameter)=>{
+                        selected_app.parameters.map((parameter)=>{
                             return(
-                                <ParameterProperties application={selected_application} forceUpdate={forceUpdate} parameter={parameter}/>
+                                <ParameterProperties application={selected_app} forceUpdate={forceUpdate} parameter={parameter}/>
                             )
                         })
                     }
-                </StyledScrollbar>
+                </CardStack>
             </div>,
             <div>
-                {new_fields.peripheral ?
-                    <InputField name="peripheral" compact label="Peripheral Name" onKeyDown={handle_add_item_done}/>:
-                    <MdAdd id="peripheral" size={ColorTheme.icons_size} onClick={handle_add_item} color={ColorTheme.icons_color}/>
-                }
-                <StyledScrollbar>
+                <ManagerToolbar
+                    onAdd={() =>{handle_add_new("peripheral", selected_app.peripherals,"name");}}
+                                contentName="Peripheral"/>
+                <CardStack>
                     {
-                        selected_application.peripherals.map((peripheral)=>{
+                        selected_app.peripherals.map((peripheral)=>{
                             return(
-                                <ApplicationPeripheralProperties application={selected_application} peripherals={peripherals} forceUpdate={forceUpdate} peripheral={peripheral}/>
+                                <ApplicationPeripheralProperties application={selected_app} peripherals={peripherals} forceUpdate={forceUpdate} peripheral={peripheral}/>
                             )
                         })
                     }
-                </StyledScrollbar>
+                </CardStack>
             </div>,
             <div>
-                {new_fields.soft_core ?
-                    <InputField name="soft_core" compact label="Field Name" onKeyDown={handle_add_item_done}/>:
-                    <MdAdd id="soft_core" size={ColorTheme.icons_size} onClick={handle_add_item} color={ColorTheme.icons_color}/>
-                }
-                <StyledScrollbar>
+                <ManagerToolbar
+                    onAdd={() =>{handle_add_new("soft_core", selected_app.soft_cores, "id");}}
+                    contentName="Soft Core"/>
+                <CardStack>
                     {
-                        selected_application.soft_cores.map((soft_core)=>{
+                        selected_app.soft_cores.map((soft_core)=>{
                             return(
-                                <ApplicationSoftCoreProperties application={selected_application} core={soft_core} programs={programs} forceUpdate={forceUpdate}/>
+                                <ApplicationSoftCoreProperties application={selected_app} core={soft_core} programs={programs} forceUpdate={forceUpdate}/>
                             )
                         })
                     }
-                </StyledScrollbar>
+                </CardStack>
             </div>,
             <div>
-                {new_fields.misc ?
-                    <InputField name="misc" compact label="Field Name" onKeyDown={handle_add_item_done}/>:
-                    <MdAdd id="misc"  size={ColorTheme.icons_size} onClick={handle_add_item} color={ColorTheme.icons_color}/>
-                }
-                <StyledScrollbar>
+                <ManagerToolbar
+                    onAdd={() =>{handle_add_new("misc", misc_fields, "name");}}
+                    contentName="Miscellaneous Field"/>
+                <CardStack>
                     {
-                        Object.keys(selected_application).map((key, index) =>{
-                            if(!Array.isArray(selected_application[key]) && typeof selected_application[key] !== 'function')
-                                return <ApplicationMiscFieldProperties application={selected_application} forceUpdate={forceUpdate} field={{name:key, value:selected_application[key]}}/>
+                        misc_fields.map((field)=>{
+                            return <ApplicationMiscFieldProperties application={selected_app} forceUpdate={forceUpdate} field={field}/>
                         })
                     }
-                </StyledScrollbar>
+                </CardStack>
             </div>
         ])
     }
@@ -240,7 +227,7 @@ let  ApplicationsManager = props =>{
     if(!settings.selected_application)
         return <></>;
 
-    if(selected_application.application_name)
+    if(selected_app.application_name)
         return(
             <ResponsiveGridLayout
                 className="layout"

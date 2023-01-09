@@ -43,7 +43,7 @@ let PlotTab = function (props) {
                         <ChannelSelector channels={channels}/>
                     }/>
                 </UIPanel>
-                <UIPanel key="props" data-grid={{x: 3, y: 0, w: 21, h: 10, static: true}} level="level_2">
+                <UIPanel key="scope" data-grid={{x: 3, y: 0, w: 21, h: 10, static: true}} level="level_2">
                     <SimpleContent name="Scope" content={
                         <PlotComponent palette={{colorway:ColorTheme.plot_palette}} refreshRate={settings.refreshRate}/>
                     }/>

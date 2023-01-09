@@ -20,7 +20,6 @@ import {useDispatch, useSelector} from "react-redux";
 
 import {download_json, get_next_id, import_application, up_application, upload_json} from "../../client_core";
 import {
-    ColorTheme,
     SelectableList,
     SimpleContent,
     UIPanel
@@ -28,9 +27,7 @@ import {
 import {Responsive, WidthProvider} from "react-grid-layout";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import {addApplication} from "../../redux/Actions/applicationActions";
-import {MdNoteAdd, MdDownload, MdUpload} from "react-icons/md";
 
-import {Tooltip} from "react-tooltip";
 import 'react-tooltip/dist/react-tooltip.css'
 import SideToolbar from "./SideToolbar";
 
@@ -55,7 +52,6 @@ let  ApplicationSidebar = props =>{
     };
 
     let handleExport = (event) =>{
-
         download_json(applications_redux[settings.selected_application],settings.selected_application);
 
     };

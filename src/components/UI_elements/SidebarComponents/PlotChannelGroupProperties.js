@@ -14,45 +14,35 @@
 // limitations under the License.
 
 import React, {useState} from "react";
-import {Label} from "../Label";
-import {MdArrowDropDown, MdArrowDropUp} from "react-icons/md";
 import {InputField} from "../InputField";
 
-
-import {Button} from "../Button";
 import {Checkbox} from "../checkbox"
 import {MultiSelect} from "../MultiSelect";
-import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
-import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
-import {ColorTheme} from "../ColorTheme";
+import {up_application} from "../../../client_core";
+import {Card} from "../panels/Card";
 
 export let  PlotChannelGroupProperties = props =>{
 
-    const [is_open, set_is_open] = useState(false);
     const [channels_list, set_channels_list] = useState([]);
 
     let options = props.application.channels.map((ch)=>{
         return {label:ch.name, value:ch.id}
     });
 
-    let handleOpen = ()=>{
-        set_is_open(true);
-    }
 
-    let handleChangeDefault = (event)=>{
-        props.application.edit_channel_group(props.group.group_name, event.target.name, event.target.checked).then(()=>{
+    let handleChangeDefault = (target)=>{
+        let app = new up_application(props.application);
+        app.edit_channel_group(props.group.group_name, target.name, target.checked).then(()=>{
             props.forceUpdate();
         });
     }
 
-    let handleClose = ()=>{
-        set_is_open(false);
-    }
 
     let handleChange = (event)=>{
         if(event.length<=6){
             set_channels_list(event);
-            props.application.edit_channel_group(props.group.group_name, "channels", event).then(()=>{
+            let app = new up_application(props.application);
+            app.edit_channel_group(props.group.group_name, "channels", event).then(()=>{
                 props.forceUpdate();
             });
         }
@@ -61,47 +51,36 @@ export let  PlotChannelGroupProperties = props =>{
 
     let handleonKeyDown = (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
-            props.application.edit_channel_group(props.group.group_name, event.target.name, event.target.value).then(()=>{
+            let app = new up_application(props.application);
+            app.edit_channel_group(props.group.group_name, event.target.name, event.target.value).then(()=>{
                 props.forceUpdate();
             });
         }
     }
 
-    let handleRemoveRegister= (event) =>{
-        props.application.remove_channel_groups(props.group.group_name).then(()=>{
+    let handleRemove= () =>{
+        let app = new up_application(props.application);
+        app.remove_channel_groups(props.group.group_name).then(()=>{
             props.forceUpdate();
         });
     }
 
-    let renderChannelContent = (props) =>{
-        if(is_open) {
-            let is_default = props.group.default;
-            return (
-                <SidebarCollapsableContentLayout>
-                    <InputField ID="group_name" name="group_name" defaultValue={props.group.group_name} onKeyDown={handleonKeyDown} label="Name"/>
-                    <InputField ID="group_id" name='group_id' defaultValue={props.group.group_id} onKeyDown={handleonKeyDown} label="ID"/>
-                    <MultiSelect ID="content" onChange={handleChange} value={channels_list} options={options} label="Content"/>
-                    <Checkbox ID="default" name='default' value={is_default} onChange={handleChangeDefault} label="Default group"/>
-
-                    <Button onClick={handleRemoveRegister}>Remove</Button>
-                </SidebarCollapsableContentLayout>
-            )
-        }
-        return null;
-    }
 
     return(
-        <>
-            <SidebarCollapsableNameLayout>
-                <Label>{props.group.group_name}</Label>
-                {is_open
-                    ? <MdArrowDropUp size={ColorTheme.icons_size} onClick={handleClose} color={ColorTheme.icons_color}/>
-                    : <MdArrowDropDown size={ColorTheme.icons_size} onClick={handleOpen} color={ColorTheme.icons_color}/>
-                }
-            </SidebarCollapsableNameLayout>
-            {
-                renderChannelContent(props)
-            }
-        </>
+        <Card
+            name={props.group.group_name}
+            onRemove={handleRemove}
+            selector={{
+                name:"default",
+                label:"Enabled",
+                click:handleChangeDefault,
+                value:props.group.Default
+            }}
+        >
+            <InputField inline ID="group_name" name="group_name" defaultValue={props.group.group_name} onKeyDown={handleonKeyDown} label="Name"/>
+            <InputField inline ID="group_id" name='group_id' defaultValue={props.group.group_id} onKeyDown={handleonKeyDown} label="ID"/>
+            <MultiSelect inline ID="content" onChange={handleChange} value={channels_list} options={options} label="Content"/>
+            <Checkbox ID="default" name='default' value={props.group.default} onChange={handleChangeDefault} label="Default group"/>
+        </Card>
     );
 };
