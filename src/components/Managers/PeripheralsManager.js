@@ -19,28 +19,27 @@ import {useSelector} from "react-redux"
 
 
 import {
-    ColorTheme,
+    Button, CardStack,
+    ColorTheme, FormLayout,
     InputField,
-    RegisterProperties,
+    RegisterProperties, SelectField, SimpleContent,
     StyledScrollbar, TabbedContent, UIPanel
 } from "../UI_elements"
 
-import {up_peripheral} from "../../client_core"
+import {get_next_id, up_peripheral} from "../../client_core"
 import {Responsive, WidthProvider} from "react-grid-layout";
 import {MdAdd} from "react-icons/md";
+import ManagerToolbar from "./ManagerToolbar";
 
 
 let PeripheralsManager = (props)=>{
 
     const selected_peripheral =  useSelector(state => new up_peripheral(state.peripherals[state.settings.current_peripheral]))
 
-
     const ResponsiveGridLayout = WidthProvider(Responsive);
 
-    const peripherals = useSelector(state => state.peripherals);
     const settings = useSelector(state => state.settings);
 
-    const [new_register, set_new_register] = useState(false);
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     let handleEditVersion = (event) =>{
@@ -54,50 +53,27 @@ let PeripheralsManager = (props)=>{
             selected_peripheral.edit_name(event.target.value).then();
         }
     }
-    let handle_add_register = () => {
-        set_new_register(true);
+
+    let handle_add_new = (item_type, old_items, title_prop) =>{
+
+        let ids = Object.values(old_items).map((item)=>{
+            const regex = new RegExp("new_"+item_type+"_(\\d+)", 'g');
+            let match = Array.from(item[title_prop].matchAll(regex), m => m[1]);
+            if(match.length>0){
+                return match;
+            } else{
+                return null;
+            }
+        });
+        ids = ids.filter(Boolean);
+        let name ="new_" + item_type + "_" + get_next_id(ids.sort());
+        debugger;
+        selected_peripheral.add_register(name).then();
     }
 
-    let handle_add_register_done = (event) => {
-        if(event.key==="Enter"|| event.key ==="Tab"){
-            selected_peripheral.add_register(event.target.value).then();
-            set_new_register(false);
-        } else if (event.key ==="Escape"){
-            set_new_register(false);
-        }
-    }
 
     if(!settings.current_peripheral)
         return <></>;
-
-    let get_tabs_content = ()=>{
-        return([
-            <div>
-                <InputField inline name="edit_name" defaultValue={peripherals[settings.current_peripheral].peripheral_name} onKeyDown={handleEditName} label="Name"/>
-                <InputField inline name="edit_version" defaultValue={peripherals[settings.current_peripheral].version} onKeyDown={handleEditVersion} label="Version"/>
-            </div>,
-            <div>
-                <MdAdd id="register" size={ColorTheme.icons_size} onClick={handle_add_register} color={ColorTheme.icons_color}/>
-                {new_register &&
-                    <InputField name="register" compact label="Register Name" onKeyDown={handle_add_register_done}/>
-                }
-                <StyledScrollbar>
-                    {
-                        peripherals[settings.current_peripheral].registers.map((reg)=>{
-                            return(
-                                <RegisterProperties peripheral={selected_peripheral} forceUpdate={forceUpdate} register={reg}/>
-                            )
-                        })
-                    }
-                </StyledScrollbar>
-            </div>
-        ])
-    }
-
-    let get_tabs_names = ()=>{
-        return ["Peripheral properties", "Registers"]
-    }
-
 
 
     return(
@@ -107,8 +83,32 @@ let PeripheralsManager = (props)=>{
             cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
             useCSSTransforms={false}
         >
-            <UIPanel key="new_props" data-grid={{x: 0, y: 0, w: 24, h: 6, static: true}} level="level_2">
-                <TabbedContent names={get_tabs_names()} contents={get_tabs_content()}/>
+            <UIPanel key="properties" data-grid={{x: 0, y: 0, w: 24, h: 1, static: true}} level="level_2">
+                <SimpleContent name="Peripheral Properties" content={
+                    <div>
+                        <InputField inline name="edit_name" defaultValue={selected_peripheral.peripheral_name} onKeyDown={handleEditName} label="Name"/>
+                        <InputField inline name="edit_version" defaultValue={selected_peripheral.version} onKeyDown={handleEditVersion} label="Version"/>
+                    </div>
+                }/>
+
+            </UIPanel>
+            <UIPanel key="registers" data-grid={{x: 0, y: 1, w: 24, h: 5, static: true}} level="level_2">
+                <SimpleContent name="Registers" content={
+                    <div>
+                        <ManagerToolbar
+                            onAdd={() =>{handle_add_new("register", selected_peripheral.registers, "register_name");}}
+                            contentName="Register"/>
+                        <CardStack>
+                            {
+                                selected_peripheral.registers.map((reg)=>{
+                                    return(
+                                        <RegisterProperties peripheral={selected_peripheral} forceUpdate={forceUpdate} register={reg}/>
+                                    )
+                                })
+                            }
+                        </CardStack>
+                    </div>
+                }/>
             </UIPanel>
         </ResponsiveGridLayout>
     );

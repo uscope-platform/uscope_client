@@ -25,6 +25,7 @@ import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLa
 import {FieldProperties} from "./FieldProperties";
 import {up_register} from "../../../client_core";
 import {ColorTheme} from "../ColorTheme";
+import {Card} from "../panels/Card";
 
 const ChoicesWrapper = styled.div`
     display: grid;
@@ -90,52 +91,37 @@ export let  RegisterProperties = props =>{
 
     }
 
-    let handleRemoveRegister= (event) =>{
+    let handleRemove= (event) =>{
         up_register.remove_register(props.peripheral.peripheral_name, props.register.register_name).then(()=>{
             props.forceUpdate();
         });
     }
 
-    let renderContent = (props) =>{
-        if(is_open)
-            return(
-                <SidebarCollapsableContentLayout>
-                    <InputField inline ID="register_name" name="register_name" defaultValue={props.register.register_name} onKeyDown={handleEditNameChange} label="Name"/>
-                    <InputField inline ID="ID" name='ID' defaultValue={props.register.ID} onKeyDown={handleonKeyDown} label="Register ID"/>
-                    <InputField inline ID="offset" name='offset' defaultValue={props.register.offset} onKeyDown={handleonKeyDown} label="Address offset"/>
-                    <InputField inline ID="description" name='description' defaultValue={props.register.description} onKeyDown={handleonKeyDown} label="Description"/>
-                    <ChoicesWrapper>
-                        <Label>Register access capabilities</Label>
-                        <div>
-                            <Checkbox name='direction_read' value={props.register.direction.includes("R")} onChange={handleChange} label="Read"/>
-                            <Checkbox name='direction_write' value={props.register.direction.includes("W")} onChange={handleChange} label="Write"/>
-                        </div>
-                    </ChoicesWrapper>
-                    {
-                        props.register.fields.map((field)=>{
-                            return(
-                                <FieldProperties peripheral={props.peripheral} forceUpdate={props.forceUpdate} register={props.register} field={field}/>
-                            )
-                        })
-                    }
-                    <Button onClick={handleRemoveRegister} >Remove</Button>
-                </SidebarCollapsableContentLayout>
-            )
-        return null;
-    }
+
 
     return(
-        <>
-            <SidebarCollapsableNameLayout>
-                <Label>{props.register.register_name}</Label>
-                {is_open
-                    ? <MdArrowDropUp size={ColorTheme.icons_size} onClick={handleClose} color={ColorTheme.icons_color}/>
-                    : <MdArrowDropDown size={ColorTheme.icons_size} onClick={handleOpen} color={ColorTheme.icons_color}/>
-                }
-            </SidebarCollapsableNameLayout>
+        <Card
+            name={props.register.register_name}
+            onRemove={handleRemove}
+        >
+            <InputField inline ID="register_name" name="register_name" defaultValue={props.register.register_name} onKeyDown={handleEditNameChange} label="Name"/>
+            <InputField inline ID="ID" name='ID' defaultValue={props.register.ID} onKeyDown={handleonKeyDown} label="Register ID"/>
+            <InputField inline ID="offset" name='offset' defaultValue={props.register.offset} onKeyDown={handleonKeyDown} label="Address offset"/>
+            <InputField inline ID="description" name='description' defaultValue={props.register.description} onKeyDown={handleonKeyDown} label="Description"/>
+            <ChoicesWrapper>
+                <Label>Register access capabilities</Label>
+                <div>
+                    <Checkbox name='direction_read' value={props.register.direction.includes("R")} onChange={handleChange} label="Read"/>
+                    <Checkbox name='direction_write' value={props.register.direction.includes("W")} onChange={handleChange} label="Write"/>
+                </div>
+            </ChoicesWrapper>
             {
-                renderContent(props)
+                props.register.fields.map((field)=>{
+                    return(
+                        <FieldProperties peripheral={props.peripheral} forceUpdate={props.forceUpdate} register={props.register} field={field}/>
+                    )
+                })
             }
-        </>
+        </Card>
     );
 };
