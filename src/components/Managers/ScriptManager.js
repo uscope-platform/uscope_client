@@ -32,7 +32,7 @@ let ScriptManager = (props) =>{
     const settings = useSelector(state => state.settings);
     const scripts =  useSelector(state => state.scripts);
 
-    let selected_script = scripts[settings.selected_script];
+    let selected_script = settings.selected_script ? scripts[settings.selected_script] : {};
     let selected_script_obj = new up_script(selected_script);
 
     const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -44,11 +44,6 @@ let ScriptManager = (props) =>{
         }
     }
 
-    let handle_edit_done = () =>{
-
-    }
-
-    if(selected_script)
 
     return(
         <ResponsiveGridLayout
@@ -69,7 +64,7 @@ let ScriptManager = (props) =>{
             </UIPanel>
             <UIPanel key="script_source" data-grid={{x: 0, y: 5, w: 24, h: 20, static: true}} level="level_2">
                 <SimpleContent name="Script Source Code" content={
-                    <ScriptsEditor script={selected_script} done={handle_edit_done} />
+                    <ScriptsEditor script={selected_script} />
                 }/>
             </UIPanel>
         </ResponsiveGridLayout>

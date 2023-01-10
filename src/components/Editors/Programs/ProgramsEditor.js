@@ -28,22 +28,27 @@ import {up_program} from "../../../client_core";
 
 
 let ProgramsEditor = props =>{
-    const [editor_content, set_editor_content] = useState("");
+    const [editor_content, set_editor_content] = useState('');
     const [language, set_language] = useState('');
+    const [dirty, set_dirty] = useState(false);
 
     useEffect(()=>{
         if(typeof props.program !== 'undefined' && props.program !== null){
             set_editor_content(props.program.program_content);
             set_language(props.program.program_type);
+            set_dirty(false);
         }
     },[props.program])
 
     let handle_change = (newValue) => {
+        set_dirty(true);
         set_editor_content(newValue);
     };
 
     let handle_save = (event) => {
-        props.program.edit_field('program_content', editor_content).then(()=>{
+        let program = new up_program(props.program);
+        program.edit_field('program_content', editor_content).then(()=>{
+            set_dirty(false);
         })
     };
 
@@ -71,10 +76,11 @@ let ProgramsEditor = props =>{
 
 
     let constructActionsBar = () =>{
+        let save_color = dirty ? ColorTheme.icons_color:"gray";
         return(
             <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
                 <div id="save_icon">
-                    <MdSave onClick={handle_save} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
+                    <MdSave onClick={handle_save} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={save_color}/>
                     <Tooltip anchorId="save_icon" content="Save Program" place="top" />
                 </div>
                 <div id="build_icon">
@@ -89,9 +95,16 @@ let ProgramsEditor = props =>{
         )
     }
 
+    let handle_shortcuts = (event) =>{
+        let charCode = String.fromCharCode(event.which).toLowerCase();
+        if((event.ctrlKey || event.metaKey) && charCode === 's') {
+            event.preventDefault();
+            handle_save()
+        }
+    }
 
     return(
-        <div>
+        <div onKeyDown={handle_shortcuts}>
             <ToastContainer
                 position="top-right"
                 autoClose={5000}
