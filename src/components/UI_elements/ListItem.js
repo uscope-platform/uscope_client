@@ -15,7 +15,6 @@
 
 import styled from 'styled-components';
 import React, {useState} from "react";
-import {Image} from "./Image";
 import {MdDelete} from "react-icons/md";
 import {ColorTheme} from "./ColorTheme";
 
@@ -25,19 +24,12 @@ const ItemLayout = styled.div`
     display: flex;
     align-items: center;
     gap: 0.5em;
-    background: ${props => props.selected ?props.theme.background.accents+"90":"#0000"}
 `
-export let  SelectableListItem = props =>{
-    const image_src = "assets/selector_icons/" + props.icon+".svg";
-    let selected = {selected:props.selected};
-    const alt = props.icon + "language icon";
+export let  ListItem = props =>{
 
     let [color, set_color] = useState("white");
     let [confirm_needed, set_confirm_needed] = useState(false);
 
-    let handle_click = () =>{
-        props.onSelect(props.name)
-    };
 
     let handle_remove = () =>{
         set_color("red");
@@ -48,27 +40,17 @@ export let  SelectableListItem = props =>{
                 set_color("white");
             }, 1500);
         } else{
-            props.onRemove(props.name);
+            props.onRemove({type:props.type, name:props.name});
         }
     };
 
 
-    let get_icon_image = (icon) =>{
-        if(typeof icon === "string"){
-            return <Image style={{width:"2em"}} src={image_src} alt={alt}/>
-        } else {
-            return icon;
-        }
-    }
-
     return(
-        <ItemLayout {...selected}>
-            <div></div>
-            <div onClick={handle_click} style={{display:"flex", flexGrow:1}}>
-                {get_icon_image(props.icon)}
+        <ItemLayout>
+            <div style={{display:"flex", flexGrow:1}}>
                 <p style={{marginLeft:"0.5em", paddingTop:"6px", cursor:"default"}}>{props.name}</p>
             </div>
-            <MdDelete size={ColorTheme.icons_size} onClick={handle_remove} color={color}/>
+            <MdDelete onClick={handle_remove} color={color}/>
         </ItemLayout>
     );
 };

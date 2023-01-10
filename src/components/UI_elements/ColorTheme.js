@@ -43,7 +43,8 @@ export const ColorTheme = {
         level_4: "rgba(255,255,255,0.11)",
         level_5: "rgba(255,255,255,0.11)",
         accents: "#c76863",
-        borders: "#434343"
+        borders: "#434343",
+        bordersLight: "#636363"
     },
     text: "rgba(255, 255, 255, 0.87)",
     icons_color: "rgba(255, 255, 255, 0.87)",

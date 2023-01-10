@@ -19,14 +19,25 @@ import {
     SimpleContent,
     FormLayout,
     InputField,
-    SelectField
+    SelectField,
+    CardStack,
+    PlotChannelProperties,
+    PlotChannelGroupProperties,
+    InitialRegisterValue,
+    MacroProperties,
+    ParameterProperties,
+    ApplicationPeripheralProperties,
+    ApplicationSoftCoreProperties,
+    ApplicationMiscFieldProperties,
+    TabbedContent
 } from "../UI_elements";
 
 import {useSelector} from "react-redux";
 import ProgramsEditor from "../Editors/Programs/ProgramsEditor";
 import {Responsive, WidthProvider} from "react-grid-layout";
 import {up_program} from "../../client_core";
-
+import ManagerToolbar from "./ManagerToolbar";
+import BuildSettings from "../Editors/Programs/BuildSettings";
 
 let ProgramsManager = props =>{
 
@@ -37,7 +48,7 @@ let ProgramsManager = props =>{
 
     let allowed_types = ["asm", "C"];
 
-    let selected_program = programs_store[settings.selected_program];
+    let selected_program = settings.selected_program ? programs_store[settings.selected_program]: {};
     let selected_program_obj = new up_program(selected_program);
 
     let handleTypeChange = (event) =>{
@@ -49,8 +60,23 @@ let ProgramsManager = props =>{
         }
     }
 
+    let get_tabs_content = ()=>{
+        return([
+            <div key="program_editor">
+                <ProgramsEditor program={selected_program} />
+            </div>,
+            <div key="build_settings">
+                <BuildSettings  language={selected_program.language}/>
+            </div>
+        ])
+    }
 
-    if(selected_program)
+    let get_tabs_names = ()=>{
+        return ["Souce Code", "Build Settings"]
+    }
+
+
+
     return(
         <ResponsiveGridLayout
             className="layout"
@@ -69,9 +95,7 @@ let ProgramsManager = props =>{
                 }/>
             </UIPanel>
             <UIPanel key="program_source" data-grid={{x: 0, y: 5, w: 24, h: 20, static: true}} level="level_2">
-                <SimpleContent name="Program Souce Code" content={
-                    <ProgramsEditor program={selected_program} />
-                }/>
+                <TabbedContent names={get_tabs_names()} contents={get_tabs_content()} />
             </UIPanel>
 
         </ResponsiveGridLayout>

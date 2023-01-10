@@ -31,7 +31,7 @@ export {SelectableListLayout} from './SelectableListLayout'
 export {SelectableList} from './SelectableList'
 export {DeleteIcon} from './DeleteIcon'
 export {ChipSelector} from './ChipSelector'
-
+export {ListItem} from './ListItem'
 
 export {ApplicationLayout} from "./Layouts/ApplicationLayout"
 export {BlockLayout} from "./Layouts/BlockLayout"
