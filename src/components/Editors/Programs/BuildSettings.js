@@ -13,10 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {InputField, ListItem} from "../../UI_elements";
 import styled from "styled-components";
-import {MdDelete} from "react-icons/md";
 
 const VariablesList = styled.div`
   margin-top:0.5em;
@@ -39,47 +38,56 @@ const VariablesInputArea = styled.div`
 
 let BuildSettings = props =>{
 
-    let [inputs, set_inputs] = useState([]);
-    let [outputs, set_outputs] = useState([]);
-    let [memories, set_memories] = useState([]);
+
+    let inputs = props.build_settings.io? props.build_settings.io.inputs:[];
+    let outputs = props.build_settings.io? props.build_settings.io.outputs:[];
+    let memories = props.build_settings.io? props.build_settings.io.memories:[];
+
 
     let remove_item = (item) =>{
+        let next_settings = {io:{inputs:inputs, outputs:outputs, memories:memories}};
         switch (item.type){
             case "input":
-                set_inputs(inputs.filter((in_item=>{
+                next_settings.io.inputs = inputs.filter((in_item=>{
                     return in_item !== item.name;
-                })))
+                }))
                 break;
             case "output":
-                set_outputs(outputs.filter((out_item=>{
+                next_settings.io.outputs = outputs.filter((out_item=>{
                     return out_item !== item.name;
-                })))
+                }))
                 break;
             case "memory":
-                set_memories(memories.filter((mem_item=>{
+                next_settings.io.memories = memories.filter((mem_item=>{
                     return mem_item !== item.name;
-                })))
+                }))
                 break;
             default:
                 return;
         }
+        props.onEdit(next_settings);
     }
 
     let handle_edit = (event) =>{
         if(event.key==="Enter"){
+            let next_settings = {io:{inputs:inputs, outputs:outputs, memories:memories}};
             switch (event.target.name){
                 case "input":
-                    set_inputs([...inputs, event.target.value])
+                    let new_in = [...inputs, event.target.value];
+                    next_settings.io.inputs = new_in;
                     break;
                 case "output":
-                    set_outputs([...outputs, event.target.value])
+                    let new_out = [...outputs, event.target.value];
+                    next_settings.io.outputs = new_out;
                     break;
                 case "memory":
-                    set_memories([...memories, event.target.value])
+                    let new_mem = [...memories, event.target.value];
+                    next_settings.io.memories = new_mem;
                     break;
                 default:
                     return;
             }
+            props.onEdit(next_settings);
         }
     }
 
@@ -96,7 +104,7 @@ let BuildSettings = props =>{
                     <InputField name="input" onKeyDown={handle_edit} />
                     <VariablesList>
                         {[
-                            inputs.map((item)=>{
+                            props.build_settings.io.inputs.map((item)=>{
                                 return <ListItem onRemove={remove_item} type="input" name={item}/>
                             })
                         ]}
@@ -109,7 +117,7 @@ let BuildSettings = props =>{
                     <InputField name="output" onKeyDown={handle_edit} />
                     <VariablesList>
                         {[
-                            outputs.map((item)=>{
+                            props.build_settings.io.outputs.map((item)=>{
                                 return <ListItem onRemove={remove_item} type="output" name={item}/>
                             })
                         ]}
@@ -122,7 +130,7 @@ let BuildSettings = props =>{
                     <InputField name="memory" onKeyDown={handle_edit} />
                     <VariablesList>
                         {[
-                            memories.map((item)=>{
+                            props.build_settings.io.memories.map((item)=>{
                                 return <ListItem onRemove={remove_item} type="memory" name={item}/>
                             })
                         ]}

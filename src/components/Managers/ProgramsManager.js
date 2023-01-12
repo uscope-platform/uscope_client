@@ -20,15 +20,6 @@ import {
     FormLayout,
     InputField,
     SelectField,
-    CardStack,
-    PlotChannelProperties,
-    PlotChannelGroupProperties,
-    InitialRegisterValue,
-    MacroProperties,
-    ParameterProperties,
-    ApplicationPeripheralProperties,
-    ApplicationSoftCoreProperties,
-    ApplicationMiscFieldProperties,
     TabbedContent
 } from "../UI_elements";
 
@@ -36,7 +27,6 @@ import {useSelector} from "react-redux";
 import ProgramsEditor from "../Editors/Programs/ProgramsEditor";
 import {Responsive, WidthProvider} from "react-grid-layout";
 import {up_program} from "../../client_core";
-import ManagerToolbar from "./ManagerToolbar";
 import BuildSettings from "../Editors/Programs/BuildSettings";
 
 let ProgramsManager = props =>{
@@ -60,13 +50,18 @@ let ProgramsManager = props =>{
         }
     }
 
+    let handle_settings_edit = (settings) => {
+        selected_program_obj.edit_field("build_settings", settings);
+    }
+
     let get_tabs_content = ()=>{
+        debugger;
         return([
             <div key="program_editor">
                 <ProgramsEditor program={selected_program} />
             </div>,
             <div key="build_settings">
-                <BuildSettings  language={selected_program.language}/>
+                <BuildSettings  language={selected_program.language} build_settings={selected_program.build_settings} onEdit={handle_settings_edit}/>
             </div>
         ])
     }

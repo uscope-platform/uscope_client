@@ -26,10 +26,11 @@ export class up_program {
         this.name = program_obj.name;
         this.program_content = program_obj.program_content;
         this.program_type = program_obj.program_type;
+        this.build_settings = program_obj.build_settings;
     }
 
     static construct_empty(program_id){
-        let program_obj = {id:program_id, name:'new program_'+program_id,program_content:'', program_type:''};
+        let program_obj = {id:program_id, name:'new program_'+program_id,program_content:'', program_type:'', build_settings:{}};
         return new up_program(program_obj);
     }
 
@@ -75,7 +76,8 @@ export class up_program {
             id: this.id,
             name: this.name,
             program_content: this.program_content,
-            program_type: this.program_type
+            program_type: this.program_type,
+            build_settings: this.build_settings
         };
     }
 
