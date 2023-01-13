@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from "react";
+import React, {useState} from "react";
 import {
     UIPanel,
     SimpleContent,
@@ -40,6 +40,7 @@ let ProgramsManager = props =>{
 
     let selected_program = settings.selected_program ? programs_store[settings.selected_program]: {};
     let selected_program_obj = new up_program(selected_program);
+    let [selectedTab, set_selectedTab] = useState(0);
 
     let handleTypeChange = (event) =>{
         selected_program_obj.edit_field(event.target.name, event.target.value).then();
@@ -89,7 +90,7 @@ let ProgramsManager = props =>{
                 }/>
             </UIPanel>
             <UIPanel key="program_source" data-grid={{x: 0, y: 5, w: 24, h: 20, static: true}} level="level_2">
-                <TabbedContent names={get_tabs_names()} contents={get_tabs_content()} />
+                <TabbedContent names={get_tabs_names()} contents={get_tabs_content()} onSelect={set_selectedTab} selected={selectedTab}/>
             </UIPanel>
 
         </ResponsiveGridLayout>

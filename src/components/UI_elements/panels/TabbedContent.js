@@ -17,18 +17,16 @@ import {PanelTitle, ContentDiv} from "./UIPanel";
 import {useState} from "react";
 
 export let TabbedContent = function (props) {
-    let [selected, set_selected] = useState(0);
-
 
     let handle_select_tab = (event) =>{
-        set_selected(props.names.indexOf(event.target.textContent));
+        props.onSelect(props.names.indexOf(event.target.textContent));
     }
 
 
     let construct_titles = () =>{
         let ret_val = [];
         for(let i = 0; i<props.contents.length;i++){
-            let is_selected = {selected:i===selected};
+            let is_selected = {selected:i===props.selected};
             ret_val.push(
                 <PanelTitle key={props.names[i] + "_title"} {...is_selected}>
                     <p style={{marginLeft:"0.5em", marginRight:"0.5em", marginTop:"0.25em"}} onClick={handle_select_tab}>{props.names[i]}</p>
@@ -43,7 +41,7 @@ export let TabbedContent = function (props) {
                 {construct_titles()}
             </div>
             <ContentDiv>
-                {props.contents[selected]}
+                {props.contents[props.selected]}
             </ContentDiv>
         </>
     );

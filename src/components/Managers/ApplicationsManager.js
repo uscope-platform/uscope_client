@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useReducer} from 'react';
+import React, {useReducer, useState} from 'react';
 
 import {useSelector} from "react-redux"
 
@@ -52,6 +52,7 @@ let  ApplicationsManager = props =>{
 
     const selected_app = sel_app_name ?applications[sel_app_name]: empty_app;
 
+    let [selectedTab, set_selectedTab] = useState(0);
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
@@ -246,7 +247,8 @@ let  ApplicationsManager = props =>{
                 useCSSTransforms={false}
             >
                 <UIPanel key="new_props" data-grid={{x: 0, y: 0, w: 24, h: 6}} level="level_2">
-                    <TabbedContent names={get_tabs_names()} contents={get_tabs_content()}/>
+                    <TabbedContent names={get_tabs_names()} contents={get_tabs_content()}
+                                   selected={selectedTab} onSelect={set_selectedTab}/>
                 </UIPanel>
             </ResponsiveGridLayout>
         );
