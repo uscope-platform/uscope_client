@@ -37,7 +37,7 @@ let  ProgramSidebar = props =>{
 
     useEffect(() => {
         return() =>{
-            dispatch(setSetting(["selected_programs", null]));
+            dispatch(setSetting(["selected_program", null]));
         }
     },[dispatch]);
 
@@ -56,7 +56,7 @@ let  ProgramSidebar = props =>{
         let deleted = Object.values(programs_store).filter((scr)=>{
             return scr.name === program;
         })[0];
-        dispatch(setSetting(["selected_programs", null]));
+        dispatch(setSetting(["selected_program", null]));
         up_program.delete_program(deleted).then();
     };
 

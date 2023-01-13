@@ -75,8 +75,6 @@ let ProgramsManager = props =>{
         return ["Souce Code", "Build Settings"]
     }
 
-
-
     return(
         <ResponsiveGridLayout
             className="layout"

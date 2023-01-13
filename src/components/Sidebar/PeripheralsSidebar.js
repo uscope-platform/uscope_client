@@ -57,10 +57,8 @@ let  PeripheralsSidebar = props =>{
 
 
     let handleRemove = (periph) =>{
-
-        up_peripheral.delete_periperal(periph).then(()=>{
-            dispatch(setSetting(["current_peripheral", null]))
-        })
+        dispatch(setSetting(["current_peripheral", null]));
+        up_peripheral.delete_periperal(periph).then();
     };
 
     let handleExport = (event) =>{

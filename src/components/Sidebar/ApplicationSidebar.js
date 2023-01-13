@@ -46,9 +46,8 @@ let  ApplicationSidebar = props =>{
 
 
     let  handleRemove = (app) =>{
-        up_application.delete_application(app).then(()=>{
-            dispatch(setSetting(["selected_application", null]))
-        });
+        dispatch(setSetting(["selected_application", null]));
+        up_application.delete_application(app).then();
     };
 
     let handleExport = (event) =>{
@@ -70,6 +69,8 @@ let  ApplicationSidebar = props =>{
             let match = Array.from(app.application_name.matchAll(regex), m => m[1]);
             if(match.length>0){
                 return match;
+            } else {
+                return undefined;
             }
         });
         ids = ids.filter(Boolean);
