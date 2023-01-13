@@ -56,14 +56,19 @@ let ProgramsManager = props =>{
     }
 
     let get_tabs_content = ()=>{
-        return([
+        let res = [
             <div key="program_editor">
                 <ProgramsEditor program={selected_program} />
-            </div>,
-            <div key="build_settings">
-                <BuildSettings  language={selected_program.language} build_settings={selected_program.build_settings} onEdit={handle_settings_edit}/>
             </div>
-        ])
+        ]
+        if(selected_program.program_type==="C"){
+            res.push(
+                <div key="build_settings">
+                    <BuildSettings  language={selected_program.language} build_settings={selected_program.build_settings} onEdit={handle_settings_edit}/>
+                </div>
+            )
+        }
+        return(res);
     }
 
     let get_tabs_names = ()=>{

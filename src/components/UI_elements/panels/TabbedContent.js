@@ -14,7 +14,6 @@
 // limitations under the License.
 
 import {PanelTitle, ContentDiv} from "./UIPanel";
-import {useState} from "react";
 
 export let TabbedContent = function (props) {
 

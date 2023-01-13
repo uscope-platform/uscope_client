@@ -22,7 +22,7 @@ import {Card} from "../panels/Card";
 import styled from "styled-components";
 import {useSelector} from "react-redux";
 import {SelectableListItem} from "../SelectableListItem";
-import {MdAdd, MdArrowBack, MdArrowForward, MdOutlineHorizontalRule, MdSync, MdSyncAlt} from "react-icons/md";
+import {MdArrowBack, MdArrowForward, MdOutlineHorizontalRule, MdSyncAlt} from "react-icons/md";
 
 
 const List = styled.div`
