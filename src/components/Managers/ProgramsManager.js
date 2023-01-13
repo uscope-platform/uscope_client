@@ -55,7 +55,6 @@ let ProgramsManager = props =>{
     }
 
     let get_tabs_content = ()=>{
-        debugger;
         return([
             <div key="program_editor">
                 <ProgramsEditor program={selected_program} />

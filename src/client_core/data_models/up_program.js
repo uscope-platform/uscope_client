@@ -30,7 +30,7 @@ export class up_program {
     }
 
     static construct_empty(program_id){
-        let program_obj = {id:program_id, name:'new program_'+program_id,program_content:'', program_type:'', build_settings:{}};
+        let program_obj = {id:program_id, name:'new program_'+program_id,program_content:'', program_type:'', build_settings:{io:[]}};
         return new up_program(program_obj);
     }
 

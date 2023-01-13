@@ -18,15 +18,12 @@ import React, {useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {get_next_id, up_bitstream, upload_raw} from "../../client_core";
 import {
-    ColorTheme,
     SelectableList,
     SimpleContent,
     UIPanel
 } from "../UI_elements";
 import {Responsive, WidthProvider} from "react-grid-layout";
 import {setSetting} from "../../redux/Actions/SettingsActions";
-import {MdNoteAdd, MdDownload, MdUpload} from "react-icons/md";
-import {Tooltip} from "react-tooltip";
 import SideToolbar from "./SideToolbar";
 
 
@@ -58,11 +55,9 @@ let  BitstreamSidebar = props =>{
         let id = get_next_id(ids);
         set_bitstream_object({ id:id, name:'new_bitstream_'+id});
         upload_raw().then((event)=>{
-            debugger;
             up_bitstream.get_file_content( event).then((file =>{
                 bitstream_object['content'] = file.content;
                 bitstream_object['name'] = file.name.replace(".bit", "")
-                debugger;
                 let bitstream = new up_bitstream(bitstream_object);
                 bitstream.add_remote().then();
             }));

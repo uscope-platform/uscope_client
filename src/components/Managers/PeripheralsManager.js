@@ -13,22 +13,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useReducer, useState} from 'react';
+import React, {useReducer} from 'react';
 
 import {useSelector} from "react-redux"
 
 
 import {
-    Button, CardStack,
-    ColorTheme, FormLayout,
+    CardStack,
     InputField,
-    RegisterProperties, SelectField, SimpleContent,
-    StyledScrollbar, TabbedContent, UIPanel
+    RegisterProperties,
+    SimpleContent, UIPanel
 } from "../UI_elements"
 
 import {get_next_id, up_peripheral} from "../../client_core"
 import {Responsive, WidthProvider} from "react-grid-layout";
-import {MdAdd} from "react-icons/md";
 import ManagerToolbar from "./ManagerToolbar";
 
 
@@ -67,7 +65,6 @@ let PeripheralsManager = (props)=>{
         });
         ids = ids.filter(Boolean);
         let name ="new_" + item_type + "_" + get_next_id(ids.sort());
-        debugger;
         selected_peripheral.add_register(name).then();
     }
 

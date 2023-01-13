@@ -42,10 +42,8 @@ export let upload_raw = () =>{
         input.type = 'file';
         input.setAttribute('style', 'display:none');
         input.onchange = e => {
-            debugger;
             resolve(e);
         };
-        debugger;
         document.body.appendChild(input);
         input.click();
         document.body.removeChild(input);

@@ -16,7 +16,6 @@
 import styled from 'styled-components';
 import React, {useState} from "react";
 import {MdDelete} from "react-icons/md";
-import {ColorTheme} from "./ColorTheme";
 
 
 
@@ -44,13 +43,18 @@ export let  ListItem = props =>{
         }
     };
 
+    let render_delete = () =>{
+        if(props.delete){
+            return(<MdDelete onClick={handle_remove} color={color}/>);
+        }
+    }
 
     return(
         <ItemLayout>
             <div style={{display:"flex", flexGrow:1}}>
                 <p style={{marginLeft:"0.5em", paddingTop:"6px", cursor:"default"}}>{props.name}</p>
             </div>
-            <MdDelete onClick={handle_remove} color={color}/>
+            {render_delete()}
         </ItemLayout>
     );
 };

@@ -19,7 +19,6 @@ import {useSelector} from "react-redux"
 
 import {
     UIPanel,
-    StyledScrollbar,
     PlotChannelProperties,
     PlotChannelGroupProperties,
     InitialRegisterValue,
@@ -33,14 +32,27 @@ import {get_next_id, up_application} from "../../client_core";
 import {Responsive, WidthProvider} from "react-grid-layout";
 import ManagerToolbar from "./ManagerToolbar";
 
+
+const empty_app = {
+    channels:[],
+    channel_groups:[],
+    initial_registers_values:[],
+    macro:[],
+    parameters:[],
+    peripherals:[],
+    soft_cores:[]
+
+};
 let  ApplicationsManager = props =>{
 
-    const selected_app = useSelector(state => state.applications[state.settings.selected_application])
-
-
-    const settings = useSelector(state => state.settings);
+    const sel_app_name = useSelector(state => state.settings.selected_application);
+    const applications = useSelector(state => state.applications);
     const peripherals = useSelector(state => state.peripherals);
     const programs = useSelector(state => state.programs);
+
+    const selected_app = sel_app_name ?applications[sel_app_name]: empty_app;
+
+
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -100,6 +112,7 @@ let  ApplicationsManager = props =>{
         misc_fields = Object.keys(selected_app).map((key, index) => {
             if (!Array.isArray(selected_app[key]) && typeof selected_app[key] !== 'function')
                 return {name:key, value:selected_app[key]}
+            else return null;
         });
         misc_fields = misc_fields.filter(Boolean);
     }
@@ -107,7 +120,7 @@ let  ApplicationsManager = props =>{
 
     let get_tabs_content = ()=>{
         return([
-            <div>
+            <div key="channels">
                 <ManagerToolbar
                     onAdd={() =>{handle_add_new("channel", selected_app.channels, "name");}}
                     contentName="Channel"/>
@@ -115,13 +128,13 @@ let  ApplicationsManager = props =>{
                     {
                         selected_app.channels.map((channel)=>{
                             return(
-                                <PlotChannelProperties application={selected_app} forceUpdate={forceUpdate} channel={channel}/>
+                                <PlotChannelProperties key={channel.name} application={selected_app} forceUpdate={forceUpdate} channel={channel}/>
                             )
                         })
                     }
                 </CardStack>
             </div>,
-            <div>
+            <div key="channel_groups">
                 <ManagerToolbar
                     onAdd={() =>{handle_add_new("channel_group", selected_app.channel_groups, "group_name");}}
                     contentName="Channel Group"/>
@@ -129,13 +142,13 @@ let  ApplicationsManager = props =>{
                     {
                         selected_app.channel_groups.map((group)=>{
                             return(
-                                <PlotChannelGroupProperties application={selected_app} forceUpdate={forceUpdate} group={group}/>
+                                <PlotChannelGroupProperties  key={group.name} application={selected_app} forceUpdate={forceUpdate} group={group}/>
                             )
                         })
                     }
                 </CardStack>
             </div>,
-            <div>
+            <div key="irvs">
                 <ManagerToolbar
                     onAdd={() =>{handle_add_new("irv", selected_app.initial_registers_values,"address");}}
                     contentName="Initial Register Value"/>
@@ -143,13 +156,13 @@ let  ApplicationsManager = props =>{
                     {
                         selected_app.initial_registers_values.map((irv)=>{
                             return(
-                                <InitialRegisterValue application={selected_app} forceUpdate={forceUpdate} irv={irv}/>
+                                <InitialRegisterValue key={irv.address}  application={selected_app} forceUpdate={forceUpdate} irv={irv}/>
                             )
                         })
                     }
                 </CardStack>
             </div>,
-            <div>
+            <div key="macros">
                 <ManagerToolbar
                     onAdd={() =>{handle_add_new("macro", selected_app.macro,"name");}}
                     contentName="Macro"/>
@@ -157,13 +170,13 @@ let  ApplicationsManager = props =>{
                     {
                         selected_app.macro.map((macro)=>{
                             return(
-                                <MacroProperties application={selected_app} forceUpdate={forceUpdate} macro={macro}/>
+                                <MacroProperties key={macro.name} application={selected_app} forceUpdate={forceUpdate} macro={macro}/>
                             )
                         })
                     }
                 </CardStack>
             </div>,
-            <div>
+            <div key="parameters">
                 <ManagerToolbar
                     onAdd={() =>{handle_add_new("parameter", selected_app.parameters,"parameter_name");}}
                     contentName="Parameter"/>
@@ -171,13 +184,13 @@ let  ApplicationsManager = props =>{
                     {
                         selected_app.parameters.map((parameter)=>{
                             return(
-                                <ParameterProperties application={selected_app} forceUpdate={forceUpdate} parameter={parameter}/>
+                                <ParameterProperties key={parameter.name} application={selected_app} forceUpdate={forceUpdate} parameter={parameter}/>
                             )
                         })
                     }
                 </CardStack>
             </div>,
-            <div>
+            <div key="peripherals">
                 <ManagerToolbar
                     onAdd={() =>{handle_add_new("peripheral", selected_app.peripherals,"name");}}
                                 contentName="Peripheral"/>
@@ -185,13 +198,13 @@ let  ApplicationsManager = props =>{
                     {
                         selected_app.peripherals.map((peripheral)=>{
                             return(
-                                <ApplicationPeripheralProperties application={selected_app} peripherals={peripherals} forceUpdate={forceUpdate} peripheral={peripheral}/>
+                                <ApplicationPeripheralProperties key={peripheral.name} application={selected_app} peripherals={peripherals} forceUpdate={forceUpdate} peripheral={peripheral}/>
                             )
                         })
                     }
                 </CardStack>
             </div>,
-            <div>
+            <div key="soft_cores">
                 <ManagerToolbar
                     onAdd={() =>{handle_add_new("soft_core", selected_app.soft_cores, "id");}}
                     contentName="Soft Core"/>
@@ -199,20 +212,20 @@ let  ApplicationsManager = props =>{
                     {
                         selected_app.soft_cores.map((soft_core)=>{
                             return(
-                                <ApplicationSoftCoreProperties application={selected_app} core={soft_core} programs={programs} forceUpdate={forceUpdate}/>
+                                <ApplicationSoftCoreProperties key={soft_core.name} application={selected_app} core={soft_core} programs={programs} forceUpdate={forceUpdate}/>
                             )
                         })
                     }
                 </CardStack>
             </div>,
-            <div>
+            <div key="misc_fields">
                 <ManagerToolbar
                     onAdd={() =>{handle_add_new("misc", misc_fields, "name");}}
                     contentName="Miscellaneous Field"/>
                 <CardStack>
                     {
                         misc_fields.map((field)=>{
-                            return <ApplicationMiscFieldProperties application={selected_app} forceUpdate={forceUpdate} field={field}/>
+                            return <ApplicationMiscFieldProperties key={field.name} application={selected_app} forceUpdate={forceUpdate} field={field}/>
                         })
                     }
                 </CardStack>
@@ -224,10 +237,7 @@ let  ApplicationsManager = props =>{
         return ["Channels", "Channel Groups","IRV", "Macro", "Parameters", "Peripherals", "Cores", "Misc"]
     }
 
-    if(!settings.selected_application)
-        return <></>;
 
-    if(selected_app.application_name)
         return(
             <ResponsiveGridLayout
                 className="layout"

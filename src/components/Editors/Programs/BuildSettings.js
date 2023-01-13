@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {InputField, ListItem} from "../../UI_elements";
 import styled from "styled-components";
 
@@ -38,10 +38,9 @@ const VariablesInputArea = styled.div`
 
 let BuildSettings = props =>{
 
-
-    let inputs = props.build_settings.io? props.build_settings.io.inputs:[];
-    let outputs = props.build_settings.io? props.build_settings.io.outputs:[];
-    let memories = props.build_settings.io? props.build_settings.io.memories:[];
+    let inputs = props.build_settings.io.inputs ? props.build_settings.io.inputs:[];
+    let outputs = props.build_settings.io.outputs ? props.build_settings.io.outputs:[];
+    let memories = props.build_settings.io.memories ? props.build_settings.io.memories:[];
 
 
     let remove_item = (item) =>{
@@ -104,8 +103,8 @@ let BuildSettings = props =>{
                     <InputField name="input" onKeyDown={handle_edit} />
                     <VariablesList>
                         {[
-                            props.build_settings.io.inputs.map((item)=>{
-                                return <ListItem onRemove={remove_item} type="input" name={item}/>
+                            inputs.map((item)=>{
+                                return <ListItem delete onRemove={remove_item} type="input" name={item}/>
                             })
                         ]}
                     </VariablesList>
@@ -117,8 +116,8 @@ let BuildSettings = props =>{
                     <InputField name="output" onKeyDown={handle_edit} />
                     <VariablesList>
                         {[
-                            props.build_settings.io.outputs.map((item)=>{
-                                return <ListItem onRemove={remove_item} type="output" name={item}/>
+                            outputs.map((item)=>{
+                                return <ListItem delete onRemove={remove_item} type="output" name={item}/>
                             })
                         ]}
                     </VariablesList>
@@ -130,8 +129,8 @@ let BuildSettings = props =>{
                     <InputField name="memory" onKeyDown={handle_edit} />
                     <VariablesList>
                         {[
-                            props.build_settings.io.memories.map((item)=>{
-                                return <ListItem onRemove={remove_item} type="memory" name={item}/>
+                            memories.map((item)=>{
+                                return <ListItem delete onRemove={remove_item} type="memory" name={item}/>
                             })
                         ]}
                     </VariablesList>

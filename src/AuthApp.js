@@ -99,34 +99,34 @@ let AuthApp = (props) =>{
         }
         if(role<=2){
             local_views.push({
-                name: "Script manager",
+                name: "Scripts",
                 peripheral_id: "script_manager",
                 type: "script_manager"
             });
             local_views.push({
-                name: "Applications manager",
+                name: "Applications",
                 peripheral_id: "applications_manager",
                 type: "applications_manager"
             });
             local_views.push({
-                name: "Program Manager",
+                name: "Programs",
                 peripheral_id: "program_manager",
                 type: "program_manager"
             });
             local_views.push({
-                name: "Bitstream Manager",
+                name: "Bitstreams",
                 peripheral_id: "bitstream_manager",
                 type: "bitstream_manager"
             });
         }
         if(role<=1){
             local_views.push({
-                name: "Peripherals manager",
+                name: "Peripherals",
                 peripheral_id: "peripherals_manager",
                 type: "peripherals_manager"
             });
             local_views.push({
-                name: "Platform Manager",
+                name: "Platform",
                 peripheral_id: "platform_manager",
                 type: "platform_manager"
             });

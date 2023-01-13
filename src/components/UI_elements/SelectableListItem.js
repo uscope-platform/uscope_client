@@ -54,10 +54,18 @@ export let  SelectableListItem = props =>{
 
 
     let get_icon_image = (icon) =>{
-        if(typeof icon === "string"){
-            return <Image style={{width:"2em"}} src={image_src} alt={alt}/>
-        } else {
-            return icon;
+        if(props.icon){
+            if(typeof icon === "string"){
+                return <Image style={{width:"2em"}} src={image_src} alt={alt}/>
+            } else {
+                return icon;
+            }
+        }
+    }
+
+    let render_delete = () =>{
+        if(props.delete){
+            return(<MdDelete size={props.iconSize?props.iconSize:ColorTheme.icons_size} onClick={handle_remove} color={color}/>);
         }
     }
 
@@ -68,7 +76,7 @@ export let  SelectableListItem = props =>{
                 {get_icon_image(props.icon)}
                 <p style={{marginLeft:"0.5em", paddingTop:"6px", cursor:"default"}}>{props.name}</p>
             </div>
-            <MdDelete size={ColorTheme.icons_size} onClick={handle_remove} color={color}/>
+            {render_delete()}
         </ItemLayout>
     );
 };
