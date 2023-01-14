@@ -83,6 +83,7 @@ export let  ApplicationSoftCoreProperties = props =>{
     })
 
     let remove_item = () =>{
+
     }
 
 
@@ -110,8 +111,13 @@ export let  ApplicationSoftCoreProperties = props =>{
     }
 
     let onSync = (props) =>{
-        set_mappings([...mappings, [sel_core_io, sel_logic_io]]);
-        debugger;
+        let new_mapping = [...mappings, [sel_core_io, sel_logic_io]];
+        set_mappings(new_mapping);
+        
+        let app = new up_application(props.application);
+        app.edit_soft_core(props.core.id,"dma_mapping", new_mapping).then(()=>{
+            props.forceUpdate();
+        });
     }
 
     let generate_dma_io_section = () =>{
