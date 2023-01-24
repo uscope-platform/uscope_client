@@ -38,9 +38,9 @@ const VariablesInputArea = styled.div`
 
 let BuildSettings = props =>{
 
-    let inputs = props.build_settings.io.inputs ? props.build_settings.io.inputs:[];
-    let outputs = props.build_settings.io.outputs ? props.build_settings.io.outputs:[];
-    let memories = props.build_settings.io.memories ? props.build_settings.io.memories:[];
+    let inputs = props.build_settings && props.build_settings.io.inputs ? props.build_settings.io.inputs:[];
+    let outputs = props.build_settings && props.build_settings.io.outputs ? props.build_settings.io.outputs:[];
+    let memories = props.build_settings && props.build_settings.io.memories ? props.build_settings.io.memories:[];
 
 
     let remove_item = (item) =>{

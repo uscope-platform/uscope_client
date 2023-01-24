@@ -113,11 +113,25 @@ export let  ApplicationSoftCoreProperties = props =>{
     let onSync = (props) =>{
         let new_mapping = [...mappings, [sel_core_io, sel_logic_io]];
         set_mappings(new_mapping);
-        
+
         let app = new up_application(props.application);
         app.edit_soft_core(props.core.id,"dma_mapping", new_mapping).then(()=>{
             props.forceUpdate();
         });
+    }
+
+    let generate_logic_io_map = () =>{
+        if(props.core.io){
+            return [
+                props.core.io.map((item)=>{
+
+                    return <SelectableListItem delete onRemove={remove_item} type={item.type}
+                                               name={item.name} onSelect={set_sel_logic_io}
+                                               selected={sel_logic_io===item.name} iconSize="1em"/>
+                })
+            ]
+        }
+
     }
 
     let generate_dma_io_section = () =>{
@@ -140,13 +154,7 @@ export let  ApplicationSoftCoreProperties = props =>{
                     }}>
                         <List>
                             <h3>LOGIC SIDE IO</h3>
-                            {[
-                                props.core.io.map((item)=>{
-                                    return <SelectableListItem delete onRemove={remove_item} type={item.type}
-                                                               name={item.name} onSelect={set_sel_logic_io}
-                                                               selected={sel_logic_io===item.name} iconSize="1em"/>
-                                })
-                            ]}
+                            {generate_logic_io_map()}
                         </List>
                         <List>
                             <h3>CORE SIDE IO</h3>
