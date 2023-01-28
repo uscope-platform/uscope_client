@@ -28,7 +28,6 @@ import ApplicationChooser from "./components/AppChooser";
 import './App.css';
 
 import Sidebar from "./components/Sidebar/Sidebar";
-import OnboardingView from "./components/Onboarding";
 
 import {initialize_scripting_engine, refresh_caches, up_application} from "./client_core";
 import {Routes} from "react-router";
@@ -38,6 +37,7 @@ import { Responsive, WidthProvider } from "react-grid-layout";
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import {UIPanel} from "./components/UI_elements";
+import PlatformManager from "./components/Managers/PlatformManager";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -140,7 +140,7 @@ let AuthApp = (props) =>{
         case "ONBOARDING":
             return(
                 <div className="App">
-                    <OnboardingView onboarding_done={props.onboarding_done} />
+                    <PlatformManager  onboarding onboarding_done={props.onboarding_done} />
                 </div>
             );
 
