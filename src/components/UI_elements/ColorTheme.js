@@ -35,6 +35,7 @@ export const ColorTheme = {
         level_4: "rgba(255,255,255,0.11)",
         level_5: "rgba(255,255,255,0.11)",
         accents: "rgba(255,181,69,1)",
+        transparent_accents: "rgba(255,181,69,0.7)",
         borders: "#434343",
         bordersLight: "#636363"
     },

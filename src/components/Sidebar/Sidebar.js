@@ -16,7 +16,6 @@
 import React from 'react';
 import {useLocation} from "react-router-dom";
 
-import {SidebarLayout} from "../UI_elements";
 import PeripheralsSidebar from "./PeripheralsSidebar";
 import ApplicationSidebar from "./ApplicationSidebar";
 import PlotSidebar from "./Plot/PlotSidebar";
@@ -31,45 +30,31 @@ let  Sidebar = props =>{
     switch (location.pathname) {
         case "/peripherals_manager":
             return(
-                <SidebarLayout>
-                    <PeripheralsSidebar />
-                </SidebarLayout>
+                <PeripheralsSidebar />
                 );
         case "/applications_manager":
             return(
-                <SidebarLayout>
-                    <ApplicationSidebar/>
-                </SidebarLayout>
+                <ApplicationSidebar/>
             );
         case "/script_manager":
             return(
-                <SidebarLayout>
-                    <ScriptSidebar/>
-                </SidebarLayout>
+                <ScriptSidebar/>
             );
         case "/program_manager":
             return (
-                <SidebarLayout>
-                    <ProgramSidebar/>
-                </SidebarLayout>
+                <ProgramSidebar/>
             );
         case "/":
             return(
-                <SidebarLayout>
-                    <PlotSidebar/>
-                </SidebarLayout>
+                <PlotSidebar/>
             );
         case "/platform_manager":
             return(
-                <SidebarLayout>
-                    <PlatformSidebar/>
-                </SidebarLayout>
+                <PlatformSidebar/>
             );
         case "/bitstream_manager":
             return(
-                <SidebarLayout>
-                    <BitstreamSidebar/>
-                </SidebarLayout>
+                <BitstreamSidebar/>
             );
         default:
             return null;

@@ -25,7 +25,7 @@ const ItemLayout = styled.div`
     display: flex;
     align-items: center;
     gap: 0.5em;
-    background: ${props => props.selected ?props.theme.background.accents+"90":"#0000"}
+    background: ${props => props.selected ?props.theme.background.transparent_accents:"#0000"}
 `
 export let  SelectableListItem = props =>{
     const image_src = "assets/selector_icons/" + props.icon+".svg";
