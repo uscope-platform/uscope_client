@@ -29,5 +29,5 @@ export const SidebarBlockLayout = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: ${props => props.theme.dark_theme.level_3};
+  background-color: ${props => props.theme.background.level_3};
 `

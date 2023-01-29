@@ -23,7 +23,7 @@ const Style = {
         menu: (provided, state) => ({
                 ...provided,
                 zIndex:9999,
-                backgroundColor: ColorTheme.dark_theme.level_1,
+                backgroundColor: ColorTheme.background.level_1,
         }),
         menuPortal: (provided, state) => ({
                 ...provided,

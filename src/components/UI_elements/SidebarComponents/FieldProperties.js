@@ -33,7 +33,7 @@ export const FieldPropsLayout = styled.div`
   width: auto;
   display: flex;
   flex-direction: column;
-  background-color: ${props => props.theme.dark_theme.level_4};
+  background-color: ${props => props.theme.background.level_4};
 `
 
 

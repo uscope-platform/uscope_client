@@ -31,7 +31,7 @@ let  Navbar = props =>{
         if(isActive){
             return  {
                 display:"block",
-                backgroundColor: ColorTheme.dark_theme.level_3,
+                backgroundColor: ColorTheme.background.accents,
                 color: "white",
                 textDecoration: "none",
                 marginTop: "0.5rem",
@@ -42,7 +42,7 @@ let  Navbar = props =>{
         } else {
             return  {
                 display:"block",
-                backgroundColor: ColorTheme.dark_theme.level_1,
+                backgroundColor: ColorTheme.background.level_2,
                 color: "white",
                 textDecoration: "none",
                 marginTop: "0.5rem",

@@ -22,7 +22,7 @@ export let StyledScrollbar = (props) =>{
 
     let renderThumb = ({style, ...props}) => {
         const thumbStyle = {
-            backgroundColor: ColorTheme.dark_theme.level_1
+            backgroundColor: ColorTheme.background.level_1
         };
         return (
             <div
