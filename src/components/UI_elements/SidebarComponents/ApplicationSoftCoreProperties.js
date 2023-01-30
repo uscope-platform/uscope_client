@@ -54,9 +54,20 @@ export let  ApplicationSoftCoreProperties = props =>{
 
     const [mappings, set_mappings] = useState([]);
 
+    let programs_list = Object.keys(props.programs).map((prog_id)=>{
+        return {label:props.programs[prog_id].name, value:props.programs[prog_id].name};
+    })
+
+    let init_value = props.core.default_program ? {label:props.core.default_program, value:props.core.default_program} : undefined;
+
+    const [selected, set_selected] = useState(init_value);
+
+
+
     let handleProgramChange = (event)=>{
+        set_selected(event);
         let app = new up_application(props.application);
-        app.edit_soft_core(props.core.id,event.target.name, event.target.value).then(()=>{
+        app.edit_soft_core(props.core.id,"default_program", event.value).then(()=>{
             props.forceUpdate();
         });
     }
@@ -76,11 +87,6 @@ export let  ApplicationSoftCoreProperties = props =>{
             props.forceUpdate();
         });
     }
-
-
-    let programs_list = Object.keys(props.programs).map((prog_id)=>{
-        return props.programs[prog_id].name;
-    })
 
     let remove_item = () =>{
 
@@ -220,8 +226,14 @@ export let  ApplicationSoftCoreProperties = props =>{
         >
             <InputField inline ID="id" name="id" defaultValue={props.core.id} onKeyDown={handleonKeyDown} label="Core ID"/>
             <InputField inline ID="address" name='address' defaultValue={props.core.address} onKeyDown={handleonKeyDown} label="Address"/>
-            <SelectField label="Default Program" onChange={handleProgramChange} defaultValue={props.core.default_program}
-                         name="default_program" placeholder="Default Program" options={programs_list}/>
+            <SelectField
+                label="Default Program"
+                onChange={handleProgramChange}
+                value={selected}
+                defaultValue="Select Program"
+                name="default_program"
+                placeholder="Default Program"
+                options={programs_list}/>
             {generate_dma_io_section()}
         </Card>
     );

@@ -13,9 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import React, {useState} from 'react';
 
-import {Button, Label, Select} from "../UI_elements"
+import {Button, SelectField} from "../UI_elements"
 import {useSelector} from "react-redux";
 import styled from "styled-components";
 
@@ -30,33 +30,42 @@ const Centering = styled.div`
   margin-right: auto;  
 `
 
-const Title = styled.h1`
-font-size: 2em;
-`
-
 let ApplicationChooserView = props =>{
 
     const applications = useSelector(state => state.applications);
 
+
+    let apps_list = Object.entries(applications).map((application,i) => ({
+        value:application[0],
+        label:application[0]
+    }))
+
+    const last_app = localStorage.getItem("last_selected_application");
+
+    const default_app = last_app ? {
+        value:last_app,
+        label:last_app
+    }:apps_list[0];
+
+    const [selected, set_selected] = useState(default_app);
+
     let handle_close = (event) =>{
         event.preventDefault();
-        let app = event.target.application_selector.value;
-        props.done(app);
+        localStorage.setItem("last_selected_application",selected.value);
+        props.done(selected.value);
     };
 
     return(
         <ComponentLayout>
             <Centering>
-                <Title id='app_chooser_title'>Application Choice</Title>
-                <Label>Application Name</Label>
-                <form id='application_chooser_form' onSubmit={handle_close}>
-                    <Select name="application_selector">
-                        {Object.entries(applications).map((application,i) => (
-                            <option value={application[0]} key={i} >{application[0]}</option>
-                        ))}
-                    </Select>
-                    <Button style={{margin:"1rem 1rem"}} name='application_chooser_submit' type="submit">Save changes</Button>
-                </form>
+                <SelectField
+                    name="application_selector"
+                    label="Chose An Application"
+                    onChange={set_selected}
+                    value={selected}
+                    options={apps_list}
+                />
+                <Button style={{margin:"1rem 1rem"}} onClick={handle_close}>Save changes</Button>
             </Centering>
         </ComponentLayout>
     );

@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from "react";
+import React, {useState} from "react";
 import {InputField} from "../InputField";
 import {Checkbox} from "../checkbox";
 
@@ -26,8 +26,12 @@ import {Card} from "../panels/Card";
 export let  ApplicationPeripheralProperties = props =>{
 
     let peripherals_list = Object.entries(props.peripherals).map((periph)=>{
-        return periph[0];
+        return {label:periph[0], value:periph[0]}
     })
+
+    const [selected, set_selected] = useState({label:props.peripheral.spec_id, value:props.peripheral.spec_id});
+
+
 
     let handleChange = (event)=>{
         let app = new up_application(props.application);
@@ -37,8 +41,9 @@ export let  ApplicationPeripheralProperties = props =>{
     }
 
     let handleIDChange = (event)=>{
+        set_selected(event)
         let app = new up_application(props.application);
-        app.edit_peripheral(props.peripheral.name,event.target.name, event.target.value).then(()=>{
+        app.edit_peripheral(props.peripheral.name,"spec_id", event.value).then(()=>{
             props.forceUpdate();
         });
     }
@@ -66,8 +71,13 @@ export let  ApplicationPeripheralProperties = props =>{
         >
             <InputField inline ID="name" name="name" defaultValue={props.peripheral.name} onKeyDown={handleonKeyDown} label="Name"/>
             <InputField inline ID="peripheral_id" name='peripheral_id' defaultValue={props.peripheral.peripheral_id} onKeyDown={handleonKeyDown} label="Peripheral id"/>
-            <SelectField label="IP type" onChange={handleIDChange} defaultValue={props.peripheral.spec_id}
-                         name="spec_id" placeholder="Peripheral type" options={peripherals_list}/>
+            <SelectField label="IP type"
+                         onChange={handleIDChange}
+                         value={selected}
+                         name="spec_id"
+                         placeholder="Peripheral type"
+                         options={peripherals_list}
+            />
             <InputField inline ID="base_address" name='base_address' defaultValue={props.peripheral.base_address} onKeyDown={handleonKeyDown} label="Base Address"/>
             <InputField inline ID="type" name='type' defaultValue={props.peripheral.type} onKeyDown={handleonKeyDown} label="Type"/>
             <Checkbox name='proxied' value={props.peripheral.proxied} onChange={handleChange} label="Proxied Peripheral"/>

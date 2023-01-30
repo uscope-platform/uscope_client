@@ -18,21 +18,14 @@ import {useDispatch, useSelector} from "react-redux";
 
 import {
     Button, FormLayout,
-    InputField, Label, Select} from "../../UI_elements";
+    InputField, Label, SelectField
+} from "../../UI_elements";
 
-import styled from "styled-components";
 import {initialize_channels} from "../../../redux/Actions/plotActions";
 import {setSetting} from "../../../redux/Actions/SettingsActions";
 import {set_channel_widths, set_channel_status, up_peripheral, create_plot_channel, get_channels_from_group} from "../../../client_core";
 import {set_scaling_factors} from "../../../client_core/proxy/plot";
 
-const ChoicesWrapper = styled.div`
-    display: grid;
-    grid-template-columns: repeat(2, auto);
-    grid-gap: 0.3rem;
-    justify-content: space-between;
-    align-items: start;
-`
 
 
 let  EnablesProperties = props =>{
@@ -101,6 +94,7 @@ let  EnablesProperties = props =>{
 
     let handleChGroupChange = (event) => {
         let group_name = event.target.value;
+        set_selected(event.target);
         let group = []
         //GET GROUP OBJECT
         for(let item of application.channel_groups){
@@ -151,22 +145,25 @@ let  EnablesProperties = props =>{
         set_channel_status(new_ch_state);
     };
 
+    let ch_groups = channelGroups.map((group,i) => (
+        {label:group.group_name, value:group.group_name}
+    ));
+
+    const [selected, set_selected] = useState({label:settings.default_ch_group.group_name, value:settings.default_ch_group.group_name});
+
     return (
         <div style={{padding:"1rem"}}>
             <form onSubmit={handle_submit}>
                 <FormLayout>
                     <InputField inline name='frequency' label="Frequency"/>
                     <InputField inline name={'phase'} label={'Phase'}/>
-                    <ChoicesWrapper>
-                        <Label>Channel Group</Label>
-                        <Select name="channel_group" defaultValue={settings.default_ch_group.group_name} onChange={handleChGroupChange}>
-                            {
-                                channelGroups.map((group,i) => (
-                                    <option key={i} >{group.group_name}</option>
-                                ))
-                            }
-                        </Select>
-                    </ChoicesWrapper>
+                    <SelectField
+                        label="Channel Group"
+                        name="channel_group"
+                        onChange={handleChGroupChange}
+                        options={ch_groups}
+                        value={selected}
+                    />
                     <Label>Effective Sampling frequency: {settings.sampling_period}</Label>
                     <Button type='submit' >Submit changes</Button>
                 </FormLayout>

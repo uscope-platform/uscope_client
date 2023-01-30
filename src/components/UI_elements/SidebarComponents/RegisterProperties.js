@@ -13,18 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from "react";
+import React from "react";
 import {Label} from "../Label";
 import styled from "styled-components";
-import {MdArrowDropDown, MdArrowDropUp} from "react-icons/md";
 import {InputField} from "../InputField";
 import {Checkbox} from "../checkbox";
-import {Button} from "../Button";
-import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
-import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
 import {FieldProperties} from "./FieldProperties";
 import {up_register} from "../../../client_core";
-import {ColorTheme} from "../ColorTheme";
 import {Card} from "../panels/Card";
 
 const ChoicesWrapper = styled.div`
@@ -38,10 +33,7 @@ const ChoicesWrapper = styled.div`
 export let  RegisterProperties = props =>{
     const register_obj = new up_register(props.register, props.peripheral.peripheral_name);
 
-    const [is_open, set_is_open] = useState(false);
-    let handleOpen = ()=>{
-        set_is_open(true);
-    }
+
 
     let handleEditNameChange = (event) => {
         if(event.key==="Enter"){
@@ -49,10 +41,6 @@ export let  RegisterProperties = props =>{
                 props.forceUpdate();
             });
         }
-    }
-
-    let handleClose = ()=>{
-        set_is_open(false);
     }
 
     let handleChange = (event)=>{

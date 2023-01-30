@@ -16,20 +16,8 @@
 import styled from 'styled-components';
 import {Label} from "./Label";
 import React from "react";
-
-
-
-export const Select = styled.select`
-  width: fit-content;
-  height: 2rem;
-  border-radius: 5px;
-  min-width: 4em;
-  option {
-    display: flex;
-    justify-content: center;
-    min-height: 20px;
-  }
-`;
+import Select from "react-select";
+import {ColorTheme} from "./ColorTheme";
 
 
 const SelectWrapper = styled.div`
@@ -40,18 +28,51 @@ const SelectWrapper = styled.div`
     align-items: start;
 `
 
+
 export let  SelectField = props =>{
+
+    const color= props.color ? props.color : ColorTheme.background.select_background ;
+
+    const Style = {
+        control:(provided,  { data, isDisabled, isFocused, isSelected }) => ({
+            ...provided,
+            backgroundColor: color,
+        }),
+
+        menu: (provided,  { data, isDisabled, isFocused, isSelected }) => ({
+            ...provided,
+            backgroundColor: color,
+        }),
+
+        menuPortal: (provided,  { data, isDisabled, isFocused, isSelected }) => ({
+            ...provided,
+        }),
+
+        option: (provided,  { data, isDisabled, isFocused, isSelected }) => ({
+            ...provided,
+            backgroundColor: isFocused?ColorTheme.background.transparent_accents:undefined
+        }),
+
+        singleValue:(provided,  { data, isDisabled, isFocused, isSelected }) => ({
+            ...provided,
+            color: ColorTheme.text
+        })
+    };
+
     return(
         <SelectWrapper>
             <Label htmlFor={props.name} >{props.label}</Label>
-            <Select name={props.name} id={props.name} defaultValue={props.defaultValue} value={props.value} onChange={props.onChange}>
-                <option value={props.name} hidden>{props.placeholder}</option>
-                {
-                    props.options.map((name,i) => (
-                        <option key={i} >{name}</option>
-                    ))
-                }
-            </Select>
+            <Select
+                name={props.name}
+                id={props.name}
+                styles={Style}
+                defaultValue={props.defaultValue}
+                value={props.value ? props.value: undefined}
+                menuPortalTarget={document.body}
+                onChange={props.onChange}
+                color={props.color ? props.color : ColorTheme.background.level_3}
+                options={props.options}
+            />
         </SelectWrapper>
     );
 };

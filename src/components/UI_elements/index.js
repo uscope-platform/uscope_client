@@ -14,7 +14,7 @@
 // limitations under the License.
 
 export {StyledScrollbar} from "./StyledScrollbar"
-export {Select, SelectField} from "./Select"
+export {SelectField} from "./Select"
 export {Label} from "./Label"
 export {InputField} from "./InputField"
 export {Image} from "./Image"

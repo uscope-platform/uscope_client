@@ -36,15 +36,26 @@ let ProgramsManager = props =>{
     const programs_store = useSelector(state => state.programs);
     const settings = useSelector(state => state.settings);
 
-    let allowed_types = ["asm", "C"];
 
     let selected_program = settings.selected_program ? programs_store[settings.selected_program]: {};
     let selected_program_obj = new up_program(selected_program);
     let [selectedTab, set_selectedTab] = useState(0);
 
+
+
+    let allowed_types = [
+        {label:"asm", value:"asm"},
+        {label:"C", value:"C"}
+    ];
+
+    let init_value = selected_program.program_type ? {label:selected_program.program_type, value:selected_program.program_type} : undefined;
+    const [selected, set_selected] = useState(init_value);
+
     let handleTypeChange = (event) =>{
-        selected_program_obj.edit_field(event.target.name, event.target.value).then();
+        set_selected(event);
+        selected_program_obj.edit_field("program_type", event.value).then();
     }
+
     let handle_name_change = (event) => {
         if (event.key === "Enter" || event.key === "Tab") {
             selected_program_obj.edit_field(event.target.name, event.target.value);
@@ -75,6 +86,7 @@ let ProgramsManager = props =>{
         return ["Souce Code", "Build Settings"]
     }
 
+
     return(
         <ResponsiveGridLayout
             className="layout"
@@ -87,8 +99,14 @@ let ProgramsManager = props =>{
                 <SimpleContent name="Program Properties" content={
                     <FormLayout>
                         <InputField inline name='name' placeholder={selected_program.name} onKeyDown={handle_name_change} label="Name"/>
-                        <SelectField label="Program type" onChange={handleTypeChange} defaultValue={selected_program.program_type}
-                                     name="program_type" placeholder="Program type" options={allowed_types}/>
+                        <SelectField
+                            label="Program type"
+                            onChange={handleTypeChange}
+                            value={selected}
+                            defaultValue="Select Type"
+                            name="program_type"
+                            placeholder="Program type"
+                            options={allowed_types}/>
                     </FormLayout>
                 }/>
             </UIPanel>

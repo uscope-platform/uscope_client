@@ -105,7 +105,7 @@ let  PlatformManager = props =>{
             useCSSTransforms={false}
         >
 
-            <UIPanel key="platform_management" data-grid={{x: 0, y: 0, w: 24, h: 6, static: true}} level="level_2">
+            <UIPanel key="platform_management" data-grid={{x: 0, y: 0, w: 24, h: 7, static: true}} level="level_2">
                 <SimpleContent name="Platform Management" content={
                     <div>
                         {constructActionsBar()}
@@ -114,7 +114,11 @@ let  PlatformManager = props =>{
                                 <InputField inline name="user" label="Username"/>
                                 <InputField inline name="pass" label="Password"/>
                                 <SelectField label="Role" defaultValue="role"
-                                             name="role" placeholder="Role" options={["admin", "user", "operator"]}/>
+                                             name="role" placeholder="Role" options={[
+                                    {value:"admin",label:"admin"},
+                                    {value:"user",label:"user"},
+                                    {value:"operator",label:"operator"}
+                                ]}/>
                                 <Button> Add User </Button>
                             </FormLayout>
                         </form>

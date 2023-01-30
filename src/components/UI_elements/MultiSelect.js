@@ -19,17 +19,7 @@ import {ColorTheme} from "./ColorTheme";
 import styled from "styled-components";
 import {Label} from "./Label";
 
-const Style = {
-        menu: (provided, state) => ({
-                ...provided,
-                zIndex:9999,
-                backgroundColor: ColorTheme.background.level_1,
-        }),
-        menuPortal: (provided, state) => ({
-                ...provided,
-                zIndex:9999,
-        }),
-};
+
 
 const Wrapper = styled.div`
 margin: 0 0.2rem;
@@ -41,7 +31,33 @@ align-items: center;
 flex-flow: wrap;
 `
 
+
+
 export let  MultiSelect = props =>{
+
+        const color= props.color ? props.color : ColorTheme.background.select_background ;
+
+        const Style = {
+            control:(provided,  { data, isDisabled, isFocused, isSelected }) => ({
+                ...provided,
+                backgroundColor: color,
+            }),
+
+            menu: (provided,  { data, isDisabled, isFocused, isSelected }) => ({
+                ...provided,
+                backgroundColor: color,
+            }),
+
+            menuPortal: (provided,  { data, isDisabled, isFocused, isSelected }) => ({
+                ...provided,
+            }),
+
+            option: (provided,  { data, isDisabled, isFocused, isSelected }) => ({
+                ...provided,
+                backgroundColor: isFocused?ColorTheme.background.transparent_accents:undefined
+            })
+        };
+
         return (
             <Wrapper inline={props.inline}>
                     <Label htmlFor={props.ID} inline={props.inline}>{props.label}</Label>
