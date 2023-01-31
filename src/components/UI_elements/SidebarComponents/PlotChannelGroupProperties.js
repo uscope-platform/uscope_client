@@ -23,12 +23,11 @@ import {Card} from "../panels/Card";
 
 export let  PlotChannelGroupProperties = props =>{
 
-    const [channels_list, set_channels_list] = useState([]);
+    const [channels_list, set_channels_list] = useState(props.group.channels);
 
     let options = props.application.channels.map((ch)=>{
         return {label:ch.name, value:ch.id}
     });
-
 
     let handleChangeDefault = (target)=>{
         let app = new up_application(props.application);
@@ -79,7 +78,13 @@ export let  PlotChannelGroupProperties = props =>{
         >
             <InputField inline ID="group_name" name="group_name" defaultValue={props.group.group_name} onKeyDown={handleonKeyDown} label="Name"/>
             <InputField inline ID="group_id" name='group_id' defaultValue={props.group.group_id} onKeyDown={handleonKeyDown} label="ID"/>
-            <MultiSelect inline ID="content" onChange={handleChange} value={channels_list} options={options} label="Content"/>
+            <MultiSelect
+                inline
+                ID="content"
+                onChange={handleChange}
+                value={channels_list}
+                options={options}
+                label="Content"/>
             <Checkbox ID="default" name='default' value={props.group.default} onChange={handleChangeDefault} label="Default group"/>
         </Card>
     );

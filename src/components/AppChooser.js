@@ -40,6 +40,7 @@ let ApplicationChooser = (props) =>{
 
     let handleApplicationChosen = e =>{
         let app = new up_application(applications[e]);
+        dispatch(setSetting(["selected_application", e]));
         app.set_active().then(()=>{
             dispatch(setSetting(["application", e]));
             initializePlotState(applications[e]);

@@ -50,12 +50,35 @@ export let  MultiSelect = props =>{
 
             menuPortal: (provided,  { data, isDisabled, isFocused, isSelected }) => ({
                 ...provided,
+                backgroundColor: color,
             }),
 
             option: (provided,  { data, isDisabled, isFocused, isSelected }) => ({
                 ...provided,
                 backgroundColor: isFocused?ColorTheme.background.transparent_accents:undefined
-            })
+            }),
+
+            multiValue: (provided,  { data }) => ({
+                ...provided,
+                backgroundColor: "#0000",
+                borderColor:ColorTheme.background.borders,
+                borderWidth:"2px",
+                borderStyle:"solid"
+            }),
+
+            multiValueLabel: (styles, { data }) => ({
+                ...styles,
+                color: data.color
+            }),
+            multiValueRemove: (styles, { data }) => ({
+                ...styles,
+                color: data.color,
+                ':hover': {
+                    backgroundColor: data.color,
+                    color: 'red',
+                },
+            }),
+
         };
 
         return (

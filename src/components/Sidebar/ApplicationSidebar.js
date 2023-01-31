@@ -38,12 +38,6 @@ let  ApplicationSidebar = props =>{
 
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        return() =>{
-            dispatch(setSetting(["selected_application", null]));
-        }
-    },[dispatch]);
-
 
     let  handleRemove = (app) =>{
         dispatch(setSetting(["selected_application", null]));
