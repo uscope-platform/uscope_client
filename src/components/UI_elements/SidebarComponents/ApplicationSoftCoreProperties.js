@@ -19,40 +19,11 @@ import {InputField} from "../InputField";
 import {SelectField} from "../Select";
 import {up_application} from "../../../client_core";
 import {Card} from "../panels/Card";
-import styled from "styled-components";
-import {useSelector} from "react-redux";
-import {SelectableListItem} from "../SelectableListItem";
-import {MdArrowBack, MdArrowForward, MdOutlineHorizontalRule, MdSyncAlt} from "react-icons/md";
+import {ApplicationCoreDmaIo} from "./ApplicationCoreDmaIo";
 
-
-const List = styled.div`
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-`
-
-const Separator = styled.div`
-  margin-top: 1em;
-  margin-left: auto;
-  margin-right: auto;
-  width:15em;
-  height: 2px;
-  background-color: ${props => props.theme.background.bordersLight};
-`
 
 export let  ApplicationSoftCoreProperties = props =>{
 
-    const programs = useSelector(state => state.programs);
-    const selected_program = Object.values(programs).filter((program)=>{
-        return program.name === props.core.default_program;
-    })[0];
-
-    const [sel_logic_io, set_sel_logic_io] = useState("");
-    const [sel_core_io, set_sel_core_io] = useState("");
-
-    const [mappings, set_mappings] = useState([]);
 
     let programs_list = Object.keys(props.programs).map((prog_id)=>{
         return {label:props.programs[prog_id].name, value:props.programs[prog_id].name};
@@ -88,136 +59,6 @@ export let  ApplicationSoftCoreProperties = props =>{
         });
     }
 
-    let remove_item = () =>{
-
-    }
-
-
-    let get_dma_lists = () =>{
-        let io_list = [];
-        if(selected_program.build_settings.io.inputs){
-            io_list = selected_program.build_settings.io.inputs.map((item)=>{
-                return <SelectableListItem onSelect={set_sel_core_io} iconSize="1em" type="inputs" name={item}
-                                           selected={sel_core_io===item}/>
-            })
-        }
-        if(selected_program.build_settings.io.outputs){
-            io_list = [ io_list, ...selected_program.build_settings.io.outputs.map((item)=>{
-                return <SelectableListItem onSelect={set_sel_core_io} iconSize="1em" type="outputs" name={item}
-                                           selected={sel_core_io===item}/>
-            })]
-        }
-        if(selected_program.build_settings.io.memory){
-            io_list = [ io_list, ...selected_program.build_settings.io.memory.map((item)=>{
-                return <SelectableListItem onSelect={set_sel_core_io} iconSize="1em" type="memory" name={item}
-                                           selected={sel_core_io===item}/>
-            })]
-        }
-        return io_list;
-    }
-
-    let onSync = (props) =>{
-        let new_mapping = [...mappings, [sel_core_io, sel_logic_io]];
-        set_mappings(new_mapping);
-
-        let app = new up_application(props.application);
-        app.edit_soft_core(props.core.id,"dma_mapping", new_mapping).then(()=>{
-            props.forceUpdate();
-        });
-    }
-
-    let generate_logic_io_map = () =>{
-        if(props.core.io){
-            return [
-                props.core.io.map((item)=>{
-
-                    return <SelectableListItem delete onRemove={remove_item} type={item.type}
-                                               name={item.name} onSelect={set_sel_logic_io}
-                                               selected={sel_logic_io===item.name} iconSize="1em"/>
-                })
-            ]
-        }
-
-    }
-
-    let generate_dma_io_section = () =>{
-        if(selected_program && selected_program.program_type==="C"){
-            return(
-                <div>
-                    <Separator/>
-                    <div style={{
-                        display:"flex",
-                        flexDirection:"row",
-                        justifyContent:"right",
-                        marginTop:"0.25em"
-                    }}>
-                        <MdSyncAlt onClick={onSync}/>
-
-                    </div>
-                    <div style={{
-                        display:"flex",
-                        flexDirection:"row"
-                    }}>
-                        <List>
-                            <h3>LOGIC SIDE IO</h3>
-                            {generate_logic_io_map()}
-                        </List>
-                        <List>
-                            <h3>CORE SIDE IO</h3>
-                            {get_dma_lists()}
-                        </List>
-                    </div>
-                    <Separator/>
-                    <List>
-                        <h3>IO MAPPING</h3>
-                            {
-                                mappings.map(([core_io, logic_io]) =>{
-                                    return(
-                                        <div style={{
-                                            display:"flex",
-                                            flexDirection:"row",
-                                            marginLeft:"auto",
-                                            alignItems:"center",
-                                            marginRight:"auto"
-                                        }}>
-                                            <p>{logic_io}</p>
-                                            <MdArrowBack/>
-                                            <MdOutlineHorizontalRule style={{
-                                                marginRight:"-5px",
-                                                marginLeft:"-6px"
-                                            }}/>
-                                            <MdOutlineHorizontalRule style={{
-                                                marginRight:"-5px",
-                                                marginLeft:"-5px"
-                                            }}/>
-                                            <MdOutlineHorizontalRule style={{
-                                                marginRight:"-5px",
-                                                marginLeft:"-5px"
-                                            }}/>
-                                            <MdOutlineHorizontalRule style={{
-                                                marginRight:"-5px",
-                                                marginLeft:"-5px"
-                                            }}/>
-                                            <MdOutlineHorizontalRule style={{
-                                                marginRight:"-5px",
-                                                marginLeft:"-5px"
-                                            }}/>
-                                            <MdOutlineHorizontalRule style={{
-                                                marginRight:"-6px",
-                                                marginLeft:"-5px"
-                                            }}/>
-                                            <MdArrowForward/>
-                                            <p>{core_io}</p>
-                                        </div>)
-                                })
-                            }
-                    </List>
-                </div>
-
-
-            )
-        }
-    }
 
     return(
         <Card
@@ -234,7 +75,9 @@ export let  ApplicationSoftCoreProperties = props =>{
                 name="default_program"
                 placeholder="Default Program"
                 options={programs_list}/>
-            {generate_dma_io_section()}
+            <ApplicationCoreDmaIo
+                core={props.core}
+            />
         </Card>
     );
 };
