@@ -56,26 +56,31 @@ export let  ApplicationCoreDmaIo = props =>{
 
 
     let get_dma_lists = () =>{
-        let io_list = [];
-        if(selected_program.build_settings.io.inputs){
-            io_list = selected_program.build_settings.io.inputs.map((item)=>{
-                return <SelectableListItem onSelect={set_sel_core_io} iconSize="1em" type="inputs" name={item}
-                                           selected={sel_core_io===item}/>
-            })
+
+        if(selected_program && selected_program.build_settings){
+            let io_list = [];
+            if(selected_program.build_settings.io.inputs){
+                io_list = selected_program.build_settings.io.inputs.map((item)=>{
+                    return <SelectableListItem onSelect={set_sel_core_io} iconSize="1em" type="inputs" name={item}
+                                               selected={sel_core_io===item}/>
+                })
+            }
+            if(selected_program.build_settings.io.outputs){
+                io_list = [ io_list, ...selected_program.build_settings.io.outputs.map((item)=>{
+                    return <SelectableListItem onSelect={set_sel_core_io} iconSize="1em" type="outputs" name={item}
+                                               selected={sel_core_io===item}/>
+                })]
+            }
+            if(selected_program.build_settings.io.memory){
+                io_list = [ io_list, ...selected_program.build_settings.io.memory.map((item)=>{
+                    return <SelectableListItem onSelect={set_sel_core_io} iconSize="1em" type="memory" name={item}
+                                               selected={sel_core_io===item}/>
+                })]
+            }
+            return io_list;
         }
-        if(selected_program.build_settings.io.outputs){
-            io_list = [ io_list, ...selected_program.build_settings.io.outputs.map((item)=>{
-                return <SelectableListItem onSelect={set_sel_core_io} iconSize="1em" type="outputs" name={item}
-                                           selected={sel_core_io===item}/>
-            })]
-        }
-        if(selected_program.build_settings.io.memory){
-            io_list = [ io_list, ...selected_program.build_settings.io.memory.map((item)=>{
-                return <SelectableListItem onSelect={set_sel_core_io} iconSize="1em" type="memory" name={item}
-                                           selected={sel_core_io===item}/>
-            })]
-        }
-        return io_list;
+        else return <></>
+
     }
 
     let onSync = (props) =>{
