@@ -14,12 +14,13 @@
 // limitations under the License.
 
 import React, {useState} from "react";
-import {up_application} from "../../../client_core";
+import {get_next_id, up_application} from "../../../client_core";
 import styled from "styled-components";
 import {useSelector} from "react-redux";
 import {SelectableListItem} from "../SelectableListItem";
 import {InputField} from "../InputField";
 import {SelectField} from "../Select";
+import {MdAdd} from "react-icons/md";
 
 
 const List = styled.div`
@@ -48,8 +49,15 @@ export let  ApplicationCoreDmaIo = props =>{
 
     const [sel_logic_io, set_sel_logic_io] = useState("");
 
-    let remove_item = () =>{
-
+    let remove_item = (item) =>{
+        debugger;
+        let app = new up_application(props.application);
+        let new_io = props.core.io.filter((io)=>{
+            return item !== io.name;
+        })
+        app.edit_soft_core(props.core.id,"io", new_io).then(()=>{
+            props.forceUpdate();
+        });
     }
 
     let generate_logic_io_map = () =>{
@@ -182,12 +190,43 @@ export let  ApplicationCoreDmaIo = props =>{
         } else return null;
     }
 
+    let handle_add_io = () =>{
+        let app = new up_application(props.application);
+
+        let ids = props.core.io.map((io)=>{
+            const regex = /new_io_(\d+)/g;
+            let match = Array.from(io.name.matchAll(regex), m => m[1]);
+            if(match.length>0){
+                return match;
+            } else {
+                return undefined;
+            }
+        });
+        ids = ids.filter(Boolean);
+        let id = get_next_id(ids.sort());
+
+
+        let new_io = {name:"new_io_"+id, type:"input", associated_io:"", address:0};
+
+
+
+        app.edit_soft_core(props.core.id,"io", [...props.core.io, new_io]).then(()=>{
+            props.forceUpdate();
+        });
+    }
 
     return(
         <div>
             <Separator/>
             <List>
+                <div style={{
+                display:"flex",
+                flexDirection:"row",
+                marginTop:"0.25em"
+            }}>
                 <h3>Core IO</h3>
+                <MdAdd style={{marginLeft:"auto"}} onClick={handle_add_io}/>
+            </div>
                 {generate_logic_io_map()}
             </List>
             <Separator/>
