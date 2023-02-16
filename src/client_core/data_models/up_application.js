@@ -21,8 +21,9 @@ import {addApplication, removeApplication} from "../../redux/Actions/application
 
 export class up_application {
     constructor(app_data_obj) {
-        if(!app_data_obj)
+        if(!app_data_obj){
             return;
+        }
         this.application_name = app_data_obj.application_name;
         this.bitstream = app_data_obj.bitstream;
         this.channels = app_data_obj.channels;
@@ -35,7 +36,6 @@ export class up_application {
         this.peripherals = app_data_obj.peripherals;
         this.timebase_address = app_data_obj.timebase_address;
         this.soft_cores = app_data_obj.soft_cores;
-
         let nonstandard_fields =  up_application._get_nonstandard_fields(app_data_obj);
         for(let i of nonstandard_fields){
             this[i] = app_data_obj[i];
@@ -232,7 +232,7 @@ export class up_application {
     edit_soft_core = (core_id, field_name, field_value) =>{
         let [core] = this.soft_cores.filter((sc) =>{
             return sc.id === core_id;
-        })
+        });
 
         core[field_name] = field_value;
         let edit = {application:this.application_name, core:core_id, field:field_name, value:field_value, action:"edit_soft_core"};
@@ -348,7 +348,8 @@ export class up_application {
                 n_enables:this.n_enables,
                 parameters:this.parameters,
                 peripherals:this.peripherals,
-                timebase_address:this.timebase_address
+                timebase_address:this.timebase_address,
+                soft_cores:this.soft_cores
             }
         };
         for (const x of misc_params) {

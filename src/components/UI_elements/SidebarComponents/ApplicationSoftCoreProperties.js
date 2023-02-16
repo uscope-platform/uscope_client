@@ -76,6 +76,8 @@ export let  ApplicationSoftCoreProperties = props =>{
                 placeholder="Default Program"
                 options={programs_list}/>
             <ApplicationCoreDmaIo
+                forceUpdate={props.forceUpdate}
+                application={props.application}
                 core={props.core}
             />
         </Card>

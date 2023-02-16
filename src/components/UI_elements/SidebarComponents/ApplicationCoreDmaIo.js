@@ -18,7 +18,9 @@ import {up_application} from "../../../client_core";
 import styled from "styled-components";
 import {useSelector} from "react-redux";
 import {SelectableListItem} from "../SelectableListItem";
-import {MdArrowBack, MdArrowForward, MdOutlineHorizontalRule, MdSyncAlt} from "react-icons/md";
+import {MdAdd, MdArrowBack, MdArrowForward, MdOutlineHorizontalRule, MdSyncAlt} from "react-icons/md";
+import {InputField} from "../InputField";
+import {SelectField} from "../Select";
 
 
 const List = styled.div`
@@ -108,6 +110,92 @@ export let  ApplicationCoreDmaIo = props =>{
     }
 
 
+    let handle_edit_logic_io = (event) =>{
+        if(event.key==="Enter"|| event.key ==="Tab"){
+            let field = event.target.name;
+            let value = event.target.value;
+            let app = new up_application(props.application);
+            let new_io = props.core.io.map((io)=>{
+                if(sel_logic_io === io.name){
+                    let new_item = io;
+                    new_item[field] = value;
+                    return new_item
+                }
+                return io;
+            })
+
+            app.edit_soft_core(props.core.id,"io", new_io).then(()=>{
+                props.forceUpdate();
+            });
+        }
+
+    }
+
+    let handle_change_type = (event) =>{
+
+        let app = new up_application(props.application);
+        let new_io = props.core.io.map((io)=>{
+            if(sel_logic_io === io.name){
+                let new_item = io;
+                new_item.type = event.value;
+                return new_item
+            }
+            return io;
+        })
+        app.edit_soft_core(props.core.id,"io", new_io).then(()=>{
+            props.forceUpdate();
+        });
+    }
+
+    let handle_change_core_io = (event) =>{
+
+    }
+
+
+    let render_selected_io_properties = ()=>{
+        let selected_item=[];
+
+        if(sel_logic_io) {
+            selected_item = props.core.io.filter((item) => {
+                return item.name === sel_logic_io;
+            })[0];
+            return (
+                <div style={{display: "flex", flexDirection: "column"}}>
+                    <InputField inline ID="name" name='name' value={selected_item.name}
+                                onKeyDown={handle_edit_logic_io} label="Name"/>
+                    <SelectField
+                        inline
+                        label="Type"
+                        onChange={handle_change_type}
+                        value={{value: selected_item.type, label: selected_item.type}}
+                        defaultValue="Select Type"
+                        name="type"
+                        options={[
+                            {label: "input", value: "input"},
+                            {label: "output", value: "output"},
+                            {label: "memory", value: "memory"}
+                        ]}
+                    />
+                    <SelectField
+                        inline
+                        label="Associated Core IO"
+                        onChange={handle_change_core_io}
+                        defaultValue="select associated IO"
+                        name="assoc_core_io"
+                        options={[
+                            {label: "io_1", value: "io_1"},
+                            {label: "io_2", value: "io_2"},
+                            {label: "io_3", value: "io_3"}
+                        ]}
+                    />
+                    <InputField inline ID="address" name='address' value={selected_item.address}
+                                onKeyDown={handle_edit_logic_io} label="Address"/>
+                </div>
+            )
+        } else return null;
+    }
+
+
     return(
         <div>
             <Separator/>
@@ -118,21 +206,21 @@ export let  ApplicationCoreDmaIo = props =>{
                 marginTop:"0.25em"
             }}>
                 <MdSyncAlt onClick={onSync}/>
-
             </div>
             <div style={{
                 display:"flex",
                 flexDirection:"row"
             }}>
                 <List>
-                    <h3>LOGIC SIDE IO</h3>
+                    <h3>LOGIC</h3>
                     {generate_logic_io_map()}
                 </List>
                 <List>
-                    <h3>CORE SIDE IO</h3>
+                    <h3>CORE</h3>
                     {get_dma_lists()}
                 </List>
             </div>
+            {render_selected_io_properties()}
             <Separator/>
             <List>
                 <h3>IO MAPPING</h3>
