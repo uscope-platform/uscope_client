@@ -150,6 +150,32 @@ export let  ApplicationCoreDmaIo = props =>{
         } else return [];
     }
 
+
+    let handle_add_io = () =>{
+        let app = new up_application(props.application);
+
+        let ids = props.core.io.map((io)=>{
+            const regex = /new_io_(\d+)/g;
+            let match = Array.from(io.name.matchAll(regex), m => m[1]);
+            if(match.length>0){
+                return match;
+            } else {
+                return undefined;
+            }
+        });
+        ids = ids.filter(Boolean);
+        let id = get_next_id(ids.sort());
+
+
+        let new_io = {name:"new_io_"+id, type:"input", associated_io:"", address:0};
+
+
+
+        app.edit_soft_core(props.core.id,"io", [...props.core.io, new_io]).then(()=>{
+            props.forceUpdate();
+        });
+    }
+
     let render_selected_io_properties = ()=>{
         let selected_item=[];
 
@@ -159,7 +185,7 @@ export let  ApplicationCoreDmaIo = props =>{
             })[0];
             return (
                 <div style={{display: "flex", flexDirection: "column"}}>
-                    <InputField inline ID="name" name='name' value={selected_item.name}
+                    <InputField inline ID="name" name='name' defaultValue={selected_item.name}
                                 onKeyDown={handle_edit_logic_io} label="Name"/>
                     <SelectField
                         inline
@@ -190,30 +216,6 @@ export let  ApplicationCoreDmaIo = props =>{
         } else return null;
     }
 
-    let handle_add_io = () =>{
-        let app = new up_application(props.application);
-
-        let ids = props.core.io.map((io)=>{
-            const regex = /new_io_(\d+)/g;
-            let match = Array.from(io.name.matchAll(regex), m => m[1]);
-            if(match.length>0){
-                return match;
-            } else {
-                return undefined;
-            }
-        });
-        ids = ids.filter(Boolean);
-        let id = get_next_id(ids.sort());
-
-
-        let new_io = {name:"new_io_"+id, type:"input", associated_io:"", address:0};
-
-
-
-        app.edit_soft_core(props.core.id,"io", [...props.core.io, new_io]).then(()=>{
-            props.forceUpdate();
-        });
-    }
 
     return(
         <div>

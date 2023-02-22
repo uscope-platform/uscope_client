@@ -19,18 +19,20 @@ import CodeMirror from '@uiw/react-codemirror';
 import {cpp} from '@codemirror/lang-cpp'
 import { dracula } from '@uiw/codemirror-theme-dracula';
 import {Tooltip} from "react-tooltip";
-import {MdSave, MdBuild, MdCable} from 'react-icons/md'
+import {MdSave, MdBuild} from 'react-icons/md'
 import {ColorTheme} from "../../UI_elements";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {up_program} from "../../../client_core";
+import LoadSelector from "./LoadSelector";
 
 
 let ProgramsEditor = props =>{
     const [editor_content, set_editor_content] = useState('');
     const [language, set_language] = useState('');
     const [dirty, set_dirty] = useState(false);
+
 
     useEffect(()=>{
         if(typeof props.program !== 'undefined' && props.program !== null){
@@ -67,10 +69,9 @@ let ProgramsEditor = props =>{
 
     };
 
-    let handle_load = (event) => {
-        let core_address = '0x83c00000';
+    let handle_load = (core) => {
         let prog = new up_program(props.program);
-        prog.load(core_address).then();
+        prog.load(core.address).then();
     };
 
 
@@ -87,9 +88,9 @@ let ProgramsEditor = props =>{
                     <MdBuild onClick={handle_build} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
                     <Tooltip anchorId="build_icon" content="Compile Program" place="top" />
                 </div>
+
                 <div id="load_icon">
-                    <MdCable onClick={handle_load} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
-                    <Tooltip anchorId="load_icon" content="Load Program" place="top" />
+                    <LoadSelector onLoad={handle_load}/>
                 </div>
             </div>
         )
@@ -102,6 +103,7 @@ let ProgramsEditor = props =>{
             handle_save()
         }
     }
+
 
     return(
         <div onKeyDown={handle_shortcuts}>
@@ -130,5 +132,4 @@ let ProgramsEditor = props =>{
 
 
 }
-
 export default ProgramsEditor;

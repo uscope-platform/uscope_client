@@ -69,10 +69,15 @@ export let  SelectableListItem = props =>{
         }
     }
 
+    let handleMouseEnter = () =>{
+        if(props.onMouseEnter)
+            props.onMouseEnter(props.name);
+    }
+
     return(
         <ItemLayout {...selected}>
             <div></div>
-            <div onClick={handle_click} style={{display:"flex", flexGrow:1}}>
+            <div onMouseEnter={handleMouseEnter} onClick={handle_click} style={{display:"flex", flexGrow:1}}>
                 {get_icon_image(props.icon)}
                 <p style={{marginLeft:"0.5em", paddingTop:"6px", cursor:"default"}}>{props.name}</p>
             </div>

@@ -41,18 +41,12 @@ let ProgramsManager = props =>{
     let selected_program_obj = new up_program(selected_program);
     let [selectedTab, set_selectedTab] = useState(0);
 
-
-
     let allowed_types = [
         {label:"asm", value:"asm"},
         {label:"C", value:"C"}
     ];
 
-    let init_value = selected_program.program_type ? {label:selected_program.program_type, value:selected_program.program_type} : undefined;
-    const [selected, set_selected] = useState(init_value);
-
     let handleTypeChange = (event) =>{
-        set_selected(event);
         selected_program_obj.edit_field("program_type", event.value).then();
     }
 
@@ -86,7 +80,6 @@ let ProgramsManager = props =>{
         return ["Souce Code", "Build Settings"]
     }
 
-
     return(
         <ResponsiveGridLayout
             className="layout"
@@ -102,7 +95,7 @@ let ProgramsManager = props =>{
                         <SelectField
                             label="Program type"
                             onChange={handleTypeChange}
-                            value={selected}
+                            value={{label:selected_program.program_type, value:selected_program.program_type}}
                             defaultValue="Select Type"
                             name="program_type"
                             placeholder="Program type"
@@ -113,7 +106,6 @@ let ProgramsManager = props =>{
             <UIPanel key="program_source" data-grid={{x: 0, y: 5, w: 24, h: 20, static: true}} level="level_2">
                 <TabbedContent names={get_tabs_names()} contents={get_tabs_content()} onSelect={set_selectedTab} selected={selectedTab}/>
             </UIPanel>
-
         </ResponsiveGridLayout>
     );
 
