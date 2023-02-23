@@ -44,7 +44,6 @@ let ScriptManager = (props) =>{
         }
     }
 
-    let get_
 
     return(
         <ResponsiveGridLayout

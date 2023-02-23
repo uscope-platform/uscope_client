@@ -54,9 +54,10 @@ export class up_program {
         return backend_get(api_dictionary.programs.compile+'/'+this.id)
     };
 
-    load = (core_address) => {
+    load = (core_id, application) => {
         let program_obj = this._get_program();
-        program_obj.core_address = core_address;
+        program_obj.core_id = core_id;
+        program_obj.application = application;
         return backend_post(api_dictionary.programs.apply+'/'+this.id, program_obj).then((res)=>{
             return {response:""};
         }).catch((err)=>{

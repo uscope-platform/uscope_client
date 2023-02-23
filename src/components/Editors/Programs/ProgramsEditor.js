@@ -69,9 +69,9 @@ let ProgramsEditor = props =>{
 
     };
 
-    let handle_load = (core) => {
+    let handle_load = (core, application) => {
         let prog = new up_program(props.program);
-        prog.load(core.address).then();
+        prog.load(core.id,  application.application_name).then();
     };
 
 

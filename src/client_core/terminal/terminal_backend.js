@@ -111,6 +111,7 @@ export const terminal_backend = {
             return [response.response];
         });
     },
+
     load_program:(args) =>{
         if(args[0] === "--help"){
             return new Promise((resolve)=>{
@@ -133,8 +134,8 @@ export const terminal_backend = {
             })
         }
         selected_program = new up_program(state.programs[program_id]);
-
-        let core = state.applications[state.settings['application']].soft_cores.filter((core)=>{
+        let application = state.applications[state.settings['application']];
+        let core = application.soft_cores.filter((core)=>{
             return core.id === args[1];
         });
         if(core.length === 0){
@@ -150,9 +151,8 @@ export const terminal_backend = {
                 ])
             })
         }
-        let address = core[0].address;
 
-        return selected_program.load(address).then((response)=>{
+        return selected_program.load(core[0].id,  application.application_name).then((response)=>{
             return [response.response];
         });
     }

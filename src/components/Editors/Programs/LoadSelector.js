@@ -16,12 +16,11 @@
 import React, {useState} from "react";
 
 import {MdCable, MdMemory} from 'react-icons/md'
-import {ColorTheme, ListItem, SelectableListItem} from "../../UI_elements";
+import {ColorTheme, SelectableListItem} from "../../UI_elements";
 
 import 'react-toastify/dist/ReactToastify.css';
 import Popup from "reactjs-popup";
 import {useSelector} from "react-redux";
-import {up_program} from "../../../client_core";
 
 
 let LoadSelector = props =>{
@@ -38,7 +37,7 @@ let LoadSelector = props =>{
         let core = Object.values(selected_application.soft_cores).filter((core)=>{
             return selected===core.id;
         })[0];
-        props.onLoad(core);
+        props.onLoad(core, selected_application);
     }
     let renderCoresList = () =>{
         let cores_list = Object.values(selected_application.soft_cores).map((core)=>{
