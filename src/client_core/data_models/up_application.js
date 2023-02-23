@@ -138,7 +138,8 @@ export class up_application {
         let sc = {
             id: core_id,
             address: 0x0,
-            default_program:""
+            default_program:"",
+            io:[]
         }
         let edit = {application:this.application_name, soft_core:sc, action:"add_soft_core"};
         this.soft_cores.push(sc);
