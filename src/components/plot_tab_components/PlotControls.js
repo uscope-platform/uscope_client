@@ -16,22 +16,17 @@
 import React, {useState} from 'react';
 
 import {useDispatch, useSelector} from "react-redux";
-import {Pause, Play, Stop} from 'grommet-icons'
+import {MdPause, MdPlayArrow, MdStop} from 'react-icons/md'
 import {plotPause, plotPlay, plotStop} from "../../redux/Actions/plotActions";
 import styled from "styled-components";
-
+import {up_peripheral} from "../../client_core";
+import {ColorTheme} from "../UI_elements";
 
 const ComponentStyle = styled.div`
   display: flex;
-  flex-direction: column;
-  margin-top: 2.75rem;
+  justify-content: center;
+  flex-direction: row;
 `
-
-const IconStyle = styled.div`
-  flex: 0 0 2rem;
-  
-`
-
 
 let  PlotControls = props =>{
     const settings = useSelector(state => state.settings);
@@ -44,9 +39,7 @@ let  PlotControls = props =>{
         switch (event.target.id) {
             case "play":
                 let address = parseInt(timebase_addr);
-                let bulk_registers = []
-                bulk_registers.push({address:address, value:1})
-                settings.server.periph_proxy.bulkRegisterWrite({payload:bulk_registers});
+                up_peripheral.direct_register_write([[address, 1]]).then();
                 dispatch(plotPlay());
                 break;
             case "pause":
@@ -63,17 +56,9 @@ let  PlotControls = props =>{
 
     return(
         <ComponentStyle>
-            <IconStyle>
-                <Play id='play' color='white' onClick={onClick}/>
-            </IconStyle>
-
-            <IconStyle>
-                <Pause id='pause' color='white' onClick={onClick}/>
-            </IconStyle>
-
-            <IconStyle>
-                <Stop id='stop' color='white' onClick={onClick}/>
-            </IconStyle>
+            <MdPlayArrow id='play' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={onClick}/>
+            <MdPause id='pause' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={onClick}/>
+            <MdStop id='stop' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={onClick}/>
         </ComponentStyle>
     );
 };

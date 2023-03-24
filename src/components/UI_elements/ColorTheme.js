@@ -28,13 +28,21 @@ export const ColorTheme = {
         },
         extend: undefined,
     },
-    dark_theme: {
-        base: "#08081A",
-        level_1:"#122964",
-        level_2:"#1f4068",
-        level_3:"#1d7097",
-        accents:"#c76863"
+    background:{
+        level_1: "#121212",
+        level_2: "rgba(255,255,255,0.07)",
+        level_3: "rgba(255,255,255,0.08)",
+        level_4: "rgba(255,255,255,0.11)",
+        level_5: "rgba(255,255,255,0.11)",
+        accents: "rgba(255,181,69,1)",
+        transparent_accents: "rgba(255,181,69,0.7)",
+        select_background:"#444444",
+        borders: "#434343",
+        bordersLight: "#636363"
     },
+    text: "rgba(255, 255, 255, 0.87)",
+    icons_color: "rgba(255, 255, 255, 0.87)",
+    icons_size: "2em",
     plot_palette:[
         "rgb(161, 201,244)",
         "rgb(141, 229,161)",

@@ -17,6 +17,7 @@ import styled from 'styled-components';
 
 export const FormLayout = styled.div`
     display: grid;
+    margin: 1em;
     grid-template-rows: auto;
     grid-auto-columns: auto;
     grid-gap: 0.4rem;

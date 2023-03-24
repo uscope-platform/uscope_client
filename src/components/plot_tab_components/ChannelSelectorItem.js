@@ -15,11 +15,15 @@
 
 import React from 'react';
 
-import {Checkbox} from "../UI_elements";
+import {Checkbox, ColorTheme} from "../UI_elements";
 import styled from "styled-components";
+import {MdRemove} from "react-icons/md";
 
 const Centering = styled.div`
   margin: 0 auto;  
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
 `
 
 let  ChannelSelectorItem = props => {
@@ -31,6 +35,7 @@ let  ChannelSelectorItem = props => {
 
     return(
         <Centering>
+            <MdRemove style={{marginTop:"3px"}} color={ColorTheme.plot_palette[props.idx]}/>
             <Checkbox style={{marginRight:'0.5rem'}} name={props.id} onChange={handleChannelStateChange} value={props.value} label={props.name}/>
         </Centering>
     );

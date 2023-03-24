@@ -16,9 +16,7 @@
 import React from "react";
 import {
     Button, FormLayout,
-    InputField,
-    SidebarBlockLayout,
-    SidebarBlockTitleLayout
+    InputField
 } from "../../UI_elements";
 import {useSelector} from "react-redux";
 
@@ -56,15 +54,12 @@ let CaptureProperties = props =>{
     };
 
     return(
-        <SidebarBlockLayout padding={'1rem'}>
-            <SidebarBlockTitleLayout>
-                <label style={{fontSize:'20px',fontWeight:600}}>{"Capture Settings"}</label>
-            </SidebarBlockTitleLayout>
+        <div style={{padding:"1rem"}}>
             <FormLayout>
                 <InputField inline name='n_buffers' onChange={handle_change} label="Number of buffers"/>
                 <Button onClick={handle_close}>Submit changes</Button>
             </FormLayout>
-        </SidebarBlockLayout>
+        </div>
     )
 };
 

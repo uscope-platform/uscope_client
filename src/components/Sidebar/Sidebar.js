@@ -14,66 +14,51 @@
 // limitations under the License.
 
 import React from 'react';
-import {withRouter} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 
-import {SidebarLayout} from "../UI_elements";
-import PeripheralsSidebar from "./Peripheral/PeripheralsSidebar";
-import ApplicationSidebar from "./Application/ApplicationSidebar";
+import PeripheralsSidebar from "./PeripheralsSidebar";
+import ApplicationSidebar from "./ApplicationSidebar";
 import PlotSidebar from "./Plot/PlotSidebar";
-import ScriptSidebar from "./Script/ScriptSidebar";
-import ProgramSidebar from "./Program/ProgramSidebar";
-import PlatformSidebar from "./Platform/PlatformSidebar";
-import BitstreamSidebar from "./Bitstream/BitstreamSidebar";
+import ScriptSidebar from "./ScriptSidebar";
+import ProgramSidebar from "./ProgramSidebar";
+import PlatformSidebar from "./PlatformSidebar";
+import BitstreamSidebar from "./BitstreamSidebar";
 
 let  Sidebar = props =>{
+    let location = useLocation();
 
-
-    switch (props.location.pathname) {
+    switch (location.pathname) {
         case "/peripherals_manager":
             return(
-                <SidebarLayout>
-                    <PeripheralsSidebar />
-                </SidebarLayout>
+                <PeripheralsSidebar />
                 );
         case "/applications_manager":
             return(
-                <SidebarLayout>
-                    <ApplicationSidebar/>
-                </SidebarLayout>
+                <ApplicationSidebar/>
             );
         case "/script_manager":
             return(
-                <SidebarLayout>
-                    <ScriptSidebar/>
-                </SidebarLayout>
+                <ScriptSidebar/>
             );
         case "/program_manager":
             return (
-                <SidebarLayout>
-                    <ProgramSidebar/>
-                </SidebarLayout>
+                <ProgramSidebar/>
             );
-        case "/plot":
+        case "/":
             return(
-                <SidebarLayout>
-                    <PlotSidebar/>
-                </SidebarLayout>
+                <PlotSidebar/>
             );
         case "/platform_manager":
             return(
-                <SidebarLayout>
-                    <PlatformSidebar/>
-                </SidebarLayout>
+                <PlatformSidebar/>
             );
         case "/bitstream_manager":
             return(
-                <SidebarLayout>
-                    <BitstreamSidebar/>
-                </SidebarLayout>
+                <BitstreamSidebar/>
             );
         default:
             return null;
     }
 };
 
-export default withRouter(Sidebar);
+export default Sidebar;

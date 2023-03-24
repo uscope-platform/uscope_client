@@ -14,7 +14,6 @@
 // limitations under the License.
 
 import {SET_SETTING} from "../Actions/types";
-import produce from "immer";
 import {ColorTheme} from "../../components/UI_elements";
 
 const initial_state = {
@@ -24,24 +23,17 @@ const initial_state = {
     edit_application_name: "",
     default_ch_group:'',
     current_peripheral:null,
-    current_application:null,
-    selected_script:null,
-    selected_bitstream:null,
-    script_editor_title:null,
     current_view_requires_sidebar: true,
     selected_program: null,
-    program_editor_title: null,
+    selected_application:null,
+    selected_script:null,
+    selected_bitstream:null,
     selected_user:null,
     refresh_user_view:false,
     logged:false,
     server_url: process.env.REACT_APP_SERVER,
     auth_config:null,
     user_role:null,
-    loaded_peripherals: false,
-    loaded_scripts: false,
-    loaded_applications: false,
-    loaded_bitstreams: false,
-    loaded_programs: false,
     sampling_period:0,
     plot_palette:{colorway:ColorTheme.plot_palette}
 };
@@ -49,9 +41,10 @@ const initial_state = {
 let settingsReducer = function (state = initial_state, action) {
     switch (action.type) {
         case SET_SETTING:
-            return produce(state, draftState => {
-                draftState[action.payload.name] = action.payload.value;
-            });
+            return {
+                ...state,
+                [action.payload.name]:action.payload.value
+            }
         default:
             return state;
     }

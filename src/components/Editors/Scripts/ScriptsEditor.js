@@ -13,65 +13,85 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from "react";
-import AceEditor from "react-ace";
-import {Button} from "../../UI_elements"
+import React, {useState, useEffect} from "react";
+import {ColorTheme} from "../../UI_elements"
 
-import "ace-builds/src-min-noconflict/mode-javascript";
-import "ace-builds/src-min-noconflict/theme-dracula";
 import {useSelector} from "react-redux";
-import styled from "styled-components";
 
-const Title = styled.h1`
-  margin-right: auto;
-  margin-left: auto;
-`
-const Editor = styled(AceEditor)`
-    * {
-        font-family: inherit;
-    }
-`;
+import CodeMirror from '@uiw/react-codemirror';
+import { javascript } from '@codemirror/lang-javascript';
+import { dracula } from '@uiw/codemirror-theme-dracula';
+import { autocompletion } from '@codemirror/autocomplete';
+import {
+    autocompletion_engine, up_script
+} from "../../../client_core";
+import {MdSave} from "react-icons/md";
+import {Tooltip} from "react-tooltip";
+
+
 let ScriptsEditor = props =>{
     const scripts_store = useSelector(state => state.scripts);
     const settings = useSelector(state => state.settings);
     const [editor_content, set_editor_content] = useState("");
 
+    const [dirty, set_dirty] = useState(false);
+
     let handle_change = (newValue) => {
+        set_dirty(true);
         set_editor_content(newValue);
     };
 
-    let handle_submit = (event) => {
-        let script = Object.values(scripts_store).find(x => x.id === settings.selected_script);
-        script = {script:script.id, field:'script_content', value:editor_content}
-
-        settings.server.script_proxy.edit_script(script);
-        props.done();
-    };
-
-    let handle_load = (editor) => {
+    useEffect(()=>{
         let script =Object.values(scripts_store).find(x => x.id === settings.selected_script);
         if(typeof script !== 'undefined' && script !== null){
-            editor.setValue(script.script_content);
             set_editor_content(script.script_content);
         }
-    };
+    },[settings.selected_script])
+
+    function registers_completion(context) {
+        let line = context.matchBefore(/[a-zA-Z0-9_\.]+/)
+        let word = context.matchBefore(/\w*/)
+        let options = autocompletion_engine(line, context.explicit);
+        return {
+            from: word.from,
+            options: options
+        }
+    }
+
+    let handle_save = ()=> {
+        let script = new up_script(props.script);
+        script.edit_field("script_content", editor_content).then(()=>{
+            set_dirty(false);
+        });
+    }
+
+    let handle_shortcuts = (event) =>{
+        let charCode = String.fromCharCode(event.which).toLowerCase();
+        if((event.ctrlKey || event.metaKey) && charCode === 's') {
+            event.preventDefault();
+            handle_save()
+        }
+    }
+
+    let save_color = dirty ? ColorTheme.icons_color:"gray";
 
     return(
-        <>
-            <Title>{settings.script_editor_title}</Title>
-            <Editor
-                mode="javascript"
-                theme="dracula"
-                width='auto'
-                showPrintMargin={false}
-                onChange={handle_change}
-                onLoad={handle_load}
-                name="UNIQUE_ID_OF_DIV"
+        <div onKeyDown={handle_shortcuts}>
+            <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
+                <div id="save_icon">
+                    <MdSave onClick={handle_save} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={save_color}/>
+                    <Tooltip anchorId="save_icon" content="Save Program" place="top" />
+                </div>
+            </div>
+            <CodeMirror
                 value={editor_content}
-                editorProps={{ $blockScrolling: true }}
+                width='auto'
+                theme={dracula}
+                extensions={[javascript({ jsx: true }),autocompletion({override: [registers_completion]})]}
+                onChange={handle_change}
+
             />
-            <Button variant="success" onClick={handle_submit}>Submit</Button>
-        </>
+        </div>
     );
 
 

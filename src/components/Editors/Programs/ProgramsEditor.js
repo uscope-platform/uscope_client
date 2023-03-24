@@ -13,90 +13,123 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState, useEffect, useRef} from "react";
-import AceEditor from "react-ace";
-import {Button} from "../../UI_elements"
+import React, {useState, useEffect} from "react";
 
-import "ace-builds/src-min-noconflict/mode-javascript";
-import "ace-builds/src-min-noconflict/theme-dracula";
-import "ace-builds/src-min-noconflict/mode-c_cpp"
-import {useSelector} from "react-redux";
-import styled from "styled-components";
-import fCoreMode from "./fCorehas";
+import CodeMirror from '@uiw/react-codemirror';
+import {cpp} from '@codemirror/lang-cpp'
+import { dracula } from '@uiw/codemirror-theme-dracula';
+import {Tooltip} from "react-tooltip";
+import {MdSave, MdBuild} from 'react-icons/md'
+import {ColorTheme} from "../../UI_elements";
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import {up_program} from "../../../client_core";
+import LoadSelector from "./LoadSelector";
 
 
-
-const Title = styled.h1`
-  margin-right: auto;
-  margin-left: auto;
-`
-const Editor = styled(AceEditor)`
-    * {
-        font-family: inherit;
-    }
-`;
 let ProgramsEditor = props =>{
-    const aceEditor = useRef(null)
-    const programs = useSelector(state => state.programs);
-    const settings = useSelector(state => state.settings);
-    const [editor_content, set_editor_content] = useState("");
+    const [editor_content, set_editor_content] = useState('');
     const [language, set_language] = useState('');
+    const [dirty, set_dirty] = useState(false);
+
 
     useEffect(()=>{
-        if (aceEditor.current) {
-            if(language ==="asm"){
-                aceEditor.current.editor.getSession().setMode(new fCoreMode());
-            } else if(language ==="C") {
-                aceEditor.current.editor.getSession().setMode("ace/mode/c_cpp");
-            }
-
+        if(typeof props.program !== 'undefined' && props.program !== null){
+            set_editor_content(props.program.program_content);
+            set_language(props.program.program_type);
+            set_dirty(false);
         }
-
-    },[language])
+    },[props.program])
 
     let handle_change = (newValue) => {
+        set_dirty(true);
         set_editor_content(newValue);
     };
 
-    let handle_submit = (event) => {
-        let prog = Object.values(programs).find(x => x.name === settings.program_editor_title);
-        prog = {program:prog.id, field:'program_content', value:editor_content}
-
-        settings.server.prog_proxy.edit_program(prog);
-        props.done();
+    let handle_save = (event) => {
+        let program = new up_program(props.program);
+        program.edit_field('program_content', editor_content).then(()=>{
+            set_dirty(false);
+        })
     };
 
-    let handle_load = (editor) => {
+    let handle_build = (event) => {
+        let prog = new up_program(props.program);
 
-        let prog =Object.values(programs).find(x => x.name === settings.program_editor_title);
-        if(typeof prog !== 'undefined' && prog !== null){
-            editor.setValue(prog.program_content);
-            set_editor_content(prog.program_content);
-            set_language(prog.program_type);
+        prog.compile().then((data)=>{
+            for (let item of data){
+                if(item.status==="passed"){
+                    toast.success('✅ Compilation Successfull');
+                } else if (item.status==="failed"){
+                    toast.error(item.error);
+                }
+            }
+        });
+
+    };
+
+    let handle_load = (core, application) => {
+        let prog = new up_program(props.program);
+        prog.load(core.id,  application.application_name).then();
+    };
+
+
+
+    let constructActionsBar = () =>{
+        let save_color = dirty ? ColorTheme.icons_color:"gray";
+        return(
+            <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
+                <div id="save_icon">
+                    <MdSave onClick={handle_save} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={save_color}/>
+                    <Tooltip anchorId="save_icon" content="Save Program" place="top" />
+                </div>
+                <div id="build_icon">
+                    <MdBuild onClick={handle_build} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
+                    <Tooltip anchorId="build_icon" content="Compile Program" place="top" />
+                </div>
+
+                <div id="load_icon">
+                    <LoadSelector onLoad={handle_load}/>
+                </div>
+            </div>
+        )
+    }
+
+    let handle_shortcuts = (event) =>{
+        let charCode = String.fromCharCode(event.which).toLowerCase();
+        if((event.ctrlKey || event.metaKey) && charCode === 's') {
+            event.preventDefault();
+            handle_save()
         }
+    }
 
-    };
 
     return(
-        <>
-            <Title>{settings.program_editor_title}</Title>
-            <Editor
-                ref={aceEditor}
-                mode="text"
-                width='auto'
-                theme="dracula"
-                showPrintMargin={false}
-                onChange={handle_change}
-                onLoad={handle_load}
-                name="UNIQUE_ID_OF_DIV"
-                value={editor_content}
-                editorProps={{ $blockScrolling: true }}
+        <div onKeyDown={handle_shortcuts}>
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
             />
-            <Button variant="success" onClick={handle_submit}>Submit</Button>
-        </>
+            {constructActionsBar()}
+            <CodeMirror
+                value={editor_content}
+                width='auto'
+                theme={dracula}
+                extensions={[cpp()]}
+                onChange={handle_change}
+            />
+        </div>
     );
 
 
 }
-
 export default ProgramsEditor;

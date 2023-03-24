@@ -16,12 +16,18 @@
 import React from 'react';
 import styled from 'styled-components';
 import {Label} from "./Label";
+import {ColorTheme} from "./ColorTheme";
 
 const InnerInput = styled.input`
-height: 2rem;
-border-radius: 5px;
-border-width: 0;
-width: auto;
+  height: 2rem;
+  border-radius: 5px;
+  border-width: 2px;
+  border-style: solid;
+  margin-top: 0.25em;
+  width: auto;
+  background-color: ${props => props.color};
+  border-color: ${props => props.theme.background.border};
+  color: ${props => props.theme.text};
 `
 
 const InputDescription = styled.label`
@@ -52,6 +58,7 @@ export let  InputField = props =>{
                 name={props.name}
                 type={(props.type)?props.type:"text"}
                 placeholder={props.label}
+                color={props.color ? props.color : ColorTheme.background.level_3}
                 disabled = {(props.disabled)? "disabled" : ""}
                 onChange={e => {if(props.onChange) props.onChange(e)}}
                 onKeyDown={e => {if(props.onKeyDown) props.onKeyDown(e)}}
@@ -62,11 +69,12 @@ export let  InputField = props =>{
     } else if(props.description){
         return (
             <Wrapper>
-                <Label inline={props.inline}>{props.label}</Label>
+                <Label htmlFor={props.ID} inline={props.inline}>{props.label}</Label>
                 <InnerInput
                     name={props.name}
                     placeholder={props.placeholder}
                     id={props.ID}
+                    color={props.color ? props.color : ColorTheme.background.level_3}
                     type={(props.type)?props.type:"text"}
                     disabled = {(props.disabled)? "disabled" : ""}
                     onChange={e => {if(props.onChange) props.onChange(e)}}
@@ -80,10 +88,11 @@ export let  InputField = props =>{
     } else{
         return (
             <Wrapper inline={props.inline}>
-                <Label inline={props.inline}>{props.label}</Label>
+                <Label htmlFor={props.ID} inline={props.inline}>{props.label}</Label>
                 <InnerInput
                     placeholder={props.placeholder}
                     name={props.name}
+                    color={props.color ? props.color : ColorTheme.background.level_3}
                     id={props.ID}
                     type={(props.type)?props.type:"text"}
                     disabled = {(props.disabled)? "disabled" : ""}

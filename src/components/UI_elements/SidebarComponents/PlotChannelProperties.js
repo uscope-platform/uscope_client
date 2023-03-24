@@ -13,99 +13,59 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from "react";
-import {useSelector} from "react-redux";
-import {Label} from "../Label";
-import {CaretDown, CaretUp} from "grommet-icons";
+import React from "react";
 import {InputField} from "../InputField";
-import {Checkbox} from "../checkbox";
 
-import {Button} from "../Button";
-import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
-import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
+import {ColorTheme} from "../ColorTheme";
+import {up_application} from "../../../client_core";
+import {Card} from "../panels/Card";
+
 
 export let  PlotChannelProperties = props =>{
 
-    const settings = useSelector(state => state.settings);
 
-    const [is_open, set_is_open] = useState(false);
-    const [edit_name, set_edit_name] = useState(false);
-
-
-
-    let handleOpen = ()=>{
-        set_is_open(true);
-    }
-
-    let handleEditName = () => {
-        set_edit_name(true);
-    }
-
-    let handleEditNameChange = (event) => {
-        if(event.key==="Enter"){
-            let edit = {application:props.application, channel:props.channel.name, field:event.target.name, value:event.target.value, action:"edit_channel"};
-            settings.server.app_proxy.edit_application(edit);
-            set_edit_name(false);
-        }else if(event.key ==="Escape"){
-            set_edit_name(false);
-        }
-    }
-
-    let handleClose = ()=>{
-        set_is_open(false);
-    }
-
-    let handleChange = (event)=>{
-        let edit = {application:props.application, channel:props.channel.name, field:event.target.name, value:event.target.checked, action:"edit_channel"};
-        settings.server.app_proxy.edit_application(edit);
+    let handleChange = (target)=>{
+        let app = new up_application(props.application);
+        app.edit_channel(props.channel.name, target.name, target.checked).then(()=>{
+            props.forceUpdate();
+        });
     }
 
     let handleonKeyDown = (event) =>{
-        let edit = {}
         if(event.key==="Enter"|| event.key ==="Tab"){
-            edit = {application:props.application, channel:props.channel.name, field:event.target.name, value:event.target.value, action:"edit_channel"};
-            settings.server.app_proxy.edit_application(edit);
+            let app = new up_application(props.application);
+            app.edit_channel(props.channel.name, event.target.name, event.target.value).then(()=>{
+                props.forceUpdate();
+            });
         }
     }
 
-    let handleRemoveRegister= (event) =>{
-        let edit = {application:props.application, channel:props.channel.name, action:"remove_channel"};
-        settings.server.app_proxy.edit_application(edit);
-    }
-
-    let renderChannelContent = (props) =>{
-        if(is_open)
-            return(
-                <SidebarCollapsableContentLayout>
-                    <InputField inline name='id' defaultValue={props.channel.id} onKeyDown={handleonKeyDown} label="Channel ID"/>
-                    <InputField inline name='number' defaultValue={props.channel.number} onKeyDown={handleonKeyDown} label="Channel Number"/>
-                    <InputField inline name='mux_setting' defaultValue={props.channel.mux_setting} onKeyDown={handleonKeyDown} label="Mux Setting"/>
-                    <InputField inline name='phys_width' defaultValue={props.channel.phys_width} onKeyDown={handleonKeyDown} label="Physical width"/>
-                    <InputField inline name='max_value' defaultValue={props.channel.max_value} onKeyDown={handleonKeyDown} label="Maximum Value"/>
-                    <InputField inline name='min_value' defaultValue={props.channel.min_value} onKeyDown={handleonKeyDown} label="Minimum Value"/>
-                    <Checkbox name='enabled' value={props.channel.enabled} onChange={handleChange} label="Enabled by default"/>
-                    <Button onClick={handleRemoveRegister} >Remove</Button>
-                </SidebarCollapsableContentLayout>
-            )
-        return null;
+    let handleRemove= (event) =>{
+        let app = new up_application(props.application);
+        app.remove_channel(props.channel.name).then(()=>{
+            props.forceUpdate();
+        });
     }
 
     return(
-        <>
-            <SidebarCollapsableNameLayout>
-                {edit_name
-                    ? <InputField compact name="name" defaultValue={props.channel.name} onKeyDown={handleEditNameChange} label={props.channel.name}/>
-                    : <Label onDoubleClick={handleEditName}>{props.channel.name}</Label>
-                }
-
-                {is_open
-                    ? <CaretUp size={"small"} onClick={handleClose} color='white'/>
-                    : <CaretDown size={"small"} onClick={handleOpen} color='white'/>
-                }
-            </SidebarCollapsableNameLayout>
-            {
-                renderChannelContent(props)
-            }
-        </>
+        <Card
+            name={props.channel.name}
+            onRemove={handleRemove}
+            selector={{
+                name:"enabled",
+                label:"Enabled",
+                click:handleChange,
+                value:props.channel.enabled
+            }}
+        >
+            <InputField color={ColorTheme.background.level_4} inline ID="name" name="name" defaultValue={props.channel.name} onKeyDown={handleonKeyDown} label="Name"/>
+            <InputField color={ColorTheme.background.level_4} inline ID="id" name='id' defaultValue={props.channel.id} onKeyDown={handleonKeyDown} label="Channel ID"/>
+            <InputField color={ColorTheme.background.level_4} inline ID="number" name='number' defaultValue={props.channel.number} onKeyDown={handleonKeyDown} label="Channel Number"/>
+            <InputField color={ColorTheme.background.level_4} inline ID="mux_setting" name='mux_setting' defaultValue={props.channel.mux_setting} onKeyDown={handleonKeyDown} label="Mux Setting"/>
+            <InputField color={ColorTheme.background.level_4} inline ID="phys_width" name='phys_width' defaultValue={props.channel.phys_width} onKeyDown={handleonKeyDown} label="Physical width"/>
+            <InputField color={ColorTheme.background.level_4} inline ID="max_value" name='max_value' defaultValue={props.channel.max_value} onKeyDown={handleonKeyDown} label="Maximum Value"/>
+            <InputField color={ColorTheme.background.level_4} inline ID="min_value" name='min_value' defaultValue={props.channel.min_value} onKeyDown={handleonKeyDown} label="Minimum Value"/>
+            <InputField color={ColorTheme.background.level_4} inline ID="scaling_factor" name='scaling_factor' defaultValue={props.channel.scaling_factor} onKeyDown={handleonKeyDown} label="Scaling Factor"/>
+        </Card>
     );
 };

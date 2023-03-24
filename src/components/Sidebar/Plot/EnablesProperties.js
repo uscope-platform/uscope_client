@@ -18,22 +18,14 @@ import {useDispatch, useSelector} from "react-redux";
 
 import {
     Button, FormLayout,
-    InputField, Label, Select,
-    SidebarBlockLayout,
-    SidebarBlockTitleLayout} from "../../UI_elements";
+    InputField, Label, SelectField
+} from "../../UI_elements";
 
-import styled from "styled-components";
-import {create_plot_channel, get_channels_from_group} from "../../../utilities/PlotUtilities";
 import {initialize_channels} from "../../../redux/Actions/plotActions";
 import {setSetting} from "../../../redux/Actions/SettingsActions";
+import {set_channel_widths, set_channel_status, up_peripheral, create_plot_channel, get_channels_from_group} from "../../../client_core";
+import {set_scaling_factors} from "../../../client_core/proxy/plot";
 
-const ChoicesWrapper = styled.div`
-    display: grid;
-    grid-template-columns: repeat(2, auto);
-    grid-gap: 0.3rem;
-    justify-content: space-between;
-    align-items: start;
-`
 
 
 let  EnablesProperties = props =>{
@@ -84,24 +76,25 @@ let  EnablesProperties = props =>{
         event.preventDefault();
         let sample_period = parse_number(event.target.frequency.value);
         let sample_phase = Math.round(1);
-        let bulk_registers = [];
+        let writes = [];
 
         let reg_offset = peripheral_specs['enable_generator_1'].registers.filter((reg)=>{
             return reg.ID === "freq";
         })[0].offset;
         let address = parseInt(timebase_addr)+parseInt(reg_offset);
-        bulk_registers.push({address:address, value:sample_period})
+        writes.push([address, sample_period])
 
         reg_offset = peripheral_specs['enable_generator_1'].registers.filter((reg)=>{
             return reg.ID === "pha_1";
         })[0].offset;
         address = parseInt(timebase_addr)+parseInt(reg_offset);
-        bulk_registers.push({address:address, value:sample_phase})
-        settings.server.periph_proxy.bulkRegisterWrite({payload:bulk_registers});
+        writes.push([address, sample_phase])
+        up_peripheral.direct_register_write(writes).then();
     }
 
     let handleChGroupChange = (event) => {
         let group_name = event.target.value;
+        set_selected(event.target);
         let group = []
         //GET GROUP OBJECT
         for(let item of application.channel_groups){
@@ -127,14 +120,21 @@ let  EnablesProperties = props =>{
             for(let item of components){
                 word |= item;
             }
-            settings.server.periph_proxy.bulkRegisterWrite({payload:[{address:scope_mux_address, value:word}]});
+            up_peripheral.direct_register_write([[scope_mux_address, word]]).then()
         }
         //SET  UP CHANNEL WIDTHS
         let widths = []
         for(let item of channels){
             widths.push(parseInt(item.phys_width));
         }
-        settings.server.plot_proxy.set_channel_widths(widths);
+        set_channel_widths(widths).then();
+        //SET  UP SCALING FACTORS
+        let sfs = []
+        for(let item of channels){
+            sfs.push(parseFloat(item.scaling_factor));
+        }
+        set_scaling_factors(sfs).then();
+
         // SET NEW CHANNELS status
         let new_ch_state = {}
 
@@ -142,35 +142,33 @@ let  EnablesProperties = props =>{
             new_ch_state[chan.spec.number] = chan.visible;
             return 0;
         })
-        settings.server.plot_proxy.set_channel_status(new_ch_state);
+        set_channel_status(new_ch_state);
     };
 
+    let ch_groups = channelGroups.map((group,i) => (
+        {label:group.group_name, value:group.group_name}
+    ));
+
+    const [selected, set_selected] = useState({label:settings.default_ch_group.group_name, value:settings.default_ch_group.group_name});
+
     return (
-        <SidebarBlockLayout padding={'1rem'}>
-            <SidebarBlockTitleLayout>
-                <label style={{fontSize:'20px',fontWeight:600}}>{"Scope Sampling Settings"}</label>
-            </SidebarBlockTitleLayout>
-
-                <form onSubmit={handle_submit}>
-                    <FormLayout>
-                        <InputField inline name='frequency' label="Frequency"/>
-                        <InputField inline name={'phase'} label={'Phase'}/>
-                        <ChoicesWrapper>
-                            <Label>Channel Group</Label>
-                            <Select name="channel_group" defaultValue={settings.default_ch_group.group_name} onChange={handleChGroupChange}>
-                                {
-                                    channelGroups.map((group,i) => (
-                                        <option key={i} >{group.group_name}</option>
-                                    ))
-                                }
-                            </Select>
-                        </ChoicesWrapper>
-                        <Label>Effective Sampling frequency: {settings.sampling_period}</Label>
-                        <Button type='submit' >Submit changes</Button>
-                    </FormLayout>
-                </form>
-
-        </SidebarBlockLayout>
+        <div style={{padding:"1rem"}}>
+            <form onSubmit={handle_submit}>
+                <FormLayout>
+                    <InputField inline name='frequency' label="Frequency"/>
+                    <InputField inline name={'phase'} label={'Phase'}/>
+                    <SelectField
+                        label="Channel Group"
+                        name="channel_group"
+                        onChange={handleChGroupChange}
+                        options={ch_groups}
+                        value={selected}
+                    />
+                    <Label>Effective Sampling frequency: {settings.sampling_period}</Label>
+                    <Button type='submit' >Submit changes</Button>
+                </FormLayout>
+            </form>
+        </div>
     );
 };
 

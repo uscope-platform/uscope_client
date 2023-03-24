@@ -14,42 +14,41 @@
 // limitations under the License.
 
 //       REACT IMPORTS
-import React, {useState} from 'react';
+import React from 'react';
 //       REDUX IMPORTS
 import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../redux/Actions/SettingsActions";
-import {loadViews} from "../redux/Actions/ViewsActions";
-import {loadRegisters} from "../redux/Actions/RegisterActions";
-
 
 
 import {initialize_channels} from "../redux/Actions/plotActions";
-import {create_plot_channel, get_channels_from_group} from "../utilities/PlotUtilities";
 import ApplicationChooserView from "./Common_Components/ApplicationChooserView";
 
+import {
+    set_channel_widths,
+    up_application,
+    up_peripheral,
+    create_plot_channel,
+    get_channels_from_group
+} from "../client_core"
+import {set_scaling_factors} from "../client_core/proxy/plot";
 
 let ApplicationChooser = (props) =>{
 
-    const settings = useSelector(state => state.settings);
     const applications = useSelector(state => state.applications);
     const dispatch = useDispatch();
 
 
     let handleApplicationChosen = e =>{
-        settings.server.app_proxy.setApplication(e).then(()=>{
+        let app = new up_application(applications[e]);
+        dispatch(setSetting(["selected_application", e]));
+        app.set_active().then(()=>{
             dispatch(setSetting(["application", e]));
-            let peripherals = Object.values(applications[e].peripherals);
-            dispatch(loadViews(peripherals))
             initializePlotState(applications[e]);
-            settings.server.plot_proxy.getChannelsInfo(function(){handle_loading_channels_done(peripherals);});
+            props.choice_done();
         }).catch(error =>{
             console.log("Error: error while choosing application");
         });
     };
-
-    let handle_loading_channels_done = (periph) =>{
-        initializeRegisterStore(periph);
-    }
 
     let initializePlotState = (app) =>{
 
@@ -81,7 +80,7 @@ let ApplicationChooser = (props) =>{
             for(let item of components){
                 word |= item;
             }
-            settings.server.periph_proxy.bulkRegisterWrite({payload:[{address:scope_mux_address, value:word}]});
+            up_peripheral.direct_register_write([[scope_mux_address, word]]).then();
         }
         // SET UP CHANNEL WIDTHS
 
@@ -90,89 +89,19 @@ let ApplicationChooser = (props) =>{
             for(let item of channels_list){
                 widths.push(parseInt(item.phys_width));
             }
-            settings.server.plot_proxy.set_channel_widths(widths);
+            set_channel_widths(widths).then();
         }
 
+        if(channels_list.length !== 0){
+            let sfs = []
+            for(let item of channels_list){
+                sfs.push(parseFloat(item.scaling_factor));
+            }
+            set_scaling_factors(sfs).then();
+
+        }
 
     }
-
-    let initializeRegisterStore = (peripherals) =>{
-
-        Promise.all(peripherals.map((tab) =>{
-            if(tab.user_accessible && tab.type==="Registers"){
-                return settings.server.periph_proxy.getPeripheralRegisters(tab.peripheral_id);
-            }
-            return 'Not Needed';
-        })).then((result) =>{
-                result.map((item) => {
-                    if(item!=='Not Needed'){
-                        dispatch(loadRegisters(item.peripheral_name, item.registers))
-                    }
-                    return null
-                });
-                loadResources();
-            }
-        ).catch((reason => {
-            console.log(reason)
-        }));
-
-    };
-
-    let loadResources = () => {
-
-        let role_mapping = {admin:1, user:2, operator:3};
-        let role = role_mapping[settings.user_role]
-        if(role<=3){
-            dispatch(loadViews([{
-                name: "Plot",
-                peripheral_id: "plot",
-                type: "Scope",
-                user_accessible: true
-            }]))
-        }
-        if(role<=2){
-            dispatch(loadViews([{
-                name: "Script manager",
-                peripheral_id: "script_manager",
-                type: "script_manager",
-                user_accessible: true
-            }]))
-            dispatch(loadViews([{
-                name: "Applications manager",
-                peripheral_id: "applications_manager",
-                type: "applications_manager",
-                user_accessible: true
-            }]));
-            dispatch(loadViews([{
-                name: "Program Manager",
-                peripheral_id: "program_manager",
-                type: "program_manager",
-                user_accessible: true
-            }]));
-            dispatch(loadViews([{
-                name: "Bitstream Manager",
-                peripheral_id: "bitstream_manager",
-                type: "bitstream_manager",
-                user_accessible: true
-            }]));
-        }
-        if(role<=1){
-            dispatch(loadViews([{
-                name: "Peripherals manager",
-                peripheral_id: "peripherals_manager",
-                type: "peripherals_manager",
-                user_accessible: true
-            }]))
-
-            dispatch(loadViews([{
-                name: "Platform Manager",
-                peripheral_id: "platform_manager",
-                type: "platform_manager",
-                user_accessible: true
-            }]));
-        }
-        props.choice_done();
-    };
 
     return (
         <div className="App">

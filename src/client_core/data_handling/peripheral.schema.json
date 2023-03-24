@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "minProperties":1,
+  "patternProperties": {
+    "[a-zA-Z1-9]+": {
+      "type": "object",
+      "properties": {
+        "peripheral_name": {
+          "type": "string"
+        },
+        "registers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "direction": {
+                "type": "string"
+              },
+              "fields": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "description": {
+                      "type": "string"
+                    },
+                    "length": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "offset": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "description",
+                    "length",
+                    "name",
+                    "offset"
+                  ]
+                }
+              },
+              "offset": {
+                "type": "string"
+              },
+              "register_format": {
+                "type": "string"
+              },
+              "register_name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "ID",
+              "description",
+              "direction",
+              "offset",
+              "register_name"
+            ]
+          }
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "peripheral_name",
+        "registers",
+        "version"
+      ]
+    }
+  }
+}

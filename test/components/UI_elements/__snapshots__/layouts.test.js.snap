@@ -1,0 +1,190 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`application_layout 1`] = `
+.c0 {
+  display: grid;
+  grid-template-columns: 2fr 8fr 2fr;
+  grid-gap: 1.5rem;
+  margin: 1rem 0 0 0;
+  grid-auto-rows: auto;
+  height: 96.5vh;
+  grid-template-columns: 2fr 10fr;
+}
+
+<div
+  className="c0"
+/>
+`;
+
+exports[`application_layout sidebar 1`] = `
+.c0 {
+  display: grid;
+  grid-template-columns: 2fr 8fr 2fr;
+  grid-gap: 1.5rem;
+  margin: 1rem 0 0 0;
+  grid-auto-rows: auto;
+  height: 96.5vh;
+}
+
+<div
+  className="c0"
+/>
+`;
+
+exports[`block_layout 1`] = `
+.c0 {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: max-content;
+  grid-row-gap: 1em;
+  background-color: #122964;
+  border-radius: 1rem;
+  padding: 1rem;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  width: 100%;
+  -webkit-align-self: center;
+  -ms-flex-item-align: center;
+  align-self: center;
+}
+
+<div
+  className="c0"
+/>
+`;
+
+exports[`block_layout_centered 1`] = `
+.c0 {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: max-content;
+  grid-row-gap: 1em;
+  background-color: #122964;
+  border-radius: 1rem;
+  padding: 1rem;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  width: 100%;
+  -webkit-align-self: center;
+  -ms-flex-item-align: center;
+  align-self: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+<div
+  className="c0"
+/>
+`;
+
+exports[`sidebar layout 1`] = `
+.c0 {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: auto;
+  background-color: #122964;
+  margin-left: 1rem;
+}
+
+<div
+  className="c0"
+/>
+`;
+
+exports[`sidebar_block_layout 1`] = `
+.c0 {
+  border-radius: 1rem;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  padding: 0.2rem 0 0.4rem 0.6rem;
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  background-color: #1d7097;
+}
+
+<div
+  className="c0"
+/>
+`;
+
+exports[`sidebar_block_layout padding  1`] = `
+.c0 {
+  border-radius: 1rem;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  padding: 1rem;
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  background-color: #1d7097;
+}
+
+<div
+  className="c0"
+/>
+`;
+
+exports[`sidebar_content_layout 1`] = `
+.c0 {
+  display: grid;
+  height: 100vh;
+  grid-template-columns: 1fr;
+  grid-gap: 0.5rem;
+  margin-left: 0.8rem;
+  margin-right: 0.8rem;
+  justify-items: center;
+}
+
+<div
+  className="c0"
+/>
+`;
+
+exports[`sidebar_content_layout application 1`] = `
+.c0 {
+  display: grid;
+  height: 100vh;
+  grid-template-columns: 1fr;
+  grid-auto-rows: auto 10fr auto;
+  grid-gap: 0.5rem;
+  margin-left: 0.8rem;
+  margin-right: 0.8rem;
+  justify-items: center;
+}
+
+<div
+  className="c0"
+/>
+`;
+
+exports[`sidebar_content_layout peripheral 1`] = `
+.c0 {
+  display: grid;
+  height: 100vh;
+  grid-template-columns: 1fr;
+  grid-auto-rows: auto auto 10fr auto;
+  grid-gap: 0.5rem;
+  margin-left: 0.8rem;
+  margin-right: 0.8rem;
+  justify-items: center;
+}
+
+<div
+  className="c0"
+/>
+`;

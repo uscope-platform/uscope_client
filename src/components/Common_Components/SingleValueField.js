@@ -15,8 +15,8 @@
 
 import React from 'react';
 
-import {InputField} from "../UI_elements";
-import {Edit, Trash} from "grommet-icons";
+import {ColorTheme, InputField} from "../UI_elements";
+import {MdEdit, MdDelete} from "react-icons/md";
 import styled from "styled-components";
 
 
@@ -46,8 +46,8 @@ let SingleValueField = props => {
         return(
             <LayoutWrapper>
                 <InputField description={props.description} ID={props.ID} name={props.name} label={props.name}/>
-                <Edit color='white' onClick={localEditHandler} />
-                <Trash color='white' onClick={localRemoveHandler}/>
+                <MdEdit color={ColorTheme.icons_color} onClick={localEditHandler} />
+                <MdDelete color={ColorTheme.icons_color} onClick={localRemoveHandler}/>
             </LayoutWrapper>
         );
     } else if(props.value){

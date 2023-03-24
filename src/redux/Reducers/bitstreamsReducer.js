@@ -13,27 +13,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {ADD_BITSTREAM, EDIT_BITSTREAM, LOAD_ALL_BITSTREAMS, REMOVE_BITSTREAM} from "../Actions/types";
-import produce from "immer";
+import {ADD_BITSTREAM, LOAD_ALL_BITSTREAMS, REMOVE_BITSTREAM} from "../Actions/types";
 
 
 let BitstreamsReducer = function (state = [], action) {
     switch (action.type) {
         case ADD_BITSTREAM:
-            return produce(state, draftState => {
-                draftState[action.payload.id] = action.payload;
-            });
+            return {...state, ...{[action.payload.id]:action.payload}}
         case REMOVE_BITSTREAM:
-            return produce(state, draftState => {
-                delete draftState[action.payload.id];
-            });
+            return  Object.keys(state)
+                .filter(key => {
+                    return key !== action.payload.id.toString();
+                })
+                .reduce((obj, key) => {
+                    obj[key] = state[key];
+                    return obj;
+                }, {});
         case LOAD_ALL_BITSTREAMS:
             state = action.payload;
             return  state;
-        case EDIT_BITSTREAM:
-            return produce(state, draftState => {
-                draftState[action.payload.id][action.payload.field.name] = action.payload.field.value;
-            });
         default:
             return state;
     }

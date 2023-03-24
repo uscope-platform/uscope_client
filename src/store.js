@@ -34,13 +34,10 @@ const persistConfig = {
     key: 'root',
     storage: storage,
     stateReconciler: hardSet,
-    whitelist: ['scripts', 'peripherals', 'applications', 'programs']
+    whitelist: ['scripts', 'peripherals', 'applications', 'programs', 'bitstreams']
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
-
-
-
 
 const actionSanitizer = (action) => (
     action.type === 'FETCH_DATA' && action.data ?
@@ -61,7 +58,6 @@ const store = createStore(
         applyMiddleware(...middleware)
     )
 );
-
 
 
 export default store;

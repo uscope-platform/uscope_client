@@ -13,127 +13,102 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect} from 'react';
+import React, {useReducer} from 'react';
 
-import {useDispatch, useSelector} from "react-redux"
-
-import DataTable from 'react-data-table-component';
-import {TableStyle} from './TableStyles'
+import {useSelector} from "react-redux"
 
 
-import {BlockLayout, Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements"
-import {setSetting} from "../../redux/Actions/SettingsActions";
+import {
+    CardStack,
+    InputField,
+    RegisterProperties,
+    SimpleContent, UIPanel
+} from "../UI_elements"
 
+import {get_next_id, up_peripheral} from "../../client_core"
+import {Responsive, WidthProvider} from "react-grid-layout";
+import ManagerToolbar from "./ManagerToolbar";
 
-let columns = [
-    {
-        selector: 'peripheral_name',
-        name: 'Peripheral Name',
-        sort: true,
-        grow:2
-    },
-    {
-        selector: 'version',
-        name: 'Peripheral Version'
-    }
-];
 
 let PeripheralsManager = (props)=>{
 
-    const peripherals_redux = useSelector(state => state.peripherals);
+    const selected_peripheral =  useSelector(state => new up_peripheral(state.peripherals[state.settings.current_peripheral]))
+
+    const ResponsiveGridLayout = WidthProvider(Responsive);
+
     const settings = useSelector(state => state.settings);
 
-    const dispatch = useDispatch();
+    const [, forceUpdate] = useReducer(x => x + 1, 0);
 
-    useEffect(() => {
-       return() =>{
-           dispatch(setSetting(["current_peripheral", null]));
-       }
-    },[dispatch]);
-
-    let handleOnSelect = (selection) => {
-        if(selection.selectedCount===1){
-            dispatch(setSetting(["current_peripheral", selection.selectedRows[0].peripheral_name]))
-        } else if(selection.selectedCount===0) {
-            dispatch(setSetting(["current_peripheral", null]))
-        } else if(selection.selectedCount>1){
-            selection.selectedRows.map((row)=>{
-                return row.peripheral_name;
-            });
+    let handleEditVersion = (event) =>{
+        if (event.key ==="Enter"){
+            selected_peripheral.set_version(event.target.value).then();
         }
-    };
+    }
 
-
-    let handleRemoveRow = (event) =>{
-        settings.server.creator_proxy.removePeripheral(settings.current_peripheral);
-        dispatch(setSetting(["current_peripheral", null]))
-    };
-
-    let handleExport = (event) =>{
-        let selected = settings.current_peripheral;
-        if(settings.current_peripheral===null){
-            alert("Please select a peripheral to Export");
-            return;
+    let handleEditName = (event) =>{
+        if (event.key ==="Enter"){
+            selected_peripheral.edit_name(event.target.value).then();
         }
+    }
 
-        let peripheral = {[selected]:peripherals_redux[selected]};
-        let blob = new Blob([JSON.stringify(peripheral, null, 4)], {type: "application/json"});
-        let url  = URL.createObjectURL(blob);
+    let handle_add_new = (item_type, old_items, title_prop) =>{
 
-        let link = document.createElement('a');
-        link.href = url;
-        link.download = selected;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    };
-
-    let handleImport = (event) =>{
-        let input = document.createElement('input');
-        input.type = 'file';
-        input.setAttribute('style', 'display:none');
-        input.onchange = e => {
-            let file = e.target.files[0];
-            let reader = new FileReader();
-            reader.readAsText(file,'UTF-8');
-
-            reader.onload = readerEvent => {
-                let content = readerEvent.target.result; // this is the content!
-                addPeripheral(content)
+        let ids = Object.values(old_items).map((item)=>{
+            const regex = new RegExp("new_"+item_type+"_(\\d+)", 'g');
+            let match = Array.from(item[title_prop].matchAll(regex), m => m[1]);
+            if(match.length>0){
+                return match;
+            } else{
+                return null;
             }
-        };
-        document.body.appendChild(input);
-        input.click();
-    };
+        });
+        ids = ids.filter(Boolean);
+        let name ="new_" + item_type + "_" + get_next_id(ids.sort());
+        selected_peripheral.add_register(name).then();
+    }
 
-    let addPeripheral = (content) => {
-        settings.server.creator_proxy.createPeripheral(JSON.parse(content), null);
-    };
 
-    const rowSelectCritera = row => row.peripheral_name === settings.current_peripheral;
+    if(!settings.current_peripheral)
+        return <></>;
 
 
     return(
-        <ManagerLayout>
-            <ManagerButtonsLayout>
-                <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}> Remove Peripheral</Button>
-                <Button style={{margin:"0 1rem"}} onClick={handleImport}>Import peripheral</Button>
-                <Button style={{margin:"0 1rem"}} onClick={handleExport}>Export peripheral</Button>
-            </ManagerButtonsLayout>
-            <BlockLayout centered>
-                <DataTable
-                    title='Peripherals'
-                    data={Object.values(peripherals_redux)}
-                    columns={columns}
-                    customStyles={TableStyle}
-                    theme="uScopeTableTheme"
-                    selectableRows
-                    onSelectedRowsChange={handleOnSelect}
-                    selectableRowSelected={rowSelectCritera}
-                />
-            </BlockLayout>
-        </ManagerLayout>
-    )
+        <ResponsiveGridLayout
+            className="layout"
+            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+            useCSSTransforms={false}
+        >
+            <UIPanel key="properties" data-grid={{x: 0, y: 0, w: 24, h: 1, static: true}} level="level_2">
+                <SimpleContent name="Peripheral Properties" content={
+                    <div>
+                        <InputField inline name="edit_name" defaultValue={selected_peripheral.peripheral_name} onKeyDown={handleEditName} label="Name"/>
+                        <InputField inline name="edit_version" defaultValue={selected_peripheral.version} onKeyDown={handleEditVersion} label="Version"/>
+                    </div>
+                }/>
+
+            </UIPanel>
+            <UIPanel key="registers" data-grid={{x: 0, y: 1, w: 24, h: 5, static: true}} level="level_2">
+                <SimpleContent name="Registers" content={
+                    <div>
+                        <ManagerToolbar
+                            onAdd={() =>{handle_add_new("register", selected_peripheral.registers, "register_name");}}
+                            contentName="Register"/>
+                        <CardStack>
+                            {
+                                selected_peripheral.registers.map((reg)=>{
+                                    return(
+                                        <RegisterProperties peripheral={selected_peripheral} forceUpdate={forceUpdate} register={reg}/>
+                                    )
+                                })
+                            }
+                        </CardStack>
+                    </div>
+                }/>
+            </UIPanel>
+        </ResponsiveGridLayout>
+    );
 }
 
 export default PeripheralsManager;

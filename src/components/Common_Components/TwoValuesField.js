@@ -15,8 +15,8 @@
 
 import React from 'react';
 
-import {InputField} from "../UI_elements";
-import {Edit, Trash} from "grommet-icons";
+import {ColorTheme, InputField} from "../UI_elements";
+import {MdEdit, MdDelete} from "react-icons/md";
 import styled from "styled-components";
 
 const LayoutWrapper = styled.div`
@@ -54,8 +54,8 @@ let TwoValuesField = props => {
             <LayoutWrapper>
                 <InputField description={props.field_descriptions[0]} ID={props.ID} name={props.register_name+'.1'} label={props.field_names[0]}/>
                 <InputField description={props.field_descriptions[1]} ID={props.ID} name={props.register_name+'.2'} label={props.field_names[1]}/>
-                <Edit color='white' onClick={localEditHandler} />
-                <Trash color='white' onClick={localRemoveHandler}/>
+                <MdEdit color={ColorTheme.icons_color} onClick={localEditHandler} />
+                <MdDelete color={ColorTheme.icons_color} onClick={localRemoveHandler}/>
             </LayoutWrapper>
         );
     } else{

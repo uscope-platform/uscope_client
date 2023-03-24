@@ -15,119 +15,132 @@
 
 //       REACT IMPORTS
 import React, {useEffect, useState} from 'react';
-import {Redirect, Route} from 'react-router-dom'
-
+import {Route} from 'react-router-dom'
 //       REDUX IMPORTS
-import {useDispatch, useSelector} from "react-redux";
-import {setSetting} from "./redux/Actions/SettingsActions";
+import {useSelector} from "react-redux";
 
 //      APP RELATED IMPORTS
 import TabContent from "./components/TabContent";
 import Navbar from "./components/Navbar";
 import ApplicationChooser from "./components/AppChooser";
+
 //////  STYLE IMPORTS
 import './App.css';
 
-import {ApplicationLayout} from "./components/UI_elements";
 import Sidebar from "./components/Sidebar/Sidebar";
-import OnboardingView from "./components/Onboarding";
-import {create_application} from "./utilities/ApplicationUtilities";
+
+import {initialize_scripting_engine, refresh_caches, up_application} from "./client_core";
+import {Routes} from "react-router";
+import {addApplication} from "./redux/Actions/applicationActions";
+
+import { Responsive, WidthProvider } from "react-grid-layout";
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
+import {UIPanel} from "./components/UI_elements";
+import PlatformManager from "./components/Managers/PlatformManager";
+
+const ResponsiveGridLayout = WidthProvider(Responsive);
+
 
 
 let AuthApp = (props) =>{
 
-    const views = useSelector(state => state.views);
-    const plot = useSelector(state => state.plot);
-    const scripts = useSelector(state => state.scripts);
-    const programs = useSelector(state => state.programs);
-    const bitstreams = useSelector(state => state.bitstreams);
     const settings = useSelector(state => state.settings);
     const peripherals = useSelector(state => state.peripherals);
     const applications = useSelector(state => state.applications);
 
-    const dispatch = useDispatch();
+    const [views, set_views] = useState([]);
+
     const [app_stage, set_app_stage] = useState("WAITING");
-    let load_resource = (resource) =>{
-        let digest = localStorage.getItem(resource.key);
-        if(resource.store === undefined || digest === null){
-            resource.proxy.load_all();
-            resource.proxy.get_hash().then((res)=>{
-                localStorage.setItem(resource.key, res);
-            });
-        } else{
-            resource.proxy.get_hash().then((res)=>{
-                if(digest!==res){
-                    resource.proxy.load_all();
-                    localStorage.setItem(resource.key, res);
-                } else{
-                    dispatch(setSetting([resource.loaded_flag, true]));
-                }
-            });
-        }
-    }
 
     let app_choice_done = ()=>{
+        populate_views();
         set_app_stage("NORMAL");
     };
 
     useEffect(()=>{
-        let resources = [{
-            key:'Applications-hash',
-            proxy:settings.server.app_proxy,
-            store:applications,
-            loaded_flag:'loaded_applications'
-        }, {
-            key:'Peripherals-hash',
-            proxy:settings.server.periph_proxy,
-            store:peripherals,
-            loaded_flag:'loaded_peripherals'
-        }, {
-            key:'Script-hash',
-            proxy:settings.server.script_proxy,
-            store:scripts,
-            loaded_flag:'loaded_scripts'
-        }, {
-            key:'Programs-hash',
-            proxy:settings.server.prog_proxy,
-            store:programs,
-            loaded_flag:'loaded_programs'
-        }, {
-            key:'Bitstreams-hash',
-            proxy:settings.server.bitstream_proxy,
-            store:bitstreams,
-            loaded_flag:'loaded_bitstreams'
-        }]
         if(props.needs_onboarding){
             set_app_stage("ONBOARDING");
         } else{
-            for(let i of resources){
-                load_resource(i);
-            }
+            refresh_caches().then((res) =>{
+                if(res[0].status ==="valid"){
+                    set_app_stage("APP_CHOICE");
+                } else if(Object.keys(res[0].data).length !== 0) {
+                    set_app_stage("APP_CHOICE");
+                } else {
+                    let app = up_application.construct_empty("default");
+                    app.add_remote().then(()=>{
+                        addApplication(app);
+                        set_app_stage("APP_CHOICE");
+                    })
+                }
+
+            });
             set_app_stage("RESOURCE_LOADING");
         }
 
-    },[])
-
+    },[props.needs_onboarding])
 
     useEffect(()=>{
-        if(settings.loaded_peripherals && settings.loaded_scripts &&settings.loaded_applications && settings.loaded_programs && settings.loaded_bitstreams){
-            if(Object.keys(applications).length !== 0){
-                set_app_stage("APP_CHOICE");
-            }else {
-                let app = create_application("default");
-                settings.server.app_proxy.createApplication(app).then(data =>{
-                    set_app_stage("APP_CHOICE");
-                });
-            }
+        if(settings.application)
+            initialize_scripting_engine(applications[settings.application], peripherals)
+    }, [settings.application, peripherals, applications])
+
+    let populate_views = () => {
+        let local_views = [];
+        let role_mapping = {admin:1, user:2, operator:3};
+        let role = role_mapping[settings.user_role]
+        if(role<=3){
+            local_views.push({
+                name: "Plot",
+                peripheral_id: "plot",
+                type: "Scope"
+            });
         }
-    },[settings.loaded_applications, settings.loaded_peripherals, settings.loaded_programs, settings.loaded_scripts, settings.loaded_bitstreams])
+        if(role<=2){
+            local_views.push({
+                name: "Scripts",
+                peripheral_id: "script_manager",
+                type: "script_manager"
+            });
+            local_views.push({
+                name: "Applications",
+                peripheral_id: "applications_manager",
+                type: "applications_manager"
+            });
+            local_views.push({
+                name: "Programs",
+                peripheral_id: "program_manager",
+                type: "program_manager"
+            });
+            local_views.push({
+                name: "Bitstreams",
+                peripheral_id: "bitstream_manager",
+                type: "bitstream_manager"
+            });
+        }
+        if(role<=1){
+            local_views.push({
+                name: "Peripherals",
+                peripheral_id: "peripherals_manager",
+                type: "peripherals_manager"
+            });
+            local_views.push({
+                name: "Platform",
+                peripheral_id: "platform_manager",
+                type: "platform_manager"
+            });
+        }
+        set_views(local_views);
+    }
+
 
 
     switch (app_stage) {
         case "ONBOARDING":
             return(
                 <div className="App">
-                    <OnboardingView onboarding_done={props.onboarding_done} />
+                    <PlatformManager  onboarding onboarding_done={props.onboarding_done} />
                 </div>
             );
 
@@ -144,36 +157,38 @@ let AuthApp = (props) =>{
             );
 
         case "NORMAL":
-            if(!plot.loading_done){
-                return(
-                    <></>
-                )
-            } else {
-                return (
-                    <div className="App">
-                        <ApplicationLayout name="plot_tab" sidebarNeeded={settings.current_view_requires_sidebar}>
-                            <Navbar views={views}/>
-                            {views.map((tab, i) => {
-                                if(tab.user_accessible){
-                                    return(
-                                        <Route
-                                            key={tab.peripheral_id}
-                                            path={'/'+tab.peripheral_id}
-                                            exact
-                                            render={(props) => <TabContent className="main_content_tab" tab={tab}/>}
-                                        />
+            return (
+                <div className="App">
 
-                                    )
-                                } else {
-                                    return null;
-                                }
-                            })}
-                            <Sidebar />
-                        </ApplicationLayout>
-                        <Redirect exact from="/" to="plot" />
-                    </div>
-                );
-            }
+                        <ResponsiveGridLayout
+                            className="layout"
+                            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+                            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+                            rowHeight={30}
+                            compactType='horizontal'
+                            useCSSTransforms={false}
+                        >
+                            <div key="nav" data-grid={{x: 0, y: 0, w: 3, h: 26, static: true}}>
+                                <Navbar views={views}/>
+                            </div>
+                            <UIPanel key="main" data-grid={{x: 3, y: 0, w: 16, h: 26, static: true}} level="level_1">
+                                <Routes>
+                                    <Route key="plot" path='/' element={<TabContent className="main_content_tab" tab={views[0]}/>}/>
+                                    <Route key="script_manager" path='/script_manager' element={<TabContent className="main_content_tab" tab={views[1]}/>}/>
+                                    <Route key="applications_manager" path='/applications_manager' element={<TabContent className="main_content_tab" tab={views[2]}/>}/>
+                                    <Route key="program_manager" path='/program_manager' element={<TabContent className="main_content_tab" tab={views[3]}/>}/>
+                                    <Route key="bitstream_manager" path='/bitstream_manager' element={<TabContent className="main_content_tab" tab={views[4]}/>}/>
+                                    <Route key="peripherals_manager" path='/peripherals_manager' element={<TabContent className="main_content_tab" tab={views[5]}/>}/>
+                                    <Route key="platform_manager" path='/platform_manager' element={<TabContent className="main_content_tab" tab={views[6]}/>}/>
+                                </Routes>
+                            </UIPanel>
+                            <UIPanel key="props" data-grid={{x: 19, y: 0, w: 5, h: 26, static: true}} level="level_1">
+                                <Sidebar />
+                            </UIPanel>
+                        </ResponsiveGridLayout>
+
+                </div>
+            );
         default:
             return(
                 <>

@@ -16,9 +16,11 @@
 //       REACT IMPORTS
 import React, {useCallback, useEffect, useState} from 'react';
 //      APP RELATED IMPORTS
-import serverProxy from "./ServerProxy";
 import AuthApp from "./AuthApp";
 import LoginPage from "./components/Common_Components/LoginPage";
+import store from "./store";
+import {set_address, set_auth_config, set_redux_store, sign_in, need_onboarding} from "./client_core";
+
 //////  STYLE IMPORTS
 import './App.css';
 import {useDispatch} from "react-redux";
@@ -26,15 +28,16 @@ import {setSetting} from "./redux/Actions/SettingsActions";
 import {ThemeProvider} from "styled-components";
 import {ColorTheme} from "./components/UI_elements";
 
+
 let App = (props) =>{
 
-    const [server] = useState(new serverProxy());
+
     const [logged, set_logged] = useState(false);
     const [onboarding_needed, set_onboarding_needed] = useState(true);
     const dispatch = useDispatch();
 
     const done = useCallback((login_credentials)=>{
-        server.auth_proxy.sign_in(login_credentials).then((token) =>{
+        sign_in(login_credentials).then((token) =>{
             if(token.login_token){
                 localStorage.setItem('login_token', JSON.stringify(token.login_token));
             }
@@ -42,7 +45,7 @@ let App = (props) =>{
             dispatch(setSetting(["user_role", token.role]));
             dispatch(setSetting(["access_token", token.access_token]));
             dispatch(setSetting(["auth_config", {headers: { Authorization: `Bearer ${token.access_token}` }}]));
-
+            set_auth_config({headers: { Authorization: `Bearer ${token.access_token}` }});
             set_logged(true);
         }).catch(()=>{
             localStorage.removeItem('login_token');
@@ -53,9 +56,10 @@ let App = (props) =>{
 
     useEffect(()=>{
         dispatch(setSetting(["server_url", process.env.REACT_APP_SERVER]));
-        dispatch(setSetting(["server", new serverProxy()]));
+        set_address(process.env.REACT_APP_SERVER);
+        set_redux_store(store);
 
-        server.platform_proxy.need_onboarding().then(response =>{
+        need_onboarding().then(response =>{
             set_onboarding_needed(response['onboarding_needed']);
             if(response['onboarding_needed']) {
                 set_logged(true);
@@ -65,7 +69,7 @@ let App = (props) =>{
         });
 
     },[])
-
+    
     let try_automated_login = () =>{
         let token = JSON.parse(localStorage.getItem('login_token'));
         if(token){
@@ -86,7 +90,9 @@ let App = (props) =>{
     return(
         <ThemeProvider theme={ColorTheme}>
             <div className="App">
-                {logged? <AuthApp onboarding_done={onboarding_done} needs_onboarding={onboarding_needed}/>:<LoginPage server={server} done={done}/>}
+                <React.StrictMode>
+                    {logged? <AuthApp onboarding_done={onboarding_done} needs_onboarding={onboarding_needed}/>:<LoginPage done={done}/>}
+                </React.StrictMode>
             </div>
         </ThemeProvider>
     )

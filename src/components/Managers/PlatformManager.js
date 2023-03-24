@@ -13,63 +13,52 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect, useRef, useState} from 'react';
-import {useLocation} from "react-router-dom";
+import React from 'react';
 
 import {useDispatch, useSelector} from "react-redux"
-import {BlockLayout, Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements"
+import {
+    Button,
+    UIPanel,
+    SimpleContent,
+    FormLayout,
+    InputField,
+    SelectField, ColorTheme
+} from "../UI_elements"
 
-
-import DataTable from 'react-data-table-component';
-import {TableStyle} from './TableStyles'
 import {setSetting} from "../../redux/Actions/SettingsActions";
+import {Responsive, WidthProvider} from "react-grid-layout";
+import {add_user, do_onboarding, dump_database, restore_database, upload_json} from "../../client_core";
+import { MdDownload, MdUpload} from "react-icons/md";
+import {Tooltip} from "react-tooltip";
 
-
-let columns = [
-    {
-        selector: 'username',
-        name: 'Username',
-        sortable: true,
-    },
-    {
-        selector: 'role',
-        name: 'Role'
-    }
-];
 
 let  PlatformManager = props =>{
-    const location = useLocation();
-    const [users, setUsers] = useState([])
-    const [refreshList, setRefreshList] = useState(false)
+    const ResponsiveGridLayout = WidthProvider(Responsive);
+
     const settings = useSelector(state => state.settings);
+    const dispatch = useDispatch()
 
-    const dispatch = useDispatch();
+    let handle_add_user = (event) =>{
 
-    const databaseFile = useRef(null)
-
-    useEffect(()=>{
-        settings.server.platform_proxy.get_users_list().then((response)=>{
-            setUsers(response)
-        })
-    },[dispatch, location, settings.refresh_user_view, refreshList])
-
-    let handleOnSelect = (selection) => {
-        if(selection.selectedCount===1){
-            dispatch(setSetting(["selected_user", selection.selectedRows[0].username]));
-        } else if(selection.selectedCount===0) {
-            dispatch(setSetting(["selected_user", null]));
+        event.preventDefault();
+        let username = event.target.user.value;
+        let pass = event.target.pass.value;
+        let role = event.target.role.value;
+        if(props.onboarding){
+            do_onboarding({user:username,password:pass, role:role}).then(res =>{
+                dispatch(setSetting(["refresh_user_view", !settings.refresh_user_view]));
+            })
+            props.onboarding_done();
+        } else{
+            add_user({user:username,password:pass, role:role}).then(res =>{
+                dispatch(setSetting(["refresh_user_view", !settings.refresh_user_view]));
+            })
         }
 
     };
 
-    let handleRemoveUser = (event) =>{
-        settings.server.platform_proxy.remove_user({user:settings.selected_user}).then((response)=>{
-            setRefreshList(!refreshList);
-        })
-    }
-
-    let handleDumpDatabse = () =>{
-        settings.server.platform_proxy.dump_database().then((response)=>{
+    let handle_dump_db = ()=>{
+        dump_database().then((response)=>{
             let encodedUri = encodeURI('data:text/json;charset=utf-8,'+ JSON.stringify(response));
             let link = document.createElement("a");
             link.setAttribute("href", encodedUri);
@@ -81,50 +70,62 @@ let  PlatformManager = props =>{
             link.remove();
 
         })
+    };
 
+    let handle_restore_db = ()=>{
+        upload_json().then((raw_json)=>{
+            let content = JSON.parse(raw_json);
+            restore_database(content).then();
+        }).catch((err)=>{
+            alert(err.message);
+        })
+    };
+
+    let constructActionsBar = () =>{
+        return(
+            <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
+                <div id="import_icon">
+                    <MdUpload onClick={handle_restore_db} size="2em" style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
+                    <Tooltip anchorId="import_icon" content="Restore Database" place="top" />
+                </div>
+                <div id="export_icon">
+                    <MdDownload onClick={handle_dump_db} size="2em" style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
+                    <Tooltip anchorId="export_icon" content="Dump Database" place="top" />
+                </div>
+            </div>
+        )
     }
-
-    let handleRestoreButton = event =>{
-        databaseFile.current.click();
-    }
-
-    let handleRestoreDatabse = (event) =>{
-        let file = event.target.files[0]
-        let reader = new FileReader();
-        reader.readAsText(file)
-        reader.onload = (event) =>{
-            let content = JSON.parse(event.target.result);
-            settings.server.platform_proxy.restore_database(content);
-        }
-        reader.onerror = (event) =>{
-            alert(event.target.error.message);
-        }
-    }
-
-    const rowSelectCritera = row => row.username === settings.selected_user;
-
 
     return(
-        <ManagerLayout>
-            <ManagerButtonsLayout>
-                <Button style={{margin:"0 1rem"}} onClick={handleRemoveUser}>Remove User</Button>
-                <Button style={{margin:"0 1rem"}} onClick={handleDumpDatabse}>Dump Database</Button>
-                <Button style={{margin:"0 1rem"}} onClick={handleRestoreButton}>Restore Database</Button>
-            </ManagerButtonsLayout>
-            <BlockLayout centered>
-                <DataTable
-                    title='Users'
-                    data={users}
-                    columns={columns}
-                    theme="uScopeTableTheme"
-                    customStyles={TableStyle}
-                    selectableRows
-                    onSelectedRowsChange={handleOnSelect}
-                    selectableRowSelected={rowSelectCritera}
-                />
-            </BlockLayout>
-            <input type='file' id='dbFile' ref={databaseFile} onChange={handleRestoreDatabse} style={{display: 'none'}}/>
-        </ManagerLayout>
+        <ResponsiveGridLayout
+            className="layout"
+            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+            rowHeight={30}
+            useCSSTransforms={false}
+        >
+
+            <UIPanel key="platform_management" data-grid={{x: 0, y: 0, w: 24, h: 7, static: true}} level="level_2">
+                <SimpleContent name="Platform Management" content={
+                    <div>
+                        {constructActionsBar()}
+                        <form onSubmit={handle_add_user}>
+                            <FormLayout>
+                                <InputField inline name="user" label="Username"/>
+                                <InputField inline name="pass" label="Password"/>
+                                <SelectField label="Role" defaultValue="role"
+                                             name="role" placeholder="Role" options={[
+                                    {value:"admin",label:"admin"},
+                                    {value:"user",label:"user"},
+                                    {value:"operator",label:"operator"}
+                                ]}/>
+                                <Button> Add User </Button>
+                            </FormLayout>
+                        </form>
+                    </div>
+                }/>
+            </UIPanel>
+        </ResponsiveGridLayout>
     );
 };
 

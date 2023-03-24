@@ -13,140 +13,63 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 
-import {useDispatch, useSelector} from "react-redux"
+import {useSelector} from "react-redux"
 
-import DataTable from 'react-data-table-component';
-import {TableStyle} from './TableStyles'
-
-
-import {BlockLayout, Button, ManagerButtonsLayout, ManagerLayout} from "../UI_elements"
-import {setSetting} from "../../redux/Actions/SettingsActions";
-
+import {
+    FormLayout,
+    InputField,
+    SimpleContent,
+    UIPanel
+} from "../UI_elements"
+import {Responsive, WidthProvider} from "react-grid-layout";
+import {up_script} from "../../client_core";
 import ScriptsEditor from "../Editors/Scripts/ScriptsEditor";
-
-
-let columns = [
-    {
-        selector: 'id',
-        name: 'Script ID',
-        sort: true
-    },
-    {
-        selector: 'name',
-        name: 'Script Name',
-        sort: true,
-        grow:2
-    },
-    {
-        selector: 'path',
-        name: 'Script Filename',
-        grow:3
-    },
-    {
-        selector: 'triggers',
-        name: 'Script Triggers',
-        grow:3
-    }
-];
 
 let ScriptManager = (props) =>{
 
-    const scripts_store = useSelector(state => state.scripts);
     const settings = useSelector(state => state.settings);
+    const scripts =  useSelector(state => state.scripts);
 
-    const dispatch = useDispatch();
+    let selected_script = settings.selected_script ? scripts[settings.selected_script] : {};
+    let selected_script_obj = new up_script(selected_script);
 
-    useEffect(() => {
-        return() =>{
-            dispatch(setSetting(["selected_script", null]));
+    const ResponsiveGridLayout = WidthProvider(Responsive);
+
+
+    let handle_edit_field = (event) => {
+        if(event.key==="Enter"|| event.key ==="Tab"){
+            selected_script_obj.edit_field(event.target.name, event.target.value);
         }
-    },[dispatch]);
-
-    const [editor_open, set_editor_open] = useState(false);
-
-    let handleOnSelect = (selection) => {
-        if(selection.selectedCount===1){
-            dispatch(setSetting(["selected_script", selection.selectedRows[0].id]));
-        } else if(selection.selectedCount===0) {
-            dispatch(setSetting(["selected_script", null]));
-        }
-    };
-
-    let get_next_id =(ids) => {
-        let id = null;
-        if(ids.length === 0) return 1;
-        for(var i = 1; i < ids.length; i++) {
-            if(ids[i] - ids[i-1] !== 1) {
-                id = ids[i-1]+1;
-            }
-        }
-        if(id===null)
-            id = ids.length+1;
-        return id
     }
 
-    let handleAddRow = () =>{
-        let ids = Object.values(scripts_store).map(a => a.id).sort();
-        let id = get_next_id(ids);
-
-        let new_script = { id:id, name:'new script_'+id, path:`new script_${id}.js`, script_content:'', triggers:''};
-        settings.server.script_proxy.upload_script(new_script);
-    };
-
-    let handleRemoveRow = (event) =>{
-        let removed = Object.values(scripts_store).find(x => x.id === settings.selected_script);
-        settings.server.script_proxy.delete_script(removed);
-        dispatch(setSetting(["selected_script", null]));
-    };
-
-    let handleScriptEdit = () => {
-        if(settings.selected_script===null){
-            alert("Please select a script to edit");
-            return;
-        }
-
-        let script = Object.values(scripts_store).find(x => x.id === settings.selected_script);
-        set_editor_open(true);
-        dispatch(setSetting(["script_editor_title", script.name]));
-    };
-
-    let handle_edit_done = () =>{
-        set_editor_open(false);
-    }
-
-    if(editor_open) {
-        return (
-            <ManagerLayout>
-                <ScriptsEditor done={handle_edit_done} />
-            </ManagerLayout>
-            );
-    }
-
-    const rowSelectCritera = row => row.id === settings.selected_script;
 
     return(
-    <ManagerLayout>
-        <ManagerButtonsLayout>
-            <Button style={{margin:"0 1rem"}} onClick={handleAddRow}>Add Script</Button>
-            <Button style={{margin:"0 1rem"}} onClick={handleRemoveRow}>Remove Script</Button>
-            <Button style={{margin:"0 1rem"}} onClick={handleScriptEdit}>Edit Script</Button>
-        </ManagerButtonsLayout>
-        <BlockLayout centered>
-            <DataTable
-                title='Scripts'
-                data={Object.values(scripts_store)}
-                columns={columns}
-                customStyles={TableStyle}
-                theme="uScopeTableTheme"
-                selectableRows
-                onSelectedRowsChange={handleOnSelect}
-                selectableRowSelected={rowSelectCritera}
-            />
-        </BlockLayout>
-    </ManagerLayout>
+        <ResponsiveGridLayout
+            className="layout"
+            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+            rowHeight={30}
+            useCSSTransforms={false}
+        >
+            <UIPanel key="script_properties" data-grid={{x: 0, y: 0, w: 24, h: 5, static: true}} level="level_2">
+                <SimpleContent name="Script Properties" content={
+                    <FormLayout>
+                        <InputField inline name='name' placeholder={selected_script.name} onKeyDown={handle_edit_field} label='name'/>
+                        <InputField inline name='path' placeholder={selected_script.path} onKeyDown={handle_edit_field} label='path'/>
+                        <InputField inline name='triggers' placeholder={selected_script.triggers} onKeyDown={handle_edit_field} label='triggers'/>
+                    </FormLayout>
+                }/>
+            </UIPanel>
+            <UIPanel key="script_source" data-grid={{x: 0, y: 5, w: 24, h: 20, static: true}} level="level_2">
+                <SimpleContent name="Script Source Code" content={
+                    <ScriptsEditor script={selected_script} />
+                }/>
+            </UIPanel>
+        </ResponsiveGridLayout>
     );
+
 }
 
 

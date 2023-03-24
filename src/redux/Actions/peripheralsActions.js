@@ -13,70 +13,52 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ADD_PERIPHERAL, EDIT_PERIPHERAL, LOAD_PERIPHERALS, REMOVE_PERIPHERAL} from "./types";
-import axios from 'axios';
-import {setSetting} from "./SettingsActions";
+import {
+    ADD_PERIPHERAL,
+    LOAD_PERIPHERALS, REMOVE_FIELD,
+    REMOVE_PERIPHERAL,
+    REMOVE_REGISTER,
+    UPSERT_FIELD,
+    UPSERT_REGISTER
+} from "./types";
 
 
-export const loadPeripherals = (server_url, config) => {
-    return dispatch => {
-        axios.get(server_url, config).then(res => {
-            dispatch(loadPeripheralsDone(res.data));
-            dispatch(setSetting(["loaded_peripherals", true]));
-        }).catch(err => {
-            alert('ERROR: error while loading all peripherals\n' + err.message);
-        });
-    };
-};
-
-const loadPeripheralsDone = parameters => ({
+export const loadPeripherals = peripherals => ({
     type: LOAD_PERIPHERALS,
-    payload: parameters
+    payload: peripherals
 });
 
-export const editPeripheral = (server_url, edit, config) => {
-    return dispatch => {
-        axios.post(server_url, edit, config).then(res => {
-            dispatch(editPeripheralDone(edit));
-        }).catch(err => {
-            alert('ERROR: error while editing a peripheral\n' + err.message);
-        });
-    };
-};
-
-const editPeripheralDone = edit => ({
-    type: EDIT_PERIPHERAL,
-    payload: edit
-});
-
-
-export const removePeripheral = (server_url, peripheral, config) =>{
-    return dispatch => {
-        axios.get(server_url, config).then(res => {
-            dispatch(removePeripheralDone(peripheral));
-        }).catch(err => {
-            alert('ERROR: error while removing a peripheral\n' + err.message);
-        });
-    };
-};
-
-const removePeripheralDone = peripheral =>({
-  type: REMOVE_PERIPHERAL,
-  payload:peripheral
-});
-
-
-export const addPeripheral = (server_url, peripheral_obj, config) =>{
-    return dispatch => {
-        axios.post(server_url, peripheral_obj, config).then(res => {
-            dispatch(addPeripheralDone(peripheral_obj));
-        }).catch(err => {
-            alert('ERROR: error while adding a peripheral\n' + err.message);
-        });
-    };
-};
-
-const addPeripheralDone = peripheral_obj =>({
+export const addPeripheral = peripheral_obj =>({
     type: ADD_PERIPHERAL,
     payload:peripheral_obj
+});
+
+export const removePeripheral = peripheral =>({
+    type: REMOVE_PERIPHERAL,
+    payload:peripheral
+});
+
+export const upsertRegister =  (register_obj, reg_id, periph) =>({
+    type: UPSERT_REGISTER,
+    register_id: reg_id,
+    parent:periph,
+    payload:register_obj
+});
+
+export const upsertField =  (field_obj,field_id, register, periph) =>({
+    type: UPSERT_FIELD,
+    parent_reg:register,
+    parent_periph: periph,
+    field_id:field_id,
+    payload:field_obj
+});
+
+export const removeRegister = (peripheral, register) =>({
+    type: REMOVE_REGISTER,
+    payload: {periph:peripheral, reg:register}
+});
+
+export const removeField = (peripheral, register, field) =>({
+    type: REMOVE_FIELD,
+    payload: {periph:peripheral, reg:register, field:field}
 });

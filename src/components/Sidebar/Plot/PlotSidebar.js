@@ -18,39 +18,33 @@ import React from 'react';
 
 import EnablesProperties from "./EnablesProperties";
 import CaptureProperties from "./CaptureProperties";
-import {useSelector} from "react-redux";
+import {SimpleContent, UIPanel} from "../../UI_elements";
+import {Responsive, WidthProvider} from "react-grid-layout";
 
 let  PlotSidebar = props =>{
 
-    const settings = useSelector(state => state.settings);
-
-    let on_capture_start = (capture_length) => {
-        settings.server.plot_proxy.setCapture(capture_length);
-        setTimeout(on_capture_end, 500);
-    };
-
-
-    let on_capture_end = () => {
-        settings.server.plot_proxy.get_captured_data().then((res) => {
-            if(res['elapsed'] !== 0){
-                setTimeout(on_capture_end, 1000);
-            } else {
-                let hiddenElement = document.createElement('a');
-                hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(res['data']);
-                hiddenElement.target = '_blank';
-                hiddenElement.download = 'data.csv';
-                hiddenElement.click();
-            }
-        });
-    };
+    const ResponsiveGridLayout = WidthProvider(Responsive);
 
     return (
-        <>
-            <EnablesProperties/>
-            <CaptureProperties done={on_capture_start} />
-        </>
+        <ResponsiveGridLayout
+            className="layout"
+            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+            useCSSTransforms={false}
+        >
+            <UIPanel key="scope_props" data-grid={{x: 0, y: 0, w: 24, h: 2, static: true}} level="level_2">
+                <SimpleContent name="Scope Properties" content={
+                    <EnablesProperties/>
+                }/>
+            </UIPanel>
+            <UIPanel key="capture" data-grid={{x: 2, y: 2, w: 24, h: 1.15, static: true}} level="level_2">
+                <SimpleContent name="Capture" content={
+                    <CaptureProperties/>
+                }/>
+            </UIPanel>
+        </ResponsiveGridLayout>
     );
-
 };
+
 
 export default PlotSidebar;

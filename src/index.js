@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import {createRoot} from "react-dom/client";
 import App from './App';
 import {Provider} from "react-redux";
 import store, {persistor} from "./store";
@@ -27,7 +27,12 @@ import './fonts/montserrat-v14-latin-ext_latin-300.woff2'
 import './fonts/montserrat-v14-latin-ext_latin-regular.woff2'
 import './fonts/montserrat-v14-latin-ext_latin-500.woff2'
 
-ReactDOM.render(
+
+
+const container = document.getElementById("root");
+const root = createRoot(container);
+
+root.render(
     <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
             <BrowserRouter>
@@ -35,5 +40,4 @@ ReactDOM.render(
             </BrowserRouter>
         </PersistGate>
     </Provider>,
-    document.getElementById('root')
 );

@@ -25,12 +25,19 @@ body {
   font-family: Monserrat, Helvetica, sans-serif;
   line-height: 1.4;
   color: #FFF;
-  background-color: #08081A;
+  background-color: #121212;
 }
 
 a {
   text-decoration: none;
 }
+
+.dock-tabpane{
+  overflow: auto !important;
+}
+
+
+
 
 /* montserrat-100 - latin-ext_latin */
 @font-face {

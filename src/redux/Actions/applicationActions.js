@@ -13,9 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {ADD_APPLICATION, EDIT_APPLICATION, LOAD_APPLICATIONS, REMOVE_APPLICATION, SAVE_PARAMETER} from "./types";
-import axios from 'axios';
-import {setSetting} from "./SettingsActions";
+import {ADD_APPLICATION, LOAD_APPLICATIONS, REMOVE_APPLICATION, SAVE_PARAMETER} from "./types";
 
 
 export const saveParameter = (parameter) => ({
@@ -27,69 +25,21 @@ export const saveParameter = (parameter) => ({
     }
 });
 
-export const loadApplications = (server_url, config) => {
-
-    return dispatch => {
-        axios.get(server_url, config).then(res => {
-            dispatch(loadApplicationsDone(res.data));
-            dispatch(setSetting(["loaded_applications", true]));
-        }).catch(err => {
-            alert('ERROR: error while loading all applications\n' + err.message);
-        });
-    };
-};
-
-const loadApplicationsDone = parameters => ({
+export const loadApplications = parameters => ({
     type: LOAD_APPLICATIONS,
     payload: parameters
 });
 
 
-export const editApplication = (server_url,edit, config) => {
-
-    return dispatch => {
-        axios.post(server_url, edit, config).then(res => {
-            dispatch(editApplicationDone(edit));
-        }).catch(err => {
-            alert('ERROR: error while editing an application\n' + err.message);
-        });
-    };
-};
-
-const editApplicationDone = edit => ({
-    type: EDIT_APPLICATION,
-    payload: edit
+export const addApplication = application =>({
+    type: ADD_APPLICATION,
+    payload:application
 });
 
-
-export const removeApplication = (server_url, application, config) =>{
-    return dispatch => {
-        axios.get(server_url, config).then(res => {
-            dispatch(removeApplicationDone(application));
-        }).catch(err => {
-            alert('ERROR: error while removing an application\n' + err.message);
-        });
-    };
-};
-
-const removeApplicationDone = application =>({
+export const removeApplication = application =>({
     type: REMOVE_APPLICATION,
     payload:application
 });
 
-export const addApplication = (server_url, application_obj, config) =>{
-    return dispatch => {
-        return axios.post(server_url, application_obj, config).then(res => {
-            dispatch(addApplicationDone(application_obj));
-        }).catch(err => {
-            alert('ERROR: error while adding an application\n' + err.message);
-        });
-    };
-};
-
-const addApplicationDone = application =>({
-    type: ADD_APPLICATION,
-    payload:application
-});
 
 
