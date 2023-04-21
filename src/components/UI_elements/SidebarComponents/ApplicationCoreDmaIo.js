@@ -141,8 +141,8 @@ export let  ApplicationCoreDmaIo = props =>{
                     return {label:item, value:item}
                 })]
             }
-            if(selected_program.build_settings.io.memory){
-                core_io = [ ...core_io, ...selected_program.build_settings.io.memory.map((item)=>{
+            if(selected_program.build_settings.io.memories){
+                core_io = [ ...core_io, ...selected_program.build_settings.io.memories.map((item)=>{
                     return {label:item, value:item}
                 })]
             }
