@@ -93,7 +93,7 @@ let  EnablesProperties = props =>{
     }
 
     let handleChGroupChange = (event) => {
-        let group_name = event.target.value;
+        let group_name = event.value;
         set_selected(event.target);
         let group = []
         //GET GROUP OBJECT
@@ -113,14 +113,10 @@ let  EnablesProperties = props =>{
         if(scope_mux_address){
             let components = [];
             for(let item of channels){
-                let channel_mux = parseInt(item.mux_setting)<<4*item.number;
-                components.push(channel_mux);
+                let channel_address = scope_mux_address + 4*(parseInt(item.number)+1);
+                up_peripheral.direct_register_write([[channel_address, parseInt(item.mux_setting)]]).then();
             }
-            let word = 0x1000000;
-            for(let item of components){
-                word |= item;
-            }
-            up_peripheral.direct_register_write([[scope_mux_address, word]]).then()
+            up_peripheral.direct_register_write([[scope_mux_address,  0x1000000]]).then();
         }
         //SET  UP CHANNEL WIDTHS
         let widths = []
