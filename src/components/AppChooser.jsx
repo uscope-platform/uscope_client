@@ -83,7 +83,7 @@ let ApplicationChooser = (props) =>{
 
         if(channels_list.length !== 0){
             let widths = Array(6).fill(16);
-            for(let item of channels){
+            for(let item of channels_list){
                 if(item.phys_width){
                     widths[parseInt(item.number)] = parseInt(item.phys_width);
                 }
@@ -93,7 +93,7 @@ let ApplicationChooser = (props) =>{
 
         if(channels_list.length !== 0){
             let sfs = Array(6).fill(1);
-            for(let item of channels){
+            for(let item of channels_list){
                 if(item.scaling_factor){
                     sfs[parseInt(item.number)] = parseFloat(item.scaling_factor);
                 }
