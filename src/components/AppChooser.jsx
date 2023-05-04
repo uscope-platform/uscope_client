@@ -82,20 +82,23 @@ let ApplicationChooser = (props) =>{
         // SET UP CHANNEL WIDTHS
 
         if(channels_list.length !== 0){
-            let widths = []
-            for(let item of channels_list){
-                widths.push(parseInt(item.phys_width));
+            let widths = Array(6).fill(16);
+            for(let item of channels){
+                if(item.phys_width){
+                    widths[parseInt(item.number)] = parseInt(item.phys_width);
+                }
             }
             set_channel_widths(widths).then();
         }
 
         if(channels_list.length !== 0){
-            let sfs = []
-            for(let item of channels_list){
-                sfs.push(parseFloat(item.scaling_factor));
+            let sfs = Array(6).fill(1);
+            for(let item of channels){
+                if(item.scaling_factor){
+                    sfs[parseInt(item.number)] = parseFloat(item.scaling_factor);
+                }
             }
             set_scaling_factors(sfs).then();
-
         }
 
     }

@@ -120,15 +120,20 @@ let  EnablesProperties = props =>{
             up_peripheral.direct_register_write([[scope_mux_address,  0x1000000]]).then();
         }
         //SET  UP CHANNEL WIDTHS
-        let widths = []
+        let widths = Array(6).fill(16);
         for(let item of channels){
-            widths.push(parseInt(item.phys_width));
+            if(item.phys_width){
+                widths[parseInt(item.number)] = parseInt(item.phys_width);
+            }
         }
         set_channel_widths(widths).then();
+
         //SET  UP SCALING FACTORS
-        let sfs = []
+        let sfs = Array(6).fill(1);
         for(let item of channels){
-            sfs.push(parseFloat(item.scaling_factor));
+            if(item.scaling_factor){
+                sfs[parseInt(item.number)] = parseFloat(item.scaling_factor);
+            }
         }
         set_scaling_factors(sfs).then();
 
