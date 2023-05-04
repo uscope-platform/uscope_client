@@ -14,6 +14,7 @@ export default defineConfig({
         svgrPlugin()
     ],
     build:{
-        outDir:"build"
+        outDir:"build",
+        sourcemap:true
     }
 });
