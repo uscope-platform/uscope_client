@@ -31,7 +31,7 @@ const initial_state = {
     selected_user:null,
     refresh_user_view:false,
     logged:false,
-    server_url: process.env.REACT_APP_SERVER,
+    server_url: import.meta.env.VITE_APP_SERVER,
     auth_config:null,
     user_role:null,
     sampling_period:0,

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="228px"
+   height="256px"
+   viewBox="0 0 228 256"
+   version="1.1"
+   id="svg159"
+   sodipodi:docname="generic.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs163">
+    <rect
+       x="89.966309"
+       y="112.94822"
+       width="36.18012"
+       height="64.046241"
+       id="rect534" />
+  </defs>
+  <sodipodi:namedview
+     id="namedview161"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="3.1757812"
+     inkscape:cx="113.9877"
+     inkscape:cy="150.98647"
+     inkscape:window-width="1846"
+     inkscape:window-height="1016"
+     inkscape:window-x="74"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Page-1" />
+  <!-- Generator: Sketch 52 (66869) - http://www.bohemiancoding.com/sketch -->
+  <title
+     id="title148">c</title>
+  <desc
+     id="desc150">Created with Sketch.</desc>
+  <g
+     id="Page-1"
+     stroke="none"
+     stroke-width="1"
+     fill="none"
+     fill-rule="evenodd">
+    <path
+       d="m 227.98842,75.264 c -0.002,-4.304889 -0.92358,-8.108444 -2.78676,-11.372444 -1.83024,-3.210667 -4.57247,-5.900445 -8.24897,-8.028445 C 186.5993,38.378667 156.21652,20.947556 125.87381,3.4453333 117.69342,-1.272 109.76152,-1.1004444 101.64169,3.6853333 89.560359,10.803556 29.072672,45.424 11.048203,55.853333 3.6257344,60.146667 0.01335938,66.716444 0.01157812,75.256 0,110.41867 0.01157812,145.57956 0,180.74311 c 0.00178125,4.20978 0.88439063,7.93956 2.6656406,11.15556 1.831125,3.30666 4.6107656,6.07111 8.3727654,8.24711 18.02536,10.42933 78.521063,45.04711 90.599724,52.16711 8.12339,4.78844 16.05529,4.95911 24.23835,0.24 30.3436,-17.50311 60.72816,-34.93333 91.086,-52.41778 3.762,-2.17511 6.54164,-4.94133 8.37277,-8.24533 1.77858,-3.216 2.66297,-6.94578 2.66475,-11.15645 0,0 0,-70.30577 -0.0116,-105.46933"
+       id="Path"
+       fill="#a9b9cb"
+       style="fill:#99ffb6;fill-opacity:1" />
+    <path
+       d="M 125.66808,3.6746667 C 117.50105,-1.0311111 109.5825,-0.85955556 101.47603,3.9137778 89.414297,11.013333 29.025469,45.544 11.030391,55.946667 3.6195,60.228444 0.01335938,66.781333 0.01157812,75.298667 0,110.36978 0.01157812,145.44 0,180.512 c 0.00178125,4.19911 0.88260938,7.91911 2.6611875,11.12622 1.8284531,3.29867 4.6036406,6.056 8.3594065,8.22578 4.122703,2.38311 10.472859,6.03378 17.954109,10.32889 L 195.60352,43.888889 C 172.28873,30.489778 148.96772,17.101333 125.66808,3.6746667"
+       id="path153"
+       fill="#7f8b99"
+       style="fill:#007b23;fill-opacity:1" />
+    <text
+       xml:space="preserve"
+       id="text532"
+       style="fill:black;fill-opacity:1;line-height:1.25;stroke:none;font-family:sans-serif;font-style:normal;font-weight:normal;font-size:40px;white-space:pre;shape-inside:url(#rect534)" />
+  </g>
+</svg>

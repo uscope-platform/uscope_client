@@ -1,0 +1,1 @@
+import{j as e,m as d,C as i,v as n}from"./index-a234ec4f.js";let t=o=>e.jsx("div",{style:{display:"flex",marginRight:"0.5em",justifyContent:"right"},children:e.jsxs("div",{id:"add_icon",children:[e.jsx(d,{onClick:o.onAdd,size:i.icons_size,style:{marginLeft:"0.3em"},color:i.icons_color}),e.jsx(n,{anchorId:"add_icon",content:"Add "+o.contentName,place:"top"})]})});export{t as S};

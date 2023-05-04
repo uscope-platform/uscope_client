@@ -55,8 +55,8 @@ let App = (props) =>{
 
 
     useEffect(()=>{
-        dispatch(setSetting(["server_url", process.env.REACT_APP_SERVER]));
-        set_address(process.env.REACT_APP_SERVER);
+        dispatch(setSetting(["server_url", import.meta.env.VITE_APP_SERVER]));
+        set_address(import.meta.env.VITE_APP_SERVER);
         set_redux_store(store);
 
         need_onboarding().then(response =>{

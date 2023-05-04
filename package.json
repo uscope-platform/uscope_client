@@ -8,6 +8,7 @@
     "@codemirror/lang-javascript": "^6.0.0",
     "@uiw/codemirror-theme-dracula": "^4.9.4",
     "@uiw/react-codemirror": "^4.9.4",
+    "@vitejs/plugin-react": "^4.0.0",
     "ajv": "^8.11.0",
     "axios": "^0.26.1",
     "butter-toast": "^3.3.5",
@@ -26,7 +27,6 @@
     "react-redux": "^8.0.1",
     "react-router": "^6.3.0",
     "react-router-dom": "^6.3.0",
-    "react-scripts": "^5.0.1",
     "react-select": "^5.3.0",
     "react-toastify": "^9.1.1",
     "react-tooltip": "^5.3.4",
@@ -36,19 +36,19 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
     "styled-components": "^5.1.1",
+    "vite": "^4.3.4",
+    "vite-plugin-svgr": "^3.2.0",
+    "vite-tsconfig-paths": "^4.2.0",
     "xterm": "^4.18.0",
     "xterm-addon-fit": "^0.5.0"
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "start": "PORT=3004 GENERATE_SOURCEMAP=false react-scripts --openssl-legacy-provider start",
-    "build": "react-scripts --openssl-legacy-provider build",
-    "build:staging": "env-cmd -f .env.staging npm run build",
-    "build_debugging": "env-cmd -f .env.debugging npm run build",
-    "test": "jest",
-    "eject": "react-scripts eject",
-    "storybook": "start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -s public"
+    "start": "vite",
+    "build": "vite build",
+    "build:staging": "vite build --mode staging",
+    "build_debugging": "vite build --mode debugging",
+    "test": "jest"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -68,8 +68,6 @@
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.17.7",
     "@babel/preset-react": "^7.16.7",
-    "@storybook/addons": "^6.2.7",
-    "@storybook/react": "^6.2.7",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.2.0",
     "@testing-library/user-event": "^14.1.1",
@@ -83,8 +81,7 @@
     "msw": "^0.39.2",
     "react-select-event": "^5.5.0",
     "react-test-renderer": "^18.1.0",
-    "source-map-explorer": "^2.4.2",
-    "storybook-dark-mode": "^1.0.7"
+    "source-map-explorer": "^2.4.2"
   },
   "jest": {
     "transform": {

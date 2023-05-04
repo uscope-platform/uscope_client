@@ -111,10 +111,11 @@ let  EnablesProperties = props =>{
         dispatch(initialize_channels(ch_obj));
         //SET UP MUXES FOR NEW GROUP
         if(scope_mux_address){
-            let components = [];
             for(let item of channels){
-                let channel_address = scope_mux_address + 4*(parseInt(item.number)+1);
-                up_peripheral.direct_register_write([[channel_address, parseInt(item.mux_setting)]]).then();
+                if(item){
+                    let channel_address = scope_mux_address + 4*(parseInt(item.number)+1);
+                    up_peripheral.direct_register_write([[channel_address, parseInt(item.mux_setting)]]).then();
+                }
             }
             up_peripheral.direct_register_write([[scope_mux_address,  0x1000000]]).then();
         }

@@ -72,8 +72,10 @@ let ApplicationChooser = (props) =>{
         let scope_mux_address = parseInt(app['scope_mux_address']);
         if(scope_mux_address){
             for(let item of channels_list){
-                let channel_address = scope_mux_address + 4*(parseInt(item.number)+1);
-                up_peripheral.direct_register_write([[channel_address, parseInt(item.mux_setting)]]).then();
+                if(item){
+                    let channel_address = scope_mux_address + 4*(parseInt(item.number)+1);
+                    up_peripheral.direct_register_write([[channel_address, parseInt(item.mux_setting)]]).then();
+                }
             }
             up_peripheral.direct_register_write([[scope_mux_address,  0x1000000]]).then();
         }
