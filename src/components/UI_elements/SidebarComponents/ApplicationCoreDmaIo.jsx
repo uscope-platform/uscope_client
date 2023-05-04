@@ -209,7 +209,7 @@ export let  ApplicationCoreDmaIo = props =>{
                         name="assoc_core_io"
                         options={get_core_io()}
                     />
-                    <InputField inline ID="address" name='address' value={selected_item.address}
+                    <InputField inline ID="address" name='address' defaultValue={selected_item.address}
                                 onKeyDown={handle_edit_logic_io} label="Address"/>
                 </div>
             )
