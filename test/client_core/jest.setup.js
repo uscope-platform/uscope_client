@@ -1,6 +1,7 @@
 import { server } from './mock/server'
 import {set_address, set_redux_store} from "../../src/client_core";
 import {mock_store} from "./mock/redux_store";
+import {vitest} from "vitest";
 
 // Establish API mocking before all tests.
 beforeAll(() => {
@@ -15,7 +16,7 @@ beforeEach(() =>{
 // Reset any request handlers that we may add during the tests,
 // so they don't affect other tests.
 afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     server.resetHandlers()
 });
 // Clean up after the tests are finished.

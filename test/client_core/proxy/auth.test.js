@@ -27,7 +27,7 @@ test("auth_sucess", () => {
 
 let alert_message = "";
 test("auth_fail", () => {
-    jest.spyOn(window, 'alert').mockImplementation((msg) => {alert_message = msg;});
+    vi.spyOn(window, 'alert').mockImplementation((msg) => {alert_message = msg;});
 
     return sign_in({user:"test", password:"fail"}).catch((err) =>{
         expect(err.response.data).toBe("FAILED");

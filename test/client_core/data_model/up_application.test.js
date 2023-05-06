@@ -78,7 +78,8 @@ test("add_channel", () => {
                         mux_setting: 0,
                         name: "test_ch",
                         number: 0,
-                        phys_width: 16
+                        phys_width: 16,
+                        scaling_factor: 1,
                     }],
                     channel_groups: [],
                     clock_frequency: 100000000,
@@ -101,7 +102,8 @@ test("add_channel", () => {
                     mux_setting: 0,
                     name: "test_ch",
                     number: 0,
-                    phys_width: 16
+                    phys_width: 16,
+                    scaling_factor: 1
                 }
             });
             let state = mock_store.getState();
@@ -333,7 +335,8 @@ test("add_soft_core", () => {
                     soft_cores: [{
                         id:"test_core",
                         address: 0,
-                        default_program:""
+                        default_program:"",
+                        io:[]
                     }],
                     n_enables: 0,
                     parameters: [],
@@ -346,7 +349,8 @@ test("add_soft_core", () => {
                 action: "add_soft_core", application: "default", soft_core: {
                     id:"test_core",
                     address: 0,
-                    default_program:""
+                    default_program:"",
+                    io:[]
                 }
             });
             let state = mock_store.getState();
@@ -410,7 +414,8 @@ test("edit_channel", () => {
                             mux_setting: 0,
                             name: "test_ch",
                             number: 25,
-                            phys_width: 16
+                            phys_width: 16,
+                            scaling_factor: 1
                         }],
                         channel_groups: [],
                         clock_frequency: 100000000,
@@ -594,7 +599,8 @@ test("edit_soft_core", () => {
                         soft_cores: [{
                             id:"test_core",
                             address: 0,
-                            default_program:"test_program"
+                            default_program:"test_program",
+                            io:[]
                         }],
                         n_enables: 0,
                         parameters: [],

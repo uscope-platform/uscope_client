@@ -48,7 +48,7 @@ test("create_plot_channel", () => {
 
 
 test("set widths", () => {
-    jest.spyOn(window, 'alert').mockImplementation(() => {});
+    vi.spyOn(window, 'alert').mockImplementation(() => {});
     return set_channel_widths([14, 14, 14, 14, 14 ,14]).then((res)=>{
         expect(setup_widths_data).toStrictEqual({widths:[14, 14, 14, 14, 14 ,14]});
         return set_channel_widths([]).catch((err)=>{

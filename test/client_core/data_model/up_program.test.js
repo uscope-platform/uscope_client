@@ -28,6 +28,9 @@ test("program creation", () => {
     let program = up_program.construct_empty(1);
     let check_program = {
             id:1,
+            build_settings: {
+                io: [],
+            },
             name:"new program_1",
             program_content:'',
             program_type:''
@@ -42,6 +45,9 @@ test("remote add", () => {
         let check_program =  {
             body:{
                 id:1,
+                build_settings: {
+                    io: [],
+                },
                 name:"new program_1",
                 program_content:'',
                 program_type:''
@@ -62,6 +68,9 @@ test("set content", () => {
         return program.set_content("TEST CONTENT").then(()=>{
             let check_program = {
                 id:1,
+                build_settings: {
+                    io: [],
+                },
                 name:"new program_1",
                 program_content:'TEST CONTENT',
                 program_type:''
@@ -105,7 +114,10 @@ test("load program", () => {
         return program.load('0x83c00000').then(()=>{
             let check_obj = {
                 body: {
-                    core_address: "0x83c00000",
+                    build_settings: {
+                        io: [],
+                    },
+                    core_id: "0x83c00000",
                     id: 10,
                     name: "new program_10",
                     program_content: "",

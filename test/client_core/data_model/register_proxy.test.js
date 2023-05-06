@@ -42,14 +42,16 @@ let register = {
 
 test("access with callback", done => {
     let reg = construct_proxied_register(register, "test_periph_id");
-    set_write_callback( (periph_id, spec_id, reg_id, field_spec, field_name, access_type) =>{
-        expect(periph_id).toBe("test_periph_id");
-        expect(spec_id).toBe("test_periph_spec");
-        expect(reg_id).toBe("cmp_thr_1");
-        expect(access_type).toBe("field");
-        expect(field_name).toBe("slow");
-        expect(field_spec).toStrictEqual({length: 16, offset: 16});
-        done();
+    set_write_callback((periph_id, spec_id, reg_id, field_spec, field_name, access_type) =>{
+        return new Promise((resolve)=>{
+            expect(periph_id).toBe("test_periph_id");
+            expect(spec_id).toBe("test_periph_spec");
+            expect(reg_id).toBe("cmp_thr_1");
+            expect(access_type).toBe("field");
+            expect(field_name).toBe("slow");
+            expect(field_spec).toStrictEqual({length: 16, offset: 16});
+            resolve();
+        })
     });
     reg.slow = 68;
     expect(reg.full_register_accessed).not.toBeTruthy();

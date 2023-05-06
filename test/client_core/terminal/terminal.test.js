@@ -64,11 +64,11 @@ test("test_execute_commands", ()=>{
     execute_command("wrong_test")
     expect(terminal._test_get_content()).toStrictEqual(['\r\n\x1b[1;31mUnrecognized command: wrong_test\x1b[37m']);
 
-    const read_spy = jest.spyOn(terminal_backend, "read");
-    const write_spy = jest.spyOn(terminal_backend, "write");
-    const write_direct_spy = jest.spyOn(terminal_backend, "write_direct");
-    const execute_spy = jest.spyOn(terminal_backend, "execute_queue");
-    const clear_spy = jest.spyOn(terminal_backend, "clear_queue");
+    const read_spy = vi.spyOn(terminal_backend, "read");
+    const write_spy = vi.spyOn(terminal_backend, "write");
+    const write_direct_spy = vi.spyOn(terminal_backend, "write_direct");
+    const execute_spy = vi.spyOn(terminal_backend, "execute_queue");
+    const clear_spy = vi.spyOn(terminal_backend, "clear_queue");
 
     execute_command("read --help")
     execute_command("write --help")
@@ -120,7 +120,7 @@ test("test_delete_key", ()=>{
 test("test_return_key", ()=>{
     init_test_terminal();
     terminal._test_clear_buffer();
-    const write_spy = jest.spyOn(terminal_backend, "write");
+    const write_spy = vi.spyOn(terminal_backend, "write");
     set_current_line("write --help");
     handle_keypress("\r").then((response)=>{
         expect(write_spy).toHaveBeenCalledTimes(1);
