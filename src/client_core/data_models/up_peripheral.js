@@ -65,6 +65,14 @@ export class up_peripheral {
         alert("NOT IMPLEMENTED YET");
     };
 
+    edit_parametric = (value) =>{
+        this.parametric = value;
+        let edit ={peripheral:this.peripheral_name, action:"edit_parametric", parametric:value};
+        store.dispatch(addPeripheral({payload:{[this.peripheral_name]:this}}))
+        return backend_post(api_dictionary.peripherals.edit, edit);
+    };
+
+
     get_proxied_registers = (periph_id) =>{
         let registers = {}
         for (const r of this.registers) {

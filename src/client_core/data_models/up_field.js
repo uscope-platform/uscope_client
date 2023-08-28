@@ -27,11 +27,10 @@ export class up_field {
         this.description = field_obj.description;
         this.length = field_obj.length;
         this.offset = field_obj.offset;
-        this.parametric = field_obj.parametric;
+        this.parametric = parametric;
         if(parametric){
             this.n_fields = field_obj.n_fields;
             this.order = field_obj.order;
-            this.parametric = parametric;
         }
     }
 
@@ -69,6 +68,19 @@ export class up_field {
         return backend_post(api_dictionary.peripherals.edit, edit)
     }
 
+    edit_order = (order) => {
+        let edit = {peripheral:this.parent_peripheral, register:this.parent_register, field:"order",field_name:this.name, value:order, action:"edit_field"};
+        this.order = order;
+        store.dispatch(upsertField(this, this.name, this.parent_register, this.parent_peripheral));
+        return backend_post(api_dictionary.peripherals.edit, edit)
+    }
+
+    edit_n_fields = (n_fields) => {
+        let edit = {peripheral:this.parent_peripheral, register:this.parent_register, field:"n_fields",field_name:this.name, value:[n_fields], action:"edit_field"};
+        this.n_fields = [n_fields];
+        store.dispatch(upsertField(this, this.name, this.parent_register, this.parent_peripheral));
+        return backend_post(api_dictionary.peripherals.edit, edit)
+    }
     edit_offset = (offset) => {
         let edit = {peripheral:this.parent_peripheral, register:this.parent_register, field:"offset",field_name:this.name, value:offset, action:"edit_field"};
         this.offset = offset;

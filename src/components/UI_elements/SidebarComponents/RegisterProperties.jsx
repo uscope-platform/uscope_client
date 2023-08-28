@@ -21,6 +21,7 @@ import {Checkbox} from "../checkbox";
 import {FieldProperties} from "./FieldProperties";
 import {up_register} from "../../../client_core";
 import {Card} from "../panels/Card";
+import {SelectField} from "../Select";
 
 const ChoicesWrapper = styled.div`
     display: grid;
@@ -31,7 +32,7 @@ const ChoicesWrapper = styled.div`
 `
 
 export let  RegisterProperties = props =>{
-    const register_obj = new up_register(props.register, props.peripheral.peripheral_name);
+    const register_obj = new up_register(props.register, props.peripheral.peripheral_name, props.parametric);
 
 
 
@@ -52,6 +53,16 @@ export let  RegisterProperties = props =>{
     let handleonKeyDown = (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
             switch (event.target.name) {
+                case "n_registers":
+                    register_obj.edit_n_registers(event.target.value).then(()=>{
+                        props.forceUpdate();
+                    })
+                    break;
+                case "order":
+                    register_obj.edit_order(event.target.value).then(()=>{
+                        props.forceUpdate();
+                    })
+                    break;
                 case "ID":
                     register_obj.edit_id(event.target.value).then(()=>{
                         props.forceUpdate();
@@ -85,6 +96,25 @@ export let  RegisterProperties = props =>{
         });
     }
 
+    let render_parametric_properties = ()=>{
+        if(props.register.parametric) {
+            return (
+                <div style={{display: "flex", flexDirection: "column"}}>
+                    <InputField inline ID="order" name='order' defaultValue={props.register.order} onKeyDown={handleonKeyDown} label="Order"/>
+                    <InputField inline ID="n_registers" name='n_registers' defaultValue={props.register.n_registers[0]} onKeyDown={handleonKeyDown} label="Number of Registers"/>
+                </div>
+            )
+        } else{
+            return (
+                <div style={{display: "flex", flexDirection: "column"}}>
+                    <InputField inline ID="offset" name='offset' defaultValue={props.register.offset} onKeyDown={handleonKeyDown} label="Address offset"/>
+                </div>
+            )
+        }
+    }
+
+
+
 
 
     return(
@@ -94,7 +124,8 @@ export let  RegisterProperties = props =>{
         >
             <InputField inline ID="register_name" name="register_name" defaultValue={props.register.register_name} onKeyDown={handleEditNameChange} label="Name"/>
             <InputField inline ID="ID" name='ID' defaultValue={props.register.ID} onKeyDown={handleonKeyDown} label="Register ID"/>
-            <InputField inline ID="offset" name='offset' defaultValue={props.register.offset} onKeyDown={handleonKeyDown} label="Address offset"/>
+
+            {render_parametric_properties()}
             <InputField inline ID="description" name='description' defaultValue={props.register.description} onKeyDown={handleonKeyDown} label="Description"/>
             <ChoicesWrapper>
                 <Label>Register access capabilities</Label>
@@ -106,7 +137,7 @@ export let  RegisterProperties = props =>{
             {
                 props.register.fields.map((field)=>{
                     return(
-                        <FieldProperties peripheral={props.peripheral} forceUpdate={props.forceUpdate} register={props.register} field={field}/>
+                        <FieldProperties peripheral={props.peripheral} forceUpdate={props.forceUpdate} register={props.register} field={field} parametric={props.register.parametric}/>
                     )
                 })
             }

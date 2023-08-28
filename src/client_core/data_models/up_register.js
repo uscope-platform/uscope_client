@@ -117,6 +117,19 @@ export class up_register {
         store.dispatch(upsertRegister(this, this.ID, this.parent_periph));
         return backend_post(api_dictionary.peripherals.edit, edit)
     }
+    edit_order = (order) => {
+        this.order = order;
+        let edit = {peripheral:this.parent_periph, register:this.register_name, field:"order", value:order, action:"edit_register"};
+        store.dispatch(upsertRegister(this, this.ID, this.parent_periph));
+        return backend_post(api_dictionary.peripherals.edit, edit)
+    }
+
+    edit_n_registers = (value) => {
+        this.n_registers = [value];
+        let edit = {peripheral:this.parent_periph, register:this.register_name, field:"n_registers", value:[value], action:"edit_register"};
+        store.dispatch(upsertRegister(this, this.ID, this.parent_periph));
+        return backend_post(api_dictionary.peripherals.edit, edit)
+    }
 
     edit_id = (id) =>{
         let edit = {peripheral:this.parent_periph, register:this.register_name, field:"ID", value:id, action:"edit_register"};

@@ -19,7 +19,7 @@ import {useSelector} from "react-redux"
 
 
 import {
-    CardStack,
+    CardStack, Checkbox,
     InputField,
     RegisterProperties,
     SimpleContent, UIPanel
@@ -51,6 +51,12 @@ let PeripheralsManager = (props)=>{
             selected_peripheral.edit_name(event.target.value).then();
         }
     }
+    let handleEditParametric = (event)=>{
+        selected_peripheral.edit_parametric(event.target.checked).then(()=>{
+            forceUpdate();
+        });
+    }
+
 
     let handle_add_new = (item_type, old_items, title_prop) =>{
 
@@ -85,6 +91,7 @@ let PeripheralsManager = (props)=>{
                     <div>
                         <InputField inline name="edit_name" defaultValue={selected_peripheral.peripheral_name} onKeyDown={handleEditName} label="Name"/>
                         <InputField inline name="edit_version" defaultValue={selected_peripheral.version} onKeyDown={handleEditVersion} label="Version"/>
+                        <Checkbox name='parametric' value={selected_peripheral.parametric} onChange={handleEditParametric} label="Parametric"/>
                     </div>
                 }/>
 
@@ -99,7 +106,12 @@ let PeripheralsManager = (props)=>{
                             {
                                 selected_peripheral.registers.map((reg)=>{
                                     return(
-                                        <RegisterProperties peripheral={selected_peripheral} forceUpdate={forceUpdate} register={reg}/>
+                                        <RegisterProperties
+                                            peripheral={selected_peripheral}
+                                            forceUpdate={forceUpdate}
+                                            register={reg}
+                                            parametric={selected_peripheral.parametric}
+                                        />
                                     )
                                 })
                             }

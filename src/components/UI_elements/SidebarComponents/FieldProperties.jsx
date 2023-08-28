@@ -39,7 +39,7 @@ export const FieldPropsLayout = styled.div`
 
 
 export let  FieldProperties = props =>{
-    const field_obj = new up_field(props.field, props.register.register_name, props.peripheral.peripheral_name);
+    const field_obj = new up_field(props.field, props.register.register_name, props.peripheral.peripheral_name, props.parametric);
 
     const [is_open, set_is_open] = useState(true);
     let handleOpen = ()=>{
@@ -76,6 +76,16 @@ export let  FieldProperties = props =>{
                         props.forceUpdate();
                     })
                     break;
+                case'order':
+                    field_obj.edit_order(event.target.value).then(()=>{
+                        props.forceUpdate();
+                    })
+                    break;
+                case 'n_fields':
+                    field_obj.edit_n_fields(event.target.value).then(()=>{
+                        props.forceUpdate();
+                    })
+                    break;
                 default:
                     return;
             }
@@ -92,16 +102,31 @@ export let  FieldProperties = props =>{
 
 
     let renderContent = (props) =>{
+
         if(is_open)
-            return(
-                <SidebarCollapsableContentLayout>
-                    <InputField inline ID="name" name="name" defaultValue={props.field.name} onKeyDown={handleEditNameChange} label="Name"/>
-                    <InputField inline ID="description" name='description' defaultValue={props.field.description} onKeyDown={handleonKeyDown} label="Description"/>
-                    <InputField inline ID="offset" name='offset' defaultValue={props.field.offset} onKeyDown={handleonKeyDown} label="Address offset"/>
-                    <InputField inline ID="length" name='length' defaultValue={props.field.length} onKeyDown={handleonKeyDown} label="Field Size"/>
-                    <Button onClick={handleRemove} >Remove</Button>
-                </SidebarCollapsableContentLayout>
-            )
+            if(props.field.parametric){
+                return(
+                    <SidebarCollapsableContentLayout>
+                        <InputField inline ID="name" name="name" defaultValue={props.field.name} onKeyDown={handleEditNameChange} label="Name"/>
+                        <InputField inline ID="description" name='description' defaultValue={props.field.description} onKeyDown={handleonKeyDown} label="Description"/>
+                        <InputField inline ID="offset" name='offset' defaultValue={props.field.offset} onKeyDown={handleonKeyDown} label="Address offset"/>
+                        <InputField inline ID="length" name='length' defaultValue={props.field.length} onKeyDown={handleonKeyDown} label="Field Size"/>
+                        <InputField inline ID="order" name='order' defaultValue={props.field.order} onKeyDown={handleonKeyDown} label="Order"/>
+                        <InputField inline ID="n_fields" name='n_fields' defaultValue={props.field.n_fields[0]} onKeyDown={handleonKeyDown} label="Number of fields"/>
+                        <Button onClick={handleRemove} >Remove</Button>
+                    </SidebarCollapsableContentLayout>
+                )
+            } else {
+                return(
+                    <SidebarCollapsableContentLayout>
+                        <InputField inline ID="name" name="name" defaultValue={props.field.name} onKeyDown={handleEditNameChange} label="Name"/>
+                        <InputField inline ID="description" name='description' defaultValue={props.field.description} onKeyDown={handleonKeyDown} label="Description"/>
+                        <InputField inline ID="offset" name='offset' defaultValue={props.field.offset} onKeyDown={handleonKeyDown} label="Address offset"/>
+                        <InputField inline ID="length" name='length' defaultValue={props.field.length} onKeyDown={handleonKeyDown} label="Field Size"/>
+                        <Button onClick={handleRemove} >Remove</Button>
+                    </SidebarCollapsableContentLayout>
+                )
+            }
         return null;
     }
 
