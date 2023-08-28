@@ -14,7 +14,7 @@
 // limitations under the License.
 import {autocompletion_engine, initialize_scripting_engine} from "../../../src/client_core";
 
-let app = {
+let simple_app = {
     "application_name": "SicDrive",
     "peripherals": [
         {
@@ -29,10 +29,11 @@ let app = {
     ],
 }
 
-let periph = {
+let simple_periph = {
     "AdcProcessing2": {
         "peripheral_name": "AdcProcessing2",
         "version": "1.0",
+        "parametric":false,
         "registers": [
             {
                 "parent_periph": "AdcProcessing2",
@@ -202,37 +203,37 @@ let periph = {
 
 
 test('autocomplete_this', () => {
-    initialize_scripting_engine(app, periph);
+    initialize_scripting_engine(simple_app, simple_periph);
     let periph_line = {
         "from": 204,
         "to": 206,
         "text": "th"
     }
-    initialize_scripting_engine(app, periph)
+    initialize_scripting_engine(simple_app, simple_periph)
     let res = autocompletion_engine(periph_line);
     expect(res).toStrictEqual([{"label": "this", "type": "keyword"}]);
 })
 
 test('autocomplete_peripheral', () => {
-    initialize_scripting_engine(app, periph);
+    initialize_scripting_engine(simple_app, simple_periph);
     let periph_line = {
         "from": 204,
         "to": 210,
         "text": "this.a"
     }
-    initialize_scripting_engine(app, periph)
+    initialize_scripting_engine(simple_app, simple_periph)
     let res = autocompletion_engine(periph_line);
     expect(res).toStrictEqual([{"label": "adc_test", "type": "keyword"}]);
 })
 
 test('autocomplete_register', () => {
-    initialize_scripting_engine(app, periph);
+    initialize_scripting_engine(simple_app, simple_periph);
     let register_line = {
         "from": 204,
         "to": 218,
         "text": "this.adc_test."
     }
-    initialize_scripting_engine(app, periph)
+    initialize_scripting_engine(simple_app, simple_periph)
     let res = autocompletion_engine(register_line);
     expect(res).toStrictEqual([
         {"label": "cmp_low_r", "type": "keyword"},
@@ -244,13 +245,13 @@ test('autocomplete_register', () => {
 })
 
 test('autocomplete_field', () => {
-    initialize_scripting_engine(app, periph);
+    initialize_scripting_engine(simple_app, simple_periph);
     let field_line = {
         "from": 204,
         "to": 226,
         "text": "this.adc_test.cmp_h_r."
     }
-    initialize_scripting_engine(app, periph)
+    initialize_scripting_engine(simple_app, simple_periph)
     let res = autocompletion_engine(field_line);
     expect(res).toStrictEqual([
         {"label": "fast", "type": "keyword"},
@@ -260,4 +261,141 @@ test('autocomplete_field', () => {
 })
 
 
+let parametric_app = {
+    "application_name": "SicDrive",
+    "peripherals": [
+        {
+            "parameters": {
+                "N_CHANNELS": 2
+                ,
+                "N_SHIFT_REGS": 3
+            },
+            "base_address": "0",
+            "name": "adc_test",
+            "peripheral_id": "adc_test",
+            "proxied": false,
+            "proxy_address": "0",
+            "spec_id": "AdcProcessing2",
+            "type": "Registers"
+        }
+    ],
+}
 
+
+let parametric_periph = {
+    "AdcProcessing2": {
+        "peripheral_name": "AdcProcessing2",
+        "version": "1.0",
+        "parametric":true,
+        "registers": [
+            {
+                "parent_periph": "AdcProcessing2",
+                "ID": "cmp_low_f",
+                "order": "0",
+                "fields": [
+                    {
+                        "name": "test_field_$",
+                        "order": "0",
+                        "length": 2,
+                        "offset": 0,
+                        "n_fields": [
+                            "N_SHIFT_REGS"
+                        ],
+                        "parent_register": "cmp_low_f",
+                        "parent_peripheral": "AdcProcessing2",
+                        "description": "Fast comparator treshold"
+                    },
+                    {
+                        "name": "test_field_simple",
+                        "order": "0",
+                        "length": 16,
+                        "offset": 6,
+                        "n_fields": [
+                            "1"
+                        ],
+                        "parent_register": "cmp_low_f",
+                        "parent_peripheral": "AdcProcessing2",
+                        "description": "Fast comparator treshold"
+                    }
+                ],
+                "direction": "RW",
+                "description": "Low comparator threshold (falling when in normal mode)",
+                "n_registers": [
+                    "1"
+                ],
+                "register_name": "cmp_low_f"
+            },
+            {
+                "ID": "offset_$",
+                "order": 4,
+                "parent_periph": "AdcProcessing2",
+                "fields": [],
+                "direction": "RW",
+                "description": "Offset calibration coefficient",
+                "n_registers": [
+                    "N_CHANNELS"
+                ],
+                "register_name": "offset_$"
+            },
+            {
+                "ID": "filter_tap_address",
+                "order": 8,
+                "parent_periph": "AdcProcessing2",
+                "fields": [],
+                "direction": "RW",
+                "description": "Fir Filter tap address value",
+                "n_registers": [
+                    "1"
+                ],
+                "register_name": "filter_tap_address"
+            }
+        ]
+    },
+}
+
+test('autocomplete_parametric_peripheral', () => {
+    initialize_scripting_engine(parametric_app, parametric_periph);
+    let periph_line = {
+        "from": 204,
+        "to": 210,
+        "text": "this.a"
+    }
+    initialize_scripting_engine(parametric_app, parametric_periph)
+    let res = autocompletion_engine(periph_line);
+    expect(res).toStrictEqual([{"label": "adc_test", "type": "keyword"}]);
+})
+
+test('autocomplete_parametric_register', () => {
+    initialize_scripting_engine(parametric_app, parametric_periph);
+    let register_line = {
+        "from": 204,
+        "to": 218,
+        "text": "this.adc_test."
+    }
+    initialize_scripting_engine(parametric_app, parametric_periph)
+    let res = autocompletion_engine(register_line);
+    expect(res).toStrictEqual([
+        {"label": "cmp_low_f", "type": "keyword"},
+        {"label": "offset_0", "type": "keyword"},
+        {"label": "offset_1", "type": "keyword"},
+        {"label": "filter_tap_address", "type": "keyword"},
+    ]);
+})
+
+test('autocomplete_parametric_field', () => {
+    initialize_scripting_engine(parametric_app, parametric_periph);
+    let field_line = {
+        "from": 204,
+        "to": 226,
+        "text": "this.adc_test.cmp_low_f."
+    }
+    initialize_scripting_engine(parametric_app, parametric_periph)
+    let res = autocompletion_engine(field_line);
+    expect(res).toStrictEqual([
+        {"label": "test_field_0", "type": "keyword"},
+        {"label": "test_field_1", "type": "keyword"},
+        {"label": "test_field_2", "type": "keyword"},
+        {"label": "test_field_simple", "type": "keyword"},
+        {"label": "value", "type": "keyword"}
+    ]);
+})

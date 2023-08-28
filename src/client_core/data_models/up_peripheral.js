@@ -61,7 +61,7 @@ export class up_peripheral {
         return backend_post(api_dictionary.peripherals.edit, edit);
     };
 
-    edit_name = (name) =>{
+    dit_name = (name) =>{
         alert("NOT IMPLEMENTED YET");
     };
 

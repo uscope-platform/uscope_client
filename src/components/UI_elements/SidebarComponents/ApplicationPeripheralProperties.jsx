@@ -20,6 +20,7 @@ import {Checkbox} from "../checkbox";
 import {SelectField} from "../Select";
 import {up_application} from "../../../client_core";
 import {Card} from "../panels/Card";
+import {HdlParameterProperties} from "./HdlParameterProperties";
 
 
 
@@ -64,6 +65,30 @@ export let  ApplicationPeripheralProperties = props =>{
         });
     }
 
+    let handle_parameter_change = (change) =>{
+
+        let app = new up_application(props.application);
+        let parameters = app.peripherals.filter((p) =>{
+            return p.peripheral_id === props.peripheral.peripheral_id;
+        })[0].hdl_parameters;
+        if(change.type ==="name"){
+            let value = parameters[change.name];
+            delete parameters[change.name];
+            parameters[change.new_value] = value;
+        } else {
+            parameters[change.name] = change.new_value;
+        }
+        app.edit_peripheral(props.peripheral.name,"hdl_parameters", parameters).then(()=>{
+            props.forceUpdate();
+        });
+    }
+
+    let render_hdl_parameters = ()=>{
+      return Object.keys(props.peripheral.hdl_parameters).map((item) =>{
+          return(<HdlParameterProperties name={item} value={props.peripheral.hdl_parameters[item]} onChange={handle_parameter_change}/>)
+      })
+    };
+
     return(
         <Card
             name={props.peripheral.name}
@@ -83,6 +108,7 @@ export let  ApplicationPeripheralProperties = props =>{
             <Checkbox name='proxied' value={props.peripheral.proxied} onChange={handleChange} label="Proxied Peripheral"/>
             <InputField inline ID="proxy_address" name='proxy_address' disabled={!props.peripheral.proxied} defaultValue={props.peripheral.proxy_address} onKeyDown={handleonKeyDown} label="Proxy Address"/>
             <InputField inline ID="proxy_type" name='proxy_type' disabled={!props.peripheral.proxied} defaultValue={props.peripheral.proxy_type} onKeyDown={handleonKeyDown} label="Proxy Type"/>
+            {render_hdl_parameters()}
         </Card>
     );
 };

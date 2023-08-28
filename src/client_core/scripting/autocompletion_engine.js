@@ -22,34 +22,11 @@ export const autocompletion_engine = (line, explicit) => {
     if(line.text.includes("this.")){
         let path = line.text.split(".")
         if (path.length ===2){
-            let matches = Object.keys(scripting_engine_peripherals).filter((item)=>{
-                return item.startsWith(path[1]);
-            })
-
-            return matches.map((item) => {
-                return {label: item, type: "keyword"};
-            });
+            return autocomplete_peripheral_name(path);
         } else if (path.length ===3){
-            let periph = scripting_engine_peripherals[path[1]].regs
-            let matches = Object.keys(periph).filter((item) => {
-                return item.startsWith(path[2]);
-            });
-            return matches.map((item) => {
-                return {label: item, type: "keyword"};
-            });
+            return autocomplete_register_name(path);
         } else if (path.length ===4) {
-            let periph = scripting_engine_peripherals[path[1]].regs
-            let reg = Object.keys(periph[path[2]]);
-            reg = reg.filter((item)=>{
-                return ![
-                    "field_specs","peripheral_id", "peripheral_spec_id", "register_id"
-                ].includes(item);
-            })
-            let fields = reg.map((item) => {
-                    return {label: item, type: "keyword"};
-            });
-            fields.push({label: "value", type: "keyword"})
-            return fields;
+            return autocomplete_field_name(path);
         }
         return null;
     } else{
@@ -58,3 +35,78 @@ export const autocompletion_engine = (line, explicit) => {
     }
 
 }
+
+let autocomplete_peripheral_name = (path) =>{
+    let matches = Object.keys(scripting_engine_peripherals).filter((item)=>{
+        return item.startsWith(path[1]);
+    })
+
+    return matches.map((item) => {
+        return {label: item, type: "keyword"};
+    });
+};
+
+let autocomplete_register_name = (path) =>{
+    let parametric = scripting_engine_peripherals[path[1]].spec_obj.parametric;
+    let parameters = scripting_engine_peripherals[path[1]].periph_obj.parameters;
+
+    let registers = scripting_engine_peripherals[path[1]].spec_obj.registers.map((reg) =>{
+        if(parametric) {
+            let n_regs;
+            if(parameters[reg.n_registers[0]]){
+                n_regs = parseInt(parameters[reg.n_registers[0]]);
+            } else {
+                n_regs = parseInt(reg.n_registers[0]);
+            }
+            let ret = [];
+            for(let i = 0; i<n_regs; i++){
+                ret.push(reg.register_name.replace("$", i));
+            }
+            return ret;
+        } else {
+            return reg.register_name;
+        }
+    });
+
+    let matches = registers.flat(1).filter((item) => {
+        return item.startsWith(path[2]);
+    });
+    return matches.map((item) => {
+        return {label: item, type: "keyword"};
+    });
+};
+
+let autocomplete_field_name = (path) =>{
+    let parametric = scripting_engine_peripherals[path[1]].spec_obj.parametric;
+    let parameters = scripting_engine_peripherals[path[1]].periph_obj.parameters;
+    let fields = [];
+    scripting_engine_peripherals[path[1]].spec_obj.registers.map((reg) =>{
+        if(reg.ID === path[2]){
+            let field_names = reg.fields.map((field) =>{
+                if(parametric){
+                    let n_fields;
+                    if(parameters[field.n_fields[0]]){
+                        n_fields = parseInt(parameters[field.n_fields[0]]);
+                    } else {
+                        n_fields = parseInt(field.n_fields[0]);
+                    }
+                    let ret = [];
+                    for(let i = 0; i<n_fields; i++){
+                        ret.push(field.name.replace("$", i));
+                    }
+                    return ret;
+                } else {
+                    return field.name;
+                }
+            });
+            fields = field_names.flat(1).filter((item) => {
+                return item.startsWith(path[3]);
+            });
+        }
+
+    });
+    fields.push("value");
+    return fields.map((item) => {
+        return {label: item, type: "keyword"};
+    });
+};

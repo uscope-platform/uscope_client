@@ -124,6 +124,7 @@ export class up_application {
             name: peripheral_name,
             peripheral_id: peripheral_name.replace(/\s/g, "_").toLowerCase(),
             base_address: '0',
+            hdl_parameters:{},
             proxied: false,
             proxy_address:'0',
             type: 'Registers',
