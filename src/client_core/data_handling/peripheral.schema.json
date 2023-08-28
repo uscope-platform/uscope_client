@@ -9,6 +9,9 @@
         "peripheral_name": {
           "type": "string"
         },
+        "parametric": {
+          "type": "boolean"
+        },
         "registers": {
           "type": "array",
           "items": {
@@ -39,6 +42,15 @@
                     },
                     "offset": {
                       "type": "integer"
+                    },
+                    "order": {
+                      "type": "integer"
+                    },
+                    "n_fields": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
                     }
                   },
                   "required": [
@@ -49,6 +61,12 @@
                   ]
                 }
               },
+              "n_registers": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
               "offset": {
                 "type": "string"
               },
@@ -57,14 +75,31 @@
               },
               "register_name": {
                 "type": "string"
+              },
+              "order": {
+                "type": "number"
               }
             },
-            "required": [
-              "ID",
-              "description",
-              "direction",
-              "offset",
-              "register_name"
+            "anyOf": [
+              {
+                "required": [
+                  "ID",
+                  "description",
+                  "direction",
+                  "offset",
+                  "register_name"
+                ]
+              },
+              {
+                "required": [
+                  "ID",
+                  "description",
+                  "direction",
+                  "order",
+                  "n_registers",
+                  "register_name"
+                ]
+              }
             ]
           }
         },
@@ -75,6 +110,7 @@
       "additionalProperties": false,
       "required": [
         "peripheral_name",
+        "parametric",
         "registers",
         "version"
       ]

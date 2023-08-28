@@ -20,24 +20,38 @@ import {api_dictionary} from "../proxy/api_dictionary";
 import {removeRegister, upsertRegister} from "../../redux/Actions/peripheralsActions";
 
 export class up_register {
-    constructor(register_obj, parent_periph) {
+    constructor(register_obj, parent_periph, parametric) {
+
         this.parent_periph = parent_periph;
         this.ID = register_obj.ID;
         this.register_name = register_obj.register_name;
         this.description = register_obj.description;
         this.direction = register_obj.direction;
-        this.offset= register_obj.offset;
         this.value = register_obj.value;
+        if(parametric){
+            this.order = register_obj.order;
+            this.n_registers = register_obj.n_registers;
+        } else{
+            this.offset= register_obj.offset;
+        }
+        this.parametric = parametric;
         this.fields = [];
         for(const item of register_obj.fields){
-            this.fields.push(new up_field(item, this.register_name, parent_periph));
+            this.fields.push(new up_field(item, this.register_name, parent_periph, parametric));
         }
     }
 
-    static construct_empty(register_name, parent_periph){
-        let register_obj = {ID:register_name.replace(/\s/g, "_").toLowerCase(), register_name:register_name,
-            description:"", direction:"", offset:"0x0", value:0, fields: []};
-        return new up_register(register_obj, parent_periph);
+    static construct_empty(register_name, parent_periph, parametric){
+        let register_obj = {};
+        if(parametric){
+             register_obj = {ID:register_name.replace(/\s/g, "_").toLowerCase(), register_name:register_name,
+                description:"", direction:"", order:0, n_registers:[], value:0, fields: []};
+        } else{
+            register_obj = {ID:register_name.replace(/\s/g, "_").toLowerCase(), register_name:register_name,
+                description:"", direction:"", offset:"0x0", value:0, fields: []};
+        }
+
+        return new up_register(register_obj, parent_periph, parametric);
     }
 
     edit_description = (descr) => {
@@ -140,14 +154,22 @@ export class up_register {
         for(let i of this.fields){
             converted_fields.push(i._get_field());
         }
-        return{
+        let ret_obj ={
             "ID": this.ID,
             "register_name": this.register_name,
             "description": this.description,
             "fields": converted_fields,
             "direction": this.direction,
-            "offset": this.offset,
-            "value": this.value,
+            "value": this.value
         }
+
+        if(this.parametric){
+            ret_obj["order"] = this.order;
+            ret_obj["n_registers"] = this.n_registers;
+        } else {
+            ret_obj["offset"]  = this.offset;
+        }
+
+        return ret_obj;
     }
 }

@@ -1,6 +1,7 @@
 {
   "enable_generator": {
     "peripheral_name": "enable_generator",
+    "parametric": false,
     "registers": [
       {
         "ID": "enable",
@@ -33,6 +34,7 @@
     "version": "1.0"
   },
   "AdcProcessing": {
+    "parametric": true,
     "peripheral_name": "AdcProcessing",
     "registers": [
       {
@@ -41,20 +43,42 @@
         "direction": "RW",
         "fields": [
           {
-            "description": "Fast comparator treshold",
+            "description": "Fast comparator threshold",
             "length": 16,
+            "n_fields": [
+              "1"
+            ],
             "name": "fast",
-            "offset": 0
+            "offset": 0,
+            "order": 0
           },
           {
             "description": "Slow comparator threshold",
             "length": 16,
+            "n_fields": [
+              "1",""
+            ],
             "name": "slow",
-            "offset": 16
+            "offset": 16,
+            "order": 1
           }
         ],
-        "offset": "0x0",
+        "n_registers": [
+          "1"
+        ],
+        "order": 0,
         "register_name": "cmp_low_f"
+      },
+      {
+        "ID": "offset_$",
+        "description": "Offset calibration coefficient",
+        "direction": "RW",
+        "fields": [],
+        "n_registers": [
+          "N_CHANNELS"
+        ],
+        "order": 4,
+        "register_name": "offset_$"
       }
     ],
     "version": "1.0"

@@ -20,18 +20,31 @@ import {backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
 
 export class up_field {
-    constructor(field_obj, parent_r, parent_p) {
+    constructor(field_obj, parent_r, parent_p, parametric) {
         this.name = field_obj.name;
         this.parent_register = parent_r;
         this.parent_peripheral = parent_p;
         this.description = field_obj.description;
         this.length = field_obj.length;
         this.offset = field_obj.offset;
+        this.parametric = field_obj.parametric;
+        if(parametric){
+            this.n_fields = field_obj.n_fields;
+            this.order = field_obj.order;
+            this.parametric = parametric;
+        }
     }
 
-    static construct_empty(field_name, parent_r, parent_p){
-        let field_obj = {name:field_name, description:"", length:1,  offset:0};
-        return new up_field(field_obj, parent_r, parent_p);
+    static construct_empty(field_name, parent_r, parent_p, parametric){
+
+        let field_obj = {};
+        if(parametric){
+            field_obj = {name:field_name, description:"", length:1,  offset:0, order:0, n_fields:[]};
+        } else{
+            field_obj = {name:field_name, description:"", length:1,  offset:0};
+        }
+
+        return new up_field(field_obj, parent_r, parent_p, parametric);
     }
 
     edit_name = (name) =>{
@@ -71,11 +84,16 @@ export class up_field {
     }
 
     _get_field = () => {
-        return{
+        let ret = {
             "name": this.name,
             "description": this.description,
             "length": this.length,
             "offset": this.offset
         }
+        if(this.parametric){
+            ret["order"] = this.order;
+            ret["n_fields"] = this.n_fields;
+        }
+        return ret;
     }
 }

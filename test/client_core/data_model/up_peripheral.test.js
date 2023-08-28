@@ -26,6 +26,7 @@ test("peripheral creation", () => {
     let check_periph = {test:{
             peripheral_name:"test",
             version:0.1,
+            parametric:false,
             registers:[]
         }};
 
@@ -39,6 +40,7 @@ test("remote add", () => {
             test:{
                     peripheral_name:"test",
                     version:0.1,
+                    parametric: false,
                     registers:[]
                 }
             }};
@@ -92,6 +94,7 @@ test("edit_version", () => {
                     test:{
                         peripheral_name:"test",
                         version:0.3,
+                        parametric:false,
                         registers:[]
                     }
                 }};

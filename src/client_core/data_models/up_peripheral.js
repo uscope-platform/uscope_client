@@ -29,14 +29,15 @@ export class up_peripheral {
 
         this.peripheral_name = periph_data_obj.peripheral_name;
         this.version = periph_data_obj.version;
+        this.parametric = periph_data_obj.parametric;
         this.registers = [];
         for(const item of periph_data_obj.registers){
-            this.registers.push(new up_register(item, periph_data_obj.peripheral_name));
+            this.registers.push(new up_register(item, periph_data_obj.peripheral_name, this.parametric));
         }
     }
 
     static construct_empty(periph_name){
-        let periph_data_obj = {peripheral_name:periph_name, version:0.1, registers:[]};
+        let periph_data_obj = {peripheral_name:periph_name, version:0.1, registers:[], parametric:false};
         return new up_peripheral(periph_data_obj);
     }
 
@@ -103,6 +104,7 @@ export class up_peripheral {
         return {[this.peripheral_name]:{
             peripheral_name:this.peripheral_name,
             version:this.version,
+            parametric:this.parametric,
             registers:cleaned_registers
         }};
     }

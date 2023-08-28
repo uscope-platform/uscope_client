@@ -51,6 +51,9 @@ test("peripherals import", () => {
         delete check_periphs[0].payload.enable_generator.registers[1].value;
         delete check_periphs[0].payload.enable_generator.registers[2].value;
         delete check_periphs[1].payload.AdcProcessing.registers[0].value;
+        delete check_periphs[1].payload.AdcProcessing.registers[1].value;
+        delete check_periphs[1].payload.AdcProcessing.registers[0].offset;
+        delete check_periphs[1].payload.AdcProcessing.registers[1].offset;
         expect(created_peripheral).toStrictEqual(check_periphs);
         let state = mock_store.getState();
 
@@ -58,8 +61,11 @@ test("peripherals import", () => {
         check_periphs[0].payload.enable_generator.registers[1].value = undefined;
         check_periphs[0].payload.enable_generator.registers[2].value = undefined;
         check_periphs[1].payload.AdcProcessing.registers[0].value = undefined;
+        check_periphs[1].payload.AdcProcessing.registers[1].value = undefined;
         expect(state.peripherals.enable_generator._get_periph()).toStrictEqual(check_periphs[0].payload)
-        expect(state.peripherals.AdcProcessing._get_periph()).toStrictEqual(check_periphs[1].payload)
+        let check_obj = check_periphs[1].payload;
+        let result_obj = state.peripherals.AdcProcessing._get_periph();
+        expect(result_obj).toStrictEqual(check_obj)
     })
 })
 
