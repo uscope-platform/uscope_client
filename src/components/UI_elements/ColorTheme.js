@@ -42,6 +42,7 @@ export const ColorTheme = {
     },
     text: "rgba(255, 255, 255, 0.87)",
     icons_color: "rgba(255, 255, 255, 0.87)",
+    inactive_icons_color: "rgba(255, 255, 255, 0.27)",
     icons_size: "2em",
     plot_palette:[
         "rgb(161, 201,244)",

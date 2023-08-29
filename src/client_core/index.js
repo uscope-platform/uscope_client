@@ -33,7 +33,8 @@ export {up_script} from './data_models/up_script'
 export {up_program} from './data_models/up_program'
 export {up_bitstream} from './data_models/up_bitstream'
 export {up_register} from  './data_models/up_register'
-
+//filter
+export {filter_calculate_keepouts} from './filters/filter_preview'
 export let store = null;
 
 export {import_application, import_peripherals} from './data_handling/import'
