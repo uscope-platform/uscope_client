@@ -29,6 +29,7 @@ const initial_state = {
     selected_script:null,
     selected_bitstream:null,
     selected_user:null,
+    selected_filter:null,
     refresh_user_view:false,
     logged:false,
     server_url: import.meta.env.VITE_APP_SERVER,

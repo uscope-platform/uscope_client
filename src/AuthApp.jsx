@@ -41,6 +41,9 @@ import PlatformManager from "./components/Managers/PlatformManager";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
+let operator_views = ["Scope"];
+let user_views = ["Scripts", "Applications", "Programs", "Bitstreams", "Filters"];
+let admin_views =["Peripherals", "Platform"];
 
 
 let AuthApp = (props) =>{
@@ -52,6 +55,7 @@ let AuthApp = (props) =>{
     const [views, set_views] = useState([]);
 
     const [app_stage, set_app_stage] = useState("WAITING");
+
 
     let app_choice_done = ()=>{
         populate_views();
@@ -86,50 +90,40 @@ let AuthApp = (props) =>{
             initialize_scripting_engine(applications[settings.application], peripherals)
     }, [settings.application, peripherals, applications])
 
+    let construct_routes = () =>{
+        let routes = [];
+        for(const v in views){
+            let route = "/";
+            if(v!=='scope'){
+                route += views[v].type;
+            }
+            routes.push(<Route key={views[v].type} path={route} element={<TabContent className="main_content_tab" tab={views[v]}/>}/>,)
+        }
+
+        return(routes);
+    }
+
     let populate_views = () => {
-        let local_views = [];
+        let local_views = {};
         let role_mapping = {admin:1, user:2, operator:3};
         let role = role_mapping[settings.user_role]
+
+        let selected_views;
         if(role<=3){
-            local_views.push({
-                name: "Plot",
-                peripheral_id: "plot",
-                type: "Scope"
-            });
+            selected_views = operator_views;
         }
         if(role<=2){
-            local_views.push({
-                name: "Scripts",
-                peripheral_id: "script_manager",
-                type: "script_manager"
-            });
-            local_views.push({
-                name: "Applications",
-                peripheral_id: "applications_manager",
-                type: "applications_manager"
-            });
-            local_views.push({
-                name: "Programs",
-                peripheral_id: "program_manager",
-                type: "program_manager"
-            });
-            local_views.push({
-                name: "Bitstreams",
-                peripheral_id: "bitstream_manager",
-                type: "bitstream_manager"
-            });
+            selected_views = [...selected_views, ...user_views];
         }
         if(role<=1){
-            local_views.push({
-                name: "Peripherals",
-                peripheral_id: "peripherals_manager",
-                type: "peripherals_manager"
-            });
-            local_views.push({
-                name: "Platform",
-                peripheral_id: "platform_manager",
-                type: "platform_manager"
-            });
+            selected_views = [...selected_views, ...admin_views];
+        }
+
+        for(const view of selected_views){
+            local_views[view.toLocaleLowerCase()]  = {
+                name: view,
+                type: view.toLocaleLowerCase(),
+            };
         }
         set_views(local_views);
     }
@@ -173,13 +167,7 @@ let AuthApp = (props) =>{
                             </div>
                             <UIPanel key="main" data-grid={{x: 3, y: 0, w: 16, h: 26, static: true}} level="level_1">
                                 <Routes>
-                                    <Route key="plot" path='/' element={<TabContent className="main_content_tab" tab={views[0]}/>}/>
-                                    <Route key="script_manager" path='/script_manager' element={<TabContent className="main_content_tab" tab={views[1]}/>}/>
-                                    <Route key="applications_manager" path='/applications_manager' element={<TabContent className="main_content_tab" tab={views[2]}/>}/>
-                                    <Route key="program_manager" path='/program_manager' element={<TabContent className="main_content_tab" tab={views[3]}/>}/>
-                                    <Route key="bitstream_manager" path='/bitstream_manager' element={<TabContent className="main_content_tab" tab={views[4]}/>}/>
-                                    <Route key="peripherals_manager" path='/peripherals_manager' element={<TabContent className="main_content_tab" tab={views[5]}/>}/>
-                                    <Route key="platform_manager" path='/platform_manager' element={<TabContent className="main_content_tab" tab={views[6]}/>}/>
+                                    {construct_routes()}
                                 </Routes>
                             </UIPanel>
                             <UIPanel key="props" data-grid={{x: 19, y: 0, w: 5, h: 26, static: true}} level="level_1">

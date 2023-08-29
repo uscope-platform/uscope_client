@@ -16,6 +16,7 @@
 import React, {Suspense} from 'react';
 
 import PlotTab from "./plot_tab_components/PlotTab";
+const FilterManager = React.lazy(() => import('./Managers/FilterManager'));
 const ScriptManager = React.lazy(() => import('./Managers/ScriptManager'));
 const PeripheralsManager = React.lazy(() => import('./Managers/PeripheralsManager'));
 const ApplicationsManager = React.lazy(() => import('./Managers/ApplicationsManager'));
@@ -24,51 +25,24 @@ const PlatformManager = React.lazy(()=> import('./Managers/PlatformManager'));
 const BitstreamManager = React.lazy(()=> import('./Managers/BitstreamManager'));
 
 let TabContent = props => {
-    if(props.tab.type==='Scope'){
-        return(
-            <Suspense fallback={<div>Loading...</div>}>
-                <PlotTab content={props.tab}/>
-            </Suspense>
-        );
-    } else if(props.tab.type ==='bitstream_manager'){
-        return (
-            <Suspense fallback={<div>Loading...</div>}>
-                <BitstreamManager />
-            </Suspense>
-        );
-    }else if(props.tab.type ==='script_manager'){
-        return (
-            <Suspense fallback={<div>Loading...</div>}>
-                <ScriptManager />
-            </Suspense>
-        );
-    }else if(props.tab.type ==='peripherals_manager'){
-        return (
-            <Suspense fallback={<div>Loading...</div>}>
-                <PeripheralsManager />
-            </Suspense>
-        );
-    }else if(props.tab.type ==='applications_manager'){
-        return (
-            <Suspense fallback={<div>Loading...</div>}>
-                <ApplicationsManager selected_item={props.selected_item}/>
-            </Suspense>
-        );
-    }else if(props.tab.type ==='program_manager'){
-        return (
-            <Suspense fallback={<div>Loading...</div>}>
-                <ProgramsManager />
-            </Suspense>
-        );
-    }else if(props.tab.type ==='platform_manager'){
-        return (
-            <Suspense fallback={<div>Loading...</div>}>
-                <PlatformManager />
-            </Suspense>
-        );
-    }else{
-        return null
-    }
+
+    let components_associations = {
+        scope:<PlotTab content={props.tab}/>,
+        bitstreams: <BitstreamManager />,
+        scripts: <ScriptManager />,
+        peripherals:<PeripheralsManager />,
+        applications: <ApplicationsManager selected_item={props.selected_item}/>,
+        programs: <ProgramsManager />,
+        platform: <PlatformManager />,
+        filters: <FilterManager />
+    };
+
+
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            {components_associations[props.tab.type]}
+        </Suspense>
+    );
 };
 
 export default TabContent;

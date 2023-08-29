@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import React, {Suspense} from 'react';
 import {useLocation} from "react-router-dom";
 
 import PeripheralsSidebar from "./PeripheralsSidebar";
@@ -23,42 +23,25 @@ import ScriptSidebar from "./ScriptSidebar";
 import ProgramSidebar from "./ProgramSidebar";
 import PlatformSidebar from "./PlatformSidebar";
 import BitstreamSidebar from "./BitstreamSidebar";
+import FilterSidebar from "./FilterSidebar";
 
 let  Sidebar = props =>{
     let location = useLocation();
 
-    switch (location.pathname) {
-        case "/peripherals_manager":
-            return(
-                <PeripheralsSidebar />
-                );
-        case "/applications_manager":
-            return(
-                <ApplicationSidebar/>
-            );
-        case "/script_manager":
-            return(
-                <ScriptSidebar/>
-            );
-        case "/program_manager":
-            return (
-                <ProgramSidebar/>
-            );
-        case "/":
-            return(
-                <PlotSidebar/>
-            );
-        case "/platform_manager":
-            return(
-                <PlatformSidebar/>
-            );
-        case "/bitstream_manager":
-            return(
-                <BitstreamSidebar/>
-            );
-        default:
-            return null;
-    }
+    let components_associations = {
+        "/":<PlotSidebar/>,
+        "/bitstreams": <BitstreamSidebar/>,
+        "/scripts": <ScriptSidebar/>,
+        "/peripherals": <PeripheralsSidebar />,
+        "/applications": <ApplicationSidebar/>,
+        "/programs":  <ProgramSidebar/>,
+        "/platform": <PlatformSidebar/>,
+        "/filters": <FilterSidebar />
+    };
+
+
+    return (components_associations[location.pathname]);
+
 };
 
 export default Sidebar;

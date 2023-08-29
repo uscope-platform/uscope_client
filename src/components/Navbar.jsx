@@ -51,17 +51,26 @@ let  Navbar = props =>{
             }
         }
     }
+
+    let render_navbar = () =>{
+        let ret = []
+
+        for(const v in props.views){
+            let route = "/";
+            if(v!=='scope'){
+                route += props.views[v].type;
+            }
+            ret.push(<NavLink style={link_stile} key={props.views[v].name} to={route} className="nav-link">{props.views[v].name}</NavLink>);
+        }
+
+        return ret;
+    };
+
     return(
         <ComponentLayout>
             <Image src="assets/logo.svg" alt='µScope Logo'/>
             <Image src="assets/name.svg" alt='µScope Name'/>
-            <NavLink style={link_stile} key="plot" to='/' className="nav-link">MAIN</NavLink>
-            <NavLink style={link_stile} key="script_manager" to='/script_manager' className="nav-link">SCRIPTS</NavLink>
-            <NavLink style={link_stile} key="applications_manager" to='/applications_manager' className="nav-link">APPLICATIONS</NavLink>
-            <NavLink style={link_stile} key="program_manager" to='/program_manager' className="nav-link">PROGRAMS</NavLink>
-            <NavLink style={link_stile} key="bitstream_manager" to='/bitstream_manager' className="nav-link">BITSTREAMS</NavLink>
-            <NavLink style={link_stile} key="peripherals_manager" to='/peripherals_manager' className="nav-link">PERIPHERALS</NavLink>
-            <NavLink style={link_stile} key="platform_manager" to='/platform_manager' className="nav-link">PLATFORM</NavLink>
+            {render_navbar()}
         </ComponentLayout>
 
     );
