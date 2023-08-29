@@ -194,6 +194,8 @@ function start_trigger_cl(parameters, context) {
     this.adc_test.cmp_high_f.fast = 6;
     this.adc_test.cmp_high_f.slow = 3;
     
+    this.adc_param.offset_1.value = 0xCA;
+    
     let duty_lim_low = 0.1;
     let duty_lim_high = 0.9;
     

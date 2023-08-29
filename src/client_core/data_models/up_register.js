@@ -41,6 +41,26 @@ export class up_register {
         }
     }
 
+    get_field_names = (parameters)=>{
+        return this.fields.map((field)=>{
+            if(this.parametric){
+                let n_fields;
+                if(parameters[field.n_fields[0]]){
+                    n_fields = parseInt(parameters[field.n_fields[0]]);
+                } else {
+                    n_fields = parseInt(field.n_fields[0]);
+                }
+                let ret = [];
+                for(let i = 0; i<n_fields; i++){
+                    ret.push(field.name.replace("$", i));
+                }
+                return ret;
+            } else {
+                return field.name;
+            }
+        })
+    }
+
     static construct_empty(register_name, parent_periph, parametric){
         let register_obj = {};
         if(parametric){

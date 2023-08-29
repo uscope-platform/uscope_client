@@ -36,6 +36,26 @@ export class up_peripheral {
         }
     }
 
+    get_register_names = (parameters) =>{
+        return this.registers.map((reg) =>{
+            if(this.parametric) {
+                let n_regs;
+                if(parameters[reg.n_registers[0]]){
+                    n_regs = parseInt(parameters[reg.n_registers[0]]);
+                } else {
+                    n_regs = parseInt(reg.n_registers[0]);
+                }
+                let ret = [];
+                for(let i = 0; i<n_regs; i++){
+                    ret.push(reg.register_name.replace("$", i));
+                }
+                return ret;
+            } else {
+                return reg.register_name;
+            }
+        })
+    }
+
     static construct_empty(periph_name){
         let periph_data_obj = {peripheral_name:periph_name, version:0.1, registers:[], parametric:false};
         return new up_peripheral(periph_data_obj);
@@ -72,12 +92,83 @@ export class up_peripheral {
         return backend_post(api_dictionary.peripherals.edit, edit);
     };
 
-
-    get_proxied_registers = (periph_id) =>{
-        let registers = {}
-        for (const r of this.registers) {
-            registers[r.ID] = construct_proxied_register(r, periph_id);
+    get_register_offset = (name, parameters) =>{
+        if(this.parametric){
+            let current_address_offset = 0;
+            for (const r of this.registers) {
+                let n_registers;
+                if(parameters[r.n_registers[0]]){
+                    n_registers = parameters[r.n_registers[0]];
+                } else {
+                    n_registers = parseInt(r.n_registers[0]);
+                }
+                for(let i = 0; i<n_registers;i++){
+                    let current_name = r.register_name.replace("$", i);
+                    if(name === current_name) return current_address_offset
+                    current_address_offset +=4;
+                }
+            }
+        } else {
+            let offset = this.registers.filter((item)=>{
+                return item.register_name === name
+            })[0].offset;
+            return parseInt(offset);
         }
+
+    }
+
+
+    get_proxied_registers = (periph_id, parameters) =>{
+        let registers = {}
+
+        if(this.parametric){
+            let current_address_offset = 0;
+            for (const r of this.registers) {
+                let n_registers;
+                if(parameters[r.n_registers[0]]){
+                    n_registers = parameters[r.n_registers[0]];
+                } else {
+                    n_registers = parseInt(r.n_registers[0]);
+                }
+                for(let i = 0; i<n_registers;i++){
+                    current_address_offset +=4;
+                    let local_r = JSON.parse(JSON.stringify(r));
+                    local_r.offset = current_address_offset;
+                    local_r.ID = local_r.ID.replace("$", i);
+                    local_r.register_name = local_r.register_name.replace("$", i);
+
+                    let current_field_offset = 0;
+                    let fields = [];
+                    for(let f of local_r.fields){
+                        let n_fields;
+                        if(parameters[f.n_fields[0]]){
+                            n_fields = parameters[f.n_fields[0]];
+                        } else {
+                            n_fields = parseInt(f.n_fields[0]);
+                        }
+
+                        for(let j = 0; j<n_fields; j++){
+                            let local_f= JSON.parse(JSON.stringify(f));
+                            // calculate starting point
+                            local_f.offset = current_field_offset;
+                            current_field_offset +=f.length;
+                            local_f.name = local_f.name.replace("$", j);
+                            fields.push(local_f);
+                        }
+
+                    }
+                    local_r.fields = fields;
+                    registers[local_r.ID] = construct_proxied_register(local_r, periph_id);
+                }
+            }
+        } else {
+            for (const r of this.registers) {
+                registers[r.ID] = construct_proxied_register(r, periph_id);
+            }
+        }
+
+
+
         return registers;
     }
 

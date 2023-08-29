@@ -265,7 +265,7 @@ let parametric_app = {
     "application_name": "SicDrive",
     "peripherals": [
         {
-            "parameters": {
+            "hdl_parameters": {
                 "N_CHANNELS": 2
                 ,
                 "N_SHIFT_REGS": 3

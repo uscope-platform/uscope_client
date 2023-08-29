@@ -14,6 +14,8 @@
 // limitations under the License.
 
 import {scripting_engine_peripherals} from "./script_runner";
+import {up_peripheral} from "../data_models/up_peripheral";
+import {up_register} from "../data_models/up_register";
 
 export const autocompletion_engine = (line, explicit) => {
 
@@ -47,26 +49,9 @@ let autocomplete_peripheral_name = (path) =>{
 };
 
 let autocomplete_register_name = (path) =>{
-    let parametric = scripting_engine_peripherals[path[1]].spec_obj.parametric;
-    let parameters = scripting_engine_peripherals[path[1]].periph_obj.parameters;
-
-    let registers = scripting_engine_peripherals[path[1]].spec_obj.registers.map((reg) =>{
-        if(parametric) {
-            let n_regs;
-            if(parameters[reg.n_registers[0]]){
-                n_regs = parseInt(parameters[reg.n_registers[0]]);
-            } else {
-                n_regs = parseInt(reg.n_registers[0]);
-            }
-            let ret = [];
-            for(let i = 0; i<n_regs; i++){
-                ret.push(reg.register_name.replace("$", i));
-            }
-            return ret;
-        } else {
-            return reg.register_name;
-        }
-    });
+    let parameters = scripting_engine_peripherals[path[1]].periph_obj.hdl_parameters;
+    let periph = new up_peripheral(scripting_engine_peripherals[path[1]].spec_obj);
+    let registers = periph.get_register_names(parameters);
 
     let matches = registers.flat(1).filter((item) => {
         return item.startsWith(path[2]);
@@ -78,27 +63,12 @@ let autocomplete_register_name = (path) =>{
 
 let autocomplete_field_name = (path) =>{
     let parametric = scripting_engine_peripherals[path[1]].spec_obj.parametric;
-    let parameters = scripting_engine_peripherals[path[1]].periph_obj.parameters;
+    let parameters = scripting_engine_peripherals[path[1]].periph_obj.hdl_parameters;
     let fields = [];
     scripting_engine_peripherals[path[1]].spec_obj.registers.map((reg) =>{
         if(reg.ID === path[2]){
-            let field_names = reg.fields.map((field) =>{
-                if(parametric){
-                    let n_fields;
-                    if(parameters[field.n_fields[0]]){
-                        n_fields = parseInt(parameters[field.n_fields[0]]);
-                    } else {
-                        n_fields = parseInt(field.n_fields[0]);
-                    }
-                    let ret = [];
-                    for(let i = 0; i<n_fields; i++){
-                        ret.push(field.name.replace("$", i));
-                    }
-                    return ret;
-                } else {
-                    return field.name;
-                }
-            });
+            let register = new up_register(reg, "", parametric);
+            let field_names = register.get_field_names(parameters);
             fields = field_names.flat(1).filter((item) => {
                 return item.startsWith(path[3]);
             });

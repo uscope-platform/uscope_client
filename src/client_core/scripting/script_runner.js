@@ -29,7 +29,7 @@ export const initialize_scripting_engine = (application, peripherals) =>{
     set_write_callback(register_write_callback);
     for (const p of applications_peripherals) {
         let periph = new up_peripheral(peripherals[p.spec_id])
-        scripting_engine_peripherals[p.peripheral_id] = {regs:periph.get_proxied_registers(p.peripheral_id), periph_obj:p, spec_obj:periph._get_periph()[periph.peripheral_name]};
+        scripting_engine_peripherals[p.peripheral_id] = {regs:periph.get_proxied_registers(p.peripheral_id, p.hdl_parameters), periph_obj:p, spec_obj:periph._get_periph()[periph.peripheral_name]};
     }
 }
 

@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import {up_peripheral} from "../data_models/up_peripheral";
+
 export const translate_legacy_registers = (store, registers) => {
     const state = store.getState();
     const app_peripherals = state.applications[state.settings['application']]['peripherals'];
@@ -59,11 +61,11 @@ export const translate_registers = (write_log, peripherals) =>{
     //The first step is the consolidation of informations scattered here and there
     for(let item of write_log){
         let periph = peripherals[item.periph_id].periph_obj
-
+        let periph_spec = new up_peripheral(peripherals[item.periph_id].spec_obj);
         let base_addr = parseInt(periph.base_address)
-        let register_offset = parseInt(peripherals[item.periph_id].spec_obj.registers.filter((reg)=>{
-            return reg.ID === item.reg_id;
-        })[0].offset)
+
+        let register_offset = periph_spec.get_register_offset(item.reg_id, periph.hdl_parameters);
+
         let address = base_addr + register_offset;
         let value = null;
         if(item.access_type === "full_reg"){
