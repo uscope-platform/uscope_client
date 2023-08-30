@@ -107,7 +107,7 @@ let FilterManager = props =>{
                     }/>
                 </UIPanel>
                 <UIPanel key="filter_designer_controls" data-grid={{x:10, y: 0, w: 14, h: 15, static: true}} level="level_2">
-                    <SimpleContent name="Controls" content={
+                    <SimpleContent name="Design Parameters" content={
                         <div>
                             <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
                                 <div id="build">
@@ -122,6 +122,11 @@ let FilterManager = props =>{
                                 on_rename={handleRename}
                             />
                         </div>
+                    }/>
+                </UIPanel>
+                <UIPanel key="filter_implementation_controls" data-grid={{x:0, y: 15, w: 24, h: 8, static: true}} level="level_2">
+                    <SimpleContent name="Implementation Parameters" content={
+                        <div></div>
                     }/>
                 </UIPanel>
             </ResponsiveGridLayout>

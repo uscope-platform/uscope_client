@@ -71,23 +71,31 @@ let  FilterPlot = props =>{
                     x: props.data_x,
                     y: props.data_y,
                     type: 'scatter',
-                    mode: 'lines'
+                    mode: 'lines',
+                    line: {
+                        color: 'rgb(250,55,55)',
+                        width: 3,
+                        opacity: 1,
+                    }
                 }
                 ]
     );
 
-    useEffect(() => {
+    let update_layout = (prop, value)=>{
         let new_layout= plot_layout;
-        new_layout["shapes"] = props.keepout_shapes;
+        new_layout[prop] = value;
         set_plot_layout(new_layout);
         set_data_rev(data_rev +1);
+    }
+
+    useEffect(() => {
+        update_layout("shapes", props.keepout_shapes);
     }, [props.keepout_shapes]);
 
     useEffect(()=>{
-        let new_layout= plot_layout;
-        new_layout.xaxis.range = [0, (props.f_sample/2)*1.05];
-        set_plot_layout(new_layout);
-        set_data_rev(data_rev +1);
+        let x_axis = plot_layout.xaxis;
+        x_axis.range =  [0, (props.f_sample/2)*1.05];
+        update_layout("xaxis", x_axis);
     }, [props.f_sample])
 
     useEffect(() => {
@@ -95,8 +103,21 @@ let  FilterPlot = props =>{
         new_data[0].x = props.data_x;
         new_data[0].y = props.data_y;
         set_plot_data(new_data)
-        set_data_rev(data_rev +1);
+
+        if(props.data_y){
+            let max_y = Math.max(...props.data_y, 10);
+            let min_y= Math.min(...props.data_y, -90);
+
+            let y_axis = plot_layout.yaxis;
+            y_axis.range =  [min_y*1.1, max_y*1.1];
+            update_layout("yaxis", y_axis);
+        }
+
+
     }, [props.data_x, props.data_y]);
+
+
+
 
     return(
         <Plot

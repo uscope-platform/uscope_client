@@ -30,7 +30,7 @@ export const filter_calculate_keepouts = (filter_parameters) =>{
         limits.push([filter_parameters.stop_band_edge_2, filter_parameters.sampling_frequency/2, -80, 0]);
     } else if(filter_parameters.type === "bs"){
         limits.push([0, filter_parameters.pass_band_edge_1, -80, -1]);
-        limits.push([filter_parameters.stop_band_edge_1,filter_parameters.stop_band_edge_2, -1000, 0]);
+        limits.push([filter_parameters.stop_band_edge_1,filter_parameters.stop_band_edge_2, -90, 0]);
         limits.push([filter_parameters.pass_band_edge_2, filter_parameters.sampling_frequency/2, -80, -1]);
     }
 
@@ -44,10 +44,10 @@ export const filter_calculate_keepouts = (filter_parameters) =>{
             x1: l[1],
             y1: l[3],
             line: {
-                color: 'rgb(55, 128, 191)',
-                width: 3
+                color: 'rgba(55, 128, 191,0.3)'
             },
-            fillcolor: 'rgba(55, 128, 191, 0.6)'
+            fillcolor: 'rgba(55, 128, 191, 0.3)',
+            layer:"below"
         })
     }
 
