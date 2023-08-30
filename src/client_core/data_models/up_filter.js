@@ -1,0 +1,65 @@
+// Copyright 2023 Filippo Savi
+// Author: Filippo Savi <filssavi@gmail.com>
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+
+
+
+import {store} from "../index";
+import {backend_delete, backend_patch, backend_post} from "../proxy/backend";
+import {api_dictionary} from "../proxy/api_dictionary";
+import {AddFilter, removeFilter} from "../../redux/Actions/FiltersActons";
+
+export class up_filter {
+    constructor(filter_obj) {
+        if(!filter_obj)
+            return;
+        this.id = filter_obj.id;
+        this.name = filter_obj.name;
+        this.parameters = filter_obj.parameters;
+    }
+
+    static construct_empty(filter_id){
+        let filter_obj = {id:filter_id, name:'new filter_'+filter_id,parameters:{}};
+        return new up_filter(filter_obj);
+    }
+
+    add_remote = () => {
+        store.dispatch(AddFilter(this));
+        return backend_post(api_dictionary.filters.add+'/'+this.id, this._get_filter());
+    }
+
+    edit_field = (field, value) => {
+        this[field] = value;
+        store.dispatch(AddFilter(this));
+        let edit = {filter:this.id, field:field, value:value};
+        return backend_patch(api_dictionary.filters.edit+'/'+this.id,edit)
+    }
+
+    static delete_filter(filter){
+        return backend_delete(api_dictionary.filters.delete+'/'+filter.id, filter).then(()=>{
+            store.dispatch(removeFilter(filter));
+        })
+    }
+
+    _get_filter = () =>{
+        return {
+                id: this.id,
+                name: this.name,
+                parameters: this.parameters
+            };
+    }
+
+
+}

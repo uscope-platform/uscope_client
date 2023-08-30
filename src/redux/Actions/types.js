@@ -48,6 +48,11 @@ export const REMOVE_APPLICATION = 'REMOVE_APPLICATION';
 export const ADD_PROGRAM = "ADD_PROGRAM";
 export const REMOVE_PROGRAM = "REMOVE_PROGRAM";
 export const LOAD_ALL_PROGRAMS = "LOAD_ALL_PROGRAM";
+//                  FCORE PROGRAMS
+export const ADD_FILTER = "ADD_FILTER";
+export const REMOVE_FILTER = "REMOVE_FILTER";
+export const LOAD_ALL_FILTERS = "LOAD_ALL_FILTERS";
+
 //                  BITSTREAMS
 export const ADD_BITSTREAM = "ADD_BITSTREAM";
 export const REMOVE_BITSTREAM = "REMOVE_BITSTREAM";

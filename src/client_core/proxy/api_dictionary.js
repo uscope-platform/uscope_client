@@ -75,5 +75,13 @@ export const api_dictionary = {
         add: 'script',
         edit: 'script',
         delete: 'script',
+    },
+    filters:{
+        get_hash: 'filters/digest',
+        load_all: 'filters/none',
+        add: 'filters',
+        edit: 'filters',
+        delete: 'filters',
+        get_response: "filters/response"
     }
 }

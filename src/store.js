@@ -34,7 +34,7 @@ const persistConfig = {
     key: 'root',
     storage: storage,
     stateReconciler: hardSet,
-    whitelist: ['scripts', 'peripherals', 'applications', 'programs', 'bitstreams']
+    whitelist: ['scripts', 'peripherals', 'applications', 'programs', 'bitstreams', 'filters']
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -31,11 +31,15 @@ let FilterManager = props =>{
 
     const [filter_type, set_filter_type] = useState([true, false, false, false]);
     const [filter_parameters, set_filter_parameters] = useState({
-        pass_band_ripple:1,
-        stop_band_ripple:2,
-        cutoff_frequency:3,
+        pass_band_ripple:3,
+        stop_band_attenuation:80,
+        pass_band_edge_1:1e3,
+        stop_band_edge_1:2e3,
+        pass_band_edge_2:3e3,
+        stop_band_edge_2:4e3,
         cut_in_frequency:4,
-        cut_off_frequency:5
+        cut_off_frequency:5,
+        sampling_frequency:10e3
     });
 
     const [keepout_shapes, set_keepout_shapes] = useState([]);
@@ -67,7 +71,7 @@ let FilterManager = props =>{
         >
             <UIPanel key="filter_designer_plot" data-grid={{x: 0, y: 0, w: 10, h: 15, static: true}} level="level_2">
                 <SimpleContent name="Filter Viewer" content={
-                    <FilterPlot keepout_shapes={keepout_shapes} />
+                    <FilterPlot keepout_shapes={keepout_shapes} f_sample={filter_parameters.sampling_frequency}/>
                 }/>
             </UIPanel>
             <UIPanel key="filter_designer_controls" data-grid={{x:10, y: 0, w: 14, h: 15, static: true}} level="level_2">

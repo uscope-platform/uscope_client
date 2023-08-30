@@ -37,7 +37,7 @@ let  FilterPlot = props =>{
             t: 25,
         },
         showlegend:false,
-        width: 600,
+        width: 530,
         height:400,
         data_revision:data_rev,
         paper_bgcolor: "rgba(0,0,0,0)",
@@ -50,7 +50,8 @@ let  FilterPlot = props =>{
             showgrid: true,
             tickcolor: '#FFFFFF',
             linecolor: '#FFFFFF',
-            gridcolor: '#777777'
+            gridcolor: '#777777',
+            range:[0, props.f_sample]
         },
         yaxis: {
             automargin: true,
@@ -58,7 +59,8 @@ let  FilterPlot = props =>{
             showgrid: true,
             tickcolor: '#FFFFFF',
             linecolor: '#FFFFFF',
-            gridcolor: '#777777'
+            gridcolor: '#777777',
+            range:[-90,10]
         },
         shapes: []
     });
@@ -68,9 +70,14 @@ let  FilterPlot = props =>{
         new_layout["shapes"] = props.keepout_shapes;
         set_plot_layout(new_layout);
         set_data_rev(data_rev +1);
-        console.log(new_layout);
     }, [props.keepout_shapes]);
 
+    useEffect(()=>{
+        let new_layout= plot_layout;
+        new_layout.xaxis.range = [0, (props.f_sample/2)*1.05];
+        set_plot_layout(new_layout);
+        set_data_rev(data_rev +1);
+    }, [props.f_sample])
 
     return(
         <Plot

@@ -25,6 +25,8 @@ import {up_program} from "./data_models/up_program";
 import {loadAllPrograms} from "../redux/Actions/ProgramsActions";
 import {up_bitstream} from "./data_models/up_bitstream";
 import {loadAllBitstreams} from "../redux/Actions/bitstreamsActions";
+import {loadAllFilters} from "../redux/Actions/FiltersActons";
+import {up_filter} from "./data_models/up_filter";
 
 let load_all_applications = () => {
     return backend_get(api_dictionary.applications.load_all).then(res=>{
@@ -85,6 +87,17 @@ let load_all_bitstreams = () =>{
     })
 }
 
+let load_all_filters = () =>{
+    return backend_get(api_dictionary.filters.load_all).then(res=>{
+        let filters_dict = {}
+        for (let item in res) {
+            filters_dict[item] = new up_filter(res[item]);
+        }
+        store.dispatch(loadAllFilters(filters_dict));
+        return filters_dict;
+    })
+}
+
 
 export const refresh_caches = () =>{
     let state = store.getState();
@@ -95,6 +108,7 @@ export const refresh_caches = () =>{
     refresh_ops.push(refresh_resource_cache("scripts_cache", state.scripts, load_all_scripts , ()=>{return backend_get(api_dictionary.scripts.get_hash)}));
     refresh_ops.push(refresh_resource_cache("programs_cache",state.programs, load_all_programs , ()=>{return backend_get(api_dictionary.programs.get_hash)}));
     refresh_ops.push(refresh_resource_cache("bitstreams_cache",state.bitstreams, load_all_bitstreams , ()=>{return backend_get(api_dictionary.bitstream.get_hash)}));
+    refresh_ops.push(refresh_resource_cache("filters_cache",state.filters, load_all_filters , ()=>{return backend_get(api_dictionary.filters.get_hash)}));
     return Promise.all(refresh_ops);
 };
 

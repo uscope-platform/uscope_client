@@ -15,23 +15,41 @@
 
 
 export const filter_calculate_keepouts = (filter_type, filter_parameters) =>{
-    if(filter_type[2]){
-        return [    {
+
+    let exclusion_zones = [];
+    let limits = []
+    if(filter_type[0]){ //  LOW PASS
+        limits.push([0, filter_parameters.pass_band_edge_1, -90, -filter_parameters.pass_band_ripple]);
+        limits.push([filter_parameters.stop_band_edge_1, filter_parameters.sampling_frequency/2, -filter_parameters.stop_band_attenuation, 0]);
+    } else if(filter_type[1]){ //HIGH PASS
+        limits.push([0, filter_parameters.pass_band_edge_1, -filter_parameters.stop_band_attenuation, 0]);
+        limits.push([filter_parameters.stop_band_edge_1, filter_parameters.sampling_frequency/2, -90, -filter_parameters.pass_band_ripple]);
+    } else if(filter_type[2]){ //BAND PASS
+        limits.push([0, filter_parameters.stop_band_edge_1, -filter_parameters.stop_band_attenuation, 0]);
+        limits.push([filter_parameters.pass_band_edge_1, filter_parameters.pass_band_edge_2, -90, -filter_parameters.pass_band_ripple]);
+        limits.push([filter_parameters.stop_band_edge_2, filter_parameters.sampling_frequency/2, -filter_parameters.stop_band_attenuation, 0]);
+    } else{ ///BAND STOP
+        limits.push([0, filter_parameters.pass_band_edge_1, -90, -filter_parameters.pass_band_ripple]);
+        limits.push([filter_parameters.stop_band_edge_1,filter_parameters.stop_band_edge_2, -filter_parameters.stop_band_attenuation, 0]);
+        limits.push([filter_parameters.pass_band_edge_2, filter_parameters.sampling_frequency/2, -90, -filter_parameters.pass_band_ripple]);
+    }
+
+    for(const l of limits) {
+        exclusion_zones.push({
             type: 'rect',
             xref: 'x',
             yref: 'y',
-            x0: 0.7,
-            y0: 3,
-            x1: 1.5,
-            y1: 6,
+            x0: l[0],
+            y0: l[2],
+            x1: l[1],
+            y1: l[3],
             line: {
                 color: 'rgb(55, 128, 191)',
                 width: 3
             },
             fillcolor: 'rgba(55, 128, 191, 0.6)'
-        }];
-    } else{
-        return [];
+        })
     }
 
+    return exclusion_zones;
 }

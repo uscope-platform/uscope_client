@@ -23,6 +23,7 @@ import {scriptsReducer, scriptsWorkspaceReducer} from "./scriptsReducer";
 import ApplicationsReducer from './applicationsReducer'
 import programsReducer from "./ProgramsReducer";
 import BitstreamsReducer from "./bitstreamsReducer";
+import filtersReducer from "./FiltersReducer";
 
 export default combineReducers({
     bitstreams:BitstreamsReducer,
@@ -33,5 +34,6 @@ export default combineReducers({
     applications : ApplicationsReducer,
     programs : programsReducer,
     scripts: scriptsReducer,
-    scriptsWorkspace: scriptsWorkspaceReducer
+    scriptsWorkspace: scriptsWorkspaceReducer,
+    filters: filtersReducer
     });
