@@ -17,7 +17,7 @@
 
 
 import {store} from "../index";
-import {backend_delete, backend_patch, backend_post} from "../proxy/backend";
+import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
 import {AddFilter, removeFilter} from "../../redux/Actions/FiltersActons";
 
@@ -36,18 +36,19 @@ export class up_filter {
             name:'new filter_'+filter_id,
             parameters:{
                 type:"lp",
-                pass_band_ripple:0,
-                stop_band_attenuation:0,
+                n_taps:100,
                 pass_band_edge_1:0,
                 stop_band_edge_1:0,
                 pass_band_edge_2:0,
                 stop_band_edge_2:0,
-                cut_in_frequency:0,
-                cut_off_frequency:0,
                 sampling_frequency:0
             }
         };
         return new up_filter(filter_obj);
+    }
+
+    build = () =>{
+        return backend_get(api_dictionary.filters.build + '/' + this.id);
     }
 
     add_remote = () => {

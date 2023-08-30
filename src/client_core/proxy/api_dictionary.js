@@ -82,6 +82,7 @@ export const api_dictionary = {
         add: 'filters',
         edit: 'filters',
         delete: 'filters',
+        build:'filters/build',
         get_response: "filters/response"
     }
 }

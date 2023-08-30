@@ -46,7 +46,7 @@ let  FilterSidebar = props =>{
     let selected_filter = {name:""};
     if(settings.selected_filter)
         selected_filter = filters_store[settings.selected_filter];
-    
+
 
     let handleOnSelect = (selection) => {
         if(settings.selected_filter !==selection){
@@ -83,6 +83,7 @@ let  FilterSidebar = props =>{
     let handleExport = () =>{
         download_json(selected_filter, selected_filter.name);
     };
+
 
     let get_content = () =>{
         let types = [];

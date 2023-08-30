@@ -18,29 +18,43 @@ import React from 'react';
 
 
 import {ColorTheme, } from "../UI_elements"
-import {MdNoteAdd, MdDownload, MdUpload} from "react-icons/md";
+import {MdNoteAdd, MdDownload, MdUpload, MdBuild} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
 
 let SideToolbar = (props) =>{
     let io_color = props.exportEnabled ? ColorTheme.icons_color:"gray";
     let click_handler = props.exportEnabled ? props.onExport:null;
     let export_tooltip = props.exportEnabled ? <Tooltip anchorId="export_icon" content={"Export "+ props.contentName} place="top" />:null;
-    return(
-        <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
+
+    let render_icons = () =>{
+        let ret = [];
+        ret.push(
             <div id="add_icon">
                 <MdNoteAdd onClick={props.onAdd} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
                 <Tooltip anchorId="add_icon" content={"Add "+ props.contentName} place="top" />
             </div>
+        )
+        ret.push(
             <div id="import_icon">
                 <MdUpload onClick={props.onImport} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
                 <Tooltip anchorId="import_icon" content={"Import "+ props.contentName} place="top" />
             </div>
+        )
+        ret.push(
             <div id="export_icon">
                 <MdDownload onClick={click_handler} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={io_color}/>
                 {
                     export_tooltip
                 }
             </div>
+        )
+        return ret;
+    }
+
+
+    return(
+        <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
+            {render_icons()}
         </div>
     );
 }

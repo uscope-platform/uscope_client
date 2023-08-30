@@ -19,19 +19,19 @@ export const filter_calculate_keepouts = (filter_parameters) =>{
     let exclusion_zones = [];
     let limits = []
     if(filter_parameters.type === "lp"){
-        limits.push([0, filter_parameters.pass_band_edge_1, -90, -filter_parameters.pass_band_ripple]);
-        limits.push([filter_parameters.stop_band_edge_1, filter_parameters.sampling_frequency/2, -filter_parameters.stop_band_attenuation, 0]);
+        limits.push([0, filter_parameters.pass_band_edge_1, -90, -1]);
+        limits.push([filter_parameters.stop_band_edge_1, filter_parameters.sampling_frequency/2, -80, 0]);
     } else if(filter_parameters.type === "hp"){
-        limits.push([0, filter_parameters.pass_band_edge_1, -filter_parameters.stop_band_attenuation, 0]);
-        limits.push([filter_parameters.stop_band_edge_1, filter_parameters.sampling_frequency/2, -90, -filter_parameters.pass_band_ripple]);
+        limits.push([0, filter_parameters.pass_band_edge_1, -80, 0]);
+        limits.push([filter_parameters.stop_band_edge_1, filter_parameters.sampling_frequency/2, -90, -1]);
     } else if(filter_parameters.type === "bp"){
-        limits.push([0, filter_parameters.stop_band_edge_1, -filter_parameters.stop_band_attenuation, 0]);
-        limits.push([filter_parameters.pass_band_edge_1, filter_parameters.pass_band_edge_2, -90, -filter_parameters.pass_band_ripple]);
-        limits.push([filter_parameters.stop_band_edge_2, filter_parameters.sampling_frequency/2, -filter_parameters.stop_band_attenuation, 0]);
+        limits.push([0, filter_parameters.stop_band_edge_1, -80, 0]);
+        limits.push([filter_parameters.pass_band_edge_1, filter_parameters.pass_band_edge_2, -90, -1]);
+        limits.push([filter_parameters.stop_band_edge_2, filter_parameters.sampling_frequency/2, -80, 0]);
     } else if(filter_parameters.type === "bs"){
-        limits.push([0, filter_parameters.pass_band_edge_1, -90, -filter_parameters.pass_band_ripple]);
-        limits.push([filter_parameters.stop_band_edge_1,filter_parameters.stop_band_edge_2, -filter_parameters.stop_band_attenuation, 0]);
-        limits.push([filter_parameters.pass_band_edge_2, filter_parameters.sampling_frequency/2, -90, -filter_parameters.pass_band_ripple]);
+        limits.push([0, filter_parameters.pass_band_edge_1, -80, -1]);
+        limits.push([filter_parameters.stop_band_edge_1,filter_parameters.stop_band_edge_2, -1000, 0]);
+        limits.push([filter_parameters.pass_band_edge_2, filter_parameters.sampling_frequency/2, -80, -1]);
     }
 
     for(const l of limits) {

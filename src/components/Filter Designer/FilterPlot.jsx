@@ -65,6 +65,17 @@ let  FilterPlot = props =>{
         shapes: []
     });
 
+    const [plot_data, set_plot_data] = useState(
+        [
+                {
+                    x: props.data_x,
+                    y: props.data_y,
+                    type: 'scatter',
+                    mode: 'lines'
+                }
+                ]
+    );
+
     useEffect(() => {
         let new_layout= plot_layout;
         new_layout["shapes"] = props.keepout_shapes;
@@ -79,18 +90,17 @@ let  FilterPlot = props =>{
         set_data_rev(data_rev +1);
     }, [props.f_sample])
 
+    useEffect(() => {
+        let new_data= plot_data;
+        new_data[0].x = props.data_x;
+        new_data[0].y = props.data_y;
+        set_plot_data(new_data)
+        set_data_rev(data_rev +1);
+    }, [props.data_x, props.data_y]);
+
     return(
         <Plot
-            data={[
-                {
-                    x: [1, 2, 3],
-                    y: [2, 6, 3],
-                    type: 'scatter',
-                    mode: 'lines+markers',
-                    marker: {color: 'red'},
-                },
-                {type: 'bar', x: [1, 2, 3], y: [2, 5, 3]},
-            ]}
+            data={plot_data}
             config={{responsive: true, displaylogo: false}}
             layout={{...plot_layout,...settings.plot_palette}}
 

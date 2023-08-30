@@ -49,8 +49,7 @@ let  FilterDesignerControls = props =>{
 
     let render_filter_parameters = () =>{
         let ret = [];
-        ret.push(<InputField inline name="pass_band_ripple" defaultValue={props.filter_parameters.pass_band_ripple} onKeyDown={handle_edit_field} label="Pass band ripple"/>);
-        ret.push(<InputField inline name="stop_band_attenuation" defaultValue={props.filter_parameters.stop_band_attenuation} onKeyDown={handle_edit_field} label="Stop band attenuation"/>);
+        ret.push(<InputField inline name="n_taps" defaultValue={props.filter_parameters.n_taps} onKeyDown={handle_edit_field} label="Number of taps"/>);
         if(["lp", "hp"].includes(props.filter_parameters.type)){
             ret.push(<InputField inline name="pass_band_edge_1" defaultValue={props.filter_parameters.pass_band_edge_1} onKeyDown={handle_edit_field} label="Pass band edge frequency"/>);
             ret.push(<InputField inline name="stop_band_edge_1" defaultValue={props.filter_parameters.stop_band_edge_1} onKeyDown={handle_edit_field} label="Stop band edge frequency"/>);
