@@ -14,21 +14,21 @@
 // limitations under the License.
 
 
-export const filter_calculate_keepouts = (filter_type, filter_parameters) =>{
+export const filter_calculate_keepouts = (filter_parameters) =>{
 
     let exclusion_zones = [];
     let limits = []
-    if(filter_type[0]){ //  LOW PASS
+    if(filter_parameters.type === "lp"){
         limits.push([0, filter_parameters.pass_band_edge_1, -90, -filter_parameters.pass_band_ripple]);
         limits.push([filter_parameters.stop_band_edge_1, filter_parameters.sampling_frequency/2, -filter_parameters.stop_band_attenuation, 0]);
-    } else if(filter_type[1]){ //HIGH PASS
+    } else if(filter_parameters.type === "hp"){
         limits.push([0, filter_parameters.pass_band_edge_1, -filter_parameters.stop_band_attenuation, 0]);
         limits.push([filter_parameters.stop_band_edge_1, filter_parameters.sampling_frequency/2, -90, -filter_parameters.pass_band_ripple]);
-    } else if(filter_type[2]){ //BAND PASS
+    } else if(filter_parameters.type === "bp"){
         limits.push([0, filter_parameters.stop_band_edge_1, -filter_parameters.stop_band_attenuation, 0]);
         limits.push([filter_parameters.pass_band_edge_1, filter_parameters.pass_band_edge_2, -90, -filter_parameters.pass_band_ripple]);
         limits.push([filter_parameters.stop_band_edge_2, filter_parameters.sampling_frequency/2, -filter_parameters.stop_band_attenuation, 0]);
-    } else{ ///BAND STOP
+    } else if(filter_parameters.type === "bs"){
         limits.push([0, filter_parameters.pass_band_edge_1, -90, -filter_parameters.pass_band_ripple]);
         limits.push([filter_parameters.stop_band_edge_1,filter_parameters.stop_band_edge_2, -filter_parameters.stop_band_attenuation, 0]);
         limits.push([filter_parameters.pass_band_edge_2, filter_parameters.sampling_frequency/2, -90, -filter_parameters.pass_band_ripple]);

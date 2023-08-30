@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import React from 'react';
+import {ColorTheme} from "../../UI_elements";
 
 
 
@@ -24,26 +25,26 @@ let  BandStop = props =>{
             viewBox="0 0 24 24"
             width="24"
             version="1.1"
-            id="band_stop"
+            id="bs"
             xmlns="http://www.w3.org/2000/svg"
             onClick={e => props.onClick(e)}
         >
             <path
-                fill={props.color}
-                stroke={props.color}
+                fill={props.active?ColorTheme.icons_color:ColorTheme.inactive_icons_color}
+                stroke={props.active?ColorTheme.icons_color:ColorTheme.inactive_icons_color}
                 fillOpacity={1}
                 strokeWidth={1.76267}
                 strokeOpacity={1}
                 d="m 3.2493211,4.5546317 c 0,0 -0.1677916,-0.027795 2.8933025,-0.021002 3.0610951,0.00681 4.0924044,14.7310163 4.0924044,14.7310163 l -7.1350115,0.02113 z"
-                id="band_stop" />
+                id="bs" />
             <path
-                fill={props.color}
-                stroke={props.color}
+                fill={props.active?ColorTheme.icons_color:ColorTheme.inactive_icons_color}
+                stroke={props.active?ColorTheme.icons_color:ColorTheme.inactive_icons_color}
                 fillOpacity={1}
                 strokeWidth={1.76267}
                 strokeOpacity={1}
                 d="m 21.231274,4.5693727 c 0,0 0.167792,-0.027795 -2.893302,-0.021002 -3.061095,0.00681 -4.092404,14.7310163 -4.092404,14.7310163 l 7.135011,0.02113 z"
-                id="band_stop" />
+                id="bs" />
 
         </svg>
     );

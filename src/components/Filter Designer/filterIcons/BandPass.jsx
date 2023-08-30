@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import React from 'react';
+import {ColorTheme} from "../../UI_elements";
 
 
 
@@ -24,18 +25,18 @@ let  BandPass = props =>{
             viewBox="0 0 24 24"
             width="24"
             version="1.1"
-            id="band_pass"
+            id="bp"
             xmlns="http://www.w3.org/2000/svg"
             onClick={e => props.onClick(e)}
         >
             <path
-                fill={props.color}
-                stroke={props.color}
+                fill={props.active?ColorTheme.icons_color:ColorTheme.inactive_icons_color}
+                stroke={props.active?ColorTheme.icons_color:ColorTheme.inactive_icons_color}
                 fillOpacity={1}
                 strokeWidth={1.76267}
                 strokeOpacity={1}
                 d="M 14.519531 5.296875 C 13.021214 5.2944747 11.082211 5.3075611 9.1777344 5.3242188 C 5.2793337 6.3563416 2.7792969 19.802734 2.7792969 19.802734 L 14.195312 19.900391 L 21.388672 19.839844 C 21.388672 19.839844 18.686147 5.303545 14.519531 5.296875 z "
-                id="band_pass" />
+                id="bp" />
         </svg>
     );
 };

@@ -22,43 +22,41 @@ import {
 import {Responsive, WidthProvider} from "react-grid-layout";
 import FilterPlot from "./FilterPlot";
 import FilterDesignerControls from "./FilterDesignerControls";
-import {filter_calculate_keepouts} from "../../client_core";
+import {filter_calculate_keepouts, up_program} from "../../client_core";
+import {useSelector} from "react-redux";
+import {up_filter} from "../../client_core/data_models/up_filter";
 
 
 let FilterManager = props =>{
 
+    const [filter_revision, set_filter_revision] = useState( 0);
+
+    const filters_store = useSelector(state => state.filters);
+    const settings = useSelector(state => state.settings);
+
     const ResponsiveGridLayout = WidthProvider(Responsive);
 
-    const [filter_type, set_filter_type] = useState([true, false, false, false]);
-    const [filter_parameters, set_filter_parameters] = useState({
-        pass_band_ripple:3,
-        stop_band_attenuation:80,
-        pass_band_edge_1:1e3,
-        stop_band_edge_1:2e3,
-        pass_band_edge_2:3e3,
-        stop_band_edge_2:4e3,
-        cut_in_frequency:4,
-        cut_off_frequency:5,
-        sampling_frequency:10e3
-    });
+    let selected_filter = settings.selected_filter ? new up_filter(filters_store[settings.selected_filter]): up_filter.construct_empty(0);
 
     const [keepout_shapes, set_keepout_shapes] = useState([]);
 
     useEffect(() => {
-        set_keepout_shapes(filter_calculate_keepouts(filter_type, filter_parameters));
-    }, [filter_type, filter_parameters]);
+        set_keepout_shapes(filter_calculate_keepouts(selected_filter.parameters));
+    }, [filter_revision]);
 
-    let handleParamChanges = (change) =>{
-        switch (change.type){
-            case "select_filter":
-                set_filter_type(change.value);
-                break;
-            default:
-                let new_parameters = {...filter_parameters};
-                new_parameters[change.type] = parseFloat(change.value);
-                set_filter_parameters(new_parameters);
-                break;
-        }
+    useEffect(() => {
+        set_filter_revision(filter_revision+1)
+    }, [settings.selected_filter]);
+
+
+    let handleParamChanges = (param_name, value) =>{
+        set_filter_revision(filter_revision+1)
+        selected_filter.edit_parameter(param_name, value).then();
+    }
+
+    let handleRename = (param_name, value) =>{
+        set_filter_revision(filter_revision+1)
+        selected_filter.edit_field(param_name, value).then();
     }
 
     return(
@@ -71,20 +69,22 @@ let FilterManager = props =>{
         >
             <UIPanel key="filter_designer_plot" data-grid={{x: 0, y: 0, w: 10, h: 15, static: true}} level="level_2">
                 <SimpleContent name="Filter Viewer" content={
-                    <FilterPlot keepout_shapes={keepout_shapes} f_sample={filter_parameters.sampling_frequency}/>
+                    <FilterPlot keepout_shapes={keepout_shapes} f_sample={selected_filter.parameters.sampling_frequency}/>
                 }/>
             </UIPanel>
             <UIPanel key="filter_designer_controls" data-grid={{x:10, y: 0, w: 14, h: 15, static: true}} level="level_2">
                 <SimpleContent name="Controls" content={
                     <FilterDesignerControls
-                        filter_type={filter_type}
-                        filter_parameters={filter_parameters}
+                        name={selected_filter.name}
+                        filter_parameters={selected_filter.parameters}
                         on_change={handleParamChanges}
+                        on_rename={handleRename}
                     />
                 }/>
             </UIPanel>
         </ResponsiveGridLayout>
     );
+
 
 }
 

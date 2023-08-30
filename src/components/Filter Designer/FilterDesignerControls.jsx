@@ -16,7 +16,7 @@
 import React from 'react';
 
 import styled from "styled-components";
-import {ColorTheme, InputField} from "../UI_elements";
+import {InputField} from "../UI_elements";
 import LowPass from "./filterIcons/LowPass"
 import HighPass from "./filterIcons/HighPass"
 import BandPass from "./filterIcons/BandPass"
@@ -32,25 +32,18 @@ let  FilterDesignerControls = props =>{
 
     let handleFilterChange = (event) => {
         let type = event.target.id;
-        switch (type){
-            case "low_pass":
-                props.on_change({type:"select_filter", value: [true, false, false, false]})
-                break;
-            case "high_pass":
-                props.on_change({type:"select_filter", value: [false, true, false, false]})
-                break;
-            case "band_pass":
-                props.on_change({type:"select_filter", value: [false, false, true, false]})
-                break;
-            case "band_stop":
-                props.on_change({type:"select_filter", value: [false, false, false, true]})
-                break;
-        }
+        props.on_change("type", type);
     };
 
     let handle_edit_field = (event) => {
         if(event.key==="Enter"|| event.key ==="Tab"){
-            props.on_change({type:event.target.name, value: event.target.value});
+            props.on_change(event.target.name, parseFloat(event.target.value));
+        }
+    }
+
+    let handle_rename = (event) => {
+        if(event.key==="Enter"|| event.key ==="Tab"){
+            props.on_rename(event.target.name, event.target.value);
         }
     }
 
@@ -58,16 +51,16 @@ let  FilterDesignerControls = props =>{
         let ret = [];
         ret.push(<InputField inline name="pass_band_ripple" defaultValue={props.filter_parameters.pass_band_ripple} onKeyDown={handle_edit_field} label="Pass band ripple"/>);
         ret.push(<InputField inline name="stop_band_attenuation" defaultValue={props.filter_parameters.stop_band_attenuation} onKeyDown={handle_edit_field} label="Stop band attenuation"/>);
-        if(props.filter_type[0] || props.filter_type[1]){
+        if(["lp", "hp"].includes(props.filter_parameters.type)){
             ret.push(<InputField inline name="pass_band_edge_1" defaultValue={props.filter_parameters.pass_band_edge_1} onKeyDown={handle_edit_field} label="Pass band edge frequency"/>);
             ret.push(<InputField inline name="stop_band_edge_1" defaultValue={props.filter_parameters.stop_band_edge_1} onKeyDown={handle_edit_field} label="Stop band edge frequency"/>);
-        } else if(props.filter_type[2]){
+        } else if(props.filter_parameters.type==="bp"){
             ret.push(<InputField inline name="stop_band_edge_1" defaultValue={props.filter_parameters.stop_band_edge_1} onKeyDown={handle_edit_field} label="First stop band edge frequency"/>);
             ret.push(<InputField inline name="pass_band_edge_1" defaultValue={props.filter_parameters.pass_band_edge_1} onKeyDown={handle_edit_field} label="Pass band first edge frequency"/>);
 
             ret.push(<InputField inline name="pass_band_edge_2" defaultValue={props.filter_parameters.pass_band_edge_2} onKeyDown={handle_edit_field} label="Pass band second edge frequency"/>);
             ret.push(<InputField inline name="stop_band_edge_2" defaultValue={props.filter_parameters.stop_band_edge_2} onKeyDown={handle_edit_field} label="Second stop band edge  frequency"/>);
-        } else{
+        } else if(props.filter_parameters.type==="bs"){
             ret.push(<InputField inline name="pass_band_edge_1" defaultValue={props.filter_parameters.pass_band_edge_1} onKeyDown={handle_edit_field} label="First pass band edge frequency"/>);
             ret.push(<InputField inline name="stop_band_edge_1" defaultValue={props.filter_parameters.stop_band_edge_1} onKeyDown={handle_edit_field} label="Stop band first edge frequency"/>);
 
@@ -81,12 +74,13 @@ let  FilterDesignerControls = props =>{
     let render_controls = () =>{
         return(
             <div>
+                <InputField inline name="name" defaultValue={props.name} onKeyDown={handle_rename} label="Filter Name"/>
                 <InputField inline name="sampling_frequency" defaultValue={props.filter_parameters.sampling_frequency} onKeyDown={handle_edit_field} label="Sampling Frequency"/>
                 <ComponentStyle>
-                    <LowPass onClick={handleFilterChange} color={props.filter_type[0]?ColorTheme.icons_color:ColorTheme.inactive_icons_color}/>
-                    <HighPass onClick={handleFilterChange} color={props.filter_type[1]?ColorTheme.icons_color:ColorTheme.inactive_icons_color}/>
-                    <BandPass onClick={handleFilterChange} color={props.filter_type[2]?ColorTheme.icons_color:ColorTheme.inactive_icons_color}/>
-                    <BandStop onClick={handleFilterChange} color={props.filter_type[3]?ColorTheme.icons_color:ColorTheme.inactive_icons_color}/>
+                    <LowPass  onClick={handleFilterChange} active={props.filter_parameters.type==="lp"} />
+                    <HighPass onClick={handleFilterChange} active={props.filter_parameters.type==="hp"} />
+                    <BandPass onClick={handleFilterChange} active={props.filter_parameters.type==="bp"} />
+                    <BandStop onClick={handleFilterChange} active={props.filter_parameters.type==="bs"} />
                 </ComponentStyle>
                 {render_filter_parameters()}
             </div>

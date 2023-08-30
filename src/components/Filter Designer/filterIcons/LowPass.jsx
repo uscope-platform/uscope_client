@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import React from 'react';
+import {ColorTheme} from "../../UI_elements";
 
 
 
@@ -24,18 +25,18 @@ let  LowPass = props =>{
             viewBox="0 0 24 24"
             width="24"
             version="1.1"
-            id="low_pass"
+            id="lp"
             xmlns="http://www.w3.org/2000/svg"
             onClick={e => props.onClick(e)}
         >
             <path
-                fill={props.color}
-                stroke={props.color}
+                fill={props.active?ColorTheme.icons_color:ColorTheme.inactive_icons_color}
+                stroke={props.active?ColorTheme.icons_color:ColorTheme.inactive_icons_color}
                 fillOpacity={1}
                 strokeWidth={1.76267}
                 strokeOpacity={1}
                 d="m 2.6045404,5.3601663 c 0,0 7.7887616,-0.1065188 11.9553816,-0.099844 4.16662,0.00667 6.86859,14.5422277 6.86859,14.5422277 L 2.6020383,19.963992 Z"
-                id="low_pass" />
+                id="lp" />
 
         </svg>
     );

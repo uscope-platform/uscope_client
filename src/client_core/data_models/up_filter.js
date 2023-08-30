@@ -31,7 +31,22 @@ export class up_filter {
     }
 
     static construct_empty(filter_id){
-        let filter_obj = {id:filter_id, name:'new filter_'+filter_id,parameters:{}};
+        let filter_obj = {
+            id:filter_id,
+            name:'new filter_'+filter_id,
+            parameters:{
+                type:"lp",
+                pass_band_ripple:0,
+                stop_band_attenuation:0,
+                pass_band_edge_1:0,
+                stop_band_edge_1:0,
+                pass_band_edge_2:0,
+                stop_band_edge_2:0,
+                cut_in_frequency:0,
+                cut_off_frequency:0,
+                sampling_frequency:0
+            }
+        };
         return new up_filter(filter_obj);
     }
 
@@ -39,6 +54,14 @@ export class up_filter {
         store.dispatch(AddFilter(this));
         return backend_post(api_dictionary.filters.add+'/'+this.id, this._get_filter());
     }
+
+    edit_parameter = (field, value) => {
+        this.parameters[field] = value;
+        store.dispatch(AddFilter(this));
+        let edit = {filter:this.id, field:"parameters", value:this.parameters};
+        return backend_patch(api_dictionary.filters.edit+'/'+this.id,edit)
+    }
+
 
     edit_field = (field, value) => {
         this[field] = value;
