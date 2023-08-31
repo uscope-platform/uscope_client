@@ -1,4 +1,4 @@
-// Copyright 2021 Filippo Savi
+// Copyright 2023 Filippo Savi
 // Author: Filippo Savi <filssavi@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,11 +26,12 @@ import FilterDesignerControls from "./FilterDesignerControls";
 import {filter_calculate_keepouts} from "../../client_core";
 import {useSelector} from "react-redux";
 import {up_filter} from "../../client_core/data_models/up_filter";
-import {MdBuild} from "react-icons/md";
+import {MdBuild, MdConstruction} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
 
 import {ToastContainer, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import FilterImplementationControls from "./FilterImplementationControls";
 
 let FilterManager = props =>{
 
@@ -45,7 +46,7 @@ let FilterManager = props =>{
 
     const [keepout_shapes, set_keepout_shapes] = useState([]);
 
-    const [plot_filter, set_plot_filter] = useState({x:0, y:0})
+    const [plot_filter, set_plot_filter] = useState({ideal:{x:0, y:0}, quantized:{x:0, y:0}})
 
     useEffect(() => {
         set_keepout_shapes(filter_calculate_keepouts(selected_filter.parameters));
@@ -53,12 +54,26 @@ let FilterManager = props =>{
 
     useEffect(() => {
         set_filter_revision(filter_revision+1)
-        set_plot_filter({x:[], y:[]});
+        selected_filter.get_plots().then((resp)=>{
+            set_plot_filter({
+                ideal: {x:resp.ideal.frequency, y:resp.ideal.response},
+                quantized:  {x:resp.quantized.frequency, y:resp.quantized.response}
+            });
+
+        })
+        set_plot_filter({ideal: {x:[], y:[]}, quantized: {x:[], y:[]}});
     }, [settings.selected_filter]);
 
-    let handleBuild = () =>{
-        selected_filter.build().then((resp)=>{
-            set_plot_filter({x:resp["frequency"], y:resp["response"]});
+    let handleDesign = () =>{
+        selected_filter.design().then((resp)=>{
+            set_plot_filter({ideal: {x:resp["frequency"], y:resp["response"]}, quantized: plot_filter.quantized});
+        }).catch((err)=>{
+            toast.error(err);
+        })
+    }
+    let handleImplement = () =>{
+        selected_filter.implement().then((resp)=>{
+            set_plot_filter({ideal: plot_filter.ideal, quantized: {x:resp["frequency"], y:resp["response"]}});
         }).catch((err)=>{
             toast.error(err);
         })
@@ -101,8 +116,7 @@ let FilterManager = props =>{
                         <FilterPlot
                             keepout_shapes={keepout_shapes}
                             f_sample={selected_filter.parameters.sampling_frequency}
-                            data_x={plot_filter.x}
-                            data_y={plot_filter.y}
+                            plot_data={plot_filter}
                         />
                     }/>
                 </UIPanel>
@@ -110,9 +124,9 @@ let FilterManager = props =>{
                     <SimpleContent name="Design Parameters" content={
                         <div>
                             <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
-                                <div id="build">
-                                    <MdBuild onClick={handleBuild} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
-                                    <Tooltip anchorId="build" content={"Build Filter"} place="top" />
+                                <div id="design">
+                                    <MdBuild onClick={handleDesign} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
+                                    <Tooltip anchorId="design" content={"Design Filter"} place="top" />
                                 </div>
                             </div>
                             <FilterDesignerControls
@@ -126,7 +140,18 @@ let FilterManager = props =>{
                 </UIPanel>
                 <UIPanel key="filter_implementation_controls" data-grid={{x:0, y: 15, w: 24, h: 8, static: true}} level="level_2">
                     <SimpleContent name="Implementation Parameters" content={
-                        <div></div>
+                        <div>
+                            <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
+                                <div id="implement">
+                                    <MdConstruction onClick={handleImplement} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
+                                    <Tooltip anchorId="implement" content={"Implement Filter"} place="top" />
+                                </div>
+                            </div>
+                            <FilterImplementationControls
+                                filter_parameters={selected_filter.parameters}
+                                on_change={handleParamChanges}
+                            />
+                        </div>
                     }/>
                 </UIPanel>
             </ResponsiveGridLayout>

@@ -1,4 +1,4 @@
-// Copyright 2021 Filippo Savi
+// Copyright 2023 Filippo Savi
 // Author: Filippo Savi <filssavi@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -68,12 +68,23 @@ let  FilterPlot = props =>{
     const [plot_data, set_plot_data] = useState(
         [
                 {
-                    x: props.data_x,
-                    y: props.data_y,
+                    x: props.plot_data.ideal.x,
+                    y: props.plot_data.ideal.y,
                     type: 'scatter',
                     mode: 'lines',
                     line: {
                         color: 'rgb(250,55,55)',
+                        width: 3,
+                        opacity: 1,
+                    }
+                },
+                {
+                    x: props.plot_data.quantized.x,
+                    y: props.plot_data.quantized.y,
+                    type: 'scatter',
+                    mode: 'lines',
+                    line: {
+                        color: 'rgb(34,154,90)',
                         width: 3,
                         opacity: 1,
                     }
@@ -98,26 +109,38 @@ let  FilterPlot = props =>{
         update_layout("xaxis", x_axis);
     }, [props.f_sample])
 
-    useEffect(() => {
-        let new_data= plot_data;
-        new_data[0].x = props.data_x;
-        new_data[0].y = props.data_y;
-        set_plot_data(new_data)
-
-        if(props.data_y){
-            let max_y = Math.max(...props.data_y, 10);
-            let min_y= Math.min(...props.data_y, -90);
+    let calculate_y_range = (data) =>{
+        if(data.quantized.y || data.ideal.y){
+            let y_base = [...data.ideal.y];
+            if(data.quantized.y) y_base = [...y_base, ...data.quantized.y];
+            let max_y = Math.max(...y_base, 10);
+            let min_y= Math.min(...y_base, -90);
 
             let y_axis = plot_layout.yaxis;
             y_axis.range =  [min_y*1.1, max_y*1.1];
             update_layout("yaxis", y_axis);
         }
+    }
 
+    useEffect(() => {
+        let new_data= plot_data;
+        new_data[0].x = props.plot_data.ideal.x;
+        new_data[0].y = props.plot_data.ideal.y;
+        set_plot_data(new_data)
 
-    }, [props.data_x, props.data_y]);
+        calculate_y_range(props.plot_data);
 
+    }, [props.plot_data.ideal.x, props.plot_data.ideal.y]);
 
+    useEffect(() => {
+        let new_data= plot_data;
+        new_data[1].x = props.plot_data.quantized.x;
+        new_data[1].y = props.plot_data.quantized.y;
+        set_plot_data(new_data)
 
+        calculate_y_range(props.plot_data);
+
+    }, [props.plot_data.quantized.x, props.plot_data.quantized.y]);
 
     return(
         <Plot

@@ -79,10 +79,12 @@ export const api_dictionary = {
     filters:{
         get_hash: 'filters/digest',
         load_all: 'filters/none',
+        load: 'filters',
         add: 'filters',
         edit: 'filters',
         delete: 'filters',
-        build:'filters/build',
+        design:'filters/design',
+        implement:'filters/implement',
         get_response: "filters/response"
     }
 }

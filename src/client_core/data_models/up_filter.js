@@ -41,14 +41,22 @@ export class up_filter {
                 stop_band_edge_1:0,
                 pass_band_edge_2:0,
                 stop_band_edge_2:0,
-                sampling_frequency:0
+                sampling_frequency:0,
+                taps_width:16
             }
         };
         return new up_filter(filter_obj);
     }
 
-    build = () =>{
-        return backend_get(api_dictionary.filters.build + '/' + this.id);
+    design = () =>{
+        return backend_get(api_dictionary.filters.design + '/' + this.id);
+    }
+    implement = () =>{
+        return backend_get(api_dictionary.filters.implement + '/' + this.id);
+    }
+
+    get_plots = () =>{
+        return backend_get(api_dictionary.filters.load + '/' + this.id);
     }
 
     add_remote = () => {
