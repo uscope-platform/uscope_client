@@ -30,6 +30,7 @@ export {SelectableList} from './SelectableList'
 export {DeleteIcon} from './DeleteIcon'
 export {ChipSelector} from './ChipSelector'
 export {ListItem} from './ListItem'
+export {TwoColumnSelector} from "./TwoColumnSelector"
 
 export {FormLayout} from "./Layouts/FormLayout"
 export {SidebarCollapsableNameLayout} from "./Layouts/SidebarCollapsableNameLayout"
@@ -40,7 +41,6 @@ export {FilterProperties} from "./SidebarComponents/Application/FiterProperties"
 export {MiscFieldProperties} from "./SidebarComponents/Application/MiscFieldProperties"
 export {PeripheralProperties} from "./SidebarComponents/Application/PeripheralProperties"
 export {InitialRegisterValue} from "./SidebarComponents/Application/InitialRegisterValueProperties"
-export {ScriptsSelector} from "./SidebarComponents/Application/ScriptsSelector"
 export {MacroProperties} from "./SidebarComponents/Application/MacroProperties"
 export {ParameterProperties} from "./SidebarComponents/Application/ParameterProperties"
 export {PlotChannelProperties} from "./SidebarComponents/Application/PlotChannelProperties"

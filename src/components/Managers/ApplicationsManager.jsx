@@ -29,7 +29,7 @@ import {
     MiscFieldProperties,
     TabbedContent,
     CardStack,
-    FilterProperties, ScriptsSelector
+    FilterProperties, TwoColumnSelector
 } from "../UI_elements"
 
 import {get_next_id, up_application} from "../../client_core";
@@ -57,6 +57,7 @@ let  ApplicationsManager = props =>{
     const peripherals = useSelector(state => state.peripherals);
     const filters = useSelector(state => state.filters);
     const programs = useSelector(state => state.programs);
+    const scripts = useSelector(state => state.scripts);
 
     const selected_app = sel_app_name ?applications[sel_app_name]: empty_app;
 
@@ -65,6 +66,43 @@ let  ApplicationsManager = props =>{
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     const ResponsiveGridLayout = WidthProvider(Responsive);
+
+
+    const calculate_selected_scripts = () =>{
+        return selected_app.scripts.map((scr)=>{
+            return scripts[scr].name;
+        });
+    }
+
+
+    const calculate_available_scripts = ()=>{
+        return Object.values(scripts).filter((val)=>{
+            return !selected_scripts.includes(val.name);
+        }).map((scr)=>{
+            return scr.name;
+        })
+    }
+
+    const [selected_scripts, set_selected_scripts] = useState(calculate_selected_scripts())
+    let [available_scripts,set_available_scripts] = useState(calculate_available_scripts());
+
+    const calculate_selected_programs = () =>{
+        return selected_app.programs.map((prg)=>{
+            return programs[prg].name;
+        });
+    }
+
+
+    const calculate_available_programs = ()=>{
+        return Object.values(programs).filter((val)=>{
+            return !selected_programs.includes(val.name);
+        }).map((prg)=>{
+            return prg.name;
+        })
+    }
+
+    const [selected_programs, set_selected_programs] = useState(calculate_selected_programs())
+    let [available_programs,set_available_programs] = useState(calculate_available_programs());
 
 
     let add_content = (name, type) =>{
@@ -127,6 +165,36 @@ let  ApplicationsManager = props =>{
             else return null;
         });
         misc_fields = misc_fields.filter(Boolean);
+    }
+
+
+    let handleDeselectScript = (id) =>{
+        let selected_application = new up_application(selected_app);
+        selected_application.remove_selected_script(id).then();
+        set_available_scripts(calculate_available_scripts());
+        set_selected_scripts(calculate_selected_scripts());
+    }
+
+    let handleSelectScript = (id) =>{
+        let app = new up_application(selected_app);
+        app.add_selected_script(id).then();
+        set_available_scripts(calculate_available_scripts());
+        set_selected_scripts(calculate_selected_scripts());
+    }
+
+
+    let handleDeselectPrograms = (id) =>{
+        let selected_application = new up_application(selected_app);
+        selected_application.remove_selected_program(id).then();
+        set_available_programs(calculate_available_programs());
+        set_selected_programs(calculate_selected_programs());
+    }
+
+    let handleSelectPrograms = (id) =>{
+        let app = new up_application(selected_app);
+        app.add_selected_program(id).then();
+        set_available_programs(calculate_available_programs());
+        set_selected_programs(calculate_selected_programs());
     }
 
 
@@ -262,23 +330,26 @@ let  ApplicationsManager = props =>{
                 </CardStack>
             </div>,
             <div key="scripts_card">
-                <ScriptsSelector
-                    application={selected_app}
-                    scripts={selected_app.scripts}
-                    forceUpdate={forceUpdate}
+                <TwoColumnSelector
+                    itemType="Scripts"
+                    data={scripts}
+                    display_field="name"
+                    selected_items={selected_scripts}
+                    available_items={available_scripts}
+                    onSelect={handleSelectScript}
+                    onDeselect={handleDeselectScript}
                 />
             </div>,
             <div key="programs_card">
-                <ManagerToolbar
-                    onAdd={() =>{}}
-                    contentName="Programs"/>
-                <CardStack>
-                    {
-                        selected_app.programs.map((field)=>{
-                            return <>{field}</>
-                        })
-                    }
-                </CardStack>
+                <TwoColumnSelector
+                    itemType="Programs"
+                    data={programs}
+                    display_field="name"
+                    selected_items={selected_programs}
+                    available_items={available_programs}
+                    onSelect={handleSelectPrograms}
+                    onDeselect={handleDeselectPrograms}
+                />
             </div>
         ])
     }

@@ -171,6 +171,12 @@ export class up_application {
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
+    add_selected_program = (program_id) =>{
+        let edit = {application:this.application_name, program:program_id, action:"add_selected_program"};
+        this.programs.push(program_id);
+        return backend_post(api_dictionary.applications.edit, edit);
+    }
+
     add_soft_core = (core_id) => {
         let sc = {
             id: core_id,
@@ -374,6 +380,14 @@ export class up_application {
         this.scripts.splice(idx,1);
 
         let edit = {application:this.application_name, script:script_id, action:"remove_selected_script"};
+        return backend_post(api_dictionary.applications.edit, edit);
+    }
+
+    remove_selected_program = (program_id) => {
+        let idx = this.programs.indexOf(program_id)
+        this.programs.splice(idx,1);
+
+        let edit = {application:this.application_name, program:program_id, action:"remove_selected_program"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 

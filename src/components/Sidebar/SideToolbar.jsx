@@ -29,19 +29,19 @@ let SideToolbar = (props) =>{
     let render_icons = () =>{
         let ret = [];
         ret.push(
-            <div id="add_icon">
+            <div key="add_icon" id="add_icon">
                 <MdNoteAdd onClick={props.onAdd} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
                 <Tooltip anchorId="add_icon" content={"Add "+ props.contentName} place="top" />
             </div>
         )
         ret.push(
-            <div id="import_icon">
+            <div key="import_icon" id="import_icon">
                 <MdUpload onClick={props.onImport} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
                 <Tooltip anchorId="import_icon" content={"Import "+ props.contentName} place="top" />
             </div>
         )
         ret.push(
-            <div id="export_icon">
+            <div key="export_icon" id="export_icon">
                 <MdDownload onClick={click_handler} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={io_color}/>
                 {
                     export_tooltip

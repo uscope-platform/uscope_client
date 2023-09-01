@@ -65,7 +65,7 @@ export let  CoreDmaIo = props =>{
             return [
                 props.core.io.map((item)=>{
 
-                    return <SelectableListItem delete onRemove={remove_item} type={item.type}
+                    return <SelectableListItem key={item.name} delete onRemove={remove_item} type={item.type}
                                                name={item.name} onSelect={set_sel_logic_io}
                                                selected={sel_logic_io===item.name} iconSize="1em"/>
                 })
