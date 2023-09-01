@@ -75,16 +75,16 @@ let  ApplicationsManager = props =>{
     }
 
 
-    const calculate_available_scripts = ()=>{
+    const calculate_available_scripts = (sel_s)=>{
         return Object.values(scripts).filter((val)=>{
-            return !selected_scripts.includes(val.name);
+            return !sel_s.includes(val.name);
         }).map((scr)=>{
             return scr.name;
         })
     }
 
     const [selected_scripts, set_selected_scripts] = useState(calculate_selected_scripts())
-    let [available_scripts,set_available_scripts] = useState(calculate_available_scripts());
+    let [available_scripts,set_available_scripts] = useState(calculate_available_scripts(selected_scripts));
 
     const calculate_selected_programs = () =>{
         return selected_app.programs.map((prg)=>{
@@ -93,16 +93,16 @@ let  ApplicationsManager = props =>{
     }
 
 
-    const calculate_available_programs = ()=>{
+    const calculate_available_programs = (sel_p)=>{
         return Object.values(programs).filter((val)=>{
-            return !selected_programs.includes(val.name);
+            return !sel_p.includes(val.name);
         }).map((prg)=>{
             return prg.name;
         })
     }
 
     const [selected_programs, set_selected_programs] = useState(calculate_selected_programs())
-    let [available_programs,set_available_programs] = useState(calculate_available_programs());
+    let [available_programs,set_available_programs] = useState(calculate_available_programs(selected_programs));
 
 
     let add_content = (name, type) =>{
@@ -170,31 +170,43 @@ let  ApplicationsManager = props =>{
 
     let handleDeselectScript = (id) =>{
         let selected_application = new up_application(selected_app);
-        selected_application.remove_selected_script(id).then();
-        set_available_scripts(calculate_available_scripts());
-        set_selected_scripts(calculate_selected_scripts());
+        selected_application.remove_selected_script(id).then(()=>{
+            let sel_s = calculate_selected_scripts();
+            let av_s = calculate_available_scripts(sel_s);
+            set_selected_scripts(sel_s);
+            set_available_scripts(av_s);
+        });
     }
 
     let handleSelectScript = (id) =>{
         let app = new up_application(selected_app);
-        app.add_selected_script(id).then();
-        set_available_scripts(calculate_available_scripts());
-        set_selected_scripts(calculate_selected_scripts());
+        app.add_selected_script(id).then(()=>{
+            let sel_s = calculate_selected_scripts();
+            let av_s = calculate_available_scripts(sel_s);
+            set_selected_scripts(sel_s);
+            set_available_scripts(av_s);
+        });
     }
 
 
     let handleDeselectPrograms = (id) =>{
         let selected_application = new up_application(selected_app);
-        selected_application.remove_selected_program(id).then();
-        set_available_programs(calculate_available_programs());
-        set_selected_programs(calculate_selected_programs());
+        selected_application.remove_selected_program(id).then(()=>{
+            let sel_p = calculate_selected_programs();
+            let av_p = calculate_available_programs(sel_p);
+            set_selected_programs(sel_p);
+            set_available_programs(av_p);
+        });
     }
 
     let handleSelectPrograms = (id) =>{
         let app = new up_application(selected_app);
-        app.add_selected_program(id).then();
-        set_available_programs(calculate_available_programs());
-        set_selected_programs(calculate_selected_programs());
+        app.add_selected_program(id).then(()=>{
+            let sel_p = calculate_selected_programs();
+            let av_p = calculate_available_programs(sel_p);
+            set_selected_programs(sel_p);
+            set_available_programs(av_p);
+        });
     }
 
 
