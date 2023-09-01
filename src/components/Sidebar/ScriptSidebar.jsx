@@ -29,7 +29,10 @@ import SideToolbar from "./SideToolbar";
 let ScriptManager = (props) =>{
 
     const scripts_store = useSelector(state => state.scripts);
+    const applications = useSelector(state => state.applications);
     const settings = useSelector(state => state.settings);
+
+    const applications_scripts = applications[settings.application].scripts;
 
     const dispatch = useDispatch();
 
@@ -62,9 +65,11 @@ let ScriptManager = (props) =>{
 
     let get_content = () =>{
         let types = [];
-        let items = Object.values(scripts_store).map((scr)=>{
+        let items = Object.keys(scripts_store).filter((scr_id)=>{
+            return applications_scripts.includes(scr_id);
+        }).map((scr_id)=>{
             types.push("generic");
-            return scr.name;
+            return scripts_store[scr_id].name;
         })
 
         return [items, types]

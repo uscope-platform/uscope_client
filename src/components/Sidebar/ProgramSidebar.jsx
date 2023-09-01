@@ -30,8 +30,13 @@ import SideToolbar from "./SideToolbar";
 
 let  ProgramSidebar = props =>{
 
+
+
+
     const programs_store = useSelector(state => state.programs);
     const settings = useSelector(state => state.settings);
+    const applications = useSelector(state => state.applications);
+    const applications_programs = applications[settings.application].programs;
     const ResponsiveGridLayout = WidthProvider(Responsive);
     const dispatch = useDispatch();
 
@@ -63,9 +68,11 @@ let  ProgramSidebar = props =>{
 
     let get_content = () =>{
         let types = [];
-        let items = Object.values(programs_store).map((prg)=>{
-            types.push(prg.program_type);
-            return prg.name;
+        let items = Object.keys(programs_store).filter((prg_id)=>{
+            return applications_programs.includes(prg_id);
+        }).map((prg_id)=>{
+            types.push(programs_store[prg_id].program_type);
+            return programs_store[prg_id].name;
         })
 
         return [items, types]
