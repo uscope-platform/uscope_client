@@ -56,6 +56,10 @@ export class up_peripheral {
         })
     }
 
+    static get_filter_peripherals(){
+        return ["AdcProcessing"];
+    }
+
     static construct_empty(periph_name){
         let periph_data_obj = {peripheral_name:periph_name, version:0.1, registers:[], parametric:false};
         return new up_peripheral(periph_data_obj);

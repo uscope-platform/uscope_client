@@ -35,15 +35,18 @@ export {FormLayout} from "./Layouts/FormLayout"
 export {SidebarCollapsableNameLayout} from "./Layouts/SidebarCollapsableNameLayout"
 export {SidebarCollapsableContentLayout} from "./Layouts/SidebarCollapsableContentLayout"
 
-export {ApplicationSoftCoreProperties} from "./SidebarComponents/ApplicationSoftCoreProperties"
-export {ApplicationMiscFieldProperties} from "./SidebarComponents/ApplicationMiscFieldProperties"
-export {ApplicationPeripheralProperties} from "./SidebarComponents/ApplicationPeripheralProperties"
-export {InitialRegisterValue} from "./SidebarComponents/InitialRegisterValueProperties"
-export {MacroProperties} from "./SidebarComponents/MacroProperties"
-export {ParameterProperties} from "./SidebarComponents/ParameterProperties"
-export {PlotChannelProperties} from "./SidebarComponents/PlotChannelProperties"
-export {PlotChannelGroupProperties} from  "./SidebarComponents/PlotChannelGroupProperties"
+export {SoftCoreProperties} from "./SidebarComponents/Application/SoftCoreProperties"
+export {FilterProperties} from "./SidebarComponents/Application/FiterProperties"
+export {MiscFieldProperties} from "./SidebarComponents/Application/MiscFieldProperties"
+export {PeripheralProperties} from "./SidebarComponents/Application/PeripheralProperties"
+export {InitialRegisterValue} from "./SidebarComponents/Application/InitialRegisterValueProperties"
+export {ScriptsSelector} from "./SidebarComponents/Application/ScriptsSelector"
+export {MacroProperties} from "./SidebarComponents/Application/MacroProperties"
+export {ParameterProperties} from "./SidebarComponents/Application/ParameterProperties"
+export {PlotChannelProperties} from "./SidebarComponents/Application/PlotChannelProperties"
+export {PlotChannelGroupProperties} from "./SidebarComponents/Application/PlotChannelGroupProperties"
 export {RegisterProperties} from "./SidebarComponents/RegisterProperties"
+
 
 export {SimpleContent} from './panels/SimpleContent'
 export {TabbedContent} from './panels/TabbedContent'

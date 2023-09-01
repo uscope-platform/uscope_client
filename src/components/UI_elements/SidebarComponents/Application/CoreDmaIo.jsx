@@ -14,12 +14,12 @@
 // limitations under the License.
 
 import React, {useState} from "react";
-import {get_next_id, up_application} from "../../../client_core";
+import {get_next_id, up_application} from "../../../../client_core";
 import styled from "styled-components";
 import {useSelector} from "react-redux";
-import {SelectableListItem} from "../SelectableListItem";
-import {InputField} from "../InputField";
-import {SelectField} from "../Select";
+import {SelectableListItem} from "../../SelectableListItem";
+import {InputField} from "../../InputField";
+import {SelectField} from "../../Select";
 import {MdAdd} from "react-icons/md";
 
 
@@ -40,7 +40,7 @@ const Separator = styled.div`
   background-color: ${props => props.theme.background.bordersLight};
 `
 
-export let  ApplicationCoreDmaIo = props =>{
+export let  CoreDmaIo = props =>{
 
     const programs = useSelector(state => state.programs);
     const selected_program = Object.values(programs).filter((program)=>{

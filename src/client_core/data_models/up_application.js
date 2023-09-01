@@ -36,6 +36,9 @@ export class up_application {
         this.peripherals = app_data_obj.peripherals;
         this.timebase_address = app_data_obj.timebase_address;
         this.soft_cores = app_data_obj.soft_cores;
+        this.filters = app_data_obj.filters;
+        this.programs = app_data_obj.programs;
+        this.scripts = app_data_obj.scripts;
         let nonstandard_fields =  up_application._get_nonstandard_fields(app_data_obj);
         for(let i of nonstandard_fields){
             this[i] = app_data_obj[i];
@@ -43,8 +46,23 @@ export class up_application {
     }
 
     static construct_empty(app_name){
-        let app_data_obj = {application_name:app_name, bitstream:"", channels:[],channel_groups:[],clock_frequency:100000000,
-            initial_registers_values:[], macro:[],n_enables:0,parameters:[],peripherals:[],timebase_address:"", soft_cores:[]};
+        let app_data_obj = {
+            application_name:app_name,
+            bitstream:"",
+            channels:[],
+            channel_groups:[],
+            clock_frequency:100000000,
+            initial_registers_values:[],
+            macro:[],
+            n_enables:0,
+            parameters:[],
+            peripherals:[],
+            timebase_address:"",
+            soft_cores:[],
+            filters:[],
+            programs:[],
+            scripts:[],
+        };
         return new up_application(app_data_obj);
     }
 
@@ -135,6 +153,24 @@ export class up_application {
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
+    add_filter = (filter_id) =>{
+        let f = {
+            id:filter_id,
+            filter_name:"",
+            peripheral:"",
+            enabled:false
+        };
+        let edit = {application:this.application_name, filter:f, action:"add_filter"};
+        this.filters.push(f);
+        return backend_post(api_dictionary.applications.edit, edit);
+    }
+
+    add_selected_script = (script_id) =>{
+        let edit = {application:this.application_name, script:script_id, action:"add_selected_script"};
+        this.scripts.push(script_id);
+        return backend_post(api_dictionary.applications.edit, edit);
+    }
+
     add_soft_core = (core_id) => {
         let sc = {
             id: core_id,
@@ -213,6 +249,17 @@ export class up_application {
 
         periph[field_name] = field_value;
         let edit = {application:this.application_name, peripheral:periph_name, field:field_name, value:field_value, action:"edit_peripheral"};
+        return backend_post(api_dictionary.applications.edit, edit);
+    }
+
+    edit_filter = (filter_id, field_name, field_value) =>{
+
+        let [filter] = this.filters.filter((f) =>{
+            return f.id === filter_id;
+        })
+
+        filter[field_name] = field_value;
+        let edit = {application:this.application_name, filter:filter_id, field:field_name, value:field_value, action:"edit_filter"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -309,6 +356,24 @@ export class up_application {
         this.soft_cores.splice(idx,1);
 
         let edit = {application:this.application_name, core:core_id, action:"remove_soft_core"};
+        return backend_post(api_dictionary.applications.edit, edit);
+    }
+
+    remove_filter = (filter_id) => {
+        let idx = this.filters.filter((f) =>{
+            return f.id === filter_id;
+        })
+        this.filters.splice(idx,1);
+
+        let edit = {application:this.application_name, filter:filter_id, action:"remove_filter"};
+        return backend_post(api_dictionary.applications.edit, edit);
+    }
+
+    remove_selected_script = (script_id) => {
+        let idx = this.scripts.indexOf(script_id)
+        this.scripts.splice(idx,1);
+
+        let edit = {application:this.application_name, script:script_id, action:"remove_selected_script"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 

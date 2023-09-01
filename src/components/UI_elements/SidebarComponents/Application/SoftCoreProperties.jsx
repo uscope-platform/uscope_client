@@ -14,15 +14,15 @@
 // limitations under the License.
 
 import React, {useState} from "react";
-import {InputField} from "../InputField";
+import {InputField} from "../../InputField";
 
-import {SelectField} from "../Select";
-import {up_application} from "../../../client_core";
-import {Card} from "../panels/Card";
-import {ApplicationCoreDmaIo} from "./ApplicationCoreDmaIo";
+import {SelectField} from "../../Select";
+import {up_application} from "../../../../client_core";
+import {Card} from "../../panels/Card";
+import {CoreDmaIo} from "./CoreDmaIo";
 
 
-export let  ApplicationSoftCoreProperties = props =>{
+export let  SoftCoreProperties = props =>{
 
 
     let programs_list = Object.keys(props.programs).map((prog_id)=>{
@@ -75,7 +75,7 @@ export let  ApplicationSoftCoreProperties = props =>{
                 name="default_program"
                 placeholder="Default Program"
                 options={programs_list}/>
-            <ApplicationCoreDmaIo
+            <CoreDmaIo
                 forceUpdate={props.forceUpdate}
                 application={props.application}
                 core={props.core}

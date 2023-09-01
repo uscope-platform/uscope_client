@@ -14,39 +14,40 @@
 // limitations under the License.
 
 import React from "react";
-import {InputField} from "../InputField";
+import {InputField} from "../../InputField";
 
-import {up_application} from "../../../client_core";
-import {Card} from "../panels/Card";
+import {up_application} from "../../../../client_core";
+import {Card} from "../../panels/Card";
 
-export let  InitialRegisterValue = props =>{
+export let  MiscFieldProperties = props =>{
+
 
 
     let handleonKeyDown = (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
             let app = new up_application(props.application);
-            app.edit_irv(props.irv.address,event.target.name, event.target.value).then(()=>{
+            app.edit_misc_param(props.field.name,event.target.value, event.target.name==="name").then(()=>{
                 props.forceUpdate();
             });
         }
     }
 
-    let handleRemove= () =>{
+    let handleRemove = (event) =>{
         let app = new up_application(props.application);
-        app.remove_irv(props.irv.address).then(()=>{
+        app.remove_misc_field(props.field.name).then(()=>{
             props.forceUpdate();
         });
+        props.forceUpdate();
     }
-
 
 
     return(
         <Card
-            name={props.irv.address}
+            name={props.field.name}
             onRemove={handleRemove}
         >
-            <InputField inline ID="address" name="address" defaultValue={props.irv.address} onKeyDown={handleonKeyDown} label="Address"/>
-            <InputField inline ID="value" name='value' defaultValue={props.irv.value} onKeyDown={handleonKeyDown} label="Value"/>
+            <InputField inline ID="name" name="name" defaultValue={props.field.name} onKeyDown={handleonKeyDown} label="Name"/>
+            <InputField inline ID="value"  name='value' defaultValue={props.field.value} onKeyDown={handleonKeyDown} label="Value"/>
         </Card>
     );
 };

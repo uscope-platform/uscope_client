@@ -14,15 +14,15 @@
 // limitations under the License.
 
 import React, {useState} from "react";
-import {Label} from "../Label";
+import {Label} from "../../Label";
 import {MdArrowDropDown, MdArrowDropUp} from "react-icons/md";
-import {InputField} from "../InputField";
-import {Button} from "../Button";
-import {SidebarCollapsableContentLayout} from "../Layouts/SidebarCollapsableContentLayout";
-import {SidebarCollapsableNameLayout} from  "../Layouts/SidebarCollapsableNameLayout";
+import {InputField} from "../../InputField";
+import {Button} from "../../Button";
+import {SidebarCollapsableContentLayout} from "../../Layouts/SidebarCollapsableContentLayout";
+import {SidebarCollapsableNameLayout} from "../../Layouts/SidebarCollapsableNameLayout";
 import styled from "styled-components";
-import {up_field} from "../../../client_core";
-import {ColorTheme} from "../ColorTheme";
+import {up_field} from "../../../../client_core";
+import {ColorTheme} from "../../ColorTheme";
 
 
 export const FieldPropsLayout = styled.div`

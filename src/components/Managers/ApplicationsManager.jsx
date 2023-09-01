@@ -24,8 +24,12 @@ import {
     InitialRegisterValue,
     MacroProperties,
     ParameterProperties,
-    ApplicationPeripheralProperties,
-    ApplicationSoftCoreProperties, ApplicationMiscFieldProperties, TabbedContent, CardStack
+    PeripheralProperties,
+    SoftCoreProperties,
+    MiscFieldProperties,
+    TabbedContent,
+    CardStack,
+    FilterProperties, ScriptsSelector
 } from "../UI_elements"
 
 import {get_next_id, up_application} from "../../client_core";
@@ -40,7 +44,10 @@ const empty_app = {
     macro:[],
     parameters:[],
     peripherals:[],
-    soft_cores:[]
+    soft_cores:[],
+    filters:[],
+    scripts:[],
+    programs:[]
 
 };
 let  ApplicationsManager = props =>{
@@ -48,6 +55,7 @@ let  ApplicationsManager = props =>{
     const sel_app_name = useSelector(state => state.settings.selected_application);
     const applications = useSelector(state => state.applications);
     const peripherals = useSelector(state => state.peripherals);
+    const filters = useSelector(state => state.filters);
     const programs = useSelector(state => state.programs);
 
     const selected_app = sel_app_name ?applications[sel_app_name]: empty_app;
@@ -85,6 +93,9 @@ let  ApplicationsManager = props =>{
                 break;
             case "misc":
                 selected_application.set_misc_param(name).then();
+                break;
+            case "filter":
+                selected_application.add_filter(name).then();
                 break;
             default:
                 return;
@@ -199,7 +210,7 @@ let  ApplicationsManager = props =>{
                     {
                         selected_app.peripherals.map((peripheral)=>{
                             return(
-                                <ApplicationPeripheralProperties key={peripheral.name} application={selected_app} peripherals={peripherals} forceUpdate={forceUpdate} peripheral={peripheral}/>
+                                <PeripheralProperties key={peripheral.name} application={selected_app} peripherals={peripherals} forceUpdate={forceUpdate} peripheral={peripheral}/>
                             )
                         })
                     }
@@ -213,7 +224,7 @@ let  ApplicationsManager = props =>{
                     {
                         selected_app.soft_cores.map((soft_core)=>{
                             return(
-                                <ApplicationSoftCoreProperties key={soft_core.name} application={selected_app} core={soft_core} programs={programs} forceUpdate={forceUpdate}/>
+                                <SoftCoreProperties key={soft_core.name} application={selected_app} core={soft_core} programs={programs} forceUpdate={forceUpdate}/>
                             )
                         })
                     }
@@ -226,7 +237,45 @@ let  ApplicationsManager = props =>{
                 <CardStack>
                     {
                         misc_fields.map((field)=>{
-                            return <ApplicationMiscFieldProperties key={field.name} application={selected_app} forceUpdate={forceUpdate} field={field}/>
+                            return <MiscFieldProperties key={field.name} application={selected_app} forceUpdate={forceUpdate} field={field}/>
+                        })
+                    }
+                </CardStack>
+            </div>,
+            <div key="filters_card">
+                <ManagerToolbar
+                    onAdd={() =>{handle_add_new("filter", selected_app.filters, "id");}}
+                    contentName="Filters"/>
+                <CardStack>
+                    {
+                        selected_app.filters.map((field)=>{
+                            return <FilterProperties
+                                key={field.id}
+                                application={selected_app}
+                                forceUpdate={forceUpdate}
+                                filter={field}
+                                filter_designs={filters}
+                                peripherals={selected_app.peripherals}
+                            />
+                        })
+                    }
+                </CardStack>
+            </div>,
+            <div key="scripts_card">
+                <ScriptsSelector
+                    application={selected_app}
+                    scripts={selected_app.scripts}
+                    forceUpdate={forceUpdate}
+                />
+            </div>,
+            <div key="programs_card">
+                <ManagerToolbar
+                    onAdd={() =>{}}
+                    contentName="Programs"/>
+                <CardStack>
+                    {
+                        selected_app.programs.map((field)=>{
+                            return <>{field}</>
                         })
                     }
                 </CardStack>
@@ -235,7 +284,7 @@ let  ApplicationsManager = props =>{
     }
 
     let get_tabs_names = ()=>{
-        return ["Channels", "Channel Groups","IRV", "Macro", "Parameters", "Peripherals", "Cores", "Misc"]
+        return ["Channels", "Channel Groups","IRV", "Macro", "Parameters", "Peripherals", "Cores", "Misc", "Filters", "Scripts", "Programs"]
     }
 
 

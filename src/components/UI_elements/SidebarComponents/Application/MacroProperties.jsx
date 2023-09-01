@@ -14,10 +14,10 @@
 // limitations under the License.
 
 import React from "react";
-import {InputField} from "../InputField";
+import {InputField} from "../../InputField";
 
-import {up_application} from "../../../client_core";
-import {Card} from "../panels/Card";
+import {up_application} from "../../../../client_core";
+import {Card} from "../../panels/Card";
 
 
 export let  MacroProperties = props =>{

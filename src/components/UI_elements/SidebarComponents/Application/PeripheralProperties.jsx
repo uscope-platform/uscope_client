@@ -14,17 +14,17 @@
 // limitations under the License.
 
 import React, {useState} from "react";
-import {InputField} from "../InputField";
-import {Checkbox} from "../checkbox";
+import {InputField} from "../../InputField";
+import {Checkbox} from "../../checkbox";
 
-import {SelectField} from "../Select";
-import {up_application} from "../../../client_core";
-import {Card} from "../panels/Card";
+import {SelectField} from "../../Select";
+import {up_application} from "../../../../client_core";
+import {Card} from "../../panels/Card";
 import {HdlParameterProperties} from "./HdlParameterProperties";
 
 
 
-export let  ApplicationPeripheralProperties = props =>{
+export let  PeripheralProperties = props =>{
 
     let peripherals_list = Object.entries(props.peripherals).map((periph)=>{
         return {label:periph[0], value:periph[0]}

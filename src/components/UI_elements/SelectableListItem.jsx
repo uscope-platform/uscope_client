@@ -64,7 +64,7 @@ export let  SelectableListItem = props =>{
     }
 
     let render_delete = () =>{
-        if(props.delete){
+        if(props.onRemove){
             return(<MdDelete size={props.iconSize?props.iconSize:ColorTheme.icons_size} onClick={handle_remove} color={color}/>);
         }
     }
