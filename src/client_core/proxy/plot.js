@@ -49,6 +49,18 @@ export const set_scaling_factors = (scaling_factors) => {
     })
 }
 
+export const set_channel_signs = (signed) => {
+    return new Promise((resolve, reject)=>{
+        backend_post(api_dictionary.plot.set_signed, {signed}).then((res) => {
+            resolve(res)
+        }).catch((err) =>{
+            alert('ERROR: error while setting up channel signed status\n' + err.message);
+            reject(err);
+        })
+    })
+}
+
+
 
 export let create_plot_channel = (ch) => {
     return ({

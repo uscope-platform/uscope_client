@@ -23,7 +23,14 @@ import {
 
 import {initialize_channels} from "../../../redux/Actions/plotActions";
 import {setSetting} from "../../../redux/Actions/SettingsActions";
-import {set_channel_widths, set_channel_status, up_peripheral, create_plot_channel, get_channels_from_group} from "../../../client_core";
+import {
+    set_channel_widths,
+    set_channel_status,
+    up_peripheral,
+    create_plot_channel,
+    get_channels_from_group,
+    set_channel_signs
+} from "../../../client_core";
 import {set_scaling_factors} from "../../../client_core/proxy/plot";
 
 
@@ -121,21 +128,24 @@ let  EnablesProperties = props =>{
         }
         //SET  UP CHANNEL WIDTHS
         let widths = Array(6).fill(16);
+        let sfs = Array(6).fill(1);
+        let signs = Array(6).fill(true);
+
         for(let item of channels){
             if(item.phys_width){
                 widths[parseInt(item.number)] = parseInt(item.phys_width);
             }
-        }
-        set_channel_widths(widths).then();
-
-        //SET  UP SCALING FACTORS
-        let sfs = Array(6).fill(1);
-        for(let item of channels){
             if(item.scaling_factor){
                 sfs[parseInt(item.number)] = parseFloat(item.scaling_factor);
             }
+            if(item.signed !== undefined && item.signed !== null){
+                signs[parseInt(item.number)] = item.signed;
+            }
         }
+
+        set_channel_widths(widths).then();
         set_scaling_factors(sfs).then();
+        set_channel_signs(signs).then();
 
         // SET NEW CHANNELS status
         let new_ch_state = {}

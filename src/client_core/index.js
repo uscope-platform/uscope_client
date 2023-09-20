@@ -24,7 +24,9 @@ export {set_address, set_auth_config} from './proxy/backend'
 
 export {sign_in} from './proxy/auth'
 export {add_user, remove_user, get_users_list, dump_database, restore_database, do_onboarding, need_onboarding} from './proxy/platform'
-export {fetch_data, set_channel_status, set_channel_widths, create_plot_channel, get_channels_from_group, get_channel_number_from_id} from './proxy/plot'
+export {fetch_data, set_channel_status, set_channel_signs, set_scaling_factors, set_channel_widths, create_plot_channel, get_channels_from_group, get_channel_number_from_id} from './proxy/plot'
+
+
 // DATA MODEL
 export {up_application} from './data_models/up_application'
 export {up_peripheral} from './data_models/up_peripheral'
@@ -33,6 +35,7 @@ export {up_script} from './data_models/up_script'
 export {up_program} from './data_models/up_program'
 export {up_bitstream} from './data_models/up_bitstream'
 export {up_register} from  './data_models/up_register'
+export {application_diff_engine} from './data_models/diff_engine'
 //filter
 export {filter_calculate_keepouts} from './filters/filter_preview'
 export let store = null;

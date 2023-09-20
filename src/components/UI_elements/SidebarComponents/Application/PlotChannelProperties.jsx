@@ -19,6 +19,7 @@ import {InputField} from "../../InputField";
 import {ColorTheme} from "../../ColorTheme";
 import {up_application} from "../../../../client_core";
 import {Card} from "../../panels/Card";
+import {Checkbox} from "../../checkbox";
 
 
 export let  PlotChannelProperties = props =>{
@@ -38,6 +39,13 @@ export let  PlotChannelProperties = props =>{
                 props.forceUpdate();
             });
         }
+    }
+
+    let handleChangeSigned = (event)=>{
+        let app = new up_application(props.application);
+        app.edit_channel(props.channel.name, event.target.name, event.target.checked).then(()=>{
+            props.forceUpdate();
+        });
     }
 
     let handleRemove= (event) =>{
@@ -66,6 +74,7 @@ export let  PlotChannelProperties = props =>{
             <InputField color={ColorTheme.background.level_4} inline ID="max_value" name='max_value' defaultValue={props.channel.max_value} onKeyDown={handleonKeyDown} label="Maximum Value"/>
             <InputField color={ColorTheme.background.level_4} inline ID="min_value" name='min_value' defaultValue={props.channel.min_value} onKeyDown={handleonKeyDown} label="Minimum Value"/>
             <InputField color={ColorTheme.background.level_4} inline ID="scaling_factor" name='scaling_factor' defaultValue={props.channel.scaling_factor} onKeyDown={handleonKeyDown} label="Scaling Factor"/>
+            <Checkbox ID="signed" name='signed' value={props.channel.signed} onChange={handleChangeSigned} label="Signed"/>
         </Card>
     );
 };

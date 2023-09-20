@@ -85,7 +85,8 @@ export class up_application {
             enabled: false,
             max_value: "1000",
             min_value: "0",
-            scaling_factor:1
+            scaling_factor:1,
+            signed:true
         };
         this.channels.push(ch);
         let edit = {application:this.application_name, channel:ch, action:"add_channel"};
