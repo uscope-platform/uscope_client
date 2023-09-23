@@ -13,10 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect} from 'react';
+import React, {useEffect, useReducer} from 'react';
 
 import {useDispatch, useSelector} from "react-redux";
-import {download_json, get_next_id, up_program, upload_json} from "../../client_core";
+import {download_json, get_next_id, up_application, up_program, upload_json} from "../../client_core";
 import {
     SelectableList,
     SimpleContent,
@@ -30,15 +30,14 @@ import SideToolbar from "./SideToolbar";
 
 let  ProgramSidebar = props =>{
 
-
-
-
     const programs_store = useSelector(state => state.programs);
     const settings = useSelector(state => state.settings);
     const applications = useSelector(state => state.applications);
     const applications_programs = applications[settings.application].programs;
     const ResponsiveGridLayout = WidthProvider(Responsive);
     const dispatch = useDispatch();
+
+    const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     useEffect(() => {
         return() =>{
@@ -54,7 +53,12 @@ let  ProgramSidebar = props =>{
     let handleAdd = () =>{
         let id = get_next_id(Object.values(programs_store).map(a => a.id).sort());
         let program = up_program.construct_empty(id);
-        program.add_remote().then();
+        program.add_remote().then(()=>{
+            let app = new up_application(applications[settings.application]);
+            app.add_selected_program(id.toString()).then(()=>{
+                forceUpdate();
+            });
+        });
     };
 
     let handleRemove = (program) =>{
@@ -62,7 +66,10 @@ let  ProgramSidebar = props =>{
             return scr.name === program;
         })[0];
         dispatch(setSetting(["selected_program", null]));
-        up_program.delete_program(deleted).then();
+        up_program.delete_program(deleted).then(()=>{
+            let app = new up_application(applications[settings.application]);
+            app.remove_selected_program(deleted.id.toString()).then();
+        });
     };
 
 

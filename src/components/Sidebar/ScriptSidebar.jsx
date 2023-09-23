@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect} from 'react';
+import React, {useEffect, useReducer} from 'react';
 
 import {useDispatch, useSelector} from "react-redux"
 
@@ -22,7 +22,7 @@ import {useDispatch, useSelector} from "react-redux"
 import { SelectableList, SimpleContent, UIPanel} from "../UI_elements"
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
-import {download_json, get_next_id, up_script, upload_json} from "../../client_core";
+import {download_json, get_next_id, up_application, up_script, upload_json} from "../../client_core";
 import {Responsive, WidthProvider} from "react-grid-layout";
 import SideToolbar from "./SideToolbar";
 
@@ -35,6 +35,8 @@ let ScriptManager = (props) =>{
     const applications_scripts = applications[settings.application].scripts;
 
     const dispatch = useDispatch();
+
+    const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     useEffect(() => {
         return() =>{
@@ -51,7 +53,13 @@ let ScriptManager = (props) =>{
     let handleAdd = () =>{
         let id = get_next_id(Object.values(scripts_store).map(a => a.id).sort());
         let script = up_script.construct_empty(id);
-        script.add_remote().then();
+
+        script.add_remote().then(()=>{
+            let app = new up_application(applications[settings.application]);
+            app.add_selected_script(id.toString()).then(()=>{
+                forceUpdate();
+            });
+        });
     };
 
     let handleRemove = (script) =>{
@@ -59,7 +67,10 @@ let ScriptManager = (props) =>{
             return scr.name === script;
         })[0];
         dispatch(setSetting(["selected_script", null]));
-        up_script.delete_script(deleted).then();
+        up_script.delete_script(deleted).then(()=>{
+            let app = new up_application(applications[settings.application]);
+            app.remove_selected_script(deleted.id.toString()).then();
+        });
     };
 
 
