@@ -209,6 +209,26 @@ export const programs_init = {
     }
 }
 
+export const filters_init = {
+    1: {
+        "id": 1,
+        "name": "new filter_1",
+        "parameters": {
+            "n_taps": 100,
+            "pass_band_edge_1": 0,
+            "pass_band_edge_2": 0,
+            "sampling_frequency": 0,
+            "stop_band_edge_1": 0,
+            "stop_band_edge_2": 0,
+            "taps_width": 16,
+            "type": "lp"
+    }
+}
+}
+
+
+
+
 export const cache_handlers = [
 
     rest.get('test_server/application/digest', (req, res, ctx) => {
@@ -284,10 +304,27 @@ export const cache_handlers = [
         )
     }),
 
+    rest.get('test_server/filters/digest', (req, res, ctx) => {
+
+        return res(
+            ctx.text("56dd465c-2aa3-46dc-ab05-db35e217f801"),
+            ctx.status(200)
+        )
+    }),
+
     rest.get('test_server/bitstream/none', (req, res, ctx) => {
 
         return res(
             ctx.json(bitstream_init),
+            ctx.status(200)
+
+        )
+    }),
+
+    rest.get('test_server/filters/none', (req, res, ctx) => {
+
+        return res(
+            ctx.json(filters_init),
             ctx.status(200)
 
         )

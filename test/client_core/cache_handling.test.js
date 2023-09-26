@@ -20,7 +20,8 @@ import {
     bitstream_init,
     peripherals_init,
     programs_init,
-    scripts_init
+    scripts_init,
+    filters_init
 } from "./mock/cache_handling_api";
 
 let check_test_results = (promise_result, redux_reference, test_case) => {
@@ -29,6 +30,7 @@ let check_test_results = (promise_result, redux_reference, test_case) => {
     expect(promise_result[2].status).toBe(test_case)
     expect(promise_result[3].status).toBe(test_case)
     expect(promise_result[4].status).toBe(test_case)
+    expect(promise_result[5].status).toBe(test_case)
 
     let state = mock_store.getState();
 
@@ -37,6 +39,7 @@ let check_test_results = (promise_result, redux_reference, test_case) => {
     expect(localStorage.getItem("bitstreams_cache")).toBe("74478cc1-fdb7-486a-975c-129c71400530");
     expect(localStorage.getItem("programs_cache")).toBe("d0f84519-10da-4ada-8727-8bd6a0f608e0");
     expect(localStorage.getItem("scripts_cache")).toBe("9701008d-c511-4ded-94b3-b08748a6e066");
+    expect(localStorage.getItem("filters_cache")).toBe("56dd465c-2aa3-46dc-ab05-db35e217f801");
 
     expect(state.applications).toMatchObject(redux_reference.applications);
     expect(state.applications["SicDrive"].constructor.name).toBe("up_application");
@@ -52,6 +55,9 @@ let check_test_results = (promise_result, redux_reference, test_case) => {
 
     expect(state.programs).toMatchObject(redux_reference.programs);
     expect(state.programs[1].constructor.name).toBe("up_program");
+
+    expect(state.filters).toMatchObject(redux_reference.filters);
+    expect(state.filters[1].constructor.name).toBe("up_filter");
 }
 
 const expected_store = {
@@ -59,7 +65,8 @@ const expected_store = {
     "peripherals":peripherals_init,
     "scripts":scripts_init,
     "bitstreams":bitstream_init,
-    "programs":programs_init
+    "programs":programs_init,
+    "filters": filters_init
 }
 
 

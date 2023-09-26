@@ -9,6 +9,8 @@ import programsReducer from "../../../src/redux/Reducers/ProgramsReducer";
 import {scriptsReducer, scriptsWorkspaceReducer} from "../../../src/redux/Reducers/scriptsReducer";
 import thunk from "redux-thunk";
 import {up_application, up_peripheral, up_script, up_program, up_bitstream} from "../../../src/client_core";
+import {up_filter} from "../../../src/client_core/data_models/up_filter";
+import filtersReducer from "../../../src/redux/Reducers/FiltersReducer";
 
 export let register_writes = [];
 
@@ -259,6 +261,28 @@ let plot_init = {
     }
 }
 
+
+export const filters_init = {
+    1: new up_filter({
+        "id": 1,
+        "ideal_taps": [],
+        "name": "new filter_1",
+        "parameters": {
+            "n_taps": 100,
+            "pass_band_edge_1": 0,
+            "pass_band_edge_2": 0,
+            "sampling_frequency": 0,
+            "stop_band_edge_1": 0,
+            "stop_band_edge_2": 0,
+            "taps_width": 16,
+            "type": "lp"
+        },
+        "quantized_taps": []
+    })
+}
+
+
+
 const rootReducer = (state, action) => {
     if (action.type === 'RESET_STORE') {
         return mock_reducer(initial_redux_state, action)
@@ -275,6 +299,7 @@ export const mock_reducer = combineReducers({
     applications : ApplicationsReducer,
     programs : programsReducer,
     scripts: scriptsReducer,
+    filters: filtersReducer,
     scriptsWorkspace: scriptsWorkspaceReducer
 });
 
@@ -286,6 +311,7 @@ export const initial_redux_state = {
     bitstreams: bitstream_init,
     programs : programs_init,
     plot: plot_init,
+    filters:filters_init,
     registerValues: {},
     scriptsWorkspace: {}
 };
