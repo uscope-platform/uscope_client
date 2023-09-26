@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {get_next_id, up_application} from "../../../../client_core";
 import styled from "styled-components";
 import {useSelector} from "react-redux";
@@ -48,6 +48,22 @@ export let  CoreDmaIo = props =>{
     })[0];
 
     const [sel_logic_io, set_sel_logic_io] = useState("");
+
+    const [selected_io, set_selected_io] = useState({
+        name:"",
+        type:"",
+        associated_io:"",
+        address:0
+    });
+
+    useEffect(() => {
+        if(sel_logic_io){
+            let selected_item = props.core.io.filter((item) => {
+                return item.name === sel_logic_io;
+            })[0];
+            set_selected_io(selected_item)
+        }
+    }, [sel_logic_io])
 
     let remove_item = (item) =>{
         debugger;
@@ -169,53 +185,10 @@ export let  CoreDmaIo = props =>{
 
         let new_io = {name:"new_io_"+id, type:"input", associated_io:"", address:0};
 
-
-
         app.edit_soft_core(props.core.id,"io", [...props.core.io, new_io]).then(()=>{
             props.forceUpdate();
         });
     }
-
-    let render_selected_io_properties = ()=>{
-        let selected_item=[];
-
-        if(sel_logic_io) {
-            selected_item = props.core.io.filter((item) => {
-                return item.name === sel_logic_io;
-            })[0];
-            return (
-                <div style={{display: "flex", flexDirection: "column"}}>
-                    <InputField inline ID="name" name='name' defaultValue={selected_item.name}
-                                onKeyDown={handle_edit_logic_io} label="Name"/>
-                    <SelectField
-                        inline
-                        label="Type"
-                        onChange={handle_change_type}
-                        value={{value: selected_item.type, label: selected_item.type}}
-                        defaultValue="Select Type"
-                        name="type"
-                        options={[
-                            {label: "input", value: "input"},
-                            {label: "output", value: "output"},
-                            {label: "memory", value: "memory"}
-                        ]}
-                    />
-                    <SelectField
-                        inline
-                        label="Associated Core IO"
-                        onChange={handle_change_core_io}
-                        value={{value:selected_item.associated_io, label:selected_item.associated_io}}
-                        defaultValue="select associated IO"
-                        name="assoc_core_io"
-                        options={get_core_io()}
-                    />
-                    <InputField inline ID="address" name='address' defaultValue={selected_item.address}
-                                onKeyDown={handle_edit_logic_io} label="Address"/>
-                </div>
-            )
-        } else return null;
-    }
-
 
     return(
         <div>
@@ -232,7 +205,34 @@ export let  CoreDmaIo = props =>{
                 {generate_logic_io_map()}
             </List>
             <Separator/>
-            {render_selected_io_properties()}
+            <div style={{display: "flex", flexDirection: "column"}}>
+                <InputField inline key={selected_io.name} ID="name" name='name' defaultValue={selected_io.name}
+                            onKeyDown={handle_edit_logic_io} label="Name"/>
+                <SelectField
+                    inline
+                    label="Type"
+                    onChange={handle_change_type}
+                    value={{value: selected_io.type, label: selected_io.type}}
+                    defaultValue="Select Type"
+                    name="type"
+                    options={[
+                        {label: "input", value: "input"},
+                        {label: "output", value: "output"},
+                        {label: "memory", value: "memory"}
+                    ]}
+                />
+                <SelectField
+                    inline
+                    label="Associated Core IO"
+                    onChange={handle_change_core_io}
+                    value={{value:selected_io.associated_io, label:selected_io.associated_io}}
+                    defaultValue="select associated IO"
+                    name="assoc_core_io"
+                    options={get_core_io()}
+                />
+                <InputField inline key={selected_io.address} ID="address" name='address' defaultValue={selected_io.address}
+                            onKeyDown={handle_edit_logic_io} label="Address"/>
+            </div>
         </div>
     );
 };
