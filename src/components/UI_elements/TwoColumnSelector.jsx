@@ -17,7 +17,7 @@ import React, {useState} from "react";
 import {UIPanel} from "./panels/UIPanel";
 import {SimpleContent} from "./panels/SimpleContent";
 import {Responsive, WidthProvider} from "react-grid-layout";
-import {MdArrowBack, MdArrowForward} from "react-icons/all";
+import {MdArrowBack, MdArrowForward} from "react-icons/md";
 import {SelectableList} from "./SelectableList";
 
 
