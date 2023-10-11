@@ -125,13 +125,43 @@ export const complete_address = () =>{
 }
 
 
+export const complete_version = () =>{
+
+    let candidates = ["client", "server", "driver", "module", "hardware"];
+    let tokens = current_line.split(" ")
+
+    if(tokens.length === 2){
+        candidates = candidates.filter((item)=>{
+            return item.startsWith(tokens[1]);
+        })
+    }
+    if(candidates.length === 1){
+        let present_substr = tokens[1].split(".").pop()
+        let missing = candidates[0].replace(present_substr, "");
+        current_line = current_line + missing;
+        terminal.write(missing);
+    } else {
+        for (let i = 0; i < candidates.length; i += 5) {
+            terminal.write("\r\n" + xterm_colors.blue + candidates.slice(i, i + 5).join("         ")  +  xterm_colors.white);
+        }
+        display_prompt();
+        terminal.write(current_line);
+    }
+
+}
+
+
 export const handle_tab = () =>{
     switch(current_line.split(" ").length-1){
         case 0:
             complete_command();
             break;
         case 1:
-            complete_address();
+            if(current_line.split(" ")[0] === "version"){
+                complete_version();
+            } else {
+                complete_address();
+            }
             break;
         default:
             break;

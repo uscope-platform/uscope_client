@@ -44,3 +44,8 @@ export const dump_database = () =>{
 export const restore_database = db_file =>{
     return backend_post(api_dictionary.platform.db.restore, db_file);
 }
+
+export const get_version = component =>{
+    let address = api_dictionary.platform.db.versions + "/" + component;
+    return backend_get(address);
+}

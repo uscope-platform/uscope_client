@@ -17,6 +17,7 @@ import {script_register_access_log, scripting_engine_peripherals} from "../scrip
 import {translate_registers} from "../scripting/backend";
 import {up_peripheral} from "../data_models/up_peripheral";
 import {store, up_program} from "../index";
+import {get_version} from "../proxy/platform";
 
 export const terminal_backend = {
     write: (args) =>{
@@ -110,6 +111,31 @@ export const terminal_backend = {
         return up_peripheral.direct_register_read(access[0].address).then((response)=>{
             return [response.response];
         });
+    },
+
+    version:(args)=>{
+        if(args[0] === "--help"){
+            return new Promise((resolve)=>{
+                resolve([
+                    "VERSION:",
+                    "This command reports the version of various applications in the stack",
+                    "format: version [COMPONENT NAME]"
+                ]);
+            })
+        }
+        let selected_component = args[0];
+        if(selected_component==="client"){
+            return new Promise((resolve, reject)=>{
+                resolve([
+                    __USCOPE_CLIENT_VERSION__
+                ])
+            })
+        } else if(["server", "driver", "module", "hardware"].includes(selected_component)) {
+           return get_version(selected_component).then((response)=>{
+                return [response];
+            });
+
+        }
     },
 
     load_program:(args) =>{
