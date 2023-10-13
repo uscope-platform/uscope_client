@@ -24,6 +24,8 @@ import ApplicationsReducer from './applicationsReducer'
 import programsReducer from "./ProgramsReducer";
 import BitstreamsReducer from "./bitstreamsReducer";
 import filtersReducer from "./FiltersReducer";
+import emulatorReducer from "./EmulatorReducer";
+import emulatorsReducer from "./EmulatorReducer";
 
 export default combineReducers({
     bitstreams:BitstreamsReducer,
@@ -35,5 +37,6 @@ export default combineReducers({
     programs : programsReducer,
     scripts: scriptsReducer,
     scriptsWorkspace: scriptsWorkspaceReducer,
-    filters: filtersReducer
+    filters: filtersReducer,
+    emulators: emulatorsReducer
     });

@@ -88,5 +88,12 @@ export const api_dictionary = {
         design:'filters/design',
         implement:'filters/implement',
         get_response: "filters/response"
+    },
+    emulators:{
+        get_hash:'emulators/hash',
+        load_all: 'emulators/none',
+        add: 'emulators',
+        edit: 'emulators',
+        delete: 'emulators',
     }
 }

@@ -44,14 +44,20 @@ export const REMOVE_FIELD = 'REMOVE_FIELD';
 export const LOAD_APPLICATIONS = 'LOAD_APPLICATIONS';
 export const ADD_APPLICATION = 'ADD_APPLICATION';
 export const REMOVE_APPLICATION = 'REMOVE_APPLICATION';
-//                  FCORE PROGRAMS
+//                  FCORE PROGRAMS ACTIONS
 export const ADD_PROGRAM = "ADD_PROGRAM";
 export const REMOVE_PROGRAM = "REMOVE_PROGRAM";
 export const LOAD_ALL_PROGRAMS = "LOAD_ALL_PROGRAM";
-//                  FCORE PROGRAMS
+//                  FILTER ACTIONS
 export const ADD_FILTER = "ADD_FILTER";
 export const REMOVE_FILTER = "REMOVE_FILTER";
 export const LOAD_ALL_FILTERS = "LOAD_ALL_FILTERS";
+
+//                  EMULATOR ACTIONS
+export const ADD_EMULATOR = "ADD_EMULATOR";
+export const REMOVE_EMULATOR = "REMOVE_EMULATOR";
+export const LOAD_ALL_EMULATOR = "LOAD_ALL_EMULATOR";
+
 
 //                  BITSTREAMS
 export const ADD_BITSTREAM = "ADD_BITSTREAM";

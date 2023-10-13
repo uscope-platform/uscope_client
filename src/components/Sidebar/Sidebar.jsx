@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {Suspense} from 'react';
+import React from 'react';
 import {useLocation} from "react-router-dom";
 
 import PeripheralsSidebar from "./PeripheralsSidebar";
@@ -24,6 +24,7 @@ import ProgramSidebar from "./ProgramSidebar";
 import PlatformSidebar from "./PlatformSidebar";
 import BitstreamSidebar from "./BitstreamSidebar";
 import FilterSidebar from "./FilterSidebar";
+import FcoreEmulatorSidebar from "./FcoreEmulator/FcoreEmulatorSidebar";
 
 let  Sidebar = props =>{
     let location = useLocation();
@@ -36,7 +37,8 @@ let  Sidebar = props =>{
         "/applications": <ApplicationSidebar/>,
         "/programs":  <ProgramSidebar/>,
         "/platform": <PlatformSidebar/>,
-        "/filters": <FilterSidebar />
+        "/filters": <FilterSidebar />,
+        "/emulator":<FcoreEmulatorSidebar/>
     };
 
 

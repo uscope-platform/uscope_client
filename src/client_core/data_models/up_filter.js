@@ -79,7 +79,7 @@ export class up_filter {
         return backend_patch(api_dictionary.filters.edit+'/'+this.id,edit)
     }
 
-    static delete_filter(filter){
+    static delete(filter){
         return backend_delete(api_dictionary.filters.delete+'/'+filter.id, filter).then(()=>{
             store.dispatch(removeFilter(filter));
         })

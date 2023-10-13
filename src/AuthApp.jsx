@@ -42,7 +42,7 @@ import PlatformManager from "./components/Managers/PlatformManager";
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 let operator_views = ["Scope"];
-let user_views = ["Scripts", "Applications", "Programs", "Bitstreams", "Filters"];
+let user_views = ["Scripts", "Applications", "Programs", "Bitstreams", "Filters", "Emulator"];
 let admin_views =["Peripherals", "Platform"];
 
 

@@ -35,6 +35,7 @@ export {up_script} from './data_models/up_script'
 export {up_program} from './data_models/up_program'
 export {up_bitstream} from './data_models/up_bitstream'
 export {up_register} from  './data_models/up_register'
+export {up_emulator} from './data_models/up_emulator'
 export {application_diff_engine} from './data_models/diff_engine'
 //filter
 export {filter_calculate_keepouts} from './filters/filter_preview'

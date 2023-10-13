@@ -1,4 +1,4 @@
-// Copyright 2021 University of Nottingham Ningbo China
+// Copyright 2023 University of Nottingham Ningbo China
 // Author: Filippo Savi <filssavi@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,26 +16,25 @@
 import React from 'react';
 
 import {useSelector} from "react-redux";
-import {up_filter} from "../../client_core/data_models/up_filter";
-import SidebarBase from "./SidebarBase";
 
+import {up_emulator} from "../../../client_core";
+import SidebarBase from "../SidebarBase";
 
-let  FilterSidebar = props =>{
+let  FcoreEmulatorSidebar = props =>{
 
-    const filters_store = useSelector(state => state.filters);
+    const emulators_store = useSelector(state => state.emulators);
 
     return(
         <SidebarBase
-            objects={filters_store}
+            objects={emulators_store}
             selection_key="id"
-            template={up_filter}
+            template={up_emulator}
             display_key="name"
-            content_name="Filter"
-            selector="selected_filter"
+            content_name="Emulator"
+            selector="selected_emulator"
         />
     );
+
 };
 
-export default FilterSidebar;
-
-
+export default FcoreEmulatorSidebar;

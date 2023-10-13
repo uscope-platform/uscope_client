@@ -23,6 +23,7 @@ const ApplicationsManager = React.lazy(() => import('./Managers/ApplicationsMana
 const ProgramsManager = React.lazy(()=> import('./Managers/ProgramsManager'));
 const PlatformManager = React.lazy(()=> import('./Managers/PlatformManager'));
 const BitstreamManager = React.lazy(()=> import('./Managers/BitstreamManager'));
+const FcoreEmulationEditor = React.lazy(() => import('./Emulator/FcoreEmulationEditor'));
 
 let TabContent = props => {
 
@@ -34,7 +35,8 @@ let TabContent = props => {
         applications: <ApplicationsManager selected_item={props.selected_item}/>,
         programs: <ProgramsManager />,
         platform: <PlatformManager />,
-        filters: <FilterManager />
+        filters: <FilterManager />,
+        emulator:<FcoreEmulationEditor/>
     };
 
 
