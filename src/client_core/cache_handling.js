@@ -32,8 +32,7 @@ let load_all_applications = () => {
     return backend_get(api_dictionary.applications.load_all).then(res=>{
         let apps_dict = {}
         for (let item in res) {
-            let app = new up_application(res[item])
-            apps_dict[app.application_name] = app
+            apps_dict[item] = new up_application(res[item]);
         }
         store.dispatch(loadApplications(apps_dict));
         return apps_dict;
@@ -45,8 +44,7 @@ let load_all_peripherals = () => {
     return backend_get(api_dictionary.peripherals.load_all).then(res=>{
         let periph_dict = {}
         for (let item in res) {
-            let periph = new up_peripheral(res[item])
-            periph_dict[periph.peripheral_name] = periph
+            periph_dict[item] = new up_peripheral(res[item]);
         }
         store.dispatch(loadPeripherals(periph_dict));
         return periph_dict;

@@ -52,14 +52,14 @@ const empty_app = {
 };
 let  ApplicationsManager = props =>{
 
-    const sel_app_name = useSelector(state => state.settings.selected_application);
+    const settings = useSelector(state => state.settings);
     const applications = useSelector(state => state.applications);
     const peripherals = useSelector(state => state.peripherals);
     const filters = useSelector(state => state.filters);
     const programs = useSelector(state => state.programs);
     const scripts = useSelector(state => state.scripts);
 
-    const selected_app = sel_app_name ?applications[sel_app_name]: empty_app;
+    const selected_app = settings.selected_application ?applications[settings.selected_application]: empty_app;
 
     let [selectedTab, set_selectedTab] = useState(0);
 
@@ -73,7 +73,6 @@ let  ApplicationsManager = props =>{
             return scripts[scr].name;
         });
     }
-
 
     const calculate_available_scripts = (sel_s)=>{
         return Object.values(scripts).filter((val)=>{
@@ -160,7 +159,7 @@ let  ApplicationsManager = props =>{
     let misc_fields = [];
     if(selected_app){
         misc_fields = Object.keys(selected_app).map((key, index) => {
-            if (!Array.isArray(selected_app[key]) && typeof selected_app[key] !== 'function')
+            if (!Array.isArray(selected_app[key]) && typeof selected_app[key] !== 'function' && key !== 'id')
                 return {name:key, value:selected_app[key]}
             else return null;
         });
@@ -220,7 +219,12 @@ let  ApplicationsManager = props =>{
                     {
                         selected_app.channels.map((channel)=>{
                             return(
-                                <PlotChannelProperties key={channel.name} application={selected_app} forceUpdate={forceUpdate} channel={channel}/>
+                                <PlotChannelProperties
+                                    key={channel.name}
+                                    application={selected_app}
+                                    forceUpdate={forceUpdate}
+                                    channel={channel}
+                                />
                             )
                         })
                     }
@@ -234,7 +238,12 @@ let  ApplicationsManager = props =>{
                     {
                         selected_app.channel_groups.map((group)=>{
                             return(
-                                <PlotChannelGroupProperties  key={group.name} application={selected_app} forceUpdate={forceUpdate} group={group}/>
+                                <PlotChannelGroupProperties
+                                    key={group.name}
+                                    application={selected_app}
+                                    forceUpdate={forceUpdate}
+                                    group={group}
+                                />
                             )
                         })
                     }
@@ -248,7 +257,12 @@ let  ApplicationsManager = props =>{
                     {
                         selected_app.initial_registers_values.map((irv)=>{
                             return(
-                                <InitialRegisterValue key={irv.address}  application={selected_app} forceUpdate={forceUpdate} irv={irv}/>
+                                <InitialRegisterValue
+                                    key={irv.address}
+                                    application={selected_app}
+                                    forceUpdate={forceUpdate}
+                                    irv={irv}
+                                />
                             )
                         })
                     }
@@ -262,7 +276,12 @@ let  ApplicationsManager = props =>{
                     {
                         selected_app.macro.map((macro)=>{
                             return(
-                                <MacroProperties key={macro.name} application={selected_app} forceUpdate={forceUpdate} macro={macro}/>
+                                <MacroProperties
+                                    key={macro.name}
+                                    application={selected_app}
+                                    forceUpdate={forceUpdate}
+                                    macro={macro}
+                                />
                             )
                         })
                     }
@@ -276,7 +295,12 @@ let  ApplicationsManager = props =>{
                     {
                         selected_app.parameters.map((parameter)=>{
                             return(
-                                <ParameterProperties key={parameter.name} application={selected_app} forceUpdate={forceUpdate} parameter={parameter}/>
+                                <ParameterProperties
+                                    key={parameter.name}
+                                    application={selected_app}
+                                    forceUpdate={forceUpdate}
+                                    parameter={parameter}
+                                />
                             )
                         })
                     }
@@ -290,7 +314,13 @@ let  ApplicationsManager = props =>{
                     {
                         selected_app.peripherals.map((peripheral)=>{
                             return(
-                                <PeripheralProperties key={peripheral.name} application={selected_app} peripherals={peripherals} forceUpdate={forceUpdate} peripheral={peripheral}/>
+                                <PeripheralProperties
+                                    key={peripheral.name}
+                                    application={selected_app}
+                                    peripherals={peripherals}
+                                    forceUpdate={forceUpdate}
+                                    peripheral={peripheral}
+                                />
                             )
                         })
                     }
@@ -304,7 +334,13 @@ let  ApplicationsManager = props =>{
                     {
                         selected_app.soft_cores.map((soft_core)=>{
                             return(
-                                <SoftCoreProperties key={soft_core.name} application={selected_app} core={soft_core} programs={programs} forceUpdate={forceUpdate}/>
+                                <SoftCoreProperties
+                                    key={soft_core.id}
+                                    application={selected_app}
+                                    core={soft_core}
+                                    programs={programs}
+                                    forceUpdate={forceUpdate}
+                                />
                             )
                         })
                     }
@@ -317,7 +353,12 @@ let  ApplicationsManager = props =>{
                 <CardStack>
                     {
                         misc_fields.map((field)=>{
-                            return <MiscFieldProperties key={field.name} application={selected_app} forceUpdate={forceUpdate} field={field}/>
+                            return <MiscFieldProperties
+                                key={field.name}
+                                application={selected_app}
+                                forceUpdate={forceUpdate}
+                                field={field}
+                            />
                         })
                     }
                 </CardStack>

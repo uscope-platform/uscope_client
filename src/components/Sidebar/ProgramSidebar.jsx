@@ -13,19 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect, useReducer} from 'react';
+import React, {useReducer} from 'react';
 
-import {useDispatch, useSelector} from "react-redux";
-import {download_json, get_next_id, up_application, up_program, upload_json} from "../../client_core";
-import {
-    SelectableList,
-    SimpleContent,
-    UIPanel
-} from "../UI_elements";
-import {Responsive, WidthProvider} from "react-grid-layout";
-import {setSetting} from "../../redux/Actions/SettingsActions";
+import {useSelector} from "react-redux";
+import {up_application, up_program} from "../../client_core";
 
-import SideToolbar from "./SideToolbar";
+import SidebarBase from "./SidebarBase";
 
 
 let  ProgramSidebar = props =>{
@@ -34,108 +27,34 @@ let  ProgramSidebar = props =>{
     const settings = useSelector(state => state.settings);
     const applications = useSelector(state => state.applications);
     const applications_programs = applications[settings.application].programs;
-    const ResponsiveGridLayout = WidthProvider(Responsive);
-    const dispatch = useDispatch();
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
-    useEffect(() => {
-        return() =>{
-            dispatch(setSetting(["selected_program", null]));
-        }
-    },[dispatch]);
 
-
-    let selected_program = programs_store[settings.selected_program];
-    let selected_program_obj = new up_program(selected_program);
-
-
-    let handleAdd = () =>{
-        let id = get_next_id(Object.values(programs_store).map(a => a.id).sort());
-        let program = up_program.construct_empty(id);
-        program.add_remote().then(()=>{
-            let app = new up_application(applications[settings.application]);
-            app.add_selected_program(id.toString()).then(()=>{
-                forceUpdate();
-            });
+    let handleAdd = (id) =>{
+        let app = new up_application(applications[settings.application]);
+        app.add_selected_program(id.toString()).then(()=>{
+            forceUpdate();
         });
     };
 
-    let handleRemove = (program) =>{
-        let deleted = Object.values(programs_store).filter((scr)=>{
-            return scr.name === program;
-        })[0];
-        dispatch(setSetting(["selected_program", null]));
-        up_program.delete_program(deleted).then(()=>{
-            let app = new up_application(applications[settings.application]);
-            app.remove_selected_program(deleted.id.toString()).then();
-        });
+    let handleRemove = (deleted) =>{
+        let app = new up_application(applications[settings.application]);
+        app.remove_selected_program(deleted.id.toString()).then();
     };
-
-
-    let get_content = () =>{
-        let types = [];
-        let items = Object.keys(programs_store).filter((prg_id)=>{
-            return applications_programs.includes(prg_id);
-        }).map((prg_id)=>{
-            types.push(programs_store[prg_id].program_type);
-            return programs_store[prg_id].name;
-        })
-
-        return [items, types]
-    }
-
-
-    const [names, types] = get_content();
-
-    let handleSelect = (item) =>{
-        if(settings.selected_program !==item){
-            let selected_program = Object.values(programs_store).filter((bitstream)=>{
-                return bitstream.name === item;
-            })[0];
-            dispatch(setSetting(["selected_program", selected_program.id]));
-        }
-    };
-
-
-    let handleExport = () =>{
-        download_json(selected_program, selected_program.name);
-    }
-
-    let handleImport = () =>{
-        upload_json().then((prg)=>{
-            let program = new up_program(JSON.parse(prg));
-            program.add_remote().then();
-        }).catch((err)=>{
-            alert(err);
-        })
-
-    }
-
-
 
     return(
-        <ResponsiveGridLayout
-            className="layout"
-            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-            useCSSTransforms={false}
-        >
-            <UIPanel key="program_props" data-grid={{x: 0, y: 0, w: 24, h: 3, static: true}} level="level_2">
-                <SimpleContent name="Program List" content={
-                    <div>
-                        <SideToolbar
-                            onAdd={handleAdd}
-                            onImport={handleImport}
-                            onExport={handleExport}
-                            contentName="Program"
-                            exportEnabled={settings.selected_program}
-                        />
-                        <SelectableList items={names} types={types} selected_item={selected_program_obj.name} onRemove={handleRemove} onSelect={handleSelect} />
-                    </div>
-                }/>
-            </UIPanel>
-        </ResponsiveGridLayout>
+        <SidebarBase
+            objects={programs_store}
+            selection_key="id"
+            template={up_program}
+            items_filter={applications_programs}
+            display_key="name"
+            content_name="Program"
+            selector="selected_program"
+            onDelete={handleRemove}
+            onAdd={handleAdd}
+        />
     );
 
 };

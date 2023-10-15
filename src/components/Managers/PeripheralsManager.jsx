@@ -32,13 +32,16 @@ import ManagerToolbar from "./ManagerToolbar";
 
 let PeripheralsManager = (props)=>{
 
-    const selected_peripheral =  useSelector(state => new up_peripheral(state.peripherals[state.settings.current_peripheral]))
-
     const ResponsiveGridLayout = WidthProvider(Responsive);
 
     const settings = useSelector(state => state.settings);
+    const peripherals = useSelector(state => state.peripherals);
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
+
+    const selected_peripheral = settings.current_peripheral ?
+        new up_peripheral(peripherals[parseInt(settings.current_peripheral)]) :
+        {registers:[], parametric:false};
 
     let handleEditVersion = (event) =>{
         if (event.key ==="Enter"){
@@ -107,6 +110,7 @@ let PeripheralsManager = (props)=>{
                                 selected_peripheral.registers.map((reg)=>{
                                     return(
                                         <RegisterProperties
+                                            key={reg.ID}
                                             peripheral={selected_peripheral}
                                             forceUpdate={forceUpdate}
                                             register={reg}

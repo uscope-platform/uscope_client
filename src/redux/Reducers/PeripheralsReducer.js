@@ -32,7 +32,7 @@ let PeripheralsReducer = function (state = null, action) {
         case REMOVE_PERIPHERAL:
             return  Object.keys(state)
                 .filter(key => {
-                    return key !== action.payload;
+                    return parseInt(key) !== action.payload;
                 })
                 .reduce((obj, key) => {
                     obj[key] = state[key];

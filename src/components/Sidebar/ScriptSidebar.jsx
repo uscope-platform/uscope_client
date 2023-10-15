@@ -13,18 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect, useReducer} from 'react';
+import React, { useReducer} from 'react';
 
 import {useDispatch, useSelector} from "react-redux"
 
 
-
-import { SelectableList, SimpleContent, UIPanel} from "../UI_elements"
-import {setSetting} from "../../redux/Actions/SettingsActions";
-
-import {download_json, get_next_id, up_application, up_script, upload_json} from "../../client_core";
-import {Responsive, WidthProvider} from "react-grid-layout";
-import SideToolbar from "./SideToolbar";
+import {up_application, up_script} from "../../client_core";
+import SidebarBase from "./SidebarBase";
 
 let ScriptManager = (props) =>{
 
@@ -38,101 +33,30 @@ let ScriptManager = (props) =>{
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
-    useEffect(() => {
-        return() =>{
-            dispatch(setSetting(["selected_script", null]));
-        }
-    },[dispatch]);
-
-    const ResponsiveGridLayout = WidthProvider(Responsive);
-
-    let selected_script = {name:""};
-    if(settings.selected_script)
-        selected_script = scripts_store[settings.selected_script];
-
-    let handleAdd = () =>{
-        let id = get_next_id(Object.values(scripts_store).map(a => a.id).sort());
-        let script = up_script.construct_empty(id);
-
-        script.add_remote().then(()=>{
-            let app = new up_application(applications[settings.application]);
-            app.add_selected_script(id.toString()).then(()=>{
-                forceUpdate();
-            });
+    let handleAdd = (id) =>{
+        let app = new up_application(applications[settings.application]);
+        app.add_selected_script(id.toString()).then(()=>{
+            forceUpdate();
         });
     };
 
-    let handleRemove = (script) =>{
-        let deleted = Object.values(scripts_store).filter((scr)=>{
-            return scr.name === script;
-        })[0];
-        dispatch(setSetting(["selected_script", null]));
-        up_script.delete_script(deleted).then(()=>{
-            let app = new up_application(applications[settings.application]);
-            app.remove_selected_script(deleted.id.toString()).then();
-        });
+    let handleRemove = (deleted) =>{
+        let app = new up_application(applications[settings.application]);
+        app.remove_selected_script(deleted.id.toString()).then();
     };
-
-
-    let get_content = () =>{
-        let types = [];
-        let items = Object.keys(scripts_store).filter((scr_id)=>{
-            return applications_scripts.includes(scr_id);
-        }).map((scr_id)=>{
-            types.push("generic");
-            return scripts_store[scr_id].name;
-        })
-
-        return [items, types]
-    }
-
-    const [names, types] = get_content();
-
-    let handleSelect = (item) =>{
-        if(settings.selected_script !==item){
-            let selected_script = Object.values(scripts_store).filter((scr)=>{
-                return scr.name === item;
-            })[0];
-            dispatch(setSetting(["selected_script", selected_script.id]));
-        }
-    };
-
-    let handleExport = () =>{
-        download_json(selected_script, selected_script.name);
-    }
-
-    let handleImport = () =>{
-        upload_json().then((scr)=>{
-            let script = new up_script(JSON.parse(scr));
-            script.add_remote().then();
-        }).catch((err)=>{
-            alert(err);
-        })
-
-    }
 
     return(
-        <ResponsiveGridLayout
-            className="layout"
-            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-            useCSSTransforms={false}
-        >
-            <UIPanel key="script_props" data-grid={{x: 0, y: 0, w: 24, h: 5, static: true}} level="level_2">
-                <SimpleContent name="Script List" content={
-                    <div>
-                        <SideToolbar
-                            onAdd={handleAdd}
-                            onImport={handleImport}
-                            onExport={handleExport}
-                            contentName="Script"
-                            exportEnabled={settings.selected_script}
-                        />
-                        <SelectableList items={names} types={types} selected_item={selected_script.name} onRemove={handleRemove} onSelect={handleSelect} />
-                    </div>
-                }/>
-            </UIPanel>
-        </ResponsiveGridLayout>
+        <SidebarBase
+            objects={scripts_store}
+            selection_key="id"
+            template={up_script}
+            items_filter={applications_scripts}
+            display_key="name"
+            content_name="Script"
+            selector="selected_script"
+            onDelete={handleRemove}
+            onAdd={handleAdd}
+        />
     );
 }
 

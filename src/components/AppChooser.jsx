@@ -101,7 +101,6 @@ let ApplicationChooser = (props) =>{
             set_scaling_factors(sfs).then();
             set_channel_signs(signs).then();
         }
-
     }
 
     return (

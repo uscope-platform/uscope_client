@@ -34,57 +34,80 @@ let  SidebarBase = props =>{
     const settings = useSelector(state => state.settings);
     const dispatch = useDispatch();
 
-
-
     useEffect(() => {
         return() =>{
             dispatch(setSetting([props.selector, null]));
         }
     },[dispatch]);
 
-
-
-
-    let selected_item = {[props.selection_key]:""};
+    let selected_item = props.initial_value ? {[props.display_key]:props.initial_value.value}: {[props.display_key]:""};
     let export_enabled = false;
-    if(settings[props.selector]){
+    if(settings[props.selector]  ){
         export_enabled = true;
         selected_item = props.objects[settings[props.selector]];
     }
+
+    let handleAdd = (content) => {
+        let id = get_next_id(Object.values(props.objects).map(a => a[props.selection_key]).sort());
+        let obj = props.template.construct_empty(id);
+        obj.add_remote().then((args)=>{
+            if(props.onAdd){
+                props.onAdd(id);
+            }
+        });
+    };
 
     let  handleRemove = (key) =>{
         let deleted = Object.values(props.objects).filter((obj)=>{
             return obj[props.display_key] === key;
         })[0];
         dispatch(setSetting([props.selector, null]));
-        props.template.delete(deleted).then();
+        props.template.delete(deleted).then((args) =>{
+            if(props.onDelete){
+                props.onDelete(deleted);
+            }
+        });
     };
 
     let handleExport = (args) =>{
-        download_json(selected_item, selected_item.name);
+        if(props.export_array){
+            download_json([selected_item], selected_item[props.display_key]);
+        } else {
+            download_json(selected_item, selected_item[props.display_key]);
+        }
+
     };
 
     let handleImport = (args) =>{
         upload_json().then((item)=>{
-            let obj = new props.template(JSON.parse(item));
-            obj.add_remote().then();
+            if(props.onImport){
+                props.onImport(item);
+            } else {
+                let obj = new props.template(JSON.parse(item));
+                obj.add_remote().then();
+            }
         }).catch((err)=>{
             alert(err);
         })
     };
 
-    let handleAdd = (content) => {
-        let id = get_next_id(Object.values(props.objects).map(a => a[props.selection_key]).sort());
-        let obj = props.template.construct_empty(id);
-        obj.add_remote().then();
-    };
-
     let get_content = () =>{
         let types = [];
-        let items = Object.values(props.objects).map((obj)=>{
-            types.push("generic");
-            return obj[props.display_key];
-        })
+        let items;
+
+        if(props.items_filter){
+            items = Object.keys(props.objects).filter((scr_id)=>{
+                return props.items_filter.includes(scr_id);
+            }).map((scr_id)=>{
+                types.push("generic");
+                return props.objects[scr_id][props.display_key];
+            })
+        } else{
+            items = Object.values(props.objects).map((obj)=>{
+                types.push("generic");
+                return obj[props.display_key];
+            })
+        }
 
         return [items, types]
     }
@@ -93,10 +116,10 @@ let  SidebarBase = props =>{
 
     let handleSelect = (selection) =>{
         if(settings[props.selector] !==selection){
-            let selected_item = Object.values(props.objects).filter((item)=>{
+            let sel_item = Object.values(props.objects).filter((item)=>{
                 return item[props.display_key] === selection;
             })[0];
-            dispatch(setSetting([props.selector, selected_item[props.selection_key].toString()]));
+            dispatch(setSetting([props.selector, sel_item[props.selection_key].toString()]));
         }
     };
 

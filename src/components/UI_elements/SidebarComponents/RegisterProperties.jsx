@@ -32,7 +32,7 @@ const ChoicesWrapper = styled.div`
 `
 
 export let  RegisterProperties = props =>{
-    const register_obj = new up_register(props.register, props.peripheral.peripheral_name, props.parametric);
+    const register_obj = new up_register(props.register, props.peripheral.id, props.parametric);
 
 
 
@@ -91,7 +91,7 @@ export let  RegisterProperties = props =>{
     }
 
     let handleRemove= (event) =>{
-        up_register.remove_register(props.peripheral.peripheral_name, props.register.register_name).then(()=>{
+        up_register.remove_register(props.peripheral.id, props.register.register_name).then(()=>{
             props.forceUpdate();
         });
     }
@@ -137,7 +137,14 @@ export let  RegisterProperties = props =>{
             {
                 props.register.fields.map((field)=>{
                     return(
-                        <FieldProperties peripheral={props.peripheral} forceUpdate={props.forceUpdate} register={props.register} field={field} parametric={props.register.parametric}/>
+                        <FieldProperties
+                            key={field.name}
+                            peripheral={props.peripheral}
+                            forceUpdate={props.forceUpdate}
+                            register={props.register}
+                            field={field}
+                            parametric={props.register.parametric}
+                        />
                     )
                 })
             }

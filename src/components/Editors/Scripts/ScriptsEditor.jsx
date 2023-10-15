@@ -42,7 +42,7 @@ let ScriptsEditor = props =>{
     };
 
     useEffect(()=>{
-        let script =Object.values(scripts_store).find(x => x.id === settings.selected_script);
+        let script =Object.values(scripts_store).find(x => x.id.toString() === settings.selected_script);
         if(typeof script !== 'undefined' && script !== null){
             set_editor_content(script.script_content);
         }
