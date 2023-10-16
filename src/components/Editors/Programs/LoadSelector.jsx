@@ -27,7 +27,7 @@ let LoadSelector = props =>{
     const applications_store = useSelector(state => state.applications);
     const settings = useSelector(state => state.settings);
 
-    let selected_application = applications_store[settings.selected_application];
+    let selected_application = applications_store[settings.application];
     let [selected, set_selected] = useState("");
 
     let onMouseEnter = (name) =>{

@@ -170,7 +170,7 @@ export class up_application {
     }
 
     add_selected_script = (script_id) =>{
-        let edit = {application:this.application_name, script:script_id, action:"add_selected_script"};
+        let edit = {application:this.id, script:script_id, action:"add_selected_script"};
         this.scripts.push(script_id);
         return backend_post(api_dictionary.applications.edit, edit);
     }
