@@ -13,142 +13,123 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useCallback, useReducer, useRef} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 
-import {UIPanel, SimpleContent} from "../UI_elements";
-
-import {Responsive, WidthProvider} from "react-grid-layout";
-
-const ResponsiveGridLayout = WidthProvider(Responsive);
-
-import ReactFlow, { useNodesState, useEdgesState, addEdge, updateEdge, useReactFlow }  from 'reactflow';
-import 'reactflow/dist/style.css';
-import EmulatorToolbar from "../Sidebar/FcoreEmulator/EmulatorToolbar";
-import ELK from 'elkjs/lib/elk.bundled'
-
-
-const elk = new ELK();
-
-const useLayoutedElements = () => {
-    const { getNodes, setNodes, getEdges, fitView } = useReactFlow();
-    const defaultOptions = {
-        'elk.algorithm': 'layered',
-        'elk.layered.spacing.nodeNodeBetweenLayers': 100,
-        'elk.spacing.nodeNode': 80,
-    };
-
-    const getLayoutedElements = useCallback((options) => {
-        const layoutOptions = { ...defaultOptions, ...options };
-        const graph = {
-            id: 'root',
-            layoutOptions: layoutOptions,
-            children: getNodes(),
-            edges: getEdges(),
-        };
-
-        elk.layout(graph).then(({ children }) => {
-            // By mutating the children in-place we saves ourselves from creating a
-            // needless copy of the nodes array.
-            children.forEach((node) => {
-                node.position = { x: node.x, y: node.y };
-            });
-
-            setNodes(children);
-            window.requestAnimationFrame(() => {
-                fitView();
-            });
-        });
-    }, []);
-
-    return { getLayoutedElements };
-};
-
-const initialNodes = [
-    { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
-    { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
-];
-const initialEdges = [{ id: 'e1-2', source: '1', target: '2' , type:"smoothstep"}];
+import EmulatorDiagram from "./EmulatorDiagram";
+import {useDispatch, useSelector} from "react-redux";
+import {setSetting} from "../../redux/Actions/SettingsActions";
+import {up_emulator} from "../../client_core";
 
 
 let FcoreEmulationEditor = function (props) {
 
-    const edgeUpdateSuccessful = useRef(true);
 
-    const [n_cores, forceUpdate] = useReducer(x => x + 1, 2);
+    const emulators = useSelector(state => state.emulators);
+    const settings = useSelector(state => state.settings);
 
-    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+    const selected_emulator = emulators[settings.selected_emulator]
 
-    // ADD EDGE CONNECTIONS
-    const onConnect = useCallback(
-        (params) => setEdges((eds) => addEdge({...params, type:"smoothstep"}, eds)),
-        [setEdges]
-    );
+    const [n_cores, set_n_cores] = useState(0);
 
-    // EDIT EDGE CONNECTIONS
-    const onEdgeUpdateStart = useCallback(() => {
-        edgeUpdateSuccessful.current = false;
-    }, []);
-    const onEdgeUpdate = useCallback((oldEdge, newConnection) => {
-        edgeUpdateSuccessful.current = true;
-        setEdges((els) => updateEdge(oldEdge, newConnection, els));
-    }, []);
-    const onEdgeUpdateEnd = useCallback((_, edge) => {
-        if (!edgeUpdateSuccessful.current) {
-            setEdges((eds) => eds.filter((e) => e.id !== edge.id));
+    const dispatch = useDispatch();
+
+    const [nodes, setNodes] = useState([]);
+    const [edges, setEdges] = useState([]);
+
+
+    useEffect(() => {
+        //SETUP NODES
+        if(selected_emulator){
+            let initial_nodes = [];
+            let n = 0;
+            Object.values(selected_emulator.cores).map((c)=>{
+                n += 1;
+                initial_nodes.push({ id: c.id, text: c.name });
+            });
+            set_n_cores(n);
+            setNodes(nodes => (initial_nodes));
+            //SETUP EDGES
+            let initial_edges = [];
+            Object.values(selected_emulator.connections).map((c)=>{
+                const id = `${c.source}-${c.target}`;
+                initial_edges.push({
+                    id,
+                    from: c.source,
+                    to: c.target
+                })
+            });
+            setEdges(edges =>(initial_edges));
         }
-        edgeUpdateSuccessful.current = true;
-    }, []);
-
-
-    const { getLayoutedElements } = useLayoutedElements();
+    }, [settings.selected_emulator]);
 
     let add_core = ()=>{
-        setNodes([{ id: n_cores.toString(), position: { x: 0, y: 100*n_cores }, data: { label: n_cores.toString() } }, ...nodes])
-        forceUpdate();
+        let s_e = new up_emulator(selected_emulator);
+        s_e.add_core(n_cores+1).then((core)=>{
+            setNodes([...nodes, {id:core.id, text:core.name}]);
+
+        });
+        set_n_cores(n_cores+1);
     };
 
-    let redo_layout = () =>{
-        getLayoutedElements({'elk.algorithm': 'org.eclipse.elk.force'});
+    let handle_node_select = (event, node) =>{
+        dispatch(setSetting(["emulator_selected_component", node]));
     }
 
-    return(
-        <ResponsiveGridLayout
-            className="layout"
-            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-            rowHeight={30}
-            useCSSTransforms={false}
-        >
-            <UIPanel key="ch_selector" data-grid={{x: 0, y: 0, w: 20, h: 20, static: true}} level="level_2">
-                <SimpleContent name="Emulation setup" content={
-                    <div>
-                        <EmulatorToolbar
-                            onAdd={add_core}
-                            onLayout={redo_layout}
-                        />
-                        <div style={{ width: '100vw', height: '100vh' }}>
+    let handle_edge_select = (event, edge) =>{
+        dispatch(setSetting(["emulator_selected_connection", edge]))
+    }
 
-                                <ReactFlow
-                                    nodes={nodes}
-                                    edges={edges}
-                                    onNodesChange={onNodesChange}
-                                    onEdgesChange={onEdgesChange}
-                                    onConnect={onConnect}
-                                    onEdgeUpdate={onEdgeUpdate}
-                                    onEdgeUpdateStart={onEdgeUpdateStart}
-                                    onEdgeUpdateEnd={onEdgeUpdateEnd}
-                                    fitView
-                                />
-                        </div>
-                    </div>
+    let handle_change = (args) =>{
+        debugger;
+    }
 
-                }/>
-            </UIPanel>
-        </ResponsiveGridLayout>
-    );
+
+    let handle_canvas_click = ()=>{
+
+    }
+
+
+    let handle_link_nodes = (event, from, to) =>{
+
+        let s_e = new up_emulator(selected_emulator);
+        let found_edges = s_e.connections.filter((conn)=>{
+            return conn.source === from.id && conn.target === to.id;
+        })
+        if(found_edges.length === 0){
+            s_e.add_dma_connection(from.id, to.id).then(()=>{
+                const id = `${from.id}-${to.id}`;
+                setEdges([
+                    ...edges,
+                    {
+                        id,
+                        from: from.id,
+                        to: to.id
+                    }
+                ]);
+            });
+        }
+
+
+    }
+
+    if(selected_emulator){
+        return(
+            <EmulatorDiagram
+                selected_node={settings.emulator_selected_component}
+                onNodeSelect={handle_node_select}
+                onEdgeSelect={handle_edge_select}
+                onCanvasClick={handle_canvas_click}
+                onLinkNodes={handle_link_nodes}
+                onAdd={add_core}
+                onChange={handle_change}
+                nodes={nodes}
+                edges={edges}
+            />
+        );
+    } else{
+        return <></>
+    }
 };
-
 
 
 

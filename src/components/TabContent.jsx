@@ -16,7 +16,6 @@
 import React, {Suspense} from 'react';
 
 import PlotTab from "./plot_tab_components/PlotTab";
-import {ReactFlowProvider} from "reactflow";
 
 const FilterManager = React.lazy(() => import('./Filter Designer/FilterManager'));
 const ScriptManager = React.lazy(() => import('./Managers/ScriptManager'));
@@ -38,7 +37,7 @@ let TabContent = props => {
         programs: <ProgramsManager />,
         platform: <PlatformManager />,
         filters: <FilterManager />,
-        emulator:<ReactFlowProvider> <FcoreEmulationEditor/> </ReactFlowProvider>
+        emulator:<FcoreEmulationEditor/>
     };
 
 

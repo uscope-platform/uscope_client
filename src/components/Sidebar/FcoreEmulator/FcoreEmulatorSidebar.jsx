@@ -19,20 +19,25 @@ import {useSelector} from "react-redux";
 
 import {up_emulator} from "../../../client_core";
 import SidebarBase from "../SidebarBase";
+import EmulatorNodeProperties from "./EmulatorNodeProperties";
 
 let  FcoreEmulatorSidebar = props =>{
 
     const emulators_store = useSelector(state => state.emulators);
 
     return(
-        <SidebarBase
-            objects={emulators_store}
-            selection_key="id"
-            template={up_emulator}
-            display_key="name"
-            content_name="Emulator"
-            selector="selected_emulator"
-        />
+        <>
+            <SidebarBase
+                objects={emulators_store}
+                selection_key="id"
+                template={up_emulator}
+                display_key="name"
+                content_name="Emulator"
+                selector="selected_emulator"
+            />
+           <EmulatorNodeProperties/>
+        </>
+
     );
 
 };

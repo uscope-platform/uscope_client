@@ -51,5 +51,8 @@ export const ColorTheme = {
         "rgb(208, 187,255)",
         "rgb(255, 254,163)",
         "rgb(185, 242,240)",
-    ]
+    ],
+    emulator:{
+      selected_node_border:"rgb(90, 90,244)"
+    }
 };

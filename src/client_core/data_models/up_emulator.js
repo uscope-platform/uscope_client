@@ -26,7 +26,11 @@ export class up_emulator {
         this.id = emulator_obj.id;
         this.name = emulator_obj.name;
         this.cores = emulator_obj.cores;
-        this.connections = emulator_obj.connections;
+        if(!emulator_obj.connections){
+            this.connections = [];
+        } else {
+            this.connections = emulator_obj.connections;
+        }
         this.inputs = emulator_obj.inputs;
         this.outputs= emulator_obj.outputs;
     }
@@ -36,7 +40,7 @@ export class up_emulator {
             id:emulator_id,
             name:'new_emulator_'+ emulator_id,
             cores:{},
-            connections:{},
+            connections:[],
             inputs:{},
             outputs:{}
         };
@@ -48,12 +52,48 @@ export class up_emulator {
         return backend_post(api_dictionary.emulators.add+'/'+this.id, this._get_emulator());
     }
 
-    edit_field = (field, value) => {
-        this[field] = value;
-        store.dispatch(AddEmulator(this));
-        let edit = {filter:this.id, field:field, value:value};
-        return backend_patch(api_dictionary.emulators.edit+'/'+this.id,edit)
+    add_core = (id) => {
+        let c = {
+            name: "new_core_" + id,
+            id: id,
+            order:id,
+            program:{
+                filename:"",
+                type:""
+            },
+            channels:1,
+            inputs:{},
+            outputs:{},
+            memory_init:{},
+            options:{
+                comparators:"reducing",
+                efi:"none"
+            }
+        };
+        this.cores[id] = c;
+        let edit = {emulator:this.id, core:c, action:"add_core"};
+        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then((resp)=>{
+            return new Promise((resolve)=>{
+                resolve(c);
+            })
+        });
     }
+
+    add_dma_connection = (source_id, target_id) =>{
+        let c = {
+            source:source_id,
+            target:target_id,
+            channels:[]
+        }
+        this.connections.push(c);
+        let edit = {emulator:this.id, connection:c, action:"add_connection"};
+        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then((resp)=>{
+            return new Promise((resolve)=>{
+                resolve(c);
+            })
+        });
+    }
+
 
     static delete(emulator){
         return backend_delete(api_dictionary.emulators.delete+'/'+emulator.id, emulator).then(()=>{

@@ -31,6 +31,7 @@ const initial_state = {
     selected_user:null,
     selected_filter:null,
     selected_emulator:null,
+    emulator_selected_component:null,
     refresh_user_view:false,
     logged:false,
     server_url: import.meta.env.VITE_APP_SERVER,

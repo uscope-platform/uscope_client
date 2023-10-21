@@ -47,6 +47,7 @@ export const ContentDiv = styled.div`
   border-top-width: 3px;
   border-left-width: 0;
   border-right-width: 0;
+  height:100%;
 `
 
 

@@ -15,9 +15,9 @@
 
 import React from 'react';
 
-import {ColorTheme} from "../../UI_elements";
+import {ColorTheme} from "../UI_elements";
 import {Tooltip} from "react-tooltip";
-import {MdAdd, MdRotateRight} from "react-icons/md";
+import {MdAdd, MdDelete, MdRotateRight} from "react-icons/md";
 
 let  EmulatorToolbar = props =>{
 
@@ -28,8 +28,12 @@ let  EmulatorToolbar = props =>{
                 <MdAdd onClick={props.onAdd} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
                 <Tooltip anchorSelect="add_icon" content={"Add Core"} place="top" />
             </div>
+            <div key="delete_icon" id="delete_icon">
+                <MdDelete size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
+                <Tooltip anchorSelect="delete_icon" content={"Delete Element"} place="top" />
+            </div>
             <div key="redo_layout" id="redo_layout">
-                <MdRotateRight onClick={props.onLayout} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
+                <MdRotateRight size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
                 <Tooltip anchorSelect="redo_layout" content={"Redo layout"} place="top" />
             </div>
 
