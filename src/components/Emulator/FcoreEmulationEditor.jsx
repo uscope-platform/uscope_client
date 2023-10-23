@@ -13,13 +13,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect, useReducer, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import EmulatorDiagram from "./EmulatorDiagram";
 import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import {up_emulator} from "../../client_core";
+import {SimpleContent, UIPanel} from "../UI_elements";
+import CoreInputProperties from "./CoreInputProperties";
+import CoreOutputProperties from "./CoreOutputProperties";
+import CoreMemoryProperties from "./CoreMemoryProperties";
+import {Responsive, WidthProvider} from "react-grid-layout";
 
+
+const ResponsiveGridLayout = WidthProvider(Responsive);
 
 let FcoreEmulationEditor = function (props) {
 
@@ -72,11 +79,13 @@ let FcoreEmulationEditor = function (props) {
     };
 
     let handle_node_select = (event, node) =>{
-        dispatch(setSetting(["emulator_selected_component", node]));
+        dispatch(setSetting(["emulator_selected_iom", null]));
+        dispatch(setSetting(["emulator_selected_component", {type:"node", obj:node}]));
     }
 
     let handle_edge_select = (event, edge) =>{
-        dispatch(setSetting(["emulator_selected_connection", edge]))
+        dispatch(setSetting(["emulator_selected_iom", null]));
+        dispatch(setSetting(["emulator_selected_component", {type:"edge", obj:edge}]))
     }
 
     let handle_change = (args) =>{
@@ -85,7 +94,7 @@ let FcoreEmulationEditor = function (props) {
 
 
     let handle_canvas_click = ()=>{
-
+        dispatch(setSetting(["emulator_selected_component", null]));
     }
 
 
@@ -113,24 +122,50 @@ let FcoreEmulationEditor = function (props) {
     }
 
     if(selected_emulator){
+        
         return(
-            <EmulatorDiagram
-                selected_node={settings.emulator_selected_component}
-                onNodeSelect={handle_node_select}
-                onEdgeSelect={handle_edge_select}
-                onCanvasClick={handle_canvas_click}
-                onLinkNodes={handle_link_nodes}
-                onAdd={add_core}
-                onChange={handle_change}
-                nodes={nodes}
-                edges={edges}
-            />
+            <ResponsiveGridLayout
+                className="layout"
+                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+                cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+                rowHeight={30}
+                useCSSTransforms={false}
+            >
+                <UIPanel key="emulator_diagram" data-grid={{x: 0, y: 0, w: 24, h: 18, static: true}} level="level_2">
+                    <SimpleContent name="Emulation setup" height="100%" content={
+                        <EmulatorDiagram
+                            selected_node={settings.emulator_selected_component}
+                            onNodeSelect={handle_node_select}
+                            onEdgeSelect={handle_edge_select}
+                            onCanvasClick={handle_canvas_click}
+                            onLinkNodes={handle_link_nodes}
+                            onAdd={add_core}
+                            onChange={handle_change}
+                            nodes={nodes}
+                            edges={edges}
+                        />
+                    }/>
+                </UIPanel>
+                <UIPanel key="emulator_i_props" data-grid={{x: 0, y: 18, w: 8, h: 18, static: true}} level="level_2">
+                    <SimpleContent name="Inputs" height="100%" content={
+                        <CoreInputProperties/>
+                    }/>
+                </UIPanel>
+                <UIPanel key="emulator_o_props" data-grid={{x: 8, y: 18, w: 8, h: 18, static: true}} level="level_2">
+                    <SimpleContent name="Outputs" height="100%" content={
+                        <CoreOutputProperties/>
+                    }/>
+                </UIPanel>
+                <UIPanel key="emulator_m_props" data-grid={{x: 16, y: 18, w: 8, h: 18, static: true}} level="level_2">
+                    <SimpleContent name="Memory" height="100%" content={
+                        <CoreMemoryProperties/>
+                    }/>
+                </UIPanel>
+            </ResponsiveGridLayout>
         );
     } else{
         return <></>
     }
 };
-
-
 
 export default FcoreEmulationEditor;

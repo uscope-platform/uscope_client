@@ -31,8 +31,6 @@ export class up_emulator {
         } else {
             this.connections = emulator_obj.connections;
         }
-        this.inputs = emulator_obj.inputs;
-        this.outputs= emulator_obj.outputs;
     }
 
     static construct_empty(emulator_id){
@@ -40,9 +38,7 @@ export class up_emulator {
             id:emulator_id,
             name:'new_emulator_'+ emulator_id,
             cores:{},
-            connections:[],
-            inputs:{},
-            outputs:{}
+            connections:[]
         };
         return new up_emulator(emulator_obj);
     }
@@ -63,6 +59,7 @@ export class up_emulator {
             },
             channels:1,
             inputs:{},
+            input_file:"",
             outputs:{},
             memory_init:{},
             options:{
@@ -77,6 +74,66 @@ export class up_emulator {
                 resolve(c);
             })
         });
+    }
+
+    add_output = (core_id, progressive) => {
+        let output = {
+            reg_n: 0,
+            type: "float",
+            name: "new_output_" + progressive
+        }
+        this.cores[core_id].outputs.push(output);
+        let edit = {emulator:this.id, core:core_id.toString(), output:output, action:"add_output"};
+        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+    }
+
+    add_input = (core_id, progressive) => {
+        let input = {
+            reg_n: 0,
+            type: "float",
+            channel:0,
+            name: "new_input_" + progressive
+        }
+        this.cores[core_id].inputs.push(input);
+        let edit = {emulator:this.id, core:core_id.toString(), input:input, action:"add_input"};
+        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+    }
+
+    add_memory = (core_id, progressive) =>{
+        let mem = {
+            reg_n: 0,
+            type: "f",
+            value:0,
+            name: "new_memory_" + progressive
+        }
+        this.cores[core_id].memory_init.push(mem);
+        let edit = {emulator:this.id, core:core_id.toString(), memory:mem, action:"add_memory"};
+        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+    }
+
+
+    remove_output = (core_id, obj_name) => {
+        this.cores[core_id].outputs = this.cores[core_id].outputs.filter((item)=>{
+            return item.name !== obj_name;
+        })
+        let edit = {emulator:this.id, core:core_id.toString(), name:obj_name, action:"remove_output"};
+        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+    }
+
+    remove_input = (core_id, obj_name) => {
+        this.cores[core_id].inputs = this.cores[core_id].inputs.filter((item)=>{
+            return item.name !== obj_name;
+        })
+        let edit = {emulator:this.id, core:core_id.toString(), name:obj_name, action:"remove_input"};
+        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+    }
+
+    remove_memory = (core_id, obj_name) =>{
+        this.cores[core_id].memory_init = this.cores[core_id].memory_init.filter((item)=>{
+            return item.name !== obj_name;
+        })
+        let edit = {emulator:this.id, core:core_id.toString(), name:obj_name, action:"remove_memory"};
+        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
     }
 
     add_dma_connection = (source_id, target_id) =>{
@@ -94,6 +151,37 @@ export class up_emulator {
         });
     }
 
+    add_dma_channel = (source, target, progressive) =>{
+        let c = {
+            name:"new_dma_channel_" + progressive,
+            source:{
+                channel:0,
+                register:0
+            },
+            target: {
+                channel:0,
+                register: 0
+            }
+        }
+        let dma_obj = this.connections.filter((item)=>{
+            return item.source === source && item.target === target;
+        })[0];
+        dma_obj.channels.push(c);
+        let edit = {emulator:this.id, source:source, target:target, channel:c, action:"add_dma_channel"};
+        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+    }
+
+    remove_dma_channel = (source, target, obj_name) =>{
+        let dma_obj = this.connections.filter((item)=>{
+            return item.source === source && item.target === target;
+        })[0];
+        dma_obj.channels = dma_obj.channels.filter((item)=>{
+            return item.name !== obj_name;
+        })
+        let edit = {emulator:this.id, source:source, target:target, name:obj_name, action:"remove_dma_channel"};
+        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+    }
+
 
     static delete(emulator){
         return backend_delete(api_dictionary.emulators.delete+'/'+emulator.id, emulator).then(()=>{
@@ -107,8 +195,6 @@ export class up_emulator {
             name: this.name,
             cores: this.cores,
             connections: this.connections,
-            inputs: this.connections,
-            outputs: this.outputs
         };
     }
 

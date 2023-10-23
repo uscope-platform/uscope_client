@@ -1,4 +1,4 @@
-// Copyright 2023 University of Nottingham Ningbo China
+// Copyright 2023 Filippo Savi
 // Author: Filippo Savi <filssavi@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,10 +20,23 @@ import {useSelector} from "react-redux";
 import {up_emulator} from "../../../client_core";
 import SidebarBase from "../SidebarBase";
 import EmulatorNodeProperties from "./EmulatorNodeProperties";
+import EmulatorEdgeProperties from "./EmulatorEdgeProperties";
 
 let  FcoreEmulatorSidebar = props =>{
 
     const emulators_store = useSelector(state => state.emulators);
+
+    const settings = useSelector(state => state.settings);
+
+    const sel_component_type = settings.emulator_selected_component ? settings.emulator_selected_component.type : null;
+
+    let render_properties = () =>{
+        if(sel_component_type === "node"){
+            return(<EmulatorNodeProperties/>);
+        } else if(sel_component_type === "edge"){
+            return(<EmulatorEdgeProperties/>);
+        }
+    }
 
     return(
         <>
@@ -34,8 +47,9 @@ let  FcoreEmulatorSidebar = props =>{
                 display_key="name"
                 content_name="Emulator"
                 selector="selected_emulator"
+                height={2}
             />
-           <EmulatorNodeProperties/>
+            {render_properties()}
         </>
 
     );
