@@ -16,7 +16,7 @@
 import React from 'react';
 
 import EmulatorToolbar from "./EmulatorToolbar";
-import {Canvas, Edge, hasLink, Node, useSelection} from "reaflow";
+import {Canvas, Edge, hasLink, Node, removeAndUpsertNodes, useSelection} from "reaflow";
 
 let EmulatorDiagram = function (props) {
 
@@ -62,6 +62,13 @@ let EmulatorDiagram = function (props) {
        props.onLinkNodes(event, from,to);
     };
 
+    let handle_node_remove = (event, node) =>{
+        props.onNodeRemove(removeAndUpsertNodes(props.nodes, props.edges, node), node);
+    }
+
+    let handle_edge_remove = (event, edge) =>{
+        props.onEdgeRemove(edge);
+    }
     return(
         <div style={{
             height:"100%",
@@ -73,8 +80,8 @@ let EmulatorDiagram = function (props) {
                 nodes={props.nodes}
                 edges={props.edges}
                 selections={selections}
-                node={<Node onClick={handle_node_click}/>}
-                edge={ <Edge onClick={handle_edge_click}/> }
+                node={<Node onClick={handle_node_click} onRemove={handle_node_remove}/>}
+                edge={ <Edge onClick={handle_edge_click} onRemove={handle_edge_remove}/> }
                 onCanvasClick={handle_canvas_click}
                 onLayoutChange={handle_layout_change}
                 onNodeLinkCheck={handle_link_check}
@@ -83,8 +90,6 @@ let EmulatorDiagram = function (props) {
         </div>
     );
 };
-
-
 
 
 export default EmulatorDiagram;

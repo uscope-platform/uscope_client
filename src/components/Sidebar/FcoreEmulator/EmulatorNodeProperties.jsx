@@ -19,6 +19,7 @@ import {Responsive, WidthProvider} from "react-grid-layout";
 import {InputField, SelectField, SimpleContent, UIPanel} from "../../UI_elements";
 import {useSelector} from "react-redux";
 import {MdAdd} from "react-icons/md";
+import {up_emulator} from "../../../client_core";
 
 let  EmulatorNodeProperties = props =>{
 
@@ -31,6 +32,8 @@ let  EmulatorNodeProperties = props =>{
 
     let selected_component = null;
 
+    const selected_emulator = settings.selected_emulator ? new up_emulator(emulators_store[parseInt(settings.selected_emulator)]): null;
+
     if(sel_component_type){
         selected_component = Object.values(emulators_store[parseInt(settings.selected_emulator)].cores).filter((item)=>{
             return item.id === selected_component_obj.obj.id;
@@ -39,10 +42,22 @@ let  EmulatorNodeProperties = props =>{
 
 
     let handle_change = (event) =>{
-
+        if(event.key==="Enter"|| event.key ==="Tab") {
+            let field = event.target.name;
+            let value = event.target.value;
+            if(field === "program"){
+                let comps = event.target.value.split(".");
+                value = {filename: event.target.value, type:comps[1]}
+            }
+            selected_emulator.edit_core_props(settings.emulator_selected_component.obj.id, field, value).then();
+        }
     }
-    let handle_change_type = (event) =>{
 
+    let handle_change_iom = () =>{
+
+    };
+    let handle_change_type = (event) =>{
+        debugger;
     }
 
     let render_io_props = ()=>{
@@ -79,8 +94,8 @@ let  EmulatorNodeProperties = props =>{
             })[0];
             panel_content.push(
                 <div key="output_props">
-                    <InputField inline ID="name" name="name" label="Name" defaultValue={sel_out.name} onKeyDown={handle_change}/>
-                    <InputField inline ID="reg_n" name="reg_n" label="Register #" defaultValue={sel_out.reg_n} onKeyDown={handle_change}/>
+                    <InputField inline ID="name" name="name" label="Name" defaultValue={sel_out.name} onKeyDown={handle_change_iom}/>
+                    <InputField inline ID="reg_n" name="reg_n" label="Register #" defaultValue={sel_out.reg_n} onKeyDown={handle_change_iom}/>
                     <SelectField
                         inline
                         label="Type"
@@ -102,8 +117,8 @@ let  EmulatorNodeProperties = props =>{
             })[0];
             panel_content.push(
                 <div key="memory_props">
-                    <InputField inline ID="name" name="name" label="Name" defaultValue={sel_mem.name} onKeyDown={handle_change}/>
-                    <InputField inline ID="reg_n" name="reg_n" label="Register #" defaultValue={sel_mem.reg_n} onKeyDown={handle_change}/>
+                    <InputField inline ID="name" name="name" label="Name" defaultValue={sel_mem.name} onKeyDown={handle_change_iom}/>
+                    <InputField inline ID="reg_n" name="reg_n" label="Register #" defaultValue={sel_mem.reg_n} onKeyDown={handle_change_iom}/>
                     <SelectField
                         inline
                         label="Type"
@@ -116,7 +131,7 @@ let  EmulatorNodeProperties = props =>{
                             {label: "integer", value: "integer"}
                         ]}
                     />
-                    <InputField inline ID="value" name="value" label="Value" defaultValue={sel_mem.value} onKeyDown={handle_change}/>
+                    <InputField inline ID="value" name="value" label="Value" defaultValue={sel_mem.value} onKeyDown={handle_change_iom}/>
                 </div>
             );
             panel_name = "Memory Properties";
@@ -144,7 +159,7 @@ let  EmulatorNodeProperties = props =>{
                 {
                     <SimpleContent name={"Node Properties"} content={
                         <div key="node_props">
-                            <InputField ID="core_name" name="core_name" label="Core Name" defaultValue={selected_component.name} onKeyDown={handle_change}/>
+                            <InputField ID="name" name="name" label="Core Name" defaultValue={selected_component.name} onKeyDown={handle_change}/>
                             <InputField ID="channels" name="channels" label="Channels #" defaultValue={selected_component.channels} onKeyDown={handle_change}/>
                             <InputField ID="program" name="program" label="Program" defaultValue={selected_component.program.filename} onKeyDown={handle_change}/>
                             <InputField ID="input_file" name="input_file" label="Input File" defaultValue={selected_component.input_file} onKeyDown={handle_change}/>

@@ -117,8 +117,31 @@ let FcoreEmulationEditor = function (props) {
                 ]);
             });
         }
+    }
 
+    let handle_node_remove = (result, node)=>{
+        let s_e = new up_emulator(selected_emulator);
+        dispatch(setSetting(["emulator_selected_iom", null]));
+        dispatch(setSetting(["emulator_selected_component", null]));
+        s_e.remove_core(node.id).then(()=>{
+            edges.map((item)=>{
+                if(item.from ===node.id || item.to === node.id){
+                    s_e.remove_dma_connection(item.from, item.to).then();
+                }
+            });
+        })
+        setNodes(result.nodes);
+        setEdges(result.edges);
+    }
 
+    let handle_edge_remove = (edge) =>{
+        let s_e = new up_emulator(selected_emulator);
+        dispatch(setSetting(["emulator_selected_iom", null]));
+        dispatch(setSetting(["emulator_selected_component", null]));
+        s_e.remove_dma_connection(edge.from, edge.to).then(()=>{
+            let n_e = edges.filter((item) =>{ return item.id !== edge.id});
+            setEdges(n_e);
+        });
     }
 
     if(selected_emulator){
@@ -136,7 +159,9 @@ let FcoreEmulationEditor = function (props) {
                         <EmulatorDiagram
                             selected_node={settings.emulator_selected_component}
                             onNodeSelect={handle_node_select}
+                            onNodeRemove={handle_node_remove}
                             onEdgeSelect={handle_edge_select}
+                            onEdgeRemove={handle_edge_remove}
                             onCanvasClick={handle_canvas_click}
                             onLinkNodes={handle_link_nodes}
                             onAdd={add_core}

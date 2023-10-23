@@ -58,10 +58,10 @@ export class up_emulator {
                 type:""
             },
             channels:1,
-            inputs:{},
+            inputs:[],
             input_file:"",
-            outputs:{},
-            memory_init:{},
+            outputs:[],
+            memory_init:[],
             options:{
                 comparators:"reducing",
                 efi:"none"
@@ -74,6 +74,19 @@ export class up_emulator {
                 resolve(c);
             })
         });
+    }
+
+    edit_core_props = (core_id, field, value) =>{
+        let edit = {emulator:this.id, core:core_id.toString(), field_name:field, value:value, action:"edit_core_props"};
+        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then(()=>{
+            this.cores[core_id][field] = value;
+        });
+    }
+
+    remove_core = (core_id) =>{
+        delete this.cores[core_id];
+        let edit = {emulator:this.id, core:core_id.toString(), action:"remove_core"};
+        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
     }
 
     add_output = (core_id, progressive) => {
@@ -149,6 +162,14 @@ export class up_emulator {
                 resolve(c);
             })
         });
+    }
+
+    remove_dma_connection = (source_id, target_id) =>{
+        this.connections = this.connections.filter((item)=>{
+            return item.source !== source_id && item.target !== target_id;
+        });
+        let edit = {emulator:this.id, source:source_id, target:target_id, action:"remove_connection"};
+        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
     }
 
     add_dma_channel = (source, target, progressive) =>{
