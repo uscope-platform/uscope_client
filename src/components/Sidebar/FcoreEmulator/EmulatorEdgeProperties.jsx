@@ -20,6 +20,7 @@ import {InputField, SelectableList, SimpleContent, UIPanel} from "../../UI_eleme
 import {useSelector} from "react-redux";
 import {MdAdd} from "react-icons/md";
 import {up_emulator} from "../../../client_core";
+import {setSetting} from "../../../redux/Actions/SettingsActions";
 
 let  EmulatorEdgeProperties = props =>{
 
@@ -65,13 +66,38 @@ let  EmulatorEdgeProperties = props =>{
         });
     }
 
-    let handle_change = () =>{
+    let handle_change = (event) =>{
+        if(event.key==="Enter"|| event.key ==="Tab") {
+            let field = event.target.name;
+            let value = event.target.value;
 
+            if(field !== 'name'){
+                let selected_channel = selected_component.channels.filter((item) =>{
+                    return item.name === selected;
+                })[0];
+
+                let split_field = field.split("_");
+                if(split_field[0] === 'source'){
+                    value = selected_channel.source;
+                    value[split_field[1]] = parseInt(event.target.value);
+                } else {
+                    value = selected_channel.target;
+                    value[split_field[1]] = parseInt(event.target.value);
+                }
+                field = split_field[0];
+            }
+            selected_emulator.edit_dma_channel(source_core, target_core,
+                field, value, selected).then(()=>{
+                if(field === 'name'){
+                    set_selected(value)
+                }
+                forceUpdate();
+            });
+        }
     }
 
     let render_channel_props = () =>{
         if (selected) {
-
             let selected_channel = selected_component.channels.filter((item) =>{
                 return item.name === selected;
             })[0];

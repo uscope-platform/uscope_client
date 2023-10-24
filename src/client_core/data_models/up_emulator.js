@@ -230,6 +230,24 @@ export class up_emulator {
         return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
     }
 
+
+    edit_dma_channel = (source, target,field, value, channel_name) =>{
+        let edit = {emulator:this.id, source:source, target:target, field_name:field, value:value, channel:channel_name, action:"edit_dma_channel"};
+        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then(()=>{
+            let dma_obj = this.connections.filter((item)=>{
+                return item.source === source && item.target === target;
+            })[0];
+            dma_obj.channels = dma_obj.channels.map((item)=>{
+                if(item.name === channel_name){
+                    return  {...item, ...{[field]:value}};
+                } else {
+                    return item;
+                }
+            })
+        });
+    }
+
+
     remove_dma_channel = (source, target, obj_name) =>{
         let dma_obj = this.connections.filter((item)=>{
             return item.source === source && item.target === target;

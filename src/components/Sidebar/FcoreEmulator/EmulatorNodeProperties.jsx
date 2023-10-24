@@ -65,10 +65,7 @@ let  EmulatorNodeProperties = props =>{
                 selected_emulator.edit_input(settings.emulator_selected_component.obj.id,
                     field, value, settings.emulator_selected_iom.obj).then(()=>{
                     if(field === 'name'){
-                        let sel_in = selected_component.inputs.filter((item)=>{
-                            return item.name === value;
-                        })[0];
-                        dispatch(setSetting(["emulator_selected_iom", {type:settings.emulator_selected_iom.type, obj:sel_in.name}]));
+                        dispatch(setSetting(["emulator_selected_iom", {type:settings.emulator_selected_iom.type, obj:value}]));
                     }
                     forceUpdate();
                 });
@@ -76,10 +73,8 @@ let  EmulatorNodeProperties = props =>{
                 selected_emulator.edit_output(settings.emulator_selected_component.obj.id,
                     field, value, settings.emulator_selected_iom.obj).then(()=>{
                     if(field === 'name'){
-                        let sel_out = selected_component.outputs.filter((item)=>{
-                            return item.name === value;
-                        })[0];
-                        dispatch(setSetting(["emulator_selected_iom", {type:settings.emulator_selected_iom.type, obj:sel_out.name}]));
+
+                        dispatch(setSetting(["emulator_selected_iom", {type:settings.emulator_selected_iom.type, obj:value}]));
                     }
                     forceUpdate();
                 });
@@ -87,10 +82,7 @@ let  EmulatorNodeProperties = props =>{
                 selected_emulator.edit_memory(settings.emulator_selected_component.obj.id,
                     field, value, settings.emulator_selected_iom.obj).then(()=>{
                     if(field === 'name'){
-                        let sel_mem = selected_component.memory_init.filter((item)=>{
-                            return item.name === value;
-                        })[0];
-                        dispatch(setSetting(["emulator_selected_iom", {type:settings.emulator_selected_iom.type, obj:sel_mem.name}]));
+                        dispatch(setSetting(["emulator_selected_iom", {type:settings.emulator_selected_iom.type, obj:value}]));
                     }
                     forceUpdate();
                 });
