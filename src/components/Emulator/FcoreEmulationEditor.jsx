@@ -123,15 +123,17 @@ let FcoreEmulationEditor = function (props) {
         let s_e = new up_emulator(selected_emulator);
         dispatch(setSetting(["emulator_selected_iom", null]));
         dispatch(setSetting(["emulator_selected_component", null]));
-        s_e.remove_core(node.id).then(()=>{
-            edges.map((item)=>{
-                if(item.from ===node.id || item.to === node.id){
-                    s_e.remove_dma_connection(item.from, item.to).then();
-                }
-            });
-        })
-        setNodes(result.nodes);
-        setEdges(result.edges);
+        let new_edges = [];
+        edges.map((item)=> {
+            if (item.from !== node.id && item.to !== node.id) {
+                new_edges.push(item);
+            }
+        });
+        s_e.remove_node_connections(node.id).then(()=>{
+            s_e.remove_core(node.id).then();
+            setNodes(result.nodes);
+            setEdges(new_edges);
+        });
     }
 
     let handle_edge_remove = (edge) =>{

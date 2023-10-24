@@ -210,6 +210,14 @@ export class up_emulator {
         return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
     }
 
+    remove_node_connections = (node_id) =>{
+        this.connections = this.connections.filter((item)=>{
+            return item.source !== node_id && item.target !== node_id;
+        });
+        let edit = {emulator:this.id, node:node_id, action:"remove_node_connections"};
+        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+    }
+
     add_dma_channel = (source, target, progressive) =>{
         let c = {
             name:"new_dma_channel_" + progressive,
