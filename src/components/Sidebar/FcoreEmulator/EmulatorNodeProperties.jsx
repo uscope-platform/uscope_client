@@ -13,13 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import React, {useReducer} from 'react';
 
 import {Responsive, WidthProvider} from "react-grid-layout";
 import {InputField, SelectField, SimpleContent, UIPanel} from "../../UI_elements";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {MdAdd} from "react-icons/md";
 import {up_emulator} from "../../../client_core";
+import {setSetting} from "../../../redux/Actions/SettingsActions";
 
 let  EmulatorNodeProperties = props =>{
 
@@ -27,12 +28,14 @@ let  EmulatorNodeProperties = props =>{
     const settings = useSelector(state => state.settings);
     const selected_component_obj = settings.emulator_selected_component;
 
-
     const sel_component_type = selected_component_obj ? selected_component_obj.type : null;
 
     let selected_component = null;
 
     const selected_emulator = settings.selected_emulator ? new up_emulator(emulators_store[parseInt(settings.selected_emulator)]): null;
+
+    const [, forceUpdate] = useReducer(x => x + 1, 0);
+    const dispatch = useDispatch();
 
     if(sel_component_type){
         selected_component = Object.values(emulators_store[parseInt(settings.selected_emulator)].cores).filter((item)=>{
@@ -53,11 +56,64 @@ let  EmulatorNodeProperties = props =>{
         }
     }
 
-    let handle_change_iom = () =>{
+    let handle_change_iom = (event) =>{
+        if(event.key==="Enter"|| event.key ==="Tab") {
+            let field = event.target.name;
+            let value = event.target.value;
 
+            if (settings.emulator_selected_iom.type === 'inputs') {
+                selected_emulator.edit_input(settings.emulator_selected_component.obj.id,
+                    field, value, settings.emulator_selected_iom.obj).then(()=>{
+                    if(field === 'name'){
+                        let sel_in = selected_component.inputs.filter((item)=>{
+                            return item.name === value;
+                        })[0];
+                        dispatch(setSetting(["emulator_selected_iom", {type:settings.emulator_selected_iom.type, obj:sel_in.name}]));
+                    }
+                    forceUpdate();
+                });
+            } else if (settings.emulator_selected_iom.type === 'outputs') {
+                selected_emulator.edit_output(settings.emulator_selected_component.obj.id,
+                    field, value, settings.emulator_selected_iom.obj).then(()=>{
+                    if(field === 'name'){
+                        let sel_out = selected_component.outputs.filter((item)=>{
+                            return item.name === value;
+                        })[0];
+                        dispatch(setSetting(["emulator_selected_iom", {type:settings.emulator_selected_iom.type, obj:sel_out.name}]));
+                    }
+                    forceUpdate();
+                });
+            } else if (settings.emulator_selected_iom.type === 'memory_init') {
+                selected_emulator.edit_memory(settings.emulator_selected_component.obj.id,
+                    field, value, settings.emulator_selected_iom.obj).then(()=>{
+                    if(field === 'name'){
+                        let sel_mem = selected_component.memory_init.filter((item)=>{
+                            return item.name === value;
+                        })[0];
+                        dispatch(setSetting(["emulator_selected_iom", {type:settings.emulator_selected_iom.type, obj:sel_mem.name}]));
+                    }
+                    forceUpdate();
+                });
+            }
+        }
     };
     let handle_change_type = (event) =>{
-        debugger;
+        if (settings.emulator_selected_iom.type === 'inputs') {
+            selected_emulator.edit_input(settings.emulator_selected_component.obj.id,
+                "type", event.value, settings.emulator_selected_iom.obj).then(()=>{
+                forceUpdate();
+            });
+        } else if (settings.emulator_selected_iom.type === 'outputs') {
+            selected_emulator.edit_output(settings.emulator_selected_component.obj.id,
+                "type", event.value, settings.emulator_selected_iom.obj).then(()=>{
+                forceUpdate();
+            });
+        } else if (settings.emulator_selected_iom.type === 'memory_init') {
+            selected_emulator.edit_memory(settings.emulator_selected_component.obj.id,
+                "type", event.value, settings.emulator_selected_iom.obj).then(()=>{
+                forceUpdate();
+            });
+        }
     }
 
     let render_io_props = ()=>{
@@ -70,9 +126,9 @@ let  EmulatorNodeProperties = props =>{
             })[0];
             panel_content.push(
                 <div key="input_props">
-                    <InputField ID="name" name="name" label="Name" defaultValue={sel_in.name} onKeyDown={handle_change}/>
-                    <InputField ID="channel" name="channel" label="Channel" defaultValue={sel_in.channel} onKeyDown={handle_change}/>
-                    <InputField ID="reg_n" name="reg_n" label="Register #" defaultValue={sel_in.reg_n} onKeyDown={handle_change}/>
+                    <InputField ID="name" name="name" label="Name" defaultValue={sel_in.name} onKeyDown={handle_change_iom}/>
+                    <InputField ID="channel" name="channel" label="Channel" defaultValue={sel_in.channel} onKeyDown={handle_change_iom}/>
+                    <InputField ID="reg_n" name="reg_n" label="Register #" defaultValue={sel_in.reg_n} onKeyDown={handle_change_iom}/>
                     <SelectField
                         inline
                         label="Type"

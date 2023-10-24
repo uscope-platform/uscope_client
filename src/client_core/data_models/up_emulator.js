@@ -100,6 +100,19 @@ export class up_emulator {
         return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
     }
 
+    edit_output = (core_id, field, value, output_name) =>{
+        let edit = {emulator:this.id, core:core_id.toString(), field_name:field, value:value, output:output_name, action:"edit_output"};
+        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then(()=>{
+            this.cores[core_id].outputs = this.cores[core_id].outputs.map((item)=>{
+                if(item.name === output_name){
+                    return  {...item, ...{[field]:value}};
+                } else {
+                    return item;
+                }
+            });
+        });
+    }
+
     add_input = (core_id, progressive) => {
         let input = {
             reg_n: 0,
@@ -110,6 +123,19 @@ export class up_emulator {
         this.cores[core_id].inputs.push(input);
         let edit = {emulator:this.id, core:core_id.toString(), input:input, action:"add_input"};
         return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+    }
+
+    edit_input = (core_id, field, value, input_name) =>{
+        let edit = {emulator:this.id, core:core_id.toString(), field_name:field, value:value, input:input_name, action:"edit_input"};
+        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then(()=>{
+            this.cores[core_id].inputs = this.cores[core_id].inputs.map((item)=>{
+                if(item.name === input_name){
+                    return  {...item, ...{[field]:value}};
+                } else {
+                    return item;
+                }
+            });
+        });
     }
 
     add_memory = (core_id, progressive) =>{
@@ -124,6 +150,18 @@ export class up_emulator {
         return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
     }
 
+    edit_memory = (core_id, field, value, memory_name) =>{
+        let edit = {emulator:this.id, core:core_id.toString(), field_name:field, value:value, memory:memory_name, action:"edit_memory"};
+        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then(()=>{
+            this.cores[core_id].memory_init = this.cores[core_id].memory_init.map((item)=>{
+                if(item.name === memory_name){
+                    return  {...item, ...{[field]:value}};
+                } else {
+                    return item;
+                }
+            });
+        });
+    }
 
     remove_output = (core_id, obj_name) => {
         this.cores[core_id].outputs = this.cores[core_id].outputs.filter((item)=>{
