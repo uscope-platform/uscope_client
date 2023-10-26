@@ -17,10 +17,9 @@ import React from 'react';
 
 import {ColorTheme} from "../UI_elements";
 import {Tooltip} from "react-tooltip";
-import {MdAdd, MdDelete, MdRotateRight} from "react-icons/md";
+import {MdAdd, MdDelete, MdBuild} from "react-icons/md";
 
 let  EmulatorToolbar = props =>{
-
 
     return(
         <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
@@ -28,13 +27,9 @@ let  EmulatorToolbar = props =>{
                 <MdAdd onClick={props.onAdd} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
                 <Tooltip anchorSelect="add_icon" content={"Add Core"} place="top" />
             </div>
-            <div key="delete_icon" id="delete_icon">
-                <MdDelete size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
-                <Tooltip anchorSelect="delete_icon" content={"Delete Element"} place="top" />
-            </div>
-            <div key="redo_layout" id="redo_layout">
-                <MdRotateRight size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
-                <Tooltip anchorSelect="redo_layout" content={"Redo layout"} place="top" />
+            <div key="build" id="build">
+                <MdBuild onClick={props.onBuild} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
+                <Tooltip anchorSelect="build" content={"Build"} place="top" />
             </div>
 
         </div>

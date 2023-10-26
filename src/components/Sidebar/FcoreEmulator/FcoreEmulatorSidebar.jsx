@@ -21,22 +21,12 @@ import {up_emulator} from "../../../client_core";
 import SidebarBase from "../SidebarBase";
 import EmulatorNodeProperties from "./EmulatorNodeProperties";
 import EmulatorEdgeProperties from "./EmulatorEdgeProperties";
+import EmulatorProperties from "./EmulatorProperties";
 
 let  FcoreEmulatorSidebar = props =>{
 
     const emulators_store = useSelector(state => state.emulators);
 
-    const settings = useSelector(state => state.settings);
-
-    const sel_component_type = settings.emulator_selected_component ? settings.emulator_selected_component.type : null;
-
-    let render_properties = () =>{
-        if(sel_component_type === "node"){
-            return(<EmulatorNodeProperties/>);
-        } else if(sel_component_type === "edge"){
-            return(<EmulatorEdgeProperties/>);
-        }
-    }
 
     return(
         <>
@@ -49,7 +39,9 @@ let  FcoreEmulatorSidebar = props =>{
                 selector="selected_emulator"
                 height={2}
             />
-            {render_properties()}
+            <EmulatorNodeProperties/>
+            <EmulatorEdgeProperties/>
+            <EmulatorProperties/>
         </>
 
     );

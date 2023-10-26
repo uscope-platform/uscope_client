@@ -18,7 +18,7 @@ import React, {useEffect, useState} from 'react';
 import EmulatorDiagram from "./EmulatorDiagram";
 import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../../redux/Actions/SettingsActions";
-import {up_emulator} from "../../client_core";
+import {download_json, up_emulator} from "../../client_core";
 import {SimpleContent, UIPanel} from "../UI_elements";
 import CoreInputProperties from "./CoreInputProperties";
 import CoreOutputProperties from "./CoreOutputProperties";
@@ -88,8 +88,10 @@ let FcoreEmulationEditor = function (props) {
         dispatch(setSetting(["emulator_selected_component", {type:"edge", obj:edge}]))
     }
 
-    let handle_change = (args) =>{
-        debugger;
+    let handle_build = (args) =>{
+        let s_e = new up_emulator(selected_emulator);
+        let product = s_e.build();
+        download_json(product, s_e.name + "_artifact");
     }
 
 
@@ -167,23 +169,23 @@ let FcoreEmulationEditor = function (props) {
                             onCanvasClick={handle_canvas_click}
                             onLinkNodes={handle_link_nodes}
                             onAdd={add_core}
-                            onChange={handle_change}
+                            onBuild={handle_build}
                             nodes={nodes}
                             edges={edges}
                         />
                     }/>
                 </UIPanel>
-                <UIPanel key="emulator_i_props" data-grid={{x: 0, y: 18, w: 8, h: 18, static: true}} level="level_2">
+                <UIPanel key="emulator_i_props" data-grid={{x: 0, y: 18, w: 8, h: 7.4, static: true}} level="level_2">
                     <SimpleContent name="Inputs" height="100%" content={
                         <CoreInputProperties/>
                     }/>
                 </UIPanel>
-                <UIPanel key="emulator_o_props" data-grid={{x: 8, y: 18, w: 8, h: 18, static: true}} level="level_2">
+                <UIPanel key="emulator_o_props" data-grid={{x: 8, y: 18, w: 8, h: 7.4, static: true}} level="level_2">
                     <SimpleContent name="Outputs" height="100%" content={
                         <CoreOutputProperties/>
                     }/>
                 </UIPanel>
-                <UIPanel key="emulator_m_props" data-grid={{x: 16, y: 18, w: 8, h: 18, static: true}} level="level_2">
+                <UIPanel key="emulator_m_props" data-grid={{x: 16, y: 18, w: 8, h: 7.4, static: true}} level="level_2">
                     <SimpleContent name="Memory" height="100%" content={
                         <CoreMemoryProperties/>
                     }/>

@@ -75,7 +75,7 @@ let EmulatorDiagram = function (props) {
             display:"flex",
             flexDirection:"column"
         }}>
-            <EmulatorToolbar onAdd={props.onAdd}/>
+            <EmulatorToolbar onAdd={props.onAdd} onBuild={props.onBuild}/>
             <Canvas
                 nodes={props.nodes}
                 edges={props.edges}

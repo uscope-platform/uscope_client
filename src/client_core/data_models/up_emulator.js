@@ -44,8 +44,14 @@ export class up_emulator {
     }
 
     add_remote = () => {
-        store.dispatch(AddEmulator(this));
-        return backend_post(api_dictionary.emulators.add+'/'+this.id, this._get_emulator());
+        return new Promise((resolve, reject) =>{
+            backend_post(api_dictionary.emulators.add+'/'+this.id, this._get_emulator()).then((resp)=>{
+                store.dispatch(AddEmulator(this))
+                resolve();
+            }).catch((error)=>{
+                alert(error.response.data.message)
+            })
+        });
     }
 
     add_core = (id) => {
@@ -64,7 +70,7 @@ export class up_emulator {
             memory_init:[],
             options:{
                 comparators:"reducing",
-                efi:"none"
+                efi_implementation:"none"
             }
         };
         this.cores[id] = c;
@@ -75,6 +81,13 @@ export class up_emulator {
             })
         });
     }
+
+    edit_name = (new_name) =>{
+        let edit = {emulator:this.id, value:new_name, action:"edit_name"};
+        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then(()=>{
+            this.name = new_name;
+        });
+    };
 
     edit_core_props = (core_id, field, value) =>{
         let edit = {emulator:this.id, core:core_id.toString(), field_name:field, value:value, action:"edit_core_props"};
@@ -141,7 +154,7 @@ export class up_emulator {
     add_memory = (core_id, progressive) =>{
         let mem = {
             reg_n: 0,
-            type: "f",
+            type: "float",
             value:0,
             name: "new_memory_" + progressive
         }
@@ -221,6 +234,7 @@ export class up_emulator {
     add_dma_channel = (source, target, progressive) =>{
         let c = {
             name:"new_dma_channel_" + progressive,
+            type:"scalar_transfer",
             source:{
                 channel:0,
                 register:0
@@ -257,14 +271,23 @@ export class up_emulator {
 
 
     remove_dma_channel = (source, target, obj_name) =>{
-        let dma_obj = this.connections.filter((item)=>{
-            return item.source === source && item.target === target;
-        })[0];
-        dma_obj.channels = dma_obj.channels.filter((item)=>{
-            return item.name !== obj_name;
-        })
         let edit = {emulator:this.id, source:source, target:target, name:obj_name, action:"remove_dma_channel"};
-        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then(()=>{
+            this.connections = this.connections.map((item)=>{
+                if(item.source === source && item.target === target){
+                   let ret = item;
+                    ret.channels = ret.channels.filter((item)=>{
+                        return item.name !== obj_name;
+                    })
+                    return ret;
+                } else {
+                    return item;
+                }
+            });
+            return new Promise((resolve)=>{
+                resolve();
+            })
+        });
     }
 
 
@@ -272,6 +295,52 @@ export class up_emulator {
         return backend_delete(api_dictionary.emulators.delete+'/'+emulator.id, emulator).then(()=>{
             store.dispatch(removeEmulator(emulator));
         })
+    }
+
+    build = () =>{
+        let ret_val = {
+            cores: Object.values(this.cores).map((item)=>{
+                return({
+                    channels:item.channels,
+                    id:item.name,
+                    order:item.order,
+                    input_file:item.input_file,
+                    options:item.options,
+                    program:item.program,
+                    outputs:item.outputs.map((out)=>{
+                        return {
+                            name: out.name,
+                            type: out.type,
+                            reg_n: parseInt(out.reg_n)
+                        };
+                    }),
+                    inputs:item.inputs.map((in_obj)=>{
+                        return {
+                            name: in_obj.name,
+                            type: in_obj.type,
+                            reg_n: parseInt(in_obj.reg_n),
+                            channel: in_obj.channel
+                        };
+                    }),
+                    memory_init:item.memory_init.map((mem)=>{
+                        return {
+                            name: mem.name,
+                            type: mem.type,
+                            reg_n: parseInt(mem.reg_n),
+                            value: parseInt(mem.value),
+                        };
+                    })
+                })
+            }),
+            interconnect: this.connections.map((item)=>{
+                return {
+                    source:item.source,
+                    destination:item.target,
+                    channels:item.channels
+                };
+            })
+        };
+        return ret_val;
     }
 
     _get_emulator = () =>{
