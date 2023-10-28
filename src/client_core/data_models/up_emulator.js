@@ -301,25 +301,22 @@ export class up_emulator {
         let ret_val = {
             cores: Object.values(this.cores).map((item)=>{
                 return({
-                    channels:item.channels,
                     id:item.name,
                     order:item.order,
                     input_file:item.input_file,
-                    options:item.options,
-                    program:item.program,
-                    outputs:item.outputs.map((out)=>{
-                        return {
-                            name: out.name,
-                            type: out.type,
-                            reg_n: parseInt(out.reg_n)
-                        };
-                    }),
                     inputs:item.inputs.map((in_obj)=>{
                         return {
                             name: in_obj.name,
                             type: in_obj.type,
                             reg_n: parseInt(in_obj.reg_n),
                             channel: in_obj.channel
+                        };
+                    }),
+                    outputs:item.outputs.map((out)=>{
+                        return {
+                            name: out.name,
+                            type: out.type,
+                            reg_n: parseInt(out.reg_n)
                         };
                     }),
                     memory_init:item.memory_init.map((mem)=>{
@@ -329,14 +326,27 @@ export class up_emulator {
                             reg_n: parseInt(mem.reg_n),
                             value: parseInt(mem.value),
                         };
-                    })
+                    }),
+                    channels:item.channels,
+                    program:item.program,
+                    options:item.options
                 })
             }),
             interconnect: this.connections.map((item)=>{
                 return {
-                    source:item.source,
-                    destination:item.target,
-                    channels:item.channels
+                    source:this.cores[item.source].name,
+                    destination:this.cores[item.target].name,
+                    channels:item.channels.map((item)=>{
+                        let ret = {
+                            name:item.name,
+                            type:item.type,
+                            source:item.source,
+                            destination:item.target
+                        };
+                        if(item.length) ret.length = item.length;
+                        if(item.stride) ret.stride = item.stride;
+                        return ret;
+                    })
                 };
             })
         };

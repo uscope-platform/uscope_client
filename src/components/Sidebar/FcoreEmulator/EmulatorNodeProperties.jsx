@@ -51,6 +51,12 @@ let  EmulatorNodeProperties = props =>{
                     let comps = event.target.value.split(".");
                     value = {filename: event.target.value, type:comps[1]}
                 }
+                if(field === "order" || field === "channels") value = parseInt(value);
+                if(field==="efi_implementation"||field==="comparators"){
+                    value = selected_component.options;
+                    value[field] = event.target.value;
+                    field = "options";
+                }
                 selected_emulator.edit_core_props(settings.emulator_selected_component.obj.id, field, value).then();
             }
         }
@@ -59,6 +65,8 @@ let  EmulatorNodeProperties = props =>{
             if(event.key==="Enter"|| event.key ==="Tab") {
                 let field = event.target.name;
                 let value = event.target.value;
+
+                if(field === "reg_n" || field === "channel") value = parseInt(value);
 
                 if (settings.emulator_selected_iom.type === 'inputs') {
                     selected_emulator.edit_input(settings.emulator_selected_component.obj.id,

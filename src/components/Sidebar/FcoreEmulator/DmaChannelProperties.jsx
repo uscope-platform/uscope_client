@@ -43,6 +43,9 @@ let  DmaChannelProperties = props =>{
                 field = split_field[0];
             }
 
+            if(field === "length" || field === "stride"){
+                value = parseInt(value);
+            }
 
             props.selected_emulator.edit_dma_channel(props.source_core, props.target_core,
                 field, value, props.selected_channel.name).then(()=>{
