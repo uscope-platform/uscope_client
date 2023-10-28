@@ -99,12 +99,21 @@ let  SidebarBase = props =>{
             items = Object.keys(props.objects).filter((scr_id)=>{
                 return props.items_filter.includes(scr_id);
             }).map((scr_id)=>{
-                types.push("generic");
+                if(props.objects[scr_id][props.type_prop]){
+                    types.push(props.objects[scr_id][props.type_prop]);
+                } else {
+                    types.push("generic");
+                }
                 return props.objects[scr_id][props.display_key];
             })
         } else{
             items = Object.values(props.objects).map((obj)=>{
                 types.push("generic");
+                if(props.display_key[props.type_prop]){
+                    types.push(props.objects[props.type_prop][props.type_prop]);
+                } else {
+                    types.push("generic");
+                }
                 return obj[props.display_key];
             })
         }
