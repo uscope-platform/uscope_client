@@ -19,8 +19,8 @@ import {useSelector} from "react-redux";
 
 import {up_emulator} from "../../../client_core";
 import SidebarBase from "../SidebarBase";
-import EmulatorNodeProperties from "./EmulatorNodeProperties";
-import EmulatorEdgeProperties from "./EmulatorEdgeProperties";
+import EmulatorNodeProperties from "./NodesSidebar/EmulatorNodeProperties";
+import EmulatorEdgeProperties from "./EdgesSidebar/EmulatorEdgeProperties";
 import EmulatorProperties from "./EmulatorProperties";
 
 let  FcoreEmulatorSidebar = props =>{

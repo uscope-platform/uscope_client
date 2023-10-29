@@ -16,11 +16,11 @@
 import React, {useCallback, useEffect, useReducer, useState} from 'react';
 
 import {Responsive, WidthProvider} from "react-grid-layout";
-import {InputField, SelectableList, SimpleContent, UIPanel} from "../../UI_elements";
+import {InputField, SelectableList, SimpleContent, UIPanel} from "../../../UI_elements";
 import {useDispatch, useSelector} from "react-redux";
 import {MdAdd} from "react-icons/md";
-import {up_emulator} from "../../../client_core";
-import {setSetting} from "../../../redux/Actions/SettingsActions";
+import {up_emulator} from "../../../../client_core";
+import {setSetting} from "../../../../redux/Actions/SettingsActions";
 import DmaChannelsList from "./DmaChannelsList";
 import DmaChannelProperties from "./DmaChannelProperties";
 

@@ -15,9 +15,9 @@
 
 import React, {useReducer} from 'react';
 
-import {InputField, SelectField} from "../../UI_elements";
+import {InputField, SelectField} from "../../../UI_elements";
 import {useDispatch} from "react-redux";
-import {setSetting} from "../../../redux/Actions/SettingsActions";
+import {setSetting} from "../../../../redux/Actions/SettingsActions";
 import Select from "react-select";
 
 let  DmaChannelProperties = props =>{

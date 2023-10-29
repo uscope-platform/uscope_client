@@ -15,10 +15,10 @@
 
 import React, {useEffect, useReducer, useState} from 'react';
 
-import {SelectableList} from "../../UI_elements";
+import {SelectableList} from "../../../UI_elements";
 import {MdAdd} from "react-icons/md";
 import {useDispatch, useSelector} from "react-redux";
-import {setSetting} from "../../../redux/Actions/SettingsActions";
+import {setSetting} from "../../../../redux/Actions/SettingsActions";
 
 let  DmaChannelsList = props =>{
 
