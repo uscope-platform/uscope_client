@@ -39,7 +39,7 @@ let  EmulatorEdgeProperties = props =>{
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
-    if(sel_component_type === "edge"){
+    if(sel_component_type === "edge" && settings.selected_emulator){
 
         selected_component = emulators_store[settings.selected_emulator].connections.filter((item) => {
             return item.source === settings.emulator_selected_component.obj.from && item.target === settings.emulator_selected_component.obj.to;
@@ -55,7 +55,7 @@ let  EmulatorEdgeProperties = props =>{
             selected_channel = selected_component.channels.filter((item) =>{
                 return item.name === settings.emulator_selected_dma_channel;
             })[0];
-            if(!selected_channel) selected_channel = {name:"", source:{channel:"", register:""}, target:{channel:"", register: ""}};
+            if(!selected_channel) selected_channel = {name:"", source:{channel:"", register:""},source_output:"", target:{channel:"", register: ""}, target_input:""};
         }
 
         const ResponsiveGridLayout = WidthProvider(Responsive);

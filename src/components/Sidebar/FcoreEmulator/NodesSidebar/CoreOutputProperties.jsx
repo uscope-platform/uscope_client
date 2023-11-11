@@ -26,13 +26,25 @@ let  CoreOutputProperties = props =>{
     const [, forceUpdate] = useReducer(x => x + 1, 0);
     const dispatch = useDispatch();
 
+    let sel_out = props.selected_core.outputs.filter((item)=>{
+        return item.name === settings.emulator_selected_iom.obj
+    })[0];
+
 
     let handle_change_iom = (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab") {
             let field = event.target.name;
             let value = event.target.value;
 
-            if(field === "reg_n" || field === "channel") value = parseInt(value);
+            if(field === "reg_n" || field === "channel") {
+                if(field === "reg_n" &&  sel_out.register_type === "vector"){
+                    value = value.split(",").map((item) =>{
+                        return parseInt(item.trim());
+                    });
+                } else {
+                    value = parseInt(value);
+                }
+            }
 
             props.selected_emulator.edit_output(settings.emulator_selected_component.obj.id,
                 field, value, settings.emulator_selected_iom.obj).then(()=>{
@@ -45,16 +57,13 @@ let  CoreOutputProperties = props =>{
         }
     };
 
-    let handle_change_type = (event) =>{
+    let handle_select = (object, e) =>{
         props.selected_emulator.edit_output(settings.emulator_selected_component.obj.id,
-            "type", event.value, settings.emulator_selected_iom.obj).then(()=>{
+            e.name, object.value, settings.emulator_selected_iom.obj).then(()=>{
             forceUpdate();
         });
     }
 
-    let sel_out = props.selected_core.outputs.filter((item)=>{
-        return item.name === settings.emulator_selected_iom.obj
-    })[0];
 
     return(
         <SimpleContent name="Output Properties" content={
@@ -64,13 +73,25 @@ let  CoreOutputProperties = props =>{
                 <SelectField
                     inline
                     label="Type"
-                    onChange={handle_change_type}
+                    onChange={handle_select}
                     value={{value: sel_out.type, label: sel_out.type}}
                     defaultValue="Select Type"
                     name="type"
                     options={[
                         {label: "float", value: "float"},
                         {label: "integer", value: "integer"}
+                    ]}
+                />
+                <SelectField
+                    inline
+                    label="Register Type"
+                    onChange={handle_select}
+                    value={{value: sel_out.register_type, label: sel_out.register_type}}
+                    defaultValue="Select Register Type"
+                    name="register_type"
+                    options={[
+                        {label: "scalar", value: "scalar"},
+                        {label: "vector", value: "vector"}
                     ]}
                 />
             </div> }/>

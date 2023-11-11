@@ -106,7 +106,8 @@ export class up_emulator {
         let output = {
             reg_n: 0,
             type: "float",
-            name: "new_output_" + progressive
+            name: "new_output_" + progressive,
+            register_type:"scalar"
         }
         this.cores[core_id].outputs.push(output);
         let edit = {emulator:this.id, core:core_id.toString(), output:output, action:"add_output"};
@@ -131,7 +132,9 @@ export class up_emulator {
             reg_n: 0,
             type: "float",
             channel:0,
-            name: "new_input_" + progressive
+            name: "new_input_" + progressive,
+            register_type:"scalar",
+            labels:""
         }
         this.cores[core_id].inputs.push(input);
         let edit = {emulator:this.id, core:core_id.toString(), input:input, action:"add_input"};
@@ -156,7 +159,9 @@ export class up_emulator {
             reg_n: 0,
             type: "float",
             value:0,
-            name: "new_memory_" + progressive
+            name: "new_memory_" + progressive,
+            register_type:"scalar",
+            vector_size:0
         }
         this.cores[core_id].memory_init.push(mem);
         let edit = {emulator:this.id, core:core_id.toString(), memory:mem, action:"add_memory"};
@@ -298,6 +303,8 @@ export class up_emulator {
     }
 
     build = () =>{
+
+
         let ret_val = {
             cores: Object.values(this.cores).map((item)=>{
                 return({
@@ -305,30 +312,52 @@ export class up_emulator {
                     order:item.order,
                     input_file:item.input_file,
                     inputs:item.inputs.map((in_obj)=>{
+
                         return {
                             name: in_obj.name,
                             type: in_obj.type,
                             reg_n: parseInt(in_obj.reg_n),
-                            channel: in_obj.channel
+                            channel: in_obj.channel,
+                            register_type:in_obj.register_type,
+                            vector_labels:in_obj.labels.split(",").map(item => item.trim())
                         };
                     }),
                     outputs:item.outputs.map((out)=>{
+
                         return {
                             name: out.name,
                             type: out.type,
-                            reg_n: parseInt(out.reg_n)
+                            reg_n: out.reg_n,
+                            register_type:out.register_type
                         };
                     }),
                     memory_init:item.memory_init.map((mem)=>{
+                        let init_val = [];
+                        let init_add = [];
+                        if(mem.register_type ==="vector"){
+                            for(let i =0; i<mem.vector_size;i++){
+                                init_val.push(parseInt(mem.value));
+                                init_add.push(parseInt(mem.reg_n)+i);
+                            }
+                        }   else {
+                            init_val = parseInt(mem.value);
+                            init_add = parseInt(mem.reg_n);
+                        }
+
                         return {
                             name: mem.name,
                             type: mem.type,
-                            reg_n: parseInt(mem.reg_n),
-                            value: parseInt(mem.value),
+                            reg_n: init_add,
+                            value: init_val,
                         };
                     }),
                     channels:item.channels,
-                    program:item.program,
+                    program:(()=>{
+                        let prog = Object.values(store.getState().programs).filter((p)=>{
+                            return p.name === item.program;
+                        })[0]
+                        return {content:prog.program_content, build_settings:prog.build_settings};
+                    })(),
                     options:item.options
                 })
             }),
@@ -341,7 +370,9 @@ export class up_emulator {
                             name:item.name,
                             type:item.type,
                             source:item.source,
-                            destination:item.target
+                            source_output:item.source_output,
+                            destination:item.target,
+                            destination_input:item.target_input
                         };
                         if(item.length) ret.length = item.length;
                         if(item.stride) ret.stride = item.stride;

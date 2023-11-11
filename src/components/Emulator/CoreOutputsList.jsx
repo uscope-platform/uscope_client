@@ -18,7 +18,7 @@ import {useSelector} from "react-redux";
 import {up_emulator} from "../../client_core";
 import IomProperties from "./IomProperties";
 
-let  CoreOutputProperties = props =>{
+let  CoreOutputsList = props =>{
 
 
     const emulators_store = useSelector(state => state.emulators);
@@ -53,4 +53,4 @@ let  CoreOutputProperties = props =>{
     );
 };
 
-export default CoreOutputProperties;
+export default CoreOutputsList;

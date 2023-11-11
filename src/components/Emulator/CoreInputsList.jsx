@@ -18,27 +18,26 @@ import {useSelector} from "react-redux";
 import {up_emulator} from "../../client_core";
 import IomProperties from "./IomProperties";
 
-
-let  CoreMemoryProperties = props =>{
+let  CoreInputsList = props =>{
 
 
     const emulators_store = useSelector(state => state.emulators);
     const settings = useSelector(state => state.settings);
 
-    let selected_core_id = settings.emulator_selected_component ? settings.emulator_selected_component.obj.id : null;
-
     let selected_emulator = new up_emulator(emulators_store[parseInt(settings.selected_emulator)]);
+
+    let selected_core_id = settings.emulator_selected_component ? settings.emulator_selected_component.obj.id : null;
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
-    let handle_add = (memory_size) =>{
-        selected_emulator.add_memory(selected_core_id, memory_size).then(()=>{
+    let handle_add = (input_size) =>{
+        selected_emulator.add_input(selected_core_id, input_size).then(()=>{
             forceUpdate();
         });
     }
 
     let handle_remove = (removed_item) =>{
-        selected_emulator.remove_memory(selected_core_id, removed_item).then(()=>{
+        selected_emulator.remove_input(selected_core_id, removed_item).then(()=>{
             forceUpdate();
         });
     }
@@ -47,9 +46,9 @@ let  CoreMemoryProperties = props =>{
         <IomProperties
             onRemove={handle_remove}
             onAdd={handle_add}
-            content_type="memory_init"
+            content_type="inputs"
         />
     );
 };
 
-export default CoreMemoryProperties;
+export default CoreInputsList;

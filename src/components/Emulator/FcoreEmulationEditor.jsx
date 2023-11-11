@@ -20,9 +20,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import {download_json, up_emulator} from "../../client_core";
 import {SimpleContent, UIPanel} from "../UI_elements";
-import CoreInputProperties from "./CoreInputProperties";
-import CoreOutputProperties from "./CoreOutputProperties";
-import CoreMemoryProperties from "./CoreMemoryProperties";
+import CoreInputsList from "./CoreInputsList";
+import CoreOutputsList from "./CoreOutputsList";
+import CoreMemoriesList from "./CoreMemoriesList";
 import {Responsive, WidthProvider} from "react-grid-layout";
 
 
@@ -177,17 +177,17 @@ let FcoreEmulationEditor = function (props) {
                 </UIPanel>
                 <UIPanel key="emulator_i_props" data-grid={{x: 0, y: 18, w: 8, h: 7.4, static: true}} level="level_2">
                     <SimpleContent name="Inputs" height="100%" content={
-                        <CoreInputProperties/>
+                        <CoreInputsList/>
                     }/>
                 </UIPanel>
                 <UIPanel key="emulator_o_props" data-grid={{x: 8, y: 18, w: 8, h: 7.4, static: true}} level="level_2">
                     <SimpleContent name="Outputs" height="100%" content={
-                        <CoreOutputProperties/>
+                        <CoreOutputsList/>
                     }/>
                 </UIPanel>
                 <UIPanel key="emulator_m_props" data-grid={{x: 16, y: 18, w: 8, h: 7.4, static: true}} level="level_2">
                     <SimpleContent name="Memory" height="100%" content={
-                        <CoreMemoryProperties/>
+                        <CoreMemoriesList/>
                     }/>
                 </UIPanel>
             </ResponsiveGridLayout>

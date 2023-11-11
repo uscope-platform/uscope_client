@@ -17,7 +17,7 @@ import {store} from "../index";
 import {backend_get, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
 import {addApplication, removeApplication} from "../../redux/Actions/applicationActions";
-import app from "../../App";
+
 
 
 export class up_application {

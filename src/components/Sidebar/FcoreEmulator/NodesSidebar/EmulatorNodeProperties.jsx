@@ -33,7 +33,7 @@ let  EmulatorNodeProperties = props =>{
     const sel_component_type = selected_component_obj ? selected_component_obj.type : null;
 
 
-    if(sel_component_type === "node"){
+    if(sel_component_type === "node" && settings.selected_emulator){
         let selected_core = Object.values(emulators_store[parseInt(settings.selected_emulator)].cores).filter((item)=>{
             return item.id === selected_component_obj.obj.id;
         })[0];

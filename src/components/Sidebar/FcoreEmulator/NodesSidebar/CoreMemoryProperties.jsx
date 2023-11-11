@@ -32,7 +32,7 @@ let  CoreMemoryProperties = props =>{
             let field = event.target.name;
             let value = event.target.value;
 
-            if(field === "reg_n" || field === "channel") value = parseInt(value);
+            if(field === "reg_n" || field === "channel"|| field==="vector_size") value = parseInt(value);
 
             props.selected_emulator.edit_memory(settings.emulator_selected_component.obj.id,
                 field, value, settings.emulator_selected_iom.obj).then(()=>{
@@ -55,6 +55,20 @@ let  CoreMemoryProperties = props =>{
         return item.name === settings.emulator_selected_iom.obj
     })[0];
 
+
+    let handle_select = (selection, event) =>{
+        props.selected_emulator.edit_memory(settings.emulator_selected_component.obj.id,
+            event.name, selection.value, settings.emulator_selected_iom.obj).then(()=>{
+            forceUpdate();
+        });
+    }
+
+    let render_vector_init_props = () =>{
+        if(sel_mem.register_type === "vector"){
+            return(<InputField inline key="vector_size" ID="vector_size" name="vector_size" label="Vector size" defaultValue={sel_mem.vector_size} onKeyDown={handle_change_iom}/>);
+        }
+    }
+
     return(
         <SimpleContent name="Memory Properties" content={
             <div key="memory_props">
@@ -72,6 +86,19 @@ let  CoreMemoryProperties = props =>{
                         {label: "integer", value: "integer"}
                     ]}
                 />
+                <SelectField
+                    inline
+                    label="Register Type"
+                    onChange={handle_select}
+                    value={{value: sel_mem.register_type, label: sel_mem.register_type}}
+                    defaultValue="Select Register Type"
+                    name="register_type"
+                    options={[
+                        {label: "scalar", value: "scalar"},
+                        {label: "vector", value: "vector"}
+                    ]}
+                />
+                {render_vector_init_props()}
                 <InputField inline ID="value" name="value" label="Value" defaultValue={sel_mem.value} onKeyDown={handle_change_iom}/>
             </div>
         }/>
