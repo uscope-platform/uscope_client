@@ -161,7 +161,8 @@ export class up_emulator {
             value:0,
             name: "new_memory_" + progressive,
             register_type:"scalar",
-            vector_size:0
+            vector_size:0,
+            is_output:false
         }
         this.cores[core_id].memory_init.push(mem);
         let edit = {emulator:this.id, core:core_id.toString(), memory:mem, action:"add_memory"};
@@ -347,8 +348,9 @@ export class up_emulator {
                         return {
                             name: mem.name,
                             type: mem.type,
+                            is_output: mem.is_output,
                             reg_n: init_add,
-                            value: init_val,
+                            value: init_val 
                         };
                     }),
                     channels:item.channels,

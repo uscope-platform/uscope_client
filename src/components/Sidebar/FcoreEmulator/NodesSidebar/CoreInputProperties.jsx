@@ -44,26 +44,20 @@ let  CoreInputProperties = props =>{
         }
     };
 
-    let handle_change_data_type = (event) =>{
+    let handle_select = (obj, e) =>{
         props.selected_emulator.edit_input(settings.emulator_selected_component.obj.id,
-            "type", event.value, settings.emulator_selected_iom.obj).then(()=>{
+            e.name, obj.value, settings.emulator_selected_iom.obj).then(()=>{
             forceUpdate();
         });
     }
 
-    let handle_change_register_type = (event) =>{
-        props.selected_emulator.edit_input(settings.emulator_selected_component.obj.id,
-            "register_type", event.value, settings.emulator_selected_iom.obj).then(()=>{
-            forceUpdate();
-        });
-    }
 
     let sel_in = props.selected_core.inputs.filter((item)=>{
         return item.name === settings.emulator_selected_iom.obj
     })[0];
 
     let render_vector_input_properties = () =>{
-        if(sel_in.register_type==="vector"){
+        if(sel_in.register_type==="vector" || sel_in.register_type==="explicit_vector"){
             return <InputField ID="labels" name="labels" label="Labels" defaultValue={sel_in.labels} onKeyDown={handle_change_iom}/>
         }
     }
@@ -77,7 +71,7 @@ let  CoreInputProperties = props =>{
                 <SelectField
                     inline
                     label="Data Type"
-                    onChange={handle_change_data_type}
+                    onChange={handle_select}
                     value={{value: sel_in.type, label: sel_in.type}}
                     defaultValue="Select Data Type"
                     name="type"
@@ -88,14 +82,15 @@ let  CoreInputProperties = props =>{
                 />
                 <SelectField
                     inline
-                    label="Input Type"
-                    onChange={handle_change_register_type}
+                    label="Register Type"
+                    onChange={handle_select}
                     value={{value: sel_in.register_type, label: sel_in.register_type}}
-                    defaultValue="Select Input Type"
+                    defaultValue="Select Register Type"
                     name="register_type"
                     options={[
                         {label: "scalar", value: "scalar"},
-                        {label: "vector", value: "vector"}
+                        {label: "vector", value: "vector"},
+                        {label: "explicit_vector", value: "explicit_vector"}
                     ]}
                 />
                 {render_vector_input_properties()}

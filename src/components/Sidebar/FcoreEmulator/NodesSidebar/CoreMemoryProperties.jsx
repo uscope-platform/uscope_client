@@ -15,9 +15,10 @@
 
 import React, {useReducer} from 'react';
 
-import {InputField, SelectField, SimpleContent} from "../../../UI_elements";
+import {Checkbox, InputField, SelectField, SimpleContent} from "../../../UI_elements";
 import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../../../../redux/Actions/SettingsActions";
+import {up_application} from "../../../../client_core";
 
 let  CoreMemoryProperties = props =>{
 
@@ -26,6 +27,15 @@ let  CoreMemoryProperties = props =>{
     const [, forceUpdate] = useReducer(x => x + 1, 0);
     const dispatch = useDispatch();
 
+    let handle_change_output = (event)=>{
+
+        let field = event.target.name;
+        let value = event.target.checked;
+        props.selected_emulator.edit_memory(settings.emulator_selected_component.obj.id,
+            field, value, settings.emulator_selected_iom.obj).then(()=>{
+            forceUpdate();
+        });
+    }
 
     let handle_change_iom = (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab") {
@@ -100,6 +110,7 @@ let  CoreMemoryProperties = props =>{
                 />
                 {render_vector_init_props()}
                 <InputField inline ID="value" name="value" label="Value" defaultValue={sel_mem.value} onKeyDown={handle_change_iom}/>
+                <Checkbox name='is_output' value={sel_mem.is_output} onChange={handle_change_output} label="Use as Output"/>
             </div>
         }/>
     )
