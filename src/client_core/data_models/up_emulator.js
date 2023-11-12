@@ -328,11 +328,15 @@ export class up_emulator {
 
         let ret_val = {
             cores: Object.values(this.cores).map((item)=>{
+                let input_data =  {};
+                if(item.input_data.length !== 0){
+                    input_data = item.input_data[0].data
+                }
                 return({
                     id:item.name,
                     order:item.order,
                     input_file:item.input_file,
-                    input_data:item.input_data,
+                    input_data:input_data,
                     inputs:item.inputs.map((in_obj)=>{
 
                         return {
