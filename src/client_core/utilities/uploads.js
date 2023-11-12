@@ -21,12 +21,13 @@ export let upload_json = () =>{
         input.setAttribute('style', 'display:none');
         input.onchange = e => {
             let file = e.target.files[0];
+            let filename = file.name;
             let reader = new FileReader();
             reader.readAsText(file,'UTF-8');
 
             reader.onload = readerEvent => {
                 let content = readerEvent.target.result; // this is the content!
-                resolve(content);
+                resolve({name:filename, data:content});
             }
         };
         document.body.appendChild(input);

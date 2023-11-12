@@ -19,11 +19,12 @@ import EmulatorDiagram from "./EmulatorDiagram";
 import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import {download_json, up_emulator} from "../../client_core";
-import {SimpleContent, UIPanel} from "../UI_elements";
+import {SimpleContent, TabbedContent, UIPanel} from "../UI_elements";
 import CoreInputsList from "./CoreInputsList";
 import CoreOutputsList from "./CoreOutputsList";
 import CoreMemoriesList from "./CoreMemoriesList";
 import {Responsive, WidthProvider} from "react-grid-layout";
+import CoreInputFilesList from "./CoreInputFilesList";
 
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -43,6 +44,7 @@ let FcoreEmulationEditor = function (props) {
     const [nodes, setNodes] = useState([]);
     const [edges, setEdges] = useState([]);
 
+    let [selectedTab, set_selectedTab] = useState(0);
 
     useEffect(() => {
         //SETUP NODES
@@ -176,9 +178,10 @@ let FcoreEmulationEditor = function (props) {
                     }/>
                 </UIPanel>
                 <UIPanel key="emulator_i_props" data-grid={{x: 0, y: 18, w: 8, h: 7.4, static: true}} level="level_2">
-                    <SimpleContent name="Inputs" height="100%" content={
-                        <CoreInputsList/>
-                    }/>
+                    <TabbedContent names={["Inputs", "Input Files"]} contents={[
+                        <CoreInputsList/>,
+                        <CoreInputFilesList/>
+                    ]} onSelect={set_selectedTab} selected={selectedTab}/>
                 </UIPanel>
                 <UIPanel key="emulator_o_props" data-grid={{x: 8, y: 18, w: 8, h: 7.4, static: true}} level="level_2">
                     <SimpleContent name="Outputs" height="100%" content={

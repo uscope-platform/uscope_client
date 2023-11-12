@@ -18,6 +18,7 @@ import {store} from "../index";
 import {backend_delete, backend_patch, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
 import {AddEmulator, removeEmulator} from "../../redux/Actions/EmulatorActions";
+import {da} from "plotly.js/src/traces/carpet/attributes";
 
 export class up_emulator {
     constructor(emulator_obj) {
@@ -66,6 +67,7 @@ export class up_emulator {
             channels:1,
             inputs:[],
             input_file:"",
+            input_data:[],
             outputs:[],
             memory_init:[],
             options:{
@@ -125,6 +127,24 @@ export class up_emulator {
                 }
             });
         });
+    }
+
+    add_input_file = (core_id, input_name,  data) =>{
+        let i_d = {
+            name:input_name,
+            data:data
+        }
+        this.cores[core_id].input_data.push(i_d);
+        let edit = {emulator:this.id, core:core_id.toString(), input_data:i_d, action:"add_input_data"};
+        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+    }
+
+    remove_input_file = (core_id, obj_name) => {
+        this.cores[core_id].input_data = this.cores[core_id].input_data.filter((item)=>{
+            return item.name !== obj_name;
+        })
+        let edit = {emulator:this.id, core:core_id.toString(), name:obj_name, action:"remove_input_data"};
+        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
     }
 
     add_input = (core_id, progressive) => {
@@ -312,6 +332,7 @@ export class up_emulator {
                     id:item.name,
                     order:item.order,
                     input_file:item.input_file,
+                    input_data:item.input_data,
                     inputs:item.inputs.map((in_obj)=>{
 
                         return {
@@ -350,7 +371,7 @@ export class up_emulator {
                             type: mem.type,
                             is_output: mem.is_output,
                             reg_n: init_add,
-                            value: init_val 
+                            value: init_val
                         };
                     }),
                     channels:item.channels,

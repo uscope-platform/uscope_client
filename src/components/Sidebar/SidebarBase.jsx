@@ -81,9 +81,9 @@ let  SidebarBase = props =>{
     let handleImport = (args) =>{
         upload_json().then((item)=>{
             if(props.onImport){
-                props.onImport(item);
+                props.onImport(item.data);
             } else {
-                let obj = new props.template(JSON.parse(item));
+                let obj = new props.template(JSON.parse(item.data));
                 obj.add_remote().then();
             }
         }).catch((err)=>{
