@@ -18,7 +18,7 @@ import {store} from "../index";
 import {backend_delete, backend_patch, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
 import {AddEmulator, removeEmulator} from "../../redux/Actions/EmulatorActions";
-import {da} from "plotly.js/src/traces/carpet/attributes";
+import {build} from "vite";
 
 export class up_emulator {
     constructor(emulator_obj) {
@@ -324,48 +324,49 @@ export class up_emulator {
     }
 
     build = () =>{
+        return {
+            cores: Object.values(this.cores).map((item) => {
+                let merged_data = {};
+                if (item.input_data.length !== 0) {
 
-
-        let ret_val = {
-            cores: Object.values(this.cores).map((item)=>{
-                let input_data =  {};
-                if(item.input_data.length !== 0){
-                    input_data = item.input_data[0].data
+                    item.input_data.map((d) => {
+                        merged_data = {...merged_data.data, ...d.data};
+                    })
                 }
-                return({
-                    id:item.name,
-                    order:item.order,
-                    input_file:item.input_file,
-                    input_data:input_data,
-                    inputs:item.inputs.map((in_obj)=>{
+                return ({
+                    id: item.name,
+                    order: item.order,
+                    input_file: item.input_file,
+                    input_data: merged_data,
+                    inputs: item.inputs.map((in_obj) => {
 
                         return {
                             name: in_obj.name,
                             type: in_obj.type,
                             reg_n: parseInt(in_obj.reg_n),
                             channel: in_obj.channel,
-                            register_type:in_obj.register_type,
-                            vector_labels:in_obj.labels.split(",").map(item => item.trim())
+                            register_type: in_obj.register_type,
+                            vector_labels: in_obj.labels.split(",").map(item => item.trim())
                         };
                     }),
-                    outputs:item.outputs.map((out)=>{
+                    outputs: item.outputs.map((out) => {
 
                         return {
                             name: out.name,
                             type: out.type,
                             reg_n: out.reg_n,
-                            register_type:out.register_type
+                            register_type: out.register_type
                         };
                     }),
-                    memory_init:item.memory_init.map((mem)=>{
+                    memory_init: item.memory_init.map((mem) => {
                         let init_val = [];
                         let init_add = [];
-                        if(mem.register_type ==="vector"){
-                            for(let i =0; i<mem.vector_size;i++){
+                        if (mem.register_type === "vector") {
+                            for (let i = 0; i < mem.vector_size; i++) {
                                 init_val.push(parseInt(mem.value));
-                                init_add.push(parseInt(mem.reg_n)+i);
+                                init_add.push(parseInt(mem.reg_n) + i);
                             }
-                        }   else {
+                        } else {
                             init_val = parseInt(mem.value);
                             init_add = parseInt(mem.reg_n);
                         }
@@ -378,38 +379,42 @@ export class up_emulator {
                             value: init_val
                         };
                     }),
-                    channels:item.channels,
-                    program:(()=>{
-                        let prog = Object.values(store.getState().programs).filter((p)=>{
+                    channels: item.channels,
+                    program: (() => {
+                        let prog = Object.values(store.getState().programs).filter((p) => {
                             return p.name === item.program;
                         })[0]
-                        return {content:prog.program_content, build_settings:prog.build_settings};
+                        return {content: prog.program_content, build_settings: prog.build_settings};
                     })(),
-                    options:item.options
+                    options: item.options
                 })
             }),
-            interconnect: this.connections.map((item)=>{
+            interconnect: this.connections.map((item) => {
                 return {
-                    source:this.cores[item.source].name,
-                    destination:this.cores[item.target].name,
-                    channels:item.channels.map((item)=>{
+                    source: this.cores[item.source].name,
+                    destination: this.cores[item.target].name,
+                    channels: item.channels.map((item) => {
                         let ret = {
-                            name:item.name,
-                            type:item.type,
-                            source:item.source,
-                            source_output:item.source_output,
-                            destination:item.target,
-                            destination_input:item.target_input
+                            name: item.name,
+                            type: item.type,
+                            source: item.source,
+                            source_output: item.source_output,
+                            destination: item.target,
+                            destination_input: item.target_input
                         };
-                        if(item.length) ret.length = item.length;
-                        if(item.stride) ret.stride = item.stride;
+                        if (item.length) ret.length = item.length;
+                        if (item.stride) ret.stride = item.stride;
                         return ret;
                     })
                 };
             })
         };
-        return ret_val;
     }
+
+    run = () =>{
+        let specs = build();
+        //TODO: Implement emulation run
+    };
 
     _get_emulator = () =>{
         return {

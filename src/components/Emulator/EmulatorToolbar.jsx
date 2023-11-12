@@ -31,6 +31,10 @@ let  EmulatorToolbar = props =>{
                 <MdBuild onClick={props.onBuild} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
                 <Tooltip anchorSelect="build" content={"Build"} place="top" />
             </div>
+            <div key="run" id="run">
+                <MdBuild onClick={props.onRun} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
+                <Tooltip anchorSelect="run" content={"Run"} place="top" />
+            </div>
 
         </div>
     );
