@@ -95,5 +95,6 @@ export const api_dictionary = {
         add: 'emulators',
         edit: 'emulators',
         delete: 'emulators',
+        run:'emulators/run'
     }
 }

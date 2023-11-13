@@ -18,7 +18,6 @@ import {store} from "../index";
 import {backend_delete, backend_patch, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
 import {AddEmulator, removeEmulator} from "../../redux/Actions/EmulatorActions";
-import {build} from "vite";
 
 export class up_emulator {
     constructor(emulator_obj) {
@@ -412,8 +411,10 @@ export class up_emulator {
     }
 
     run = () =>{
-        let specs = build();
-        //TODO: Implement emulation run
+        let specs = this.build();
+        return backend_post(api_dictionary.emulators.run, specs).then((res)=>{
+           return res;
+        });
     };
 
     _get_emulator = () =>{

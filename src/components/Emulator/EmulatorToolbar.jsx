@@ -17,7 +17,7 @@ import React from 'react';
 
 import {ColorTheme} from "../UI_elements";
 import {Tooltip} from "react-tooltip";
-import {MdAdd, MdDelete, MdBuild} from "react-icons/md";
+import {MdAdd, MdBuild, MdPlayArrow} from "react-icons/md";
 
 let  EmulatorToolbar = props =>{
 
@@ -32,7 +32,7 @@ let  EmulatorToolbar = props =>{
                 <Tooltip anchorSelect="build" content={"Build"} place="top" />
             </div>
             <div key="run" id="run">
-                <MdBuild onClick={props.onRun} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
+                <MdPlayArrow onClick={props.onRun} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
                 <Tooltip anchorSelect="run" content={"Run"} place="top" />
             </div>
 

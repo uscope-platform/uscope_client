@@ -13,15 +13,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
-import {SimpleContent, UIPanel} from "../UI_elements";
-import CoreMemoriesList from "./CoreMemoriesList";
+import React, {useEffect, useState} from 'react';
+import {SelectableList, SimpleContent, UIPanel} from "../UI_elements";
 import {Responsive, WidthProvider} from "react-grid-layout";
 
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 let EmulationResults = function (props) {
+
+    let [selected_core, set_selected_core] = useState();
+    let [selected_output, set_selected_output] = useState();
+
+    let [cores, set_cores] = useState([]);
+    let [outputs, set_outputs] = useState([]);
+
+    useEffect(() => {
+        set_cores(Object.keys(props.results));
+    }, [props.results]);
+
+
+    useEffect(() => {
+        if(props.results && selected_core){
+            set_outputs(Object.keys(props.results[selected_core].outputs));
+        }
+    }, [selected_core]);
+
 
     return(
         <ResponsiveGridLayout
@@ -38,12 +55,16 @@ let EmulationResults = function (props) {
             </UIPanel>
             <UIPanel key="emulation_result_core_sel" data-grid={{x: 14, y: 0, w: 6, h: 8, static: true}} level="level_2">
                 <SimpleContent name="Core Selector" height="100%" content={
-                    <div><p>test 2</p></div>
+                    <div>
+                        <SelectableList items={cores} selected_item={selected_core} onSelect={set_selected_core} />
+                    </div>
                 }/>
             </UIPanel>
             <UIPanel key="emulation_result_data_sel" data-grid={{x: 14, y: 8, w: 6, h: 8, static: true}} level="level_2">
                 <SimpleContent name="Data Selector" height="100%" content={
-                    <div><p>test 2</p></div>
+                    <div>
+                        <SelectableList items={outputs} selected_item={selected_output} onSelect={set_selected_output} />
+                    </div>
                 }/>
             </UIPanel>
         </ResponsiveGridLayout>
