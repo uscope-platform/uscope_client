@@ -27,6 +27,9 @@ import {Responsive, WidthProvider} from "react-grid-layout";
 import CoreInputFilesList from "./CoreInputFilesList";
 import EmulationResults from "./EmulationResults";
 
+import {ToastContainer, toast} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -79,7 +82,6 @@ let FcoreEmulationEditor = function (props) {
         let s_e = new up_emulator(selected_emulator);
         s_e.add_core(n_cores+1).then((core)=>{
             setNodes([...nodes, {id:core.id, text:core.name}]);
-
         });
         set_n_cores(n_cores+1);
     };
@@ -104,6 +106,7 @@ let FcoreEmulationEditor = function (props) {
         let s_e = new up_emulator(selected_emulator);
         s_e.run().then((results)=>{
             set_emulation_results(results);
+            toast.success("Emulation Completed");
         });
     }
 
@@ -164,49 +167,63 @@ let FcoreEmulationEditor = function (props) {
     if(selected_emulator){
         
         return(
-            <ResponsiveGridLayout
-                className="layout"
-                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-                rowHeight={30}
-                useCSSTransforms={false}
-            >
-                <UIPanel key="emulator_diagram" data-grid={{x: 0, y: 0, w: 24, h: 18, static: true}} level="level_2">
-                    <TabbedContent height="100%" names={["Emulation setup", "Emulation Results"]} contents={[
-                        <EmulatorDiagram
-                            selected_node={settings.emulator_selected_component}
-                            onNodeSelect={handle_node_select}
-                            onNodeRemove={handle_node_remove}
-                            onEdgeSelect={handle_edge_select}
-                            onEdgeRemove={handle_edge_remove}
-                            onCanvasClick={handle_canvas_click}
-                            onLinkNodes={handle_link_nodes}
-                            onAdd={add_core}
-                            onBuild={handle_build}
-                            onRun={handle_run}
-                            nodes={nodes}
-                            edges={edges}
-                        />,
-                        <EmulationResults results={emulation_results}/>
-                    ]} onSelect={set_selected_main_tab} selected={selected_main_tab}/>
-                </UIPanel>
-                <UIPanel key="emulator_i_props" data-grid={{x: 0, y: 18, w: 8, h: 7.4, static: true}} level="level_2">
-                    <TabbedContent names={["Inputs", "Input Files"]} contents={[
-                        <CoreInputsList/>,
-                        <CoreInputFilesList/>
-                    ]} onSelect={set_selected_inputs_tab} selected={selected_inputs_tab}/>
-                </UIPanel>
-                <UIPanel key="emulator_o_props" data-grid={{x: 8, y: 18, w: 8, h: 7.4, static: true}} level="level_2">
-                    <SimpleContent name="Outputs" height="100%" content={
-                        <CoreOutputsList/>
-                    }/>
-                </UIPanel>
-                <UIPanel key="emulator_m_props" data-grid={{x: 16, y: 18, w: 8, h: 7.4, static: true}} level="level_2">
-                    <SimpleContent name="Memory" height="100%" content={
-                        <CoreMemoriesList/>
-                    }/>
-                </UIPanel>
-            </ResponsiveGridLayout>
+            <>
+                <ToastContainer
+                    position="top-right"
+                    autoClose={2000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="dark"
+                />
+                <ResponsiveGridLayout
+                    className="layout"
+                    breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+                    cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+                    rowHeight={30}
+                    useCSSTransforms={false}
+                >
+                    <UIPanel key="emulator_diagram" data-grid={{x: 0, y: 0, w: 24, h: 18, static: true}} level="level_2">
+                        <TabbedContent height="100%" names={["Emulation setup", "Emulation Results"]} contents={[
+                            <EmulatorDiagram
+                                selected_node={settings.emulator_selected_component}
+                                onNodeSelect={handle_node_select}
+                                onNodeRemove={handle_node_remove}
+                                onEdgeSelect={handle_edge_select}
+                                onEdgeRemove={handle_edge_remove}
+                                onCanvasClick={handle_canvas_click}
+                                onLinkNodes={handle_link_nodes}
+                                onAdd={add_core}
+                                onBuild={handle_build}
+                                onRun={handle_run}
+                                nodes={nodes}
+                                edges={edges}
+                            />,
+                            <EmulationResults results={emulation_results}/>
+                        ]} onSelect={set_selected_main_tab} selected={selected_main_tab}/>
+                    </UIPanel>
+                    <UIPanel key="emulator_i_props" data-grid={{x: 0, y: 18, w: 8, h: 7.4, static: true}} level="level_2">
+                        <TabbedContent names={["Inputs", "Input Files"]} contents={[
+                            <CoreInputsList/>,
+                            <CoreInputFilesList/>
+                        ]} onSelect={set_selected_inputs_tab} selected={selected_inputs_tab}/>
+                    </UIPanel>
+                    <UIPanel key="emulator_o_props" data-grid={{x: 8, y: 18, w: 8, h: 7.4, static: true}} level="level_2">
+                        <SimpleContent name="Outputs" height="100%" content={
+                            <CoreOutputsList/>
+                        }/>
+                    </UIPanel>
+                    <UIPanel key="emulator_m_props" data-grid={{x: 16, y: 18, w: 8, h: 7.4, static: true}} level="level_2">
+                        <SimpleContent name="Memory" height="100%" content={
+                            <CoreMemoriesList/>
+                        }/>
+                    </UIPanel>
+                </ResponsiveGridLayout>
+            </>
         );
     } else{
         return <></>

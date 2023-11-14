@@ -13,20 +13,40 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 import {SelectableList, SimpleContent, UIPanel} from "../UI_elements";
 import {Responsive, WidthProvider} from "react-grid-layout";
+import createPlotlyComponent from "react-plotly.js/factory";
+import Plotly from "plotly.js-basic-dist";
+import {useSelector} from "react-redux";
 
+
+const Plot = createPlotlyComponent(Plotly);
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 let EmulationResults = function (props) {
+
+    const channels = useSelector(state => state.plot);
+    const settings = useSelector(state => state.settings);
 
     let [selected_core, set_selected_core] = useState();
     let [selected_output, set_selected_output] = useState();
 
     let [cores, set_cores] = useState([]);
     let [outputs, set_outputs] = useState([]);
+
+    let [data, set_data] = useState([
+        {
+            x: [1, 2, 3],
+            y: [2, 6, 3],
+            type: 'scatter',
+            mode: 'lines+markers',
+            marker: {color: 'red'},
+        }
+    ])
+
+    const [data_revision,update_data ] = useReducer(x => x + 1, 0);
 
     useEffect(() => {
         set_cores(Object.keys(props.results));
@@ -40,6 +60,43 @@ let EmulationResults = function (props) {
     }, [selected_core]);
 
 
+    let plot_layout = {...channels.layout,...settings.plot_palette};
+    plot_layout.width = 800;
+    plot_layout.height = 560;
+
+    let plot_config = {...channels.config, response:true};
+
+    let handle_datapoint_select = (datapoint) =>{
+        set_selected_output(datapoint);
+        let x = [];
+        let selected_data = props.results[selected_core].outputs[datapoint];
+        if(selected_data[0].length === undefined){
+            for(let i =0; i<selected_data.length; i++){
+                x.push(i);
+            }
+            selected_data = [{
+                x: x,
+                y: props.results[selected_core].outputs[datapoint],
+                type: 'scatter',
+                mode: 'lines'
+            }];
+        } else {
+            for(let i =0; i<selected_data[0].length; i++){
+                x.push(i);
+            }
+            selected_data = selected_data.map((trace)=>{
+                return {
+                    x: x,
+                    y: trace,
+                    type: 'scatter',
+                    mode: 'lines'
+                };
+            })
+        }
+        set_data(selected_data);
+        update_data();
+    }
+
     return(
         <ResponsiveGridLayout
             className="layout"
@@ -50,7 +107,12 @@ let EmulationResults = function (props) {
         >
             <UIPanel key="emulation_result_plots" data-grid={{x: 0, y: 0, w: 14, h: 16, static: true}} level="level_2">
                 <SimpleContent name="Results Plot" height="100%" content={
-                    <div><p>test 1</p></div>
+                    <Plot
+                        data={data}
+                        layout={plot_layout}
+                        config={plot_config}
+                        revision={data_revision}
+                    />
                 }/>
             </UIPanel>
             <UIPanel key="emulation_result_core_sel" data-grid={{x: 14, y: 0, w: 6, h: 8, static: true}} level="level_2">
@@ -63,7 +125,7 @@ let EmulationResults = function (props) {
             <UIPanel key="emulation_result_data_sel" data-grid={{x: 14, y: 8, w: 6, h: 8, static: true}} level="level_2">
                 <SimpleContent name="Data Selector" height="100%" content={
                     <div>
-                        <SelectableList items={outputs} selected_item={selected_output} onSelect={set_selected_output} />
+                        <SelectableList items={outputs} selected_item={selected_output} onSelect={handle_datapoint_select} />
                     </div>
                 }/>
             </UIPanel>
