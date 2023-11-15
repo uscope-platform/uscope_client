@@ -45,10 +45,19 @@ let  DmaChannelProperties = props =>{
         source_memories = Object.values(programs).filter((p)=>{
             return p.name === source_program;
         })[0].build_settings.io.memories;
-        source_outputs = [...source_outputs, ...source_memories];
+        if(source_outputs && source_memories){
+            source_outputs = [...source_outputs, ...source_memories];
+        } else if(source_memories){
+            source_outputs = source_memories;
+        } else if(!source_outputs){
+            source_outputs = [];
+        }
+
         target_inputs = Object.values(programs).filter((p)=>{
             return p.name === target_program;
         })[0].build_settings.io.inputs;
+        
+        if(!target_inputs) target_inputs = [];
     }
 
 

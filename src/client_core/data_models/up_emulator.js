@@ -59,10 +59,7 @@ export class up_emulator {
             name: "new_core_" + id,
             id: id,
             order:id,
-            program:{
-                filename:"",
-                type:""
-            },
+            program:"",
             channels:1,
             inputs:[],
             input_file:"",
