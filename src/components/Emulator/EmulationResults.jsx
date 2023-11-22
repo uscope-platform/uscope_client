@@ -31,19 +31,12 @@ let EmulationResults = function (props) {
     const settings = useSelector(state => state.settings);
 
     let [selected_core, set_selected_core] = useState();
-    let [selected_output, set_selected_output] = useState();
+    let [selected_output, set_selected_output] = useState([]);
 
     let [cores, set_cores] = useState([]);
     let [outputs, set_outputs] = useState([]);
 
     let [data, set_data] = useState([
-        {
-            x: [1, 2, 3],
-            y: [2, 6, 3],
-            type: 'scatter',
-            mode: 'lines+markers',
-            marker: {color: 'red'},
-        }
     ])
 
     const [data_revision,update_data ] = useReducer(x => x + 1, 0);
@@ -66,15 +59,16 @@ let EmulationResults = function (props) {
 
     let plot_config = {...channels.config, response:true};
 
-    let handle_datapoint_select = (datapoint) =>{
-        set_selected_output(datapoint);
+    let handle_datapoint_select = (datapoint, multi_selection) =>{
         let x = [];
+        if(selected_output.includes(datapoint)) return;
         let selected_data = props.results[selected_core].outputs[datapoint];
         if(selected_data[0].length === undefined){
             for(let i =0; i<selected_data.length; i++){
                 x.push(i);
             }
             selected_data = [{
+                name:datapoint,
                 x: x,
                 y: props.results[selected_core].outputs[datapoint],
                 type: 'scatter',
@@ -86,6 +80,7 @@ let EmulationResults = function (props) {
             }
             selected_data = selected_data.map((trace)=>{
                 return {
+                    name:datapoint,
                     x: x,
                     y: trace,
                     type: 'scatter',
@@ -93,7 +88,13 @@ let EmulationResults = function (props) {
                 };
             })
         }
-        set_data(selected_data);
+        if(multi_selection){
+            set_data([...data, ...selected_data]);
+            set_selected_output([...selected_output, datapoint]);
+        } else{
+            set_selected_output([datapoint]);
+            set_data(selected_data);
+        }
         update_data();
     }
 
@@ -125,7 +126,7 @@ let EmulationResults = function (props) {
             <UIPanel key="emulation_result_data_sel" data-grid={{x: 14, y: 8, w: 6, h: 8, static: true}} level="level_2">
                 <SimpleContent name="Data Selector" height="100%" content={
                     <div>
-                        <SelectableList items={outputs} selected_item={selected_output} onSelect={handle_datapoint_select} />
+                        <SelectableList multi_select items={outputs} selected_item={selected_output} onSelect={handle_datapoint_select} />
                     </div>
                 }/>
             </UIPanel>

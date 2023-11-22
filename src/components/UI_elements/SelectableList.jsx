@@ -23,12 +23,19 @@ export let  SelectableList = props =>{
     let constructListContent = (names, icons) =>{
         let ret = []
         for(let i = 0; i< names.length; i++){
+            let selected;
+            if(props.multi_select){
+                selected = props.selected_item.includes(names[i]);
+            } else{
+                selected = props.selected_item===names[i];
+            }
             ret.push(
                 <SelectableListItem
+                    multi_select={props.multi_select}
                     key={names[i]}
                     onRemove={props.onRemove}
                     onSelect={props.onSelect}
-                    selected={props.selected_item===names[i]}
+                    selected={selected}
                     icon={icons ? icons[i]: undefined}
                     name={names[i]}/>
             )

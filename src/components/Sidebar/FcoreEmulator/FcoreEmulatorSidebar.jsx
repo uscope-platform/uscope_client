@@ -15,18 +15,25 @@
 
 import React from 'react';
 
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 import {up_emulator} from "../../../client_core";
 import SidebarBase from "../SidebarBase";
 import EmulatorNodeProperties from "./NodesSidebar/EmulatorNodeProperties";
 import EmulatorEdgeProperties from "./EdgesSidebar/EmulatorEdgeProperties";
 import EmulatorProperties from "./EmulatorProperties";
+import {setSetting} from "../../../redux/Actions/SettingsActions";
 
 let  FcoreEmulatorSidebar = props =>{
 
     const emulators_store = useSelector(state => state.emulators);
+    const dispatch = useDispatch();
 
+
+    let handle_select_emulator = (sel) =>{
+        dispatch(setSetting(["emulator_selected_iom", null]));
+        dispatch(setSetting(["emulator_selected_component", null]));
+    }
 
     return(
         <>
@@ -38,6 +45,7 @@ let  FcoreEmulatorSidebar = props =>{
                 content_name="Emulator"
                 selector="selected_emulator"
                 height={2}
+                onSelect={handle_select_emulator}
             />
             <EmulatorNodeProperties/>
             <EmulatorEdgeProperties/>
