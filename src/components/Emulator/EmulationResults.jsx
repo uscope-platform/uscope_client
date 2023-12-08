@@ -42,13 +42,23 @@ let EmulationResults = function (props) {
     const [data_revision,update_data ] = useReducer(x => x + 1, 0);
 
     useEffect(() => {
-        set_cores(Object.keys(props.results));
+        let cores = [...Object.keys(props.results)];
+        if(props.inputs){
+            cores = [...cores, ...Object.keys(props.inputs)];
+        }
+        set_cores(cores);
     }, [props.results]);
 
 
     useEffect(() => {
         if(props.results && selected_core){
-            set_outputs(Object.keys(props.results[selected_core].outputs));
+            let outputs = []
+            if(props.results.hasOwnProperty(selected_core)){
+                outputs = Object.keys(props.results[selected_core].outputs);
+            } else {
+                outputs = Object.keys(props.inputs[selected_core]);
+            }
+            set_outputs(outputs);
         }
     }, [selected_core]);
 
@@ -62,7 +72,12 @@ let EmulationResults = function (props) {
     let handle_datapoint_select = (datapoint, multi_selection) =>{
         let x = [];
         if(selected_output.includes(datapoint)) return;
-        let selected_data = props.results[selected_core].outputs[datapoint];
+        let selected_data = [];
+        if(props.results.hasOwnProperty(selected_core)){
+            selected_data = props.results[selected_core].outputs[datapoint];
+        } else {
+            selected_data = props.inputs[selected_core][datapoint];
+        }
         if(selected_data[0].length === undefined){
             for(let i =0; i<selected_data.length; i++){
                 x.push(i);
@@ -70,7 +85,7 @@ let EmulationResults = function (props) {
             selected_data = [{
                 name:datapoint,
                 x: x,
-                y: props.results[selected_core].outputs[datapoint],
+                y: selected_data,
                 type: 'scatter',
                 mode: 'lines'
             }];

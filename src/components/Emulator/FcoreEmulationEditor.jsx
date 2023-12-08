@@ -52,6 +52,7 @@ let FcoreEmulationEditor = function (props) {
     let [selected_main_tab, set_selected_main_tab] = useState(0);
 
     let [emulation_results, set_emulation_results] = useState({});
+    let [input_data, set_input_data] = useState({});
 
     useEffect(() => {
         //SETUP NODES
@@ -75,6 +76,16 @@ let FcoreEmulationEditor = function (props) {
                 })
             });
             setEdges(edges =>(initial_edges));
+            let inputs_obj ={};
+
+            Object.values(selected_emulator.cores).map((core)=>{
+                return core.input_data
+            }).filter((item)=>{
+                return item.length>0;
+            }).flat().map((item)=>{
+                inputs_obj[item.name] = item.data;
+            });
+            set_input_data(inputs_obj);
         }
     }, [settings.selected_emulator]);
 
@@ -203,7 +214,7 @@ let FcoreEmulationEditor = function (props) {
                                 nodes={nodes}
                                 edges={edges}
                             />,
-                            <EmulationResults results={emulation_results}/>
+                            <EmulationResults results={emulation_results} inputs={input_data}/>
                         ]} onSelect={set_selected_main_tab} selected={selected_main_tab}/>
                     </UIPanel>
                     <UIPanel key="emulator_i_props" data-grid={{x: 0, y: 18, w: 8, h: 7.4, static: true}} level="level_2">
