@@ -62,7 +62,6 @@ export class up_emulator {
             program:"",
             channels:1,
             inputs:[],
-            input_file:"",
             input_data:[],
             outputs:[],
             memory_init:[],
@@ -332,7 +331,6 @@ export class up_emulator {
                 return ({
                     id: item.name,
                     order: item.order,
-                    input_file: item.input_file,
                     input_data: merged_data,
                     inputs: item.inputs.map((in_obj) => {
 
