@@ -26,6 +26,7 @@ export class up_emulator {
         this.id = emulator_obj.id;
         this.name = emulator_obj.name;
         this.cores = emulator_obj.cores;
+        this.n_cycles = emulator_obj.n_cycles;
         if(!emulator_obj.connections){
             this.connections = [];
         } else {
@@ -38,7 +39,8 @@ export class up_emulator {
             id:emulator_id,
             name:'new_emulator_'+ emulator_id,
             cores:{},
-            connections:[]
+            connections:[],
+            n_cycles:1
         };
         return new up_emulator(emulator_obj);
     }
@@ -85,7 +87,12 @@ export class up_emulator {
             this.name = new_name;
         });
     };
-
+    edit_cycles = (n_cycles) =>{
+        let edit = {emulator:this.id, value:n_cycles, action:"edit_cycles"};
+        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then(()=>{
+            this.n_cycles = n_cycles;
+        });
+    };
     edit_core_props = (core_id, field, value) =>{
         let edit = {emulator:this.id, core:core_id.toString(), field_name:field, value:value, action:"edit_core_props"};
         return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then(()=>{
@@ -146,6 +153,10 @@ export class up_emulator {
         let input = {
             reg_n: 0,
             type: "float",
+            source:{
+                type:"constant",
+                value:""
+            },
             channel:0,
             name: "new_input_" + progressive,
             register_type:"scalar",
@@ -333,10 +344,10 @@ export class up_emulator {
                     order: item.order,
                     input_data: merged_data,
                     inputs: item.inputs.map((in_obj) => {
-
                         return {
                             name: in_obj.name,
                             type: in_obj.type,
+                            source:in_obj.source,
                             reg_n: parseInt(in_obj.reg_n),
                             channel: in_obj.channel,
                             register_type: in_obj.register_type,
@@ -401,7 +412,8 @@ export class up_emulator {
                         return ret;
                     })
                 };
-            })
+            }),
+            n_cycles:this.n_cycles
         };
     }
 

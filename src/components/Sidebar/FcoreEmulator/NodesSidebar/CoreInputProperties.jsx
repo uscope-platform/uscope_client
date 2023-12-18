@@ -33,6 +33,11 @@ let  CoreInputProperties = props =>{
             let value = event.target.value;
 
             if(field === "reg_n" || field === "channel") value = parseInt(value);
+            if(field === "source_value") {
+                field = "source";
+                if(sel_in.source.type === "constant") value = parseFloat(value);
+                value = {...sel_in.source, ...{"value":value}};
+            }
 
             props.selected_emulator.edit_input(settings.emulator_selected_component.obj.id,
                 field, value, settings.emulator_selected_iom.obj).then(()=>{
@@ -45,12 +50,17 @@ let  CoreInputProperties = props =>{
     };
 
     let handle_select = (obj, e) =>{
+        let field = e.name;
+        let value = obj.value;
+        if(e.name === "source_type"){
+            field = "source"
+            value = {...sel_in.source, ...{"type":value}};
+        }
         props.selected_emulator.edit_input(settings.emulator_selected_component.obj.id,
-            e.name, obj.value, settings.emulator_selected_iom.obj).then(()=>{
+            field, value, settings.emulator_selected_iom.obj).then(()=>{
             forceUpdate();
         });
     }
-
 
     let sel_in = props.selected_core.inputs.filter((item)=>{
         return item.name === settings.emulator_selected_iom.obj
@@ -60,6 +70,58 @@ let  CoreInputProperties = props =>{
         if(sel_in.register_type==="vector" || sel_in.register_type==="explicit_vector"){
             return <InputField ID="labels" name="labels" label="Labels" defaultValue={sel_in.labels} onKeyDown={handle_change_iom}/>
         }
+    }
+
+    let render_source_options = () => {
+        let ret = []
+        ret.push(
+            <SelectField
+                inline
+                key="source_type"
+                label="Source Type"
+                onChange={handle_select}
+                value={{value: sel_in.source.type, label: sel_in.source.type}}
+                defaultValue="Select Source Type"
+                name="source_type"
+                options={[
+                    {label: "constant", value: "constant"},
+                    {label: "file", value: "file"}
+                ]}
+            />
+        )
+        if(sel_in.source){
+            if(sel_in.source.type==="constant") {
+                ret.push(
+                    <InputField
+                        Inline
+                        ID="source_value"
+                        name="source_value"
+                        label="Value"
+                        defaultValue={sel_in.source.value}
+                        onKeyDown={handle_change_iom}
+                        key="souce_value"
+                    />
+                )
+            }else if(sel_in.source.type==="file"){
+                let files = props.selected_core.input_data.map((item)=>{
+                    return Object.keys(item.data).map((name)=>{
+                        return {label:item.name + "." + name, value:item.name + "." + name};
+                    })
+                }).flat();
+
+                ret.push(<SelectField
+                    inline
+                    key="souce_value"
+                    label="Data Series"
+                    onChange={handle_select}
+                    value={{value: sel_in.source.type, label: sel_in.source.type}}
+                    defaultValue="Select data series"
+                    name="souce_value"
+                    options={files}
+                />)
+            }
+        }
+        return(ret);
     }
 
     return(
@@ -93,6 +155,7 @@ let  CoreInputProperties = props =>{
                         {label: "explicit_vector", value: "explicit_vector"}
                     ]}
                 />
+                {render_source_options()}
                 {render_vector_input_properties()}
             </div>
         }/>

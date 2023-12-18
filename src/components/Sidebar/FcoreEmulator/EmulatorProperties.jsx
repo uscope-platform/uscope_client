@@ -34,9 +34,15 @@ let  EmulatorProperties = props =>{
 
     let handle_change = (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab") {
-            selected_emulator.edit_name(event.target.value).then(()=>{
-                forceUpdate();
-            });
+            if (event.target.name === "name"){
+                selected_emulator.edit_name(event.target.value).then(() => {
+                    forceUpdate();
+                });
+            } else if(event.target.name === "n_cycles"){
+                selected_emulator.edit_cycles(parseInt(event.target.value)).then(()=>{
+                    forceUpdate();
+                });
+            }
         }
     }
 
@@ -57,6 +63,7 @@ let  EmulatorProperties = props =>{
                     <SimpleContent name={"Emulator Properties"} content={
                         <div key="emulator_props">
                             <InputField inline ID="name" name="name" label="Emulator Name" defaultValue={selected_emulator.name} onKeyDown={handle_change}/>
+                            <InputField inline ID="n_cycles" name="n_cycles" label="Number of cycles" defaultValue={selected_emulator.n_cycles} onKeyDown={handle_change}/>
                         </div>
                     }
                     />
