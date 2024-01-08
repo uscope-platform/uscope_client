@@ -37,9 +37,8 @@ let ApplicationsReducer = function (state = [], action) {
         case REMOVE_APPLICATION:
             return  Object.keys(state)
                 .filter(key => {
-                    return key !== action.payload;
-                })
-                .reduce((obj, key) => {
+                    return parseInt(key) !== action.payload;
+                }).reduce((obj, key) => {
                     obj[key] = state[key];
                     return obj;
                 }, {});

@@ -27,12 +27,15 @@ import {HdlParameterProperties} from "./HdlParameterProperties";
 export let  PeripheralProperties = props =>{
 
     let peripherals_list = Object.entries(props.peripherals).map((periph)=>{
-        return {label:periph[0], value:periph[0]}
+        return {label:periph[1].peripheral_name, value:periph[0]}
     })
 
-    const [selected, set_selected] = useState({label:props.peripheral.spec_id, value:props.peripheral.spec_id});
-
-
+    let [selected, set_selected] = useState((()=>{
+        let p =  Object.values(props.peripherals).filter((p)=>{
+            return p.id === parseInt(props.peripheral.spec_id);
+        })[0];
+        return {label:p.peripheral_name, value:parseInt(props.peripheral.spec_id)}
+    })());
 
     let handleChange = (event)=>{
         let app = new up_application(props.application);

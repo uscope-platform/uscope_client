@@ -72,7 +72,7 @@ let AuthApp = (props) =>{
                 } else if(Object.keys(res[0].data).length !== 0) {
                     set_app_stage("APP_CHOICE");
                 } else {
-                    let app = up_application.construct_empty("default");
+                    let app = up_application.construct_empty(1);
                     app.add_remote().then(()=>{
                         addApplication(app);
                         set_app_stage("APP_CHOICE");

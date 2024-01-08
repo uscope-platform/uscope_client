@@ -31,6 +31,7 @@
     "react-toastify": "^9.1.1",
     "react-tooltip": "^5.3.4",
     "reactjs-popup": "^2.0.5",
+    "reaflow": "^5.2.6",
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
     "redux-persist": "^6.0.0",

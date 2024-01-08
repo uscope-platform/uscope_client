@@ -14,7 +14,7 @@
 // limitations under the License.
 
 
-import {store, up_application, up_peripheral} from "./index"
+import {store, up_application, up_emulator, up_peripheral} from "./index"
 import {backend_get} from "./proxy/backend";
 import {api_dictionary} from "./proxy/api_dictionary";
 import {loadApplications} from "../redux/Actions/applicationActions";
@@ -27,13 +27,13 @@ import {up_bitstream} from "./data_models/up_bitstream";
 import {loadAllBitstreams} from "../redux/Actions/bitstreamsActions";
 import {loadAllFilters} from "../redux/Actions/FiltersActons";
 import {up_filter} from "./data_models/up_filter";
+import {loadAllEmulators} from "../redux/Actions/EmulatorActions";
 
 let load_all_applications = () => {
     return backend_get(api_dictionary.applications.load_all).then(res=>{
         let apps_dict = {}
         for (let item in res) {
-            let app = new up_application(res[item])
-            apps_dict[app.application_name] = app
+            apps_dict[item] = new up_application(res[item]);
         }
         store.dispatch(loadApplications(apps_dict));
         return apps_dict;
@@ -45,8 +45,7 @@ let load_all_peripherals = () => {
     return backend_get(api_dictionary.peripherals.load_all).then(res=>{
         let periph_dict = {}
         for (let item in res) {
-            let periph = new up_peripheral(res[item])
-            periph_dict[periph.peripheral_name] = periph
+            periph_dict[item] = new up_peripheral(res[item]);
         }
         store.dispatch(loadPeripherals(periph_dict));
         return periph_dict;
@@ -99,6 +98,19 @@ let load_all_filters = () =>{
 }
 
 
+let load_all_emulators = () =>{
+    return backend_get(api_dictionary.emulators.load_all).then(res=>{
+        let emulators_dict = {}
+        for (let item in res) {
+            emulators_dict[item] = new up_emulator(res[item]);
+        }
+        store.dispatch(loadAllEmulators(emulators_dict));
+        return emulators_dict;
+    })
+}
+
+
+
 export const refresh_caches = () =>{
     let state = store.getState();
     let refresh_ops = [];
@@ -109,6 +121,7 @@ export const refresh_caches = () =>{
     refresh_ops.push(refresh_resource_cache("programs_cache",state.programs, load_all_programs , ()=>{return backend_get(api_dictionary.programs.get_hash)}));
     refresh_ops.push(refresh_resource_cache("bitstreams_cache",state.bitstreams, load_all_bitstreams , ()=>{return backend_get(api_dictionary.bitstream.get_hash)}));
     refresh_ops.push(refresh_resource_cache("filters_cache",state.filters, load_all_filters , ()=>{return backend_get(api_dictionary.filters.get_hash)}));
+    refresh_ops.push(refresh_resource_cache("emulators_cache",state.emulators, load_all_emulators , ()=>{return backend_get(api_dictionary.emulators.get_hash)}));
     return Promise.all(refresh_ops);
 };
 

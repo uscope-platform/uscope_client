@@ -13,9 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
-
-
 import {construct_proxied_register, store} from "../index";
 import {backend_get, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
@@ -23,18 +20,32 @@ import {addPeripheral, removePeripheral} from "../../redux/Actions/peripheralsAc
 import {up_register} from "./up_register";
 
 export class up_peripheral {
+
     constructor(periph_data_obj) {
         if(!periph_data_obj)
             return null;
 
+        this.id = periph_data_obj.id;
         this.peripheral_name = periph_data_obj.peripheral_name;
         this.version = periph_data_obj.version;
         this.parametric = periph_data_obj.parametric;
         this.registers = [];
         for(const item of periph_data_obj.registers){
-            this.registers.push(new up_register(item, periph_data_obj.peripheral_name, this.parametric));
+            this.registers.push(new up_register(item, periph_data_obj.id, this.parametric));
         }
     }
+
+    static construct_empty(periph_id){
+        let periph_data_obj = {
+            id:periph_id,
+            peripheral_name: 'new peripheral_' + periph_id,
+            version:0.1,
+            registers:[],
+            parametric:false
+        };
+        return new up_peripheral(periph_data_obj);
+    }
+
 
     get_register_names = (parameters) =>{
         return this.registers.map((reg) =>{
@@ -60,39 +71,34 @@ export class up_peripheral {
         return ["AdcProcessing"];
     }
 
-    static construct_empty(periph_name){
-        let periph_data_obj = {peripheral_name:periph_name, version:0.1, registers:[], parametric:false};
-        return new up_peripheral(periph_data_obj);
-    }
-
     add_remote = () => {
-        store.dispatch(addPeripheral({payload:{[this.peripheral_name]:this}}))
+        store.dispatch(addPeripheral({payload:{[this.id]:this}}))
         return backend_post(api_dictionary.peripherals.add, {payload:this._get_periph()});
     }
 
     add_register = (reg_name) =>{
-        let reg = up_register.construct_empty(reg_name, this.peripheral_name);
+        let reg = up_register.construct_empty(reg_name, this.id);
         this.registers.push(reg);
-        store.dispatch(addPeripheral({payload:{[this.peripheral_name]:this}}));
-        let edit ={peripheral:this.peripheral_name, action:"add_register",register:reg._get_register()};
+        store.dispatch(addPeripheral({payload:{[this.id]:this}}));
+        let edit ={peripheral:this.id, action:"add_register",register:reg._get_register()};
         return backend_post(api_dictionary.peripherals.edit, edit);
     }
 
     set_version = (ver) =>{
         this.version = ver;
-        let edit ={peripheral:this.peripheral_name, action:"edit_version", version:parseFloat(ver)};
-        store.dispatch(addPeripheral({payload:{[this.peripheral_name]:this}}))
+        let edit ={peripheral:this.id, action:"edit_version", version:parseFloat(ver)};
+        store.dispatch(addPeripheral({payload:{[this.id]:this}}))
         return backend_post(api_dictionary.peripherals.edit, edit);
     };
 
-    dit_name = (name) =>{
+    edit_name = (name) =>{
         alert("NOT IMPLEMENTED YET");
     };
 
     edit_parametric = (value) =>{
         this.parametric = value;
-        let edit ={peripheral:this.peripheral_name, action:"edit_parametric", parametric:value};
-        store.dispatch(addPeripheral({payload:{[this.peripheral_name]:this}}))
+        let edit ={peripheral:this.id, action:"edit_parametric", parametric:value};
+        store.dispatch(addPeripheral({payload:{[this.id]:this}}))
         return backend_post(api_dictionary.peripherals.edit, edit);
     };
 
@@ -176,9 +182,9 @@ export class up_peripheral {
         return registers;
     }
 
-    static delete_periperal(periph){
-        return backend_get(api_dictionary.peripherals.delete+'/'+ periph).then(()=>{
-            store.dispatch(removePeripheral(periph));
+    static delete(periph){
+        return backend_get(api_dictionary.peripherals.delete+'/'+ periph.id).then(()=>{
+            store.dispatch(removePeripheral(periph.id));
         })
     }
 
@@ -205,6 +211,7 @@ export class up_peripheral {
             cleaned_registers.push(i._get_register());
         }
         return {[this.peripheral_name]:{
+            id:this.id,
             peripheral_name:this.peripheral_name,
             version:this.version,
             parametric:this.parametric,

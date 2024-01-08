@@ -49,7 +49,7 @@ export class up_script {
         return backend_patch(api_dictionary.scripts.edit+'/'+this.id,edit)
     }
 
-    static delete_script(script){
+    static delete(script){
         return backend_delete(api_dictionary.scripts.delete+'/'+script.id, script).then(()=>{
             store.dispatch(removeScript(script));
         })

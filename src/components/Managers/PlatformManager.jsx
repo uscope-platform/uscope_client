@@ -74,7 +74,7 @@ let  PlatformManager = props =>{
 
     let handle_restore_db = ()=>{
         upload_json().then((raw_json)=>{
-            let content = JSON.parse(raw_json);
+            let content = JSON.parse(raw_json.data);
             restore_database(content).then();
         }).catch((err)=>{
             alert(err.message);

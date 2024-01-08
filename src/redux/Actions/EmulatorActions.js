@@ -25,7 +25,7 @@ export const removeEmulator = emulator =>({
     payload:emulator
 });
 
-export const loadAllEmulator = emulator =>({
+export const loadAllEmulators = emulator =>({
     type: LOAD_ALL_EMULATOR,
     payload:emulator
 });

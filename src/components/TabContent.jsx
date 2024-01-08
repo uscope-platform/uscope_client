@@ -16,6 +16,7 @@
 import React, {Suspense} from 'react';
 
 import PlotTab from "./plot_tab_components/PlotTab";
+
 const FilterManager = React.lazy(() => import('./Filter Designer/FilterManager'));
 const ScriptManager = React.lazy(() => import('./Managers/ScriptManager'));
 const PeripheralsManager = React.lazy(() => import('./Managers/PeripheralsManager'));

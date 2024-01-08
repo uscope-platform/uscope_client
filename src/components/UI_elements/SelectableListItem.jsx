@@ -35,8 +35,14 @@ export let  SelectableListItem = props =>{
     let [color, set_color] = useState("white");
     let [confirm_needed, set_confirm_needed] = useState(false);
 
-    let handle_click = () =>{
-        props.onSelect(props.name)
+    let handle_click = (event) =>{
+        if(props.multi_select){
+            if(event.ctrlKey) props.onSelect(props.name, true);
+            else props.onSelect(props.name, false);
+        } else{
+            props.onSelect(props.name)
+        }
+
     };
 
     let handle_remove = () =>{

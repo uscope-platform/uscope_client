@@ -1,4 +1,4 @@
-// Copyright 2023 University of Nottingham Ningbo China
+// Copyright 2023 Filippo Savi
 // Author: Filippo Savi <filssavi@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,24 +15,43 @@
 
 import React from 'react';
 
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 import {up_emulator} from "../../../client_core";
 import SidebarBase from "../SidebarBase";
+import EmulatorNodeProperties from "./NodesSidebar/EmulatorNodeProperties";
+import EmulatorEdgeProperties from "./EdgesSidebar/EmulatorEdgeProperties";
+import EmulatorProperties from "./EmulatorProperties";
+import {setSetting} from "../../../redux/Actions/SettingsActions";
 
 let  FcoreEmulatorSidebar = props =>{
 
     const emulators_store = useSelector(state => state.emulators);
+    const dispatch = useDispatch();
+
+
+    let handle_select_emulator = (sel) =>{
+        dispatch(setSetting(["emulator_selected_iom", null]));
+        dispatch(setSetting(["emulator_selected_component", null]));
+    }
 
     return(
-        <SidebarBase
-            objects={emulators_store}
-            selection_key="id"
-            template={up_emulator}
-            display_key="name"
-            content_name="Emulator"
-            selector="selected_emulator"
-        />
+        <>
+            <SidebarBase
+                objects={emulators_store}
+                selection_key="id"
+                template={up_emulator}
+                display_key="name"
+                content_name="Emulator"
+                selector="selected_emulator"
+                height={2}
+                onSelect={handle_select_emulator}
+            />
+            <EmulatorNodeProperties/>
+            <EmulatorEdgeProperties/>
+            <EmulatorProperties/>
+        </>
+
     );
 
 };
