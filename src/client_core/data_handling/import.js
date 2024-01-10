@@ -51,7 +51,7 @@ export const import_peripherals = (raw_json) => {
     let [valid, errors] = validate_json(imported_periph, peripheral_schema);
     if(valid){
         let promises = [];
-        for(const periph_item in imported_periph){
+        for(const periph_item in imported_periph['peripherals']){
             let periph = new up_peripheral(imported_periph[periph_item]);
             promises.push(periph.add_remote().then(()=>{
                 return periph;
