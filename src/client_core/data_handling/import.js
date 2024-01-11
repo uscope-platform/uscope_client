@@ -16,8 +16,8 @@
 import Ajv2020 from "ajv/dist/2020"
 import {up_application} from "../data_models/up_application";
 import {up_peripheral} from "../data_models/up_peripheral";
-import {application_schema} from "./application.schema";
-import {peripheral_schema} from "./peripheral.schema";
+import {application_schema} from "./application_schema";
+import {peripheral_schema} from "./peripheral_schema";
 
 let validate_json = (obj, schema) => {
     const ajv = new Ajv2020()
@@ -32,8 +32,9 @@ let validate_json = (obj, schema) => {
     return [valid, erorr_strings]
 }
 
-export const import_application = (raw_json) => {
+export const import_application = (raw_json, id) => {
     let imported_app = JSON.parse(raw_json);
+    imported_app["id"] = id;
     let [valid, errors] = validate_json(imported_app, application_schema);
     if(valid){
         let app = new up_application(imported_app);
@@ -50,8 +51,8 @@ export const import_peripherals = (raw_json) => {
     let [valid, errors] = validate_json(imported_periph, peripheral_schema);
     if(valid){
         let promises = [];
-        for(const periph_item in imported_periph['peripherals']){
-            let periph = new up_peripheral(imported_periph[periph_item]);
+        for(const periph_item of imported_periph['peripherals']){
+            let periph = new up_peripheral(periph_item);
             promises.push(periph.add_remote().then(()=>{
                 return periph;
             }))

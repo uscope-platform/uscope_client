@@ -19,6 +19,7 @@ import {useDispatch, useSelector} from "react-redux";
 
 
 import {
+    get_next_id,
     import_application,
     up_application,
 } from "../../client_core";
@@ -35,8 +36,8 @@ let  ApplicationSidebar = props =>{
     const dispatch = useDispatch();
 
     let handleImport = (app) =>{
-
-        import_application(app).then(()=>{
+        let id = get_next_id(Object.values(applications_redux).map(a => a[props.selection_key]).sort());
+        import_application(app, id).then(()=>{
             addApplication(app);
         })
     };

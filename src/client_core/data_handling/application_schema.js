@@ -72,7 +72,7 @@ export let application_schema = {
           },
           "spec_id": {
             "description": "ID that links this peripheral to the relative specification",
-            "type": "string"
+            "type": "integer"
           }
         },
         "required": [
