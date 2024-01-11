@@ -14,11 +14,10 @@
 // limitations under the License.
 
 import Ajv2020 from "ajv/dist/2020"
-import application_schema from "./application.schema.json"
-import peripheral_schema from "./peripheral.schema.json"
 import {up_application} from "../data_models/up_application";
 import {up_peripheral} from "../data_models/up_peripheral";
-
+import {application_schema} from "./application.schema";
+import {peripheral_schema} from "./peripheral.schema";
 
 let validate_json = (obj, schema) => {
     const ajv = new Ajv2020()

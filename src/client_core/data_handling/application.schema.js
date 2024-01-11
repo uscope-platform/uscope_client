@@ -1,4 +1,4 @@
-{
+export let application_schema = {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Application Definition",
   "description": "JSON object defining an application in the uPlatform suite",
