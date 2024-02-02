@@ -424,11 +424,19 @@ export class up_emulator {
         });
     };
 
+    deploy = () =>{
+        let specs = this.build();
+        return backend_post(api_dictionary.hil.deploy, specs).then((res)=>{
+            return res;
+        })
+    }
+
     _get_emulator = () =>{
         return {
             id: this.id,
             name: this.name,
             cores: this.cores,
+            n_cycles: this.n_cycles,
             connections: this.connections,
         };
     }
