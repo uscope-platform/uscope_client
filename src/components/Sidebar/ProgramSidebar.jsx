@@ -42,6 +42,11 @@ let  ProgramSidebar = props =>{
         let app = new up_application(applications[settings.application]);
         app.remove_selected_program(deleted.id.toString()).then();
     };
+    let handle_import_done = (obj) =>{
+        let app = new up_application(applications[settings.application]);
+        app.add_selected_program(obj.id.toString()).then();
+        forceUpdate();
+    }
 
     return(
         <SidebarBase
@@ -55,6 +60,7 @@ let  ProgramSidebar = props =>{
             type_prop="program_type"
             onDelete={handleRemove}
             onAdd={handleAdd}
+            omImportDone={handle_import_done}
         />
     );
 

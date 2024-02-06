@@ -92,7 +92,11 @@ let  SidebarBase = props =>{
                         }
                     }
                 }
-                obj.add_remote().then();
+                obj.add_remote().then(()=>{
+                    if(props.omImportDone){
+                        props.omImportDone(obj);
+                    }
+                });
             }
         }).catch((err)=>{
             alert(err);
