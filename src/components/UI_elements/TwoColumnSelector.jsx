@@ -51,12 +51,12 @@ export let  TwoColumnSelector = props =>{
             cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
             useCSSTransforms={false}
         >
-            <UIPanel key={"available_content_"+props.itemType} data-grid={{x: 0, y: 0, w: 11, h: 5}} level="level_3">
+            <UIPanel key={"available_content_"+props.itemType} data-grid={{x: 0, y: 0, w: 9, h: 5, static: true}} level="level_3">
                 <SimpleContent name={"Available " + props.itemType} content={
                     <SelectableList items={props.available_items} selected_item={available_highlight} onSelect={set_available_highlight} />
                 }/>
             </UIPanel>
-            <div key={props.itemType+"_selector_controls"}  data-grid={{x: 11, y: 0, w: 2, h: 5}} style={{
+            <div key={props.itemType+"_selector_controls"}  data-grid={{x: 9, y: 0, w: 1, h: 5, static: true}} style={{
                 display:"flex",
                 flexDirection:"column",
                 justifyContent:"center",
@@ -67,7 +67,7 @@ export let  TwoColumnSelector = props =>{
                     marginTop:"1em"
                 }} onClick={handleDeSelect}/>
             </div>
-            <UIPanel key={"selected_content_"+props.itemType} data-grid={{x: 13, y: 0, w: 11, h: 5}} level="level_3">
+            <UIPanel key={"selected_content_"+props.itemType} data-grid={{x: 10, y: 0, w: 9, h: 5, static: true}} level="level_3">
                 <SimpleContent name={"Selected " + props.itemType} content={
                     <SelectableList items={props.selected_items} selected_item={selected_highlight} onSelect={set_selected_highlight} />
                 }/>

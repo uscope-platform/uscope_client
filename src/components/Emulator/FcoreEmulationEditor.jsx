@@ -29,6 +29,7 @@ import EmulationResults from "./EmulationResults";
 
 import {ToastContainer, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import {win} from "codemirror/src/util/dom";
 
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -36,6 +37,7 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 let FcoreEmulationEditor = function (props) {
 
 
+    const applications_store = useSelector(state => state.applications);
     const emulators = useSelector(state => state.emulators);
     const settings = useSelector(state => state.settings);
 
@@ -121,6 +123,20 @@ let FcoreEmulationEditor = function (props) {
         });
     }
 
+    let handle_deploy = () =>{
+        let deploy = true;
+        if(applications_store[settings.application].application_name !== "HIL_base"){
+            if(!window.confirm("This feature is only meant to work with the HIL_base application, do you wish to continue regardless:")){
+                deploy = false;
+            }
+        }
+        if(deploy){
+            let s_e = new up_emulator(selected_emulator);
+            s_e.deploy().then(()=>{
+                debugger;
+            });
+        }
+    }
 
     let handle_canvas_click = ()=>{
         dispatch(setSetting(["emulator_selected_component", null]));
@@ -211,6 +227,7 @@ let FcoreEmulationEditor = function (props) {
                                 onAdd={add_core}
                                 onBuild={handle_build}
                                 onRun={handle_run}
+                                onDeploy={handle_deploy}
                                 nodes={nodes}
                                 edges={edges}
                             />,

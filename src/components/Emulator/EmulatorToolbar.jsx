@@ -17,25 +17,32 @@ import React from 'react';
 
 import {ColorTheme} from "../UI_elements";
 import {Tooltip} from "react-tooltip";
-import {MdAdd, MdBuild, MdPlayArrow} from "react-icons/md";
+import {MdAdd, MdBuild, MdConstruction, MdDownload, MdPlayArrow} from "react-icons/md";
 
 let  EmulatorToolbar = props =>{
 
     return(
-        <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
+        <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
             <div key="add_icon" id="add_icon">
-                <MdAdd onClick={props.onAdd} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
-                <Tooltip anchorSelect="add_icon" content={"Add Core"} place="top" />
+                <MdAdd onClick={props.onAdd} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
+                       color={ColorTheme.icons_color}/>
+                <Tooltip anchorSelect="add_icon" content={"Add Core"} place="top"/>
             </div>
             <div key="build" id="build">
-                <MdBuild onClick={props.onBuild} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
-                <Tooltip anchorSelect="build" content={"Build"} place="top" />
+                <MdDownload onClick={props.onBuild} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
+                         color={ColorTheme.icons_color}/>
+                <Tooltip anchorSelect="build" content={"Build"} place="top"/>
             </div>
             <div key="run" id="run">
-                <MdPlayArrow onClick={props.onRun} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
-                <Tooltip anchorSelect="run" content={"Run"} place="top" />
+                <MdPlayArrow onClick={props.onRun} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
+                             color={ColorTheme.icons_color}/>
+                <Tooltip anchorSelect="run" content={"Run"} place="top"/>
             </div>
-
+            <div key="deploy" id="deploy">
+                <MdConstruction onClick={props.onDeploy} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
+                             color={ColorTheme.icons_color}/>
+                <Tooltip anchorSelect="deploy" content={"Deploy"} place="top"/>
+            </div>
         </div>
     );
 };

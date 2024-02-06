@@ -96,5 +96,8 @@ export const api_dictionary = {
         edit: 'emulators',
         delete: 'emulators',
         run:'emulators/run'
+    },
+    hil:{
+        deploy: 'hil/deploy'
     }
 }

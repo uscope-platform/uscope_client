@@ -38,8 +38,6 @@ let  PlotControls = props =>{
     let onClick = (event) => {
         switch (event.target.id) {
             case "play":
-                let address = parseInt(timebase_addr);
-                up_peripheral.direct_register_write([[address, 1]]).then();
                 dispatch(plotPlay());
                 break;
             case "pause":
