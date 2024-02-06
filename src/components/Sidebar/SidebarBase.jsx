@@ -17,11 +17,7 @@ import React, {useEffect} from 'react';
 
 import {useDispatch, useSelector} from "react-redux";
 
-import {
-    SelectableList,
-    SimpleContent,
-    UIPanel
-} from "../UI_elements";
+import {SelectableList, SimpleContent, UIPanel} from "../UI_elements";
 import {Responsive, WidthProvider} from "react-grid-layout";
 
 import 'react-tooltip/dist/react-tooltip.css'
@@ -83,7 +79,19 @@ let  SidebarBase = props =>{
             if(props.onImport){
                 props.onImport(item.data);
             } else {
+                let ids = Object.values(props.objects).map(a => a[props.selection_key]);
                 let obj = new props.template(JSON.parse(item.data));
+                if(ids.includes(obj[props.selection_key])){
+                    if(JSON.stringify(props.objects[obj[props.selection_key]]) === JSON.stringify(obj._get_program())){
+                        return;
+                    } else {
+                        obj.id = get_next_id(Object.values(props.objects).map(a => a[props.selection_key]).sort());
+                        let labels = Object.values(props.objects).map(a => a[props.display_key]);
+                        if(labels.includes(obj[props.display_key])){
+                            obj[props.display_key] = obj[props.display_key] + "_" + obj.id.toString();
+                        }
+                    }
+                }
                 obj.add_remote().then();
             }
         }).catch((err)=>{
