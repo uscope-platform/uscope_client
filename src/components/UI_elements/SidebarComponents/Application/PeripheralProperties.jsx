@@ -34,7 +34,11 @@ export let  PeripheralProperties = props =>{
         let p =  Object.values(props.peripherals).filter((p)=>{
             return p.id === parseInt(props.peripheral.spec_id);
         })[0];
-        return {label:p.peripheral_name, value:parseInt(props.peripheral.spec_id)}
+        if(props.peripheral.spec_id !== ""){
+            return {label:p.peripheral_name, value:parseInt(props.peripheral.spec_id)}
+        } else {
+            return {label: "", value: null}
+        }
     })());
 
     let handleChange = (event)=>{

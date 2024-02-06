@@ -29,9 +29,9 @@ import {
     up_peripheral,
     create_plot_channel,
     get_channels_from_group,
-    set_channel_signs
+    set_channel_signs,
+    set_scaling_factors
 } from "../../../client_core";
-import {set_scaling_factors} from "../../../client_core/proxy/plot";
 
 
 
