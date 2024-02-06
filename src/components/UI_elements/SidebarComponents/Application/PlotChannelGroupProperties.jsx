@@ -73,7 +73,7 @@ export let  PlotChannelGroupProperties = props =>{
                 name:"default",
                 label:"Enabled",
                 click:handleChangeDefault,
-                value:props.group.Default
+                value:props.group.default
             }}
         >
             <InputField inline ID="group_name" name="group_name" defaultValue={props.group.group_name} onKeyDown={handleonKeyDown} label="Name"/>
@@ -85,7 +85,6 @@ export let  PlotChannelGroupProperties = props =>{
                 value={channels_list}
                 options={options}
                 label="Content"/>
-            <Checkbox ID="default" name='default' value={props.group.default} onChange={handleChangeDefault} label="Default group"/>
         </Card>
     );
 };
