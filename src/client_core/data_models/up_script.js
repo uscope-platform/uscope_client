@@ -55,6 +55,10 @@ export class up_script {
         })
     }
 
+    get_raw_obj = () => {
+        return this._get_script();
+    }
+
     _get_script = () =>{
         return {
                 id: this.id,

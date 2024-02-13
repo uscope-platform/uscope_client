@@ -421,6 +421,10 @@ export class up_application {
         })
     }
 
+    get_raw_obj = () => {
+        return this._get_app();
+    }
+
     _get_app = () =>{
         let misc_params = up_application._get_nonstandard_fields(this);
         let ret_obj = {

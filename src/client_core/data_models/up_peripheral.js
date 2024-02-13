@@ -205,6 +205,10 @@ export class up_peripheral {
         return backend_get(api_dictionary.peripherals.direct_read + '/' +address);
     }
 
+    get_raw_obj = () => {
+        return this._get_periph();
+    }
+
     _get_periph = () =>{
         let cleaned_registers = [];
         for(let i of this.registers){

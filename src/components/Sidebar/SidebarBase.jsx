@@ -82,7 +82,7 @@ let  SidebarBase = props =>{
                 let ids = Object.values(props.objects).map(a => a[props.selection_key]);
                 let obj = new props.template(JSON.parse(item.data));
                 if(ids.includes(obj[props.selection_key])){
-                    if(JSON.stringify(props.objects[obj[props.selection_key]]) === JSON.stringify(obj._get_program())){
+                    if(JSON.stringify(props.objects[obj[props.selection_key]]) === JSON.stringify(obj.get_raw_obj())){
                         return;
                     } else {
                         obj.id = get_next_id(Object.values(props.objects).map(a => a[props.selection_key]).sort());

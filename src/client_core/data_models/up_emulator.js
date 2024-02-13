@@ -431,6 +431,10 @@ export class up_emulator {
         })
     }
 
+    get_raw_obj = () => {
+        return this._get_emulator();
+    }
+
     _get_emulator = () =>{
         return {
             id: this.id,

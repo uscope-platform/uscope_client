@@ -74,6 +74,10 @@ export class up_program {
         })
     }
 
+    get_raw_obj = () => {
+        return this._get_program();
+    }
+
     _get_program = () =>{
         return {
             id: this.id,

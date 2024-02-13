@@ -85,6 +85,10 @@ export class up_filter {
         })
     }
 
+    get_raw_obj = () => {
+        return this._get_filter();
+    }
+
     _get_filter = () =>{
         return {
                 id: this.id,

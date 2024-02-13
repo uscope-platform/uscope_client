@@ -66,6 +66,10 @@ export class up_bitstream {
         })
     }
 
+    get_raw_obj = () => {
+        return this._get_bitstream();
+    }
+
     _get_bitstream = () =>{
         return {
             id: this.id,

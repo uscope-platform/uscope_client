@@ -182,6 +182,11 @@ export class up_register {
         return f_names
     }
 
+    get_raw_obj = () => {
+        return this._get_register();
+    }
+
+
     _get_register = () => {
         let converted_fields = [];
         for(let i of this.fields){
