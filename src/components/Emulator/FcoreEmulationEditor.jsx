@@ -136,8 +136,14 @@ let FcoreEmulationEditor = function (props) {
         }
         if(deploy){
             let s_e = new up_emulator(selected_emulator);
-            s_e.deploy().then(()=>{
-                debugger;
+            s_e.deploy().then((ret)=>{
+                if(ret.code && ret.code === 8) {
+                    toast.error(ret.error);
+                } else if(ret.code && ret.code === 9){
+                    toast.warn(ret.error);
+                } else {
+                    toast.success("HIL correctly deployed");
+                }
             });
         }
     }
