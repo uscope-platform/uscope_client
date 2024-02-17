@@ -118,8 +118,12 @@ let FcoreEmulationEditor = function (props) {
     let handle_run = (args) =>{
         let s_e = new up_emulator(selected_emulator);
         s_e.run().then((results)=>{
-            set_emulation_results(results);
-            toast.success("Emulation Completed");
+            if(results.code && results.code === 7){
+                toast.error(results.error);
+            } else {
+                set_emulation_results(results);
+                toast.success("Emulation Completed");
+            }
         });
     }
 
