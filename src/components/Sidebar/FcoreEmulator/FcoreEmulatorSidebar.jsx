@@ -23,6 +23,7 @@ import EmulatorNodeProperties from "./NodesSidebar/EmulatorNodeProperties";
 import EmulatorEdgeProperties from "./EdgesSidebar/EmulatorEdgeProperties";
 import EmulatorProperties from "./EmulatorProperties";
 import {setSetting} from "../../../redux/Actions/SettingsActions";
+import WarningsPanel from "./WarningsPanel";
 
 let  FcoreEmulatorSidebar = props =>{
 
@@ -50,6 +51,7 @@ let  FcoreEmulatorSidebar = props =>{
             <EmulatorNodeProperties/>
             <EmulatorEdgeProperties/>
             <EmulatorProperties/>
+            <WarningsPanel/>
         </>
 
     );

@@ -118,9 +118,14 @@ let FcoreEmulationEditor = function (props) {
     let handle_run = (args) =>{
         let s_e = new up_emulator(selected_emulator);
         s_e.run().then((results)=>{
-            if(results.code && results.code === 7){
+            if(results.code && results.code === 7) {
+                dispatch(setSetting(["emulator_compile_warning", null]));
                 toast.error(results.error);
+            } else if(results.code && results.code === 9){
+                dispatch(setSetting(["emulator_compile_warning", JSON.parse(results.duplicates)['duplicates']]));
+                toast.warn(results.error);
             } else {
+                dispatch(setSetting(["emulator_compile_warning", null]));
                 set_emulation_results(results);
                 toast.success("Emulation Completed");
             }
@@ -139,9 +144,12 @@ let FcoreEmulationEditor = function (props) {
             s_e.deploy().then((ret)=>{
                 if(ret.code && ret.code === 8) {
                     toast.error(ret.error);
+                    dispatch(setSetting(["emulator_compile_warning", null]));
                 } else if(ret.code && ret.code === 9){
+                    dispatch(setSetting(["emulator_compile_warning", "test"]));
                     toast.warn(ret.error);
                 } else {
+                    dispatch(setSetting(["emulator_compile_warning", null]));
                     toast.success("HIL correctly deployed");
                 }
             });
