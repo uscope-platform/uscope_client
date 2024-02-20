@@ -36,12 +36,14 @@ export let  SelectField = props =>{
     const Style = {
         control:(provided,  { data, isDisabled, isFocused, isSelected }) => ({
             ...provided,
+            minWidth:"7em",
             backgroundColor: color,
         }),
 
         menu: (provided,  { data, isDisabled, isFocused, isSelected }) => ({
             ...provided,
-            backgroundColor: color,
+            width: "max-content",
+            backgroundColor: color
         }),
 
         menuPortal: (provided,  { data, isDisabled, isFocused, isSelected }) => ({
@@ -65,6 +67,7 @@ export let  SelectField = props =>{
             <Select
                 name={props.name}
                 id={props.name}
+                style={props.style}
                 styles={Style}
                 defaultValue={props.defaultValue}
                 value={props.value ? props.value: undefined}

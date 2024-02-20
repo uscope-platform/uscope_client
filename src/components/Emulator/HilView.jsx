@@ -19,7 +19,7 @@ import {Responsive, WidthProvider} from "react-grid-layout";
 import FcoreEmulationEditor from "./FcoreEmulationEditor";
 import {TabbedContent, UIPanel} from "../UI_elements"
 import EmulationResults from "./EmulationResults";
-import HilControl from "./HilControl";
+import HilControl from "./HilControl/HilControl";
 
 
 const ResponsiveGridLayout = WidthProvider(Responsive);

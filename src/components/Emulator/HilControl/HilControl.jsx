@@ -14,13 +14,23 @@
 // limitations under the License.
 
 import React from 'react';
-import {SimpleContent, UIPanel} from "../UI_elements";
+import {SimpleContent, UIPanel} from "../../UI_elements";
 import {Responsive, WidthProvider} from "react-grid-layout";
+import HilChannelSelector from "./HilChannelSelector";
+import {useSelector} from "react-redux";
+import {up_emulator} from "../../../client_core";
+import HilInputsPanel from "./HilInputsPanel";
 
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 let HilControl = function (props) {
+
+    const emulators_store = useSelector(state => state.emulators);
+    const settings = useSelector(state => state.settings);
+
+    let selected_emulator = new up_emulator(emulators_store[parseInt(settings.selected_emulator)]);
+
 
     return(
         <ResponsiveGridLayout
@@ -37,12 +47,12 @@ let HilControl = function (props) {
             </UIPanel>
             <UIPanel key="Hil_inputs" data-grid={{x: 0, y: 16, w: 10, h: 8, static: true}} level="level_2">
                 <SimpleContent name="Inputs" height="100%" content={
-                    <p>INPUTS</p>
+                    <HilInputsPanel emulator={selected_emulator}/>
                 }/>
             </UIPanel>
             <UIPanel key="hil_channel_selector" data-grid={{x: 14, y: 16, w: 10, h: 8, static: true}} level="level_2">
                 <SimpleContent name="Channel Selector" height="100%" content={
-                    <p>CHANNEL SELECTOR</p>
+                    <HilChannelSelector emulator={selected_emulator}/>
                 }/>
             </UIPanel>
         </ResponsiveGridLayout>

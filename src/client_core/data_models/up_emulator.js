@@ -435,6 +435,46 @@ export class up_emulator {
         return this._get_emulator();
     }
 
+    get_outputs= () =>{
+        let target_outputs = {};
+        Object.values(this.connections).map((dma)=>{
+            dma.channels.map((ch)=>{
+                switch (ch.type){
+                    case "2d_vector_transfer":
+                        for(let i = 0; i<ch.stride; i++){
+                            target_outputs[ch.target.register + i] = ch.name + "[" + i + "]";
+                        }
+                        break;
+                    case "scalar_transfer":
+                        target_outputs[ch.target.register] = ch.name;
+                        break;
+                }
+            })
+        })
+        Object.values(this.cores).map((core)=>{
+            core.outputs.map((out)=>{
+                if(out.register_type ==="scalar"){
+                    target_outputs[out.reg_n] = out.name;
+                } else {
+                }
+            })
+        })
+        return target_outputs;
+    }
+
+    get_inputs =() =>{
+        let target_inputs = [];
+
+        Object.values(this.cores).map((core)=>{
+            core.inputs.map((i)=>{
+                if(i.source.type === "constant"){
+                    target_inputs.push({name:i.name, address:i.reg_n, value:i.source.value});
+                }
+            })
+        })
+        return target_inputs;
+    }
+
     _get_emulator = () =>{
         return {
             id: this.id,
