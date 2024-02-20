@@ -53,8 +53,6 @@ let FcoreEmulationEditor = function (props) {
     let [selected_inputs_tab, set_selected_inputs_tab] = useState(0);
     let [selected_main_tab, set_selected_main_tab] = useState(0);
 
-    let [emulation_results, set_emulation_results] = useState({});
-    let [input_data, set_input_data] = useState({});
 
     useEffect(() => {
         //SETUP NODES
@@ -87,7 +85,7 @@ let FcoreEmulationEditor = function (props) {
             }).flat().map((item)=>{
                 inputs_obj[item.name] = item.data;
             });
-            set_input_data(inputs_obj);
+            props.onInputDataChange(inputs_obj);
         }
     }, [settings.selected_emulator]);
 
@@ -126,7 +124,7 @@ let FcoreEmulationEditor = function (props) {
                 toast.warn(results.error);
             } else {
                 dispatch(setSetting(["emulator_compile_warning", null]));
-                set_emulation_results(results);
+                props.onEmulationDone(results);
                 toast.success("Emulation Completed");
             }
         });
@@ -232,8 +230,8 @@ let FcoreEmulationEditor = function (props) {
                     rowHeight={30}
                     useCSSTransforms={false}
                 >
-                    <UIPanel key="emulator_diagram" data-grid={{x: 0, y: 0, w: 24, h: 18, static: true}} level="level_2">
-                        <TabbedContent height="100%" names={["Emulation setup", "Emulation Results"]} contents={[
+                    <UIPanel key="emulator_diagram" data-grid={{x: 0, y: 0, w: 24, h: 16, static: true}} level="level_2">
+                        <SimpleContent name="Emulation_diagram" height="100%" content={
                             <EmulatorDiagram
                                 selected_node={settings.emulator_selected_component}
                                 onNodeSelect={handle_node_select}
@@ -248,22 +246,21 @@ let FcoreEmulationEditor = function (props) {
                                 onDeploy={handle_deploy}
                                 nodes={nodes}
                                 edges={edges}
-                            />,
-                            <EmulationResults results={emulation_results} inputs={input_data}/>
-                        ]} onSelect={set_selected_main_tab} selected={selected_main_tab}/>
+                            />
+                        }/>
                     </UIPanel>
-                    <UIPanel key="emulator_i_props" data-grid={{x: 0, y: 18, w: 8, h: 7.4, static: true}} level="level_2">
+                    <UIPanel key="emulator_i_props" data-grid={{x: 0, y: 16, w: 8, h: 7.4, static: true}} level="level_2">
                         <TabbedContent names={["Inputs", "Input Files"]} contents={[
                             <CoreInputsList/>,
                             <CoreInputFilesList/>
                         ]} onSelect={set_selected_inputs_tab} selected={selected_inputs_tab}/>
                     </UIPanel>
-                    <UIPanel key="emulator_o_props" data-grid={{x: 8, y: 18, w: 8, h: 7.4, static: true}} level="level_2">
+                    <UIPanel key="emulator_o_props" data-grid={{x: 8, y: 16, w: 8, h: 7.4, static: true}} level="level_2">
                         <SimpleContent name="Outputs" height="100%" content={
                             <CoreOutputsList/>
                         }/>
                     </UIPanel>
-                    <UIPanel key="emulator_m_props" data-grid={{x: 16, y: 18, w: 8, h: 7.4, static: true}} level="level_2">
+                    <UIPanel key="emulator_m_props" data-grid={{x: 16, y: 16, w: 8, h: 7.4, static: true}} level="level_2">
                         <SimpleContent name="Memory" height="100%" content={
                             <CoreMemoriesList/>
                         }/>

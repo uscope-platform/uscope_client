@@ -121,7 +121,7 @@ let EmulationResults = function (props) {
             rowHeight={30}
             useCSSTransforms={false}
         >
-            <UIPanel key="emulation_result_plots" data-grid={{x: 0, y: 0, w: 14, h: 16, static: true}} level="level_2">
+            <UIPanel key="emulation_result_plots" data-grid={{x: 0, y: 0, w: 24, h: 16, static: true}} level="level_2">
                 <SimpleContent name="Results Plot" height="100%" content={
                     <Plot
                         data={data}
@@ -131,14 +131,14 @@ let EmulationResults = function (props) {
                     />
                 }/>
             </UIPanel>
-            <UIPanel key="emulation_result_core_sel" data-grid={{x: 14, y: 0, w: 6, h: 8, static: true}} level="level_2">
+            <UIPanel key="emulation_result_core_sel" data-grid={{x: 0, y: 16, w: 10, h: 8, static: true}} level="level_2">
                 <SimpleContent name="Core Selector" height="100%" content={
                     <div>
                         <SelectableList items={cores} selected_item={selected_core} onSelect={set_selected_core} />
                     </div>
                 }/>
             </UIPanel>
-            <UIPanel key="emulation_result_data_sel" data-grid={{x: 14, y: 8, w: 6, h: 8, static: true}} level="level_2">
+            <UIPanel key="emulation_result_data_sel" data-grid={{x: 14, y: 16, w: 10, h: 8, static: true}} level="level_2">
                 <SimpleContent name="Data Selector" height="100%" content={
                     <div>
                         <SelectableList multi_select items={outputs} selected_item={selected_output} onSelect={handle_datapoint_select} />
