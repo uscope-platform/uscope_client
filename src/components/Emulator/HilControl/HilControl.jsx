@@ -13,13 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import React, {useState} from 'react';
 import {SimpleContent, UIPanel} from "../../UI_elements";
 import {Responsive, WidthProvider} from "react-grid-layout";
 import HilChannelSelector from "./HilChannelSelector";
 import {useSelector} from "react-redux";
 import {up_emulator} from "../../../client_core";
 import HilInputsPanel from "./HilInputsPanel";
+import HilPlot from "./HilPlot";
 
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -30,35 +31,36 @@ let HilControl = function (props) {
     const settings = useSelector(state => state.settings);
 
     let selected_emulator = new up_emulator(emulators_store[parseInt(settings.selected_emulator)]);
+    if(props.deployed){
+        return(
+            <ResponsiveGridLayout
+                className="layout"
+                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+                cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+                rowHeight={30}
+                useCSSTransforms={false}
+            >
+                <UIPanel key="hil_scope" data-grid={{x: 0, y: 0, w: 24, h: 16, static: true}} level="level_2">
+                    <SimpleContent name="Scope" height="100%" content={
+                        <HilPlot/>
+                    }/>
+                </UIPanel>
+                <UIPanel key="Hil_inputs" data-grid={{x: 0, y: 16, w: 10, h: 8, static: true}} level="level_2">
+                    <SimpleContent name="Inputs" height="100%" content={
+                        <HilInputsPanel emulator={selected_emulator}/>
+                    }/>
+                </UIPanel>
+                <UIPanel key="hil_channel_selector" data-grid={{x: 14, y: 16, w: 10, h: 8, static: true}} level="level_2">
+                    <SimpleContent name="Channel Selector" height="100%" content={
+                        <HilChannelSelector emulator={selected_emulator}/>
+                    }/>
+                </UIPanel>
+            </ResponsiveGridLayout>
 
 
-    return(
-        <ResponsiveGridLayout
-            className="layout"
-            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-            rowHeight={30}
-            useCSSTransforms={false}
-        >
-            <UIPanel key="hil_scope" data-grid={{x: 0, y: 0, w: 24, h: 16, static: true}} level="level_2">
-                <SimpleContent name="Scope" height="100%" content={
-                    <p>SCOPE</p>
-                }/>
-            </UIPanel>
-            <UIPanel key="Hil_inputs" data-grid={{x: 0, y: 16, w: 10, h: 8, static: true}} level="level_2">
-                <SimpleContent name="Inputs" height="100%" content={
-                    <HilInputsPanel emulator={selected_emulator}/>
-                }/>
-            </UIPanel>
-            <UIPanel key="hil_channel_selector" data-grid={{x: 14, y: 16, w: 10, h: 8, static: true}} level="level_2">
-                <SimpleContent name="Channel Selector" height="100%" content={
-                    <HilChannelSelector emulator={selected_emulator}/>
-                }/>
-            </UIPanel>
-        </ResponsiveGridLayout>
+        );
+    }
 
-
-    );
 };
 
 

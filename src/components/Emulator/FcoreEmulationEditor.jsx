@@ -51,7 +51,6 @@ let FcoreEmulationEditor = function (props) {
     const [edges, setEdges] = useState([]);
 
     let [selected_inputs_tab, set_selected_inputs_tab] = useState(0);
-    let [selected_main_tab, set_selected_main_tab] = useState(0);
 
 
     useEffect(() => {
@@ -148,6 +147,7 @@ let FcoreEmulationEditor = function (props) {
                     toast.warn(ret.error);
                 } else {
                     dispatch(setSetting(["emulator_compile_warning", null]));
+                    props.onDeploy();
                     toast.success("HIL correctly deployed");
                 }
             });

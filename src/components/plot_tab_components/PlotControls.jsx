@@ -29,34 +29,40 @@ const ComponentStyle = styled.div`
 `
 
 let  PlotControls = props =>{
-    const settings = useSelector(state => state.settings);
-    const applications = useSelector(state => state.applications);
-
-    const [timebase_addr, ] = useState(applications[settings['application']]['timebase_address']);
 
     const dispatch = useDispatch();
     let onClick = (event) => {
         switch (event.target.id) {
             case "play":
-                dispatch(plotPlay());
+                props.onPlay();
                 break;
             case "pause":
-                dispatch(plotPause());
+                props.onPause();
                 break;
             case "stop":
-                dispatch(plotStop());
+                props.onStop();
                 break;
             default:
                 break;
         }
     };
 
-
+    let render_controls = () =>{
+        let ret = [];
+        if(props.onPlay){
+            ret.push(<MdPlayArrow key="plot_play_btn" id='play' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={onClick}/>);
+        }
+        if(props.onPause){
+            ret.push(<MdPause key="plot_pause_btn"  id='pause' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={onClick}/>);
+        }
+        if(props.onStop){
+            ret.push(<MdStop key="plot_stop_btn"  id='stop' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={onClick}/>);
+        }
+        return ret;
+    }
     return(
         <ComponentStyle>
-            <MdPlayArrow id='play' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={onClick}/>
-            <MdPause id='pause' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={onClick}/>
-            <MdStop id='stop' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={onClick}/>
+            {render_controls()}
         </ComponentStyle>
     );
 };

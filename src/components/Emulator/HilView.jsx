@@ -30,6 +30,8 @@ let HilView = function (props) {
 
     let [emulation_results, set_emulation_results] = useState({});
     let [input_data, set_input_data] = useState({});
+    let [deployed, set_deployed] = useState(false);
+
     return(
         <ResponsiveGridLayout
             className="layout"
@@ -40,9 +42,9 @@ let HilView = function (props) {
         >
             <UIPanel key="emulator_diagram" data-grid={{x: 0, y: 0, w: 24, h: 25, static: true}} level="level_2">
                 <TabbedContent height="100%" names={["Emulation setup", "Emulation Results", "Hil Scope"]} contents={[
-                    <FcoreEmulationEditor onEmulationDone={set_emulation_results} onInputDataChange={set_input_data}/>,
+                    <FcoreEmulationEditor onEmulationDone={set_emulation_results} onInputDataChange={set_input_data} onDeploy={()=>{set_deployed(true)}}/>,
                     <EmulationResults results={emulation_results} inputs={input_data}/>,
-                    <HilControl/>
+                    <HilControl deployed={deployed}/>
                 ]} onSelect={set_selected_main_tab} selected={selected_main_tab}/>
             </UIPanel>
         </ResponsiveGridLayout>

@@ -14,9 +14,20 @@
 // limitations under the License.
 
 import {fetchData, setChannelStatus} from "../../redux/Actions/plotActions";
-import {backend_post, dispatch_redux_thunk} from "./backend";
+import {backend_get, backend_post, dispatch_redux_thunk} from "./backend";
 
 import {api_dictionary} from './api_dictionary'
+
+
+export const direct_fetch = () =>  {
+    return new Promise((resolve, reject)=>{
+        backend_get(api_dictionary.plot.fetch_data).then((res) => {
+            resolve(res)
+        }).catch((err) =>{
+            reject(err);
+        });
+    });
+};
 
 
 export const fetch_data = () =>  {

@@ -23,6 +23,7 @@ import {useDispatch} from "react-redux";
 
 import {set_channel_status, get_channel_number_from_id} from "../../client_core";
 import PlotControls from "./PlotControls";
+import {plotPause, plotPlay, plotStop} from "../../redux/Actions/plotActions";
 
 
 let ChannelSelector = function(props) {
@@ -60,6 +61,15 @@ let ChannelSelector = function(props) {
         dispatch(setSetting(["plot_palette", {colorway: palette}]));
     }
 
+    let handle_play = ()=>{
+        dispatch(plotPlay());
+    }
+    let handle_pause = ()=>{
+        dispatch(plotPause());
+    }
+    let handle_stop = ()=>{
+        dispatch(plotStop());
+    }
     return(
             <div>
                     {channels_data.map((chan,i) => {
@@ -67,7 +77,7 @@ let ChannelSelector = function(props) {
                             <ChannelSelectorItem onStatusChange={handle_status_change} key={chan.spec.id} id={chan.spec.id} idx={i} name={chan.spec.name} value={chan.visible}/>
                         );
                     })}
-                <PlotControls/>
+                <PlotControls onPlay={handle_play} onPause={handle_pause} onStop={handle_stop}/>
             </div>
         );
 };
