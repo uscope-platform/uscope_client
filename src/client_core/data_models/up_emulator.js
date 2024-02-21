@@ -70,7 +70,8 @@ export class up_emulator {
             options:{
                 comparators:"reducing",
                 efi_implementation:"none"
-            }
+            },
+            multirate_divisor:0
         };
         this.cores[id] = c;
         let edit = {emulator:this.id, core:c, action:"add_core"};
@@ -391,7 +392,8 @@ export class up_emulator {
                         })[0]
                         return {content: prog.program_content, build_settings: prog.build_settings};
                     })(),
-                    options: item.options
+                    options: item.options,
+                    multirate_divisor: item.multirate_divisor
                 })
             }),
             interconnect: this.connections.map((item) => {

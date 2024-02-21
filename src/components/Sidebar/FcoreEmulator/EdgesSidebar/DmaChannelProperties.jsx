@@ -13,12 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useReducer, useState} from 'react';
+import React, {useReducer} from 'react';
 
 import {InputField, SelectField} from "../../../UI_elements";
 import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../../../../redux/Actions/SettingsActions";
-import Select from "react-select";
+
 
 let  DmaChannelProperties = props =>{
 
