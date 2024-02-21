@@ -25,7 +25,10 @@ let HilInputsPanel = function (props) {
         if(event.key==="Enter"|| event.key ==="Tab") {
             let input = event.target.name;
             let value = parseFloat(event.target.value);
-            // TODO: PUSH input change to driver
+            let current_in = target_inputs.filter((i) =>{
+                return i.name === input;
+            })[0];
+            props.emulator.set_input(current_in.core, current_in.address, value);
         }
     }
 

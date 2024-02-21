@@ -30,6 +30,7 @@ let HilChannelSelector = function (props) {
         new_ch[ch_n-1] = parseInt(value);
         set_selected_channels(new_ch);
         forceUpdate();
+        props.emulator.select_output(ch_n-1, parseInt(value.value));
     }
 
     let render_selectors = () =>{

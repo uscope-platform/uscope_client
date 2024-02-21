@@ -98,6 +98,8 @@ export const api_dictionary = {
         run:'emulators/run'
     },
     hil:{
-        deploy: 'hil/deploy'
+        deploy: 'hil/deploy',
+        select_output: 'hil/select_out',
+        set_input: 'hil/set_input'
     }
 }

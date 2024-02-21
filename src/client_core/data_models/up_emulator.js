@@ -462,17 +462,25 @@ export class up_emulator {
         return target_outputs;
     }
 
+    select_output = (channel, address) =>{
+        return backend_post(api_dictionary.hil.select_output, {"channel":channel, "address":address});
+    }
+
     get_inputs =() =>{
         let target_inputs = [];
 
         Object.values(this.cores).map((core)=>{
             core.inputs.map((i)=>{
                 if(i.source.type === "constant"){
-                    target_inputs.push({name:i.name, address:i.reg_n, value:i.source.value});
+                    target_inputs.push({core: core.name, name:i.name, address:i.reg_n, value:i.source.value});
                 }
             })
         })
         return target_inputs;
+    }
+
+    set_input = (core, address, value) =>{
+        return backend_post(api_dictionary.hil.set_input, {"address":address, "value":value, "core": core});
     }
 
     _get_emulator = () =>{
