@@ -17,7 +17,7 @@ import React, {useReducer, useState} from 'react';
 import {Responsive, WidthProvider} from "react-grid-layout";
 import createPlotlyComponent from "react-plotly.js/factory";
 import Plotly from "plotly.js-basic-dist";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import PlotControls from "../../plot_tab_components/PlotControls";
 import {fetch_data} from "../../../client_core";
 import useInterval from "../../Common_Components/useInterval";
@@ -25,6 +25,7 @@ import axios from "axios";
 import {fetchDataDone} from "../../../redux/Actions/plotActions";
 import {api_dictionary} from "../../../client_core/proxy/api_dictionary";
 import {direct_fetch} from "../../../client_core/proxy/plot";
+import {setSetting} from "../../../redux/Actions/SettingsActions";
 
 
 const Plot = createPlotlyComponent(Plotly);
@@ -51,7 +52,7 @@ let HilPlot = function (props) {
     const [plot_running, set_plot_running] = useState(false)
 
     let  handleRefresh = () =>{
-        if(plot_running){
+        if(settings.hil_plot_running){
            direct_fetch().then((data)=>{
 
                let x = [...Array(data[0].data.length).keys()];
@@ -76,6 +77,12 @@ let HilPlot = function (props) {
         handleRefresh();
     },  settings.refreshRate);
 
+    const dispatch = useDispatch();
+
+    let handle_pause = () => {
+        dispatch(setSetting(["hil_plot_running", false]));
+    }
+
     return(
         <div>
             <Plot
@@ -84,7 +91,7 @@ let HilPlot = function (props) {
                 config={plot_config}
                 revision={data_revision}
             />
-            <PlotControls onPlay={()=>{set_plot_running(true)}} onPause={()=>{set_plot_running(false)}}/>
+            <PlotControls onPause={handle_pause}/>
         </div>
     );
 };

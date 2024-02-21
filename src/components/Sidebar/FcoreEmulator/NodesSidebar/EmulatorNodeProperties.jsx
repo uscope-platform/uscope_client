@@ -26,19 +26,13 @@ import EmulatorCoreProperties from "./EmulatorCoreProperties";
 
 let  EmulatorNodeProperties = props =>{
 
-    const emulators_store = useSelector(state => state.emulators);
     const settings = useSelector(state => state.settings);
     const selected_component_obj = settings.emulator_selected_component;
 
-    const sel_component_type = selected_component_obj ? selected_component_obj.type : null;
-
-
-    if(sel_component_type === "node" && settings.selected_emulator){
-        let selected_core = Object.values(emulators_store[parseInt(settings.selected_emulator)].cores).filter((item)=>{
+    if(props.enabled && props.selected_emulator){
+        let selected_core = Object.values(props.selected_emulator.cores).filter((item)=>{
             return item.id === selected_component_obj.obj.id;
         })[0];
-
-        const selected_emulator = settings.selected_emulator ? new up_emulator(emulators_store[parseInt(settings.selected_emulator)]): null;
 
 
         const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -54,14 +48,14 @@ let  EmulatorNodeProperties = props =>{
                     <SimpleContent name={"Node Properties"} content={
                         <EmulatorCoreProperties
                             selected_core={selected_core}
-                            selected_emulator={selected_emulator}
+                            selected_emulator={props.selected_emulator}
                         />
                     } />
                 </UIPanel>
                 <UIPanel key={"iom properties"} data-grid={{x: 0, y: 2, w: 24, h: 2, static: true}} level="level_2">
                     <NodeIomProperties
                         selected_core={selected_core}
-                        selected_emulator={selected_emulator}
+                        selected_emulator={props.selected_emulator}
                     />
                 </UIPanel>
             </ResponsiveGridLayout>

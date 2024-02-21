@@ -26,12 +26,8 @@ import DmaChannelProperties from "./DmaChannelProperties";
 
 let  EmulatorEdgeProperties = props =>{
 
-    const emulators_store = useSelector(state => state.emulators);
     const settings = useSelector(state => state.settings);
 
-    const selected_emulator = new up_emulator(emulators_store[parseInt(settings.selected_emulator)]);
-
-    const sel_component_type = settings.emulator_selected_component ? settings.emulator_selected_component.type : null;
 
     let selected_component = null;
     let connections_list = []
@@ -39,9 +35,9 @@ let  EmulatorEdgeProperties = props =>{
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
-    if(sel_component_type === "edge" && settings.selected_emulator){
+    if(props.enabled && props.selected_emulator){
 
-        selected_component = emulators_store[settings.selected_emulator].connections.filter((item) => {
+        selected_component = props.selected_emulator.connections.filter((item) => {
             return item.source === settings.emulator_selected_component.obj.from && item.target === settings.emulator_selected_component.obj.to;
         })[0];
         connections_list = selected_component.channels.map((item) => {
@@ -71,7 +67,7 @@ let  EmulatorEdgeProperties = props =>{
                     <SimpleContent name={"DMA channel properties"} content={
                         <DmaChannelsList
                             connections_list={connections_list}
-                            selected_emulator={selected_emulator}
+                            selected_emulator={props.selected_emulator}
                             source_core={source_core}
                             target_core={target_core}
                             forceUpdate={forceUpdate}
@@ -81,9 +77,8 @@ let  EmulatorEdgeProperties = props =>{
                 <UIPanel key="channel_properties_tab" data-grid={{x: 0, y: 2, w: 24, h: 2.2, static: true}} level="level_2">
                     <SimpleContent name={"DMA channel properties"} content={
                         <DmaChannelProperties
-                            selected_emulator={selected_emulator}
+                            selected_emulator={props.selected_emulator}
                             selected_component={selected_component}
-                            sel_component_type={sel_component_type}
                             source_core={source_core}
                             target_core={target_core}
                             selected_channel={selected_channel}

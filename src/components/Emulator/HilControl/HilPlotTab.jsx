@@ -25,7 +25,7 @@ import HilPlot from "./HilPlot";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
-let HilControl = function (props) {
+let HilPlotTab = function (props) {
 
     const emulators_store = useSelector(state => state.emulators);
     const settings = useSelector(state => state.settings);
@@ -64,4 +64,4 @@ let HilControl = function (props) {
 };
 
 
-export default HilControl;
+export default HilPlotTab;

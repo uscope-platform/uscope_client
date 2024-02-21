@@ -100,6 +100,8 @@ export const api_dictionary = {
     hil:{
         deploy: 'hil/deploy',
         select_output: 'hil/select_out',
-        set_input: 'hil/set_input'
+        set_input: 'hil/set_input',
+        start:'hil/start',
+        stop:'hil/stop'
     }
 }

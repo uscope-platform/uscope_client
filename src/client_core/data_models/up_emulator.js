@@ -15,7 +15,7 @@
 
 
 import {store} from "../index";
-import {backend_delete, backend_patch, backend_post} from "../proxy/backend";
+import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
 import {AddEmulator, removeEmulator} from "../../redux/Actions/EmulatorActions";
 
@@ -482,6 +482,14 @@ export class up_emulator {
     set_input = (core, address, value) =>{
         return backend_post(api_dictionary.hil.set_input, {"address":address, "value":value, "core": core});
     }
+
+    start_hil = () =>{
+        return backend_get(api_dictionary.hil.start);
+    }
+    stop_hil = () =>{
+        return backend_get(api_dictionary.hil.stop);
+    }
+
 
     _get_emulator = () =>{
         return {

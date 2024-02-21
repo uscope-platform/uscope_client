@@ -19,18 +19,25 @@ import {Responsive, WidthProvider} from "react-grid-layout";
 import FcoreEmulationEditor from "./FcoreEmulationEditor";
 import {TabbedContent, UIPanel} from "../UI_elements"
 import EmulationResults from "./EmulationResults";
-import HilControl from "./HilControl/HilControl";
+import HilPlotTab from "./HilControl/HilPlotTab";
+import {useDispatch, useSelector} from "react-redux";
+import {setSetting} from "../../redux/Actions/SettingsActions";
 
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 let HilView = function (props) {
 
-    let [selected_main_tab, set_selected_main_tab] = useState(0);
+    const settings = useSelector(state => state.settings);
+    const dispatch = useDispatch();
 
     let [emulation_results, set_emulation_results] = useState({});
     let [input_data, set_input_data] = useState({});
     let [deployed, set_deployed] = useState(false);
+
+    let on_select = (value) =>{
+        dispatch(setSetting(["emulator_selected_tab", value]))
+    }
 
     return(
         <ResponsiveGridLayout
@@ -44,8 +51,8 @@ let HilView = function (props) {
                 <TabbedContent height="100%" names={["Emulation setup", "Emulation Results", "Hil Scope"]} contents={[
                     <FcoreEmulationEditor onEmulationDone={set_emulation_results} onInputDataChange={set_input_data} onDeploy={()=>{set_deployed(true)}}/>,
                     <EmulationResults results={emulation_results} inputs={input_data}/>,
-                    <HilControl deployed={deployed}/>
-                ]} onSelect={set_selected_main_tab} selected={selected_main_tab}/>
+                    <HilPlotTab deployed={deployed}/>
+                ]} onSelect={on_select} selected={settings.emulator_selected_tab}/>
             </UIPanel>
         </ResponsiveGridLayout>
 

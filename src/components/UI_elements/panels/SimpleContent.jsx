@@ -20,9 +20,9 @@ export let SimpleContent = function (props) {
     return(
         <>
             <PanelTitle selected>
-                <p style={{marginLeft:"0.5em", marginRight:"0.5em", marginTop:"0.25em"}}>{props.name}</p>
+                <p style={{marginLeft:"0.5em", marginRight:"0.5em", marginTop:"0.25em", paddingBottom:"0.1m"}}>{props.name}</p>
             </PanelTitle>
-            <ContentDiv>
+            <ContentDiv height={props.height}>
                 {props.content}
             </ContentDiv>
         </>

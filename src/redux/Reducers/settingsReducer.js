@@ -35,6 +35,8 @@ const initial_state = {
     emulator_selected_iom:null,
     emulator_selected_dma_channel:null,
     emulator_compile_warning:null,
+    emulator_selected_tab:0,
+    hil_plot_running:false,
     refresh_user_view:false,
     logged:false,
     server_url: import.meta.env.VITE_APP_SERVER,

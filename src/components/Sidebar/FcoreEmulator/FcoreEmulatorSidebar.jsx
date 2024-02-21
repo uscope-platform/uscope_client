@@ -24,12 +24,18 @@ import EmulatorEdgeProperties from "./EdgesSidebar/EmulatorEdgeProperties";
 import EmulatorProperties from "./EmulatorProperties";
 import {setSetting} from "../../../redux/Actions/SettingsActions";
 import WarningsPanel from "./WarningsPanel";
+import HilControl from "./HilControl";
 
 let  FcoreEmulatorSidebar = props =>{
 
     const emulators_store = useSelector(state => state.emulators);
+    const settings = useSelector(state => state.settings);
+
     const dispatch = useDispatch();
 
+    const selected_emulator = settings.selected_emulator ? new up_emulator(emulators_store[parseInt(settings.selected_emulator)]): null;
+
+    const sel_component_type = settings.emulator_selected_component ? settings.emulator_selected_component.type : null;
 
     let handle_select_emulator = (sel) =>{
         dispatch(setSetting(["emulator_selected_iom", null]));
@@ -48,10 +54,11 @@ let  FcoreEmulatorSidebar = props =>{
                 height={2}
                 onSelect={handle_select_emulator}
             />
-            <EmulatorNodeProperties/>
-            <EmulatorEdgeProperties/>
-            <EmulatorProperties/>
+            <EmulatorNodeProperties enabled={sel_component_type==="node"} selected_emulator={selected_emulator}/>
+            <EmulatorEdgeProperties enabled={sel_component_type==="edge"} selected_emulator={selected_emulator}/>
+            <EmulatorProperties enabled={ sel_component_type !== "node"  && sel_component_type !== "edge"} selected_emulator={selected_emulator}/>
             <WarningsPanel/>
+            <HilControl enabled={settings.emulator_selected_tab===2} selected_emulator={selected_emulator}/>
         </>
 
     );
