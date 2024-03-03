@@ -31,6 +31,7 @@ export {DeleteIcon} from './DeleteIcon'
 export {ChipSelector} from './ChipSelector'
 export {ListItem} from './ListItem'
 export {TwoColumnSelector} from "./TwoColumnSelector"
+export {Chip} from "./Chip"
 
 export {FormLayout} from "./Layouts/FormLayout"
 export {SidebarCollapsableNameLayout} from "./Layouts/SidebarCollapsableNameLayout"

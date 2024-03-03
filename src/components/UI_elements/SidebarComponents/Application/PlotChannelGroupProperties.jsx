@@ -16,7 +16,6 @@
 import React, {useState} from "react";
 import {InputField} from "../../InputField";
 
-import {Checkbox} from "../../checkbox"
 import {MultiSelect} from "../../MultiSelect";
 import {up_application} from "../../../../client_core";
 import {Card} from "../../panels/Card";

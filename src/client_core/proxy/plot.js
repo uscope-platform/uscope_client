@@ -72,6 +72,25 @@ export const set_channel_signs = (signed) => {
 }
 
 
+export let get_acquisition_status = () =>{
+    return new Promise((resolve, reject)=>{
+        backend_get(api_dictionary.plot.acquisition).then((res) => {
+            resolve(res)
+        }).catch((err) =>{
+            reject(err);
+        });
+    });
+}
+
+export let set_acquisition = (args) =>{
+    return new Promise((resolve, reject)=>{
+        backend_post(api_dictionary.plot.acquisition, args).then((res) => {
+            resolve(res)
+        }).catch((err) =>{
+            reject(err);
+        });
+    });
+}
 
 export let create_plot_channel = (ch) => {
     return ({

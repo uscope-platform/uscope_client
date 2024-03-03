@@ -17,9 +17,9 @@ import React from 'react';
 
 
 import EnablesProperties from "./EnablesProperties";
-import CaptureProperties from "./CaptureProperties";
 import {SimpleContent, UIPanel} from "../../UI_elements";
 import {Responsive, WidthProvider} from "react-grid-layout";
+import TriggerControls from "./TriggerControls";
 
 let  PlotSidebar = props =>{
 
@@ -37,9 +37,9 @@ let  PlotSidebar = props =>{
                     <EnablesProperties/>
                 }/>
             </UIPanel>
-            <UIPanel key="capture" data-grid={{x: 2, y: 2, w: 24, h: 1.15, static: true}} level="level_2">
-                <SimpleContent name="Capture" content={
-                    <CaptureProperties/>
+            <UIPanel key="trigger" data-grid={{x: 2, y: 2, w: 24, h: 1.15, static: true}} level="level_2">
+                <SimpleContent name="Trigger and Acquisition" content={
+                    <TriggerControls/>
                 }/>
             </UIPanel>
         </ResponsiveGridLayout>

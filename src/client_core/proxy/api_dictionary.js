@@ -60,7 +60,8 @@ export const api_dictionary = {
         set_channel_status: 'plot/channels/status',
         set_widths: 'plot/channels/widths',
         set_signed: 'plot/channels/signs',
-        scaling_factors: 'plot/channels/scaling_factors'
+        scaling_factors: 'plot/channels/scaling_factors',
+        acquisition: 'plot/acquisition'
     },
     programs:{
         get_hash:'program/hash',

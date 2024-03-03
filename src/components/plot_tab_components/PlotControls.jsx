@@ -16,7 +16,7 @@
 import React, {useState} from 'react';
 
 import {useDispatch, useSelector} from "react-redux";
-import {MdPause, MdPlayArrow, MdStop} from 'react-icons/md'
+import {MdDownload, MdPause, MdPlayArrow, MdStop} from 'react-icons/md'
 import {plotPause, plotPlay, plotStop} from "../../redux/Actions/plotActions";
 import styled from "styled-components";
 import {up_peripheral} from "../../client_core";
@@ -42,6 +42,9 @@ let  PlotControls = props =>{
             case "stop":
                 props.onStop();
                 break;
+            case "download":
+                props.onDownload();
+                break;
             default:
                 break;
         }
@@ -57,6 +60,9 @@ let  PlotControls = props =>{
         }
         if(props.onStop){
             ret.push(<MdStop key="plot_stop_btn"  id='stop' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={onClick}/>);
+        }
+        if(props.onDownload){
+            ret.push(<MdDownload key="plot_download_btn"  id='download' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={onClick}/>);
         }
         return ret;
     }
