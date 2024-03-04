@@ -18,7 +18,6 @@ import React, {useReducer} from 'react';
 import {Responsive, WidthProvider} from "react-grid-layout";
 import {InputField,  SimpleContent, UIPanel} from "../../UI_elements";
 import {useSelector} from "react-redux";
-import {up_emulator} from "../../../client_core";
 
 let  EmulatorProperties = props =>{
 

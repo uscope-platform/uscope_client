@@ -37,7 +37,7 @@ let  PlotSidebar = props =>{
                     <EnablesProperties/>
                 }/>
             </UIPanel>
-            <UIPanel key="trigger" data-grid={{x: 2, y: 2, w: 24, h: 1.15, static: true}} level="level_2">
+            <UIPanel key="trigger" data-grid={{x: 2, y: 2, w: 24, h: 3, static: true}} level="level_2">
                 <SimpleContent name="Trigger and Acquisition" content={
                     <TriggerControls/>
                 }/>
