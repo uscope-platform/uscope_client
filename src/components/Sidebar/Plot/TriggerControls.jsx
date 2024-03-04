@@ -79,7 +79,7 @@ let  TriggerControls = props =>{
 
     useInterval(() => {
         handle_get_status();
-    },  props.refreshRate);
+    },  750);
 
     return(
         <div>

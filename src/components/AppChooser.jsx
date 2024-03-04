@@ -32,6 +32,7 @@ import {
     set_scaling_factors,
     set_channel_signs
 } from "../client_core"
+import {set_scope_address} from "../client_core/proxy/plot";
 
 let ApplicationChooser = (props) =>{
 
@@ -79,6 +80,7 @@ let ApplicationChooser = (props) =>{
                 }
             }
             up_peripheral.direct_register_write([[scope_mux_address,  0x1000000]]).then();
+            set_scope_address(scope_mux_address).then()
         }
         // SET UP CHANNEL WIDTHS
 

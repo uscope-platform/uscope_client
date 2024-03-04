@@ -61,7 +61,8 @@ export const api_dictionary = {
         set_widths: 'plot/channels/widths',
         set_signed: 'plot/channels/signs',
         scaling_factors: 'plot/channels/scaling_factors',
-        acquisition: 'plot/acquisition'
+        acquisition: 'plot/acquisition',
+        address:'plot/address'
     },
     programs:{
         get_hash:'program/hash',
