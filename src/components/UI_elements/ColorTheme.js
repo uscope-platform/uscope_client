@@ -53,9 +53,11 @@ export const ColorTheme = {
         "rgb(185, 242,240)",
     ],
     scope_status:{
-        running:"rgb(0,255,0)",
-        wait_trigger:"rgb(255,255,0)",
-        stopped:"rgb(255,0,0)"
+        unknown:"rgb(255,0,0)",
+        run:"rgb(122, 255, 160)",
+        "free run":"rgb(122, 255, 160)",
+        wait:"rgb(255, 234, 122)",
+        stop:"rgb(255, 130, 122)"
     },
     emulator:{
       selected_node_border:"rgb(90, 90,244)"

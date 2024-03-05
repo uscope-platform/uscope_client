@@ -61,7 +61,7 @@ let  TriggerControls = props =>{
 
     let handle_get_status = () =>{
         get_acquisition_status().then(resp =>{
-            set_acquisition_status(acquisition_status);
+            set_acquisition_status(resp);
         })
     }
 
