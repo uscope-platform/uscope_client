@@ -30,7 +30,6 @@ import {setSetting} from "../../../redux/Actions/SettingsActions";
 
 const Plot = createPlotlyComponent(Plotly);
 
-const ResponsiveGridLayout = WidthProvider(Responsive);
 
 let HilPlot = function (props) {
 

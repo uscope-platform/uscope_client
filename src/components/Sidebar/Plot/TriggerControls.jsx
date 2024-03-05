@@ -34,6 +34,8 @@ let  TriggerControls = props =>{
 
     let [remote_version, set_remote_version] = useState(0);
 
+    let [past_acq_state, set_past_acq_state] = useState({});
+
     let handle_select = (value, event) =>{
         switch (event.name) {
             case "trigger_mode":
@@ -50,14 +52,20 @@ let  TriggerControls = props =>{
     }
 
     useEffect(() => {
-        set_acquisition({
+        let next_acq = {
             level: trigger_level,
             level_type: level_type,
             mode: acquisition_mode.value,
             trigger: trigger_mode.value,
             source:parseInt(trigger_source.value),
             trigger_point:trigger_point
-        }).then();
+        };
+        if(past_acq_state !== next_acq){
+            set_acquisition(next_acq).then(()=>{
+                set_past_acq_state(next_acq);
+            });
+        }
+
     }, [remote_version]);
 
     let handle_get_status = () =>{
@@ -159,7 +167,7 @@ let  TriggerControls = props =>{
                     {label:"both edges", value:"both_edges"}
                 ]}
             />
-            <PlotControls onPlay={props.onPlay} onPause={props.onPause} onDownload={props.onDownload}/>
+            <PlotControls onPlay={props.onPlay} onPause={props.onPause} onDownload={props.onDownload} onStop={props.onStop}/>
         </div>
 
     );

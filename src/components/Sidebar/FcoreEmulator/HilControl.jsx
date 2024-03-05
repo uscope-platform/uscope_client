@@ -14,11 +14,11 @@
 // limitations under the License.
 
 import React from 'react';
-
-
-import {ColorTheme, SimpleContent, UIPanel} from "../../UI_elements";
-import {MdPlayArrow, MdStop, MdPause} from "react-icons/md";
+import {SimpleContent, UIPanel} from "../../UI_elements";
 import {Responsive, WidthProvider} from "react-grid-layout";
+import TriggerControls from "../Plot/TriggerControls";
+
+
 let  HilControl = props =>{
 
 
@@ -26,25 +26,18 @@ let  HilControl = props =>{
 
     if(props.enabled){
         return(
-        <ResponsiveGridLayout
-            className="layout"
-            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-            useCSSTransforms={false}
-        >
-            <UIPanel key={"Item properties"} data-grid={{x: 0, y: 0, w: 24, h:0.6, static: true}} level="level_2">
-                {
-                    <SimpleContent name={"HIL controls"} height="fit-content" content={
-                        <div>
-                            <MdPlayArrow key="plot_play_btn" id='play' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={props.onStart}/>
-                            <MdStop key="plot_stop_btn"  id='stop' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={props.onStop}/>
-                            <MdPause key="plot_pause_btn"  id='pause' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={props.onPause}/>
-                        </div>
-                    }
-                    />
-                }
-            </UIPanel>
-        </ResponsiveGridLayout>
+            <ResponsiveGridLayout
+                className="layout"
+                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+                cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
+                useCSSTransforms={false}
+            >
+                <UIPanel key="trigger" data-grid={{x: 0, y: 0, w: 24, h: 2.2, static: true}} level="level_2">
+                    <SimpleContent name="Trigger and Acquisition" content={
+                        <TriggerControls  onPlay={props.onStart} onPause={props.onPause} onStop={props.onStop}/>
+                    }/>
+                </UIPanel>
+            </ResponsiveGridLayout>
         );
     }
 
