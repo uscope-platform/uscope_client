@@ -28,6 +28,7 @@ let  TriggerControls = props =>{
     let [acquisition_status, set_acquisition_status] = useState("stopped");
     let [trigger_source, set_trigger_source] = useState({label:"1", value:"1"});
     let [trigger_level, set_trigger_level] = useState(0);
+    let [trigger_point, set_trigger_point] = useState(200);
     let [level_type, set_level_type] = useState("float");
 
     let [remote_version, set_remote_version] = useState(0);
@@ -48,15 +49,14 @@ let  TriggerControls = props =>{
     }
 
     useEffect(() => {
-        if(remote_version>0){
-            set_acquisition({
-                level: trigger_level,
-                level_type: level_type,
-                mode: acquisition_mode.value,
-                trigger: trigger_mode.value,
-                source:parseInt(trigger_source.value)
-            }).then();
-        }
+        set_acquisition({
+            level: trigger_level,
+            level_type: level_type,
+            mode: acquisition_mode.value,
+            trigger: trigger_mode.value,
+            source:parseInt(trigger_source.value),
+            trigger_point:trigger_point
+        }).then();
     }, [remote_version]);
 
     let handle_get_status = () =>{
@@ -67,11 +67,21 @@ let  TriggerControls = props =>{
 
     let handle_set_value = (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
-            let lvl = event.target.value;
-            if(lvl.match("^\\d+(\\.\\d+)?")) {
-                set_trigger_level(parseFloat(lvl))
-                set_remote_version(remote_version + 1);
+            switch (event.target.name) {
+                case "trigger_level":
+                    if(event.target.value.match("^\\d+(\\.\\d+)?")) {
+                        set_trigger_level(parseFloat(event.target.value))
+                        set_remote_version(remote_version + 1);
+                    }
+                    break;
+                case "trigger_point":
+                    if(Number.isSafeInteger(event.target.value)) {
+                        set_trigger_point(parseInt(event.target.value))
+                        set_remote_version(remote_version + 1);
+                    }
+                    break;
             }
+
         }
 
     }
@@ -91,6 +101,14 @@ let  TriggerControls = props =>{
                 defaultValue={trigger_level}
                 onKeyDown={handle_set_value}
                 label="Trigger Level"
+            />
+            <InputField
+                inline
+                ID="trigger_point"
+                name='trigger_point'
+                defaultValue={trigger_point}
+                onKeyDown={handle_set_value}
+                label="Trigger point"
             />
             <Radio
                 label="Level Type"
