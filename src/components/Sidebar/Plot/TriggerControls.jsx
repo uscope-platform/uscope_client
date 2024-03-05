@@ -75,7 +75,7 @@ let  TriggerControls = props =>{
                     }
                     break;
                 case "trigger_point":
-                    if(Number.isSafeInteger(event.target.value)) {
+                    if(event.target.value.match("^\\d+")) {
                         set_trigger_point(parseInt(event.target.value))
                         set_remote_version(remote_version + 1);
                     }
