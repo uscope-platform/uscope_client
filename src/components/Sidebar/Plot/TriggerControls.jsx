@@ -26,7 +26,7 @@ let  TriggerControls = props =>{
 
     let [acquisition_mode, set_acquisition_mode] = useState({label:"continuous", value:"continuous"});
     let [trigger_mode, set_trigger_mode] = useState({label:"rising edge", value:"rising_edge"});
-    let [acquisition_status, set_acquisition_status] = useState("stopped");
+    let [acquisition_status, set_acquisition_status] = useState("wait");
     let [trigger_source, set_trigger_source] = useState({label:"1", value:"1"});
     let [trigger_level, set_trigger_level] = useState(0);
     let [trigger_point, set_trigger_point] = useState(200);
@@ -68,11 +68,7 @@ let  TriggerControls = props =>{
 
     }, [remote_version]);
 
-    let handle_get_status = () =>{
-        get_acquisition_status().then(resp =>{
-            set_acquisition_status(resp);
-        })
-    }
+
 
     let handle_set_value = (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
@@ -95,14 +91,21 @@ let  TriggerControls = props =>{
 
     }
 
-
-    useInterval(() => {
-        handle_get_status();
-    },  750);
-
+    if(props.showAcquisitionStatus){
+        useInterval(() => {
+            get_acquisition_status().then(resp =>{
+                set_acquisition_status(resp);
+            })
+        },  750);
+    }
+    let plot_status = () =>{
+        if(props.showAcquisitionStatus){
+            return <Chip status={acquisition_status} >{acquisition_status}</Chip>
+        }
+    }
     return(
         <div>
-            <Chip status={acquisition_status} >{acquisition_status}</Chip>
+            {plot_status()}
             <InputField
                 inline
                 ID="trigger_level"

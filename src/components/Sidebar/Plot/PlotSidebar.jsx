@@ -89,7 +89,7 @@ let  PlotSidebar = props =>{
             </UIPanel>
             <UIPanel key="trigger" data-grid={{x: 2, y: 2, w: 24, h: 2.2, static: true}} level="level_2">
                 <SimpleContent name="Trigger and Acquisition" content={
-                    <TriggerControls  onPlay={handle_play} onPause={handle_pause} onDownload={handle_download}/>
+                    <TriggerControls showAcquisitionStatus onPlay={handle_play} onPause={handle_pause} onDownload={handle_download}/>
                 }/>
             </UIPanel>
         </ResponsiveGridLayout>
