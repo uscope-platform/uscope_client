@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React, {useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch, useSelector, useStore} from "react-redux";
 
 import {
     Button, FormLayout,
@@ -36,10 +36,14 @@ import {
 
 
 let  EnablesProperties = props =>{
+
     const dispatch = useDispatch();
     const settings = useSelector(state => state.settings);
     const applications_list = useSelector(state => state.applications);
-    const channels_data = useSelector(state => state.plot.data);
+
+
+    const store = useStore();
+
     const [application, ] = useState(applications_list[settings['application']])
     const [timebase_addr, ] = useState(applications_list[settings['application']]['timebase_address']);
     const [channelGroups, ] = useState(applications_list[settings['application']]['channel_groups']);
@@ -150,7 +154,7 @@ let  EnablesProperties = props =>{
         // SET NEW CHANNELS status
         let new_ch_state = {}
 
-        channels_data.map(chan => {
+        store.getState().plot.data.map(chan => {
             new_ch_state[chan.spec.number] = chan.visible;
             return 0;
         })

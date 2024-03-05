@@ -30,7 +30,6 @@ const ComponentStyle = styled.div`
 
 let  PlotControls = props =>{
 
-    const dispatch = useDispatch();
     let onClick = (event) => {
         switch (event.target.id) {
             case "play":

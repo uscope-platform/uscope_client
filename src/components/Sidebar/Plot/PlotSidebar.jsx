@@ -13,15 +13,65 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import React, {useCallback} from 'react';
 
 
 import EnablesProperties from "./EnablesProperties";
 import {SimpleContent, UIPanel} from "../../UI_elements";
 import {Responsive, WidthProvider} from "react-grid-layout";
 import TriggerControls from "./TriggerControls";
+import {plotPause, plotPlay} from "../../../redux/Actions/plotActions";
+import {useDispatch, useSelector, useStore} from "react-redux";
 
 let  PlotSidebar = props =>{
+
+    const store = useStore();
+
+    const settings = useSelector(state => state.settings);
+    const dispatch = useDispatch();
+
+    let handle_play = ()=>{
+        dispatch(plotPlay());
+    }
+    let handle_pause = ()=>{
+        dispatch(plotPause());
+    }
+
+    const handle_download = useCallback(()=>{
+        let channels = store.getState().plot;
+        let data = channels.data.map((ch)=>{
+            return ch.y;
+        });
+        let csv_content = "";
+        if(settings.sampling_period){
+            csv_content = `time,${channels.data[0].name},${channels.data[1].name},${channels.data[2].name},${channels.data[3].name},${channels.data[4].name},${channels.data[5].name}\n`
+            for(let i = 0; i<data[0].length; i++){
+
+                csv_content += `${channels.data[0].x[i]/settings.sampling_period},${data[0][i]},${data[1][i]},${data[2][i]},${data[3][i]},${data[4][i]},${data[5][i]}\n`
+            }
+        } else {
+            csv_content = `${channels.data[0].name},${channels.data[1].name},${channels.data[2].name},${channels.data[3].name},${channels.data[4].name},${channels.data[5].name}\n`
+            for(let i = 0; i<data[0].length; i++){
+
+                csv_content += `${data[0][i]},${data[1][i]},${data[2][i]},${data[3][i]},${data[4][i]},${data[5][i]}\n`
+            }
+        }
+
+
+        let [month, day, year]    = new Date().toLocaleDateString("en-US").split("/");
+        let [hour, minute, second] = new Date().toLocaleTimeString("en-US").split(/:| /);
+        let filename = settings.default_ch_group.group_name.replace(' ', '_')+ '_'+ day+month+year+hour+minute+second;
+
+        const encodedUri = encodeURI('data:text/csv;charset=utf-8,' + csv_content);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", filename);
+        link.setAttribute("id", "csv_download_link");
+        document.body.appendChild(link);
+
+        link.click();
+        link.remove();
+    }, [])
 
     const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -37,9 +87,9 @@ let  PlotSidebar = props =>{
                     <EnablesProperties/>
                 }/>
             </UIPanel>
-            <UIPanel key="trigger" data-grid={{x: 2, y: 2, w: 24, h: 3, static: true}} level="level_2">
+            <UIPanel key="trigger" data-grid={{x: 2, y: 2, w: 24, h: 2.2, static: true}} level="level_2">
                 <SimpleContent name="Trigger and Acquisition" content={
-                    <TriggerControls/>
+                    <TriggerControls  onPlay={handle_play} onPause={handle_pause} onDownload={handle_download}/>
                 }/>
             </UIPanel>
         </ResponsiveGridLayout>

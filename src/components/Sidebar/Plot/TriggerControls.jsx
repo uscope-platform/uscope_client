@@ -20,6 +20,7 @@ import styled from "styled-components";
 import {Chip, InputField, Radio, SelectField} from "../../UI_elements";
 import {get_acquisition_status, set_acquisition} from "../../../client_core/proxy/plot";
 import useInterval from "../../Common_Components/useInterval";
+import PlotControls from "../../plot_tab_components/PlotControls";
 
 let  TriggerControls = props =>{
 
@@ -158,6 +159,7 @@ let  TriggerControls = props =>{
                     {label:"both edges", value:"both_edges"}
                 ]}
             />
+            <PlotControls onPlay={props.onPlay} onPause={props.onPause} onDownload={props.onDownload}/>
         </div>
 
     );

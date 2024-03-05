@@ -22,13 +22,9 @@ import {setSetting} from "../../redux/Actions/SettingsActions";
 import {useDispatch} from "react-redux";
 
 import {set_channel_status, get_channel_number_from_id} from "../../client_core";
-import PlotControls from "./PlotControls";
-import {plotPause, plotPlay, plotStop} from "../../redux/Actions/plotActions";
-
 
 let ChannelSelector = function(props) {
 
-    const settings = useSelector(state => state.settings);
     const channels = useSelector(state => state.plot);
     const dispatch = useDispatch();
 
@@ -62,51 +58,6 @@ let ChannelSelector = function(props) {
         dispatch(setSetting(["plot_palette", {colorway: palette}]));
     }
 
-    let handle_play = ()=>{
-        dispatch(plotPlay());
-    }
-    let handle_pause = ()=>{
-        dispatch(plotPause());
-    }
-    let handle_stop = ()=>{
-        dispatch(plotStop());
-    }
-
-    let handle_download = () =>{
-        let data = channels.data.map((ch)=>{
-            return ch.y;
-        });
-        let csv_content = "";
-        if(settings.sampling_period){
-            csv_content = `time,${channels.data[0].name},${channels.data[1].name},${channels.data[2].name},${channels.data[3].name},${channels.data[4].name},${channels.data[5].name}\n`
-            for(let i = 0; i<data[0].length; i++){
-
-                csv_content += `${channels.data[0].x[i]/settings.sampling_period},${data[0][i]},${data[1][i]},${data[2][i]},${data[3][i]},${data[4][i]},${data[5][i]}\n`
-            }
-        } else {
-            csv_content = `${channels.data[0].name},${channels.data[1].name},${channels.data[2].name},${channels.data[3].name},${channels.data[4].name},${channels.data[5].name}\n`
-            for(let i = 0; i<data[0].length; i++){
-
-                csv_content += `${data[0][i]},${data[1][i]},${data[2][i]},${data[3][i]},${data[4][i]},${data[5][i]}\n`
-            }
-        }
-
-
-        let [month, day, year]    = new Date().toLocaleDateString("en-US").split("/");
-        let [hour, minute, second] = new Date().toLocaleTimeString("en-US").split(/:| /);
-        let filename = settings.default_ch_group.group_name.replace(' ', '_')+ '_'+ day+month+year+hour+minute+second;
-
-        const encodedUri = encodeURI('data:text/csv;charset=utf-8,' + csv_content);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", filename);
-        link.setAttribute("id", "csv_download_link");
-        document.body.appendChild(link);
-
-        link.click();
-        link.remove();
-
-    }
 
     return(
             <div>
@@ -115,7 +66,6 @@ let ChannelSelector = function(props) {
                             <ChannelSelectorItem onStatusChange={handle_status_change} key={chan.spec.id} id={chan.spec.id} idx={i} name={chan.spec.name} value={chan.visible}/>
                         );
                     })}
-                <PlotControls onPlay={handle_play} onPause={handle_pause} onStop={handle_stop} onDownload={handle_download}/>
             </div>
         );
 };
