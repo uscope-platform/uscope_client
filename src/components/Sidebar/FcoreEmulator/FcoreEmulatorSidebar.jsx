@@ -17,7 +17,7 @@ import React from 'react';
 
 import {useDispatch, useSelector} from "react-redux";
 
-import {up_emulator} from "../../../client_core";
+import {set_channel_status, up_emulator} from "../../../client_core";
 import SidebarBase from "../SidebarBase";
 import EmulatorNodeProperties from "./NodesSidebar/EmulatorNodeProperties";
 import EmulatorEdgeProperties from "./EdgesSidebar/EmulatorEdgeProperties";
@@ -41,6 +41,23 @@ let  FcoreEmulatorSidebar = props =>{
         dispatch(setSetting(["emulator_selected_iom", null]));
         dispatch(setSetting(["emulator_selected_component", null]));
     }
+    let on_start = () =>{
+        set_channel_status({0:true, 2:true, 3:true, 4:true, 5:true});
+        selected_emulator.start_hil().then(()=>{
+            dispatch(setSetting(["hil_plot_running", true]));
+        });
+    };
+
+    let on_stop = () =>{
+        selected_emulator.stop_hil().then(()=>{
+            dispatch(setSetting(["hil_plot_running", false]));
+        });
+    }
+
+    let on_pause = () => {
+        let new_status= !settings.hil_plot_running;
+        dispatch(setSetting(["hil_plot_running", new_status]));
+    }
 
     return(
         <>
@@ -58,7 +75,8 @@ let  FcoreEmulatorSidebar = props =>{
             <EmulatorEdgeProperties enabled={sel_component_type==="edge"} selected_emulator={selected_emulator}/>
             <EmulatorProperties enabled={ sel_component_type !== "node"  && sel_component_type !== "edge"} selected_emulator={selected_emulator}/>
             <WarningsPanel/>
-            <HilControl enabled={settings.emulator_selected_tab===2} selected_emulator={selected_emulator}/>
+            <HilControl enabled={settings.emulator_selected_tab===2} onStart={on_start} onStop={on_stop} onPause={on_pause}/>
+
         </>
 
     );

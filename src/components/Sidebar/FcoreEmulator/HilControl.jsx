@@ -17,28 +17,10 @@ import React from 'react';
 
 
 import {ColorTheme, SimpleContent, UIPanel} from "../../UI_elements";
-import {MdPlayArrow, MdStop} from "react-icons/md";
+import {MdPlayArrow, MdStop, MdPause} from "react-icons/md";
 import {Responsive, WidthProvider} from "react-grid-layout";
-import {useDispatch} from "react-redux";
-import {setSetting} from "../../../redux/Actions/SettingsActions";
-import {set_channel_status} from "../../../client_core";
-
 let  HilControl = props =>{
 
-    const dispatch = useDispatch();
-
-    let on_start = () =>{
-        set_channel_status({0:true, 2:true, 3:true, 4:true, 5:true});
-        props.selected_emulator.start_hil().then(()=>{
-            dispatch(setSetting(["hil_plot_running", true]));
-        });
-    };
-
-    let on_stop = () =>{
-        props.selected_emulator.stop_hil().then(()=>{
-            dispatch(setSetting(["hil_plot_running", false]));
-        });
-    }
 
     const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -54,8 +36,9 @@ let  HilControl = props =>{
                 {
                     <SimpleContent name={"HIL controls"} height="fit-content" content={
                         <div>
-                            <MdPlayArrow key="plot_play_btn" id='play' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={on_start}/>
-                            <MdStop key="plot_stop_btn"  id='stop' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={on_stop}/>
+                            <MdPlayArrow key="plot_play_btn" id='play' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={props.onStart}/>
+                            <MdStop key="plot_stop_btn"  id='stop' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={props.onStop}/>
+                            <MdPause key="plot_pause_btn"  id='pause' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={props.onPause}/>
                         </div>
                     }
                     />

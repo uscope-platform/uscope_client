@@ -49,8 +49,6 @@ let HilPlot = function (props) {
 
     let plot_config = {...channels.config, response:true};
 
-    const [plot_running, set_plot_running] = useState(false)
-
     let  handleRefresh = () =>{
         if(settings.hil_plot_running){
            direct_fetch().then((data)=>{
@@ -77,11 +75,6 @@ let HilPlot = function (props) {
         handleRefresh();
     },  settings.refreshRate);
 
-    const dispatch = useDispatch();
-
-    let handle_pause = () => {
-        dispatch(setSetting(["hil_plot_running", false]));
-    }
 
     return(
         <div>
@@ -91,7 +84,6 @@ let HilPlot = function (props) {
                 config={plot_config}
                 revision={data_revision}
             />
-            <PlotControls onPause={handle_pause}/>
         </div>
     );
 };
