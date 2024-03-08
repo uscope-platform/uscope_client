@@ -16,21 +16,35 @@
 
 import React, {useReducer, useState} from 'react';
 import {SelectField} from "../../UI_elements";
+import {useStore} from "react-redux";
 
 let HilChannelSelector = function (props) {
 
+    let store = useStore();
+
     let target_outputs = props.emulator ? props.emulator.get_outputs() : {};
-    let [selected_channels, set_selected_channels]  = useState([{},{},{},{},{},{}]);
+    let [selected_channels, set_selected_channels]  = useState(()=>{
+        let old_cache_val = JSON.parse(localStorage.getItem('hil_selector_channels'));
+        let app = store.getState().settings.selected_application;
+        if(old_cache_val && old_cache_val[app]) return old_cache_val[app];
+        else return [{},{},{},{},{},{}]
+    });
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     let handle_select_channel = (value, test) =>{
         let ch_n = parseInt(test.name.split("_")[1]);
         let new_ch = selected_channels;
-        new_ch[ch_n-1] = parseInt(value);
+        new_ch[ch_n-1] = value;
         set_selected_channels(new_ch);
         forceUpdate();
         props.emulator.select_output(ch_n-1, parseInt(value.value));
+        let old_cache_val = JSON.parse(localStorage.getItem('hil_selector_channels'));
+        let app = store.getState().settings.selected_application;
+        let new_cache = old_cache_val;
+        if(!new_cache) new_cache = {};
+        new_cache[app] = new_ch
+        localStorage.setItem('hil_selector_channels',JSON.stringify(new_cache));
     }
 
     let render_selectors = () =>{
