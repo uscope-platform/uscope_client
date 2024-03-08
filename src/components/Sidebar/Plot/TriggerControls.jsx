@@ -30,7 +30,6 @@ let  TriggerControls = props =>{
     let [trigger_source, set_trigger_source] = useState({label:"1", value:"1"});
     let [trigger_level, set_trigger_level] = useState(0);
     let [trigger_point, set_trigger_point] = useState(200);
-    let [level_type, set_level_type] = useState("float");
 
     let [remote_version, set_remote_version] = useState(0);
 
@@ -54,7 +53,7 @@ let  TriggerControls = props =>{
     useEffect(() => {
         let next_acq = {
             level: trigger_level,
-            level_type: level_type,
+            level_type: "int",
             mode: acquisition_mode.value,
             trigger: trigger_mode.value,
             source:parseInt(trigger_source.value),
@@ -121,15 +120,6 @@ let  TriggerControls = props =>{
                 defaultValue={trigger_point}
                 onKeyDown={handle_set_value}
                 label="Trigger point"
-            />
-            <Radio
-                label="Level Type"
-                value={level_type}
-                options={['float', 'int']}
-                onChange={(value) =>{
-                    set_level_type(value);
-                    set_remote_version(remote_version + 1);
-                }}
             />
             <SelectField
                 inline
