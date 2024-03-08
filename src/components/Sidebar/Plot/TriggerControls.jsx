@@ -29,7 +29,7 @@ let  TriggerControls = props =>{
     let [trigger_source, set_trigger_source] = useState({label:"1", value:"1"});
     let [trigger_level, set_trigger_level] = useState(0);
     let [trigger_point, set_trigger_point] = useState(200);
-    let [tb_prescaler, set_tb_prescaler] = useState(200);
+    let [tb_prescaler, set_tb_prescaler] = useState(0);
 
     let [remote_version, set_remote_version] = useState(0);
 
