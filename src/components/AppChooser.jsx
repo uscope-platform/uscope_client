@@ -79,7 +79,6 @@ let ApplicationChooser = (props) =>{
                     up_peripheral.direct_register_write([[channel_address, parseInt(item.mux_setting)]]).then();
                 }
             }
-            up_peripheral.direct_register_write([[scope_mux_address,  0x1000000]]).then();
             set_scope_address(scope_mux_address).then()
         }
         // SET UP CHANNEL WIDTHS

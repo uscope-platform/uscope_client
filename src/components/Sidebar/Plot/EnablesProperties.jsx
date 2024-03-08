@@ -128,7 +128,6 @@ let  EnablesProperties = props =>{
                     up_peripheral.direct_register_write([[channel_address, parseInt(item.mux_setting)]]).then();
                 }
             }
-            up_peripheral.direct_register_write([[scope_mux_address,  0x1000000]]).then();
         }
         //SET  UP CHANNEL WIDTHS
         let widths = Array(6).fill(16);
