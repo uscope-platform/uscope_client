@@ -152,3 +152,22 @@ let refresh_resource_cache = (key,resource, load_fcn, hash_fcn) => {
 
 }
 
+
+
+export const save_ui_state = (name, value) =>{
+    let old_cache_val = JSON.parse(localStorage.getItem(name));
+    let app = store.getState().settings.selected_application;
+    let new_cache = old_cache_val;
+    if(!new_cache) new_cache = {};
+    new_cache[app] = value;
+    localStorage.setItem(name,JSON.stringify(new_cache));
+};
+
+
+export const get_ui_state = (name, default_value) =>{
+    let old_cache_val = JSON.parse(localStorage.getItem(name));
+    let app = store.getState().settings.selected_application;
+    if(old_cache_val && old_cache_val[app]) return old_cache_val[app];
+    else return default_value
+};
+
