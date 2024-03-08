@@ -227,6 +227,16 @@ export const filters_init = {
 }
 
 
+export const emulators_init = {
+    1: {
+        "id":1,
+        name:'new_emulator_1',
+        cores:{},
+        connections:[],
+        n_cycles:1
+    }
+}
+
 
 
 export const cache_handlers = [
@@ -311,6 +321,13 @@ export const cache_handlers = [
             ctx.status(200)
         )
     }),
+    rest.get('test_server/emulators/hash', (req, res, ctx) => {
+
+        return res(
+            ctx.text("9d80a6f8-9e9a-46ca-b3bf-8203b5c8a010"),
+            ctx.status(200)
+        )
+    }),
 
     rest.get('test_server/bitstream/none', (req, res, ctx) => {
 
@@ -325,6 +342,14 @@ export const cache_handlers = [
 
         return res(
             ctx.json(filters_init),
+            ctx.status(200)
+
+        )
+    }),
+    rest.get('test_server/emulators/none', (req, res, ctx) => {
+
+        return res(
+            ctx.json(emulators_init),
             ctx.status(200)
 
         )
