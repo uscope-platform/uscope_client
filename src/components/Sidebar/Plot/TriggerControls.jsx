@@ -16,7 +16,6 @@
 
 import React, {useEffect, useState} from 'react';
 
-import styled from "styled-components";
 import {Chip, InputField, Radio, SelectField} from "../../UI_elements";
 import {get_acquisition_status, set_acquisition} from "../../../client_core/proxy/plot";
 import useInterval from "../../Common_Components/useInterval";
@@ -30,6 +29,7 @@ let  TriggerControls = props =>{
     let [trigger_source, set_trigger_source] = useState({label:"1", value:"1"});
     let [trigger_level, set_trigger_level] = useState(0);
     let [trigger_point, set_trigger_point] = useState(200);
+    let [tb_prescaler, set_tb_prescaler] = useState(200);
 
     let [remote_version, set_remote_version] = useState(0);
 
@@ -56,6 +56,7 @@ let  TriggerControls = props =>{
             level_type: "int",
             mode: acquisition_mode.value,
             trigger: trigger_mode.value,
+            prescaler:tb_prescaler,
             source:parseInt(trigger_source.value),
             trigger_point:trigger_point
         };
@@ -81,6 +82,12 @@ let  TriggerControls = props =>{
                 case "trigger_point":
                     if(event.target.value.match("^\\d+")) {
                         set_trigger_point(parseInt(event.target.value))
+                        set_remote_version(remote_version + 1);
+                    }
+                    break;
+                case  "tb_prescaler":
+                    if(event.target.value.match("^\\d+")) {
+                        set_tb_prescaler(parseInt(event.target.value))
                         set_remote_version(remote_version + 1);
                     }
                     break;
@@ -159,6 +166,14 @@ let  TriggerControls = props =>{
                     {label:"falling edge", value:"falling_edge"},
                     {label:"both edges", value:"both_edges"}
                 ]}
+            />
+            <InputField
+                inline
+                ID="tb_prescaler"
+                name='tb_prescaler'
+                defaultValue={tb_prescaler}
+                onKeyDown={handle_set_value}
+                label="Timebase Prescaler"
             />
             <PlotControls onPlay={props.onPlay} onPause={props.onPause} onDownload={props.onDownload} onStop={props.onStop}/>
         </div>
