@@ -42,7 +42,7 @@ let  FcoreEmulatorSidebar = props =>{
         dispatch(setSetting(["emulator_selected_component", null]));
     }
     let on_start = () =>{
-        set_channel_status({0:true, 2:true, 3:true, 4:true, 5:true});
+        set_channel_status({0:true, 1:true, 2:true, 3:true, 4:true, 5:true});
         selected_emulator.start_hil().then(()=>{
             dispatch(setSetting(["hil_plot_running", true]));
         });
