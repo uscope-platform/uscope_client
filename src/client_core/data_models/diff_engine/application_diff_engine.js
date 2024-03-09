@@ -65,7 +65,7 @@ export class application_diff_engine {
 
         ret = [...ret, application_diff_engine.diff_scripts(inner_app_a.scripts, inner_app_b.scripts)];
         delete inner_app_a.scripts;
-        delete inner_app_b.scripts``;
+        delete inner_app_b.scripts;
 
         ret = [...ret, application_diff_engine.diff_misc_fields(inner_app_a, inner_app_b)];
 

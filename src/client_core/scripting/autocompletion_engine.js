@@ -38,6 +38,15 @@ export const autocompletion_engine = (line, explicit) => {
 
 }
 
+export const prefix_extractor = (args) => {
+
+    if(args.length > 1) {
+        let pref_arr = args.map(arg => arg.label);
+        return prefix(pref_arr);
+    }
+    return null
+}
+
 let autocomplete_peripheral_name = (path) =>{
     let matches = Object.keys(scripting_engine_peripherals).filter((item)=>{
         return item.startsWith(path[1]);
@@ -80,3 +89,14 @@ let autocomplete_field_name = (path) =>{
         return {label: item, type: "keyword"};
     });
 };
+
+let prefix = (words) => {
+
+    if (!words[0] || words.length ===  1) return words[0] || "";
+    let i = 0;
+    while(words[0][i] && words.every(w => w[i] === words[0][i]))
+        i++;
+
+    return words[0].substring(0, i);
+}
+
