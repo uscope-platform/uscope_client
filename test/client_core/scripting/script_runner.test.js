@@ -23,6 +23,7 @@ import {scripting_engine_peripherals} from "../../../src/client_core/scripting/s
 
 let app = {
     application_name: "SicDrive",
+    id:1,
     peripherals: [
         {
             base_address: "0xAC",
@@ -30,7 +31,7 @@ let app = {
             peripheral_id: "adc_test",
             proxied: false,
             proxy_address: "0",
-            spec_id: "AdcProcessing2",
+            spec_id: 1,
             type: "Registers"
         },
         {
@@ -44,15 +45,16 @@ let app = {
             peripheral_id: "adc_param",
             proxied: false,
             proxy_address: "0",
-            spec_id: "AdcProcessing_param",
+            spec_id: 2,
             type: "Registers"
         }
     ]
 }
 
 let periph = {
-    AdcProcessing2: {
+    1: {
         peripheral_name: "AdcProcessing2",
+        id:1,
         version: "1.0",
         parametric:false,
         registers: [
@@ -220,9 +222,10 @@ let periph = {
             }
         ]
     },
-    AdcProcessing_param: {
+    2: {
         peripheral_name: "AdcProcessing_param",
         version: "1.0",
+        id:2,
         parametric:true,
         registers: [
             {
@@ -318,7 +321,7 @@ test('scripting_engine_initialization', () => {
                     faste: 0,
                     slow: 0,
                     peripheral_id: "adc_test",
-                    peripheral_spec_id: "AdcProcessing2",
+                    peripheral_spec_id: 1,
                     register_id: "cmp_low_r",
                 },
                 cmp_high_f: {
@@ -335,7 +338,7 @@ test('scripting_engine_initialization', () => {
                     fast: 0,
                     slow: 0,
                     peripheral_id: "adc_test",
-                    peripheral_spec_id: "AdcProcessing2",
+                    peripheral_spec_id: 1,
                     register_id: "cmp_high_f",
                 },
                 cmp_h_r: {
@@ -352,7 +355,7 @@ test('scripting_engine_initialization', () => {
                     fast: 0,
                     slow: 0,
                     peripheral_id: "adc_test",
-                    peripheral_spec_id: "AdcProcessing2",
+                    peripheral_spec_id: 1,
                     register_id: "cmp_h_r",
                 },
                 cal_coeff: {
@@ -364,7 +367,7 @@ test('scripting_engine_initialization', () => {
                     },
                     offset: 0,
                     peripheral_id: "adc_test",
-                    peripheral_spec_id: "AdcProcessing2",
+                    peripheral_spec_id: 1,
                     register_id: "cal_coeff",
                 },
                 control: {
@@ -406,12 +409,12 @@ test('scripting_engine_initialization', () => {
                     fault_disable: 0,
                     decimation: 0,
                     peripheral_id: "adc_test",
-                    peripheral_spec_id: "AdcProcessing2",
+                    peripheral_spec_id: 1,
                     register_id: "control",
                 }
             },
             periph_obj:app.peripherals[0],
-            spec_obj: periph_check.AdcProcessing2
+            spec_obj: periph_check[1]
         },
         adc_param:{
             regs:{
@@ -439,30 +442,30 @@ test('scripting_engine_initialization', () => {
                     test_field_2:0,
                     test_field_simple:0,
                     peripheral_id: "adc_param",
-                    peripheral_spec_id: "AdcProcessing_param",
+                    peripheral_spec_id: 2,
                     register_id: "cmp_low_f"
                 },
                 offset_0: {
                     field_specs: {},
                     peripheral_id: "adc_param",
-                    peripheral_spec_id: "AdcProcessing_param",
+                    peripheral_spec_id: 2,
                     register_id: "offset_0"
                 },
                 offset_1: {
                     field_specs: {},
                     peripheral_id: "adc_param",
-                    peripheral_spec_id: "AdcProcessing_param",
+                    peripheral_spec_id: 2,
                     register_id: "offset_1"
                 },
                 filter_tap_address:{
                     field_specs: {},
                     peripheral_id: "adc_param",
-                    peripheral_spec_id: "AdcProcessing_param",
+                    peripheral_spec_id: 2,
                     register_id: "filter_tap_address"
                 }
             },
             periph_obj:app.peripherals[1],
-            spec_obj: periph_check.AdcProcessing_param
+            spec_obj: periph_check[2]
         }
     }
     expect(scripting_engine_peripherals).toEqual(expected_sep)
