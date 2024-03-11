@@ -1,6 +1,7 @@
 {
   "application_name": "test_app",
   "bitstream": "",
+  "id": 1,
   "channel_groups": [],
   "channels": [],
   "clock_frequency": 100000000,
@@ -8,6 +9,9 @@
   "macro": [],
   "n_enables": 0,
   "parameters": [],
+  "filters": [],
+  "scripts": [],
+  "programs": [],
   "soft_cores": [],
   "peripherals": [
     {
@@ -16,7 +20,7 @@
       "peripheral_id": "test_periph",
       "proxied": false,
       "proxy_address": "0",
-      "spec_id": "app_spec"
+      "spec_id": 1
     }
   ],
   "timebase_address": ""

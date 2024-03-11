@@ -16,6 +16,7 @@ import {autocompletion_engine, initialize_scripting_engine} from "../../../src/c
 
 let simple_app = {
     "application_name": "SicDrive",
+    "id":1,
     "peripherals": [
         {
             "base_address": "0",
@@ -23,15 +24,16 @@ let simple_app = {
             "peripheral_id": "adc_test",
             "proxied": false,
             "proxy_address": "0",
-            "spec_id": "AdcProcessing2",
+            "spec_id": 1,
             "type": "Registers"
         }
     ],
 }
 
 let simple_periph = {
-    "AdcProcessing2": {
+    1: {
         "peripheral_name": "AdcProcessing2",
+        "id": 1,
         "version": "1.0",
         "parametric":false,
         "registers": [
@@ -263,6 +265,7 @@ test('autocomplete_field', () => {
 
 let parametric_app = {
     "application_name": "SicDrive",
+    id:1,
     "peripherals": [
         {
             "hdl_parameters": {
@@ -275,7 +278,7 @@ let parametric_app = {
             "peripheral_id": "adc_test",
             "proxied": false,
             "proxy_address": "0",
-            "spec_id": "AdcProcessing2",
+            "spec_id": 1,
             "type": "Registers"
         }
     ],
@@ -283,8 +286,9 @@ let parametric_app = {
 
 
 let parametric_periph = {
-    "AdcProcessing2": {
+    1: {
         "peripheral_name": "AdcProcessing2",
+        "id":1,
         "version": "1.0",
         "parametric":true,
         "registers": [

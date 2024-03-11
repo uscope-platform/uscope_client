@@ -78,7 +78,7 @@ test("set content", () => {
 test("delete script", () => {
     let script = up_script.construct_empty(10);
     return script.add_remote().then(()=>{
-        return up_script.delete_script(script).then(()=>{
+        return up_script.delete(script).then(()=>{
             expect(script_removal_data).toStrictEqual(script.id.toString());
             let scripts = mock_store.getState().scripts;
             expect(scripts).not.toHaveProperty(script.id.toString());

@@ -90,7 +90,7 @@ test("set content", () => {
 test("delete program", () => {
     let program = up_program.construct_empty(10);
     return program.add_remote().then(()=>{
-        return up_program.delete_program(program).then(()=>{
+        return up_program.delete(program).then(()=>{
                 expect(removed_program_data).toStrictEqual(program.id.toString());
             let programs = mock_store.getState().programs;
             expect(programs).not.toHaveProperty(program.id.toString());

@@ -19,7 +19,7 @@ import 'xterm/css/xterm.css';
 
 import {terminal_backend} from './terminal_backend'
 import {xterm_colors} from "./terminal_colors";
-import {autocompletion_engine} from "../scripting/autocompletion_engine";
+import {autocompletion_engine, prefix_extractor} from "../scripting/autocompletion_engine";
 
 const recognised_commands = Object.keys(terminal_backend);
 
@@ -103,14 +103,24 @@ export const complete_address = () =>{
                 text:"this."+tokens[1]
             }
             let options = autocompletion_engine( line,true);
+            let pref = prefix_extractor(options);
             let candidates = options.map((item)=>{
                 return item.label;
             });
-            if(candidates.length === 1){
+            if(candidates.length === 1) {
                 let present_substr = tokens[1].split(".").pop()
                 let missing = candidates[0].replace(present_substr, "");
                 current_line = current_line + missing;
                 terminal.write(missing);
+            } else if(pref){
+                let present_substr = tokens[1].split(".").pop()
+                let missing = pref.replace(present_substr, "");
+                for (let i = 0; i < candidates.length; i += 5) {
+                    terminal.write("\r\n" + xterm_colors.blue + candidates.slice(i, i + 5).join("         ")  +  xterm_colors.white);
+                }
+                current_line = current_line + missing;
+                display_prompt();
+                terminal.write(current_line);
             } else {
                 for (let i = 0; i < candidates.length; i += 5) {
                     terminal.write("\r\n" + xterm_colors.blue + candidates.slice(i, i + 5).join("         ")  +  xterm_colors.white);

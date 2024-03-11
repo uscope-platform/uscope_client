@@ -8,9 +8,17 @@ import ApplicationsReducer from "../../../src/redux/Reducers/applicationsReducer
 import programsReducer from "../../../src/redux/Reducers/ProgramsReducer";
 import {scriptsReducer, scriptsWorkspaceReducer} from "../../../src/redux/Reducers/scriptsReducer";
 import thunk from "redux-thunk";
-import {up_application, up_peripheral, up_script, up_program, up_bitstream} from "../../../src/client_core";
+import {
+    up_application,
+    up_peripheral,
+    up_script,
+    up_program,
+    up_bitstream,
+    up_emulator
+} from "../../../src/client_core";
 import {up_filter} from "../../../src/client_core/data_models/up_filter";
 import filtersReducer from "../../../src/redux/Reducers/FiltersReducer";
+import emulatorsReducer from "../../../src/redux/Reducers/EmulatorReducer";
 
 export let register_writes = [];
 
@@ -282,6 +290,16 @@ export const filters_init = {
 }
 
 
+let emulators_init = {
+    1: new up_emulator({
+        "id":1,
+        name:'new_emulator_1',
+        cores:{},
+        connections:[],
+        n_cycles:1
+    })
+}
+
 
 const rootReducer = (state, action) => {
     if (action.type === 'RESET_STORE') {
@@ -300,7 +318,8 @@ export const mock_reducer = combineReducers({
     programs : programsReducer,
     scripts: scriptsReducer,
     filters: filtersReducer,
-    scriptsWorkspace: scriptsWorkspaceReducer
+    scriptsWorkspace: scriptsWorkspaceReducer,
+    emulators: emulatorsReducer
 });
 
 export const initial_redux_state = {
@@ -313,7 +332,8 @@ export const initial_redux_state = {
     plot: plot_init,
     filters:filters_init,
     registerValues: {},
-    scriptsWorkspace: {}
+    scriptsWorkspace: {},
+    emulators:emulators_init
 };
 
 export const mock_store = createStore(
