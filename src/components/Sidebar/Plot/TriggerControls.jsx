@@ -20,16 +20,25 @@ import {Chip, InputField, Radio, SelectField} from "../../UI_elements";
 import {get_acquisition_status, set_acquisition} from "../../../client_core/proxy/plot";
 import useInterval from "../../Common_Components/useInterval";
 import PlotControls from "../../plot_tab_components/PlotControls";
+import {get_ui_state, save_ui_state} from "../../../client_core";
 
 let  TriggerControls = props =>{
 
-    let [acquisition_mode, set_acquisition_mode] = useState({label:"continuous", value:"continuous"});
-    let [trigger_mode, set_trigger_mode] = useState({label:"rising edge", value:"rising_edge"});
+    let [controls_state, set_controls_state] = useState(get_ui_state('trigger_and_acquisition',  {
+        acquisition_mode: {label:"continuous", value:"continuous"},
+        trigger_mode:{label:"rising edge", value:"rising_edge"},
+        trigger_source:{label:"1", value:"1"},
+        trigger_level:0,
+        trigger_point:200,
+        tb_prescaler:0,
+    }))
+
+    let update_control_state = (state) =>{
+        set_controls_state(state);
+        save_ui_state('trigger_and_acquisition', state);
+    }
+
     let [acquisition_status, set_acquisition_status] = useState("wait");
-    let [trigger_source, set_trigger_source] = useState({label:"1", value:"1"});
-    let [trigger_level, set_trigger_level] = useState(0);
-    let [trigger_point, set_trigger_point] = useState(200);
-    let [tb_prescaler, set_tb_prescaler] = useState(0);
 
     let [remote_version, set_remote_version] = useState(0);
 
@@ -38,13 +47,13 @@ let  TriggerControls = props =>{
     let handle_select = (value, event) =>{
         switch (event.name) {
             case "trigger_mode":
-                set_trigger_mode(value);
+                update_control_state({...controls_state, trigger_mode: value});
                 break;
             case "acquisition_mode":
-                set_acquisition_mode(value);
+                update_control_state({...controls_state, acquisition_mode: value});
                 break;
             case "trigger_source":
-                set_trigger_source(value)
+                update_control_state({...controls_state, trigger_source: value});
                 break;
         }
         set_remote_version(remote_version + 1);
@@ -52,13 +61,13 @@ let  TriggerControls = props =>{
 
     useEffect(() => {
         let next_acq = {
-            level: trigger_level,
+            level: controls_state.trigger_level,
             level_type: "int",
-            mode: acquisition_mode.value,
-            trigger: trigger_mode.value,
-            prescaler:tb_prescaler,
-            source:parseInt(trigger_source.value),
-            trigger_point:trigger_point
+            mode: controls_state.acquisition_mode.value,
+            trigger: controls_state.trigger_mode.value,
+            prescaler:controls_state.tb_prescaler,
+            source:parseInt(controls_state.trigger_source.value),
+            trigger_point:controls_state.trigger_point
         };
         if(past_acq_state !== next_acq){
             set_acquisition(next_acq).then(()=>{
@@ -75,19 +84,19 @@ let  TriggerControls = props =>{
             switch (event.target.name) {
                 case "trigger_level":
                     if(event.target.value.match("^\\d+(\\.\\d+)?")) {
-                        set_trigger_level(parseFloat(event.target.value))
+                        update_control_state({...controls_state, trigger_level: parseFloat(event.target.value)});
                         set_remote_version(remote_version + 1);
                     }
                     break;
                 case "trigger_point":
                     if(event.target.value.match("^\\d+")) {
-                        set_trigger_point(parseInt(event.target.value))
+                        update_control_state({...controls_state, trigger_point: parseInt(event.target.value)});
                         set_remote_version(remote_version + 1);
                     }
                     break;
                 case  "tb_prescaler":
                     if(event.target.value.match("^\\d+")) {
-                        set_tb_prescaler(parseInt(event.target.value))
+                        update_control_state({...controls_state, tb_prescaler: parseInt(event.target.value)});
                         set_remote_version(remote_version + 1);
                     }
                     break;
@@ -116,7 +125,7 @@ let  TriggerControls = props =>{
                 inline
                 ID="trigger_level"
                 name='trigger_level'
-                defaultValue={trigger_level}
+                defaultValue={controls_state.trigger_level}
                 onKeyDown={handle_set_value}
                 label="Trigger Level"
             />
@@ -124,7 +133,7 @@ let  TriggerControls = props =>{
                 inline
                 ID="trigger_point"
                 name='trigger_point'
-                defaultValue={trigger_point}
+                defaultValue={controls_state.trigger_point}
                 onKeyDown={handle_set_value}
                 label="Trigger point"
             />
@@ -132,7 +141,7 @@ let  TriggerControls = props =>{
                 inline
                 label="Acquisition mode"
                 onChange={handle_select}
-                value={acquisition_mode}
+                value={controls_state.acquisition_mode}
                 name="acquisition_mode"
                 options={[
                     {label:"continuous", value:"continuous"},
@@ -144,7 +153,7 @@ let  TriggerControls = props =>{
                 inline
                 label="Trigger Source"
                 onChange={handle_select}
-                value={trigger_source}
+                value={controls_state.trigger_source}
                 name="trigger_source"
                 options={[
                     {label:"1", value:"1"},
@@ -159,7 +168,7 @@ let  TriggerControls = props =>{
                 inline
                 label="Trigger mode"
                 onChange={handle_select}
-                value={trigger_mode}
+                value={controls_state.trigger_mode}
                 name="trigger_mode"
                 options={[
                     {label:"rising edge", value:"rising_edge"},
@@ -171,7 +180,7 @@ let  TriggerControls = props =>{
                 inline
                 ID="tb_prescaler"
                 name='tb_prescaler'
-                defaultValue={tb_prescaler}
+                defaultValue={controls_state.tb_prescaler}
                 onKeyDown={handle_set_value}
                 label="Timebase Prescaler"
             />

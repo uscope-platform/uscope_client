@@ -21,10 +21,17 @@ import {get_ui_state, save_ui_state} from "../../../client_core";
 
 let HilChannelSelector = function (props) {
 
-    let store = useStore();
-
     let target_outputs = props.emulator ? props.emulator.get_outputs() : {};
-    let [selected_channels, set_selected_channels]  = useState(get_ui_state('hil_selector_channels',  [{},{},{},{},{},{}]));
+    let [selected_channels, set_selected_channels]  = useState(()=>{
+        let default_state = [{},{},{},{},{},{}];
+        let state = get_ui_state('hil_selector_channels',  default_state);
+        if( state !== default_state){
+            for(let i = 0; i< 6; i++) {
+                props.emulator.select_output(i, parseInt(state[i].value));
+            }
+        }
+        return state;
+    });
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
