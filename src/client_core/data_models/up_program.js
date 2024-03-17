@@ -27,6 +27,11 @@ export class up_program {
         this.program_content = program_obj.program_content;
         this.program_type = program_obj.program_type;
         this.build_settings = program_obj.build_settings;
+        if(!program_obj.headers){
+            this.headers = [];
+        } else{
+            this.headers = program_obj.headers;
+        }
     }
 
     static construct_empty(program_id){
@@ -52,7 +57,19 @@ export class up_program {
         return backend_patch(api_dictionary.programs.edit+'/'+this.id,edit)
     }
 
-    compile = () =>{
+    add_header = (id) =>{
+        let selected_headers = [...this.headers, id];
+        return this.edit_field("headers", selected_headers);
+    };
+
+    remove_header = (id) =>{
+        let selected_headers = this.headers.filter(h=>{
+            return h !== id;
+        });
+        return this.edit_field("headers", selected_headers);
+    };
+
+     compile = () =>{
         return backend_get(api_dictionary.programs.compile+'/'+this.id)
     };
 
@@ -84,7 +101,8 @@ export class up_program {
             name: this.name,
             program_content: this.program_content,
             program_type: this.program_type,
-            build_settings: this.build_settings
+            build_settings: this.build_settings,
+            headers: this.headers
         };
     }
 

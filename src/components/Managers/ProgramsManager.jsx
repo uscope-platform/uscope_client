@@ -20,7 +20,7 @@ import {
     FormLayout,
     InputField,
     SelectField,
-    TabbedContent
+    TabbedContent, TwoColumnSelector
 } from "../UI_elements";
 
 import {useSelector} from "react-redux";
@@ -43,8 +43,54 @@ let ProgramsManager = props =>{
 
     let allowed_types = [
         {label:"asm", value:"asm"},
-        {label:"C", value:"C"}
+        {label:"C", value:"C"},
+        {label:"H", value: "H"}
     ];
+
+    const headers = Object.values(programs_store).filter((p) =>{
+        return p.program_type === "H";
+    })
+
+
+    const calculate_headers = () =>{
+        if(!selected_program_obj){
+            return [];
+        }
+        for(let i of selected_program_obj.headers){
+
+            if(headers.filter(h=>h.id === i).length === 0){
+                selected_program_obj.remove_header(i).then();
+            }
+        }
+        let sel = Object.values(headers).map((val)=>{
+            if(selected_program_obj.headers.includes(val.id)){
+                return val.name;
+            }
+        }).filter(item => item);
+
+        let av = Object.values(headers).filter((val)=>{
+            return !sel.includes(val.name);
+        }).map((prg)=>{
+            return prg.name;
+        })
+
+        return {selected:sel, available:av}
+    };
+
+    let h = calculate_headers();
+
+    let handleDeselectHeader =  (id) =>{
+        selected_program_obj.remove_header(parseInt(id)).then(()=>{
+            h = calculate_headers();
+        });
+    }
+
+    let handleSelectHeader = (id) =>{
+        selected_program_obj.add_header(parseInt(id)).then(()=>{
+            h = calculate_headers();
+        });
+    }
+
 
     let handleTypeChange = (event) =>{
         selected_program_obj.edit_field("program_type", event.value).then();
@@ -52,12 +98,12 @@ let ProgramsManager = props =>{
 
     let handle_name_change = (event) => {
         if (event.key === "Enter" || event.key === "Tab") {
-            selected_program_obj.edit_field(event.target.name, event.target.value);
+            selected_program_obj.edit_field(event.target.name, event.target.value).then();
         }
     }
 
     let handle_settings_edit = (settings) => {
-        selected_program_obj.edit_field("build_settings", settings);
+        selected_program_obj.edit_field("build_settings", settings).then();
     }
 
     let get_tabs_content = ()=>{
@@ -72,12 +118,25 @@ let ProgramsManager = props =>{
                     <BuildSettings  language={selected_program.language} build_settings={selected_program.build_settings} onEdit={handle_settings_edit}/>
                 </div>
             )
+            res.push(
+                <div key="headers_selector">
+                    <TwoColumnSelector
+                        itemType="headers"
+                        data={programs_store}
+                        display_field="name"
+                        selected_items={h.selected}
+                        available_items={h.available}
+                        onSelect={handleSelectHeader}
+                        onDeselect={handleDeselectHeader}
+                    />
+                </div>
+            )
         }
         return(res);
     }
 
     let get_tabs_names = ()=>{
-        return ["Souce Code", "Build Settings"]
+        return ["Souce Code", "Build Settings", "Headers"]
     }
 
     return(

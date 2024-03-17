@@ -71,7 +71,7 @@ let ProgramsEditor = props =>{
 
     let handle_load = (core, application) => {
         let prog = new up_program(props.program);
-        prog.load(core.id,  application.application_name).then();
+        prog.load(core.id,  application.id).then();
     };
 
 

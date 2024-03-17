@@ -70,7 +70,9 @@ let  ApplicationsManager = props =>{
 
     const calculate_selected_scripts = () =>{
         return selected_app.scripts.map((scr)=>{
-            return scripts[scr].name;
+            if(scripts.hasOwnProperty(scr)){
+                return scripts[scr].name;
+            }
         });
     }
 
@@ -87,7 +89,9 @@ let  ApplicationsManager = props =>{
 
     const calculate_selected_programs = () =>{
         return selected_app.programs.map((prg)=>{
-            return programs[prg].name;
+            if(programs.hasOwnProperty(prg)){
+                return programs[prg].name;
+            }
         });
     }
 
