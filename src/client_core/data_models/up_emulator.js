@@ -390,7 +390,10 @@ export class up_emulator {
                         let prog = Object.values(store.getState().programs).filter((p) => {
                             return p.name === item.program;
                         })[0]
-                        return {content: prog.program_content, build_settings: prog.build_settings};
+                        let headers = prog.headers.map((h)=>{
+                            return store.getState().programs[h].program_content;
+                        })
+                        return {content: prog.program_content, build_settings: prog.build_settings, headers:headers};
                     })(),
                     options: item.options,
                     multirate_divisor: item.multirate_divisor
