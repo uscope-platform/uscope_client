@@ -13,13 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useReducer, useState} from 'react';
+import React, {useCallback, useEffect, useReducer, useState} from 'react';
 import {Responsive, WidthProvider} from "react-grid-layout";
 import createPlotlyComponent from "react-plotly.js/factory";
 import Plotly from "plotly.js-basic-dist";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch, useSelector, useStore} from "react-redux";
 import PlotControls from "../../plot_tab_components/PlotControls";
-import {fetch_data} from "../../../client_core";
+import {download_plot, fetch_data} from "../../../client_core";
 import useInterval from "../../Common_Components/useInterval";
 import axios from "axios";
 import {fetchDataDone} from "../../../redux/Actions/plotActions";
@@ -36,6 +36,8 @@ let HilPlot = function (props) {
     const channels = useSelector(state => state.plot);
     const settings = useSelector(state => state.settings);
 
+    const store = useStore();
+    const dispatch = useDispatch();
 
     let [data, set_data] = useState([
     ])
@@ -47,6 +49,15 @@ let HilPlot = function (props) {
     plot_layout.height = 550;
 
     let plot_config = {...channels.config, response:true};
+
+
+    useEffect(() => {
+        if(settings.download_hil_data){
+            let state = store.getState();
+            download_plot(data, state.settings.sampling_period, "hil_data");
+            dispatch(setSetting(["download_hil_data", false]));
+        }
+    }, [settings.download_hil_data]);
 
     let  handleRefresh = () =>{
         if(settings.hil_plot_running){

@@ -13,16 +13,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import React, {useCallback} from 'react';
 import {SimpleContent, UIPanel} from "../../UI_elements";
 import {Responsive, WidthProvider} from "react-grid-layout";
 import TriggerControls from "../Plot/TriggerControls";
+import {download_plot} from "../../../client_core";
+import {useDispatch, useStore} from "react-redux";
+import {setSetting} from "../../../redux/Actions/SettingsActions";
 
 
 let  HilControl = props =>{
-
+    const dispatch = useDispatch();
 
     const ResponsiveGridLayout = WidthProvider(Responsive);
+
+    const handle_download = useCallback(()=>{
+        dispatch(setSetting(["download_hil_data", true]));
+    }, [])
 
     if(props.enabled){
         return(
@@ -34,7 +41,7 @@ let  HilControl = props =>{
             >
                 <UIPanel key="trigger" data-grid={{x: 0, y: 0, w: 24, h: 2.2, static: true}} level="level_2">
                     <SimpleContent name="Trigger and Acquisition" content={
-                        <TriggerControls  onPlay={props.onStart} onPause={props.onPause} onStop={props.onStop}/>
+                        <TriggerControls  onPlay={props.onStart} onPause={props.onPause} onStop={props.onStop} onDownload={handle_download}/>
                     }/>
                 </UIPanel>
             </ResponsiveGridLayout>

@@ -22,6 +22,7 @@ import {Responsive, WidthProvider} from "react-grid-layout";
 import TriggerControls from "./TriggerControls";
 import {plotPause, plotPlay} from "../../../redux/Actions/plotActions";
 import {useDispatch, useSelector, useStore} from "react-redux";
+import {download_plot} from "../../../client_core";
 
 let  PlotSidebar = props =>{
 
@@ -37,39 +38,8 @@ let  PlotSidebar = props =>{
     }
 
     const handle_download = useCallback(()=>{
-        let channels = store.getState().plot;
-        let data = channels.data.map((ch)=>{
-            return ch.y;
-        });
-        let csv_content = "";
-        if(store.getState().settings.sampling_period){
-            csv_content = `time,${channels.data[0].name},${channels.data[1].name},${channels.data[2].name},${channels.data[3].name},${channels.data[4].name},${channels.data[5].name}\n`
-            for(let i = 0; i<data[0].length; i++){
-
-                csv_content += `${channels.data[0].x[i]/store.getState().settings.sampling_period},${data[0][i]},${data[1][i]},${data[2][i]},${data[3][i]},${data[4][i]},${data[5][i]}\n`
-            }
-        } else {
-            csv_content = `${channels.data[0].name},${channels.data[1].name},${channels.data[2].name},${channels.data[3].name},${channels.data[4].name},${channels.data[5].name}\n`
-            for(let i = 0; i<data[0].length; i++){
-
-                csv_content += `${data[0][i]},${data[1][i]},${data[2][i]},${data[3][i]},${data[4][i]},${data[5][i]}\n`
-            }
-        }
-
-
-        let [month, day, year]    = new Date().toLocaleDateString("en-US").split("/");
-        let [hour, minute, second] = new Date().toLocaleTimeString("en-US").split(/:| /);
-        let filename = store.getState().settings.default_ch_group.group_name.replace(' ', '_')+ '_'+ day+month+year+hour+minute+second;
-
-        const encodedUri = encodeURI('data:text/csv;charset=utf-8,' + csv_content);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", filename);
-        link.setAttribute("id", "csv_download_link");
-        document.body.appendChild(link);
-
-        link.click();
-        link.remove();
+        let state = store.getState();
+        download_plot(state.plot.data, state.settings.sampling_period, state.settings.default_ch_group.group_name);
     }, [])
 
     const ResponsiveGridLayout = WidthProvider(Responsive);

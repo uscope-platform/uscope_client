@@ -42,6 +42,7 @@ const initial_state = {
     server_url: import.meta.env.VITE_APP_SERVER,
     auth_config:null,
     user_role:null,
+    download_hil_data:false,
     sampling_period:0,
     plot_palette:{colorway:ColorTheme.plot_palette}
 };
