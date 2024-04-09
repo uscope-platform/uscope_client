@@ -111,7 +111,7 @@ export class up_application {
     add_irv = (irv_address) =>{
         let irv = {
             address:irv_address,
-            value:"0"
+            value:0
         }
         this.initial_registers_values.push(irv);
         let edit = {application:this.id, irv:irv, action:"add_irv"};
