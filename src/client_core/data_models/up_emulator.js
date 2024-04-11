@@ -96,7 +96,7 @@ export class up_emulator {
             this.n_cycles = n_cycles;
         });
     };
-    
+
     edit_async_multirate = (is_async) =>{
         let edit = {emulator:this.id, value:is_async, action:"edit_async_multirate"};
         return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then(()=>{
@@ -427,7 +427,8 @@ export class up_emulator {
                     })
                 };
             }),
-            n_cycles:this.n_cycles
+            n_cycles:this.n_cycles,
+            async_multirate:this.async_multirate
         };
     }
 
@@ -511,7 +512,8 @@ export class up_emulator {
             name: this.name,
             cores: this.cores,
             n_cycles: this.n_cycles,
-            connections: this.connections,
+            async_multirate:this.async_multirate,
+            connections: this.connections
         };
     }
 
