@@ -16,7 +16,7 @@
 import React, {useReducer} from 'react';
 
 import {Responsive, WidthProvider} from "react-grid-layout";
-import {InputField,  SimpleContent, UIPanel} from "../../UI_elements";
+import {InputField, SimpleContent, ToggleField, UIPanel} from "../../UI_elements";
 import {useSelector} from "react-redux";
 
 let  EmulatorProperties = props =>{
@@ -37,6 +37,10 @@ let  EmulatorProperties = props =>{
                     forceUpdate();
                 });
             }
+        } else if(event.key===undefined){
+            props.selected_emulator.edit_async_multirate(event.target.checked).then(() =>{
+                forceUpdate();
+            })
         }
     }
 
@@ -57,6 +61,7 @@ let  EmulatorProperties = props =>{
                             <div key="emulator_props">
                                 <InputField inline ID="name" name="name" label="Emulator Name" defaultValue={props.selected_emulator.name} onKeyDown={handle_change}/>
                                 <InputField inline ID="n_cycles" name="n_cycles" label="Number of cycles" defaultValue={props.selected_emulator.n_cycles} onKeyDown={handle_change}/>
+                                <ToggleField inline name="async_multirate" label={["Synchronous", "Asynchronous"]} value={props.selected_emulator.async_multirate} onChange={handle_change}/>
                             </div>
                         }
                         />

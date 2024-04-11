@@ -27,6 +27,7 @@ export class up_emulator {
         this.name = emulator_obj.name;
         this.cores = emulator_obj.cores;
         this.n_cycles = emulator_obj.n_cycles;
+        this.async_multirate = emulator_obj.async_multirate;
         if(!emulator_obj.connections){
             this.connections = [];
         } else {
@@ -40,7 +41,8 @@ export class up_emulator {
             name:'new_emulator_'+ emulator_id,
             cores:{},
             connections:[],
-            n_cycles:1
+            n_cycles:1,
+            async_multirate:false
         };
         return new up_emulator(emulator_obj);
     }
@@ -92,6 +94,13 @@ export class up_emulator {
         let edit = {emulator:this.id, value:n_cycles, action:"edit_cycles"};
         return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then(()=>{
             this.n_cycles = n_cycles;
+        });
+    };
+    
+    edit_async_multirate = (is_async) =>{
+        let edit = {emulator:this.id, value:is_async, action:"edit_async_multirate"};
+        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then(()=>{
+            this.async_multirate = is_async;
         });
     };
     edit_core_props = (core_id, field, value) =>{

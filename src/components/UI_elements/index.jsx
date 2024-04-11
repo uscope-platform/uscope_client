@@ -33,6 +33,7 @@ export {ListItem} from './ListItem'
 export {TwoColumnSelector} from "./TwoColumnSelector"
 export {Chip} from "./Chip"
 export {Radio} from "./Radio"
+export {ToggleField} from "./ToggleField"
 
 export {FormLayout} from "./Layouts/FormLayout"
 export {SidebarCollapsableNameLayout} from "./Layouts/SidebarCollapsableNameLayout"
