@@ -56,6 +56,10 @@ let  CoreInputProperties = props =>{
             field = "source"
             value = {...sel_in.source, ...{"type":value}};
         }
+        if(field === "source_value") {
+            field = "source";
+            value = {...sel_in.source, ...{"value":value}};
+        }
         props.selected_emulator.edit_input(settings.emulator_selected_component.obj.id,
             field, value, settings.emulator_selected_iom.obj).then(()=>{
             forceUpdate();
@@ -99,7 +103,7 @@ let  CoreInputProperties = props =>{
                         label="Value"
                         defaultValue={sel_in.source.value}
                         onKeyDown={handle_change_iom}
-                        key="souce_value"
+                        key="source_value"
                     />
                 )
             }else if(sel_in.source.type==="file"){
@@ -111,12 +115,12 @@ let  CoreInputProperties = props =>{
 
                 ret.push(<SelectField
                     inline
-                    key="souce_value"
+                    key="source_value"
                     label="Data Series"
                     onChange={handle_select}
                     value={{value: sel_in.source.type, label: sel_in.source.type}}
                     defaultValue="Select data series"
-                    name="souce_value"
+                    name="source_value"
                     options={files}
                 />)
             }
