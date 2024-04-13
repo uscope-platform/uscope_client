@@ -170,7 +170,7 @@ export class up_application {
     }
 
     add_selected_program = (program_id) =>{
-        let edit = {application:this.id, program:program_id, action:"add_selected_program"};
+        let edit = {application:this.id, program:program_id, action:"add_selectedProgram"};
         this.programs.push(program_id);
         return backend_post(api_dictionary.applications.edit, edit);
     }
@@ -377,7 +377,7 @@ export class up_application {
         let idx = this.scripts.indexOf(script_id)
         this.scripts.splice(idx,1);
 
-        let edit = {application:this.id, script:script_id, action:"remove_selected_script"};
+        let edit = {application:this.id, script:script_id, action:"remove_selectedScript"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -385,7 +385,7 @@ export class up_application {
         let idx = this.programs.indexOf(program_id)
         this.programs.splice(idx,1);
 
-        let edit = {application:this.id, program:program_id, action:"remove_selected_program"};
+        let edit = {application:this.id, program:program_id, action:"remove_selectedProgram"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
