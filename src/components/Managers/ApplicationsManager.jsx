@@ -218,6 +218,8 @@ let  ApplicationsManager = props =>{
     }
 
 
+    let misc_obj={application_name:selected_app.application_name, clock_frequency:selected_app.clock_frequency, bitstream: selected_app.bitstream, ...selected_app.miscellaneous}
+
     let get_tabs_content = ()=>{
         return([
             <div key="channels">
@@ -361,13 +363,13 @@ let  ApplicationsManager = props =>{
                     contentName="Miscellaneous Field"/>
                 <CardStack>
                     {
-                        Object.keys(selected_app.miscellaneous).map((key)=>{
+                        Object.keys(misc_obj).map((key)=>{
                             return <MiscFieldProperties
                                 key={key}
                                 application={selected_app}
                                 forceUpdate={forceUpdate}
                                 name={key}
-                                value={selected_app.miscellaneous[key]}
+                                value={misc_obj[key]}
                             />
                         })
                     }
