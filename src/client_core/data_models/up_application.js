@@ -189,7 +189,7 @@ export class up_application {
 
     set_misc_param = (param_name) =>{
         let edit = {application:this.id, field: {name:param_name, value:"0"}, action:"add_misc"};
-        this[param_name] = 0;
+        this.miscellaneous[param_name] = 0;
         store.dispatch(addApplication({[this.id]:this}))
         return backend_post(api_dictionary.applications.edit, edit);
 
@@ -272,11 +272,11 @@ export class up_application {
         let edit = {}
         if(rename_param){
             edit =  {application:this.id, field: {old_name:param_name, name:param_value}, action:"edit_misc"};
-            this[param_value] = this[param_name];
-            delete this[param_name];
+            this.miscellaneous[param_value] = this.miscellaneous[param_name];
+            delete this.miscellaneous[param_name];
         } else {
             edit = {application:this.id, field: {old_name:null, name:param_name, value:param_value}, action:"edit_misc"};
-            this[param_name] = param_value;
+            this.miscellaneous[param_name] = param_value;
         }
         store.dispatch(addApplication({[this.id]:this}))
         return backend_post(api_dictionary.applications.edit, edit);
@@ -390,7 +390,7 @@ export class up_application {
     }
 
     remove_misc_field = (field_name) =>{
-        delete this[field_name]
+        delete this.miscellaneous[field_name]
         let edit = {application:this.id, field:{name:field_name}, action:"remove_misc"};
         store.dispatch(addApplication({[this.application_name]:this}))
         return backend_post(api_dictionary.applications.edit, edit);
