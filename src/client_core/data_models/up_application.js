@@ -86,7 +86,7 @@ export class up_application {
             signed:true
         };
         this.channels.push(ch);
-        let edit = {application:this.id, channel:ch, action:"add_channel"};
+        let edit = {application:this.id, item:ch, action:"add_channel"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -98,7 +98,7 @@ export class up_application {
             default:false
         };
         this.channel_groups.push(chg);
-        let edit = {application:this.id, group:chg, action:"add_channel_group"};
+        let edit = {application:this.id, item:chg, action:"add_channelGroup"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -108,7 +108,7 @@ export class up_application {
             value:0
         }
         this.initial_registers_values.push(irv);
-        let edit = {application:this.id, irv:irv, action:"add_irv"};
+        let edit = {application:this.id, item:irv, action:"add_irv"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -118,7 +118,7 @@ export class up_application {
             trigger: ""
         };
         this.macro.push(m);
-        let edit = {application:this.id, macro:m, action:"add_macro"};
+        let edit = {application:this.id, item:m, action:"add_macro"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -131,7 +131,7 @@ export class up_application {
             visible: false
         };
         this.parameters.push(p)
-        let edit = {application:this.id, parameter:p, action:"add_parameter"};
+        let edit = {application:this.id, item:p, action:"add_parameter"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -146,7 +146,7 @@ export class up_application {
             type: 'Registers',
             spec_id: ""
         };
-        let edit = {application:this.id, peripheral:p, action:"add_peripheral"};
+        let edit = {application:this.id, item:p, action:"add_peripheral"};
         this.peripherals.push(p);
         return backend_post(api_dictionary.applications.edit, edit);
     }
@@ -158,19 +158,19 @@ export class up_application {
             peripheral:"",
             enabled:false
         };
-        let edit = {application:this.id, filter:f, action:"add_filter"};
+        let edit = {application:this.id, item:f, action:"add_filter"};
         this.filters.push(f);
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
     add_selected_script = (script_id) =>{
-        let edit = {application:this.id, script:script_id, action:"add_selectedScript"};
+        let edit = {application:this.id, item:script_id, action:"add_selectedScript"};
         this.scripts.push(script_id);
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
     add_selected_program = (program_id) =>{
-        let edit = {application:this.id, program:program_id, action:"add_selectedProgram"};
+        let edit = {application:this.id, item:program_id, action:"add_selectedProgram"};
         this.programs.push(program_id);
         return backend_post(api_dictionary.applications.edit, edit);
     }
@@ -182,13 +182,13 @@ export class up_application {
             default_program:"",
             io:[]
         }
-        let edit = {application:this.id, soft_core:sc, action:"add_soft_core"};
+        let edit = {application:this.id, item:sc, action:"add_softCores"};
         this.soft_cores.push(sc);
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
     set_misc_param = (param_name) =>{
-        let edit = {application:this.id, field: {name:param_name, value:"0"}, action:"add_misc"};
+        let edit = {application:this.id, item: {name:param_name, value:"0"}, action:"add_misc"};
         this.miscellaneous[param_name] = 0;
         store.dispatch(addApplication({[this.id]:this}))
         return backend_post(api_dictionary.applications.edit, edit);
@@ -201,7 +201,8 @@ export class up_application {
             return ch.name === channel_name;
         })
         channel[field_name] = field_value;
-        let edit = {application:this.id, channel:channel_name, field:field_name, value:field_value, action:"edit_channel"};
+        let path = this.id + "." +  channel_name  + "." + field_name;
+        let edit = {application:this.id, channel:channel_name, field:field_name, path:path, value:field_value, action:"edit_channel"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -210,7 +211,7 @@ export class up_application {
             return chg.group_name === chg_name;
         })
         group[field_name] = field_value;
-        let edit = {application:this.id, group:chg_name, field:field_name, value:field_value, action:"edit_channel_group"};
+        let edit = {application:this.id, group:chg_name, field:field_name, value:field_value, action:"edit_channelGroup"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -288,7 +289,7 @@ export class up_application {
         });
 
         core[field_name] = field_value;
-        let edit = {application:this.id, core:core_id, field:field_name, value:field_value, action:"edit_soft_core"};
+        let edit = {application:this.id, core:core_id, field:field_name, value:field_value, action:"edit_softCores"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -309,7 +310,7 @@ export class up_application {
         })
         this.channel_groups.splice(idx,1);
 
-        let edit = {application:this.id, group:chg_id, action:"remove_channel_group"};
+        let edit = {application:this.id, group:chg_id, action:"remove_channelGroup"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -359,7 +360,7 @@ export class up_application {
         })
         this.soft_cores.splice(idx,1);
 
-        let edit = {application:this.id, core:core_id, action:"remove_soft_core"};
+        let edit = {application:this.id, core:core_id, action:"remove_softCores"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
