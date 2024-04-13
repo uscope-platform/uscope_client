@@ -7,7 +7,6 @@
   "clock_frequency": 100000000,
   "initial_registers_values": [],
   "macro": [],
-  "n_enables": 0,
   "parameters": [],
   "filters": [],
   "scripts": [],
@@ -22,6 +21,5 @@
       "proxy_address": "0",
       "spec_id": 1
     }
-  ],
-  "timebase_address": ""
+  ]
 }

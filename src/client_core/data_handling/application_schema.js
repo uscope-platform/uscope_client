@@ -36,9 +36,6 @@ export let application_schema = {
       "type": "array",
       "items": {}
     },
-    "n_enables": {
-      "type": "integer"
-    },
     "parameters": {
       "description": "Array of user defined parameters",
       "type": "array",
@@ -98,10 +95,6 @@ export let application_schema = {
         },
         "else":true
       }
-    },
-    "timebase_address": {
-      "description": "address of the main timebase generator",
-      "type": "string"
     }
   },
   "required": [
@@ -112,9 +105,7 @@ export let application_schema = {
     "clock_frequency",
     "initial_registers_values",
     "macro",
-    "n_enables",
     "parameters",
-    "peripherals",
-    "timebase_address"
+    "peripherals"
   ]
 }

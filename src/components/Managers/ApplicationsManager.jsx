@@ -356,12 +356,13 @@ let  ApplicationsManager = props =>{
                     contentName="Miscellaneous Field"/>
                 <CardStack>
                     {
-                        misc_fields.map((field)=>{
+                        Object.keys(selected_app.miscellaneous).map((key)=>{
                             return <MiscFieldProperties
-                                key={field.name}
+                                key={key}
                                 application={selected_app}
                                 forceUpdate={forceUpdate}
-                                field={field}
+                                name={key}
+                                value={selected_app.miscellaneous[key]}
                             />
                         })
                     }

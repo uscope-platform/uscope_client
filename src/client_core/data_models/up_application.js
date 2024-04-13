@@ -33,18 +33,13 @@ export class up_application {
         this.clock_frequency = app_data_obj.clock_frequency;
         this.initial_registers_values = app_data_obj.initial_registers_values;
         this.macro = app_data_obj.macro;
-        this.n_enables = app_data_obj.n_enables;
         this.parameters = app_data_obj.parameters;
         this.peripherals = app_data_obj.peripherals;
-        this.timebase_address = app_data_obj.timebase_address;
         this.soft_cores = app_data_obj.soft_cores;
         this.filters = app_data_obj.filters;
         this.programs = app_data_obj.programs;
         this.scripts = app_data_obj.scripts;
-        let nonstandard_fields =  up_application._get_nonstandard_fields(app_data_obj);
-        for(let i of nonstandard_fields){
-            this[i] = app_data_obj[i];
-        }
+        this.miscellaneous = app_data_obj.miscellaneous;
     }
 
     static construct_empty(app_id){
@@ -57,14 +52,13 @@ export class up_application {
             clock_frequency:100000000,
             initial_registers_values:[],
             macro:[],
-            n_enables:0,
             parameters:[],
             peripherals:[],
-            timebase_address:"",
             soft_cores:[],
             filters:[],
             programs:[],
             scripts:[],
+            miscellaneous:{}
         };
         return new up_application(app_data_obj);
     }
@@ -408,25 +402,11 @@ export class up_application {
         })
     }
 
-    static _get_nonstandard_fields(obj){
-        return Object.keys(obj).filter((field)=>{
-
-            let is_not_function = typeof obj[field] !== 'function';
-            let is_standard_field = [
-                "application_name","bitstream", "channels", "channel_groups","clock_frequency",
-                "initial_registers_values", "macro", "n_enables", "parameters", "peripherals",
-                "timebase_address", "filters", "scripts", "programs", "id"
-            ].includes(field);
-            return !is_standard_field && is_not_function;
-        })
-    }
-
     get_raw_obj = () => {
         return this._get_app();
     }
 
     _get_app = () =>{
-        let misc_params = up_application._get_nonstandard_fields(this);
         let ret_obj = {
             [this.application_name]:{
                 id:this.id,
@@ -437,19 +417,14 @@ export class up_application {
                 clock_frequency:this.clock_frequency,
                 initial_registers_values:this.initial_registers_values,
                 macro:this.macro,
-                n_enables:this.n_enables,
                 parameters:this.parameters,
                 peripherals:this.peripherals,
-                timebase_address:this.timebase_address,
                 soft_cores:this.soft_cores,
                 filters:this.filters,
                 scripts:this.scripts,
                 programs:this.programs
             }
         };
-        for (const x of misc_params) {
-            ret_obj[this.application_name][x] = this[x];
-        }
         return ret_obj;
     }
 }

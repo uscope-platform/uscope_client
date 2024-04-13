@@ -71,7 +71,7 @@ let ApplicationChooser = (props) =>{
         }
         dispatch(initialize_channels(ch_obj));
         //SET UP MUXES FOR NEW GROUP
-        let scope_mux_address = parseInt(app['scope_mux_address']);
+        let scope_mux_address = parseInt(app['miscellaneous']['scope_mux_address']);
         if(scope_mux_address){
             for(let item of channels_list){
                 if(item){
