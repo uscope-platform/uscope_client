@@ -202,7 +202,7 @@ export class up_application {
         })
         channel[field_name] = field_value;
         let path = this.id + "." +  channel_name  + "." + field_name;
-        let edit = {application:this.id, channel:channel_name, field:field_name, path:path, value:field_value, action:"edit_channel"};
+        let edit = {application:this.id, item_id:channel_name, field:field_name, path:path, value:field_value, action:"edit_channel"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -211,7 +211,7 @@ export class up_application {
             return chg.group_name === chg_name;
         })
         group[field_name] = field_value;
-        let edit = {application:this.id, group:chg_name, field:field_name, value:field_value, action:"edit_channelGroup"};
+        let edit = {application:this.id, item_id:chg_name, field:field_name, value:field_value, action:"edit_channelGroup"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -220,7 +220,7 @@ export class up_application {
             return i.address === address;
         })
         irv[field_name] = field_value;
-        let edit = {application:this.id, address:address, field:field_name, value:field_value, action:"edit_irv"};
+        let edit = {application:this.id, item_id:address, field:field_name, value:field_value, action:"edit_irv"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -231,7 +231,7 @@ export class up_application {
         })
 
         macro[field_name] = field_value;
-        let edit = {application:this.id, name:macro_name, field:field_name, value:field_value, action:"edit_macro"};
+        let edit = {application:this.id, item_id:macro_name, field:field_name, value:field_value, action:"edit_macro"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -242,7 +242,7 @@ export class up_application {
         })
 
         param[field_name] = field_value;
-        let edit = {application:this.id, parameter:param_id, field:field_name, value:field_value, action:"edit_parameter"};
+        let edit = {application:this.id, item_id:param_id, field:field_name, value:field_value, action:"edit_parameter"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -253,7 +253,7 @@ export class up_application {
         })
 
         periph[field_name] = field_value;
-        let edit = {application:this.id, peripheral:periph_name, field:field_name, value:field_value, action:"edit_peripheral"};
+        let edit = {application:this.id, item_id:periph_name, field:field_name, value:field_value, action:"edit_peripheral"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -264,7 +264,7 @@ export class up_application {
         })
 
         filter[field_name] = field_value;
-        let edit = {application:this.id, filter:filter_id, field:field_name, value:field_value, action:"edit_filter"};
+        let edit = {application:this.id, item_id:filter_id, field:field_name, value:field_value, action:"edit_filter"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -289,7 +289,7 @@ export class up_application {
         });
 
         core[field_name] = field_value;
-        let edit = {application:this.id, core:core_id, field:field_name, value:field_value, action:"edit_softCores"};
+        let edit = {application:this.id, item_id:core_id, field:field_name, value:field_value, action:"edit_softCores"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
