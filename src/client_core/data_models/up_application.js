@@ -300,7 +300,7 @@ export class up_application {
         })
         this.channels.splice(idx,1);
 
-        let edit = {application:this.id, channel:ch_id, action:"remove_channel"};
+        let edit = {application:this.id, item_id:ch_id, action:"remove_channel"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -310,7 +310,7 @@ export class up_application {
         })
         this.channel_groups.splice(idx,1);
 
-        let edit = {application:this.id, group:chg_id, action:"remove_channelGroup"};
+        let edit = {application:this.id, item_id:chg_id, action:"remove_channelGroup"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -320,7 +320,7 @@ export class up_application {
         })
         this.initial_registers_values.splice(idx,1);
 
-        let edit = {application:this.id, address:address, action:"remove_irv"};
+        let edit = {application:this.id, item_id:address, action:"remove_irv"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -330,7 +330,7 @@ export class up_application {
         })
         this.macro.splice(idx,1);
 
-        let edit = {application:this.id, name:macro_name, action:"remove_macro"};
+        let edit = {application:this.id, item_id:macro_name, action:"remove_macro"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -340,7 +340,7 @@ export class up_application {
         })
         this.parameters.splice(idx,1);
 
-        let edit = {application:this.id, parameter:param_id, action:"remove_parameter"};
+        let edit = {application:this.id, item_id:param_id, action:"remove_parameter"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -350,7 +350,7 @@ export class up_application {
         })
         this.peripherals.splice(idx,1);
 
-        let edit = {application:this.id, peripheral:periph_id, action:"remove_peripheral"};
+        let edit = {application:this.id, item_id:periph_id, action:"remove_peripheral"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -360,7 +360,7 @@ export class up_application {
         })
         this.soft_cores.splice(idx,1);
 
-        let edit = {application:this.id, core:core_id, action:"remove_softCores"};
+        let edit = {application:this.id, item_id:core_id, action:"remove_softCores"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -370,7 +370,7 @@ export class up_application {
         })
         this.filters.splice(idx,1);
 
-        let edit = {application:this.id, filter:filter_id, action:"remove_filter"};
+        let edit = {application:this.id, item_id:filter_id, action:"remove_filter"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -378,7 +378,7 @@ export class up_application {
         let idx = this.scripts.indexOf(script_id)
         this.scripts.splice(idx,1);
 
-        let edit = {application:this.id, script:script_id, action:"remove_selectedScript"};
+        let edit = {application:this.id, item_id:script_id, action:"remove_selectedScript"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -386,7 +386,7 @@ export class up_application {
         let idx = this.programs.indexOf(program_id)
         this.programs.splice(idx,1);
 
-        let edit = {application:this.id, program:program_id, action:"remove_selectedProgram"};
+        let edit = {application:this.id, item_id:program_id, action:"remove_selectedProgram"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
