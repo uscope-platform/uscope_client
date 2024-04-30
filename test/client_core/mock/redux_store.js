@@ -78,7 +78,6 @@ let test_application = {
                 trigger: 'setup_load_step_trg'
             }
         ],
-        n_enables: '1',
         parameters: [
             {
                 parameter_id: 'deadtime',
@@ -147,8 +146,7 @@ let test_application = {
                 type: 'Registers'
             }
         ],
-        scope_mux_address: '0x43c00300',
-        timebase_address: '0x43c00304'
+        scope_mux_address: '0x43c00300'
 }
 
 

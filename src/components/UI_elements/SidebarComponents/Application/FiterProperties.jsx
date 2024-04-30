@@ -85,7 +85,7 @@ export let  FilterProperties = props =>{
             name={props.filter.id}
             onRemove={handleRemove}
         >
-            <InputField inline ID='filter_id' name='filter_id' defaultValue={props.filter.id} onKeyDown={handleonKeyDown} label="ID"/>
+            <InputField inline ID='id' name='id' defaultValue={props.filter.id} onKeyDown={handleonKeyDown} label="ID"/>
 
             <SelectField
                 label="Filter Hardware"

@@ -45,9 +45,9 @@ let  EnablesProperties = props =>{
     const store = useStore();
 
     const [application, ] = useState(applications_list[settings['application']])
-    const [timebase_addr, ] = useState(applications_list[settings['application']]['timebase_address']);
+    const [timebase_addr, ] = useState(applications_list[settings['application']]['miscellaneous']['timebase_address']);
     const [channelGroups, ] = useState(applications_list[settings['application']]['channel_groups']);
-    const [scope_mux_address, ] = useState(parseInt(applications_list[settings['application']]['scope_mux_address']));
+    const [scope_mux_address, ] = useState(parseInt(applications_list[settings['application']]['miscellaneous']['scope_mux_address']));
 
     const peripheral_specs = useSelector( state => state.peripherals);
 

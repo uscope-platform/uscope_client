@@ -26,7 +26,7 @@ export let  MiscFieldProperties = props =>{
     let handleonKeyDown = (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
             let app = new up_application(props.application);
-            app.edit_misc_param(props.field.name,event.target.value, event.target.name==="name").then(()=>{
+            app.edit_misc_param(props.name,event.target.value, event.target.name==="name").then(()=>{
                 props.forceUpdate();
             });
         }
@@ -34,7 +34,7 @@ export let  MiscFieldProperties = props =>{
 
     let handleRemove = (event) =>{
         let app = new up_application(props.application);
-        app.remove_misc_field(props.field.name).then(()=>{
+        app.remove_misc_field(props.name).then(()=>{
             props.forceUpdate();
         });
         props.forceUpdate();
@@ -43,11 +43,11 @@ export let  MiscFieldProperties = props =>{
 
     return(
         <Card
-            name={props.field.name}
+            name={props.name}
             onRemove={handleRemove}
         >
-            <InputField inline ID="name" name="name" defaultValue={props.field.name} onKeyDown={handleonKeyDown} label="Name"/>
-            <InputField inline ID="value"  name='value' defaultValue={props.field.value} onKeyDown={handleonKeyDown} label="Value"/>
+            <InputField inline ID="name" name="name" defaultValue={props.name} onKeyDown={handleonKeyDown} label="Name"/>
+            <InputField inline ID="value"  name='value' defaultValue={props.value} onKeyDown={handleonKeyDown} label="Value"/>
         </Card>
     );
 };

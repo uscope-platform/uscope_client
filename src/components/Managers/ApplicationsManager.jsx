@@ -146,29 +146,34 @@ let  ApplicationsManager = props =>{
 
 
     let handle_add_new = (item_type, old_items, title_prop) =>{
-        let ids = Object.values(old_items).map((item)=>{
-            const regex = new RegExp("new_"+item_type+"_(\\d+)", 'g');
-            let match = Array.from(item[title_prop].matchAll(regex), m => m[1]);
-            if(match.length>0){
-                return match;
-            } else{
-                return null;
-            }
-        });
+        let ids = 3;
+        if(item_type === "misc"){
+            ids = Object.keys(old_items).map((item)=>{
+                const regex = new RegExp("new_"+item_type+"_(\\d+)", 'g');
+                let match = Array.from(item.matchAll(regex), m => m[1]);
+                if(match.length>0){
+                    return match;
+                } else{
+                    return null;
+                }
+            });
+        } else {
+             ids = Object.values(old_items).map((item)=>{
+                const regex = new RegExp("new_"+item_type+"_(\\d+)", 'g');
+                let match = Array.from(item[title_prop].matchAll(regex), m => m[1]);
+                if(match.length>0){
+                    return match;
+                } else{
+                    return null;
+                }
+            });
+        }
+
         ids = ids.filter(Boolean);
         let name ="new_" + item_type + "_" + get_next_id(ids.sort());
         add_content(name, item_type);
     }
 
-    let misc_fields = [];
-    if(selected_app){
-        misc_fields = Object.keys(selected_app).map((key, index) => {
-            if (!Array.isArray(selected_app[key]) && typeof selected_app[key] !== 'function' && key !== 'id')
-                return {name:key, value:selected_app[key]}
-            else return null;
-        });
-        misc_fields = misc_fields.filter(Boolean);
-    }
 
 
     let handleDeselectScript = (id) =>{
@@ -212,6 +217,8 @@ let  ApplicationsManager = props =>{
         });
     }
 
+
+    let misc_obj={application_name:selected_app.application_name, clock_frequency:selected_app.clock_frequency, bitstream: selected_app.bitstream, ...selected_app.miscellaneous}
 
     let get_tabs_content = ()=>{
         return([
@@ -352,16 +359,17 @@ let  ApplicationsManager = props =>{
             </div>,
             <div key="misc_fields">
                 <ManagerToolbar
-                    onAdd={() =>{handle_add_new("misc", misc_fields, "name");}}
+                    onAdd={() =>{handle_add_new("misc", selected_app.miscellaneous, "name");}}
                     contentName="Miscellaneous Field"/>
                 <CardStack>
                     {
-                        misc_fields.map((field)=>{
+                        Object.keys(misc_obj).map((key)=>{
                             return <MiscFieldProperties
-                                key={field.name}
+                                key={key}
                                 application={selected_app}
                                 forceUpdate={forceUpdate}
-                                field={field}
+                                name={key}
+                                value={misc_obj[key]}
                             />
                         })
                     }

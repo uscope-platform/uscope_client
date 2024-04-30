@@ -33,18 +33,13 @@ export class up_application {
         this.clock_frequency = app_data_obj.clock_frequency;
         this.initial_registers_values = app_data_obj.initial_registers_values;
         this.macro = app_data_obj.macro;
-        this.n_enables = app_data_obj.n_enables;
         this.parameters = app_data_obj.parameters;
         this.peripherals = app_data_obj.peripherals;
-        this.timebase_address = app_data_obj.timebase_address;
         this.soft_cores = app_data_obj.soft_cores;
         this.filters = app_data_obj.filters;
         this.programs = app_data_obj.programs;
         this.scripts = app_data_obj.scripts;
-        let nonstandard_fields =  up_application._get_nonstandard_fields(app_data_obj);
-        for(let i of nonstandard_fields){
-            this[i] = app_data_obj[i];
-        }
+        this.miscellaneous = app_data_obj.miscellaneous;
     }
 
     static construct_empty(app_id){
@@ -57,14 +52,13 @@ export class up_application {
             clock_frequency:100000000,
             initial_registers_values:[],
             macro:[],
-            n_enables:0,
             parameters:[],
             peripherals:[],
-            timebase_address:"",
             soft_cores:[],
             filters:[],
             programs:[],
             scripts:[],
+            miscellaneous:{}
         };
         return new up_application(app_data_obj);
     }
@@ -92,7 +86,7 @@ export class up_application {
             signed:true
         };
         this.channels.push(ch);
-        let edit = {application:this.id, channel:ch, action:"add_channel"};
+        let edit = {application:this.id, item:ch, action:"add_channel"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -104,7 +98,7 @@ export class up_application {
             default:false
         };
         this.channel_groups.push(chg);
-        let edit = {application:this.id, group:chg, action:"add_channel_group"};
+        let edit = {application:this.id, item:chg, action:"add_channelGroup"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -114,7 +108,7 @@ export class up_application {
             value:0
         }
         this.initial_registers_values.push(irv);
-        let edit = {application:this.id, irv:irv, action:"add_irv"};
+        let edit = {application:this.id, item:irv, action:"add_irv"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -124,7 +118,7 @@ export class up_application {
             trigger: ""
         };
         this.macro.push(m);
-        let edit = {application:this.id, macro:m, action:"add_macro"};
+        let edit = {application:this.id, item:m, action:"add_macro"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -137,7 +131,7 @@ export class up_application {
             visible: false
         };
         this.parameters.push(p)
-        let edit = {application:this.id, parameter:p, action:"add_parameter"};
+        let edit = {application:this.id, item:p, action:"add_parameter"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -152,7 +146,7 @@ export class up_application {
             type: 'Registers',
             spec_id: ""
         };
-        let edit = {application:this.id, peripheral:p, action:"add_peripheral"};
+        let edit = {application:this.id, item:p, action:"add_peripheral"};
         this.peripherals.push(p);
         return backend_post(api_dictionary.applications.edit, edit);
     }
@@ -164,19 +158,19 @@ export class up_application {
             peripheral:"",
             enabled:false
         };
-        let edit = {application:this.id, filter:f, action:"add_filter"};
+        let edit = {application:this.id, item:f, action:"add_filter"};
         this.filters.push(f);
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
     add_selected_script = (script_id) =>{
-        let edit = {application:this.id, script:script_id, action:"add_selected_script"};
+        let edit = {application:this.id, item:script_id, action:"add_selectedScript"};
         this.scripts.push(script_id);
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
     add_selected_program = (program_id) =>{
-        let edit = {application:this.id, program:program_id, action:"add_selected_program"};
+        let edit = {application:this.id, item:program_id, action:"add_selectedProgram"};
         this.programs.push(program_id);
         return backend_post(api_dictionary.applications.edit, edit);
     }
@@ -188,14 +182,14 @@ export class up_application {
             default_program:"",
             io:[]
         }
-        let edit = {application:this.id, soft_core:sc, action:"add_soft_core"};
+        let edit = {application:this.id, item:sc, action:"add_softCores"};
         this.soft_cores.push(sc);
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
     set_misc_param = (param_name) =>{
-        let edit = {application:this.id, field: {name:param_name, value:"0"}, action:"add_misc"};
-        this[param_name] = 0;
+        let edit = {application:this.id, item: {name:param_name, value:"0"}, action:"add_misc"};
+        this.miscellaneous[param_name] = 0;
         store.dispatch(addApplication({[this.id]:this}))
         return backend_post(api_dictionary.applications.edit, edit);
 
@@ -207,7 +201,8 @@ export class up_application {
             return ch.name === channel_name;
         })
         channel[field_name] = field_value;
-        let edit = {application:this.id, channel:channel_name, field:field_name, value:field_value, action:"edit_channel"};
+        let path = this.id + "." +  channel_name  + "." + field_name;
+        let edit = {application:this.id, item_id:channel_name, field:field_name, path:path, value:field_value, action:"edit_channel"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -216,7 +211,7 @@ export class up_application {
             return chg.group_name === chg_name;
         })
         group[field_name] = field_value;
-        let edit = {application:this.id, group:chg_name, field:field_name, value:field_value, action:"edit_channel_group"};
+        let edit = {application:this.id, item_id:chg_name, field:field_name, value:field_value, action:"edit_channelGroup"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -225,7 +220,7 @@ export class up_application {
             return i.address === address;
         })
         irv[field_name] = field_value;
-        let edit = {application:this.id, address:address, field:field_name, value:field_value, action:"edit_irv"};
+        let edit = {application:this.id, item_id:address, field:field_name, value:field_value, action:"edit_irv"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -236,7 +231,7 @@ export class up_application {
         })
 
         macro[field_name] = field_value;
-        let edit = {application:this.id, name:macro_name, field:field_name, value:field_value, action:"edit_macro"};
+        let edit = {application:this.id, item_id:macro_name, field:field_name, value:field_value, action:"edit_macro"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -247,7 +242,7 @@ export class up_application {
         })
 
         param[field_name] = field_value;
-        let edit = {application:this.id, parameter:param_id, field:field_name, value:field_value, action:"edit_parameter"};
+        let edit = {application:this.id, item_id:param_id, field:field_name, value:field_value, action:"edit_parameter"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -258,7 +253,7 @@ export class up_application {
         })
 
         periph[field_name] = field_value;
-        let edit = {application:this.id, peripheral:periph_name, field:field_name, value:field_value, action:"edit_peripheral"};
+        let edit = {application:this.id, item_id:periph_name, field:field_name, value:field_value, action:"edit_peripheral"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -269,7 +264,7 @@ export class up_application {
         })
 
         filter[field_name] = field_value;
-        let edit = {application:this.id, filter:filter_id, field:field_name, value:field_value, action:"edit_filter"};
+        let edit = {application:this.id, item_id:filter_id, field:field_name, value:field_value, action:"edit_filter"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -278,11 +273,11 @@ export class up_application {
         let edit = {}
         if(rename_param){
             edit =  {application:this.id, field: {old_name:param_name, name:param_value}, action:"edit_misc"};
-            this[param_value] = this[param_name];
-            delete this[param_name];
+            this.miscellaneous[param_value] = this.miscellaneous[param_name];
+            delete this.miscellaneous[param_name];
         } else {
             edit = {application:this.id, field: {old_name:null, name:param_name, value:param_value}, action:"edit_misc"};
-            this[param_name] = param_value;
+            this.miscellaneous[param_name] = param_value;
         }
         store.dispatch(addApplication({[this.id]:this}))
         return backend_post(api_dictionary.applications.edit, edit);
@@ -294,7 +289,7 @@ export class up_application {
         });
 
         core[field_name] = field_value;
-        let edit = {application:this.id, core:core_id, field:field_name, value:field_value, action:"edit_soft_core"};
+        let edit = {application:this.id, item_id:core_id, field:field_name, value:field_value, action:"edit_softCores"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -305,7 +300,7 @@ export class up_application {
         })
         this.channels.splice(idx,1);
 
-        let edit = {application:this.id, channel:ch_id, action:"remove_channel"};
+        let edit = {application:this.id, item_id:ch_id, action:"remove_channel"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -315,7 +310,7 @@ export class up_application {
         })
         this.channel_groups.splice(idx,1);
 
-        let edit = {application:this.id, group:chg_id, action:"remove_channel_group"};
+        let edit = {application:this.id, item_id:chg_id, action:"remove_channelGroup"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -325,7 +320,7 @@ export class up_application {
         })
         this.initial_registers_values.splice(idx,1);
 
-        let edit = {application:this.id, address:address, action:"remove_irv"};
+        let edit = {application:this.id, item_id:address, action:"remove_irv"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -335,7 +330,7 @@ export class up_application {
         })
         this.macro.splice(idx,1);
 
-        let edit = {application:this.id, name:macro_name, action:"remove_macro"};
+        let edit = {application:this.id, item_id:macro_name, action:"remove_macro"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -345,7 +340,7 @@ export class up_application {
         })
         this.parameters.splice(idx,1);
 
-        let edit = {application:this.id, parameter:param_id, action:"remove_parameter"};
+        let edit = {application:this.id, item_id:param_id, action:"remove_parameter"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -355,7 +350,7 @@ export class up_application {
         })
         this.peripherals.splice(idx,1);
 
-        let edit = {application:this.id, peripheral:periph_id, action:"remove_peripheral"};
+        let edit = {application:this.id, item_id:periph_id, action:"remove_peripheral"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -365,7 +360,7 @@ export class up_application {
         })
         this.soft_cores.splice(idx,1);
 
-        let edit = {application:this.id, core:core_id, action:"remove_soft_core"};
+        let edit = {application:this.id, item_id:core_id, action:"remove_softCores"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -375,7 +370,7 @@ export class up_application {
         })
         this.filters.splice(idx,1);
 
-        let edit = {application:this.id, filter:filter_id, action:"remove_filter"};
+        let edit = {application:this.id, item_id:filter_id, action:"remove_filter"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -383,7 +378,7 @@ export class up_application {
         let idx = this.scripts.indexOf(script_id)
         this.scripts.splice(idx,1);
 
-        let edit = {application:this.id, script:script_id, action:"remove_selected_script"};
+        let edit = {application:this.id, item_id:script_id, action:"remove_selectedScript"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
@@ -391,12 +386,12 @@ export class up_application {
         let idx = this.programs.indexOf(program_id)
         this.programs.splice(idx,1);
 
-        let edit = {application:this.id, program:program_id, action:"remove_selected_program"};
+        let edit = {application:this.id, item_id:program_id, action:"remove_selectedProgram"};
         return backend_post(api_dictionary.applications.edit, edit);
     }
 
     remove_misc_field = (field_name) =>{
-        delete this[field_name]
+        delete this.miscellaneous[field_name]
         let edit = {application:this.id, field:{name:field_name}, action:"remove_misc"};
         store.dispatch(addApplication({[this.application_name]:this}))
         return backend_post(api_dictionary.applications.edit, edit);
@@ -408,25 +403,11 @@ export class up_application {
         })
     }
 
-    static _get_nonstandard_fields(obj){
-        return Object.keys(obj).filter((field)=>{
-
-            let is_not_function = typeof obj[field] !== 'function';
-            let is_standard_field = [
-                "application_name","bitstream", "channels", "channel_groups","clock_frequency",
-                "initial_registers_values", "macro", "n_enables", "parameters", "peripherals",
-                "timebase_address", "filters", "scripts", "programs", "id"
-            ].includes(field);
-            return !is_standard_field && is_not_function;
-        })
-    }
-
     get_raw_obj = () => {
         return this._get_app();
     }
 
     _get_app = () =>{
-        let misc_params = up_application._get_nonstandard_fields(this);
         let ret_obj = {
             [this.application_name]:{
                 id:this.id,
@@ -437,19 +418,14 @@ export class up_application {
                 clock_frequency:this.clock_frequency,
                 initial_registers_values:this.initial_registers_values,
                 macro:this.macro,
-                n_enables:this.n_enables,
                 parameters:this.parameters,
                 peripherals:this.peripherals,
-                timebase_address:this.timebase_address,
                 soft_cores:this.soft_cores,
                 filters:this.filters,
                 scripts:this.scripts,
                 programs:this.programs
             }
         };
-        for (const x of misc_params) {
-            ret_obj[this.application_name][x] = this[x];
-        }
         return ret_obj;
     }
 }

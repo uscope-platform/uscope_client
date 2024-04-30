@@ -29,14 +29,12 @@ test("application_creation", () => {
             clock_frequency: 100000000,
             initial_registers_values: [],
             macro: [],
-            n_enables: 0,
             parameters: [],
             soft_cores: [],
             peripherals: [],
             filters:[],
             scripts:[],
-            programs:[],
-            timebase_address: ''
+            programs:[]
         }};
     expect(app._get_app()).toStrictEqual(check_app)
 })
@@ -53,14 +51,12 @@ test("remote add", () => {
                 clock_frequency: 100000000,
                 initial_registers_values: [],
                 macro: [],
-                n_enables: 0,
                 parameters: [],
                 soft_cores: [],
                 peripherals: [],
                 filters:[],
                 scripts:[],
-                programs:[],
-                timebase_address: ''
+                programs:[]
             }};
 
         expect(created_app_data).toStrictEqual(check_app);
@@ -95,13 +91,11 @@ test("add_channel", () => {
                     initial_registers_values: [],
                     macro: [],
                     soft_cores: [],
-                    n_enables: 0,
                     parameters: [],
                     peripherals: [],
                     filters:[],
                     scripts:[],
-                    programs:[],
-                    timebase_address: ''
+                    programs:[]
                 }
             };
 
@@ -144,14 +138,12 @@ test("add_channel_group", () => {
                     clock_frequency: 100000000,
                     initial_registers_values: [],
                     macro: [],
-                    n_enables: 0,
                     parameters: [],
                     peripherals: [],
                     soft_cores: [],
                     filters:[],
                     scripts:[],
-                    programs:[],
-                    timebase_address: ''
+                    programs:[]
                 }
             };
 
@@ -187,14 +179,12 @@ test("add_irv", () => {
                         value:"0"
                     }],
                     macro: [],
-                    n_enables: 0,
                     parameters: [],
                     soft_cores: [],
                     peripherals: [],
                     filters:[],
                     scripts:[],
-                    programs:[],
-                    timebase_address: ''
+                    programs:[]
                 }
             };
 
@@ -227,14 +217,12 @@ test("add_macro", () => {
                         name:"test_macro",
                         trigger:""
                     }],
-                    n_enables: 0,
                     parameters: [],
                     soft_cores: [],
                     peripherals: [],
                     filters:[],
                     scripts:[],
-                    programs:[],
-                    timebase_address: ''
+                    programs:[]
                 }
             };
 
@@ -266,7 +254,6 @@ test("add_parameter", () => {
                     initial_registers_values: [],
                     macro: [],
                     soft_cores: [],
-                    n_enables: 0,
                     parameters: [{
                         parameter_id:"test_param",
                         parameter_name:"test_param",
@@ -277,8 +264,7 @@ test("add_parameter", () => {
                     peripherals: [],
                     filters:[],
                     scripts:[],
-                    programs:[],
-                    timebase_address: ''
+                    programs:[]
                 }
             };
 
@@ -312,7 +298,6 @@ test("add_peripheral", () => {
                     clock_frequency: 100000000,
                     initial_registers_values: [],
                     macro: [],
-                    n_enables: 0,
                     soft_cores: [],
                     filters:[],
                     scripts:[],
@@ -327,8 +312,7 @@ test("add_peripheral", () => {
                         spec_id:"",
                         proxy_address:"0",
                         type:"Registers"
-                    }],
-                    timebase_address: ''
+                    }]
                 }
             };
 
@@ -372,13 +356,11 @@ test("add_soft_core", () => {
                         default_program:"",
                         io:[]
                     }],
-                    n_enables: 0,
                     parameters: [],
                     peripherals: [],
                     filters:[],
                     scripts:[],
-                    programs:[],
-                    timebase_address: ''
+                    programs:[]
                 }
             };
 
@@ -411,14 +393,12 @@ test("set_misc_periph", () => {
                     clock_frequency: 100000000,
                     initial_registers_values: [],
                     macro: [],
-                    n_enables: 0,
                     parameters: [],
                     peripherals: [],
                     soft_cores: [],
                     filters:[],
                     scripts:[],
                     programs:[],
-                    timebase_address: '',
                     test_param:0,
                 }
             };
@@ -463,14 +443,12 @@ test("edit_channel", () => {
                         clock_frequency: 100000000,
                         initial_registers_values: [],
                         macro: [],
-                        n_enables: 0,
                         parameters: [],
                         peripherals: [],
                         soft_cores: [],
                         filters:[],
                         scripts:[],
-                        programs:[],
-                        timebase_address: ''
+                        programs:[]
                     }
                 };
 
@@ -502,14 +480,12 @@ test("edit_channel_group", () => {
                         clock_frequency: 100000000,
                         initial_registers_values: [],
                         macro: [],
-                        n_enables: 0,
                         parameters: [],
                         peripherals: [],
                         soft_cores: [],
                         filters:[],
                         scripts:[],
-                        programs:[],
-                        timebase_address: ''
+                        programs:[]
                     }
                 };
 
@@ -540,14 +516,12 @@ test("edit_irv", () => {
                             value:"0"
                         }],
                         macro: [],
-                        n_enables: 0,
                         parameters: [],
                         peripherals: [],
                         soft_cores: [],
                         filters:[],
                         scripts:[],
-                        programs:[],
-                        timebase_address: ''
+                        programs:[]
                     }
                 };
 
@@ -580,14 +554,12 @@ test("edit_macro", () => {
                             name: "macro_2",
                             trigger: ""
                         }],
-                        n_enables: 0,
                         parameters: [],
                         peripherals: [],
                         filters:[],
                         scripts:[],
                         programs:[],
-                        soft_cores: [],
-                        timebase_address: ''
+                        soft_cores: []
                     }
                 };
 
@@ -616,7 +588,6 @@ test("edit_parameter", () => {
                         clock_frequency: 100000000,
                         initial_registers_values: [],
                         macro: [],
-                        n_enables: 0,
                         parameters: [{
                             parameter_id: "test_param",
                             parameter_name: "test_param",
@@ -628,8 +599,7 @@ test("edit_parameter", () => {
                         filters:[],
                         scripts:[],
                         programs:[],
-                        soft_cores: [],
-                        timebase_address: ''
+                        soft_cores: []
                     }
                 };
 
@@ -664,13 +634,11 @@ test("edit_soft_core", () => {
                             default_program:"test_program",
                             io:[]
                         }],
-                        n_enables: 0,
                         parameters: [],
                         peripherals: [],
                         filters:[],
                         scripts:[],
-                        programs:[],
-                        timebase_address: ''
+                        programs:[]
                     }
                 };
 
@@ -699,14 +667,12 @@ test("edit_misc_param_value", () => {
                         clock_frequency: 100000000,
                         initial_registers_values: [],
                         macro: [],
-                        n_enables: 0,
                         parameters: [],
                         soft_cores: [],
                         peripherals: [],
                         filters:[],
                         scripts:[],
                         programs:[],
-                        timebase_address: '',
                         test_param: 52,
                     }
                 };
@@ -737,14 +703,12 @@ test("edit_misc_rename", () => {
                         clock_frequency: 100000000,
                         initial_registers_values: [],
                         macro: [],
-                        n_enables: 0,
                         parameters: [],
                         soft_cores: [],
                         peripherals: [],
                         filters:[],
                         scripts:[],
                         programs:[],
-                        timebase_address: '',
                         test_2: 0,
                     }
                 };
@@ -776,14 +740,12 @@ test("remove_channel", () => {
                         clock_frequency: 100000000,
                         initial_registers_values: [],
                         macro: [],
-                        n_enables: 0,
                         parameters: [],
                         soft_cores: [],
                         peripherals: [],
                         filters:[],
                         scripts:[],
-                        programs:[],
-                        timebase_address: ''
+                        programs:[]
                     }
                 };
 
@@ -814,14 +776,12 @@ test("remove_channel_group", () => {
                         clock_frequency: 100000000,
                         initial_registers_values: [],
                         macro: [],
-                        n_enables: 0,
                         parameters: [],
                         soft_cores: [],
                         peripherals: [],
                         filters:[],
                         scripts:[],
-                        programs:[],
-                        timebase_address: ''
+                        programs:[]
                     }
                 };
 
@@ -849,14 +809,12 @@ test("remove_irv", () => {
                         clock_frequency: 100000000,
                         initial_registers_values: [],
                         macro: [],
-                        n_enables: 0,
                         parameters: [],
                         soft_cores: [],
                         peripherals: [],
                         filters:[],
                         scripts:[],
-                        programs:[],
-                        timebase_address: ''
+                        programs:[]
                     }
                 };
 
@@ -886,14 +844,12 @@ test("remove_macro", () => {
                         clock_frequency: 100000000,
                         initial_registers_values: [],
                         macro: [],
-                        n_enables: 0,
                         parameters: [],
                         soft_cores: [],
                         peripherals: [],
                         filters:[],
                         scripts:[],
-                        programs:[],
-                        timebase_address: ''
+                        programs:[]
                     }
                 };
 
@@ -922,14 +878,12 @@ test("remove_parameter", () => {
                         clock_frequency: 100000000,
                         initial_registers_values: [],
                         macro: [],
-                        n_enables: 0,
                         parameters: [],
                         soft_cores: [],
                         peripherals: [],
                         filters:[],
                         scripts:[],
-                        programs:[],
-                        timebase_address: ''
+                        programs:[]
                     }
                 };
 
@@ -958,14 +912,12 @@ test("remove_peripheral", () => {
                         clock_frequency: 100000000,
                         initial_registers_values: [],
                         macro: [],
-                        n_enables: 0,
                         soft_cores: [],
                         parameters: [],
                         peripherals: [],
                         filters:[],
                         scripts:[],
-                        programs:[],
-                        timebase_address: ''
+                        programs:[]
                     }
                 };
 
@@ -994,14 +946,12 @@ test("remove_misc_param", () => {
                         clock_frequency: 100000000,
                         initial_registers_values: [],
                         macro: [],
-                        n_enables: 0,
                         parameters: [],
                         soft_cores: [],
                         peripherals: [],
                         filters:[],
                         scripts:[],
-                        programs:[],
-                        timebase_address: ''
+                        programs:[]
                     }
                 };
 

@@ -68,7 +68,6 @@ export const applications_init = {
                 trigger: 'setup_load_step_trg'
             }
         ],
-        n_enables: '1',
         parameters: [
             {
                 parameter_id: 'deadtime',
@@ -117,8 +116,7 @@ export const applications_init = {
                 type: 'Registers'
             }
         ],
-        scope_mux_address: '0x43c00300',
-        timebase_address: '0x43c00304'
+        scope_mux_address: '0x43c00300'
     }
 }
 
