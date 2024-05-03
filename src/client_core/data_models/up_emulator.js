@@ -27,7 +27,6 @@ export class up_emulator {
         this.name = emulator_obj.name;
         this.cores = emulator_obj.cores;
         this.n_cycles = emulator_obj.n_cycles;
-        this.async_multirate = emulator_obj.async_multirate;
         if(!emulator_obj.connections){
             this.connections = [];
         } else {
@@ -41,8 +40,7 @@ export class up_emulator {
             name:'new_emulator_'+ emulator_id,
             cores:{},
             connections:[],
-            n_cycles:1,
-            async_multirate:false
+            n_cycles:1
         };
         return new up_emulator(emulator_obj);
     }
@@ -73,7 +71,7 @@ export class up_emulator {
                 comparators:"reducing",
                 efi_implementation:"none"
             },
-            multirate_divisor:0
+            sampling_frequency:0
         };
         this.cores[id] = c;
         let edit = {emulator:this.id, core:c, action:"add_core"};
@@ -97,12 +95,6 @@ export class up_emulator {
         });
     };
 
-    edit_async_multirate = (is_async) =>{
-        let edit = {emulator:this.id, value:is_async, action:"edit_async_multirate"};
-        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then(()=>{
-            this.async_multirate = is_async;
-        });
-    };
     edit_core_props = (core_id, field, value) =>{
         let edit = {emulator:this.id, core:core_id.toString(), field_name:field, value:value, action:"edit_core_props"};
         return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then(()=>{
@@ -405,7 +397,7 @@ export class up_emulator {
                         return {content: prog.program_content, build_settings: prog.build_settings, headers:headers};
                     })(),
                     options: item.options,
-                    multirate_divisor: item.multirate_divisor
+                    sampling_frequency: item.sampling_frequency
                 })
             }),
             interconnect: this.connections.map((item) => {
@@ -427,8 +419,7 @@ export class up_emulator {
                     })
                 };
             }),
-            n_cycles:this.n_cycles,
-            async_multirate:this.async_multirate
+            n_cycles:this.n_cycles
         };
     }
 
@@ -512,7 +503,6 @@ export class up_emulator {
             name: this.name,
             cores: this.cores,
             n_cycles: this.n_cycles,
-            async_multirate:this.async_multirate,
             connections: this.connections
         };
     }

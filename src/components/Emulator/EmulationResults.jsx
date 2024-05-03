@@ -31,6 +31,7 @@ let EmulationResults = function (props) {
     const settings = useSelector(state => state.settings);
 
     let [selected_core, set_selected_core] = useState();
+    let [timebase, set_timebase] = useState();
     let [selected_output, set_selected_output] = useState([]);
 
     let [cores, set_cores] = useState([]);
@@ -43,9 +44,11 @@ let EmulationResults = function (props) {
 
     useEffect(() => {
         let cores = [...Object.keys(props.results)];
+        cores = cores.filter(item => {return item !== "timebase"});
         if(props.inputs){
             cores = [...cores, ...Object.keys(props.inputs)];
         }
+        set_timebase(props.results['timebase']);
         set_cores(cores);
     }, [props.results]);
 
@@ -70,7 +73,7 @@ let EmulationResults = function (props) {
     let plot_config = {...channels.config, response:true};
 
     let handle_datapoint_select = (datapoint, multi_selection) =>{
-        let x = [];
+
         if(selected_output.includes(datapoint)) return;
         let selected_data = [];
         if(props.results.hasOwnProperty(selected_core)){
@@ -79,24 +82,19 @@ let EmulationResults = function (props) {
             selected_data = props.inputs[selected_core][datapoint];
         }
         if(selected_data[0].length === undefined){
-            for(let i =0; i<selected_data.length; i++){
-                x.push(i);
-            }
             selected_data = [{
                 name:datapoint,
-                x: x,
+                x: timebase,
                 y: selected_data,
                 type: 'scatter',
                 mode: 'lines'
             }];
         } else {
-            for(let i =0; i<selected_data[0].length; i++){
-                x.push(i);
-            }
+
             selected_data = selected_data.map((trace)=>{
                 return {
                     name:datapoint,
-                    x: x,
+                    x: timebase,
                     y: trace,
                     type: 'scatter',
                     mode: 'lines'

@@ -42,7 +42,7 @@ let  EmulatorCoreProperties = props =>{
                 let comps = event.target.value.split(".");
                 value = {filename: event.target.value, type:comps[1]}
             }
-            if(field === "order" || field === "channels" || field === "multirate_divisor") value = parseInt(value);
+            if(field === "order" || field === "channels" || field === "sampling_frequency") value = parseInt(value);
             if(field==="efi_implementation"||field==="comparators"){
                 value = props.selected_core.options;
                 value[field] = event.target.value;
@@ -74,7 +74,7 @@ let  EmulatorCoreProperties = props =>{
             <InputField inline ID="order" name="order" label="Execution Order" defaultValue={props.selected_core.order} onKeyDown={handle_change}/>
             <InputField inline ID="efi_implementation" name="efi_implementation" label="EFI" defaultValue={props.selected_core.options.efi_implementation} onKeyDown={handle_change}/>
             <InputField inline ID="comparators" name="comparators" label="comparators" defaultValue={props.selected_core.options.comparators} onKeyDown={handle_change}/>
-            <InputField inline ID="multirate_divisor" name="multirate_divisor" label="Multirate Divisor" defaultValue={props.selected_core.multirate_divisor} onKeyDown={handle_change}/>
+            <InputField inline ID="sampling_frequency" name="sampling_frequency" label="Sampling Frequency" defaultValue={props.selected_core.sampling_frequency} onKeyDown={handle_change}/>
         </div>
     );
 };
