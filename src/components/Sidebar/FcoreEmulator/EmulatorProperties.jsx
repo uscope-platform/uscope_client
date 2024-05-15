@@ -18,6 +18,7 @@ import React, {useReducer} from 'react';
 import {Responsive, WidthProvider} from "react-grid-layout";
 import {InputField, SimpleContent, ToggleField, UIPanel} from "../../UI_elements";
 import {useSelector} from "react-redux";
+import {RangedInputField} from "../../UI_elements/RangedInputField";
 
 let  EmulatorProperties = props =>{
 
@@ -25,6 +26,8 @@ let  EmulatorProperties = props =>{
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
+
+    
 
     let handle_change = (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab") {
@@ -36,10 +39,17 @@ let  EmulatorProperties = props =>{
                 props.selected_emulator.edit_cycles(parseInt(event.target.value)).then(()=>{
                     forceUpdate();
                 });
+            } else if(event.target.name === "emulation_time"){
+                props.selected_emulator.edit_emulation_time(parseFloat(event.target.value)).then(()=>{
+                    forceUpdate();
+                });
             }
         }
     }
 
+    const handle_range_change = (value)=>{
+        //TODO: HANDLE RANGE CHANGE
+    }
 
     const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -57,6 +67,17 @@ let  EmulatorProperties = props =>{
                             <div key="emulator_props">
                                 <InputField inline ID="name" name="name" label="Emulator Name" defaultValue={props.selected_emulator.name} onKeyDown={handle_change}/>
                                 <InputField inline ID="n_cycles" name="n_cycles" label="Number of cycles" defaultValue={props.selected_emulator.n_cycles} onKeyDown={handle_change}/>
+                                <RangedInputField
+                                    ID="emulation_time"
+                                    name="emulation_time"
+                                    label="Emulation Time"
+                                    defaultValue={props.selected_emulator.emulation_time}
+                                    onKeyDown={handle_change}
+                                    rangeOptions={["µs", "ms", "s"]}
+                                    defaultRange="s"
+                                    onRangeChange={handle_range_change}
+                                />
+
                             </div>
                         }
                         />

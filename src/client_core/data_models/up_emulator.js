@@ -27,6 +27,7 @@ export class up_emulator {
         this.name = emulator_obj.name;
         this.cores = emulator_obj.cores;
         this.n_cycles = emulator_obj.n_cycles;
+        this.emulation_time = emulator_obj.emulation_time;
         if(!emulator_obj.connections){
             this.connections = [];
         } else {
@@ -40,7 +41,8 @@ export class up_emulator {
             name:'new_emulator_'+ emulator_id,
             cores:{},
             connections:[],
-            n_cycles:1
+            n_cycles:1,
+            emulation_time:0.001
         };
         return new up_emulator(emulator_obj);
     }
@@ -94,7 +96,12 @@ export class up_emulator {
             this.n_cycles = n_cycles;
         });
     };
-
+    edit_emulation_time = (emu_time) =>{
+        let edit = {emulator:this.id, value:emu_time, action:"edit_emu_time"};
+        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then(()=>{
+            this.emulation_time = emu_time;
+        });
+    };
     edit_core_props = (core_id, field, value) =>{
         let edit = {emulator:this.id, core:core_id.toString(), field_name:field, value:value, action:"edit_core_props"};
         return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then(()=>{
@@ -419,7 +426,8 @@ export class up_emulator {
                     })
                 };
             }),
-            n_cycles:this.n_cycles
+            n_cycles:this.n_cycles,
+            emulation_time:this.emulation_time
         };
     }
 
@@ -503,6 +511,7 @@ export class up_emulator {
             name: this.name,
             cores: this.cores,
             n_cycles: this.n_cycles,
+            emulation_timeemulation_time:this.emulation_time,
             connections: this.connections
         };
     }
