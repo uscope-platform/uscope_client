@@ -51,7 +51,7 @@ flex-flow: wrap;
 
 
 export let  RangedInputField = props =>{
-    let [range, set_range] = useState({label:props.defaultRange, value:props.defaultRange});
+    let [range, set_range] = useState();
     const color= props.color ? props.color : ColorTheme.background.select_background ;
 
     const SelectStyle = {
@@ -82,6 +82,10 @@ export let  RangedInputField = props =>{
         })
     };
 
+    useEffect(()=>{
+        set_range({label: props.range, value: props.range})
+    }, [props.range])
+
 
     const options = props.rangeOptions.map((val)=>{
         return {label: val, value: val};
@@ -95,7 +99,6 @@ export let  RangedInputField = props =>{
         <Wrapper inline={props.inline}>
             <Label htmlFor={props.ID} inline={props.inline}>{props.label}</Label>
             <InnerInput
-                placeholder={props.placeholder}
                 name={props.name}
                 key={props.key}
                 color={props.color ? props.color : ColorTheme.background.level_3}
@@ -104,16 +107,15 @@ export let  RangedInputField = props =>{
                 disabled = {(props.disabled)? "disabled" : ""}
                 onChange={e => {if(props.onChange) props.onChange(e)}}
                 onKeyDown={e => {if(props.onKeyDown) props.onKeyDown(e)}}
-                defaultValue={props.defaultValue}
-                value={props.value?props.value:undefined}
+                defaultValue={props.value}
             />
             <Select
                 styles={SelectStyle}
-                defaultValue={range}
                 menuPortalTarget={document.body}
                 onChange={handle_range_change}
                 color={props.color ? props.color : ColorTheme.background.level_3}
                 options={options}
+                value={range}
             />
         </Wrapper>
     );

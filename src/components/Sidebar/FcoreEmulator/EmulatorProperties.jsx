@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useReducer} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 
 import {Responsive, WidthProvider} from "react-grid-layout";
 import {InputField, SimpleContent, ToggleField, UIPanel} from "../../UI_elements";
@@ -26,8 +26,30 @@ let  EmulatorProperties = props =>{
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
+    const [range, set_range] = useState("s");
+    const [indicated_time, set_indicated_time] = useState(0);
+    const emulation_time = props.selected_emulator && props.selected_emulator.emulation_time ? props.selected_emulator.emulation_time : 0;
+    const ranges_map = {s:1, ms:1e-3, us:1e-6};
 
-    
+    useEffect(() => {
+        if(emulation_time){
+            let new_range;
+            let new_indicated_time;
+            if(emulation_time>= 1){
+                new_range = "s";
+                new_indicated_time = emulation_time;
+            } else if(emulation_time>=1e-3){
+                new_range = "ms";
+                new_indicated_time = emulation_time/ranges_map.ms;
+            } else {
+                new_range = "us";
+                new_indicated_time = emulation_time/ranges_map.us;
+            }
+            set_range(new_range);
+            set_indicated_time(new_indicated_time);
+        }
+    }, [emulation_time]);
+
 
     let handle_change = (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab") {
@@ -40,7 +62,9 @@ let  EmulatorProperties = props =>{
                     forceUpdate();
                 });
             } else if(event.target.name === "emulation_time"){
-                props.selected_emulator.edit_emulation_time(parseFloat(event.target.value)).then(()=>{
+                set_indicated_time(event.target.value);
+                let time = parseFloat(event.target.value)*ranges_map[range];
+                props.selected_emulator.edit_emulation_time(time).then(()=>{
                     forceUpdate();
                 });
             }
@@ -49,6 +73,10 @@ let  EmulatorProperties = props =>{
 
     const handle_range_change = (value)=>{
         //TODO: HANDLE RANGE CHANGE
+        let time = indicated_time*ranges_map[value];
+        props.selected_emulator.edit_emulation_time(time).then(()=>{
+            forceUpdate();
+        });
     }
 
     const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -71,11 +99,11 @@ let  EmulatorProperties = props =>{
                                     ID="emulation_time"
                                     name="emulation_time"
                                     label="Emulation Time"
-                                    defaultValue={props.selected_emulator.emulation_time}
+                                    rangeOptions={["us", "ms", "s"]}
                                     onKeyDown={handle_change}
-                                    rangeOptions={["µs", "ms", "s"]}
-                                    defaultRange="s"
                                     onRangeChange={handle_range_change}
+                                    value={indicated_time}
+                                    range={range}
                                 />
 
                             </div>
