@@ -230,8 +230,7 @@ export const emulators_init = {
         "id":1,
         name:'new_emulator_1',
         cores:{},
-        connections:[],
-        n_cycles:1
+        connections:[]
     }
 }
 

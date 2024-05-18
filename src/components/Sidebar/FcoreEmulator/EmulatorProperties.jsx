@@ -57,10 +57,6 @@ let  EmulatorProperties = props =>{
                 props.selected_emulator.edit_name(event.target.value).then(() => {
                     forceUpdate();
                 });
-            } else if(event.target.name === "n_cycles"){
-                props.selected_emulator.edit_cycles(parseInt(event.target.value)).then(()=>{
-                    forceUpdate();
-                });
             } else if(event.target.name === "emulation_time"){
                 set_indicated_time(event.target.value);
                 let time = parseFloat(event.target.value)*ranges_map[range];
@@ -94,7 +90,7 @@ let  EmulatorProperties = props =>{
                         <SimpleContent name={"Emulator Properties"} content={
                             <div key="emulator_props">
                                 <InputField inline ID="name" name="name" label="Emulator Name" defaultValue={props.selected_emulator.name} onKeyDown={handle_change}/>
-                                <InputField inline ID="n_cycles" name="n_cycles" label="Number of cycles" defaultValue={props.selected_emulator.n_cycles} onKeyDown={handle_change}/>
+
                                 <RangedInputField
                                     ID="emulation_time"
                                     name="emulation_time"
