@@ -573,7 +573,8 @@ export class up_application {
                 soft_cores:this.soft_cores,
                 filters:this.filters,
                 scripts:this.scripts,
-                programs:this.programs
+                programs:this.programs,
+                miscellaneous:this.miscellaneous
             }
         };
         return ret_obj;
