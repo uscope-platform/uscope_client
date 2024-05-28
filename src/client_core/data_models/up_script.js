@@ -21,6 +21,16 @@ import {backend_delete, backend_patch, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
 import {AddScript, removeScript} from "../../redux/Actions/scriptsActions";
 
+const default_script_content = `
+    function script_main(parameters, context) {
+    
+        let ws = []; 
+        let regs = []; 
+        return {workspace:ws, registers:regs};
+     
+    }
+`
+
 export class up_script {
     constructor(script_obj) {
         if(!script_obj)
@@ -33,7 +43,7 @@ export class up_script {
     }
 
     static construct_empty(script_id){
-        let script_obj = {id:script_id, name:'new script_'+script_id,path:`new script_${script_id}.js`, script_content:'', triggers:''};
+        let script_obj = {id:script_id, name:'new script_'+script_id,path:`new script_${script_id}.js`, script_content:default_script_content, triggers:''};
         return new up_script(script_obj);
     }
 
