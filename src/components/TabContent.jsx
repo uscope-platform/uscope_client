@@ -25,6 +25,8 @@ const ProgramsManager = React.lazy(()=> import('./Managers/ProgramsManager'));
 const PlatformManager = React.lazy(()=> import('./Managers/PlatformManager'));
 const BitstreamManager = React.lazy(()=> import('./Managers/BitstreamManager'));
 const HilView = React.lazy(() => import('./Emulator/HilView'));
+const SettingsView = React.lazy(() => import('./Settings/Settings_view'));
+
 
 let TabContent = props => {
 
@@ -37,7 +39,8 @@ let TabContent = props => {
         programs: <ProgramsManager />,
         platform: <PlatformManager />,
         filters: <FilterManager />,
-        emulator:<HilView/>
+        emulator:<HilView/>,
+        settings:<SettingsView/>
     };
 
 

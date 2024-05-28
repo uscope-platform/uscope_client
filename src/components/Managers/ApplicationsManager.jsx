@@ -48,8 +48,8 @@ const empty_app = {
     filters:[],
     scripts:[],
     programs:[]
-
 };
+
 let  ApplicationsManager = props =>{
 
     const settings = useSelector(state => state.settings);

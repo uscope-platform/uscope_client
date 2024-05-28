@@ -43,7 +43,7 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 
 let operator_views = ["Scope"];
 let user_views = ["Scripts", "Applications", "Programs", "Bitstreams", "Filters", "Emulator"];
-let admin_views =["Peripherals", "Platform"];
+let admin_views =["Peripherals", "Platform", "Settings"];
 
 
 let AuthApp = (props) =>{

@@ -40,16 +40,17 @@ let ApplicationChooser = (props) =>{
     const dispatch = useDispatch();
 
 
-    let handleApplicationChosen = e =>{
+    let handleApplicationChosen = async e =>{
         let app = new up_application(applications[e]);
         dispatch(setSetting(["selected_application", e]));
-        app.set_active().then(()=>{
-            dispatch(setSetting(["application", e]));
-            initializePlotState(applications[e]);
-            props.choice_done();
-        }).catch(error =>{
+        try {
+            await app.set_active();
+        }catch (error){
             console.log("Error: error while choosing application");
-        });
+        }
+        dispatch(setSetting(["application", e]));
+        initializePlotState(applications[e]);
+        props.choice_done();
     };
 
     let initializePlotState = (app) =>{
