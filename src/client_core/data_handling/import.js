@@ -36,6 +36,9 @@ export const import_application = (raw_json, id) => {
     let imported_app = JSON.parse(raw_json);
     imported_app["id"] = id;
     let [valid, errors] = validate_json(imported_app, application_schema);
+    if(imported_app.miscellaneous === undefined){
+        imported_app.miscellaneous =  {}
+    }
     if(valid){
         let app = new up_application(imported_app);
         return app.add_remote().then(()=>{

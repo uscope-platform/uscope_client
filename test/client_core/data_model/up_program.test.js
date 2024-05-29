@@ -29,8 +29,13 @@ test("program creation", () => {
     let check_program = {
             id:1,
             build_settings: {
-                io: [],
+                io: {
+                    inputs:[],
+                    outputs:[],
+                    memories:[]
+                }
             },
+            headers:[],
             name:"new program_1",
             program_content:'',
             program_type:''
@@ -46,8 +51,13 @@ test("remote add", () => {
             body:{
                 id:1,
                 build_settings: {
-                    io: [],
+                    io: {
+                        inputs:[],
+                        outputs:[],
+                        memories:[]
+                    }
                 },
+                headers:[],
                 name:"new program_1",
                 program_content:'',
                 program_type:''
@@ -69,8 +79,13 @@ test("set content", () => {
             let check_program = {
                 id:1,
                 build_settings: {
-                    io: [],
+                    io: {
+                        inputs:[],
+                        outputs:[],
+                        memories:[]
+                    }
                 },
+                headers:[],
                 name:"new program_1",
                 program_content:'TEST CONTENT',
                 program_type:''
@@ -115,8 +130,13 @@ test("load program", () => {
             let check_obj = {
                 body: {
                     build_settings: {
-                        io: [],
+                        io: {
+                            inputs:[],
+                            outputs:[],
+                            memories:[]
+                        }
                     },
+                    headers:[],
                     core_id: "0x83c00000",
                     id: 10,
                     name: "new program_10",

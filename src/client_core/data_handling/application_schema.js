@@ -22,9 +22,29 @@ export let application_schema = {
       "type": "array",
       "items": {}
     },
-    "clock_frequency": {
-      "description": "frequency of the main clock in the FPGA",
-      "type": "integer"
+    "pl_clocks":{
+      "description": "Object containing the frequency of each PS-PL clock signal",
+      "type": "object",
+      "properties": {
+        "0":{
+          "type": "integer",
+          "description": "frequency of PS-PL clock 0"
+        },
+        "1":{
+          "type": "integer",
+          "description": "frequency of PS-PL clock 1"
+        },
+        "2":{
+          "type": "integer",
+          "description": "frequency of PS-PL clock 2"
+        },
+        "3":{
+          "type": "integer",
+          "description": "frequency of PS-PL clock 3"
+        }
+      },
+      "additionalProperties": false,
+      "minProperties": 4
     },
     "initial_registers_values": {
       "description": "array of objects that specify values to be written to specific registers upon FPGA loading",
@@ -102,7 +122,6 @@ export let application_schema = {
     "bitstream",
     "channel_groups",
     "channels",
-    "clock_frequency",
     "initial_registers_values",
     "macro",
     "parameters",

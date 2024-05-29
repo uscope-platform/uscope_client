@@ -218,7 +218,7 @@ let  ApplicationsManager = props =>{
     }
 
 
-    let misc_obj={application_name:selected_app.application_name, clock_frequency:selected_app.clock_frequency, bitstream: selected_app.bitstream, ...selected_app.miscellaneous}
+    let misc_obj={application_name:selected_app.application_name, bitstream: selected_app.bitstream, ...selected_app.miscellaneous}
 
     let get_tabs_content = ()=>{
         return([

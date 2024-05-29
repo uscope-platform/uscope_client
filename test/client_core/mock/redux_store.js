@@ -32,7 +32,12 @@ let test_application = {
         bitstream: 'scm.bin',
         channel_groups: [],
         channels: [],
-        clock_frequency: 100000000,
+        pl_clocks: {
+            "0": 100e6,
+            "1": 200e6,
+            "2": 100e6,
+            "3": 100e6
+        },
         default_core_address: '0x83c00000',
         initial_registers_values: [
             {

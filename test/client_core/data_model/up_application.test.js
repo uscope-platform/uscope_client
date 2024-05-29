@@ -26,12 +26,13 @@ test("application_creation", () => {
             bitstream: '',
             channels: [],
             channel_groups:[],
-            clock_frequency: 100000000,
+            pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
             initial_registers_values: [],
             macro: [],
             parameters: [],
             soft_cores: [],
             peripherals: [],
+            miscellaneous:{},
             filters:[],
             scripts:[],
             programs:[]
@@ -48,7 +49,7 @@ test("remote add", () => {
                 bitstream: '',
                 channels: [],
                 channel_groups:[],
-                clock_frequency: 100000000,
+                pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
                 initial_registers_values: [],
                 macro: [],
                 parameters: [],
@@ -56,6 +57,7 @@ test("remote add", () => {
                 peripherals: [],
                 filters:[],
                 scripts:[],
+                miscellaneous:{},
                 programs:[]
             }};
 
@@ -87,11 +89,12 @@ test("add_channel", () => {
                         signed:true
                     }],
                     channel_groups: [],
-                    clock_frequency: 100000000,
+                    pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
                     initial_registers_values: [],
                     macro: [],
                     soft_cores: [],
                     parameters: [],
+                    miscellaneous: {},
                     peripherals: [],
                     filters:[],
                     scripts:[],
@@ -100,7 +103,7 @@ test("add_channel", () => {
             };
 
             expect(edit_app_data).toStrictEqual({
-                action: "add_channel", application: 1, channel: {
+                action: "add", object:"channel", application: 1, item: {
                     enabled: false,
                     id: "test_ch",
                     max_value: "1000",
@@ -135,11 +138,12 @@ test("add_channel_group", () => {
                         channels:[],
                         "default":false
                     }],
-                    clock_frequency: 100000000,
+                    pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
                     initial_registers_values: [],
                     macro: [],
                     parameters: [],
                     peripherals: [],
+                    miscellaneous: {},
                     soft_cores: [],
                     filters:[],
                     scripts:[],
@@ -148,7 +152,7 @@ test("add_channel_group", () => {
             };
 
             expect(edit_app_data).toStrictEqual({
-                action: "add_channel_group", application: 1, group: {
+                action: "add", object:"channel_group", application: 1, item: {
                     group_id:"test_chg",
                     group_name:"test_chg",
                     channels:[],
@@ -173,14 +177,15 @@ test("add_irv", () => {
                     id:1,
                     channels: [],
                     channel_groups: [],
-                    clock_frequency: 100000000,
+                    pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
                     initial_registers_values: [{
                         address:"0x543245",
-                        value:"0"
+                        value:0
                     }],
                     macro: [],
                     parameters: [],
                     soft_cores: [],
+                    miscellaneous: {},
                     peripherals: [],
                     filters:[],
                     scripts:[],
@@ -189,9 +194,9 @@ test("add_irv", () => {
             };
 
             expect(edit_app_data).toStrictEqual({
-                action: "add_irv", application: 1, irv: {
+                action: "add", application: 1, object:"irv", item: {
                     address:"0x543245",
-                    value:"0"
+                    value:0
                 }
             });
             let state = mock_store.getState();
@@ -211,7 +216,7 @@ test("add_macro", () => {
                     bitstream: '',
                     channels: [],
                     channel_groups: [],
-                    clock_frequency: 100000000,
+                    pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
                     initial_registers_values: [],
                     macro: [{
                         name:"test_macro",
@@ -220,6 +225,7 @@ test("add_macro", () => {
                     parameters: [],
                     soft_cores: [],
                     peripherals: [],
+                    miscellaneous: {},
                     filters:[],
                     scripts:[],
                     programs:[]
@@ -227,7 +233,7 @@ test("add_macro", () => {
             };
 
             expect(edit_app_data).toStrictEqual({
-                action: "add_macro", application: 1, macro: {
+                action: "add", application: 1, object:"macro", item: {
                     name:"test_macro",
                     trigger:""
                 }
@@ -250,7 +256,7 @@ test("add_parameter", () => {
                     bitstream: '',
                     channels: [],
                     channel_groups: [],
-                    clock_frequency: 100000000,
+                    pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
                     initial_registers_values: [],
                     macro: [],
                     soft_cores: [],
@@ -263,13 +269,14 @@ test("add_parameter", () => {
                     }],
                     peripherals: [],
                     filters:[],
+                    miscellaneous: {},
                     scripts:[],
                     programs:[]
                 }
             };
 
             expect(edit_app_data).toStrictEqual({
-                action: "add_parameter", application: 1, parameter: {
+                action: "add", application: 1, object:"parameter", item: {
                     parameter_id:"test_param",
                     parameter_name:"test_param",
                     trigger:"",
@@ -295,12 +302,13 @@ test("add_peripheral", () => {
                     bitstream: '',
                     channels: [],
                     channel_groups: [],
-                    clock_frequency: 100000000,
+                    pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
                     initial_registers_values: [],
                     macro: [],
                     soft_cores: [],
                     filters:[],
                     scripts:[],
+                    miscellaneous:{},
                     programs:[],
                     parameters: [],
                     peripherals: [{
@@ -317,7 +325,7 @@ test("add_peripheral", () => {
             };
 
             expect(edit_app_data).toStrictEqual({
-                action: "add_peripheral", application: 1, peripheral: {
+                action: "add", application: 1,object:"peripheral", item: {
                     base_address:"0",
                     name: "test_periph",
                     peripheral_id:"test_periph",
@@ -347,7 +355,7 @@ test("add_soft_core", () => {
                     bitstream: '',
                     channels: [],
                     channel_groups: [],
-                    clock_frequency: 100000000,
+                    pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
                     initial_registers_values: [],
                     macro: [],
                     soft_cores: [{
@@ -358,6 +366,7 @@ test("add_soft_core", () => {
                     }],
                     parameters: [],
                     peripherals: [],
+                    miscellaneous:{},
                     filters:[],
                     scripts:[],
                     programs:[]
@@ -365,7 +374,7 @@ test("add_soft_core", () => {
             };
 
             expect(edit_app_data).toStrictEqual({
-                action: "add_soft_core", application: 1, soft_core: {
+                action: "add", application: 1, object:"soft_core", item: {
                     id:"test_core",
                     address: 0,
                     default_program:"",
@@ -390,11 +399,12 @@ test("set_misc_periph", () => {
                     bitstream: '',
                     channels: [],
                     channel_groups: [],
-                    clock_frequency: 100000000,
+                    pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
                     initial_registers_values: [],
                     macro: [],
                     parameters: [],
                     peripherals: [],
+                    miscellaneous:{},
                     soft_cores: [],
                     filters:[],
                     scripts:[],
@@ -404,7 +414,7 @@ test("set_misc_periph", () => {
             };
 
             expect(edit_app_data).toStrictEqual({
-                action: "add_misc", application: 1, field: {
+                action: "add", application: 1, object:"misc", item: {
                     name:"test_param",
                     value:"0"
                 }
@@ -440,10 +450,11 @@ test("edit_channel", () => {
                             signed:true
                         }],
                         channel_groups: [],
-                        clock_frequency: 100000000,
+                        pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
                         initial_registers_values: [],
                         macro: [],
                         parameters: [],
+                        miscellaneous:{},
                         peripherals: [],
                         soft_cores: [],
                         filters:[],
@@ -452,7 +463,16 @@ test("edit_channel", () => {
                     }
                 };
 
-                expect(edit_app_data).toStrictEqual({action: "edit_channel", application: 1,channel:"test_ch", field:"number", value:25});
+                expect(edit_app_data).toStrictEqual({
+                    action: "edit",
+                    object: "channel",
+                    item:  {
+                        field: "number",
+                        item_id: "test_ch",
+                        value: 25,
+                    },
+                    application: 1
+                });
                 let state = mock_store.getState();
                 expect(state.applications[1]._get_app()["new application_1"]).toStrictEqual(check_app["new application_1"]);
             });
@@ -477,11 +497,12 @@ test("edit_channel_group", () => {
                             channels:[{test:"obj", id:3}],
                             "default":false
                         }],
-                        clock_frequency: 100000000,
+                        pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
                         initial_registers_values: [],
                         macro: [],
                         parameters: [],
                         peripherals: [],
+                        miscellaneous:{},
                         soft_cores: [],
                         filters:[],
                         scripts:[],
@@ -489,7 +510,16 @@ test("edit_channel_group", () => {
                     }
                 };
 
-                expect(edit_app_data).toStrictEqual({action: "edit_channel_group", application: 1,group:"test_chg", field:"channels", value:[{test:"obj", id:3}]});
+                expect(edit_app_data).toStrictEqual({
+                    action: "edit",
+                    application: 1,
+                    object: "channel_group",
+                    item:{
+                        item_id:"test_chg",
+                        field:"channels",
+                        value:[{test:"obj", id:3}]
+                    }
+                });
                 let state = mock_store.getState();
                 expect(state.applications[1]._get_app()["new application_1"]).toStrictEqual(check_app["new application_1"]);
             });
@@ -510,13 +540,14 @@ test("edit_irv", () => {
                         id:1,
                         channels: [],
                         channel_groups: [],
-                        clock_frequency: 100000000,
+                        pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
                         initial_registers_values: [{
                             address:"0x157",
-                            value:"0"
+                            value:0
                         }],
                         macro: [],
                         parameters: [],
+                        miscellaneous:{},
                         peripherals: [],
                         soft_cores: [],
                         filters:[],
@@ -525,7 +556,16 @@ test("edit_irv", () => {
                     }
                 };
 
-                expect(edit_app_data).toStrictEqual({action: "edit_irv", application: 1, address:"0x543245", field:"address", value:"0x157"});
+                expect(edit_app_data).toStrictEqual({
+                    action: "edit",
+                    application: 1,
+                    item:{
+                        item_id:"0x543245",
+                        field:"address",
+                        value:"0x157"
+                    },
+                    object:"irv"
+                });
                 let state = mock_store.getState();
                 expect(state.applications[1]._get_app()["new application_1"]).toStrictEqual(check_app["new application_1"]);
             });
@@ -548,7 +588,7 @@ test("edit_macro", () => {
                         channels: [],
                         id:1,
                         channel_groups: [],
-                        clock_frequency: 100000000,
+                        pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
                         initial_registers_values: [],
                         macro: [{
                             name: "macro_2",
@@ -557,6 +597,7 @@ test("edit_macro", () => {
                         parameters: [],
                         peripherals: [],
                         filters:[],
+                        miscellaneous:{},
                         scripts:[],
                         programs:[],
                         soft_cores: []
@@ -564,7 +605,15 @@ test("edit_macro", () => {
                 };
 
                 expect(edit_app_data).toStrictEqual({
-                    action: "edit_macro", application: 1, name:"test_macro", field:"name", value:"macro_2"});
+                    action: "edit",
+                    object:"macro",
+                    application: 1,
+                    item:{
+                        item_id:"test_macro",
+                        field:"name",
+                        value:"macro_2"
+                    }
+                    });
                 let state = mock_store.getState();
                 expect(state.applications[1]._get_app()["new application_1"]).toStrictEqual(check_app["new application_1"]);
             });
@@ -585,7 +634,7 @@ test("edit_parameter", () => {
                         channels: [],
                         id:1,
                         channel_groups: [],
-                        clock_frequency: 100000000,
+                        pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
                         initial_registers_values: [],
                         macro: [],
                         parameters: [{
@@ -597,14 +646,23 @@ test("edit_parameter", () => {
                         }],
                         peripherals: [],
                         filters:[],
+                        miscellaneous:{},
                         scripts:[],
                         programs:[],
                         soft_cores: []
                     }
                 };
 
-                expect(edit_app_data).toStrictEqual({ action: "edit_parameter", application: 1,
-                    parameter:"test_param", field:"trigger", value:"test"});
+                expect(edit_app_data).toStrictEqual({
+                    action: "edit",
+                    application: 1,
+                    item:{
+                        item_id:"test_param",
+                        field:"trigger",
+                        value:"test"
+                    },
+                    object:"parameter"
+                });
                 let state = mock_store.getState();
                 expect(state.applications[1]._get_app()["new application_1"]).toStrictEqual(check_app["new application_1"]);
             });
@@ -625,7 +683,7 @@ test("edit_soft_core", () => {
                         channels: [],
                         id:1,
                         channel_groups: [],
-                        clock_frequency: 100000000,
+                        pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
                         initial_registers_values: [],
                         macro: [],
                         soft_cores: [{
@@ -635,6 +693,7 @@ test("edit_soft_core", () => {
                             io:[]
                         }],
                         parameters: [],
+                        miscellaneous:{},
                         peripherals: [],
                         filters:[],
                         scripts:[],
@@ -642,8 +701,16 @@ test("edit_soft_core", () => {
                     }
                 };
 
-                expect(edit_app_data).toStrictEqual({ action: "edit_soft_core", application: 1,
-                    core:"test_core", field:"default_program", value:"test_program"});
+                expect(edit_app_data).toStrictEqual({
+                    action: "edit",
+                    application: 1,
+                    item:{
+                        item_id:"test_core",
+                        field:"default_program",
+                        value:"test_program"
+                    },
+                    object:"soft_core"
+                });
                 let state = mock_store.getState();
                 expect(state.applications[1]._get_app().default).toStrictEqual(check_app.default);
             });
@@ -664,10 +731,11 @@ test("edit_misc_param_value", () => {
                         id:1,
                         channels: [],
                         channel_groups: [],
-                        clock_frequency: 100000000,
+                        pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
                         initial_registers_values: [],
                         macro: [],
                         parameters: [],
+                        miscellaneous:{},
                         soft_cores: [],
                         peripherals: [],
                         filters:[],
@@ -678,7 +746,14 @@ test("edit_misc_param_value", () => {
                 };
 
                 expect(edit_app_data).toStrictEqual({
-                    action: "edit_misc", application: 1, field:{old_name:null, name:"test_param", value:52}
+                    action: "edit",
+                    application: 1,
+                    item:{
+                        edit_name: false,
+                        name: "test_param",
+                        value:52
+                    },
+                    object:"misc"
                 });
                 let state = mock_store.getState();
                 expect(state.applications[1]._get_app().default).toStrictEqual(check_app.default);
@@ -700,21 +775,29 @@ test("edit_misc_rename", () => {
                         id:1,
                         channels: [],
                         channel_groups: [],
-                        clock_frequency: 100000000,
+                        pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
                         initial_registers_values: [],
                         macro: [],
                         parameters: [],
+                        miscellaneous:{
+                            test_2: 0
+                        },
                         soft_cores: [],
                         peripherals: [],
                         filters:[],
                         scripts:[],
                         programs:[],
-                        test_2: 0,
                     }
                 };
 
                 expect(edit_app_data).toStrictEqual({
-                    action: "edit_misc", application: 1, field:{old_name:"test_param", name:"test_2"}
+                    action: "edit", application: 1,
+                    item:{
+                        edit_name: true,
+                        name:"test_param",
+                        value:"test_2"
+                    },
+                    object:"misc"
                 });
                 let state = mock_store.getState();
                 expect(state.applications[1]._get_app().default).toStrictEqual(check_app.default);
@@ -737,10 +820,11 @@ test("remove_channel", () => {
                         bitstream: '',
                         channels: [],
                         channel_groups: [],
-                        clock_frequency: 100000000,
+                        pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
                         initial_registers_values: [],
                         macro: [],
                         parameters: [],
+                        miscellaneous:{},
                         soft_cores: [],
                         peripherals: [],
                         filters:[],
@@ -750,7 +834,10 @@ test("remove_channel", () => {
                 };
 
                 expect(edit_app_data).toStrictEqual({
-                    action: "remove_channel", application: 1, channel: "test_ch"
+                    action: "remove",
+                    application: 1,
+                    object:"channel",
+                    item: "test_ch"
                 });
 
                 let state = mock_store.getState();
@@ -773,11 +860,12 @@ test("remove_channel_group", () => {
                         bitstream: '',
                         channels: [],
                         channel_groups: [],
-                        clock_frequency: 100000000,
+                        pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
                         initial_registers_values: [],
                         macro: [],
                         parameters: [],
                         soft_cores: [],
+                        miscellaneous:{},
                         peripherals: [],
                         filters:[],
                         scripts:[],
@@ -785,8 +873,12 @@ test("remove_channel_group", () => {
                     }
                 };
 
-                expect(edit_app_data).toStrictEqual({action: "remove_channel_group",
-                    application: 1, group: "test_chg"});
+                expect(edit_app_data).toStrictEqual({
+                    action: "remove",
+                    application: 1,
+                    object:"channel_group",
+                    item: "test_chg"
+                });
                 let state = mock_store.getState();
                 expect(state.applications[1]._get_app()["new application_1"]).toStrictEqual(check_app["new application_1"]);
             });
@@ -806,11 +898,12 @@ test("remove_irv", () => {
                         bitstream: '',
                         channels: [],
                         channel_groups: [],
-                        clock_frequency: 100000000,
+                        pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
                         initial_registers_values: [],
                         macro: [],
                         parameters: [],
                         soft_cores: [],
+                        miscellaneous:{},
                         peripherals: [],
                         filters:[],
                         scripts:[],
@@ -819,7 +912,10 @@ test("remove_irv", () => {
                 };
 
                 expect(edit_app_data).toStrictEqual({
-                    action: "remove_irv", application: 1, address: "0x543245"
+                    action: "remove",
+                    application: 1,
+                    object:"irv",
+                    item: "0x543245"
                 });
                 let state = mock_store.getState();
                 expect(state.applications[1]._get_app().default).toStrictEqual(check_app.default);
@@ -841,11 +937,12 @@ test("remove_macro", () => {
                         bitstream: '',
                         channels: [],
                         channel_groups: [],
-                        clock_frequency: 100000000,
+                        pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
                         initial_registers_values: [],
                         macro: [],
                         parameters: [],
                         soft_cores: [],
+                        miscellaneous:{},
                         peripherals: [],
                         filters:[],
                         scripts:[],
@@ -854,7 +951,10 @@ test("remove_macro", () => {
                 };
 
                 expect(edit_app_data).toStrictEqual({
-                    action: "remove_macro", application: 1, name: "test_macro"
+                    action: "remove",
+                    application: 1,
+                    item: "test_macro",
+                    object:"macro"
                 });
                 let state = mock_store.getState();
                 expect(state.applications[1]._get_app()["new application_1"]).toStrictEqual(check_app["new application_1"]);
@@ -875,11 +975,12 @@ test("remove_parameter", () => {
                         bitstream: '',
                         channels: [],
                         channel_groups: [],
-                        clock_frequency: 100000000,
+                        pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
                         initial_registers_values: [],
                         macro: [],
                         parameters: [],
                         soft_cores: [],
+                        miscellaneous:{},
                         peripherals: [],
                         filters:[],
                         scripts:[],
@@ -888,7 +989,10 @@ test("remove_parameter", () => {
                 };
 
                 expect(edit_app_data).toStrictEqual({
-                    action: "remove_parameter", application: 1, parameter: "test_param"
+                    action: "remove",
+                    application: 1,
+                    item: "test_param",
+                    object: "parameter"
                 });
                 let state = mock_store.getState();
                 expect(state.applications[1]._get_app()["new application_1"]).toStrictEqual(check_app["new application_1"]);
@@ -909,9 +1013,10 @@ test("remove_peripheral", () => {
                         bitstream: '',
                         channels: [],
                         channel_groups: [],
-                        clock_frequency: 100000000,
+                        pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
                         initial_registers_values: [],
                         macro: [],
+                        miscellaneous:{},
                         soft_cores: [],
                         parameters: [],
                         peripherals: [],
@@ -922,7 +1027,10 @@ test("remove_peripheral", () => {
                 };
 
                 expect(edit_app_data).toStrictEqual({
-                    action: "remove_peripheral", application: 1, peripheral: "test_periph"
+                    action: "remove",
+                    application: 1,
+                    object:"peripheral",
+                    item: "test_periph"
                 });
                 let state = mock_store.getState();
                 expect(state.applications[1]._get_app()["new application_1"]).toStrictEqual(check_app["new application_1"]);
@@ -943,10 +1051,11 @@ test("remove_misc_param", () => {
                         bitstream: '',
                         channels: [],
                         channel_groups: [],
-                        clock_frequency: 100000000,
+                        pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
                         initial_registers_values: [],
                         macro: [],
                         parameters: [],
+                        miscellaneous:{},
                         soft_cores: [],
                         peripherals: [],
                         filters:[],
@@ -956,9 +1065,10 @@ test("remove_misc_param", () => {
                 };
 
                 expect(edit_app_data).toStrictEqual({
-                    action: "remove_misc", application: 1, field: {
-                        name:"test_param"
-                    }
+                    action: "remove",
+                    object:"misc",
+                    application: 1,
+                    item:"test_param"
                 });
                 let state = mock_store.getState();
                 expect(state.applications[1]._get_app().default).toStrictEqual(check_app.default);

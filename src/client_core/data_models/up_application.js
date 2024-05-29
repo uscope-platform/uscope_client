@@ -30,7 +30,6 @@ export class up_application {
         this.bitstream = app_data_obj.bitstream;
         this.channels = app_data_obj.channels;
         this.channel_groups = app_data_obj.channel_groups;
-        this.clock_frequency = app_data_obj.clock_frequency;
         this.pl_clocks = app_data_obj.pl_clocks;
         this.initial_registers_values = app_data_obj.initial_registers_values;
         this.macro = app_data_obj.macro;
@@ -50,7 +49,6 @@ export class up_application {
             bitstream:"",
             channels:[],
             channel_groups:[],
-            clock_frequency:100000000,
             pl_clocks:{
                 "0":100e6,
                 "1":100e6,
@@ -587,7 +585,6 @@ export class up_application {
                 bitstream:this.bitstream,
                 channels:this.channels,
                 channel_groups:this.channel_groups,
-                clock_frequency:this.clock_frequency,
                 pl_clocks:this.pl_clocks,
                 initial_registers_values:this.initial_registers_values,
                 macro:this.macro,

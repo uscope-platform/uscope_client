@@ -17,7 +17,7 @@ import {
     complete_command,
     current_line,
     prefix,
-    init_test_terminal, set_current_line, terminal, execute_command, handle_keypress, complete_address
+    init_test_terminal, set_current_line, terminal, execute_command, handle_keypress, complete_address, clear_terminal
 } from "../../../src/client_core/terminal/terminal";
 import {
     terminal_backend
@@ -327,6 +327,7 @@ test("complete_command", ()=>{
 
 
 test("complete_peripheral", ()=>{
+    terminal._test_clear_buffer();
     initialize_scripting_engine(app, periph);
     init_test_terminal();
     //No ambiguity

@@ -24,7 +24,15 @@ test("script creation", () => {
             id:1,
             name:"new script_1",
             path:"new script_1.js",
-            script_content:"",
+            script_content:`
+    function script_main(parameters, context) {
+    
+        let ws = []; 
+        let regs = []; 
+        return {workspace:ws, registers:regs};
+     
+    }
+`,
             triggers:""
         };
 
@@ -39,7 +47,15 @@ test("remote add", () => {
                 id:1,
                 name:"new script_1",
                 path:"new script_1.js",
-                script_content:"",
+                script_content:`
+    function script_main(parameters, context) {
+    
+        let ws = []; 
+        let regs = []; 
+        return {workspace:ws, registers:regs};
+     
+    }
+`,
                 triggers:""
             },
             id:"1"

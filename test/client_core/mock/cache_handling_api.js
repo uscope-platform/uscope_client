@@ -22,8 +22,6 @@ export const applications_init = {
         bitstream: 'scm.bin',
         channel_groups: [],
         channels: [],
-        clock_frequency: 100000000,
-        default_core_address: '0x83c00000',
         initial_registers_values: [
             {
                 address: '0x43c001b0',
@@ -116,7 +114,16 @@ export const applications_init = {
                 type: 'Registers'
             }
         ],
-        scope_mux_address: '0x43c00300'
+        pl_clocks:{
+            "0":100e6,
+            "1":100e6,
+            "2":100e6,
+            "3":100e6,
+        },
+        programs:[],
+        miscellaneous:{},
+        scripts:[],
+        soft_cores:[]
     }
 }
 
