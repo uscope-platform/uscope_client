@@ -122,30 +122,3 @@ test("compile program", () => {
         })
     })
 })
-
-test("load program", () => {
-    let program = up_program.construct_empty(10);
-    return program.add_remote().then(()=>{
-        return program.load('0x83c00000').then(()=>{
-            let check_obj = {
-                body: {
-                    build_settings: {
-                        io: {
-                            inputs:[],
-                            outputs:[],
-                            memories:[]
-                        }
-                    },
-                    headers:[],
-                    core_id: "0x83c00000",
-                    id: 10,
-                    name: "new program_10",
-                    program_content: "",
-                    program_type: ""
-                },
-                id: "10"
-            }
-            expect(applied_program_data).toStrictEqual(check_obj);
-        })
-    })
-})

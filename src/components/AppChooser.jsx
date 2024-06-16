@@ -45,6 +45,7 @@ let ApplicationChooser = (props) =>{
         dispatch(setSetting(["selected_application", e]));
         try {
             await app.set_active();
+            await app.load_soft_cores();
         }catch (error){
             console.log("Error: error while choosing application");
         }

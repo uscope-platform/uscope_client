@@ -16,8 +16,7 @@
 import React from 'react';
 import {useSelector} from "react-redux";
 import {Responsive, WidthProvider} from "react-grid-layout";
-import {SelectableListItem, SimpleContent, UIPanel} from "../../UI_elements";
-import {margin} from "plotly.js/src/plots/layout_attributes";
+import {SimpleContent, UIPanel} from "../../UI_elements";
 
 let  WarningsPanel = props =>{
 

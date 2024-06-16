@@ -16,7 +16,7 @@
 import {script_register_access_log, scripting_engine_peripherals} from "../scripting/script_runner";
 import {translate_registers} from "../scripting/backend";
 import {up_peripheral} from "../data_models/up_peripheral";
-import {store, up_program} from "../index";
+import {store, up_application, up_program} from "../index";
 import {get_version} from "../proxy/platform";
 
 export const terminal_backend = {
@@ -138,20 +138,24 @@ export const terminal_backend = {
         }
     },
 
-    load_program:(args) =>{
+    load_program:async (args) =>{
         if(args[0] === "--help"){
             return new Promise((resolve)=>{
                 resolve([
                     "LOAD CORE:",
                     "This command reads the value of the specified register",
-                    "format: load_program [PROGRAM ID] [CORE ID]"
+                    "format: load_program [PROGRAM NAME] [CORE ID]"
                 ]);
             })
         }
         let state = store.getState();
 
-        let program_id = parseInt(args[0]);
-        let selected_program = state.programs[program_id];
+        let selected_program = undefined;
+        for(let p in state.programs){
+            if(state.programs[p].name === args[0]){
+                selected_program = state.programs[p];
+            }
+        }
         if(selected_program === undefined){
             return new Promise((resolve, reject)=>{
                 reject([
@@ -159,11 +163,11 @@ export const terminal_backend = {
                 ])
             })
         }
-        selected_program = new up_program(state.programs[program_id]);
-        let application = state.applications[state.settings['application']];
+        selected_program = new up_program(selected_program);
+        let application = new up_application(state.applications[state.settings['application']]);
         let core = application.soft_cores.filter((core)=>{
             return core.id === args[1];
-        });
+        })[0];
         if(core.length === 0){
             return new Promise((resolve, reject)=>{
                 reject([
@@ -177,10 +181,8 @@ export const terminal_backend = {
                 ])
             })
         }
-
-        return selected_program.load(core[0].id,  application.application_name).then((response)=>{
-            return [response.response];
-        });
+        let resp = await selected_program.load(core);
+        return resp.response;
     }
 }
 

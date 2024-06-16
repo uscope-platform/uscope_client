@@ -13,11 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {store} from "../index";
+import {store, up_program} from "../index";
 import {backend_get, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
 import {addApplication, removeApplication} from "../../redux/Actions/applicationActions";
-
+import  objectHash from "object-hash";
 
 
 export class up_application {
@@ -75,6 +75,26 @@ export class up_application {
 
     set_active = () => {
         return backend_get(api_dictionary.applications.set + '/' + this.id)
+    }
+
+    load_soft_cores = async () =>{
+        for (let core of this.soft_cores){
+            await this.load_core(core);
+        }
+
+    }
+
+    load_core = (core, program) =>{
+
+        let selected_program = {};
+        if(program){
+            selected_program = new up_program(program);
+        } else {
+            selected_program = new up_program(Object.values(store.getState().programs).filter((p) => {
+                return p.name === core.default_program;
+            })[0])
+        }
+        selected_program.load(core);
     }
 
     add_channel = (ch_name) =>{

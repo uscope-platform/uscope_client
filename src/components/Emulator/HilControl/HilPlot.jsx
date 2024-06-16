@@ -13,17 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useCallback, useEffect, useReducer, useState} from 'react';
-import {Responsive, WidthProvider} from "react-grid-layout";
+import React, {useEffect, useReducer, useState} from 'react';
 import createPlotlyComponent from "react-plotly.js/factory";
 import Plotly from "plotly.js-basic-dist";
 import {useDispatch, useSelector, useStore} from "react-redux";
-import PlotControls from "../../plot_tab_components/PlotControls";
 import {download_plot, fetch_data} from "../../../client_core";
 import useInterval from "../../Common_Components/useInterval";
-import axios from "axios";
-import {fetchDataDone} from "../../../redux/Actions/plotActions";
-import {api_dictionary} from "../../../client_core/proxy/api_dictionary";
 import {direct_fetch} from "../../../client_core/proxy/plot";
 import {setSetting} from "../../../redux/Actions/SettingsActions";
 

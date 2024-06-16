@@ -17,6 +17,7 @@ import {store} from "../index";
 import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
 import {AddProgram, removeProgram} from "../../redux/Actions/ProgramsActions";
+import objectHash from "object-hash";
 
 export class up_program {
     constructor(program_obj) {
@@ -83,15 +84,23 @@ export class up_program {
         return backend_get(api_dictionary.programs.compile+'/'+this.id)
     };
 
-    load = (core_id, application) => {
-        let program_obj = this._get_program();
-        program_obj.core_id = core_id;
-        program_obj.application = application;
-        return backend_post(api_dictionary.programs.apply+'/'+this.id, program_obj).then((res)=>{
-            return {response:""};
-        }).catch((err)=>{
-            alert('ERROR: error while loading a program on the core' + err.message);
-            return err;
+    load = (core) => {
+
+        let headers = this.headers.map((h)=>{
+            let header = store.getState().programs[h];
+            return {name: header.name, content: header.program_content};
+        })
+
+        let data_package = {
+            content:this.program_content,
+            headers:headers,
+            io:core.io,
+            type:this.program_type,
+            core_address:core.address
+        }
+        let h = objectHash(data_package)
+        return backend_post(api_dictionary.programs.apply+'/' + this.id, {...data_package, hash:h}).then((res)=>{
+            return {response:"program loaded"};
         })
     }
 
