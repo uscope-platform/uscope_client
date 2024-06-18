@@ -79,14 +79,10 @@ test("add_channel", () => {
                     channels: [{
                         enabled: false,
                         id: "test_ch",
-                        max_value: "1000",
-                        min_value: "0",
                         mux_setting: 0,
                         name: "test_ch",
                         number: 0,
-                        phys_width: 16,
-                        scaling_factor: 1,
-                        signed:true
+                        scaling_factor: 1
                     }],
                     channel_groups: [],
                     pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},
@@ -106,14 +102,10 @@ test("add_channel", () => {
                 action: "add", object:"channel", application: 1, item: {
                     enabled: false,
                     id: "test_ch",
-                    max_value: "1000",
-                    min_value: "0",
                     mux_setting: 0,
                     name: "test_ch",
                     number: 0,
-                    phys_width: 16,
-                    scaling_factor: 1,
-                    signed:true
+                    scaling_factor: 1
                 }
             });
             let state = mock_store.getState();
@@ -440,14 +432,10 @@ test("edit_channel", () => {
                         channels: [{
                             enabled: false,
                             id: "test_ch",
-                            max_value: "1000",
-                            min_value: "0",
                             mux_setting: 0,
                             name: "test_ch",
                             number: 25,
-                            phys_width: 16,
-                            scaling_factor: 1,
-                            signed:true
+                            scaling_factor: 1
                         }],
                         channel_groups: [],
                         pl_clocks: {"0": 100e6, "1": 100e6, "2": 100e6, "3": 100e6},

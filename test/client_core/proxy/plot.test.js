@@ -18,20 +18,16 @@ import {
     get_channel_number_from_id,
     get_channels_from_group,
     set_channel_status,
-    set_channel_widths
-} from "../../../src/client_core/proxy/plot";
+} from "../../../src/client_core";
 import {set_channel_status_data, setup_widths_data} from "../mock/plot_api";
 
 test("create_plot_channel", () => {
     let input = {
         name: "test",
         id: "test".replace(/\s/g, "_").toLowerCase(),
-        phys_width:16,
         number: 0,
         mux_setting: 0,
         enabled: false,
-        max_value: "1000",
-        min_value: "0"
     }
     let ret_val = create_plot_channel(input);
     let expected_ret = {
@@ -46,16 +42,6 @@ test("create_plot_channel", () => {
     expect(ret_val).toStrictEqual(expected_ret)
 })
 
-
-test("set widths", () => {
-    vi.spyOn(window, 'alert').mockImplementation(() => {});
-    return set_channel_widths([14, 14, 14, 14, 14 ,14]).then((res)=>{
-        expect(setup_widths_data).toStrictEqual({widths:[14, 14, 14, 14, 14 ,14]});
-        return set_channel_widths([]).catch((err)=>{
-            expect(window.alert).toBeCalledWith("ERROR: error while setting up channel widths\nRequest failed with status code 500");
-        })
-    })
-})
 
 test("get channels from group", () => {
     let group = {
@@ -78,32 +64,23 @@ test("get channels from group", () => {
         {
             enabled: true,
             id: "reference_a",
-            max_value: "1000",
-            min_value: "0",
             mux_setting: "1",
             name: "Reference A",
             number: 0,
-            phys_width: "14"
         },
         {
             enabled: true,
             id: "reference_b",
-            max_value: "1000",
-            min_value: "0",
             mux_setting: "1",
             name: "Reference B",
             number: 0,
-            phys_width: "14"
         },
         {
             enabled: true,
             id: "reference_c",
-            max_value: "1000",
-            min_value: "0",
             mux_setting: "1",
             name: "Reference C",
             number: 0,
-            phys_width: "14"
         }
     ];
     let res = get_channels_from_group(group, channels);
@@ -111,22 +88,16 @@ test("get channels from group", () => {
         {
             enabled: true,
             id: "reference_a",
-            max_value: "1000",
-            min_value: "0",
             mux_setting: "1",
             name: "Reference A",
             number: 0,
-            phys_width: "14"
         },
         {
             enabled: true,
             id: "reference_b",
-            max_value: "1000",
-            min_value: "0",
             mux_setting: "1",
             name: "Reference B",
             number: 0,
-            phys_width: "14"
         }
     ];
     expect(res).toStrictEqual(check_array);
@@ -138,22 +109,16 @@ test("get channel number from id", () => {
         create_plot_channel({
             name: "test",
             id: "test",
-            phys_width:16,
             number: 0,
             mux_setting: 0,
-            enabled: false,
-            max_value: "1000",
-            min_value: "0"
+            enabled: false
         }),
         create_plot_channel({
             name: "test_2",
             id: "test_2",
-            phys_width:16,
             number: 1,
             mux_setting: 0,
-            enabled: false,
-            max_value: "1000",
-            min_value: "0"
+            enabled: false
         }),
     ]
 

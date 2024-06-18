@@ -38,16 +38,6 @@ export const set_channel_status = (channel) => {
     return dispatch_redux_thunk(setChannelStatus, api_dictionary.plot.set_channel_status, channel);
 }
 
-export const set_channel_widths = (widths) => {
-    return new Promise((resolve, reject)=>{
-        backend_post(api_dictionary.plot.set_widths, {widths}).then((res) => {
-            resolve(res)
-        }).catch((err) =>{
-            alert('ERROR: error while setting up channel widths\n' + err.message);
-            reject(err);
-        })
-    })
-}
 
 export const set_scaling_factors = (scaling_factors) => {
     return new Promise((resolve, reject)=>{
@@ -59,18 +49,6 @@ export const set_scaling_factors = (scaling_factors) => {
         })
     })
 }
-
-export const set_channel_signs = (signed) => {
-    return new Promise((resolve, reject)=>{
-        backend_post(api_dictionary.plot.set_signed, {signed}).then((res) => {
-            resolve(res)
-        }).catch((err) =>{
-            alert('ERROR: error while setting up channel signed status\n' + err.message);
-            reject(err);
-        })
-    })
-}
-
 
 export let get_acquisition_status = () =>{
     return new Promise((resolve, reject)=>{

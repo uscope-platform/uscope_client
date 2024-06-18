@@ -101,14 +101,10 @@ export class up_application {
         let ch = {
             name: ch_name,
             id: ch_name.replace(/\s/g, "_").toLowerCase(),
-            phys_width:16,
             number: 0,
             mux_setting: 0,
             enabled: false,
-            max_value: "1000",
-            min_value: "0",
             scaling_factor:1,
-            signed:true
         };
         this.channels.push(ch);
         let edit = {

@@ -32,12 +32,9 @@ test("plot_play/pause", () =>{
 let ch = create_plot_channel({
     name: "test",
     id: "test".replace(/\s/g, "_").toLowerCase(),
-    phys_width:16,
     number: 0,
     mux_setting: 0,
-    enabled: false,
-    max_value: "1000",
-    min_value: "0"
+    enabled: false
 });
 let initial_ch = [ch, ch, ch];
 
