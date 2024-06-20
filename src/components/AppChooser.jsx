@@ -30,7 +30,10 @@ import {
     get_channels_from_group,
     set_scaling_factors,
 } from "../client_core"
+
 import {set_scope_address} from "../client_core/proxy/plot";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 let ApplicationChooser = (props) =>{
 
@@ -40,10 +43,14 @@ let ApplicationChooser = (props) =>{
 
     let handleApplicationChosen = async e =>{
         let app = new up_application(applications[e]);
-        dispatch(setSetting(["selected_application", e]));
         try {
             await app.set_active();
-            await app.load_soft_cores();
+            let failures = await app.load_soft_cores();
+            if(failures.length !== 0){
+                toast.error("LOADING FAILED FOR THE FOLLOWING CORES: " + failures.join(", "));
+                return;
+            }
+            dispatch(setSetting(["selected_application", e]));
         }catch (error){
             console.log("Error: error while choosing application");
         }
@@ -96,6 +103,18 @@ let ApplicationChooser = (props) =>{
 
     return (
         <div className="App">
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+            />
             <ApplicationChooserView done={handleApplicationChosen}/>
         </div>
     );

@@ -80,8 +80,19 @@ export class up_program {
         return this.edit_field("headers", selected_headers);
     };
 
-     compile = () =>{
-        return backend_get(api_dictionary.programs.compile+'/'+this.id)
+     compile = async () =>{
+         let headers = this.headers.map((h)=>{
+             let header = store.getState().programs[h];
+             return {name: header.name, content: header.program_content};
+         })
+
+         let data_package = {
+             content:this.program_content,
+             headers:headers,
+             io:[],
+             type:this.program_type
+         }
+        return backend_post(api_dictionary.programs.compile+'/'+this.id, data_package)
     };
 
     load = (core) => {
@@ -100,7 +111,7 @@ export class up_program {
         }
         let h = objectHash(data_package)
         return backend_post(api_dictionary.programs.apply+'/' + this.id, {...data_package, hash:h}).then((res)=>{
-            return {response:"program loaded"};
+            return res;
         })
     }
 

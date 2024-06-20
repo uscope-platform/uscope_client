@@ -24,7 +24,7 @@ import {ColorTheme} from "../../UI_elements";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {up_application, up_program} from "../../../client_core";
+import { up_program} from "../../../client_core";
 import LoadSelector from "./LoadSelector";
 
 
@@ -54,28 +54,26 @@ let ProgramsEditor = props =>{
         })
     };
 
-    let handle_build = (event) => {
+    let handle_build = async (event) => {
         let prog = new up_program(props.program);
+        let results = await prog.compile();
+        if(results[0].status==="passed"){
+            toast.success('✅ Compilation Successfull');
+        } else if (results[0].status==="failed"){
+            toast.error(results[0].error);
+        }
 
-        prog.compile().then((data)=>{
-            for (let item of data){
-                if(item.status==="passed"){
-                    toast.success('✅ Compilation Successfull');
-                } else if (item.status==="failed"){
-                    toast.error(item.error);
-                }
-            }
-        });
+
 
     };
 
     let handle_load =async (core, application) => {
         let prog = new up_program(props.program);
-        try {
-            await prog.load(core);
+        let result = await prog.load(core);
+        if(result[0].status==="passed"){
             toast.success('✅ Program Loaded');
-        } catch (error){
-            toast.error(error.message);
+        } else if (result[0].status==="failed") {
+            toast.error(result[0].error);
         }
     };
 

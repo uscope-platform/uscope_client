@@ -78,10 +78,14 @@ export class up_application {
     }
 
     load_soft_cores = async () =>{
+        let error_cores = [];
         for (let core of this.soft_cores){
-            await this.load_core(core);
+            let result = await this.load_core(core);
+            if(result[0].status !=="passed"){
+                error_cores.push(core.id)
+            }
         }
-
+        return error_cores;
     }
 
     load_core = (core, program) =>{
@@ -94,7 +98,7 @@ export class up_application {
                 return p.name === core.default_program;
             })[0])
         }
-        selected_program.load(core);
+        return selected_program.load(core);
     }
 
     add_channel = (ch_name) =>{
