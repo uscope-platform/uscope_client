@@ -55,8 +55,6 @@ export const api_dictionary = {
     plot:{
         get_info:'plot/channels/specs',
         fetch_data:'plot/channels/data',
-        set_capture: 'plot/capture',
-        get_capture: 'plot/capture',
         set_channel_status: 'plot/channels/status',
         scaling_factors: 'plot/channels/scaling_factors',
         acquisition: 'plot/acquisition',
