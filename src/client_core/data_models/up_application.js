@@ -73,8 +73,19 @@ export class up_application {
         return backend_post(api_dictionary.applications.add, this._get_app());
     }
 
-    set_active = () => {
-        return backend_get(api_dictionary.applications.set + '/' + this.id)
+    set_active = async () => {
+        await backend_get(api_dictionary.applications.set + '/' + this.id);
+        await this.load_irv();
+        return  this.load_soft_cores();
+    }
+
+    load_irv = () =>{
+        let writes = [];
+        for(let i of this.initial_registers_values){
+            writes.push({type:"direct", access_type:"full_reg", proxy_type:"", proxy_address:0, address:i.address, value:i.value})
+        }
+
+        return backend_post(api_dictionary.peripherals.bulk_write, {payload:writes})
     }
 
     load_soft_cores = async () =>{

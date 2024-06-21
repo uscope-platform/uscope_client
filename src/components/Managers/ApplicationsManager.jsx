@@ -147,7 +147,10 @@ let  ApplicationsManager = props =>{
 
     let handle_add_new = (item_type, old_items, title_prop) =>{
         let ids = 3;
-        if(item_type === "misc"){
+        if(item_type=== "irv"){
+            add_content(0, item_type);
+            return;
+        } else if(item_type === "misc"){
             ids = Object.keys(old_items).map((item)=>{
                 const regex = new RegExp("new_"+item_type+"_(\\d+)", 'g');
                 let match = Array.from(item.matchAll(regex), m => m[1]);

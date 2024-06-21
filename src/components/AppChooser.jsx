@@ -44,8 +44,7 @@ let ApplicationChooser = (props) =>{
     let handleApplicationChosen = async e =>{
         let app = new up_application(applications[e]);
         try {
-            await app.set_active();
-            let failures = await app.load_soft_cores();
+            let failures = await app.set_active();
             if(failures.length !== 0){
                 toast.error("LOADING FAILED FOR THE FOLLOWING CORES: " + failures.join(", "));
                 return;
