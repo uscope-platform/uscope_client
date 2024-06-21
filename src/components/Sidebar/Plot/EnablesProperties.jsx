@@ -16,13 +16,9 @@
 import React, {useState} from 'react';
 import {useDispatch, useSelector, useStore} from "react-redux";
 
-import {
-    Button, FormLayout,
-    InputField, Label, SelectField
-} from "../../UI_elements";
+import {FormLayout,SelectField} from "../../UI_elements";
 
 import {initialize_channels} from "../../../redux/Actions/plotActions";
-import {setSetting} from "../../../redux/Actions/SettingsActions";
 import {
     set_channel_status,
     up_peripheral,
@@ -30,8 +26,6 @@ import {
     get_channels_from_group,
     set_scaling_factors
 } from "../../../client_core";
-
-
 
 let  EnablesProperties = props =>{
 
@@ -43,63 +37,9 @@ let  EnablesProperties = props =>{
     const store = useStore();
 
     const [application, ] = useState(applications_list[settings['application']])
-    const [timebase_addr, ] = useState(applications_list[settings['application']]['miscellaneous']['timebase_address']);
     const [channelGroups, ] = useState(applications_list[settings['application']]['channel_groups']);
     const [scope_mux_address, ] = useState(parseInt(applications_list[settings['application']]['miscellaneous']['scope_mux_address']));
 
-    const peripheral_specs = useSelector( state => state.peripherals);
-
-    let parse_number = (raw_value) => {
-        let numeric_value = 0;
-        if(isNaN(parseFloat(raw_value[raw_value.length -1]))){
-            numeric_value = raw_value.slice(0,raw_value.length-1);
-            switch (raw_value[raw_value.length-1]) {
-                case 'M':
-                    numeric_value = numeric_value*1e6;
-                    break;
-                case 'k':
-                case 'K':
-                    numeric_value = numeric_value*1e3;
-                    break;
-                case 'm':
-                    numeric_value = numeric_value*1e-3;
-                    break;
-                case 'u':
-                case 'U':
-                    numeric_value = numeric_value*1e-6;
-                    break;
-                default:
-                    break;
-            }
-        } else{
-            numeric_value = parseFloat(raw_value);
-        }
-        let divisor = Math.round(Math.ceil(60e3/numeric_value));
-        let sample_time = 60e3/divisor;
-        dispatch(setSetting(["sampling_period", sample_time]));
-        return divisor;
-
-    };
-
-    let handle_submit = (event) =>{
-        event.preventDefault();
-        let sample_period = parse_number(event.target.frequency.value);
-        let sample_phase = Math.round(1);
-        let writes = [];
-
-        let reg_offset = peripheral_specs['enable_generator_1'].registers.filter((reg)=>{
-            return reg.ID === "freq";
-        })[0].offset;
-        let address = parseInt(timebase_addr)+parseInt(reg_offset);
-        writes.push([address, sample_period])
-
-        reg_offset = peripheral_specs['enable_generator_1'].registers.filter((reg)=>{
-            return reg.ID === "pha_1";
-        })[0].offset;
-        address = parseInt(timebase_addr)+parseInt(reg_offset);
-        writes.push([address, sample_phase])
-        up_peripheral.direct_register_write(writes).then();
-    }
 
     let handleChGroupChange = (event) => {
         let group_name = event.value;
@@ -156,21 +96,15 @@ let  EnablesProperties = props =>{
 
     return (
         <div style={{padding:"1rem"}}>
-            <form onSubmit={handle_submit}>
-                <FormLayout>
-                    <InputField inline name='frequency' label="Frequency"/>
-                    <InputField inline name={'phase'} label={'Phase'}/>
-                    <SelectField
-                        label="Channel Group"
-                        name="channel_group"
-                        onChange={handleChGroupChange}
-                        options={ch_groups}
-                        value={selected}
-                    />
-                    <Label>Effective Sampling frequency: {settings.sampling_period}</Label>
-                    <Button type='submit' >Submit changes</Button>
-                </FormLayout>
-            </form>
+            <FormLayout>
+                <SelectField
+                    label="Channel Group"
+                    name="channel_group"
+                    onChange={handleChGroupChange}
+                    options={ch_groups}
+                    value={selected}
+                />
+            </FormLayout>
         </div>
     );
 };
