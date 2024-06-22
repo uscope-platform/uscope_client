@@ -25,13 +25,9 @@ import ApplicationChooserView from "./Common_Components/ApplicationChooserView";
 
 import {
     up_application,
-    up_peripheral,
-    create_plot_channel,
-    get_channels_from_group,
-    set_scaling_factors,
+    create_plot_channel
 } from "../client_core"
 
-import {set_scope_address} from "../client_core/proxy/plot";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -54,52 +50,22 @@ let ApplicationChooser = (props) =>{
             console.log("Error: error while choosing application");
         }
         dispatch(setSetting(["application", e]));
-        initializePlotState(applications[e]);
+        initializePlotState(app);
         props.choice_done();
     };
 
     let initializePlotState = (app) =>{
 
-        let channels_list = [];
-        if(app.channel_groups && app.channel_groups.length>0){
-            for(let group of app.channel_groups){
-                if(group.default){
-                    dispatch(setSetting(["default_ch_group", group]));
-                    channels_list = get_channels_from_group(group, app.channels);
-                }
-            }
-        } else {
-            channels_list = app.channels;
-        }
+
+        let [channels_list, group ] = app.get_scope_setup_info();
+        dispatch(setSetting(["default_ch_group", group]));
+
         let ch_obj = [];
         for(let channel of channels_list){
             ch_obj.push(create_plot_channel(channel))
         }
         dispatch(initialize_channels(ch_obj));
 
-        // TODO: this should be pushed to the up_app set_active method and out of ui code
-        //SET UP MUXES FOR NEW GROUP
-        let scope_mux_address = parseInt(app['miscellaneous']['scope_mux_address']);
-        if(scope_mux_address){
-            for(let item of channels_list){
-                if(item){
-                    let channel_address = scope_mux_address + 4*(parseInt(item.number)+1);
-                    up_peripheral.direct_register_write([[channel_address, parseInt(item.mux_setting)]]).then();
-                }
-            }
-            set_scope_address({address:scope_mux_address, dma_buffer_offset:0x208}).then()
-        }
-        // SET UP CHANNEL WIDTHS
-
-        if(channels_list.length !== 0){
-            let sfs = Array(6).fill(1);
-            for(let item of channels_list){
-                if(item.scaling_factor){
-                    sfs[parseInt(item.number)] = parseFloat(item.scaling_factor);
-                }
-            }
-            set_scaling_factors(sfs).then();
-        }
     }
 
     return (

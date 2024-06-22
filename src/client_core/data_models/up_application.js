@@ -13,11 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {store, up_program} from "../index";
+import {get_channels_from_group, set_scaling_factors, store, up_peripheral, up_program} from "../index";
 import {backend_get, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
 import {addApplication, removeApplication} from "../../redux/Actions/applicationActions";
 import  objectHash from "object-hash";
+import {set_scope_address} from "../proxy/plot";
+import {setSetting} from "../../redux/Actions/SettingsActions";
 
 
 export class up_application {
@@ -75,11 +77,36 @@ export class up_application {
 
     set_active = async () => {
         await backend_get(api_dictionary.applications.set + '/' + this.id);
-        await this.load_irv();
         for(let i in this.pl_clocks){
             await this.set_global_clock_frequency(parseInt(i), this.pl_clocks[i]);
         }
+        await this.load_irv();
+        await this.setup_scope();
         return this.load_soft_cores();
+    }
+
+    setup_scope = async () =>{
+
+        let [channels, ] = this.get_scope_setup_info();
+        if(this.miscellaneous.scope_mux_address){
+            for(let item of channels){
+                if(item){
+                    let channel_address = parseInt(this.miscellaneous.scope_mux_address) + 4*(parseInt(item.number)+1);
+                    await up_peripheral.direct_register_write([[channel_address, parseInt(item.mux_setting)]])
+                }
+            }
+            await set_scope_address({address:parseInt(this.miscellaneous.scope_mux_address), dma_buffer_offset:0x208})
+        }
+
+        if(channels.length !== 0){
+            let sfs = Array(6).fill(1);
+            for(let item of channels){
+                if(item.scaling_factor){
+                    sfs[parseInt(item.number)] = parseFloat(item.scaling_factor);
+                }
+            }
+            await set_scaling_factors(sfs);
+        }
     }
 
     load_irv = () =>{
@@ -129,6 +156,22 @@ export class up_application {
         }
         return selected_program.load(core);
     }
+
+    get_scope_setup_info = () =>{
+        let channels_list = [];
+        let default_group = {}
+        for(let group of this.channel_groups){
+            if(group.default){
+                default_group = group;
+                channels_list = get_channels_from_group(group, this.channels);
+            }
+        }
+        return [channels_list, default_group]
+    }
+
+
+
+
 
     add_channel = (ch_name) =>{
         let ch = {
