@@ -76,6 +76,8 @@ let ApplicationChooser = (props) =>{
             ch_obj.push(create_plot_channel(channel))
         }
         dispatch(initialize_channels(ch_obj));
+
+        // TODO: this should be pushed to the up_app set_active method and out of ui code
         //SET UP MUXES FOR NEW GROUP
         let scope_mux_address = parseInt(app['miscellaneous']['scope_mux_address']);
         if(scope_mux_address){
@@ -85,7 +87,7 @@ let ApplicationChooser = (props) =>{
                     up_peripheral.direct_register_write([[channel_address, parseInt(item.mux_setting)]]).then();
                 }
             }
-            set_scope_address(scope_mux_address).then()
+            set_scope_address({address:scope_mux_address, dma_buffer_offset:0x208}).then()
         }
         // SET UP CHANNEL WIDTHS
 

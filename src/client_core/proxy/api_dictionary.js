@@ -20,7 +20,8 @@ export const api_dictionary = {
         add: 'application/add',
         edit: 'application/edit',
         remove: 'application/remove',
-        set:'application/set'
+        set:'application/set',
+        clock: 'application/clock'
     },
     bitstream:{
         get_hash: 'bitstream/digest',

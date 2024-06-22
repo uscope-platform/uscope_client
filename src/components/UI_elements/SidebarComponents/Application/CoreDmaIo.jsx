@@ -61,7 +61,6 @@ export let  CoreDmaIo = props =>{
     }, [sel_logic_io])
 
     let remove_item = (item) =>{
-        debugger;
         let app = new up_application(props.application);
         let new_io = props.core.io.filter((io)=>{
             return item !== io.name;

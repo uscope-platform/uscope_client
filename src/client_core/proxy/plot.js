@@ -72,7 +72,7 @@ export let set_acquisition = (args) =>{
 
 export let set_scope_address  = (args) =>{
     return new Promise((resolve, reject)=>{
-        backend_post(api_dictionary.plot.address, {address:args}).then((res) => {
+        backend_post(api_dictionary.plot.address, args).then((res) => {
             resolve(res)
         }).catch((err) =>{
             reject(err);

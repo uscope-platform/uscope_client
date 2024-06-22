@@ -76,7 +76,10 @@ export class up_application {
     set_active = async () => {
         await backend_get(api_dictionary.applications.set + '/' + this.id);
         await this.load_irv();
-        return  this.load_soft_cores();
+        for(let i in this.pl_clocks){
+            await this.set_global_clock_frequency(parseInt(i), this.pl_clocks[i]);
+        }
+        return this.load_soft_cores();
     }
 
     load_irv = () =>{
@@ -97,6 +100,21 @@ export class up_application {
             }
         }
         return error_cores;
+    }
+
+    set_global_clock_frequency = async (clock_n, frequency) =>{
+        return backend_post(api_dictionary.applications.clock,
+            {
+                type:"global",
+                clock_n: clock_n,
+                frequency: frequency
+            }
+        )
+    }
+
+    get_global_clock_frequency = async (clock_n) =>{
+        let clocks = await backend_get(api_dictionary.applications.clock);
+        return clocks[clock_n];
     }
 
     load_core = (core, program) =>{
