@@ -28,7 +28,6 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 
 let PlotTab = function (props) {
     const channels = useSelector(state => state.channels);
-    const settings = useSelector(state => state.settings);
 
         return(
             <ResponsiveGridLayout
@@ -45,7 +44,7 @@ let PlotTab = function (props) {
                 </UIPanel>
                 <UIPanel key="scope" data-grid={{x: 3, y: 0, w: 21, h: 10, static: true}} level="level_2">
                     <SimpleContent name="Scope" content={
-                        <PlotComponent palette={{colorway:ColorTheme.plot_palette}} refreshRate={settings.refreshRate}/>
+                        <PlotComponent palette={{colorway:ColorTheme.plot_palette}} refreshRate={125}/>
                     }/>
                 </UIPanel>
                 <UIPanel key="parameters" data-grid={{x: 0, y: 10, w: 4, h: 7, static: true}} level="level_2">

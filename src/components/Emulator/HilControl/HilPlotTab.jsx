@@ -42,7 +42,7 @@ let HilPlotTab = function (props) {
             >
                 <UIPanel key="hil_scope" data-grid={{x: 0, y: 0, w: 24, h: 16, static: true}} level="level_2">
                     <SimpleContent name="Scope" height="100%" content={
-                        <HilPlot/>
+                        <HilPlot refreshRate={125}/>
                     }/>
                 </UIPanel>
                 <UIPanel key="Hil_inputs" data-grid={{x: 0, y: 16, w: 10, h: 8, static: true}} level="level_2">

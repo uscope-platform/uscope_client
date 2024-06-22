@@ -78,7 +78,7 @@ let HilPlot = function (props) {
 
     useInterval(() => {
         handleRefresh();
-    },  settings.refreshRate);
+    },  props.refreshRate);
 
 
     return(
