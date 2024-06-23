@@ -20,7 +20,6 @@ import {
     UIPanel
 } from "../UI_elements";
 
-import {Responsive, WidthProvider} from "react-grid-layout";
 import FilterPlot from "./FilterPlot";
 import FilterDesignerControls from "./FilterDesignerControls";
 import {filter_calculate_keepouts} from "../../client_core";
@@ -40,7 +39,6 @@ let FilterManager = props =>{
     const filters_store = useSelector(state => state.filters);
     const settings = useSelector(state => state.settings);
 
-    const ResponsiveGridLayout = WidthProvider(Responsive);
 
     let selected_filter = settings.selected_filter ? new up_filter(filters_store[settings.selected_filter]): up_filter.construct_empty(0);
 
@@ -90,8 +88,13 @@ let FilterManager = props =>{
         selected_filter.edit_field(param_name, value).then();
     }
 
-    return(
-        <>
+    return (
+        <div style={{
+            display:"flex",
+            flexDirection:"column",
+            gap:10,
+            height:"100%"
+        }}>
             <ToastContainer
                 position="top-right"
                 autoClose={5000}
@@ -104,14 +107,12 @@ let FilterManager = props =>{
                 pauseOnHover
                 theme="dark"
             />
-            <ResponsiveGridLayout
-                className="layout"
-                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-                rowHeight={30}
-                useCSSTransforms={false}
-            >
-                <UIPanel key="filter_designer_plot" data-grid={{x: 0, y: 0, w: 10, h: 15, static: true}} level="level_2">
+            <div style={{
+                display: "flex",
+                flexDirection: "row",
+                gap:10
+            }}>
+                <UIPanel key="filter_designer_plot" level="level_2" style={{flexGrow:1}}>
                     <SimpleContent name="Filter Viewer" content={
                         <FilterPlot
                             keepout_shapes={keepout_shapes}
@@ -120,13 +121,15 @@ let FilterManager = props =>{
                         />
                     }/>
                 </UIPanel>
-                <UIPanel key="filter_designer_controls" data-grid={{x:10, y: 0, w: 14, h: 15, static: true}} level="level_2">
+                <UIPanel key="filter_designer_controls" style={{flexGrow:1}}
+                         level="level_2">
                     <SimpleContent name="Design Parameters" content={
                         <div>
-                            <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
+                            <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
                                 <div id="design">
-                                    <MdBuild onClick={handleDesign} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
-                                    <Tooltip anchorId="design" content={"Design Filter"} place="top" />
+                                    <MdBuild onClick={handleDesign} size={ColorTheme.icons_size}
+                                             style={{marginLeft: "0.3em"}} color={ColorTheme.icons_color}/>
+                                    <Tooltip anchorId="design" content={"Design Filter"} place="top"/>
                                 </div>
                             </div>
                             <FilterDesignerControls
@@ -138,24 +141,26 @@ let FilterManager = props =>{
                         </div>
                     }/>
                 </UIPanel>
-                <UIPanel key="filter_implementation_controls" data-grid={{x:0, y: 15, w: 24, h: 8, static: true}} level="level_2">
-                    <SimpleContent name="Implementation Parameters" content={
-                        <div>
-                            <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
-                                <div id="implement">
-                                    <MdConstruction onClick={handleImplement} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
-                                    <Tooltip anchorId="implement" content={"Implement Filter"} place="top" />
-                                </div>
+            </div>
+            <UIPanel key="filter_implementation_controls" style={{flexGrow:1}}
+                     level="level_2">
+                <SimpleContent name="Implementation Parameters" content={
+                    <div>
+                        <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
+                            <div id="implement">
+                                <MdConstruction onClick={handleImplement} size={ColorTheme.icons_size}
+                                                style={{marginLeft: "0.3em"}} color={ColorTheme.icons_color}/>
+                                <Tooltip anchorId="implement" content={"Implement Filter"} place="top"/>
                             </div>
-                            <FilterImplementationControls
-                                filter_parameters={selected_filter.parameters}
-                                on_change={handleParamChanges}
-                            />
                         </div>
-                    }/>
-                </UIPanel>
-            </ResponsiveGridLayout>
-        </>
+                        <FilterImplementationControls
+                            filter_parameters={selected_filter.parameters}
+                            on_change={handleParamChanges}
+                        />
+                    </div>
+                }/>
+            </UIPanel>
+        </div>
 
     );
 

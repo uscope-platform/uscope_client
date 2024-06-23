@@ -16,6 +16,7 @@
 import React from "react";
 import {InputField, ListItem} from "../../UI_elements";
 import styled from "styled-components";
+import {InterfaceParameters} from "../../UI_elements/InterfaceParameters";
 
 const VariablesList = styled.div`
   margin-top:0.5em;
@@ -97,7 +98,9 @@ let BuildSettings = props =>{
             gap:"10em",
             justifyContent:"center"
         }}>
-            <VariablesInputArea>
+            <VariablesInputArea style={{
+                minHeight: InterfaceParameters.programs.editorHeight
+            }}>
                 <h2>INPUTS</h2>
                 <div style={{margin:"0.5em 1.5em 0.5em 1.5em"}}>
                     <InputField name="input" onKeyDown={handle_edit} />
@@ -110,7 +113,9 @@ let BuildSettings = props =>{
                     </VariablesList>
                 </div>
             </VariablesInputArea>
-            <VariablesInputArea>
+            <VariablesInputArea style={{
+                minHeight: InterfaceParameters.programs.editorHeight
+            }}>
                 <h2>OUTPUTS</h2>
                 <div style={{margin:"0.5em 1.5em 0.5em 1.5em"}}>
                     <InputField name="output" onKeyDown={handle_edit} />
@@ -123,7 +128,9 @@ let BuildSettings = props =>{
                     </VariablesList>
                 </div>
             </VariablesInputArea>
-            <VariablesInputArea>
+            <VariablesInputArea style={{
+                minHeight: InterfaceParameters.programs.editorHeight
+            }}>
                 <h2>MEMORY</h2>
                 <div style={{margin:"0.5em 1.5em 0.5em 1.5em"}}>
                     <InputField name="memory" onKeyDown={handle_edit} />

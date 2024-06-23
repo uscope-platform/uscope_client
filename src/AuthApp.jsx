@@ -33,13 +33,12 @@ import {initialize_scripting_engine, refresh_caches, up_application} from "./cli
 import {Routes} from "react-router";
 import {addApplication} from "./redux/Actions/applicationActions";
 
-import { Responsive, WidthProvider } from "react-grid-layout";
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import {UIPanel} from "./components/UI_elements";
 import PlatformManager from "./components/Managers/PlatformManager";
+import {InterfaceParameters} from "./components/UI_elements/InterfaceParameters";
 
-const ResponsiveGridLayout = WidthProvider(Responsive);
 
 let operator_views = ["Scope"];
 let user_views = ["Scripts", "Applications", "Programs", "Bitstreams", "Filters", "Emulator"];
@@ -153,32 +152,36 @@ let AuthApp = (props) =>{
         case "NORMAL":
             return (
                 <div className="App">
-
-                        <ResponsiveGridLayout
-                            className="layout"
-                            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-                            rowHeight={30}
-                            compactType='horizontal'
-                            useCSSTransforms={false}
-                        >
-                            <div key="nav" data-grid={{x: 0, y: 0, w: 3, h: 26, static: true}}>
-                                <Navbar views={views}/>
-                            </div>
-                            <UIPanel key="main" data-grid={{x: 3, y: 0, w: 16, h: 26, static: true}} level="level_1">
-                                <Routes>
-                                    {construct_routes()}
-                                </Routes>
-                            </UIPanel>
-                            <UIPanel key="props" data-grid={{x: 19, y: 0, w: 5, h: 26, static: true}} level="level_1">
-                                <Sidebar />
-                            </UIPanel>
-                        </ResponsiveGridLayout>
-
+                    <div style={{display: "flex", gap: InterfaceParameters.main_window.columns_gap}}>
+                        <div style={{
+                            minWidth: InterfaceParameters.main_window.columns_min_widths[0],
+                            height:"1000px"
+                        }} key="nav">
+                            <Navbar views={views}/>
+                        </div>
+                        <UIPanel key="main"
+                                 style={{
+                                     padding:InterfaceParameters.main_window.padding,
+                                     minWidth:InterfaceParameters.main_window.columns_min_widths[1],
+                                     flexGrow:6,
+                                     height:"1000px"
+                        }} level="level_1">
+                            <Routes>
+                                {construct_routes()}
+                            </Routes>
+                        </UIPanel>
+                        <UIPanel key="props" style={{
+                            minWidth:InterfaceParameters.main_window.columns_min_widths[2],
+                            flexGrow:1,
+                            height:"1000px"
+                        }} level="level_1">
+                            <Sidebar/>
+                        </UIPanel>
+                    </div>
                 </div>
             );
         default:
-            return(
+            return (
                 <>
                 </>
             )

@@ -46,14 +46,12 @@ let ScriptManager = (props) =>{
 
 
     return(
-        <ResponsiveGridLayout
-            className="layout"
-            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-            rowHeight={30}
-            useCSSTransforms={false}
-        >
-            <UIPanel key="script_properties" data-grid={{x: 0, y: 0, w: 24, h: 5, static: true}} level="level_2">
+        <div style={{
+            display:"flex",
+            flexDirection:"column",
+            gap:10
+        }}>
+            <UIPanel key="script_properties" level="level_2">
                 <SimpleContent name="Script Properties" content={
                     <FormLayout>
                         <InputField inline name='name' placeholder={selected_script.name} onKeyDown={handle_edit_field} label='name'/>
@@ -62,12 +60,13 @@ let ScriptManager = (props) =>{
                     </FormLayout>
                 }/>
             </UIPanel>
-            <UIPanel key="script_source" data-grid={{x: 0, y: 5, w: 24, h: 20, static: true}} level="level_2">
+
+            <UIPanel key="script_source" level="level_2">
                 <SimpleContent name="Script Source Code" content={
                     <ScriptsEditor script={selected_script} />
                 }/>
             </UIPanel>
-        </ResponsiveGridLayout>
+        </div>
     );
 
 }

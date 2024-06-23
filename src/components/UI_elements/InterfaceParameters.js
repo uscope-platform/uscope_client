@@ -1,4 +1,4 @@
-// Copyright 2021 Filippo Savi
+// Copyright 2024 Filippo Savi
 // Author: Filippo Savi <filssavi@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,18 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {PanelTitle, ContentDiv} from "./UIPanel";
-
-export let SimpleContent = function (props) {
-
-    return(
-        <div style={props.style}>
-            <PanelTitle selected>
-                <p style={{marginLeft:"0.5em", marginRight:"0.5em", marginTop:"0.25em", paddingBottom:"0.1m"}}>{props.name}</p>
-            </PanelTitle>
-            <ContentDiv height={props.height}>
-                {props.content}
-            </ContentDiv>
-        </div>
-    );
+export const InterfaceParameters = {
+    main_window: {
+        columns_gap:10,
+        columns_min_widths:[230, 300, 300],
+        padding:10
+    },
+    scripts: {
+        editorHeight:"800px"
+    },
+    programs:{
+        editorHeight: "780px"
+    }
 };

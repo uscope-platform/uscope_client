@@ -26,14 +26,13 @@ import {
 } from "../UI_elements"
 
 import {setSetting} from "../../redux/Actions/SettingsActions";
-import {Responsive, WidthProvider} from "react-grid-layout";
 import {add_user, do_onboarding, dump_database, restore_database, upload_json} from "../../client_core";
 import { MdDownload, MdUpload} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
+import {InterfaceParameters} from "../UI_elements/InterfaceParameters";
 
 
 let  PlatformManager = props =>{
-    const ResponsiveGridLayout = WidthProvider(Responsive);
 
     const settings = useSelector(state => state.settings);
     const dispatch = useDispatch()
@@ -97,35 +96,26 @@ let  PlatformManager = props =>{
     }
 
     return(
-        <ResponsiveGridLayout
-            className="layout"
-            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-            rowHeight={30}
-            useCSSTransforms={false}
-        >
-
-            <UIPanel key="platform_management" data-grid={{x: 0, y: 0, w: 24, h: 7, static: true}} level="level_2">
-                <SimpleContent name="Platform Management" content={
-                    <div>
-                        {constructActionsBar()}
-                        <form onSubmit={handle_add_user}>
-                            <FormLayout>
-                                <InputField inline name="user" label="Username"/>
-                                <InputField inline name="pass" label="Password"/>
-                                <SelectField label="Role" defaultValue="role"
-                                             name="role" placeholder="Role" options={[
-                                    {value:"admin",label:"admin"},
-                                    {value:"user",label:"user"},
-                                    {value:"operator",label:"operator"}
-                                ]}/>
-                                <Button> Add User </Button>
-                            </FormLayout>
-                        </form>
-                    </div>
-                }/>
-            </UIPanel>
-        </ResponsiveGridLayout>
+        <UIPanel key="platform_management" level="level_2">
+            <SimpleContent name="Platform Management" content={
+                <div>
+                    {constructActionsBar()}
+                    <form onSubmit={handle_add_user}>
+                        <FormLayout>
+                            <InputField inline name="user" label="Username"/>
+                            <InputField inline name="pass" label="Password"/>
+                            <SelectField label="Role" defaultValue="role"
+                                         name="role" placeholder="Role" options={[
+                                {value:"admin",label:"admin"},
+                                {value:"user",label:"user"},
+                                {value:"operator",label:"operator"}
+                            ]}/>
+                            <Button> Add User </Button>
+                        </FormLayout>
+                    </form>
+                </div>
+            }/>
+        </UIPanel>
     );
 };
 

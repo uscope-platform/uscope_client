@@ -27,6 +27,7 @@ import {
 } from "../../../client_core";
 import {MdSave} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
+import {InterfaceParameters} from "../../UI_elements/InterfaceParameters";
 
 
 let ScriptsEditor = props =>{
@@ -86,6 +87,7 @@ let ScriptsEditor = props =>{
             <CodeMirror
                 value={editor_content}
                 width='auto'
+                height={InterfaceParameters.scripts.editorHeight}
                 theme={dracula}
                 extensions={[javascript({ jsx: true }),autocompletion({override: [registers_completion]})]}
                 onChange={handle_change}

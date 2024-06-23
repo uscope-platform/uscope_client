@@ -28,6 +28,7 @@ import {
 import {get_next_id, up_peripheral} from "../../client_core"
 import {Responsive, WidthProvider} from "react-grid-layout";
 import ManagerToolbar from "./ManagerToolbar";
+import {InterfaceParameters} from "../UI_elements/InterfaceParameters";
 
 
 let PeripheralsManager = (props)=>{
@@ -83,13 +84,13 @@ let PeripheralsManager = (props)=>{
 
 
     return(
-        <ResponsiveGridLayout
-            className="layout"
-            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-            useCSSTransforms={false}
-        >
-            <UIPanel key="properties" data-grid={{x: 0, y: 0, w: 24, h: 1, static: true}} level="level_2">
+        <div style={{
+            display:"flex",
+            flexDirection:"column",
+            gap:10,
+            height:"100%"
+        }}>
+            <UIPanel key="properties"  level="level_2">
                 <SimpleContent name="Peripheral Properties" content={
                     <div>
                         <InputField inline name="edit_name" defaultValue={selected_peripheral.peripheral_name} onKeyDown={handleEditName} label="Name"/>
@@ -99,7 +100,8 @@ let PeripheralsManager = (props)=>{
                 }/>
 
             </UIPanel>
-            <UIPanel key="registers" data-grid={{x: 0, y: 1, w: 24, h: 5, static: true}} level="level_2">
+            <UIPanel style={{flexGrow:1}}
+                key="registers" level="level_2">
                 <SimpleContent name="Registers" content={
                     <div>
                         <ManagerToolbar
@@ -123,7 +125,7 @@ let PeripheralsManager = (props)=>{
                     </div>
                 }/>
             </UIPanel>
-        </ResponsiveGridLayout>
+        </div>
     );
 }
 

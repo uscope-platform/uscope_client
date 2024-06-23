@@ -26,6 +26,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { up_program} from "../../../client_core";
 import LoadSelector from "./LoadSelector";
+import {InterfaceParameters} from "../../UI_elements/InterfaceParameters";
 
 
 let ProgramsEditor = props =>{
@@ -126,6 +127,7 @@ let ProgramsEditor = props =>{
             <CodeMirror
                 value={editor_content}
                 width='auto'
+                height={InterfaceParameters.programs.editorHeight}
                 theme={dracula}
                 extensions={[cpp()]}
                 onChange={handle_change}

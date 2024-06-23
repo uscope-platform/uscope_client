@@ -16,9 +16,9 @@
 import React, {useState} from "react";
 import {UIPanel} from "./panels/UIPanel";
 import {SimpleContent} from "./panels/SimpleContent";
-import {Responsive, WidthProvider} from "react-grid-layout";
 import {MdArrowBack, MdArrowForward} from "react-icons/md";
 import {SelectableList} from "./SelectableList";
+import {InterfaceParameters} from "./InterfaceParameters";
 
 
 export let  TwoColumnSelector = props =>{
@@ -42,21 +42,28 @@ export let  TwoColumnSelector = props =>{
       props.onDeselect(sel);
     }
 
-    const ResponsiveGridLayout = WidthProvider(Responsive);
-
     return(
-        <ResponsiveGridLayout
-            className="layout"
-            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-            useCSSTransforms={false}
-        >
-            <UIPanel key={"available_content_"+props.itemType} data-grid={{x: 0, y: 0, w: 9, h: 5, static: true}} level="level_3">
+        <div style={{
+            display: "flex",
+            padding:10
+        }}>
+            <UIPanel
+                key={"available_content_"+props.itemType}
+                level="level_3"
+                style={{
+                    flexGrow:1,
+                    minHeight:InterfaceParameters.programs.editorHeight
+                }}
+            >
                 <SimpleContent name={"Available " + props.itemType} content={
-                    <SelectableList items={props.available_items} selected_item={available_highlight} onSelect={set_available_highlight} />
+                    <SelectableList
+                        items={props.available_items}
+                        selected_item={available_highlight}
+                        onSelect={set_available_highlight}
+                    />
                 }/>
             </UIPanel>
-            <div key={props.itemType+"_selector_controls"}  data-grid={{x: 9, y: 0, w: 1, h: 5, static: true}} style={{
+            <div key={props.itemType+"_selector_controls"}  style={{
                 display:"flex",
                 flexDirection:"column",
                 justifyContent:"center",
@@ -67,11 +74,17 @@ export let  TwoColumnSelector = props =>{
                     marginTop:"1em"
                 }} onClick={handleDeSelect}/>
             </div>
-            <UIPanel key={"selected_content_"+props.itemType} data-grid={{x: 10, y: 0, w: 9, h: 5, static: true}} level="level_3">
+            <UIPanel
+                key={"selected_content_"+props.itemType}
+                level="level_3"
+                style={{
+                    flexGrow:1
+                }}
+            >
                 <SimpleContent name={"Selected " + props.itemType} content={
                     <SelectableList items={props.selected_items} selected_item={selected_highlight} onSelect={set_selected_highlight} />
                 }/>
             </UIPanel>
-        </ResponsiveGridLayout>
+        </div>
     );
 };

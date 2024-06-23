@@ -44,7 +44,7 @@ export let  SelectableList = props =>{
     }
 
     return(
-        <SelectableListLayout>
+        <SelectableListLayout style={props.style}>
             {constructListContent(props.items, props.types)}
         </SelectableListLayout>
     );

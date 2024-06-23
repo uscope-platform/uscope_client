@@ -25,13 +25,11 @@ import {
 
 import {useSelector} from "react-redux";
 import ProgramsEditor from "../Editors/Programs/ProgramsEditor";
-import {Responsive, WidthProvider} from "react-grid-layout";
 import {up_program} from "../../client_core";
 import BuildSettings from "../Editors/Programs/BuildSettings";
 
 let ProgramsManager = props =>{
 
-    const ResponsiveGridLayout = WidthProvider(Responsive);
 
     const programs_store = useSelector(state => state.programs);
     const settings = useSelector(state => state.settings);
@@ -140,14 +138,13 @@ let ProgramsManager = props =>{
     }
 
     return(
-        <ResponsiveGridLayout
-            className="layout"
-            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-            rowHeight={30}
-            useCSSTransforms={false}
-        >
-            <UIPanel key="program_properties" data-grid={{x: 0, y: 0, w: 24, h: 5, static: true}} level="level_2">
+        <div style={{
+            display:"flex",
+            flexDirection:"column",
+            gap:10,
+            height:"100%"
+        }}>
+            <UIPanel key="program_properties" level="level_2">
                 <SimpleContent name="Program Properties" content={
                     <FormLayout>
                         <InputField inline name='name' placeholder={selected_program.name} onKeyDown={handle_name_change} label="Name"/>
@@ -162,10 +159,11 @@ let ProgramsManager = props =>{
                     </FormLayout>
                 }/>
             </UIPanel>
-            <UIPanel key="program_source" data-grid={{x: 0, y: 5, w: 24, h: 20, static: true}} level="level_2">
+            <UIPanel style={{flexGrow:1}} key="program_source" level="level_2">
                 <TabbedContent names={get_tabs_names()} contents={get_tabs_content()} onSelect={set_selectedTab} selected={selectedTab}/>
             </UIPanel>
-        </ResponsiveGridLayout>
+        </div>
+
     );
 
 };
