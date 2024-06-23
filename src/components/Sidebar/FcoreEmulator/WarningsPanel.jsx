@@ -15,7 +15,6 @@
 
 import React from 'react';
 import {useSelector} from "react-redux";
-import {Responsive, WidthProvider} from "react-grid-layout";
 import {SimpleContent, UIPanel} from "../../UI_elements";
 
 let  WarningsPanel = props =>{
@@ -24,8 +23,6 @@ let  WarningsPanel = props =>{
 
 
     if(settings.emulator_compile_warning && settings.emulator_selected_component === null){
-
-        const ResponsiveGridLayout = WidthProvider(Responsive);
 
         let print_warnings = (names, icons) =>{
             let ret = []
@@ -49,20 +46,13 @@ let  WarningsPanel = props =>{
         }
 
         return(
-            <ResponsiveGridLayout
-                className="layout"
-                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-                useCSSTransforms={false}
-            >
-                <UIPanel key="warnings" data-grid={{x: 0, y: 0, w: 24, h: 2, static: true}} level="level_2">
-                    <SimpleContent name={"Warnings"} content={
-                        <div style={{display:"flex", flexDirection:"column", gap:"0.25em", margin:"0.5em"}}>
-                            {print_warnings()}
-                        </div>
-                    }/>
-                </UIPanel>
-            </ResponsiveGridLayout>
+            <UIPanel key="warnings" style={{margin:10}} level="level_2">
+                <SimpleContent name={"Warnings"} content={
+                    <div style={{display:"flex", flexDirection:"column", gap:"0.25em", margin:"0.5em"}}>
+                        {print_warnings()}
+                    </div>
+                }/>
+            </UIPanel>
         )
 
     }

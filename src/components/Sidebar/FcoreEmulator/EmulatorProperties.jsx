@@ -15,8 +15,7 @@
 
 import React, {useEffect, useReducer, useState} from 'react';
 
-import {Responsive, WidthProvider} from "react-grid-layout";
-import {InputField, SimpleContent, ToggleField, UIPanel} from "../../UI_elements";
+import {InputField, SimpleContent, UIPanel} from "../../UI_elements";
 import {useSelector} from "react-redux";
 import {RangedInputField} from "../../UI_elements/RangedInputField";
 
@@ -75,39 +74,30 @@ let  EmulatorProperties = props =>{
         });
     }
 
-    const ResponsiveGridLayout = WidthProvider(Responsive);
-
     if(settings.emulator_selected_tab === 0 && props.selected_emulator && props.enabled){
         return(
-            <ResponsiveGridLayout
-                className="layout"
-                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-                useCSSTransforms={false}
-            >
-                <UIPanel key={"Item properties"} data-grid={{x: 0, y: 0, w: 24, h: 2, static: true}} level="level_2">
-                    {
-                        <SimpleContent name={"Emulator Properties"} content={
-                            <div key="emulator_props">
-                                <InputField inline ID="name" name="name" label="Emulator Name" defaultValue={props.selected_emulator.name} onKeyDown={handle_change}/>
+            <UIPanel style={{margin:10}} key={"Item properties"} level="level_2">
+                {
+                    <SimpleContent name={"Emulator Properties"} content={
+                        <div style={{padding:10}} key="emulator_props">
+                            <InputField inline ID="name" name="name" label="Emulator Name" defaultValue={props.selected_emulator.name} onKeyDown={handle_change}/>
 
-                                <RangedInputField
-                                    ID="emulation_time"
-                                    name="emulation_time"
-                                    label="Emulation Time"
-                                    rangeOptions={["us", "ms", "s"]}
-                                    onKeyDown={handle_change}
-                                    onRangeChange={handle_range_change}
-                                    value={indicated_time}
-                                    range={range}
-                                />
+                            <RangedInputField
+                                ID="emulation_time"
+                                name="emulation_time"
+                                label="Emulation Time"
+                                rangeOptions={["us", "ms", "s"]}
+                                onKeyDown={handle_change}
+                                onRangeChange={handle_range_change}
+                                value={indicated_time}
+                                range={range}
+                            />
 
-                            </div>
-                        }
-                        />
+                        </div>
                     }
-                </UIPanel>
-            </ResponsiveGridLayout>
+                    />
+                }
+            </UIPanel>
         );
     }
 

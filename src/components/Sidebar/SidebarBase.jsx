@@ -18,7 +18,6 @@ import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 
 import {SelectableList, SimpleContent, UIPanel} from "../UI_elements";
-import {Responsive, WidthProvider} from "react-grid-layout";
 
 import 'react-tooltip/dist/react-tooltip.css'
 import SideToolbar from "./SideToolbar";
@@ -145,38 +144,27 @@ let  SidebarBase = props =>{
         }
     };
 
-    const panel_height = props.height ? props.height: 3;
-
-    const ResponsiveGridLayout = WidthProvider(Responsive);
-
     return(
-        <ResponsiveGridLayout
-            className="layout"
-            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-            useCSSTransforms={false}
-        >
-            <UIPanel key={props.content_name+"_list"} data-grid={{x: 0, y: 0, w: 24, h: panel_height, static: true}} level="level_2">
-                <SimpleContent name={props.content_name + " List"} content={
-                    <div>
-                        <SideToolbar
-                            onAdd={handleAdd}
-                            onImport={handleImport}
-                            onExport={handleExport}
-                            contentName={props.content_name}
-                            exportEnabled={export_enabled}
-                        />
-                        <SelectableList
-                            items={names}
-                            types={types}
-                            selected_item={selected_item[props.display_key]}
-                            onRemove={handleRemove}
-                            onSelect={handleSelect}
-                        />
-                    </div>
-                }/>
-            </UIPanel>
-        </ResponsiveGridLayout>
+        <UIPanel  style={{margin:10}} key={props.content_name+"_list"} level="level_2">
+            <SimpleContent name={props.content_name + " List"} content={
+                <div>
+                    <SideToolbar
+                        onAdd={handleAdd}
+                        onImport={handleImport}
+                        onExport={handleExport}
+                        contentName={props.content_name}
+                        exportEnabled={export_enabled}
+                    />
+                    <SelectableList
+                        items={names}
+                        types={types}
+                        selected_item={selected_item[props.display_key]}
+                        onRemove={handleRemove}
+                        onSelect={handleSelect}
+                    />
+                </div>
+            }/>
+        </UIPanel>
     );
 
 };

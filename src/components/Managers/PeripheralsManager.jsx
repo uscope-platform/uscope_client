@@ -26,14 +26,10 @@ import {
 } from "../UI_elements"
 
 import {get_next_id, up_peripheral} from "../../client_core"
-import {Responsive, WidthProvider} from "react-grid-layout";
 import ManagerToolbar from "./ManagerToolbar";
-import {InterfaceParameters} from "../UI_elements/InterfaceParameters";
 
 
 let PeripheralsManager = (props)=>{
-
-    const ResponsiveGridLayout = WidthProvider(Responsive);
 
     const settings = useSelector(state => state.settings);
     const peripherals = useSelector(state => state.peripherals);

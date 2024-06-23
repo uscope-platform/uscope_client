@@ -22,7 +22,6 @@ import {
     SimpleContent,
     UIPanel
 } from "../UI_elements";
-import {Responsive, WidthProvider} from "react-grid-layout";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import SideToolbar from "./SideToolbar";
 
@@ -37,8 +36,6 @@ let  BitstreamSidebar = props =>{
     const dispatch = useDispatch();
 
     const selected_bitstream = new up_bitstream(bitstreams_store[settings.selected_bitstream]);
-
-    const ResponsiveGridLayout = WidthProvider(Responsive);
 
     let handleOnSelect = (selection) => {
         if(settings.selected_bitstream !==selection){
@@ -98,13 +95,10 @@ let  BitstreamSidebar = props =>{
 
 
     return(
-        <ResponsiveGridLayout
-            className="layout"
-            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-            useCSSTransforms={false}
-        >
-            <UIPanel key="bitstream_list" data-grid={{x: 0, y: 0, w: 24, h: 3, static: true}} level="level_2">
+        <div style={{
+            margin:10
+        }}>
+            <UIPanel key="bitstream_list" level="level_2">
                 <SimpleContent name="Bitstream List" content={
                     <div>
                         <SideToolbar
@@ -116,12 +110,9 @@ let  BitstreamSidebar = props =>{
                         />
                         <SelectableList items={names} types={types} selected_item={selected_bitstream.name} onRemove={handleRemove} onSelect={handleOnSelect} />
                     </div>
-
                 }/>
             </UIPanel>
-
-        </ResponsiveGridLayout>
-
+        </div>
     );
 };
 

@@ -13,15 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useReducer, useState} from 'react';
+import React, { useState} from 'react';
 
-import {Responsive, WidthProvider} from "react-grid-layout";
-import {InputField, SelectField, SimpleContent, UIPanel} from "../../../UI_elements";
-import {useDispatch, useSelector} from "react-redux";
-import {MdAdd} from "react-icons/md";
-import {up_application, up_emulator} from "../../../../client_core";
-import {setSetting} from "../../../../redux/Actions/SettingsActions";
-import NodeIomProperties from "./NodeIomProperties";
+import {InputField, SelectField} from "../../../UI_elements";
+import {useSelector} from "react-redux";
 
 let  EmulatorCoreProperties = props =>{
 

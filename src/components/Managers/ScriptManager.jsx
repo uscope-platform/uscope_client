@@ -23,7 +23,6 @@ import {
     SimpleContent,
     UIPanel
 } from "../UI_elements"
-import {Responsive, WidthProvider} from "react-grid-layout";
 import {up_script} from "../../client_core";
 import ScriptsEditor from "../Editors/Scripts/ScriptsEditor";
 
@@ -34,8 +33,6 @@ let ScriptManager = (props) =>{
 
     let selected_script = settings.selected_script ? scripts[settings.selected_script] : {};
     let selected_script_obj = new up_script(selected_script);
-
-    const ResponsiveGridLayout = WidthProvider(Responsive);
 
 
     let handle_edit_field = (event) => {

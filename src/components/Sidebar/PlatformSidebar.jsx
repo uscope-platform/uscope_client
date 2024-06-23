@@ -24,12 +24,10 @@ import {
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
 import {get_users_list, remove_user} from "../../client_core";
-import {Responsive, WidthProvider} from "react-grid-layout";
 import {useLocation} from "react-router-dom";
 import {MdPerson} from "react-icons/md";
 
 let  PlatformSidebar = props =>{
-    const ResponsiveGridLayout = WidthProvider(Responsive);
 
     const location = useLocation();
     const settings = useSelector(state => state.settings);
@@ -81,18 +79,16 @@ let  PlatformSidebar = props =>{
 
 
     return (
-            <ResponsiveGridLayout
-                className="layout"
-                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-                useCSSTransforms={false}
-            >
-                <UIPanel key="users_list" data-grid={{x: 0, y: 0, w: 24, h: 3, static: true}} level="level_2">
+            <div style={{
+                display: "flex",
+                margin:10
+            }}>
+                <UIPanel key="users_list" style={{width:"100%"}} level="level_2">
                     <SimpleContent name="Users List" content={
                         <SelectableList items={names} types={types} selected_item={settings.selected_user} onRemove={handleRemoveUser} onSelect={handleOnSelect} />
                     }/>
                 </UIPanel>
-            </ResponsiveGridLayout>
+            </div>
         );
 
 };

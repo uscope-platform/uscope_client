@@ -23,16 +23,11 @@ import {SimpleContent, TabbedContent, UIPanel} from "../UI_elements";
 import CoreInputsList from "./CoreInputsList";
 import CoreOutputsList from "./CoreOutputsList";
 import CoreMemoriesList from "./CoreMemoriesList";
-import {Responsive, WidthProvider} from "react-grid-layout";
 import CoreInputFilesList from "./CoreInputFilesList";
-import EmulationResults from "./EmulationResults";
 
 import {ToastContainer, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import {win} from "codemirror/src/util/dom";
 
-
-const ResponsiveGridLayout = WidthProvider(Responsive);
 
 let FcoreEmulationEditor = function (props) {
 
@@ -210,7 +205,12 @@ let FcoreEmulationEditor = function (props) {
     if(selected_emulator){
         
         return(
-            <>
+            <div style={{
+                display:"flex",
+                flexDirection: "column",
+                gap:10,
+                margin:10
+            }}>
                 <ToastContainer
                     position="top-right"
                     autoClose={2000}
@@ -223,14 +223,7 @@ let FcoreEmulationEditor = function (props) {
                     pauseOnHover
                     theme="dark"
                 />
-                <ResponsiveGridLayout
-                    className="layout"
-                    breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                    cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-                    rowHeight={30}
-                    useCSSTransforms={false}
-                >
-                    <UIPanel key="emulator_diagram" data-grid={{x: 0, y: 0, w: 24, h: 16, static: true}} level="level_2">
+                    <UIPanel key="emulator_diagram" level="level_2">
                         <SimpleContent name="Emulation_diagram" height="100%" content={
                             <EmulatorDiagram
                                 selected_node={settings.emulator_selected_component}
@@ -249,24 +242,31 @@ let FcoreEmulationEditor = function (props) {
                             />
                         }/>
                     </UIPanel>
-                    <UIPanel key="emulator_i_props" data-grid={{x: 0, y: 16, w: 8, h: 7.4, static: true}} level="level_2">
-                        <TabbedContent names={["Inputs", "Input Files"]} contents={[
-                            <CoreInputsList/>,
-                            <CoreInputFilesList/>
-                        ]} onSelect={set_selected_inputs_tab} selected={selected_inputs_tab}/>
-                    </UIPanel>
-                    <UIPanel key="emulator_o_props" data-grid={{x: 8, y: 16, w: 8, h: 7.4, static: true}} level="level_2">
-                        <SimpleContent name="Outputs" height="100%" content={
-                            <CoreOutputsList/>
-                        }/>
-                    </UIPanel>
-                    <UIPanel key="emulator_m_props" data-grid={{x: 16, y: 16, w: 8, h: 7.4, static: true}} level="level_2">
-                        <SimpleContent name="Memory" height="100%" content={
-                            <CoreMemoriesList/>
-                        }/>
-                    </UIPanel>
-                </ResponsiveGridLayout>
-            </>
+                    <div style={{
+                        display:"flex",
+                        flexDirection:"row",
+                        gap:10,
+                        minHeight:"270px"
+                    }}>
+                        <UIPanel style={{flexGrow:1}} key="emulator_i_props" level="level_2">
+                            <TabbedContent names={["Inputs", "Input Files"]} contents={[
+                                <CoreInputsList/>,
+                                <CoreInputFilesList/>
+                            ]} onSelect={set_selected_inputs_tab} selected={selected_inputs_tab}/>
+                        </UIPanel>
+                        <UIPanel  style={{flexGrow:1}} key="emulator_o_props" level="level_2">
+                            <SimpleContent name="Outputs" height="100%" content={
+                                <CoreOutputsList/>
+                            }/>
+                        </UIPanel>
+                        <UIPanel  style={{flexGrow:1}} key="emulator_m_props"  level="level_2">
+                            <SimpleContent name="Memory" height="100%" content={
+                                <CoreMemoriesList/>
+                            }/>
+                        </UIPanel>
+                    </div>
+
+            </div>
         );
     } else{
         return <></>

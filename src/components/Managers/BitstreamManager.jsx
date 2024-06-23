@@ -23,14 +23,12 @@ import {
 } from "../UI_elements";
 import {useSelector} from "react-redux";
 import {up_bitstream} from "../../client_core";
-import {Responsive, WidthProvider} from "react-grid-layout";
 
 
 
 let BitstreamManager = props =>{
 
     const inputFile = useRef(null)
-    const ResponsiveGridLayout = WidthProvider(Responsive);
 
     const bitstreams_store = useSelector(state => state.bitstreams);
     const settings = useSelector(state => state.settings);

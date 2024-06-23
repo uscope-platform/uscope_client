@@ -18,7 +18,6 @@ import React, {useCallback} from 'react';
 
 import EnablesProperties from "./EnablesProperties";
 import {SimpleContent, UIPanel} from "../../UI_elements";
-import {Responsive, WidthProvider} from "react-grid-layout";
 import TriggerControls from "./TriggerControls";
 import {plotPause, plotPlay} from "../../../redux/Actions/plotActions";
 import {useDispatch, useSelector, useStore} from "react-redux";
@@ -42,15 +41,14 @@ let  PlotSidebar = props =>{
         download_plot(state.plot.data, state.settings.sampling_period, state.settings.default_ch_group.group_name);
     }, [])
 
-    const ResponsiveGridLayout = WidthProvider(Responsive);
 
     return (
-        <ResponsiveGridLayout
-            className="layout"
-            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-            useCSSTransforms={false}
-        >
+        <div style={{
+            display:"flex",
+            flexDirection:"column",
+            gap:10,
+            margin:10
+        }}>
             <UIPanel key="scope_props" data-grid={{x: 0, y: 0, w: 24, h: 2, static: true}} level="level_2">
                 <SimpleContent name="Scope Properties" content={
                     <EnablesProperties/>
@@ -61,7 +59,7 @@ let  PlotSidebar = props =>{
                     <TriggerControls showAcquisitionStatus onPlay={handle_play} onPause={handle_pause} onDownload={handle_download}/>
                 }/>
             </UIPanel>
-        </ResponsiveGridLayout>
+        </div>
     );
 };
 

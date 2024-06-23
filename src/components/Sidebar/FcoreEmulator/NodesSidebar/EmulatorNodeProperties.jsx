@@ -15,7 +15,6 @@
 
 import React from 'react';
 
-import {Responsive, WidthProvider} from "react-grid-layout";
 import {SimpleContent, UIPanel} from "../../../UI_elements";
 import {useSelector} from "react-redux";
 import NodeIomProperties from "./NodeIomProperties";
@@ -31,17 +30,14 @@ let  EmulatorNodeProperties = props =>{
             return item.id === selected_component_obj.obj.id;
         })[0];
 
-
-        const ResponsiveGridLayout = WidthProvider(Responsive);
-
         return(
-            <ResponsiveGridLayout
-                className="layout"
-                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-                useCSSTransforms={false}
-            >
-                <UIPanel key={"Item properties"} data-grid={{x: 0, y: 0, w: 24, h: 2, static: true}} level="level_2">
+            <div style={{
+                display: "flex",
+                flexDirection: "column",
+                gap:10,
+                margin:10
+            }}>
+                <UIPanel key={"Item properties"}  level="level_2">
                     <SimpleContent name={"Node Properties"} content={
                         <EmulatorCoreProperties
                             selected_core={selected_core}
@@ -49,13 +45,13 @@ let  EmulatorNodeProperties = props =>{
                         />
                     } />
                 </UIPanel>
-                <UIPanel key={"iom properties"} data-grid={{x: 0, y: 2, w: 24, h: 2, static: true}} level="level_2">
+                <UIPanel style={{minHeight:"200px"}} key={"iom properties"} level="level_2">
                     <NodeIomProperties
                         selected_core={selected_core}
                         selected_emulator={props.selected_emulator}
                     />
                 </UIPanel>
-            </ResponsiveGridLayout>
+            </div>
         );
     }
 

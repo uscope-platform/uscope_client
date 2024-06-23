@@ -13,14 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useCallback, useEffect, useReducer, useState} from 'react';
+import React, {useReducer} from 'react';
 
-import {Responsive, WidthProvider} from "react-grid-layout";
-import {InputField, SelectableList, SimpleContent, UIPanel} from "../../../UI_elements";
-import {useDispatch, useSelector} from "react-redux";
-import {MdAdd} from "react-icons/md";
-import {up_emulator} from "../../../../client_core";
-import {setSetting} from "../../../../redux/Actions/SettingsActions";
+import {SimpleContent, UIPanel} from "../../../UI_elements";
+import {useSelector} from "react-redux";
 import DmaChannelsList from "./DmaChannelsList";
 import DmaChannelProperties from "./DmaChannelProperties";
 
@@ -54,16 +50,14 @@ let  EmulatorEdgeProperties = props =>{
             if(!selected_channel) selected_channel = {name:"", source:{channel:"", register:""},source_output:"", target:{channel:"", register: ""}, target_input:""};
         }
 
-        const ResponsiveGridLayout = WidthProvider(Responsive);
-
         return(
-            <ResponsiveGridLayout
-                className="layout"
-                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-                useCSSTransforms={false}
-            >
-                <UIPanel key="channels_list" data-grid={{x: 0, y: 0, w: 24, h: 2, static: true}} level="level_2">
+            <div style={{
+                display:"flex",
+                flexDirection:"column",
+                gap:10,
+                margin:10
+            }}>
+                <UIPanel key="channels_list" style={{minHeight:"200px"}} level="level_2">
                     <SimpleContent name={"DMA channel properties"} content={
                         <DmaChannelsList
                             connections_list={connections_list}
@@ -74,7 +68,7 @@ let  EmulatorEdgeProperties = props =>{
                         />
                     }/>
                 </UIPanel>
-                <UIPanel key="channel_properties_tab" data-grid={{x: 0, y: 2, w: 24, h: 2.2, static: true}} level="level_2">
+                <UIPanel key="channel_properties_tab" style={{maxHeight:"500px"}}  level="level_2">
                     <SimpleContent name={"DMA channel properties"} content={
                         <DmaChannelProperties
                             selected_emulator={props.selected_emulator}
@@ -85,7 +79,7 @@ let  EmulatorEdgeProperties = props =>{
                         />
                     }/>
                 </UIPanel>
-            </ResponsiveGridLayout>
+            </div>
         )
 
     }
