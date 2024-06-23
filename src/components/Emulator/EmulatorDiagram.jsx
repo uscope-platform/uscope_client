@@ -80,6 +80,7 @@ let EmulatorDiagram = function (props) {
                 nodes={props.nodes}
                 edges={props.edges}
                 selections={selections}
+                height="550px"
                 node={<Node onClick={handle_node_click} onRemove={handle_node_remove}/>}
                 edge={ <Edge onClick={handle_edge_click} onRemove={handle_edge_remove}/> }
                 onCanvasClick={handle_canvas_click}

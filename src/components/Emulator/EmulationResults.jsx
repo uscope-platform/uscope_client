@@ -15,15 +15,12 @@
 
 import React, {useEffect, useReducer, useState} from 'react';
 import {SelectableList, SimpleContent, UIPanel} from "../UI_elements";
-import {Responsive, WidthProvider} from "react-grid-layout";
 import createPlotlyComponent from "react-plotly.js/factory";
 import Plotly from "plotly.js-basic-dist";
 import {useSelector} from "react-redux";
 
 
 const Plot = createPlotlyComponent(Plotly);
-
-const ResponsiveGridLayout = WidthProvider(Responsive);
 
 let EmulationResults = function (props) {
 
@@ -112,14 +109,14 @@ let EmulationResults = function (props) {
     }
 
     return(
-        <ResponsiveGridLayout
-            className="layout"
-            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-            cols={{ lg: 24, md: 20, sm: 12, xs: 8, xxs: 4 }}
-            rowHeight={30}
-            useCSSTransforms={false}
-        >
-            <UIPanel key="emulation_result_plots" data-grid={{x: 0, y: 0, w: 24, h: 16, static: true}} level="level_2">
+        <div style={{
+            display:"flex",
+            flexDirection:"column",
+            gap:10,
+            height:"100%",
+            margin:10
+        }}>
+            <UIPanel key="emulation_result_plots" level="level_2">
                 <SimpleContent name="Results Plot" height="100%" content={
                     <Plot
                         data={data}
@@ -129,21 +126,28 @@ let EmulationResults = function (props) {
                     />
                 }/>
             </UIPanel>
-            <UIPanel key="emulation_result_core_sel" data-grid={{x: 0, y: 16, w: 10, h: 8, static: true}} level="level_2">
-                <SimpleContent name="Core Selector" height="100%" content={
-                    <div>
-                        <SelectableList items={cores} selected_item={selected_core} onSelect={set_selected_core} />
-                    </div>
-                }/>
-            </UIPanel>
-            <UIPanel key="emulation_result_data_sel" data-grid={{x: 14, y: 16, w: 10, h: 8, static: true}} level="level_2">
-                <SimpleContent name="Data Selector" height="100%" content={
-                    <div>
-                        <SelectableList multi_select items={outputs} selected_item={selected_output} onSelect={handle_datapoint_select} />
-                    </div>
-                }/>
-            </UIPanel>
-        </ResponsiveGridLayout>
+            <div style={{
+                display:"flex",
+                flexDirection:"row",
+                minHeight:"300px",
+                gap:10
+            }}>
+                <UIPanel style={{flexGrow:1}} key="emulation_result_core_sel" level="level_2">
+                    <SimpleContent name="Core Selector" height="100%" content={
+                        <div>
+                            <SelectableList items={cores} selected_item={selected_core} onSelect={set_selected_core} />
+                        </div>
+                    }/>
+                </UIPanel>
+                <UIPanel style={{flexGrow:1}} key="emulation_result_data_sel" level="level_2">
+                    <SimpleContent name="Data Selector" height="100%" content={
+                        <div>
+                            <SelectableList multi_select items={outputs} selected_item={selected_output} onSelect={handle_datapoint_select} />
+                        </div>
+                    }/>
+                </UIPanel>
+            </div>
+        </div>
 
 
 );
