@@ -46,8 +46,7 @@ let  PlotSidebar = props =>{
         <div style={{
             display:"flex",
             flexDirection:"column",
-            gap:10,
-            margin:10
+            gap:10
         }}>
             <UIPanel key="scope_props" data-grid={{x: 0, y: 0, w: 24, h: 2, static: true}} level="level_2">
                 <SimpleContent name="Scope Properties" content={

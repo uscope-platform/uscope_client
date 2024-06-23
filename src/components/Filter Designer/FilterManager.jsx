@@ -31,6 +31,7 @@ import {Tooltip} from "react-tooltip";
 import {ToastContainer, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import FilterImplementationControls from "./FilterImplementationControls";
+import FilterSidebar from "../Sidebar/FilterSidebar";
 
 let FilterManager = props =>{
 
@@ -90,78 +91,91 @@ let FilterManager = props =>{
 
     return (
         <div style={{
-            display:"flex",
-            flexDirection:"column",
+            display: "flex",
+            flexDirection:"row",
             gap:10,
-            height:"100%"
+            height: "100%"
         }}>
-            <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="dark"
-            />
             <div style={{
                 display: "flex",
-                flexDirection: "row",
-                gap:10
+                flexDirection: "column",
+                gap: 10,
+                flexGrow:1,
+                height: "100%"
             }}>
-                <UIPanel key="filter_designer_plot" level="level_2" style={{flexGrow:1}}>
-                    <SimpleContent name="Filter Viewer" content={
-                        <FilterPlot
-                            keepout_shapes={keepout_shapes}
-                            f_sample={selected_filter.parameters.sampling_frequency}
-                            plot_data={plot_filter}
-                        />
-                    }/>
-                </UIPanel>
-                <UIPanel key="filter_designer_controls" style={{flexGrow:1}}
+                <ToastContainer
+                    position="top-right"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="dark"
+                />
+                <div style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: 10
+                }}>
+                    <UIPanel key="filter_designer_plot" level="level_2" style={{flexGrow: 1}}>
+                        <SimpleContent name="Filter Viewer" content={
+                            <FilterPlot
+                                keepout_shapes={keepout_shapes}
+                                f_sample={selected_filter.parameters.sampling_frequency}
+                                plot_data={plot_filter}
+                            />
+                        }/>
+                    </UIPanel>
+                    <UIPanel key="filter_designer_controls" style={{flexGrow: 1}}
+                             level="level_2">
+                        <SimpleContent name="Design Parameters" content={
+                            <div>
+                                <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
+                                    <div id="design">
+                                        <MdBuild onClick={handleDesign} size={ColorTheme.icons_size}
+                                                 style={{marginLeft: "0.3em"}} color={ColorTheme.icons_color}/>
+                                        <Tooltip anchorId="design" content={"Design Filter"} place="top"/>
+                                    </div>
+                                </div>
+                                <FilterDesignerControls
+                                    name={selected_filter.name}
+                                    filter_parameters={selected_filter.parameters}
+                                    on_change={handleParamChanges}
+                                    on_rename={handleRename}
+                                />
+                            </div>
+                        }/>
+                    </UIPanel>
+                </div>
+                <UIPanel key="filter_implementation_controls" style={{flexGrow: 1}}
                          level="level_2">
-                    <SimpleContent name="Design Parameters" content={
+                    <SimpleContent name="Implementation Parameters" content={
                         <div>
                             <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
-                                <div id="design">
-                                    <MdBuild onClick={handleDesign} size={ColorTheme.icons_size}
-                                             style={{marginLeft: "0.3em"}} color={ColorTheme.icons_color}/>
-                                    <Tooltip anchorId="design" content={"Design Filter"} place="top"/>
+                                <div id="implement">
+                                    <MdConstruction onClick={handleImplement} size={ColorTheme.icons_size}
+                                                    style={{marginLeft: "0.3em"}} color={ColorTheme.icons_color}/>
+                                    <Tooltip anchorId="implement" content={"Implement Filter"} place="top"/>
                                 </div>
                             </div>
-                            <FilterDesignerControls
-                                name={selected_filter.name}
+                            <FilterImplementationControls
                                 filter_parameters={selected_filter.parameters}
                                 on_change={handleParamChanges}
-                                on_rename={handleRename}
                             />
                         </div>
                     }/>
                 </UIPanel>
             </div>
-            <UIPanel key="filter_implementation_controls" style={{flexGrow:1}}
-                     level="level_2">
-                <SimpleContent name="Implementation Parameters" content={
-                    <div>
-                        <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
-                            <div id="implement">
-                                <MdConstruction onClick={handleImplement} size={ColorTheme.icons_size}
-                                                style={{marginLeft: "0.3em"}} color={ColorTheme.icons_color}/>
-                                <Tooltip anchorId="implement" content={"Implement Filter"} place="top"/>
-                            </div>
-                        </div>
-                        <FilterImplementationControls
-                            filter_parameters={selected_filter.parameters}
-                            on_change={handleParamChanges}
-                        />
-                    </div>
-                }/>
-            </UIPanel>
+            <div style={{
+                minWidth:"300px",
+                height: "100%"
+            }}>
+                <FilterSidebar/>
+            </div>
         </div>
-
     );
 
 

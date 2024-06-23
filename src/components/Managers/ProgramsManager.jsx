@@ -27,6 +27,7 @@ import {useSelector} from "react-redux";
 import ProgramsEditor from "../Editors/Programs/ProgramsEditor";
 import {up_program} from "../../client_core";
 import BuildSettings from "../Editors/Programs/BuildSettings";
+import ProgramSidebar from "../Sidebar/ProgramSidebar";
 
 let ProgramsManager = props =>{
 
@@ -140,30 +141,40 @@ let ProgramsManager = props =>{
     return(
         <div style={{
             display:"flex",
-            flexDirection:"column",
+            flexDirection:"row",
             gap:10,
             height:"100%"
         }}>
-            <UIPanel key="program_properties" level="level_2">
-                <SimpleContent name="Program Properties" content={
-                    <FormLayout>
-                        <InputField inline name='name' placeholder={selected_program.name} onKeyDown={handle_name_change} label="Name"/>
-                        <SelectField
-                            label="Program type"
-                            onChange={handleTypeChange}
-                            value={{label:selected_program.program_type, value:selected_program.program_type}}
-                            defaultValue="Select Type"
-                            name="program_type"
-                            placeholder="Program type"
-                            options={allowed_types}/>
-                    </FormLayout>
-                }/>
-            </UIPanel>
-            <UIPanel style={{flexGrow:1}} key="program_source" level="level_2">
-                <TabbedContent names={get_tabs_names()} contents={get_tabs_content()} onSelect={set_selectedTab} selected={selectedTab}/>
-            </UIPanel>
+            <div style={{
+                display:"flex",
+                flexDirection:"column",
+                gap:10,
+                flexGrow:1,
+                height:"100%"
+            }}>
+                <UIPanel key="program_properties" level="level_2">
+                    <SimpleContent name="Program Properties" content={
+                        <FormLayout>
+                            <InputField inline name='name' placeholder={selected_program.name} onKeyDown={handle_name_change} label="Name"/>
+                            <SelectField
+                                label="Program type"
+                                onChange={handleTypeChange}
+                                value={{label:selected_program.program_type, value:selected_program.program_type}}
+                                defaultValue="Select Type"
+                                name="program_type"
+                                placeholder="Program type"
+                                options={allowed_types}/>
+                        </FormLayout>
+                    }/>
+                </UIPanel>
+                <UIPanel style={{flexGrow:1}} key="program_source" level="level_2">
+                    <TabbedContent names={get_tabs_names()} contents={get_tabs_content()} onSelect={set_selectedTab} selected={selectedTab}/>
+                </UIPanel>
+            </div>
+            <div style={{minWidth:"300px"}}>
+                <ProgramSidebar/>
+            </div>
         </div>
-
     );
 
 };

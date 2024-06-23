@@ -95,24 +95,20 @@ let  BitstreamSidebar = props =>{
 
 
     return(
-        <div style={{
-            margin:10
-        }}>
-            <UIPanel key="bitstream_list" level="level_2">
-                <SimpleContent name="Bitstream List" content={
-                    <div>
-                        <SideToolbar
-                            onAdd={handleAdd}
-                            onImport={handleImport}
-                            onExport={handleExport}
-                            contentName="Bitstream"
-                            exportEnabled={settings.selected_bitstream}
-                        />
-                        <SelectableList items={names} types={types} selected_item={selected_bitstream.name} onRemove={handleRemove} onSelect={handleOnSelect} />
-                    </div>
-                }/>
-            </UIPanel>
-        </div>
+        <UIPanel key="bitstream_list" level="level_2">
+            <SimpleContent name="Bitstream List" content={
+                <div>
+                    <SideToolbar
+                        onAdd={handleAdd}
+                        onImport={handleImport}
+                        onExport={handleExport}
+                        contentName="Bitstream"
+                        exportEnabled={settings.selected_bitstream}
+                    />
+                    <SelectableList items={names} types={types} selected_item={selected_bitstream.name} onRemove={handleRemove} onSelect={handleOnSelect} />
+                </div>
+            }/>
+        </UIPanel>
     );
 };
 

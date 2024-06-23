@@ -30,6 +30,7 @@ import {add_user, do_onboarding, dump_database, restore_database, upload_json} f
 import { MdDownload, MdUpload} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
 import {InterfaceParameters} from "../UI_elements/InterfaceParameters";
+import PlatformSidebar from "../Sidebar/PlatformSidebar";
 
 
 let  PlatformManager = props =>{
@@ -96,26 +97,37 @@ let  PlatformManager = props =>{
     }
 
     return(
-        <UIPanel key="platform_management" level="level_2">
-            <SimpleContent name="Platform Management" content={
-                <div>
-                    {constructActionsBar()}
-                    <form onSubmit={handle_add_user}>
-                        <FormLayout>
-                            <InputField inline name="user" label="Username"/>
-                            <InputField inline name="pass" label="Password"/>
-                            <SelectField label="Role" defaultValue="role"
-                                         name="role" placeholder="Role" options={[
-                                {value:"admin",label:"admin"},
-                                {value:"user",label:"user"},
-                                {value:"operator",label:"operator"}
-                            ]}/>
-                            <Button> Add User </Button>
-                        </FormLayout>
-                    </form>
-                </div>
-            }/>
-        </UIPanel>
+        <div style={{
+            display:"flex",
+            flexDirection:"row",
+            gap: 10,
+            height:"100%"
+        }}>
+            <UIPanel style={{flexGrow:1}} key="platform_management" level="level_2">
+                <SimpleContent name="Platform Management" content={
+                    <div>
+                        {constructActionsBar()}
+                        <form onSubmit={handle_add_user}>
+                            <FormLayout>
+                                <InputField inline name="user" label="Username"/>
+                                <InputField inline name="pass" label="Password"/>
+                                <SelectField label="Role" defaultValue="role"
+                                             name="role" placeholder="Role" options={[
+                                    {value:"admin",label:"admin"},
+                                    {value:"user",label:"user"},
+                                    {value:"operator",label:"operator"}
+                                ]}/>
+                                <Button> Add User </Button>
+                            </FormLayout>
+                        </form>
+                    </div>
+                }/>
+            </UIPanel>
+            <div style={{minWidth:"300px", height:"100%"}}>
+                <PlatformSidebar/>
+            </div>
+        </div>
+
     );
 };
 

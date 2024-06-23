@@ -36,6 +36,7 @@ import {
 import {get_next_id, up_application} from "../../client_core";
 import ManagerToolbar from "./ManagerToolbar";
 import {InterfaceParameters} from "../UI_elements/InterfaceParameters";
+import ApplicationSidebar from "../Sidebar/ApplicationSidebar";
 
 const empty_app = {
     channels:[],
@@ -425,12 +426,23 @@ let  ApplicationsManager = props =>{
 
 
     return (
-        <UIPanel style={{
+        <div style={{
+            display: "flex",
+            flexDirection: "row",
+            gap:10,
             height:"100%"
-        }} level="level_2">
-            <TabbedContent names={get_tabs_names()} contents={get_tabs_content()}
-                           selected={selectedTab} onSelect={set_selectedTab}/>
-        </UIPanel>
+        }}>
+            <UIPanel style={{
+                height:"100%",
+                flexGrow:1
+            }} level="level_2">
+                <TabbedContent names={get_tabs_names()} contents={get_tabs_content()}
+                               selected={selectedTab} onSelect={set_selectedTab}/>
+            </UIPanel>
+            <div style={{minWidth:"300px"}}>
+                <ApplicationSidebar/>
+            </div>
+        </div>
     );
 };
 

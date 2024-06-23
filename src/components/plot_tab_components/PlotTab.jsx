@@ -22,6 +22,7 @@ import ParametersArea from "./ParametersArea";
 import MacroActions from "./MacroActions";
 import {ColorTheme, UIPanel, SimpleContent} from "../UI_elements";
 import TerminalComponent from "./Terminal";
+import PlotSidebar from "../Sidebar/Plot/PlotSidebar";
 
 
 let PlotTab = function (props) {
@@ -29,52 +30,60 @@ let PlotTab = function (props) {
 
         return(
             <div style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 10,
-                height: "100%"
+                display:"flex",
+                flexDirection:"row",
+                gap:10
             }}>
                 <div style={{
                     display: "flex",
-                    flexDirection: "row",
+                    flexDirection: "column",
                     gap: 10,
-                    width:"100%"
+                    height: "100%"
                 }}>
-                    <UIPanel key="ch_selector"  style={{flexGrow:0.5}} level="level_2">
-                        <SimpleContent name="Channel Selector" content={
-                            <ChannelSelector channels={channels}/>
-                        }/>
-                    </UIPanel>
-                    <UIPanel key="scope" style={{flexGrow:1}} level="level_2">
-                        <SimpleContent name="Scope" content={
-                            <PlotComponent palette={{colorway: ColorTheme.plot_palette}} refreshRate={125}/>
-                        }/>
-                    </UIPanel>
-                </div>
+                    <div style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: 10,
+                        width: "100%"
+                    }}>
+                        <UIPanel key="ch_selector" style={{flexGrow: 0.5}} level="level_2">
+                            <SimpleContent name="Channel Selector" content={
+                                <ChannelSelector channels={channels}/>
+                            }/>
+                        </UIPanel>
+                        <UIPanel key="scope" style={{flexGrow: 1}} level="level_2">
+                            <SimpleContent name="Scope" content={
+                                <PlotComponent palette={{colorway: ColorTheme.plot_palette}} refreshRate={125}/>
+                            }/>
+                        </UIPanel>
+                    </div>
 
-                <div style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    gap: 10,
-                    minHeight:"300px"
-                }}>
-                    <UIPanel style={{flexGrow:0.4}} key="parameters" level="level_2">
-                        <SimpleContent name="Parameters" content={
-                            <ParametersArea/>
-                        }/>
-                    </UIPanel>
-                    <UIPanel style={{flexGrow:1}} key="macro" level="level_2">
-                        <SimpleContent name="Macro" content={
-                            <MacroActions/>
+                    <div style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: 10,
+                        minHeight: "300px"
+                    }}>
+                        <UIPanel style={{flexGrow: 0.4}} key="parameters" level="level_2">
+                            <SimpleContent name="Parameters" content={
+                                <ParametersArea/>
+                            }/>
+                        </UIPanel>
+                        <UIPanel style={{flexGrow: 1}} key="macro" level="level_2">
+                            <SimpleContent name="Macro" content={
+                                <MacroActions/>
+                            }/>
+                        </UIPanel>
+                    </div>
+                    <UIPanel key="terminal" level="level_2">
+                        <SimpleContent name="Terminal" content={
+                            <TerminalComponent/>
                         }/>
                     </UIPanel>
                 </div>
-                <UIPanel key="terminal" level="level_2">
-                    <SimpleContent name="Terminal" content={
-                        <TerminalComponent/>
-                    }/>
-                </UIPanel>
+                <PlotSidebar/>
             </div>
+
         );
 };
 

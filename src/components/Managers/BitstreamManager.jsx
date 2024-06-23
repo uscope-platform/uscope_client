@@ -23,6 +23,7 @@ import {
 } from "../UI_elements";
 import {useSelector} from "react-redux";
 import {up_bitstream} from "../../client_core";
+import BitstreamSidebar from "../Sidebar/BitstreamSidebar";
 
 
 
@@ -33,7 +34,7 @@ let BitstreamManager = props =>{
     const bitstreams_store = useSelector(state => state.bitstreams);
     const settings = useSelector(state => state.settings);
 
-    let selected_bitstream = bitstreams_store[settings.selected_bitstream];
+    let selected_bitstream =settings.selected_bitstream ? bitstreams_store[settings.selected_bitstream] : {name:""};
     let selected_bitstream_obj = new up_bitstream(selected_bitstream);
 
 
@@ -54,17 +55,26 @@ let BitstreamManager = props =>{
         inputFile.current.click();
     }
 
-    if(selected_bitstream)
+
+
     return(
-        <UIPanel key="bitstream_properties"  level="level_2">
-            <SimpleContent name="Bitstream Properties" content={
-                <FormLayout>
-                    <InputField inline name='name' placeholder={selected_bitstream.name} onKeyDown={handle_change_name} label='name'/>
-                    <Button onClick={handle_open_file_chooser}>Change Bitstream File</Button>
-                    <input type='file' id='bitstream_chooser' ref={inputFile} onChange={upload_file} style={{display: 'none'}}/>
-                </FormLayout>
-            }/>
-        </UIPanel>
+        <div style={{
+            display:"flex",
+            flexDirection:"row",
+            gap:10,
+            height:"100%"
+        }}>
+            <UIPanel key="bitstream_properties" style={{flexGrow:1}} level="level_2">
+                <SimpleContent name="Bitstream Properties" content={
+                    <FormLayout>
+                        <InputField inline name='name' placeholder={selected_bitstream.name} onKeyDown={handle_change_name} label='name'/>
+                        <Button onClick={handle_open_file_chooser}>Change Bitstream File</Button>
+                        <input type='file' id='bitstream_chooser' ref={inputFile} onChange={upload_file} style={{display: 'none'}}/>
+                    </FormLayout>
+                }/>
+            </UIPanel>
+            <BitstreamSidebar/>
+        </div>
     );
 
 }

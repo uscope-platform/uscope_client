@@ -79,16 +79,11 @@ let  PlatformSidebar = props =>{
 
 
     return (
-            <div style={{
-                display: "flex",
-                margin:10
-            }}>
-                <UIPanel key="users_list" style={{width:"100%"}} level="level_2">
-                    <SimpleContent name="Users List" content={
-                        <SelectableList items={names} types={types} selected_item={settings.selected_user} onRemove={handleRemoveUser} onSelect={handleOnSelect} />
-                    }/>
-                </UIPanel>
-            </div>
+        <UIPanel key="users_list" level="level_2">
+            <SimpleContent name="Users List" content={
+                <SelectableList items={names} types={types} selected_item={settings.selected_user} onRemove={handleRemoveUser} onSelect={handleOnSelect} />
+            }/>
+        </UIPanel>
         );
 
 };

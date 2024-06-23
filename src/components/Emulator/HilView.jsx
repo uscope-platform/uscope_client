@@ -21,6 +21,7 @@ import EmulationResults from "./EmulationResults";
 import HilPlotTab from "./HilControl/HilPlotTab";
 import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../../redux/Actions/SettingsActions";
+import FcoreEmulatorSidebar from "../Sidebar/FcoreEmulator/FcoreEmulatorSidebar";
 
 let HilView = function (props) {
 
@@ -36,13 +37,23 @@ let HilView = function (props) {
     }
 
     return(
-        <UIPanel key="emulator_diagram" level="level_2">
-            <TabbedContent height="100%" names={["Emulation setup", "Emulation Results", "Hil Scope"]} contents={[
-                <FcoreEmulationEditor onEmulationDone={set_emulation_results} onInputDataChange={set_input_data} onDeploy={()=>{set_deployed(true)}}/>,
-                <EmulationResults results={emulation_results} inputs={input_data}/>,
-                <HilPlotTab deployed={deployed}/>
-            ]} onSelect={on_select} selected={settings.emulator_selected_tab}/>
-        </UIPanel>
+        <div style={{
+            display:"flex",
+            flexDirection:"row",
+            gap:10,
+            height:"100%"
+        }}>
+            <UIPanel style={{flexGrow:1}} key="emulator_diagram" level="level_2">
+                <TabbedContent height="100%" names={["Emulation setup", "Emulation Results", "Hil Scope"]} contents={[
+                    <FcoreEmulationEditor onEmulationDone={set_emulation_results} onInputDataChange={set_input_data} onDeploy={()=>{set_deployed(true)}}/>,
+                    <EmulationResults results={emulation_results} inputs={input_data}/>,
+                    <HilPlotTab deployed={deployed}/>
+                ]} onSelect={on_select} selected={settings.emulator_selected_tab}/>
+            </UIPanel>
+            <div style={{height:"100%"}}>
+                <FcoreEmulatorSidebar/>
+            </div>
+        </div>
 
     );
 };

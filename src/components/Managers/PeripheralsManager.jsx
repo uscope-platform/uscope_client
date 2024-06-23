@@ -27,6 +27,7 @@ import {
 
 import {get_next_id, up_peripheral} from "../../client_core"
 import ManagerToolbar from "./ManagerToolbar";
+import PeripheralsSidebar from "../Sidebar/PeripheralsSidebar";
 
 
 let PeripheralsManager = (props)=>{
@@ -75,53 +76,64 @@ let PeripheralsManager = (props)=>{
     }
 
 
-    if(!settings.current_peripheral)
-        return <></>;
-
-
     return(
         <div style={{
-            display:"flex",
-            flexDirection:"column",
+            display: "flex",
+            flexDirection: "row",
             gap:10,
             height:"100%"
         }}>
-            <UIPanel key="properties"  level="level_2">
-                <SimpleContent name="Peripheral Properties" content={
-                    <div>
-                        <InputField inline name="edit_name" defaultValue={selected_peripheral.peripheral_name} onKeyDown={handleEditName} label="Name"/>
-                        <InputField inline name="edit_version" defaultValue={selected_peripheral.version} onKeyDown={handleEditVersion} label="Version"/>
-                        <Checkbox name='parametric' value={selected_peripheral.parametric} onChange={handleEditParametric} label="Parametric"/>
-                    </div>
-                }/>
+            <div style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+                flexGrow:1,
+                height: "100%"
+            }}>
+                <UIPanel key="properties" level="level_2">
+                    <SimpleContent name="Peripheral Properties" content={
+                        <div>
+                            <InputField inline name="edit_name" defaultValue={selected_peripheral.peripheral_name}
+                                        onKeyDown={handleEditName} label="Name"/>
+                            <InputField inline name="edit_version" defaultValue={selected_peripheral.version}
+                                        onKeyDown={handleEditVersion} label="Version"/>
+                            <Checkbox name='parametric' value={selected_peripheral.parametric}
+                                      onChange={handleEditParametric} label="Parametric"/>
+                        </div>
+                    }/>
 
-            </UIPanel>
-            <UIPanel style={{flexGrow:1}}
-                key="registers" level="level_2">
-                <SimpleContent name="Registers" content={
-                    <div>
-                        <ManagerToolbar
-                            onAdd={() =>{handle_add_new("register", selected_peripheral.registers, "register_name");}}
-                            contentName="Register"/>
-                        <CardStack>
-                            {
-                                selected_peripheral.registers.map((reg)=>{
-                                    return(
-                                        <RegisterProperties
-                                            key={reg.ID}
-                                            peripheral={selected_peripheral}
-                                            forceUpdate={forceUpdate}
-                                            register={reg}
-                                            parametric={selected_peripheral.parametric}
-                                        />
-                                    )
-                                })
-                            }
-                        </CardStack>
-                    </div>
-                }/>
-            </UIPanel>
+                </UIPanel>
+                <UIPanel style={{flexGrow: 1}}
+                         key="registers" level="level_2">
+                    <SimpleContent name="Registers" content={
+                        <div>
+                            <ManagerToolbar
+                                onAdd={() => {
+                                    handle_add_new("register", selected_peripheral.registers, "register_name");
+                                }}
+                                contentName="Register"/>
+                            <CardStack>
+                                {
+                                    selected_peripheral.registers.map((reg) => {
+                                        return (
+                                            <RegisterProperties
+                                                key={reg.ID}
+                                                peripheral={selected_peripheral}
+                                                forceUpdate={forceUpdate}
+                                                register={reg}
+                                                parametric={selected_peripheral.parametric}
+                                            />
+                                        )
+                                    })
+                                }
+                            </CardStack>
+                        </div>
+                    }/>
+                </UIPanel>
+            </div>
+            <PeripheralsSidebar/>
         </div>
+
     );
 }
 

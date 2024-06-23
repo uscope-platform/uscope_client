@@ -25,6 +25,7 @@ import {
 } from "../UI_elements"
 import {up_script} from "../../client_core";
 import ScriptsEditor from "../Editors/Scripts/ScriptsEditor";
+import ScriptSidebar from "../Sidebar/ScriptSidebar";
 
 let ScriptManager = (props) =>{
 
@@ -44,26 +45,38 @@ let ScriptManager = (props) =>{
 
     return(
         <div style={{
-            display:"flex",
-            flexDirection:"column",
+            display: "flex",
+            flexDirection: "row",
             gap:10
         }}>
-            <UIPanel key="script_properties" level="level_2">
-                <SimpleContent name="Script Properties" content={
-                    <FormLayout>
-                        <InputField inline name='name' placeholder={selected_script.name} onKeyDown={handle_edit_field} label='name'/>
-                        <InputField inline name='path' placeholder={selected_script.path} onKeyDown={handle_edit_field} label='path'/>
-                        <InputField inline name='triggers' placeholder={selected_script.triggers} onKeyDown={handle_edit_field} label='triggers'/>
-                    </FormLayout>
-                }/>
-            </UIPanel>
+            <div style={{
+                display: "flex",
+                flexDirection: "column",
+                flexGrow:1,
+                gap: 10
+            }}>
+                <UIPanel key="script_properties" level="level_2">
+                    <SimpleContent name="Script Properties" content={
+                        <FormLayout>
+                            <InputField inline name='name' placeholder={selected_script.name}
+                                        onKeyDown={handle_edit_field} label='name'/>
+                            <InputField inline name='path' placeholder={selected_script.path}
+                                        onKeyDown={handle_edit_field} label='path'/>
+                            <InputField inline name='triggers' placeholder={selected_script.triggers}
+                                        onKeyDown={handle_edit_field} label='triggers'/>
+                        </FormLayout>
+                    }/>
+                </UIPanel>
 
-            <UIPanel key="script_source" level="level_2">
-                <SimpleContent name="Script Source Code" content={
-                    <ScriptsEditor script={selected_script} />
-                }/>
-            </UIPanel>
+                <UIPanel key="script_source" level="level_2">
+                    <SimpleContent name="Script Source Code" content={
+                        <ScriptsEditor script={selected_script}/>
+                    }/>
+                </UIPanel>
+            </div>
+            <ScriptSidebar/>
         </div>
+
     );
 
 }

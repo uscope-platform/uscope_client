@@ -145,7 +145,7 @@ let  SidebarBase = props =>{
     };
 
     return(
-        <UIPanel  style={{margin:10}} key={props.content_name+"_list"} level="level_2">
+        <UIPanel key={props.content_name+"_list"} level="level_2">
             <SimpleContent name={props.content_name + " List"} content={
                 <div>
                     <SideToolbar

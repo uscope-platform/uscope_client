@@ -27,14 +27,10 @@ import ApplicationChooser from "./components/AppChooser";
 //////  STYLE IMPORTS
 import './App.css';
 
-import Sidebar from "./components/Sidebar/Sidebar";
-
 import {initialize_scripting_engine, refresh_caches, up_application} from "./client_core";
 import {Routes} from "react-router";
 import {addApplication} from "./redux/Actions/applicationActions";
 
-import 'react-grid-layout/css/styles.css';
-import 'react-resizable/css/styles.css';
 import {UIPanel} from "./components/UI_elements";
 import PlatformManager from "./components/Managers/PlatformManager";
 import {InterfaceParameters} from "./components/UI_elements/InterfaceParameters";
@@ -169,13 +165,6 @@ let AuthApp = (props) =>{
                             <Routes>
                                 {construct_routes()}
                             </Routes>
-                        </UIPanel>
-                        <UIPanel key="props" style={{
-                            minWidth:InterfaceParameters.main_window.columns_min_widths[2],
-                            flexGrow:1,
-                            height:"1000px"
-                        }} level="level_1">
-                            <Sidebar/>
                         </UIPanel>
                     </div>
                 </div>
