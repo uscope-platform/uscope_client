@@ -33,23 +33,22 @@ let  FcoreEmulatorSidebar = props =>{
 
     const dispatch = useDispatch();
 
-    const selected_emulator = settings.selected_emulator ? new up_emulator(emulators_store[parseInt(settings.selected_emulator)]): null;
-
     const sel_component_type = settings.emulator_selected_component ? settings.emulator_selected_component.type : null;
 
     let handle_select_emulator = (sel) =>{
+        props.on_select(sel);
         dispatch(setSetting(["emulator_selected_iom", null]));
         dispatch(setSetting(["emulator_selected_component", null]));
     }
     let on_start = () =>{
         set_channel_status({0:true, 1:true, 2:true, 3:true, 4:true, 5:true});
-        selected_emulator.start_hil().then(()=>{
+        props.emulator.start_hil().then(()=>{
             dispatch(setSetting(["hil_plot_running", true]));
         });
     };
 
     let on_stop = () =>{
-        selected_emulator.stop_hil().then(()=>{
+        props.emulator.stop_hil().then(()=>{
             dispatch(setSetting(["hil_plot_running", false]));
         });
     }
@@ -71,9 +70,9 @@ let  FcoreEmulatorSidebar = props =>{
                 height={2}
                 onSelect={handle_select_emulator}
             />
-            <EmulatorNodeProperties enabled={sel_component_type==="node"} selected_emulator={selected_emulator}/>
-            <EmulatorEdgeProperties enabled={sel_component_type==="edge"} selected_emulator={selected_emulator}/>
-            <EmulatorProperties enabled={ sel_component_type !== "node"  && sel_component_type !== "edge"} selected_emulator={selected_emulator}/>
+            <EmulatorNodeProperties enabled={sel_component_type==="node"} selected_emulator={props.emulator}/>
+            <EmulatorEdgeProperties enabled={sel_component_type==="edge"} selected_emulator={props.emulator}/>
+            <EmulatorProperties enabled={ sel_component_type !== "node"  && sel_component_type !== "edge"} selected_emulator={props.emulator}/>
             <WarningsPanel/>
             <HilControl enabled={settings.emulator_selected_tab===2} onStart={on_start} onStop={on_stop} onPause={on_pause}/>
 

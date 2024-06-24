@@ -16,7 +16,6 @@
 import React, {useEffect, useState} from 'react';
 import {MdAdd} from "react-icons/md";
 import {SelectableList} from "../UI_elements";
-import {up_emulator} from "../../client_core";
 import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 
@@ -27,18 +26,14 @@ let  IomProperties = props =>{
 
     const dispatch = useDispatch();
 
-
     const settings = useSelector(state => state.settings);
 
-    const emulators_store = useSelector(state => state.emulators);
-
-    let selected_emulator = new up_emulator(emulators_store[parseInt(settings.selected_emulator)]);
     const sel_component_type = settings.emulator_selected_component ? settings.emulator_selected_component.type : null;
 
     let outputs_list = [];
 
     if(sel_component_type && sel_component_type === "node"){
-        outputs_list = Object.values(selected_emulator.cores).filter((item)=>{
+        outputs_list = Object.values(props.emulator.cores).filter((item)=>{
             return item.id === settings.emulator_selected_component.obj.id;
         })[0][props.content_type].map((item)=>{
             return item.name;

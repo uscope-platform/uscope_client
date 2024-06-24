@@ -140,7 +140,7 @@ let  SidebarBase = props =>{
                 return item[props.display_key] === selection;
             })[0];
             dispatch(setSetting([props.selector, sel_item[props.selection_key].toString()]));
-            if(props.onSelect) props.onSelect(selection);
+            if(props.onSelect) props.onSelect(sel_item[props.selection_key]);
         }
     };
 

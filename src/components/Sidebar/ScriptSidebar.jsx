@@ -21,7 +21,7 @@ import {useDispatch, useSelector} from "react-redux"
 import {up_application, up_script} from "../../client_core";
 import SidebarBase from "./SidebarBase";
 
-let ScriptManager = (props) =>{
+let ScriptSidebar = (props) =>{
 
     const scripts_store = useSelector(state => state.scripts);
     const applications = useSelector(state => state.applications);
@@ -55,10 +55,11 @@ let ScriptManager = (props) =>{
             content_name="Script"
             selector="selected_script"
             onDelete={handleRemove}
+            onSelect={props.on_select}
             onAdd={handleAdd}
         />
     );
 }
 
 
-export default ScriptManager;
+export default ScriptSidebar;

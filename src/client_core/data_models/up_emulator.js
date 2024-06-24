@@ -34,6 +34,16 @@ export class up_emulator {
         }
     }
 
+    deep_copy = ()=>{
+        let ret = {};
+        ret.id = this.id;
+        ret.name = this.name;
+        ret.cores = JSON.parse(JSON.stringify(this.cores));
+        ret.connections = JSON.parse(JSON.stringify(this.connections));
+        ret.emulation_time = this.emulation_time;
+        return ret;
+    }
+
     static construct_empty(emulator_id){
         let emulator_obj = {
             id:emulator_id,

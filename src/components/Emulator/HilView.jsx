@@ -22,11 +22,27 @@ import HilPlotTab from "./HilControl/HilPlotTab";
 import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import FcoreEmulatorSidebar from "../Sidebar/FcoreEmulator/FcoreEmulatorSidebar";
+import {up_emulator} from "../../client_core";
 
 let HilView = function (props) {
 
+
+    const emulators_store = useSelector(state => state.emulators);
     const settings = useSelector(state => state.settings);
     const dispatch = useDispatch();
+
+    let [selected_emulator, set_selected_emulator] = useState({
+        name:"",
+        cores:[],
+        connections:[],
+        _get_emulator: ()=>{
+            return{
+                name:"",
+                cores:[],
+                connections:[]
+            }
+        }
+    });
 
     let [emulation_results, set_emulation_results] = useState({});
     let [input_data, set_input_data] = useState({});
@@ -34,6 +50,11 @@ let HilView = function (props) {
 
     let on_select = (value) =>{
         dispatch(setSetting(["emulator_selected_tab", value]))
+    }
+
+    let handle_emulator_select = (emu)=>{
+        // THE DEEP COPY IS NECESSARY BECAUSE REACT IS STUPID
+        set_selected_emulator(new up_emulator(emulators_store[emu].deep_copy()));
     }
 
     return(
@@ -45,13 +66,21 @@ let HilView = function (props) {
         }}>
             <UIPanel style={{flexGrow:1}} key="emulator_diagram" level="level_2">
                 <TabbedContent height="100%" names={["Emulation setup", "Emulation Results", "Hil Scope"]} contents={[
-                    <FcoreEmulationEditor onEmulationDone={set_emulation_results} onInputDataChange={set_input_data} onDeploy={()=>{set_deployed(true)}}/>,
+                    <FcoreEmulationEditor
+                        onEmulationDone={set_emulation_results}
+                        onInputDataChange={set_input_data}
+                        onDeploy={()=>{set_deployed(true)}}
+                        emulator={selected_emulator}
+                    />,
                     <EmulationResults results={emulation_results} inputs={input_data}/>,
-                    <HilPlotTab deployed={deployed}/>
+                    <HilPlotTab deployed={deployed}  emulator={selected_emulator} />
                 ]} onSelect={on_select} selected={settings.emulator_selected_tab}/>
             </UIPanel>
             <div style={{height:"100%"}}>
-                <FcoreEmulatorSidebar/>
+                <FcoreEmulatorSidebar
+                    on_select={handle_emulator_select}
+                    emulator={selected_emulator}
+                />
             </div>
         </div>
 

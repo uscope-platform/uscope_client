@@ -21,7 +21,6 @@ import {
     SimpleContent,
     SelectableList, ColorTheme
 } from "../UI_elements";
-import {setSetting} from "../../redux/Actions/SettingsActions";
 
 import {get_users_list, remove_user} from "../../client_core";
 import {useLocation} from "react-router-dom";
@@ -71,8 +70,8 @@ let  PlatformSidebar = props =>{
     const [names, types] = get_content();
 
     let handleOnSelect = (selection) => {
-        if(settings.selected_user !==selection){
-            dispatch(setSetting(["selected_user", selection]));
+        if(props.user !==selection){
+            props.on_select(selection);
         }
     };
 
@@ -81,7 +80,13 @@ let  PlatformSidebar = props =>{
     return (
         <UIPanel key="users_list" level="level_2">
             <SimpleContent name="Users List" content={
-                <SelectableList items={names} types={types} selected_item={settings.selected_user} onRemove={handleRemoveUser} onSelect={handleOnSelect} />
+                <SelectableList
+                    items={names}
+                    types={types}
+                    selected_item={props.user}
+                    onRemove={handleRemoveUser}
+                    onSelect={handleOnSelect}
+                />
             }/>
         </UIPanel>
         );

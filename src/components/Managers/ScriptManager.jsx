@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import React, {useState} from 'react';
 
 import {useSelector} from "react-redux"
 
@@ -29,19 +29,20 @@ import ScriptSidebar from "../Sidebar/ScriptSidebar";
 
 let ScriptManager = (props) =>{
 
-    const settings = useSelector(state => state.settings);
+    const [selected_script, set_selected_script] = useState({});
+
     const scripts =  useSelector(state => state.scripts);
-
-    let selected_script = settings.selected_script ? scripts[settings.selected_script] : {};
-    let selected_script_obj = new up_script(selected_script);
-
 
     let handle_edit_field = (event) => {
         if(event.key==="Enter"|| event.key ==="Tab"){
-            selected_script_obj.edit_field(event.target.name, event.target.value);
+            selected_script.edit_field(event.target.name, event.target.value);
         }
     }
 
+
+    let handle_select = (selection) =>{
+        set_selected_script( new up_script(scripts[selection]) );
+    }
 
     return(
         <div style={{
@@ -74,7 +75,7 @@ let ScriptManager = (props) =>{
                     }/>
                 </UIPanel>
             </div>
-            <ScriptSidebar/>
+            <ScriptSidebar on_select={handle_select}/>
         </div>
 
     );

@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useReducer} from 'react';
+import React, {useReducer, useState} from 'react';
 
 import {useSelector} from "react-redux"
 
@@ -32,14 +32,15 @@ import PeripheralsSidebar from "../Sidebar/PeripheralsSidebar";
 
 let PeripheralsManager = (props)=>{
 
-    const settings = useSelector(state => state.settings);
     const peripherals = useSelector(state => state.peripherals);
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
-    const selected_peripheral = settings.current_peripheral ?
-        new up_peripheral(peripherals[parseInt(settings.current_peripheral)]) :
-        {registers:[], parametric:false};
+    const [selected_peripheral, set_selected_peripheral] = useState({registers:[], parametric:false, _get_periph:()=>{return{}}});
+
+    let handle_select = (sel) =>{
+        set_selected_peripheral(new up_peripheral(peripherals[sel]));
+    }
 
     let handleEditVersion = (event) =>{
         if (event.key ==="Enter"){
@@ -76,31 +77,33 @@ let PeripheralsManager = (props)=>{
     }
 
 
-    return(
+    let render_periph_prop = () => {
+        return (<div>
+            <InputField inline name="edit_name" defaultValue={selected_peripheral._get_periph().peripheral_name}
+                        onKeyDown={handleEditName} label="Name"/>
+            <InputField inline name="edit_version" defaultValue={selected_peripheral._get_periph().version}
+                        onKeyDown={handleEditVersion} label="Version"/>
+            <Checkbox name='parametric' value={selected_peripheral._get_periph().parametric}
+                      onChange={handleEditParametric} label="Parametric"/>
+        </div>)
+    }
+
+    return (
         <div style={{
             display: "flex",
             flexDirection: "row",
-            gap:10,
-            height:"100%"
+            gap: 10,
+            height: "100%"
         }}>
             <div style={{
                 display: "flex",
                 flexDirection: "column",
                 gap: 10,
-                flexGrow:1,
+                flexGrow: 1,
                 height: "100%"
             }}>
-                <UIPanel key="properties" level="level_2">
-                    <SimpleContent name="Peripheral Properties" content={
-                        <div>
-                            <InputField inline name="edit_name" defaultValue={selected_peripheral.peripheral_name}
-                                        onKeyDown={handleEditName} label="Name"/>
-                            <InputField inline name="edit_version" defaultValue={selected_peripheral.version}
-                                        onKeyDown={handleEditVersion} label="Version"/>
-                            <Checkbox name='parametric' value={selected_peripheral.parametric}
-                                      onChange={handleEditParametric} label="Parametric"/>
-                        </div>
-                    }/>
+                <UIPanel style={{minHeight:"150px"}} key="properties" level="level_2">
+                    <SimpleContent name="Peripheral Properties" content={render_periph_prop()}/>
 
                 </UIPanel>
                 <UIPanel style={{flexGrow: 1}}
@@ -131,7 +134,7 @@ let PeripheralsManager = (props)=>{
                     }/>
                 </UIPanel>
             </div>
-            <PeripheralsSidebar/>
+            <PeripheralsSidebar on_select={handle_select}/>
         </div>
 
     );

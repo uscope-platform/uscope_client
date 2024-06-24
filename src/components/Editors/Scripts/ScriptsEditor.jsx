@@ -16,8 +16,6 @@
 import React, {useState, useEffect} from "react";
 import {ColorTheme} from "../../UI_elements"
 
-import {useSelector} from "react-redux";
-
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { dracula } from '@uiw/codemirror-theme-dracula';
@@ -31,8 +29,6 @@ import {InterfaceParameters} from "../../UI_elements/InterfaceParameters";
 
 
 let ScriptsEditor = props =>{
-    const scripts_store = useSelector(state => state.scripts);
-    const settings = useSelector(state => state.settings);
     const [editor_content, set_editor_content] = useState("");
 
     const [dirty, set_dirty] = useState(false);
@@ -43,11 +39,10 @@ let ScriptsEditor = props =>{
     };
 
     useEffect(()=>{
-        let script =Object.values(scripts_store).find(x => x.id.toString() === settings.selected_script);
-        if(typeof script !== 'undefined' && script !== null){
-            set_editor_content(script.script_content);
+        if(typeof props.script !== 'undefined' && props.script !== null){
+            set_editor_content(props.script.script_content);
         }
-    },[settings.selected_script])
+    },[props.script])
 
     function registers_completion(context) {
         let line = context.matchBefore(/[a-zA-Z0-9_\.]+/)

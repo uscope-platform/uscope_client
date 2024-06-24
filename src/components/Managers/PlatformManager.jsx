@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import React, {useState} from 'react';
 
 import {useDispatch, useSelector} from "react-redux"
 import {
@@ -29,7 +29,6 @@ import {setSetting} from "../../redux/Actions/SettingsActions";
 import {add_user, do_onboarding, dump_database, restore_database, upload_json} from "../../client_core";
 import { MdDownload, MdUpload} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
-import {InterfaceParameters} from "../UI_elements/InterfaceParameters";
 import PlatformSidebar from "../Sidebar/PlatformSidebar";
 
 
@@ -38,6 +37,13 @@ let  PlatformManager = props =>{
     const settings = useSelector(state => state.settings);
     const dispatch = useDispatch()
 
+    const [selected_user, set_selected_user] = useState();
+    
+    
+    let handle_select = (user) =>{
+        set_selected_user(user);
+    }
+    
     let handle_add_user = (event) =>{
 
         event.preventDefault();
@@ -109,7 +115,7 @@ let  PlatformManager = props =>{
                         {constructActionsBar()}
                         <form onSubmit={handle_add_user}>
                             <FormLayout>
-                                <InputField inline name="user" label="Username"/>
+                                <InputField defaultValue={selected_user} inline name="user" label="Username"/>
                                 <InputField inline name="pass" label="Password"/>
                                 <SelectField label="Role" defaultValue="role"
                                              name="role" placeholder="Role" options={[
@@ -124,7 +130,7 @@ let  PlatformManager = props =>{
                 }/>
             </UIPanel>
             <div style={{minWidth:"300px", height:"100%"}}>
-                <PlatformSidebar/>
+                <PlatformSidebar  user={selected_user} on_select={handle_select}/>
             </div>
         </div>
 

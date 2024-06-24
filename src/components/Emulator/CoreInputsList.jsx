@@ -20,30 +20,27 @@ import IomProperties from "./IomProperties";
 
 let  CoreInputsList = props =>{
 
-
-    const emulators_store = useSelector(state => state.emulators);
     const settings = useSelector(state => state.settings);
-
-    let selected_emulator = new up_emulator(emulators_store[parseInt(settings.selected_emulator)]);
 
     let selected_core_id = settings.emulator_selected_component ? settings.emulator_selected_component.obj.id : null;
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     let handle_add = (input_size) =>{
-        selected_emulator.add_input(selected_core_id, input_size).then(()=>{
+        props.emulator.add_input(selected_core_id, input_size).then(()=>{
             forceUpdate();
         });
     }
 
     let handle_remove = (removed_item) =>{
-        selected_emulator.remove_input(selected_core_id, removed_item).then(()=>{
+        props.emulator.remove_input(selected_core_id, removed_item).then(()=>{
             forceUpdate();
         });
     }
 
     return(
         <IomProperties
+            emulator={props.emulator}
             onRemove={handle_remove}
             onAdd={handle_add}
             content_type="inputs"

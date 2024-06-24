@@ -38,14 +38,16 @@ let FilterManager = props =>{
     const [filter_revision, set_filter_revision] = useState( 0);
 
     const filters_store = useSelector(state => state.filters);
-    const settings = useSelector(state => state.settings);
 
-
-    let selected_filter = settings.selected_filter ? new up_filter(filters_store[settings.selected_filter]): up_filter.construct_empty(0);
+    const [selected_filter, set_selected_filter] = useState(up_filter.construct_empty(0));
 
     const [keepout_shapes, set_keepout_shapes] = useState([]);
 
     const [plot_filter, set_plot_filter] = useState({ideal:{x:0, y:0}, quantized:{x:0, y:0}})
+
+    let handle_select = (flt) =>{
+        set_selected_filter( new up_filter(filters_store[flt]))
+    }
 
     useEffect(() => {
         set_keepout_shapes(filter_calculate_keepouts(selected_filter.parameters));
@@ -61,7 +63,7 @@ let FilterManager = props =>{
 
         })
         set_plot_filter({ideal: {x:[], y:[]}, quantized: {x:[], y:[]}});
-    }, [settings.selected_filter]);
+    }, [selected_filter]);
 
     let handleDesign = () =>{
         selected_filter.design().then((resp)=>{
@@ -173,7 +175,7 @@ let FilterManager = props =>{
                 minWidth:"300px",
                 height: "100%"
             }}>
-                <FilterSidebar/>
+                <FilterSidebar on_select={handle_select}/>
             </div>
         </div>
     );

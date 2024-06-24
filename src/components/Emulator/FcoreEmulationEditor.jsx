@@ -33,10 +33,7 @@ let FcoreEmulationEditor = function (props) {
 
 
     const applications_store = useSelector(state => state.applications);
-    const emulators = useSelector(state => state.emulators);
     const settings = useSelector(state => state.settings);
-
-    const selected_emulator = emulators[settings.selected_emulator]
 
     const [n_cores, set_n_cores] = useState(0);
 
@@ -50,10 +47,10 @@ let FcoreEmulationEditor = function (props) {
 
     useEffect(() => {
         //SETUP NODES
-        if(selected_emulator){
+        if(props.emulator){
             let initial_nodes = [];
             let n = 0;
-            Object.values(selected_emulator.cores).map((c)=>{
+            Object.values(props.emulator.cores).map((c)=>{
                 n += 1;
                 initial_nodes.push({ id: c.id, text: c.name });
             });
@@ -61,7 +58,7 @@ let FcoreEmulationEditor = function (props) {
             setNodes(nodes => (initial_nodes));
             //SETUP EDGES
             let initial_edges = [];
-            Object.values(selected_emulator.connections).map((c)=>{
+            Object.values(props.emulator.connections).map((c)=>{
                 const id = `${c.source}-${c.target}`;
                 initial_edges.push({
                     id,
@@ -72,7 +69,7 @@ let FcoreEmulationEditor = function (props) {
             setEdges(edges =>(initial_edges));
             let inputs_obj ={};
 
-            Object.values(selected_emulator.cores).map((core)=>{
+            Object.values(props.emulator.cores).map((core)=>{
                 return core.input_data
             }).filter((item)=>{
                 return item.length>0;
@@ -81,11 +78,10 @@ let FcoreEmulationEditor = function (props) {
             });
             props.onInputDataChange(inputs_obj);
         }
-    }, [settings.selected_emulator]);
+    }, [props.emulator]);
 
     let add_core = ()=>{
-        let s_e = new up_emulator(selected_emulator);
-        s_e.add_core(n_cores+1).then((core)=>{
+        props.emulator.add_core(n_cores+1).then((core)=>{
             setNodes([...nodes, {id:core.id, text:core.name}]);
         });
         set_n_cores(n_cores+1);
@@ -102,14 +98,12 @@ let FcoreEmulationEditor = function (props) {
     }
 
     let handle_build = (args) =>{
-        let s_e = new up_emulator(selected_emulator);
-        let product = s_e.build();
+        let product = props.emulator.build();
         download_json(product, s_e.name + "_artifact");
     }
 
     let handle_run = (args) =>{
-        let s_e = new up_emulator(selected_emulator);
-        s_e.run().then((results)=>{
+        props.emulator.run().then((results)=>{
             if(results.code && results.code === 7) {
                 dispatch(setSetting(["emulator_compile_warning", null]));
                 toast.error(results.error);
@@ -132,8 +126,7 @@ let FcoreEmulationEditor = function (props) {
             }
         }
         if(deploy){
-            let s_e = new up_emulator(selected_emulator);
-            s_e.deploy().then((ret)=>{
+            props.emulator.deploy().then((ret)=>{
                 if(ret.code && ret.code === 8) {
                     toast.error(ret.error);
                     dispatch(setSetting(["emulator_compile_warning", null]));
@@ -156,12 +149,11 @@ let FcoreEmulationEditor = function (props) {
 
     let handle_link_nodes = (event, from, to) =>{
 
-        let s_e = new up_emulator(selected_emulator);
-        let found_edges = s_e.connections.filter((conn)=>{
+        let found_edges = props.emulator.connections.filter((conn)=>{
             return conn.source === from.id && conn.target === to.id;
         })
         if(found_edges.length === 0){
-            s_e.add_dma_connection(from.id, to.id).then(()=>{
+            props.emulator.add_dma_connection(from.id, to.id).then(()=>{
                 const id = `${from.id}-${to.id}`;
                 setEdges([
                     ...edges,
@@ -176,7 +168,6 @@ let FcoreEmulationEditor = function (props) {
     }
 
     let handle_node_remove = (result, node)=>{
-        let s_e = new up_emulator(selected_emulator);
         dispatch(setSetting(["emulator_selected_iom", null]));
         dispatch(setSetting(["emulator_selected_component", null]));
         let new_edges = [];
@@ -185,24 +176,23 @@ let FcoreEmulationEditor = function (props) {
                 new_edges.push(item);
             }
         });
-        s_e.remove_node_connections(node.id).then(()=>{
-            s_e.remove_core(node.id).then();
+        props.emulator.remove_node_connections(node.id).then(()=>{
+            props.emulator.remove_core(node.id).then();
             setNodes(result.nodes);
             setEdges(new_edges);
         });
     }
 
     let handle_edge_remove = (edge) =>{
-        let s_e = new up_emulator(selected_emulator);
         dispatch(setSetting(["emulator_selected_iom", null]));
         dispatch(setSetting(["emulator_selected_component", null]));
-        s_e.remove_dma_connection(edge.from, edge.to).then(()=>{
+        props.emulator.remove_dma_connection(edge.from, edge.to).then(()=>{
             let n_e = edges.filter((item) =>{ return item.id !== edge.id});
             setEdges(n_e);
         });
     }
 
-    if(selected_emulator){
+    if(props.emulator){
         
         return(
             <div style={{
@@ -250,18 +240,18 @@ let FcoreEmulationEditor = function (props) {
                     }}>
                         <UIPanel style={{flexGrow:1}} key="emulator_i_props" level="level_2">
                             <TabbedContent names={["Inputs", "Input Files"]} contents={[
-                                <CoreInputsList/>,
-                                <CoreInputFilesList/>
+                                <CoreInputsList emulator={props.emulator}/>,
+                                <CoreInputFilesList emulator={props.emulator}/>
                             ]} onSelect={set_selected_inputs_tab} selected={selected_inputs_tab}/>
                         </UIPanel>
                         <UIPanel  style={{flexGrow:1}} key="emulator_o_props" level="level_2">
                             <SimpleContent name="Outputs" height="100%" content={
-                                <CoreOutputsList/>
+                                <CoreOutputsList emulator={props.emulator} />
                             }/>
                         </UIPanel>
                         <UIPanel  style={{flexGrow:1}} key="emulator_m_props"  level="level_2">
                             <SimpleContent name="Memory" height="100%" content={
-                                <CoreMemoriesList/>
+                                <CoreMemoriesList emulator={props.emulator}/>
                             }/>
                         </UIPanel>
                     </div>

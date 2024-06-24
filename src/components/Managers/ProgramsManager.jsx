@@ -33,11 +33,9 @@ let ProgramsManager = props =>{
 
 
     const programs_store = useSelector(state => state.programs);
-    const settings = useSelector(state => state.settings);
 
+    let [selected_program, set_selected_program] = useState({});
 
-    let selected_program = settings.selected_program ? programs_store[settings.selected_program]: {};
-    let selected_program_obj = new up_program(selected_program);
     let [selectedTab, set_selectedTab] = useState(0);
 
     let allowed_types = [
@@ -51,18 +49,22 @@ let ProgramsManager = props =>{
     })
 
 
+    let handle_select = (sel) =>{
+        set_selected_program(new up_program(programs_store[sel]));
+    }
+
     const calculate_headers = () =>{
-        if(!selected_program_obj){
+        if(!selected_program.headers){
             return [];
         }
-        for(let i of selected_program_obj.headers){
+        for(let i of selected_program.headers){
 
             if(headers.filter(h=>h.id === i).length === 0){
-                selected_program_obj.remove_header(i).then();
+                selected_program.remove_header(i).then();
             }
         }
         let sel = Object.values(headers).map((val)=>{
-            if(selected_program_obj.headers.includes(val.id)){
+            if(selected_program.headers.includes(val.id)){
                 return val.name;
             }
         }).filter(item => item);
@@ -79,30 +81,30 @@ let ProgramsManager = props =>{
     let h = calculate_headers();
 
     let handleDeselectHeader =  (id) =>{
-        selected_program_obj.remove_header(parseInt(id)).then(()=>{
+        selected_program.remove_header(parseInt(id)).then(()=>{
             h = calculate_headers();
         });
     }
 
     let handleSelectHeader = (id) =>{
-        selected_program_obj.add_header(parseInt(id)).then(()=>{
+        selected_program.add_header(parseInt(id)).then(()=>{
             h = calculate_headers();
         });
     }
 
 
     let handleTypeChange = (event) =>{
-        selected_program_obj.edit_field("program_type", event.value).then();
+        selected_program.edit_field("program_type", event.value).then();
     }
 
     let handle_name_change = (event) => {
         if (event.key === "Enter" || event.key === "Tab") {
-            selected_program_obj.edit_field(event.target.name, event.target.value).then();
+            selected_program.edit_field(event.target.name, event.target.value).then();
         }
     }
 
     let handle_settings_edit = (settings) => {
-        selected_program_obj.edit_field("build_settings", settings).then();
+        selected_program.edit_field("build_settings", settings).then();
     }
 
     let get_tabs_content = ()=>{
@@ -172,7 +174,7 @@ let ProgramsManager = props =>{
                 </UIPanel>
             </div>
             <div style={{minWidth:"300px"}}>
-                <ProgramSidebar/>
+                <ProgramSidebar on_select={handle_select}/>
             </div>
         </div>
     );

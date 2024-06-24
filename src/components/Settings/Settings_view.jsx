@@ -38,7 +38,7 @@ let SettingsView = function (props) {
     const settings = useSelector(state => state.settings);
     const applications = useSelector(state => state.applications);
 
-    const selected_app = settings.selected_application ?applications[settings.selected_application]: {};
+    const selected_app = settings.current_application ?applications[settings.current_application]: {};
 
     const hil_present = selected_app.application_name === "HIL_base";
 

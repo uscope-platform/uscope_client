@@ -53,18 +53,21 @@ const empty_app = {
 
 let  ApplicationsManager = props =>{
 
-    const settings = useSelector(state => state.settings);
     const applications = useSelector(state => state.applications);
     const peripherals = useSelector(state => state.peripherals);
     const filters = useSelector(state => state.filters);
     const programs = useSelector(state => state.programs);
     const scripts = useSelector(state => state.scripts);
 
-    const selected_app = settings.selected_application ?applications[settings.selected_application]: empty_app;
+    const [selected_app, set_selected_app] = useState(empty_app);
 
     let [selectedTab, set_selectedTab] = useState(0);
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
+
+    let handle_select = (app) =>{
+        set_selected_app(new up_application(applications[app]));
+    }
 
     const calculate_selected_scripts = () =>{
         return selected_app.scripts.map((scr)=>{
@@ -107,34 +110,33 @@ let  ApplicationsManager = props =>{
 
 
     let add_content = (name, type) =>{
-        let selected_application = new up_application(selected_app);
         switch (type) {
             case "channel_group":
-                selected_application.add_channel_group(name).then();
+                selected_app.add_channel_group(name).then();
                 break;
             case "channel":
-                selected_application.add_channel(name).then();
+                selected_app.add_channel(name).then();
                 break;
             case "irv":
-                selected_application.add_irv(name).then();
+                selected_app.add_irv(name).then();
                 break;
             case"macro":
-                selected_application.add_macro(name).then();
+                selected_app.add_macro(name).then();
                 break;
             case"parameter":
-                selected_application.add_parameter(name).then();
+                selected_app.add_parameter(name).then();
                 break;
             case"peripheral":
-                selected_application.add_peripheral(name).then();
+                selected_app.add_peripheral(name).then();
                 break;
             case"soft_core":
-                selected_application.add_soft_core(name).then();
+                selected_app.add_soft_core(name).then();
                 break;
             case "misc":
-                selected_application.set_misc_param(name).then();
+                selected_app.set_misc_param(name).then();
                 break;
             case "filter":
-                selected_application.add_filter(name).then();
+                selected_app.add_filter(name).then();
                 break;
             default:
                 return;
@@ -178,8 +180,7 @@ let  ApplicationsManager = props =>{
 
 
     let handleDeselectScript = (id) =>{
-        let selected_application = new up_application(selected_app);
-        selected_application.remove_selected_script(id).then(()=>{
+        selected_app.remove_selected_script(id).then(()=>{
             let sel_s = calculate_selected_scripts();
             let av_s = calculate_available_scripts(sel_s);
             set_selected_scripts(sel_s);
@@ -188,8 +189,7 @@ let  ApplicationsManager = props =>{
     }
 
     let handleSelectScript = (id) =>{
-        let app = new up_application(selected_app);
-        app.add_selected_script(id).then(()=>{
+        selected_app.add_selected_script(id).then(()=>{
             let sel_s = calculate_selected_scripts();
             let av_s = calculate_available_scripts(sel_s);
             set_selected_scripts(sel_s);
@@ -199,8 +199,7 @@ let  ApplicationsManager = props =>{
 
 
     let handleDeselectPrograms = (id) =>{
-        let selected_application = new up_application(selected_app);
-        selected_application.remove_selected_program(id).then(()=>{
+        selected_app.remove_selected_program(id).then(()=>{
             let sel_p = calculate_selected_programs();
             let av_p = calculate_available_programs(sel_p);
             set_selected_programs(sel_p);
@@ -209,8 +208,7 @@ let  ApplicationsManager = props =>{
     }
 
     let handleSelectPrograms = (id) =>{
-        let app = new up_application(selected_app);
-        app.add_selected_program(id).then(()=>{
+        selected_app.add_selected_program(id).then(()=>{
             let sel_p = calculate_selected_programs();
             let av_p = calculate_available_programs(sel_p);
             set_selected_programs(sel_p);
@@ -440,7 +438,7 @@ let  ApplicationsManager = props =>{
                                selected={selectedTab} onSelect={set_selectedTab}/>
             </UIPanel>
             <div style={{minWidth:"300px"}}>
-                <ApplicationSidebar/>
+                <ApplicationSidebar on_select={handle_select}/>
             </div>
         </div>
     );

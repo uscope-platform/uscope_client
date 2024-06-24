@@ -50,6 +50,7 @@ let  PeripheralsSidebar = props =>{
             selector="current_peripheral"
             onImport={handleImport}
             export_array={true}
+            onSelect={props.on_select}
         />
     );
 };

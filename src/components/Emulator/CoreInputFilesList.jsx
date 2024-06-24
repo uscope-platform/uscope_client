@@ -24,16 +24,13 @@ let  CoreInputFilesList = props =>{
 
     const settings = useSelector(state => state.settings);
 
-    const emulators_store = useSelector(state => state.emulators);
-
-    let selected_emulator = new up_emulator(emulators_store[parseInt(settings.selected_emulator)]);
     const sel_component_type = settings.emulator_selected_component ? settings.emulator_selected_component.type : null;
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     let files_list = [];
 
     if(sel_component_type && sel_component_type === "node"){
-        files_list = Object.values(selected_emulator.cores).filter((item)=>{
+        files_list = Object.values(props.emulator.cores).filter((item)=>{
             return item.id === settings.emulator_selected_component.obj.id;
         })[0].input_data.map((item)=>{
             return item.name;
@@ -60,7 +57,7 @@ let  CoreInputFilesList = props =>{
                 }
             }
             let f_n = result.name.replace(".csv","")
-            selected_emulator.add_input_file(selected_core, f_n, data_obj).then(()=>{
+            props.emulator.add_input_file(selected_core, f_n, data_obj).then(()=>{
                 forceUpdate();
             })
         }).catch((err)=>{
@@ -70,7 +67,7 @@ let  CoreInputFilesList = props =>{
     }
 
     let handle_remove = (removed_item) =>{
-        selected_emulator.remove_input_file(selected_core, removed_item).then(()=>{
+        props.emulator.remove_input_file(selected_core, removed_item).then(()=>{
             forceUpdate();
         });
     }

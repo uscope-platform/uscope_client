@@ -61,6 +61,7 @@ let  ProgramSidebar = props =>{
             onDelete={handleRemove}
             onAdd={handleAdd}
             omImportDone={handle_import_done}
+            onSelect={props.on_select}
         />
     );
 

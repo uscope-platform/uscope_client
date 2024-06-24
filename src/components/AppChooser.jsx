@@ -45,7 +45,7 @@ let ApplicationChooser = (props) =>{
                 toast.error("LOADING FAILED FOR THE FOLLOWING CORES: " + failures.join(", "));
                 return;
             }
-            dispatch(setSetting(["selected_application", e]));
+            dispatch(setSetting(["current_application", e]));
         }catch (error){
             console.log("Error: error while choosing application");
         }

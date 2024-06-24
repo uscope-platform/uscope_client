@@ -43,14 +43,6 @@ let  ApplicationSidebar = props =>{
     };
 
 
-    useEffect(() => {
-        return() =>{
-            dispatch(setSetting(["selected_application", settings.application]));
-        }
-    },[settings.application]);
-
-
-
     return(
         <SidebarBase
             objects={applications_redux}
@@ -61,6 +53,7 @@ let  ApplicationSidebar = props =>{
             selector="selected_application"
             onImport={handleImport}
             initial_value={applications_redux[settings.application].application_name}
+            onSelect={props.on_select}
         />
     );
 

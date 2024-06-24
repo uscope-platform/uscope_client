@@ -15,16 +15,12 @@
 
 import React, {useReducer} from 'react';
 import {useSelector} from "react-redux";
-import {up_emulator} from "../../client_core";
 import IomProperties from "./IomProperties";
 
 let  CoreOutputsList = props =>{
 
 
-    const emulators_store = useSelector(state => state.emulators);
     const settings = useSelector(state => state.settings);
-
-    let selected_emulator = new up_emulator(emulators_store[parseInt(settings.selected_emulator)]);
 
     let selected_core_id = settings.emulator_selected_component ? settings.emulator_selected_component.obj.id : null;
 
@@ -32,20 +28,21 @@ let  CoreOutputsList = props =>{
 
 
     let handle_add = (output_size) =>{
-        selected_emulator.add_output(selected_core_id, output_size).then(()=>{
+        props.emulator.add_output(selected_core_id, output_size).then(()=>{
             forceUpdate();
         });
     }
 
     let handle_remove = (removed_item) =>{
         forceUpdate();
-        selected_emulator.remove_output(selected_core_id, removed_item).then(()=>{
+        props.emulator.remove_output(selected_core_id, removed_item).then(()=>{
             forceUpdate();
         });
     }
 
     return(
         <IomProperties
+            emulator={props.emulator}
             onRemove={handle_remove}
             onAdd={handle_add}
             content_type="outputs"

@@ -15,34 +15,27 @@
 
 import React, {useState} from 'react';
 
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {get_next_id, up_bitstream, upload_raw} from "../../client_core";
 import {
     SelectableList,
     SimpleContent,
     UIPanel
 } from "../UI_elements";
-import {setSetting} from "../../redux/Actions/SettingsActions";
 import SideToolbar from "./SideToolbar";
 
 
 let  BitstreamSidebar = props =>{
 
     const bitstreams_store = useSelector(state => state.bitstreams);
-    const settings = useSelector(state => state.settings);
-
     const [bitstream_object, set_bitstream_object] = useState({})
 
-    const dispatch = useDispatch();
-
-    const selected_bitstream = new up_bitstream(bitstreams_store[settings.selected_bitstream]);
-
     let handleOnSelect = (selection) => {
-        if(settings.selected_bitstream !==selection){
-            let selected_bitstreams = Object.values(bitstreams_store).filter((bitstream)=>{
+        if(props.bitstream.name !==selection){
+            let bit = Object.values(bitstreams_store).filter((bitstream)=>{
                 return bitstream.name === selection;
             })[0];
-            dispatch(setSetting(["selected_bitstream", selected_bitstreams.id]));
+            props.on_select(bit);
         }
     };
 
@@ -66,7 +59,7 @@ let  BitstreamSidebar = props =>{
         let deleted = Object.values(bitstreams_store).filter((bit)=>{
             return bit.name === bitstream;
         })[0];
-        dispatch(setSetting(["selected_bitstream", null]));
+        props.on_select({name:""})
         up_bitstream.delete_bitstream(deleted).then();
 
     };
@@ -103,9 +96,15 @@ let  BitstreamSidebar = props =>{
                         onImport={handleImport}
                         onExport={handleExport}
                         contentName="Bitstream"
-                        exportEnabled={settings.selected_bitstream}
+                        exportEnabled={props.bitstream}
                     />
-                    <SelectableList items={names} types={types} selected_item={selected_bitstream.name} onRemove={handleRemove} onSelect={handleOnSelect} />
+                    <SelectableList
+                        items={names}
+                        types={types}
+                        selected_item={props.bitstream.name}
+                        onRemove={handleRemove}
+                        onSelect={handleOnSelect}
+                    />
                 </div>
             }/>
         </UIPanel>
