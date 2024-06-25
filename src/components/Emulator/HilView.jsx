@@ -34,7 +34,9 @@ let HilView = function (props) {
     let [selected_component, set_selected_component] = useState(null);
     let [selected_iom, set_selected_iom] = useState(null);
 
-    let [selected_emulator, set_selected_emulator] = useState({
+    let [emulator_selector, set_selected_emulator] = useState(null);
+
+    let selected_emulator = emulator_selector ? new up_emulator(emulators_store[emulator_selector]) : {
         name:"",
         cores:[],
         connections:[],
@@ -45,7 +47,7 @@ let HilView = function (props) {
                 connections:[]
             }
         }
-    });
+    };
 
     let [emulation_results, set_emulation_results] = useState({});
     let [input_data, set_input_data] = useState({});
@@ -66,7 +68,7 @@ let HilView = function (props) {
 
     let handle_emulator_select = (emu)=>{
         // THE DEEP COPY IS NECESSARY BECAUSE REACT IS STUPID
-        set_selected_emulator(new up_emulator(emulators_store[emu].deep_copy()));
+        set_selected_emulator(emu);
         set_selected_component(null);
     }
 

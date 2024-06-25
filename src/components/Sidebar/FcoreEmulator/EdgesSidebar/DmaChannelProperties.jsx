@@ -23,7 +23,6 @@ import {setSetting} from "../../../../redux/Actions/SettingsActions";
 let  DmaChannelProperties = props =>{
 
     const programs = useSelector(state => state.programs);
-    const dispatch = useDispatch();
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
@@ -81,7 +80,7 @@ let  DmaChannelProperties = props =>{
             props.selected_emulator.edit_dma_channel(props.source_core, props.target_core,
                 field, value, props.selected_channel.name).then(()=>{
                 if(field === 'name'){
-                    props.on_channel_edit(handle_select_dma);
+                    props.on_channel_edit(props.on_channel_edit);
                 }
                 forceUpdate();
             });
@@ -91,7 +90,6 @@ let  DmaChannelProperties = props =>{
     let handle_change_type = (value) =>{
         props.selected_emulator.edit_dma_channel(props.source_core, props.target_core,
             "type", value.value, props.selected_channel.name).then(()=>{
-            forceUpdate();
         });
     }
 

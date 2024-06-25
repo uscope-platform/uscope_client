@@ -29,7 +29,7 @@ let  NodeIomProperties = props =>{
            selected_emulator={props.selected_emulator}
            selected_component={props.selected_component}
            selected_iom={props.selected_iom}
-           on_modify={props.on_modify}
+           on_modify={props.on_iom_modify}
        />
     } else if(props.selected_iom.type === "outputs") {
        return <CoreOutputProperties
@@ -37,7 +37,7 @@ let  NodeIomProperties = props =>{
            selected_emulator={props.selected_emulator}
            selected_component={props.selected_component}
            selected_iom={props.selected_iom}
-           on_modify={props.on_modify}
+           on_modify={props.on_iom_modify}
        />
     } else if(props.selected_iom.type === "memory_init") {
         return <CoreMemoryProperties
@@ -45,7 +45,7 @@ let  NodeIomProperties = props =>{
             selected_emulator={props.selected_emulator}
             selected_component={props.selected_component}
             selected_iom={props.selected_iom}
-            on_modify={props.on_modify}
+            on_modify={props.on_iom_modify}
         />
     }
 

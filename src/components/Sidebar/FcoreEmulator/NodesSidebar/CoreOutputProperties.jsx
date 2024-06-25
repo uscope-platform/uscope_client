@@ -27,7 +27,7 @@ let  CoreOutputProperties = props =>{
     })[0];
 
 
-    let handle_change_iom = (event) =>{
+    let handle_change_iom = async (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab") {
             let field = event.target.name;
             let value = event.target.value;
@@ -42,21 +42,16 @@ let  CoreOutputProperties = props =>{
                 }
             }
 
-            props.selected_emulator.edit_output(props.selected_component.obj.id,
-                field, value, props.selected_iom.obj).then(()=>{
-                if(field === 'name'){
-                    props.on_modify({type:props.selected_iom.type, obj:value});
-                }
-                forceUpdate();
-            });
+            await props.selected_emulator.edit_output(props.selected_component.obj.id,
+                field, value, props.selected_iom.obj);
+            if(field === 'name'){
+                props.on_modify({type:props.selected_iom.type, obj:value});
+            }
         }
     };
 
-    let handle_select = (object, e) =>{
-        props.selected_emulator.edit_output(props.selected_component.obj.id,
-            e.name, object.value, props.selected_iom.obj).then(()=>{
-            forceUpdate();
-        });
+    let handle_select = async (object, e) =>{
+        await props.selected_emulator.edit_output(props.selected_component.obj.id, e.name, object.value, props.selected_iom.obj);
     }
 
 

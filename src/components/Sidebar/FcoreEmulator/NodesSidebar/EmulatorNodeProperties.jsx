@@ -49,7 +49,7 @@ let  EmulatorNodeProperties = props =>{
                         selected_iom={props.selected_iom}
                         selected_emulator={props.selected_emulator}
                         selected_component={props.selected_component}
-                        on_iom_modify={props.on_modify}
+                        on_iom_modify={props.on_iom_modify}
                     />
                 </UIPanel>
             </div>

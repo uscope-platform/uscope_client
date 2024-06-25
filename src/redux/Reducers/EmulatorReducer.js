@@ -13,7 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {ADD_EMULATOR, REMOVE_EMULATOR, LOAD_ALL_EMULATOR} from "../Actions/types";
+import {ADD_EMULATOR, REMOVE_EMULATOR, LOAD_ALL_EMULATOR, UPDATE_EMULATOR} from "../Actions/types";
+import produce from "immer";
 
 let emulatorsReducer = function (state = [], action) {
     switch (action.type) {
@@ -31,6 +32,10 @@ let emulatorsReducer = function (state = [], action) {
         case LOAD_ALL_EMULATOR:
             state = action.payload;
             return state;
+        case UPDATE_EMULATOR:
+            return produce(state, draftState =>{
+                draftState = action.payload;
+            });
         default:
             return state;
     }

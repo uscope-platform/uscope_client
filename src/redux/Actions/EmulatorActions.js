@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {ADD_EMULATOR, REMOVE_EMULATOR, LOAD_ALL_EMULATOR} from "./types";
+import {ADD_EMULATOR, REMOVE_EMULATOR, LOAD_ALL_EMULATOR, UPDATE_EMULATOR} from "./types";
 
 export const AddEmulator = emulator =>({
     type: ADD_EMULATOR,
@@ -27,5 +27,10 @@ export const removeEmulator = emulator =>({
 
 export const loadAllEmulators = emulator =>({
     type: LOAD_ALL_EMULATOR,
+    payload:emulator
+});
+
+export const update_emulator = emulator =>({
+    type: UPDATE_EMULATOR,
     payload:emulator
 });

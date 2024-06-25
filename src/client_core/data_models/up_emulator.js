@@ -17,7 +17,8 @@
 import {store} from "../index";
 import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
-import {AddEmulator, removeEmulator} from "../../redux/Actions/EmulatorActions";
+import {AddEmulator, removeEmulator, update_emulator} from "../../redux/Actions/EmulatorActions";
+import {AddScript} from "../../redux/Actions/scriptsActions";
 
 export class up_emulator {
     constructor(emulator_obj) {
@@ -274,7 +275,7 @@ export class up_emulator {
         return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
     }
 
-    add_dma_channel = (source, target, progressive) =>{
+    add_dma_channel = async (source, target, progressive) =>{
         let c = {
             name:"new_dma_channel_" + progressive,
             type:"scalar_transfer",
@@ -292,45 +293,43 @@ export class up_emulator {
         })[0];
         dma_obj.channels.push(c);
         let edit = {emulator:this.id, source:source, target:target, channel:c, action:"add_dma_channel"};
-        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        store.dispatch(update_emulator(this));
     }
 
 
-    edit_dma_channel = (source, target,field, value, channel_name) =>{
+    edit_dma_channel = async (source, target,field, value, channel_name) =>{
         let edit = {emulator:this.id, source:source, target:target, field_name:field, value:value, channel:channel_name, action:"edit_dma_channel"};
-        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then(()=>{
-            let dma_obj = this.connections.filter((item)=>{
-                return item.source === source && item.target === target;
-            })[0];
-            dma_obj.channels = dma_obj.channels.map((item)=>{
-                if(item.name === channel_name){
-                    return  {...item, ...{[field]:value}};
-                } else {
-                    return item;
-                }
-            })
-        });
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        let dma_obj = this.connections.filter((item)=>{
+            return item.source === source && item.target === target;
+        })[0];
+        dma_obj.channels = dma_obj.channels.map((item)=>{
+            if(item.name === channel_name){
+                return  {...item, ...{[field]:value}};
+            } else {
+                return item;
+            }
+        })
+        store.dispatch(update_emulator(this));
     }
 
 
-    remove_dma_channel = (source, target, obj_name) =>{
+    remove_dma_channel =  async (source, target, obj_name) =>{
         let edit = {emulator:this.id, source:source, target:target, name:obj_name, action:"remove_dma_channel"};
-        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then(()=>{
-            this.connections = this.connections.map((item)=>{
-                if(item.source === source && item.target === target){
-                   let ret = item;
-                    ret.channels = ret.channels.filter((item)=>{
-                        return item.name !== obj_name;
-                    })
-                    return ret;
-                } else {
-                    return item;
-                }
-            });
-            return new Promise((resolve)=>{
-                resolve();
-            })
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        this.connections = this.connections.map((item)=>{
+            if(item.source === source && item.target === target){
+                let ret = item;
+                ret.channels = ret.channels.filter((item)=>{
+                    return item.name !== obj_name;
+                })
+                return ret;
+            } else {
+                return item;
+            }
         });
+        store.dispatch(update_emulator(this));
     }
 
 

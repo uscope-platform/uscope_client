@@ -57,6 +57,7 @@ export const LOAD_ALL_FILTERS = "LOAD_ALL_FILTERS";
 export const ADD_EMULATOR = "ADD_EMULATOR";
 export const REMOVE_EMULATOR = "REMOVE_EMULATOR";
 export const LOAD_ALL_EMULATOR = "LOAD_ALL_EMULATOR";
+export const UPDATE_EMULATOR = "UPDATE_EMULATOR";
 
 
 //                  BITSTREAMS
