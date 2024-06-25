@@ -15,31 +15,37 @@
 
 import React from 'react';
 
-import {useSelector} from "react-redux";
 import CoreInputProperties from "./CoreInputProperties";
 import CoreOutputProperties from "./CoreOutputProperties";
 import CoreMemoryProperties from "./CoreMemoryProperties";
 
 let  NodeIomProperties = props =>{
 
-    const settings = useSelector(state => state.settings);
+    if(!props.selected_iom) return ;
 
-    if(!settings.emulator_selected_iom) return ;
-
-    if(settings.emulator_selected_iom.type === "inputs"){
+    if(props.selected_iom.type === "inputs"){
        return <CoreInputProperties
            selected_core={props.selected_core}
            selected_emulator={props.selected_emulator}
+           selected_component={props.selected_component}
+           selected_iom={props.selected_iom}
+           on_modify={props.on_modify}
        />
-    } else if(settings.emulator_selected_iom.type === "outputs") {
+    } else if(props.selected_iom.type === "outputs") {
        return <CoreOutputProperties
            selected_core={props.selected_core}
            selected_emulator={props.selected_emulator}
+           selected_component={props.selected_component}
+           selected_iom={props.selected_iom}
+           on_modify={props.on_modify}
        />
-    } else if(settings.emulator_selected_iom.type === "memory_init") {
+    } else if(props.selected_iom.type === "memory_init") {
         return <CoreMemoryProperties
             selected_core={props.selected_core}
             selected_emulator={props.selected_emulator}
+            selected_component={props.selected_component}
+            selected_iom={props.selected_iom}
+            on_modify={props.on_modify}
         />
     }
 

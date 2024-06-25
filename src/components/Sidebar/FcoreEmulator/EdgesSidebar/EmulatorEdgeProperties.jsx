@@ -13,17 +13,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useReducer} from 'react';
+import React, {useReducer, useState} from 'react';
 
 import {SimpleContent, UIPanel} from "../../../UI_elements";
-import {useSelector} from "react-redux";
 import DmaChannelsList from "./DmaChannelsList";
 import DmaChannelProperties from "./DmaChannelProperties";
 
 let  EmulatorEdgeProperties = props =>{
 
-    const settings = useSelector(state => state.settings);
-
+    const [selected_dma_channel, set_selected_dma_channel] = useState(null);
 
     let selected_component = null;
     let connections_list = []
@@ -31,21 +29,26 @@ let  EmulatorEdgeProperties = props =>{
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
+    let handle_select_dma = (sel) =>{
+        set_selected_dma_channel(sel);
+    }
+
     if(props.enabled && props.selected_emulator){
 
         selected_component = props.selected_emulator.connections.filter((item) => {
-            return item.source === settings.emulator_selected_component.obj.from && item.target === settings.emulator_selected_component.obj.to;
+            return item.source === props.selected_component.obj.from && item.target === props.selected_component.obj.to;
         })[0];
+
         connections_list = selected_component.channels.map((item) => {
             return item.name;
         });
 
-        const source_core = settings.emulator_selected_component.obj.from;
-        const target_core = settings.emulator_selected_component.obj.to;
+        const source_core = props.selected_component.obj.from;
+        const target_core = props.selected_component.obj.to;
 
-        if(settings.emulator_selected_dma_channel){
+        if(selected_dma_channel){
             selected_channel = selected_component.channels.filter((item) =>{
-                return item.name === settings.emulator_selected_dma_channel;
+                return item.name === selected_dma_channel;
             })[0];
             if(!selected_channel) selected_channel = {name:"", source:{channel:"", register:""},source_output:"", target:{channel:"", register: ""}, target_input:""};
         }
@@ -65,6 +68,9 @@ let  EmulatorEdgeProperties = props =>{
                             source_core={source_core}
                             target_core={target_core}
                             forceUpdate={forceUpdate}
+                            selected_channel={selected_dma_channel}
+                            on_select={handle_select_dma}
+                            selected_component={props.selected_component}
                         />
                     }/>
                 </UIPanel>
@@ -76,6 +82,7 @@ let  EmulatorEdgeProperties = props =>{
                             source_core={source_core}
                             target_core={target_core}
                             selected_channel={selected_channel}
+                            on_channel_edit={handle_select_dma}
                         />
                     }/>
                 </UIPanel>

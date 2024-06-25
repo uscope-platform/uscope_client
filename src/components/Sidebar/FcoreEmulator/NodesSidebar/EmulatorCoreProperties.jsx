@@ -43,13 +43,13 @@ let  EmulatorCoreProperties = props =>{
                 value[field] = event.target.value;
                 field = "options";
             }
-            props.selected_emulator.edit_core_props(settings.emulator_selected_component.obj.id, field, value).then();
+            props.selected_emulator.edit_core_props(props.selected_component.obj.id, field, value).then();
         }
     }
 
 
     let handle_program_change=(prog)=>{
-        props.selected_emulator.edit_core_props(settings.emulator_selected_component.obj.id, "program", prog.value).then(()=>{
+        props.selected_emulator.edit_core_props(props.selected_component.obj.id, "program", prog.value).then(()=>{
             set_selected_program(prog);
         });
     }

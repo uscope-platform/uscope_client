@@ -16,18 +16,14 @@
 import React, {useReducer} from 'react';
 
 import {InputField, SelectField, SimpleContent} from "../../../UI_elements";
-import {useDispatch, useSelector} from "react-redux";
-import {setSetting} from "../../../../redux/Actions/SettingsActions";
 
 let  CoreOutputProperties = props =>{
 
-    const settings = useSelector(state => state.settings);
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
-    const dispatch = useDispatch();
 
     let sel_out = props.selected_core.outputs.filter((item)=>{
-        return item.name === settings.emulator_selected_iom.obj
+        return item.name === props.selected_iom.obj
     })[0];
 
 
@@ -46,11 +42,10 @@ let  CoreOutputProperties = props =>{
                 }
             }
 
-            props.selected_emulator.edit_output(settings.emulator_selected_component.obj.id,
-                field, value, settings.emulator_selected_iom.obj).then(()=>{
+            props.selected_emulator.edit_output(props.selected_component.obj.id,
+                field, value, props.selected_iom.obj).then(()=>{
                 if(field === 'name'){
-
-                    dispatch(setSetting(["emulator_selected_iom", {type:settings.emulator_selected_iom.type, obj:value}]));
+                    props.on_modify({type:props.selected_iom.type, obj:value});
                 }
                 forceUpdate();
             });
@@ -58,8 +53,8 @@ let  CoreOutputProperties = props =>{
     };
 
     let handle_select = (object, e) =>{
-        props.selected_emulator.edit_output(settings.emulator_selected_component.obj.id,
-            e.name, object.value, settings.emulator_selected_iom.obj).then(()=>{
+        props.selected_emulator.edit_output(props.selected_component.obj.id,
+            e.name, object.value, props.selected_iom.obj).then(()=>{
             forceUpdate();
         });
     }

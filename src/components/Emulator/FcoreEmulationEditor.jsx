@@ -18,7 +18,7 @@ import React, {useEffect, useState} from 'react';
 import EmulatorDiagram from "./EmulatorDiagram";
 import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../../redux/Actions/SettingsActions";
-import {download_json, up_emulator} from "../../client_core";
+import {download_json} from "../../client_core";
 import {SimpleContent, TabbedContent, UIPanel} from "../UI_elements";
 import CoreInputsList from "./CoreInputsList";
 import CoreOutputsList from "./CoreOutputsList";
@@ -88,13 +88,11 @@ let FcoreEmulationEditor = function (props) {
     };
 
     let handle_node_select = (event, node) =>{
-        dispatch(setSetting(["emulator_selected_iom", null]));
-        dispatch(setSetting(["emulator_selected_component", {type:"node", obj:node}]));
+        props.on_component_select({type:"node", obj:node});
     }
 
     let handle_edge_select = (event, edge) =>{
-        dispatch(setSetting(["emulator_selected_iom", null]));
-        dispatch(setSetting(["emulator_selected_component", {type:"edge", obj:edge}]))
+        props.on_component_select({type:"edge", obj:edge});
     }
 
     let handle_build = (args) =>{
@@ -143,7 +141,7 @@ let FcoreEmulationEditor = function (props) {
     }
 
     let handle_canvas_click = ()=>{
-        dispatch(setSetting(["emulator_selected_component", null]));
+        props.on_component_select(null);
     }
 
 
@@ -168,8 +166,7 @@ let FcoreEmulationEditor = function (props) {
     }
 
     let handle_node_remove = (result, node)=>{
-        dispatch(setSetting(["emulator_selected_iom", null]));
-        dispatch(setSetting(["emulator_selected_component", null]));
+        props.on_component_select(null);
         let new_edges = [];
         edges.map((item)=> {
             if (item.from !== node.id && item.to !== node.id) {
@@ -184,8 +181,7 @@ let FcoreEmulationEditor = function (props) {
     }
 
     let handle_edge_remove = (edge) =>{
-        dispatch(setSetting(["emulator_selected_iom", null]));
-        dispatch(setSetting(["emulator_selected_component", null]));
+        props.on_component_select(null);
         props.emulator.remove_dma_connection(edge.from, edge.to).then(()=>{
             let n_e = edges.filter((item) =>{ return item.id !== edge.id});
             setEdges(n_e);
@@ -216,7 +212,7 @@ let FcoreEmulationEditor = function (props) {
                     <UIPanel key="emulator_diagram" level="level_2">
                         <SimpleContent name="Emulation_diagram" height="100%" content={
                             <EmulatorDiagram
-                                selected_node={settings.emulator_selected_component}
+                                selected_node={props.selected_component}
                                 onNodeSelect={handle_node_select}
                                 onNodeRemove={handle_node_remove}
                                 onEdgeSelect={handle_edge_select}
@@ -240,18 +236,36 @@ let FcoreEmulationEditor = function (props) {
                     }}>
                         <UIPanel style={{flexGrow:1}} key="emulator_i_props" level="level_2">
                             <TabbedContent names={["Inputs", "Input Files"]} contents={[
-                                <CoreInputsList emulator={props.emulator}/>,
-                                <CoreInputFilesList emulator={props.emulator}/>
+                                <CoreInputsList
+                                    emulator={props.emulator}
+                                    selected_component={props.selected_component}
+                                    on_iom_select={props.on_iom_select}
+                                    selected_iom={props.selected_iom}
+                                />,
+                                <CoreInputFilesList
+                                    emulator={props.emulator}
+                                    selected_component={props.selected_component}
+                                />
                             ]} onSelect={set_selected_inputs_tab} selected={selected_inputs_tab}/>
                         </UIPanel>
                         <UIPanel  style={{flexGrow:1}} key="emulator_o_props" level="level_2">
                             <SimpleContent name="Outputs" height="100%" content={
-                                <CoreOutputsList emulator={props.emulator} />
+                                <CoreOutputsList
+                                    emulator={props.emulator}
+                                    selected_component={props.selected_component}
+                                    on_iom_select={props.on_iom_select}
+                                    selected_iom={props.selected_iom}
+                                />
                             }/>
                         </UIPanel>
                         <UIPanel  style={{flexGrow:1}} key="emulator_m_props"  level="level_2">
                             <SimpleContent name="Memory" height="100%" content={
-                                <CoreMemoriesList emulator={props.emulator}/>
+                                <CoreMemoriesList
+                                    emulator={props.emulator}
+                                    selected_component={props.selected_component}
+                                    on_iom_select={props.on_iom_select}
+                                    selected_iom={props.selected_iom}
+                                />
                             }/>
                         </UIPanel>
                     </div>

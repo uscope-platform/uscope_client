@@ -19,9 +19,6 @@ import {ColorTheme} from "../../components/UI_elements";
 const initial_state = {
     default_ch_group:'',
     current_application:null,
-    emulator_selected_component:null,
-    emulator_selected_iom:null,
-    emulator_selected_dma_channel:null,
     emulator_compile_warning:null,
     emulator_selected_tab:0,
     hil_plot_running:false,

@@ -81,7 +81,7 @@ let  DmaChannelProperties = props =>{
             props.selected_emulator.edit_dma_channel(props.source_core, props.target_core,
                 field, value, props.selected_channel.name).then(()=>{
                 if(field === 'name'){
-                    dispatch(setSetting(["emulator_selected_dma_channel", value]));
+                    props.on_channel_edit(handle_select_dma);
                 }
                 forceUpdate();
             });

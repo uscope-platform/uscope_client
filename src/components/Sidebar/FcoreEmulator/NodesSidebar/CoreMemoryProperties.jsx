@@ -25,14 +25,13 @@ let  CoreMemoryProperties = props =>{
     const settings = useSelector(state => state.settings);
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
-    const dispatch = useDispatch();
 
     let handle_change_output = (event)=>{
 
         let field = event.target.name;
         let value = event.target.checked;
-        props.selected_emulator.edit_memory(settings.emulator_selected_component.obj.id,
-            field, value, settings.emulator_selected_iom.obj).then(()=>{
+        props.selected_emulator.edit_memory(props.selected_component.obj.id,
+            field, value, props.selected_iom.obj).then(()=>{
             forceUpdate();
         });
     }
@@ -44,10 +43,10 @@ let  CoreMemoryProperties = props =>{
 
             if(field === "reg_n" || field === "channel"|| field==="vector_size") value = parseInt(value);
 
-            props.selected_emulator.edit_memory(settings.emulator_selected_component.obj.id,
-                field, value, settings.emulator_selected_iom.obj).then(()=>{
+            props.selected_emulator.edit_memory(props.selected_component.obj.id,
+                field, value, props.selected_iom.obj).then(()=>{
                 if(field === 'name'){
-                    dispatch(setSetting(["emulator_selected_iom", {type:settings.emulator_selected_iom.type, obj:value}]));
+                    props.on_modify({type:props.selected_iom.type, obj:value});
                 }
                 forceUpdate();
             });
@@ -55,20 +54,20 @@ let  CoreMemoryProperties = props =>{
     };
 
     let handle_change_type = (event) =>{
-        props.selected_emulator.edit_memory(settings.emulator_selected_component.obj.id,
-            "type", event.value, settings.emulator_selected_iom.obj).then(()=>{
+        props.selected_emulator.edit_memory(props.selected_component.obj.id,
+            "type", event.value, props.selected_iom.obj).then(()=>{
             forceUpdate();
         });
     }
 
     let sel_mem = props.selected_core.memory_init.filter((item)=>{
-        return item.name === settings.emulator_selected_iom.obj
+        return item.name === props.selected_iom.obj
     })[0];
 
 
     let handle_select = (selection, event) =>{
-        props.selected_emulator.edit_memory(settings.emulator_selected_component.obj.id,
-            event.name, selection.value, settings.emulator_selected_iom.obj).then(()=>{
+        props.selected_emulator.edit_memory(props.selected_component.obj.id,
+            event.name, selection.value, props.selected_iom.obj).then(()=>{
             forceUpdate();
         });
     }

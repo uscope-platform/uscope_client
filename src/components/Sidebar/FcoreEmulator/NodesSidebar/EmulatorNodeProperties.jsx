@@ -16,18 +16,15 @@
 import React from 'react';
 
 import {SimpleContent, UIPanel} from "../../../UI_elements";
-import {useSelector} from "react-redux";
 import NodeIomProperties from "./NodeIomProperties";
 import EmulatorCoreProperties from "./EmulatorCoreProperties";
 
 let  EmulatorNodeProperties = props =>{
 
-    const settings = useSelector(state => state.settings);
-    const selected_component_obj = settings.emulator_selected_component;
 
     if(props.enabled && props.selected_emulator){
         let selected_core = Object.values(props.selected_emulator.cores).filter((item)=>{
-            return item.id === selected_component_obj.obj.id;
+            return item.id === props.selected_component.obj.id;
         })[0];
 
         return(
@@ -42,13 +39,17 @@ let  EmulatorNodeProperties = props =>{
                         <EmulatorCoreProperties
                             selected_core={selected_core}
                             selected_emulator={props.selected_emulator}
+                            selected_component={props.selected_component}
                         />
                     } />
                 </UIPanel>
                 <UIPanel style={{minHeight:"200px"}} key={"iom properties"} level="level_2">
                     <NodeIomProperties
                         selected_core={selected_core}
+                        selected_iom={props.selected_iom}
                         selected_emulator={props.selected_emulator}
+                        selected_component={props.selected_component}
+                        on_iom_modify={props.on_modify}
                     />
                 </UIPanel>
             </div>

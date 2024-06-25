@@ -13,19 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect, useReducer, useState} from 'react';
+import React from 'react';
 
 import {SelectableList} from "../../../UI_elements";
 import {MdAdd} from "react-icons/md";
-import {useDispatch, useSelector} from "react-redux";
-import {setSetting} from "../../../../redux/Actions/SettingsActions";
 
 let  DmaChannelsList = props =>{
-
-    const selector = useSelector(state => state.settings.emulator_selected_dma_channel);
-
-
-    const dispatch = useDispatch();
 
     let handle_add = (event) =>{
         props.selected_emulator.add_dma_channel(props.source_core, props.target_core, props.connections_list.length).then(() =>{
@@ -40,7 +33,7 @@ let  DmaChannelsList = props =>{
     }
 
     let handle_select = (item) =>{
-        dispatch(setSetting(["emulator_selected_dma_channel", item]));
+        props.on_select(item);
     }
 
     return(
@@ -52,7 +45,12 @@ let  DmaChannelsList = props =>{
             }}>
                 <MdAdd style={{marginLeft:"auto"}} onClick={handle_add}/>
             </div>
-            <SelectableList items={props.connections_list} selected_item={selector} onSelect={handle_select} onRemove={handle_remove} />
+            <SelectableList
+                items={props.connections_list}
+                selected_item={props.selected_channel}
+                onSelect={handle_select}
+                onRemove={handle_remove}
+            />
         </div>
     )
 

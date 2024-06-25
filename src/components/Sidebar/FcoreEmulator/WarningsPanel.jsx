@@ -22,7 +22,7 @@ let  WarningsPanel = props =>{
     const settings = useSelector(state => state.settings);
 
 
-    if(settings.emulator_compile_warning && settings.emulator_selected_component === null){
+    if(settings.emulator_compile_warning && props.enabled){
 
         let print_warnings = (names, icons) =>{
             let ret = []

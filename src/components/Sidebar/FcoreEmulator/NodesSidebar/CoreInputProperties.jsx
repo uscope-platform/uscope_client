@@ -21,11 +21,7 @@ import {setSetting} from "../../../../redux/Actions/SettingsActions";
 
 let  CoreInputProperties = props =>{
 
-    const settings = useSelector(state => state.settings);
-
     const [, forceUpdate] = useReducer(x => x + 1, 0);
-    const dispatch = useDispatch();
-
 
     let handle_change_iom = (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab") {
@@ -39,10 +35,10 @@ let  CoreInputProperties = props =>{
                 value = {...sel_in.source, ...{"value":value}};
             }
 
-            props.selected_emulator.edit_input(settings.emulator_selected_component.obj.id,
-                field, value, settings.emulator_selected_iom.obj).then(()=>{
+            props.selected_emulator.edit_input(props.selected_component.obj.id,
+                field, value, props.selected_iom.obj).then(()=>{
                 if(field === 'name'){
-                    dispatch(setSetting(["emulator_selected_iom", {type:settings.emulator_selected_iom.type, obj:value}]));
+                    props.on_modify({type:props.selected_iom.type, obj:value});
                 }
                 forceUpdate();
             });
@@ -60,14 +56,14 @@ let  CoreInputProperties = props =>{
             field = "source";
             value = {...sel_in.source, ...{"value":value}};
         }
-        props.selected_emulator.edit_input(settings.emulator_selected_component.obj.id,
-            field, value, settings.emulator_selected_iom.obj).then(()=>{
+        props.selected_emulator.edit_input(props.selected_component.obj.id,
+            field, value, props.selected_iom.obj).then(()=>{
             forceUpdate();
         });
     }
 
     let sel_in = props.selected_core.inputs.filter((item)=>{
-        return item.name === settings.emulator_selected_iom.obj
+        return item.name === props.selected_iom.obj
     })[0];
 
     let render_vector_input_properties = () =>{

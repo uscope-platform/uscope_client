@@ -14,16 +14,12 @@
 // limitations under the License.
 
 import React, {useReducer} from 'react';
-import {useSelector} from "react-redux";
 import IomProperties from "./IomProperties";
 
 
 let  CoreMemoriesList = props =>{
 
-
-    const settings = useSelector(state => state.settings);
-
-    let selected_core_id = settings.emulator_selected_component ? settings.emulator_selected_component.obj.id : null;
+    let selected_core_id = props.selected_component ? props.selected_component.obj.id : null;
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
@@ -44,6 +40,9 @@ let  CoreMemoriesList = props =>{
             emulator={props.emulator}
             onRemove={handle_remove}
             onAdd={handle_add}
+            selected_iom={props.selected_iom}
+            selected_component={props.selected_component}
+            on_select={props.on_iom_select}
             content_type="memory_init"
         />
     );

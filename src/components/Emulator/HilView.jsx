@@ -31,6 +31,9 @@ let HilView = function (props) {
     const settings = useSelector(state => state.settings);
     const dispatch = useDispatch();
 
+    let [selected_component, set_selected_component] = useState(null);
+    let [selected_iom, set_selected_iom] = useState(null);
+
     let [selected_emulator, set_selected_emulator] = useState({
         name:"",
         cores:[],
@@ -52,9 +55,19 @@ let HilView = function (props) {
         dispatch(setSetting(["emulator_selected_tab", value]))
     }
 
+    let handle_component_select = (value) => {
+        set_selected_component(value);
+        set_selected_iom(null);
+    }
+
+    let handle_iom_select = (value)=>{
+        set_selected_iom(value);
+    }
+
     let handle_emulator_select = (emu)=>{
         // THE DEEP COPY IS NECESSARY BECAUSE REACT IS STUPID
         set_selected_emulator(new up_emulator(emulators_store[emu].deep_copy()));
+        set_selected_component(null);
     }
 
     return(
@@ -71,6 +84,10 @@ let HilView = function (props) {
                         onInputDataChange={set_input_data}
                         onDeploy={()=>{set_deployed(true)}}
                         emulator={selected_emulator}
+                        on_component_select={handle_component_select}
+                        on_iom_select={handle_iom_select}
+                        selected_component={selected_component}
+                        selected_iom={selected_iom}
                     />,
                     <EmulationResults results={emulation_results} inputs={input_data}/>,
                     <HilPlotTab deployed={deployed}  emulator={selected_emulator} />
@@ -78,8 +95,11 @@ let HilView = function (props) {
             </UIPanel>
             <div style={{height:"100%"}}>
                 <FcoreEmulatorSidebar
+                    selected_component={selected_component}
                     on_select={handle_emulator_select}
+                    on_iom_modify={handle_iom_select}
                     emulator={selected_emulator}
+                    selected_iom={selected_iom}
                 />
             </div>
         </div>

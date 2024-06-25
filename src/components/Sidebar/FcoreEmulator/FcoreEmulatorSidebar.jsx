@@ -33,12 +33,11 @@ let  FcoreEmulatorSidebar = props =>{
 
     const dispatch = useDispatch();
 
-    const sel_component_type = settings.emulator_selected_component ? settings.emulator_selected_component.type : null;
+    const sel_component_type = props.selected_component ? props.selected_component.type : null;
 
     let handle_select_emulator = (sel) =>{
         props.on_select(sel);
-        dispatch(setSetting(["emulator_selected_iom", null]));
-        dispatch(setSetting(["emulator_selected_component", null]));
+        props.on_iom_modify(null);
     }
     let on_start = () =>{
         set_channel_status({0:true, 1:true, 2:true, 3:true, 4:true, 5:true});
@@ -70,10 +69,25 @@ let  FcoreEmulatorSidebar = props =>{
                 height={2}
                 onSelect={handle_select_emulator}
             />
-            <EmulatorNodeProperties enabled={sel_component_type==="node"} selected_emulator={props.emulator}/>
-            <EmulatorEdgeProperties enabled={sel_component_type==="edge"} selected_emulator={props.emulator}/>
-            <EmulatorProperties enabled={ sel_component_type !== "node"  && sel_component_type !== "edge"} selected_emulator={props.emulator}/>
-            <WarningsPanel/>
+            <EmulatorNodeProperties
+                enabled={sel_component_type==="node"}
+                selected_emulator={props.emulator}
+                on_iom_modify={props.on_iom_modify}
+                selected_component={props.selected_component}
+                selected_iom={props.selected_iom}
+            />
+            <EmulatorEdgeProperties
+                enabled={sel_component_type==="edge"}
+                selected_emulator={props.emulator}
+                selected_component={props.selected_component}
+            />
+            <EmulatorProperties
+                enabled={ sel_component_type !== "node"  && sel_component_type !== "edge"}
+                selected_emulator={props.emulator}
+            />
+            <WarningsPanel
+                enabled={props.selected_component === null}
+            />
             <HilControl enabled={settings.emulator_selected_tab===2} onStart={on_start} onStop={on_stop} onPause={on_pause}/>
 
         </>

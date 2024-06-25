@@ -22,16 +22,14 @@ import {up_emulator, upload_json} from "../../client_core";
 let  CoreInputFilesList = props =>{
     let [selected, set_selected] = useState(null);
 
-    const settings = useSelector(state => state.settings);
-
-    const sel_component_type = settings.emulator_selected_component ? settings.emulator_selected_component.type : null;
+    const sel_component_type = props.selected_component ? props.selected_component.type : null;
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     let files_list = [];
 
     if(sel_component_type && sel_component_type === "node"){
         files_list = Object.values(props.emulator.cores).filter((item)=>{
-            return item.id === settings.emulator_selected_component.obj.id;
+            return item.id === props.selected_component.obj.id;
         })[0].input_data.map((item)=>{
             return item.name;
         });
@@ -39,7 +37,7 @@ let  CoreInputFilesList = props =>{
         return;
     }
 
-    let selected_core = settings.emulator_selected_component.obj.id;
+    let selected_core = props.selected_component.obj.id;
 
     let handle_add = () =>{
         upload_json().then((result)=>{

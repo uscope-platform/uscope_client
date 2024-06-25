@@ -16,38 +16,31 @@
 import React, {useEffect, useState} from 'react';
 import {MdAdd} from "react-icons/md";
 import {SelectableList} from "../UI_elements";
-import {useDispatch, useSelector} from "react-redux";
-import {setSetting} from "../../redux/Actions/SettingsActions";
 
 let  IomProperties = props =>{
 
     let [selected, set_selected] = useState(null);
 
-
-    const dispatch = useDispatch();
-
-    const settings = useSelector(state => state.settings);
-
-    const sel_component_type = settings.emulator_selected_component ? settings.emulator_selected_component.type : null;
+    const sel_component_type = props.selected_component ? props.selected_component.type : null;
 
     let outputs_list = [];
 
     if(sel_component_type && sel_component_type === "node"){
         outputs_list = Object.values(props.emulator.cores).filter((item)=>{
-            return item.id === settings.emulator_selected_component.obj.id;
+            return item.id === props.selected_component.obj.id;
         })[0][props.content_type].map((item)=>{
             return item.name;
         });
     }
 
     useEffect(() => {
-        if(settings.emulator_selected_iom){
-            if(settings.emulator_selected_iom.type !== props.content_type){
+        if(props.selected_iom){
+            if(props.selected_iom.type !== props.content_type){
                 set_selected(null);
             }
         }
 
-    }, [settings.emulator_selected_iom]);
+    }, [props.selected_iom]);
 
     let handle_add = () =>{
       props.onAdd(outputs_list.length);
@@ -58,7 +51,7 @@ let  IomProperties = props =>{
     }
 
     let handle_select = (args) =>{
-        dispatch(setSetting(["emulator_selected_iom", {type:props.content_type, obj:args}]));
+        props.on_select({type:props.content_type, obj:args});
         set_selected(args)
     }
 
