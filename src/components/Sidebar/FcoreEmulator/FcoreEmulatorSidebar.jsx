@@ -35,19 +35,32 @@ let  FcoreEmulatorSidebar = props =>{
 
     const sel_component_type = props.selected_component ? props.selected_component.type : null;
 
+    let emulator = props.emulator_selector ? new up_emulator(emulators_store[props.emulator_selector]) : {
+        name:"",
+        cores:[],
+        connections:[],
+        _get_emulator: ()=>{
+            return{
+                name:"",
+                cores:[],
+                connections:[]
+            }
+        }
+    };
+
     let handle_select_emulator = (sel) =>{
         props.on_select(sel);
         props.on_iom_modify(null);
     }
     let on_start = () =>{
         set_channel_status({0:true, 1:true, 2:true, 3:true, 4:true, 5:true});
-        props.emulator.start_hil().then(()=>{
+        emulator.start_hil().then(()=>{
             dispatch(setSetting(["hil_plot_running", true]));
         });
     };
 
     let on_stop = () =>{
-        props.emulator.stop_hil().then(()=>{
+        emulator.stop_hil().then(()=>{
             dispatch(setSetting(["hil_plot_running", false]));
         });
     }
@@ -71,19 +84,19 @@ let  FcoreEmulatorSidebar = props =>{
             />
             <EmulatorNodeProperties
                 enabled={sel_component_type==="node"}
-                selected_emulator={props.emulator}
+                selected_emulator={emulator}
                 on_iom_modify={props.on_iom_modify}
                 selected_component={props.selected_component}
                 selected_iom={props.selected_iom}
             />
             <EmulatorEdgeProperties
                 enabled={sel_component_type==="edge"}
-                selected_emulator={props.emulator}
+                selected_emulator={emulator}
                 selected_component={props.selected_component}
             />
             <EmulatorProperties
                 enabled={ sel_component_type !== "node"  && sel_component_type !== "edge"}
-                selected_emulator={props.emulator}
+                selected_emulator={emulator}
             />
             <WarningsPanel
                 enabled={props.selected_component === null}

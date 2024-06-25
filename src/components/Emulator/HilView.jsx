@@ -22,12 +22,10 @@ import HilPlotTab from "./HilControl/HilPlotTab";
 import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../../redux/Actions/SettingsActions";
 import FcoreEmulatorSidebar from "../Sidebar/FcoreEmulator/FcoreEmulatorSidebar";
-import {up_emulator} from "../../client_core";
 
 let HilView = function (props) {
 
 
-    const emulators_store = useSelector(state => state.emulators);
     const settings = useSelector(state => state.settings);
     const dispatch = useDispatch();
 
@@ -36,18 +34,6 @@ let HilView = function (props) {
 
     let [emulator_selector, set_selected_emulator] = useState(null);
 
-    let selected_emulator = emulator_selector ? new up_emulator(emulators_store[emulator_selector]) : {
-        name:"",
-        cores:[],
-        connections:[],
-        _get_emulator: ()=>{
-            return{
-                name:"",
-                cores:[],
-                connections:[]
-            }
-        }
-    };
 
     let [emulation_results, set_emulation_results] = useState({});
     let [input_data, set_input_data] = useState({});
@@ -85,14 +71,17 @@ let HilView = function (props) {
                         onEmulationDone={set_emulation_results}
                         onInputDataChange={set_input_data}
                         onDeploy={()=>{set_deployed(true)}}
-                        emulator={selected_emulator}
+                        emulator_selector={emulator_selector}
                         on_component_select={handle_component_select}
                         on_iom_select={handle_iom_select}
                         selected_component={selected_component}
                         selected_iom={selected_iom}
                     />,
                     <EmulationResults results={emulation_results} inputs={input_data}/>,
-                    <HilPlotTab deployed={deployed}  emulator={selected_emulator} />
+                    <HilPlotTab
+                        deployed={deployed}
+                        emulator_selector={emulator_selector}
+                    />
                 ]} onSelect={on_select} selected={settings.emulator_selected_tab}/>
             </UIPanel>
             <div style={{height:"100%"}}>
@@ -100,7 +89,7 @@ let HilView = function (props) {
                     selected_component={selected_component}
                     on_select={handle_emulator_select}
                     on_iom_modify={handle_iom_select}
-                    emulator={selected_emulator}
+                    emulator_selector={emulator_selector}
                     selected_iom={selected_iom}
                 />
             </div>
