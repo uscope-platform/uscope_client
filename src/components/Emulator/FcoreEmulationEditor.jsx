@@ -110,7 +110,7 @@ let FcoreEmulationEditor = function (props) {
 
     let handle_build = (args) =>{
         let product = emulator.build();
-        download_json(product, s_e.name + "_artifact");
+        download_json(product, emulator.name + "_artifact");
     }
 
     let handle_run = (args) =>{

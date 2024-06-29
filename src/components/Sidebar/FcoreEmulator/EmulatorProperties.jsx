@@ -19,6 +19,29 @@ import {InputField, SimpleContent, UIPanel} from "../../UI_elements";
 import {useSelector} from "react-redux";
 import {RangedInputField} from "../../UI_elements/RangedInputField";
 
+
+const ranges_map = {s:1, ms:1e-3, us:1e-6};
+
+let get_range = (time) =>{
+    if(time){
+        let new_range;
+        let new_indicated_time;
+        if(time>= 1){
+            new_range = "s";
+            new_indicated_time = time;
+        } else if(time>=1e-3){
+            new_range = "ms";
+            new_indicated_time = time/ranges_map.ms;
+        } else {
+            new_range = "us";
+            new_indicated_time = time/ranges_map.us;
+        }
+        return [new_range, new_indicated_time];
+    }
+    return [null, null]
+}
+
+
 let  EmulatorProperties = props =>{
 
     const settings = useSelector(state => state.settings);
@@ -28,25 +51,17 @@ let  EmulatorProperties = props =>{
     const [range, set_range] = useState("s");
     const [indicated_time, set_indicated_time] = useState(0);
     const emulation_time = props.selected_emulator && props.selected_emulator.emulation_time ? props.selected_emulator.emulation_time : 0;
-    const ranges_map = {s:1, ms:1e-3, us:1e-6};
+
 
     useEffect(() => {
         if(emulation_time){
-            let new_range;
-            let new_indicated_time;
-            if(emulation_time>= 1){
-                new_range = "s";
-                new_indicated_time = emulation_time;
-            } else if(emulation_time>=1e-3){
-                new_range = "ms";
-                new_indicated_time = emulation_time/ranges_map.ms;
-            } else {
-                new_range = "us";
-                new_indicated_time = emulation_time/ranges_map.us;
+            let [new_range, new_indicated_time] = get_range(emulation_time)
+            if(new_range){
+                set_range(new_range);
+                set_indicated_time(new_indicated_time);
             }
-            set_range(new_range);
-            set_indicated_time(new_indicated_time);
         }
+
     }, [emulation_time]);
 
 

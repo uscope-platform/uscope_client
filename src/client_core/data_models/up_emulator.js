@@ -18,7 +18,6 @@ import {store} from "../index";
 import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
 import {AddEmulator, removeEmulator, update_emulator} from "../../redux/Actions/EmulatorActions";
-import {AddScript} from "../../redux/Actions/scriptsActions";
 
 export class up_emulator {
     constructor(emulator_obj) {
@@ -93,32 +92,33 @@ export class up_emulator {
         });
     }
 
-    edit_name = (new_name) =>{
+    edit_name = async (new_name) =>{
         let edit = {emulator:this.id, value:new_name, action:"edit_name"};
-        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then(()=>{
-            this.name = new_name;
-        });
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        this.name = new_name;
+        store.dispatch(update_emulator(this));
     };
-    edit_emulation_time = (emu_time) =>{
+    edit_emulation_time =async (emu_time) =>{
         let edit = {emulator:this.id, value:emu_time, action:"edit_emu_time"};
-        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then(()=>{
-            this.emulation_time = emu_time;
-        });
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        this.emulation_time = emu_time;
+        store.dispatch(update_emulator(this));
     };
-    edit_core_props = (core_id, field, value) =>{
+    edit_core_props = async (core_id, field, value) =>{
         let edit = {emulator:this.id, core:core_id.toString(), field_name:field, value:value, action:"edit_core_props"};
-        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then(()=>{
-            this.cores[core_id][field] = value;
-        });
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit)
+        this.cores[core_id][field] = value;
+        store.dispatch(update_emulator(this));
     }
 
-    remove_core = (core_id) =>{
+    remove_core = async (core_id) =>{
         delete this.cores[core_id];
         let edit = {emulator:this.id, core:core_id.toString(), action:"remove_core"};
-        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        store.dispatch(update_emulator(this));
     }
 
-    add_output = (core_id, progressive) => {
+    add_output = async (core_id, progressive) => {
         let output = {
             reg_n: 0,
             type: "float",
@@ -127,41 +127,44 @@ export class up_emulator {
         }
         this.cores[core_id].outputs.push(output);
         let edit = {emulator:this.id, core:core_id.toString(), output:output, action:"add_output"};
-        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        store.dispatch(update_emulator(this));
     }
 
-    edit_output = (core_id, field, value, output_name) =>{
+    edit_output = async (core_id, field, value, output_name) =>{
         let edit = {emulator:this.id, core:core_id.toString(), field_name:field, value:value, output:output_name, action:"edit_output"};
-        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then(()=>{
-            this.cores[core_id].outputs = this.cores[core_id].outputs.map((item)=>{
-                if(item.name === output_name){
-                    return  {...item, ...{[field]:value}};
-                } else {
-                    return item;
-                }
-            });
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        this.cores[core_id].outputs = this.cores[core_id].outputs.map((item)=>{
+            if(item.name === output_name){
+                return  {...item, ...{[field]:value}};
+            } else {
+                return item;
+            }
         });
+        store.dispatch(update_emulator(this));
     }
 
-    add_input_file = (core_id, input_name,  data) =>{
+    add_input_file = async (core_id, input_name,  data) =>{
         let i_d = {
             name:input_name,
             data:data
         }
         this.cores[core_id].input_data.push(i_d);
         let edit = {emulator:this.id, core:core_id.toString(), input_data:i_d, action:"add_input_data"};
-        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        store.dispatch(update_emulator(this));
     }
 
-    remove_input_file = (core_id, obj_name) => {
+    remove_input_file = async (core_id, obj_name) => {
         this.cores[core_id].input_data = this.cores[core_id].input_data.filter((item)=>{
             return item.name !== obj_name;
         })
         let edit = {emulator:this.id, core:core_id.toString(), name:obj_name, action:"remove_input_data"};
-        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        store.dispatch(update_emulator(this));
     }
 
-    add_input = (core_id, progressive) => {
+    add_input =async (core_id, progressive) => {
         let input = {
             reg_n: 0,
             type: "float",
@@ -176,23 +179,24 @@ export class up_emulator {
         }
         this.cores[core_id].inputs.push(input);
         let edit = {emulator:this.id, core:core_id.toString(), input:input, action:"add_input"};
-        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        store.dispatch(update_emulator(this));
     }
 
-    edit_input = (core_id, field, value, input_name) =>{
+    edit_input =async (core_id, field, value, input_name) =>{
         let edit = {emulator:this.id, core:core_id.toString(), field_name:field, value:value, input:input_name, action:"edit_input"};
-        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then(()=>{
-            this.cores[core_id].inputs = this.cores[core_id].inputs.map((item)=>{
-                if(item.name === input_name){
-                    return  {...item, ...{[field]:value}};
-                } else {
-                    return item;
-                }
-            });
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        this.cores[core_id].inputs = this.cores[core_id].inputs.map((item)=>{
+            if(item.name === input_name){
+                return  {...item, ...{[field]:value}};
+            } else {
+                return item;
+            }
         });
+        store.dispatch(update_emulator(this));
     }
 
-    add_memory = (core_id, progressive) =>{
+    add_memory = async (core_id, progressive) =>{
         let mem = {
             reg_n: 0,
             type: "float",
@@ -204,47 +208,51 @@ export class up_emulator {
         }
         this.cores[core_id].memory_init.push(mem);
         let edit = {emulator:this.id, core:core_id.toString(), memory:mem, action:"add_memory"};
-        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        store.dispatch(update_emulator(this));
     }
 
-    edit_memory = (core_id, field, value, memory_name) =>{
+    edit_memory = async (core_id, field, value, memory_name) =>{
         let edit = {emulator:this.id, core:core_id.toString(), field_name:field, value:value, memory:memory_name, action:"edit_memory"};
-        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then(()=>{
-            this.cores[core_id].memory_init = this.cores[core_id].memory_init.map((item)=>{
-                if(item.name === memory_name){
-                    return  {...item, ...{[field]:value}};
-                } else {
-                    return item;
-                }
-            });
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        this.cores[core_id].memory_init = this.cores[core_id].memory_init.map((item)=>{
+            if(item.name === memory_name){
+                return  {...item, ...{[field]:value}};
+            } else {
+                return item;
+            }
         });
+        store.dispatch(update_emulator(this));
     }
 
-    remove_output = (core_id, obj_name) => {
+    remove_output =async (core_id, obj_name) => {
         this.cores[core_id].outputs = this.cores[core_id].outputs.filter((item)=>{
             return item.name !== obj_name;
         })
         let edit = {emulator:this.id, core:core_id.toString(), name:obj_name, action:"remove_output"};
-        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        store.dispatch(update_emulator(this));
     }
 
-    remove_input = (core_id, obj_name) => {
+    remove_input = async (core_id, obj_name) => {
         this.cores[core_id].inputs = this.cores[core_id].inputs.filter((item)=>{
             return item.name !== obj_name;
         })
         let edit = {emulator:this.id, core:core_id.toString(), name:obj_name, action:"remove_input"};
-        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        store.dispatch(update_emulator(this));
     }
 
-    remove_memory = (core_id, obj_name) =>{
+    remove_memory =async (core_id, obj_name) =>{
         this.cores[core_id].memory_init = this.cores[core_id].memory_init.filter((item)=>{
             return item.name !== obj_name;
         })
         let edit = {emulator:this.id, core:core_id.toString(), name:obj_name, action:"remove_memory"};
-        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        store.dispatch(update_emulator(this));
     }
 
-    add_dma_connection = (source_id, target_id) =>{
+    add_dma_connection = async (source_id, target_id) =>{
         let c = {
             source:source_id,
             target:target_id,
@@ -252,27 +260,27 @@ export class up_emulator {
         }
         this.connections.push(c);
         let edit = {emulator:this.id, connection:c, action:"add_connection"};
-        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then((resp)=>{
-            return new Promise((resolve)=>{
-                resolve(c);
-            })
-        });
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        store.dispatch(update_emulator(this));
+        return c;
     }
 
-    remove_dma_connection = (source_id, target_id) =>{
+    remove_dma_connection = async (source_id, target_id) =>{
         this.connections = this.connections.filter((item)=>{
             return item.source !== source_id && item.target !== target_id;
         });
         let edit = {emulator:this.id, source:source_id, target:target_id, action:"remove_connection"};
-        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        store.dispatch(update_emulator(this));
     }
 
-    remove_node_connections = (node_id) =>{
+    remove_node_connections =async (node_id) =>{
         this.connections = this.connections.filter((item)=>{
             return item.source !== node_id && item.target !== node_id;
         });
         let edit = {emulator:this.id, node:node_id, action:"remove_node_connections"};
-        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        store.dispatch(update_emulator(this));
     }
 
     add_dma_channel = async (source, target, progressive) =>{
@@ -333,10 +341,9 @@ export class up_emulator {
     }
 
 
-    static delete(emulator){
-        return backend_delete(api_dictionary.emulators.delete+'/'+emulator.id, emulator).then(()=>{
-            store.dispatch(removeEmulator(emulator));
-        })
+    static async delete(emulator) {
+        await backend_delete(api_dictionary.emulators.delete+'/'+emulator.id, emulator);
+        store.dispatch(removeEmulator(emulator.id));
     }
 
     build = () =>{

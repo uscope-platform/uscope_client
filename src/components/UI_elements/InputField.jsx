@@ -73,7 +73,7 @@ export let  InputField = props =>{
                 <Label htmlFor={props.ID} inline={props.inline}>{props.label}</Label>
                 <InnerInput
                     name={props.name}
-                    key={props.defaultValue}
+                    key={ props.key + props.defaultValue}
                     placeholder={props.placeholder}
                     id={props.ID}
                     color={props.color ? props.color : ColorTheme.background.level_3}
@@ -94,7 +94,7 @@ export let  InputField = props =>{
                 <InnerInput
                     placeholder={props.placeholder}
                     name={props.name}
-                    key={props.defaultValue}
+                    key={ props.key + props.defaultValue}
                     color={props.color ? props.color : ColorTheme.background.level_3}
                     id={props.ID}
                     type={(props.type)?props.type:"text"}
