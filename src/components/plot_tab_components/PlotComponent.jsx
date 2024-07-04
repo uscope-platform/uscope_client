@@ -21,6 +21,7 @@ import {PlotConfigurations} from "../UI_elements";
 import {initialize_plot} from "../../client_core";
 import {update_plot_data} from "../../client_core/plot_handling";
 import useInterval from "../Common_Components/useInterval";
+import {set_acquisition} from "../../client_core/proxy/plot";
 
 const Plot = createPlotlyComponent(Plotly);
 
@@ -30,6 +31,8 @@ let  PlotComponent = props =>{
 
     const [plot_data, set_plot_data] = useState([]);
     const [data_revision, bump_revision] = useReducer(x => x + 1, 1);
+
+    const [acquisition_counter, set_acquisition_counter] = useState(0);
 
     useEffect(()=>{
         let data = initialize_plot(props.application);
@@ -47,6 +50,12 @@ let  PlotComponent = props =>{
             let new_plot_data =await update_plot_data(plot_data);
             set_plot_data(new_plot_data);
             bump_revision();
+            if(acquisition_counter===9){
+                props.on_update_acquisition_status();
+                set_acquisition_counter(0);
+            } else{
+                set_acquisition_counter(acquisition_counter + 1);
+            }
         }
     };
 

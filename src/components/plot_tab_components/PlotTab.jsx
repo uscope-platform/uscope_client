@@ -24,6 +24,8 @@ import {ColorTheme, UIPanel, SimpleContent} from "../UI_elements";
 import TerminalComponent from "./Terminal";
 import PlotSidebar from "../Sidebar/Plot/PlotSidebar";
 import {create_plot_channel, get_channels_from_group, update_plot_status} from "../../client_core/plot_handling";
+import {get_acquisition_status} from "../../client_core/proxy/plot";
+import useInterval from "../Common_Components/useInterval";
 
 let PlotTab = function (props) {
     const channels = useSelector(state => state.channels);
@@ -32,6 +34,9 @@ let PlotTab = function (props) {
     const [plot_palette, set_plot_palette] = useState({colorway:ColorTheme.plot_palette})
     const [external_data, set_external_data] = useState([]);
     const [external_revision, bump_ext_revision] = useReducer(x => x+1, 0);
+
+    let [acquisition_status, set_acquisition_status] = useState("wait");
+
 
     const handle_group_change = (group) =>{
         let channels = get_channels_from_group(group, props.application.channels);
@@ -53,6 +58,17 @@ let PlotTab = function (props) {
         }
         set_plot_palette({colorway: palette});
         bump_ext_revision();
+    }
+
+    useInterval(async () => {
+        if(!plot_status){
+            await handle_update_acquisition_status();
+        }
+    },  650);
+
+    let handle_update_acquisition_status = async ()=>{
+        let status = await get_acquisition_status();
+        set_acquisition_status(status);
     }
 
     return(
@@ -92,6 +108,7 @@ let PlotTab = function (props) {
                                     external_data={external_data}
                                     on_data_init={set_external_data}
                                     external_revision={external_revision}
+                                    on_update_acquisition_status={handle_update_acquisition_status}
                                 />
                             }/>
                         </UIPanel>
@@ -123,6 +140,7 @@ let PlotTab = function (props) {
                 <PlotSidebar
                     on_plot_status_change={set_plot_status}
                     on_group_change={handle_group_change}
+                    acquisition_status={acquisition_status}
                 />
             </div>
 

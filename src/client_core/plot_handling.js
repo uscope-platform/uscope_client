@@ -67,7 +67,7 @@ export const update_plot_data =async (old_data)=>{
 }
 
 export const update_plot_status = (old_data, status)=>{
-    let new_data = old_data.filter(item=>{
+    return old_data.filter(item=>{
         if(item.spec.number in status){
             let new_item = item;
             new_item.visible = status[item.spec.number];
@@ -76,5 +76,4 @@ export const update_plot_status = (old_data, status)=>{
             return item
         }
     });
-    return new_data;
 }

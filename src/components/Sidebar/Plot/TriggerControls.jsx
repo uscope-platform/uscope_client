@@ -38,8 +38,6 @@ let  TriggerControls = props =>{
         save_ui_state('trigger_and_acquisition', state);
     }
 
-    let [acquisition_status, set_acquisition_status] = useState("wait");
-
     let [remote_version, set_remote_version] = useState(0);
 
     let [past_acq_state, set_past_acq_state] = useState({});
@@ -106,18 +104,13 @@ let  TriggerControls = props =>{
 
     }
 
-    if(props.showAcquisitionStatus){
-        useInterval(() => {
-            get_acquisition_status().then(resp =>{
-                set_acquisition_status(resp);
-            })
-        },  750);
-    }
+
     let plot_status = () =>{
         if(props.showAcquisitionStatus){
-            return <Chip status={acquisition_status} >{acquisition_status}</Chip>
+            return <Chip status={props.acquisition_status} >{props.acquisition_status}</Chip>
         }
     }
+
     return(
         <div>
             {plot_status()}
