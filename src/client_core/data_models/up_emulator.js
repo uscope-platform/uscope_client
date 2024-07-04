@@ -17,7 +17,7 @@
 import {store} from "../index";
 import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
-import {AddEmulator, removeEmulator, update_emulator} from "../../redux/Actions/EmulatorActions";
+import {removeEmulator, update_emulator} from "../../redux/Actions/EmulatorActions";
 
 export class up_emulator {
     constructor(emulator_obj) {
@@ -55,18 +55,15 @@ export class up_emulator {
         return new up_emulator(emulator_obj);
     }
 
-    add_remote = () => {
-        return new Promise((resolve, reject) =>{
-            backend_post(api_dictionary.emulators.add+'/'+this.id, this._get_emulator()).then((resp)=>{
-                store.dispatch(AddEmulator(this))
-                resolve();
-            }).catch((error)=>{
-                alert(error.response.data.message)
-            })
-        });
+    add_remote = async () => {
+        try{
+            return await backend_post(api_dictionary.emulators.add + '/' + this.id, this._get_emulator());
+        } catch (error) {
+            alert(error.response.data.message);
+        }
     }
 
-    add_core = (id) => {
+    add_core = async (id) => {
         let c = {
             name: "new_core_" + id,
             id: id,
@@ -85,11 +82,8 @@ export class up_emulator {
         };
         this.cores[id] = c;
         let edit = {emulator:this.id, core:c, action:"add_core"};
-        return backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit).then((resp)=>{
-            return new Promise((resolve)=>{
-                resolve(c);
-            })
-        });
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        return c;
     }
 
     edit_name = async (new_name) =>{
@@ -438,18 +432,14 @@ export class up_emulator {
         };
     }
 
-    run = () =>{
+    run = async () =>{
         let specs = this.build();
-        return backend_post(api_dictionary.emulators.run, specs).then((res)=>{
-           return res;
-        });
+        return await backend_post(api_dictionary.emulators.run, specs);
     };
 
-    deploy = () =>{
+    deploy = async () =>{
         let specs = this.build();
-        return backend_post(api_dictionary.hil.deploy, specs).then((res)=>{
-            return res;
-        })
+        return await backend_post(api_dictionary.hil.deploy, specs);
     }
 
     get_raw_obj = () => {
