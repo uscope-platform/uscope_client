@@ -48,7 +48,12 @@ let HilPlotTab = function (props) {
            }}>
                <UIPanel key="hil_scope" data-grid={{x: 0, y: 0, w: 24, h: 16, static: true}} level="level_2">
                    <SimpleContent name="Scope" height="100%" content={
-                       <HilPlot refreshRate={125}/>
+                       <HilPlot
+                           hil_plot_running={props.hil_plot_running}
+                           refreshRate={125}
+                           download_data_request={props.download_data_request}
+                           on_download_done={props.on_download_done}
+                       />
                    }/>
                </UIPanel>
                <div style={{

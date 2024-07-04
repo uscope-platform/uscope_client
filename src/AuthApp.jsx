@@ -101,7 +101,7 @@ let AuthApp = (props) =>{
     let populate_views = () => {
         let local_views = {};
         let role_mapping = {admin:1, user:2, operator:3};
-        let role = role_mapping[settings.user_role]
+        let role = role_mapping[props.user_role]
 
         let selected_views;
         if(role<=3){

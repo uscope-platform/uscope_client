@@ -21,6 +21,7 @@ import createPlotlyComponent from 'react-plotly.js/factory';
 import {useSelector} from "react-redux";
 
 import {fetch_data} from '../../client_core'
+import {PlotConfigurations} from "../UI_elements";
 
 const Plot = createPlotlyComponent(Plotly);
 
@@ -28,10 +29,9 @@ const Plot = createPlotlyComponent(Plotly);
 
 let  PlotComponent = props =>{
     const channels = useSelector(state => state.plot);
-    const settings = useSelector(state => state.settings);
 
     let  handleRefresh = () =>{
-        if(channels.plot_running){
+        if(props.plot_running){
             fetch_data();
         }
     };
@@ -43,8 +43,8 @@ let  PlotComponent = props =>{
     return(
         <Plot
             data={channels.data}
-            layout={{...channels.layout,...settings.plot_palette}}
-            config={{...channels.config, response:true}}
+            layout={{...PlotConfigurations.layout,...props.palette}}
+            config={{...PlotConfigurations.configs, response:true}}
             datarevision={props.datarevision}
         />
     );

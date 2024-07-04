@@ -34,6 +34,7 @@ let App = (props) =>{
 
     const [logged, set_logged] = useState(false);
     const [onboarding_needed, set_onboarding_needed] = useState(true);
+    const [user_role, set_user_role] = useState("operator");
     const dispatch = useDispatch();
 
     const done = useCallback((login_credentials)=>{
@@ -41,10 +42,8 @@ let App = (props) =>{
             if(token.login_token){
                 localStorage.setItem('login_token', JSON.stringify(token.login_token));
             }
-
-            dispatch(setSetting(["user_role", token.role]));
+            set_user_role(token.role);
             dispatch(setSetting(["access_token", token.access_token]));
-            dispatch(setSetting(["auth_config", {headers: { Authorization: `Bearer ${token.access_token}` }}]));
             set_auth_config({headers: { Authorization: `Bearer ${token.access_token}` }});
             set_logged(true);
         }).catch(()=>{
@@ -55,7 +54,6 @@ let App = (props) =>{
 
 
     useEffect(()=>{
-        dispatch(setSetting(["server_url", import.meta.env.VITE_APP_SERVER]));
         set_address(import.meta.env.VITE_APP_SERVER);
         set_redux_store(store);
 
@@ -91,7 +89,14 @@ let App = (props) =>{
         <ThemeProvider theme={ColorTheme}>
             <div className="App">
                 <React.StrictMode>
-                    {logged? <AuthApp onboarding_done={onboarding_done} needs_onboarding={onboarding_needed}/>:<LoginPage done={done}/>}
+                    {logged?
+                        <AuthApp
+                            onboarding_done={onboarding_done}
+                            needs_onboarding={onboarding_needed}
+                            user_role={user_role}
+                        /> :
+                        <LoginPage done={done}/>
+                    }
                 </React.StrictMode>
             </div>
         </ThemeProvider>

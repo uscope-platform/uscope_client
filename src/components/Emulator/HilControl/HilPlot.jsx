@@ -16,11 +16,11 @@
 import React, {useEffect, useReducer, useState} from 'react';
 import createPlotlyComponent from "react-plotly.js/factory";
 import Plotly from "plotly.js-basic-dist";
-import {useDispatch, useSelector, useStore} from "react-redux";
-import {download_plot, fetch_data} from "../../../client_core";
+import {useStore} from "react-redux";
+import {download_plot} from "../../../client_core";
 import useInterval from "../../Common_Components/useInterval";
 import {direct_fetch} from "../../../client_core/proxy/plot";
-import {setSetting} from "../../../redux/Actions/SettingsActions";
+import {ColorTheme, PlotConfigurations} from "../../UI_elements";
 
 
 const Plot = createPlotlyComponent(Plotly);
@@ -28,34 +28,30 @@ const Plot = createPlotlyComponent(Plotly);
 
 let HilPlot = function (props) {
 
-    const channels = useSelector(state => state.plot);
-    const settings = useSelector(state => state.settings);
-
     const store = useStore();
-    const dispatch = useDispatch();
 
     let [data, set_data] = useState([
     ])
 
     const [data_revision,update_data ] = useReducer(x => x + 1, 0);
-
-    let plot_layout = {...channels.layout,...settings.plot_palette};
+    // TODO: implement adaptive plot palette?
+    let plot_layout = {...PlotConfigurations.layout,colorway:ColorTheme.plot_palette};
     plot_layout.width = 1100;
     plot_layout.height = 550;
 
-    let plot_config = {...channels.config, response:true};
+    let plot_config = {...PlotConfigurations.configs, response:true};
 
 
     useEffect(() => {
-        if(settings.download_hil_data){
+        if(props.download_data_request){
             let state = store.getState();
-            download_plot(data, state.settings.sampling_period, "hil_data");
-            dispatch(setSetting(["download_hil_data", false]));
+            download_plot(data, "hil_data");
+            props.on_download_done(false);
         }
-    }, [settings.download_hil_data]);
+    }, [props.download_data_request]);
 
     let  handleRefresh = () =>{
-        if(settings.hil_plot_running){
+        if(props.hil_plot_running){
            direct_fetch().then((data)=>{
 
                let x = [...Array(data[0].data.length).keys()];

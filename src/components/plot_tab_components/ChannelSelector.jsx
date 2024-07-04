@@ -18,15 +18,12 @@ import React, {useEffect} from 'react';
 import ChannelSelectorItem from "./ChannelSelectorItem";
 import {useSelector} from "react-redux";
 import {ColorTheme} from "../UI_elements";
-import {setSetting} from "../../redux/Actions/SettingsActions";
-import {useDispatch} from "react-redux";
 
 import {set_channel_status, get_channel_number_from_id} from "../../client_core";
 
 let ChannelSelector = function(props) {
 
     const channels = useSelector(state => state.plot);
-    const dispatch = useDispatch();
 
     useEffect(()=>{
         let new_ch_state = get_state();
@@ -55,7 +52,7 @@ let ChannelSelector = function(props) {
                 palette.push(ColorTheme.plot_palette[parseInt(item)]);
             }
         }
-        dispatch(setSetting(["plot_palette", {colorway: palette}]));
+        props.onPaletteChange({colorway: palette});
     }
 
 

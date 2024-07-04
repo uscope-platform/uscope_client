@@ -18,15 +18,13 @@ import React, {useEffect, useState} from 'react';
 
 import Plotly from 'plotly.js-basic-dist';
 import createPlotlyComponent from 'react-plotly.js/factory';
-import {useSelector} from "react-redux";
+import {ColorTheme} from "../UI_elements";
 
 const Plot = createPlotlyComponent(Plotly);
 
 
-
 let  FilterPlot = props =>{
 
-    const settings = useSelector(state => state.settings);
     const [data_rev, set_data_rev] = useState(1);
 
     const [plot_layout, set_plot_layout] = useState({
@@ -146,7 +144,7 @@ let  FilterPlot = props =>{
         <Plot
             data={plot_data}
             config={{responsive: true, displaylogo: false}}
-            layout={{...plot_layout,...settings.plot_palette}}
+            layout={{...plot_layout,colorway:ColorTheme.plot_palette}}
 
 
         />

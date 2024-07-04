@@ -20,15 +20,7 @@ const initial_state = {
     default_ch_group:'',
     current_application:null,
     emulator_compile_warning:null,
-    emulator_selected_tab:0,
-    hil_plot_running:false,
-    refresh_user_view:false,
-    server_url: import.meta.env.VITE_APP_SERVER,
-    auth_config:null,
-    user_role:null,
-    download_hil_data:false,
-    sampling_period:0,
-    plot_palette:{colorway:ColorTheme.plot_palette}
+    refresh_user_view:false
 };
 
 let settingsReducer = function (state = initial_state, action) {

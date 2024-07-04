@@ -16,9 +16,6 @@
 import {
     SET_CHANNEL_STATUS,
     FETCH_DATA,
-    PLOT_PAUSE,
-    PLOT_PLAY,
-    PLOT_STOP,
     INITIALIZE_CHANNELS
 } from "../Actions/types";
 
@@ -28,68 +25,13 @@ let base_data = [];
 
 const initial_state = {
     data:base_data,
-    plot_running:false,
-    datarevision:0,
-    parameters:{
-        memory_depth: 1024
-    },
-    layout: {
-        margin: {
-            l: 25,
-            r: 25,
-            b: 25,
-            t: 25,
-        },
-        showlegend:false,
-        width: 1024,
-        height:330,
-        paper_bgcolor: "rgba(0,0,0,0)",
-        plot_bgcolor:"#444",
-        font: {
-        color: '#FFFFFF'
-        },
-        xaxis: {
-            showline: true,
-                showgrid: true,
-                tickcolor: '#FFFFFF',
-                linecolor: '#FFFFFF',
-                gridcolor: '#777777'
-        },
-        yaxis: {
-            automargin: true,
-            showline: true,
-                showgrid: true,
-                tickcolor: '#FFFFFF',
-                linecolor: '#FFFFFF',
-                gridcolor: '#777777'
-        }
-    },
-    configs: {
-        responsive: true,
-        displaylogo: false
-    },
+    datarevision:0
 };
 
 let plotReducer = function (state = initial_state, action) {
     switch (action.type) {
         case INITIALIZE_CHANNELS:
             return {...state, data:action.payload, datarevision: state.datarevision+1}
-        case PLOT_PLAY:
-            return {...state, plot_running: action.payload.value};
-        case PLOT_PAUSE:
-            return {...state, plot_running: action.payload.value};
-        case PLOT_STOP:
-            return {
-                ...state,
-                plot_running: action.payload.value,
-                data: state.data.map((channel)=>{
-                    return {
-                        ...channel,
-                        visible: false
-                    }
-                }),
-                datarevision: state.datarevision+1
-            }
         case SET_CHANNEL_STATUS:
             return {
                 ...state,

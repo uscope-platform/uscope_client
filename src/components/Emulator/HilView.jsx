@@ -19,20 +19,17 @@ import FcoreEmulationEditor from "./FcoreEmulationEditor";
 import {TabbedContent, UIPanel} from "../UI_elements"
 import EmulationResults from "./EmulationResults";
 import HilPlotTab from "./HilControl/HilPlotTab";
-import {useDispatch, useSelector} from "react-redux";
-import {setSetting} from "../../redux/Actions/SettingsActions";
 import FcoreEmulatorSidebar from "../Sidebar/FcoreEmulator/FcoreEmulatorSidebar";
 
 let HilView = function (props) {
 
-
-    const settings = useSelector(state => state.settings);
-    const dispatch = useDispatch();
-
     let [selected_component, set_selected_component] = useState(null);
     let [selected_iom, set_selected_iom] = useState(null);
-
+    let [selected_tab, set_selected_tab] = useState(0);
     let [emulator_selector, set_selected_emulator] = useState(null);
+
+    let [hil_plot_running, set_hil_plot_running] = useState(false);
+    let [download_data_request, set_download_data_request] = useState(null);
 
 
     let [emulation_results, set_emulation_results] = useState({});
@@ -40,7 +37,7 @@ let HilView = function (props) {
     let [deployed, set_deployed] = useState(false);
 
     let on_select = (value) =>{
-        dispatch(setSetting(["emulator_selected_tab", value]))
+        set_selected_tab(value);
     }
 
     let handle_component_select = (value) => {
@@ -81,8 +78,11 @@ let HilView = function (props) {
                     <HilPlotTab
                         deployed={deployed}
                         emulator_selector={emulator_selector}
+                        hil_plot_running={hil_plot_running}
+                        download_data_request={download_data_request}
+                        on_download_done={set_download_data_request}
                     />
-                ]} onSelect={on_select} selected={settings.emulator_selected_tab}/>
+                ]} onSelect={on_select} selected={selected_tab}/>
             </UIPanel>
             <div style={{height:"100%"}}>
                 <FcoreEmulatorSidebar
@@ -91,6 +91,11 @@ let HilView = function (props) {
                     on_iom_modify={handle_iom_select}
                     emulator_selector={emulator_selector}
                     selected_iom={selected_iom}
+                    enable_hil_controls={selected_tab===2}
+                    enable_emulator_properties={selected_tab === 0}
+                    on_plot_status_update={set_hil_plot_running}
+                    hil_plot_running={hil_plot_running}
+                    onDownloadHilData={set_download_data_request}
                 />
             </div>
         </div>

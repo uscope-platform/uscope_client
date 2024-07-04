@@ -16,9 +16,6 @@
 import {
     SET_CHANNEL_STATUS,
     FETCH_DATA,
-    PLOT_PAUSE,
-    PLOT_PLAY,
-    PLOT_STOP,
     INITIALIZE_CHANNELS
 } from "./types";
 import axios from "axios";
@@ -44,15 +41,6 @@ const setChannelStatusDone = (status) =>{
     }
 };
 
-export const plotPlay = () =>{
-    return{
-        type: PLOT_PLAY,
-        payload:{
-            value: true
-        }
-    }
-};
-
 export const initialize_channels = (data) =>{
     return{
         type: INITIALIZE_CHANNELS,
@@ -60,23 +48,6 @@ export const initialize_channels = (data) =>{
     }
 };
 
-export const plotPause = () =>{
-    return{
-        type: PLOT_PAUSE,
-        payload:{
-            value: false
-        }
-    }
-};
-
-export const plotStop = () =>{
-    return{
-        type: PLOT_STOP,
-        payload:{
-            value: false
-        }
-    }
-};
 
 export const fetchData = (server_url, config) => {
     return dispatch => {

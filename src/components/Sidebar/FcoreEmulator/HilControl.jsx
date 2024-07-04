@@ -16,16 +16,11 @@
 import React, {useCallback} from 'react';
 import {SimpleContent, UIPanel} from "../../UI_elements";
 import TriggerControls from "../Plot/TriggerControls";
-import {useDispatch} from "react-redux";
-import {setSetting} from "../../../redux/Actions/SettingsActions";
-
 
 let  HilControl = props =>{
-    const dispatch = useDispatch();
-
 
     const handle_download = useCallback(()=>{
-        dispatch(setSetting(["download_hil_data", true]));
+        props.onDownloadHilData(true);
     }, [])
 
     if(props.enabled){

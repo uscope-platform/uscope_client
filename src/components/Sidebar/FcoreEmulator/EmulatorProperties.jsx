@@ -89,7 +89,7 @@ let  EmulatorProperties = props =>{
         });
     }
 
-    if(settings.emulator_selected_tab === 0 && props.selected_emulator && props.enabled){
+    if(props.selected_emulator && props.enabled){
         return(
             <UIPanel style={{margin:10}} key={"Item properties"} level="level_2">
                 {

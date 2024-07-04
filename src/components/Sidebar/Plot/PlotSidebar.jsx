@@ -19,26 +19,23 @@ import React, {useCallback} from 'react';
 import EnablesProperties from "./EnablesProperties";
 import {SimpleContent, UIPanel} from "../../UI_elements";
 import TriggerControls from "./TriggerControls";
-import {plotPause, plotPlay} from "../../../redux/Actions/plotActions";
-import {useDispatch, useSelector, useStore} from "react-redux";
+import {useStore} from "react-redux";
 import {download_plot} from "../../../client_core";
 
 let  PlotSidebar = props =>{
 
     const store = useStore();
 
-    const dispatch = useDispatch();
-
     let handle_play = ()=>{
-        dispatch(plotPlay());
+        props.on_plot_status_change(true);
     }
     let handle_pause = ()=>{
-        dispatch(plotPause());
+        props.on_plot_status_change(false);
     }
 
     const handle_download = useCallback(()=>{
         let state = store.getState();
-        download_plot(state.plot.data, state.settings.sampling_period, state.settings.default_ch_group.group_name);
+        download_plot(state.plot.data, state.settings.default_ch_group.group_name);
     }, [])
 
 

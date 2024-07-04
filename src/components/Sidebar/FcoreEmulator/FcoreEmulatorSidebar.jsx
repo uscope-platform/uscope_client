@@ -15,23 +15,20 @@
 
 import React from 'react';
 
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 
 import {set_channel_status, up_emulator} from "../../../client_core";
 import SidebarBase from "../SidebarBase";
 import EmulatorNodeProperties from "./NodesSidebar/EmulatorNodeProperties";
 import EmulatorEdgeProperties from "./EdgesSidebar/EmulatorEdgeProperties";
 import EmulatorProperties from "./EmulatorProperties";
-import {setSetting} from "../../../redux/Actions/SettingsActions";
 import WarningsPanel from "./WarningsPanel";
 import HilControl from "./HilControl";
 
 let  FcoreEmulatorSidebar = props =>{
 
     const emulators_store = useSelector(state => state.emulators);
-    const settings = useSelector(state => state.settings);
 
-    const dispatch = useDispatch();
 
     const sel_component_type = props.selected_component ? props.selected_component.type : null;
 
@@ -55,19 +52,18 @@ let  FcoreEmulatorSidebar = props =>{
     let on_start = () =>{
         set_channel_status({0:true, 1:true, 2:true, 3:true, 4:true, 5:true});
         emulator.start_hil().then(()=>{
-            dispatch(setSetting(["hil_plot_running", true]));
+            props.on_plot_status_update(true);
         });
     };
 
     let on_stop = () =>{
         emulator.stop_hil().then(()=>{
-            dispatch(setSetting(["hil_plot_running", false]));
+            props.on_plot_status_update(false);
         });
     }
 
     let on_pause = () => {
-        let new_status= !settings.hil_plot_running;
-        dispatch(setSetting(["hil_plot_running", new_status]));
+        props.on_plot_status_update(!props.hil_plot_running);
     }
 
     return(
@@ -95,13 +91,13 @@ let  FcoreEmulatorSidebar = props =>{
                 selected_component={props.selected_component}
             />
             <EmulatorProperties
-                enabled={ sel_component_type !== "node"  && sel_component_type !== "edge"}
+                enabled={ props.enable_emulator_properties && sel_component_type !== "node"  && sel_component_type !== "edge"}
                 selected_emulator={emulator}
             />
             <WarningsPanel
                 enabled={props.selected_component === null}
             />
-            <HilControl enabled={settings.emulator_selected_tab===2} onStart={on_start} onStop={on_stop} onPause={on_pause}/>
+            <HilControl onDownloadHilData={props.onDownloadHilData} enabled={props.enable_hil_controls} onStart={on_start} onStop={on_stop} onPause={on_pause}/>
 
         </>
 

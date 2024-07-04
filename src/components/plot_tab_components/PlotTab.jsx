@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import React, {useState} from 'react';
 import {useSelector} from "react-redux";
 
 import ChannelSelector from "./ChannelSelector";
@@ -27,6 +27,9 @@ import PlotSidebar from "../Sidebar/Plot/PlotSidebar";
 
 let PlotTab = function (props) {
     const channels = useSelector(state => state.channels);
+
+    const [plot_status, set_plot_status] = useState(false);
+    const [plot_palette, set_plot_palette] = useState({colorway:ColorTheme.plot_palette})
 
         return(
             <div style={{
@@ -48,12 +51,16 @@ let PlotTab = function (props) {
                     }}>
                         <UIPanel key="ch_selector" style={{flexGrow: 0.5}} level="level_2">
                             <SimpleContent name="Channel Selector" content={
-                                <ChannelSelector channels={channels}/>
+                                <ChannelSelector onPaletteChange={set_plot_palette} channels={channels}/>
                             }/>
                         </UIPanel>
                         <UIPanel key="scope" style={{flexGrow: 1}} level="level_2">
                             <SimpleContent name="Scope" content={
-                                <PlotComponent palette={{colorway: ColorTheme.plot_palette}} refreshRate={125}/>
+                                <PlotComponent
+                                    plot_running={plot_status}
+                                    palette={plot_palette}
+                                    refreshRate={125}
+                                />
                             }/>
                         </UIPanel>
                     </div>
@@ -81,7 +88,7 @@ let PlotTab = function (props) {
                         }/>
                     </UIPanel>
                 </div>
-                <PlotSidebar/>
+                <PlotSidebar on_plot_status_change={set_plot_status}/>
             </div>
 
         );

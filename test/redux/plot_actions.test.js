@@ -14,20 +14,9 @@
 // limitations under the License.
 
 import {mock_store} from "../client_core/mock/redux_store";
-import {initialize_channels, plotPause, plotPlay, plotStop} from "../../src/redux/Actions/plotActions";
+import {initialize_channels} from "../../src/redux/Actions/plotActions";
 import {create_plot_channel} from "../../src/client_core";
 
-
-test("plot_play/pause", () =>{
-    let plot = mock_store.getState().plot;
-    expect(plot.plot_running).toBe(false);
-    mock_store.dispatch(plotPlay())
-    plot = mock_store.getState().plot;
-    expect(plot.plot_running).toBe(true);
-    mock_store.dispatch(plotPause())
-    plot = mock_store.getState().plot;
-    expect(plot.plot_running).toBe(false);
-})
 
 let ch = create_plot_channel({
     name: "test",
@@ -44,22 +33,5 @@ test("plot_initialize", () => {
     mock_store.dispatch(initialize_channels(initial_ch))
     plot = mock_store.getState().plot;
     expect(plot.datarevision).toBe(dr+1)
-    expect(plot.data).toStrictEqual(initial_ch)
-})
-
-
-test("plot_stop", () =>{
-    mock_store.dispatch(initialize_channels(initial_ch))
-    mock_store.dispatch(plotPlay())
-    let plot = mock_store.getState().plot;
-    let dr = plot.datarevision;
-    expect(plot.plot_running).toBe(true);
-    mock_store.dispatch(plotStop())
-    plot = mock_store.getState().plot;
-    expect(plot.plot_running).toBe(false);
-    expect(plot.datarevision).toBe(dr+1)
-    initial_ch[0].visible = false;
-    initial_ch[1].visible = false;
-    initial_ch[2].visible = false;
     expect(plot.data).toStrictEqual(initial_ch)
 })

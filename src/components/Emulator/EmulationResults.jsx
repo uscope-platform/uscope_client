@@ -14,18 +14,14 @@
 // limitations under the License.
 
 import React, {useEffect, useReducer, useState} from 'react';
-import {SelectableList, SimpleContent, UIPanel} from "../UI_elements";
+import {ColorTheme, PlotConfigurations, SelectableList, SimpleContent, UIPanel} from "../UI_elements";
 import createPlotlyComponent from "react-plotly.js/factory";
 import Plotly from "plotly.js-basic-dist";
-import {useSelector} from "react-redux";
 
 
 const Plot = createPlotlyComponent(Plotly);
 
 let EmulationResults = function (props) {
-
-    const channels = useSelector(state => state.plot);
-    const settings = useSelector(state => state.settings);
 
     let [selected_core, set_selected_core] = useState();
     let [timebase, set_timebase] = useState();
@@ -63,11 +59,11 @@ let EmulationResults = function (props) {
     }, [selected_core]);
 
 
-    let plot_layout = {...channels.layout,...settings.plot_palette};
+    let plot_layout = {...PlotConfigurations.layout,colorway:ColorTheme.plot_palette};
     plot_layout.width = 800;
     plot_layout.height = 560;
 
-    let plot_config = {...channels.config, response:true};
+    let plot_config = {...PlotConfigurations.configs, response:true};
 
     let handle_datapoint_select = (datapoint, multi_selection) =>{
 

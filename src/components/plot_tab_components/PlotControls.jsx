@@ -13,13 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from 'react';
+import React from 'react';
 
-import {useDispatch, useSelector} from "react-redux";
 import {MdDownload, MdPause, MdPlayArrow, MdStop} from 'react-icons/md'
-import {plotPause, plotPlay, plotStop} from "../../redux/Actions/plotActions";
 import styled from "styled-components";
-import {up_peripheral} from "../../client_core";
 import {ColorTheme} from "../UI_elements";
 
 const ComponentStyle = styled.div`

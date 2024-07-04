@@ -15,9 +15,6 @@
 
 //                  PLOT ACTONS
 export const SET_CHANNEL_STATUS = 'SET_CHANNEL_STATUS';
-export const PLOT_PLAY = 'PLOT_PLAY';
-export const PLOT_PAUSE = 'PLOT_PAUSE';
-export const PLOT_STOP = 'PLOT_STOP';
 export const FETCH_DATA = 'FETCH_DATA';
 export const INITIALIZE_CHANNELS = "INITIALIZE_CHANNELS";
 //                   PARAMETERS ACTIONS
