@@ -13,8 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {fetchData, setChannelStatus} from "../../redux/Actions/plotActions";
-import {backend_get, backend_post, dispatch_redux_thunk} from "./backend";
+import {backend_get, backend_post} from "./backend";
 
 import {api_dictionary} from './api_dictionary'
 
@@ -30,12 +29,16 @@ export const direct_fetch = () =>  {
 };
 
 
-export const fetch_data = () =>  {
-    return dispatch_redux_thunk(fetchData, api_dictionary.plot.fetch_data)
-};
 
 export const set_channel_status = (channel) => {
-    return dispatch_redux_thunk(setChannelStatus, api_dictionary.plot.set_channel_status, channel);
+    return new Promise((resolve, reject)=>{
+        backend_post(api_dictionary.plot.set_channel_status, channel).then((res) => {
+            resolve(res)
+        }).catch((err) =>{
+            alert('ERROR: error while setting a channel status\n' + err.message);
+            reject(err);
+        })
+    });
 }
 
 
@@ -78,31 +81,4 @@ export let set_scope_address  = (args) =>{
             reject(err);
         });
     });
-}
-
-export let create_plot_channel = (ch) => {
-    return ({
-        x: Array.from(Array(1024).keys()),
-        y: Array(1024).fill(0),
-        type: 'scatter',
-        mode: 'lines',
-        name: ch.name,
-        visible: ch.enabled,
-        spec: ch
-    })
-}
-export let get_channels_from_group = (group, channels) => {
-    let channels_list = []
-    for (let ch of group.channels) {
-        let selected_ch = channels.filter((item) => {
-            return item.id === ch.value;
-        })
-        channels_list.push(selected_ch[0])
-    }
-    return channels_list;
-}
-export let get_channel_number_from_id = (id, channels) => {
-    for (let item of channels) {
-        if (item.spec.id === id) return item.spec.number
-    }
 }

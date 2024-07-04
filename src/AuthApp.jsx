@@ -52,6 +52,8 @@ let AuthApp = (props) =>{
     const [app_stage, set_app_stage] = useState("WAITING");
 
 
+    const selected_application = settings.application ? new up_application(applications[settings.application]) : null;
+
     let app_choice_done = ()=>{
         populate_views();
         set_app_stage("NORMAL");
@@ -92,7 +94,7 @@ let AuthApp = (props) =>{
             if(v!=='scope'){
                 route += views[v].type;
             }
-            routes.push(<Route key={views[v].type} path={route} element={<TabContent className="main_content_tab" tab={views[v]}/>}/>,)
+            routes.push(<Route key={views[v].type} path={route} element={<TabContent className="main_content_tab"  application={selected_application} tab={views[v]}/>}/>,)
         }
 
         return(routes);

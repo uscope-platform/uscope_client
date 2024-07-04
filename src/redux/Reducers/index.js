@@ -15,7 +15,6 @@
 
 import {combineReducers} from "redux";
 
-import plotReducer from "./plotReducer";
 import registerValuesReducer from "./registerReducer"
 import settingsReducer from "./settingsReducer";
 import PeripheralsReducer from './PeripheralsReducer'
@@ -24,13 +23,11 @@ import ApplicationsReducer from './applicationsReducer'
 import programsReducer from "./ProgramsReducer";
 import BitstreamsReducer from "./bitstreamsReducer";
 import filtersReducer from "./FiltersReducer";
-import emulatorReducer from "./EmulatorReducer";
 import emulatorsReducer from "./EmulatorReducer";
 
 export default combineReducers({
     bitstreams:BitstreamsReducer,
     settings : settingsReducer,
-    plot: plotReducer,
     registerValues: registerValuesReducer,
     peripherals:PeripheralsReducer,
     applications : ApplicationsReducer,

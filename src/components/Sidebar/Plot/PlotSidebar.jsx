@@ -47,7 +47,9 @@ let  PlotSidebar = props =>{
         }}>
             <UIPanel key="scope_props" data-grid={{x: 0, y: 0, w: 24, h: 2, static: true}} level="level_2">
                 <SimpleContent name="Scope Properties" content={
-                    <EnablesProperties/>
+                    <EnablesProperties
+                        on_group_change={props.on_group_change}
+                    />
                 }/>
             </UIPanel>
             <UIPanel key="trigger" data-grid={{x: 2, y: 2, w: 24, h: 2.2, static: true}} level="level_2">

@@ -39,13 +39,9 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const actionSanitizer = (action) => (
-    action.type === 'FETCH_DATA' && action.data ?
-        { ...action, data: '<<DATA_BLOB>>' } : action
-);
+
 
 const composeEnhancers = composeWithDevTools({
-    actionSanitizer,
     stateSanitizer: (state) => state.data ? { ...state, data: '<<DATA_BLOB>>' } : state
 });
 

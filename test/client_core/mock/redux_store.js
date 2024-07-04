@@ -262,17 +262,6 @@ let programs_init = {
 }
 
 
-let plot_init = {
-    data: {},
-    loading_done:false,
-    plot_running:false,
-    datarevision:0,
-    parameters:{
-        memory_depth: 1024
-    }
-}
-
-
 export const filters_init = {
     1: new up_filter({
         "id": 1,
@@ -313,7 +302,6 @@ const rootReducer = (state, action) => {
 export const mock_reducer = combineReducers({
     bitstreams:BitstreamsReducer,
     settings : settingsReducer,
-    plot: plotReducer,
     registerValues: registerValuesReducer,
     peripherals:PeripheralsReducer,
     applications : ApplicationsReducer,
@@ -331,7 +319,6 @@ export const initial_redux_state = {
     scripts: scripts_init,
     bitstreams: bitstream_init,
     programs : programs_init,
-    plot: plot_init,
     filters:filters_init,
     registerValues: {},
     scriptsWorkspace: {},

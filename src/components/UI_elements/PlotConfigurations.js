@@ -49,4 +49,5 @@ export const PlotConfigurations = {
         responsive: true,
         displaylogo: false
     },
+    refresh_rate:150
 };

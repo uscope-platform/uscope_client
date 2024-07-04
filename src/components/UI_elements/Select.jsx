@@ -15,7 +15,7 @@
 
 import styled from 'styled-components';
 import {Label} from "./Label";
-import React from "react";
+import React, {useCallback, useMemo} from "react";
 import Select from "react-select";
 import {ColorTheme} from "./ColorTheme";
 
@@ -33,33 +33,37 @@ export let  SelectField = props =>{
 
     const color= props.color ? props.color : ColorTheme.background.select_background ;
 
-    const Style = {
-        control:(provided,  { data, isDisabled, isFocused, isSelected }) => ({
-            ...provided,
-            minWidth:"7em",
-            backgroundColor: color,
-        }),
+    const style = useMemo(()=>{
+        return {
+            control:(provided,  { data, isDisabled, isFocused, isSelected }) => ({
+                ...provided,
+                minWidth:"7em",
+                backgroundColor: color,
+            }),
 
-        menu: (provided,  { data, isDisabled, isFocused, isSelected }) => ({
-            ...provided,
-            width: "max-content",
-            backgroundColor: color
-        }),
+            menu: (provided,  { data, isDisabled, isFocused, isSelected }) => ({
+                ...provided,
+                width: "max-content",
+                backgroundColor: color
+            }),
 
-        menuPortal: (provided,  { data, isDisabled, isFocused, isSelected }) => ({
-            ...provided,
-        }),
+            menuPortal: (provided,  { data, isDisabled, isFocused, isSelected }) => ({
+                ...provided,
+            }),
 
-        option: (provided,  { data, isDisabled, isFocused, isSelected }) => ({
-            ...provided,
-            backgroundColor: isFocused?ColorTheme.background.transparent_accents:undefined
-        }),
+            option: (provided,  { data, isDisabled, isFocused, isSelected }) => ({
+                ...provided,
+                backgroundColor: isFocused?ColorTheme.background.transparent_accents:undefined
+            }),
 
-        singleValue:(provided,  { data, isDisabled, isFocused, isSelected }) => ({
-            ...provided,
-            color: ColorTheme.text
-        })
-    };
+            singleValue:(provided,  { data, isDisabled, isFocused, isSelected }) => ({
+                ...provided,
+                color: ColorTheme.text
+            })
+        };
+    }, [ColorTheme])
+
+    const onSelectChange = useCallback(selected => props.onChange(selected), [props.onChange]);
 
     return(
         <SelectWrapper>
@@ -68,11 +72,11 @@ export let  SelectField = props =>{
                 name={props.name}
                 id={props.name}
                 style={props.style}
-                styles={Style}
+                styles={style}
                 defaultValue={props.defaultValue}
                 value={props.value ? props.value: undefined}
                 menuPortalTarget={document.body}
-                onChange={props.onChange}
+                onChange={onSelectChange}
                 color={props.color ? props.color : ColorTheme.background.level_3}
                 options={props.options}
             />

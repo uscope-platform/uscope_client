@@ -20,12 +20,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {setSetting} from "../redux/Actions/SettingsActions";
 
 
-import {initialize_channels} from "../redux/Actions/plotActions";
 import ApplicationChooserView from "./Common_Components/ApplicationChooserView";
 
 import {
     up_application,
-    create_plot_channel
 } from "../client_core"
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -56,16 +54,9 @@ let ApplicationChooser = (props) =>{
 
     let initializePlotState = (app) =>{
 
-
         let [channels_list, group ] = app.get_scope_setup_info();
         dispatch(setSetting(["default_ch_group", group]));
-
-        let ch_obj = [];
-        for(let channel of channels_list){
-            ch_obj.push(create_plot_channel(channel))
-        }
-        dispatch(initialize_channels(ch_obj));
-
+        // TODO: GET RID OF THIS;
     }
 
     return (

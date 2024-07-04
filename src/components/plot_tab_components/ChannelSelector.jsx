@@ -13,26 +13,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect} from 'react';
+import React from 'react';
 
 import ChannelSelectorItem from "./ChannelSelectorItem";
-import {useSelector} from "react-redux";
-import {ColorTheme} from "../UI_elements";
 
 import {set_channel_status, get_channel_number_from_id} from "../../client_core";
 
 let ChannelSelector = function(props) {
 
-    const channels = useSelector(state => state.plot);
-
-    useEffect(()=>{
-        let new_ch_state = get_state();
-        set_channel_status(new_ch_state);
-    },[])
-
     let get_state = ()=>{
         let new_ch_state = {}
-        channels.data.map(chan => {
+        props.data.map(chan => {
             new_ch_state[chan.spec.number] = chan.visible;
             return 0;
         })
@@ -41,28 +32,29 @@ let ChannelSelector = function(props) {
 
     let handle_status_change = status =>{
         let new_state = get_state();
-        let channel_number = get_channel_number_from_id(status.id, channels.data);
+        let channel_number = get_channel_number_from_id(status.id, props.data);
         new_state[parseInt(channel_number)] = status.status;
         set_channel_status(new_state);
+        props.on_channel_status_change(new_state);
 
-        let palette = [];
-        for(let item in new_state){
-
-            if(new_state[item]){
-                palette.push(ColorTheme.plot_palette[parseInt(item)]);
-            }
-        }
-        props.onPaletteChange({colorway: palette});
     }
-
 
     return(
             <div>
-                    {channels.data.map((chan,i) => {
+                    {   props.data?
+                        props.data.map((chan,i) => {
                         return(
-                            <ChannelSelectorItem onStatusChange={handle_status_change} key={chan.spec.id} id={chan.spec.id} idx={i} name={chan.spec.name} value={chan.visible}/>
+                            <ChannelSelectorItem
+                                onStatusChange={handle_status_change}
+                                key={chan.spec.id}
+                                id={chan.spec.id}
+                                idx={i}
+                                name={chan.spec.name}
+                                value={chan.visible}
+                            />
                         );
-                    })}
+                    }):<></>
+                    }
             </div>
         );
 };

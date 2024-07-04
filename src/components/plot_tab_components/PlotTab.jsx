@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from 'react';
+import React, {useReducer, useState} from 'react';
 import {useSelector} from "react-redux";
 
 import ChannelSelector from "./ChannelSelector";
@@ -23,15 +23,39 @@ import MacroActions from "./MacroActions";
 import {ColorTheme, UIPanel, SimpleContent} from "../UI_elements";
 import TerminalComponent from "./Terminal";
 import PlotSidebar from "../Sidebar/Plot/PlotSidebar";
-
+import {create_plot_channel, get_channels_from_group, update_plot_status} from "../../client_core/plot_handling";
 
 let PlotTab = function (props) {
     const channels = useSelector(state => state.channels);
 
     const [plot_status, set_plot_status] = useState(false);
     const [plot_palette, set_plot_palette] = useState({colorway:ColorTheme.plot_palette})
+    const [external_data, set_external_data] = useState([]);
+    const [external_revision, bump_ext_revision] = useReducer(x => x+1, 0);
 
-        return(
+    const handle_group_change = (group) =>{
+        let channels = get_channels_from_group(group, props.application.channels);
+        let ch_obj = [];
+        for(let item of channels){
+            ch_obj.push(create_plot_channel(item))
+        }
+        set_external_data(ch_obj);
+        bump_ext_revision();
+    }
+
+    let handle_channel_status_change = (new_state) => {
+        set_external_data(update_plot_status(external_data, new_state));
+        let palette = [];
+        for(let item in new_state){
+            if(new_state[item]){
+                palette.push(ColorTheme.plot_palette[parseInt(item)]);
+            }
+        }
+        set_plot_palette({colorway: palette});
+        bump_ext_revision();
+    }
+
+    return(
             <div style={{
                 display:"flex",
                 flexDirection:"row",
@@ -51,15 +75,23 @@ let PlotTab = function (props) {
                     }}>
                         <UIPanel key="ch_selector" style={{flexGrow: 0.5}} level="level_2">
                             <SimpleContent name="Channel Selector" content={
-                                <ChannelSelector onPaletteChange={set_plot_palette} channels={channels}/>
+                                <ChannelSelector
+                                    data={external_data}
+                                    onPaletteChange={set_plot_palette}
+                                    on_channel_status_change={handle_channel_status_change}
+                                    channels={channels}
+                                />
                             }/>
                         </UIPanel>
                         <UIPanel key="scope" style={{flexGrow: 1}} level="level_2">
                             <SimpleContent name="Scope" content={
                                 <PlotComponent
-                                    plot_running={plot_status}
+                                    application={props.application}
+                                    plot_status={plot_status}
                                     palette={plot_palette}
-                                    refreshRate={125}
+                                    external_data={external_data}
+                                    on_data_init={set_external_data}
+                                    external_revision={external_revision}
                                 />
                             }/>
                         </UIPanel>
@@ -88,7 +120,10 @@ let PlotTab = function (props) {
                         }/>
                     </UIPanel>
                 </div>
-                <PlotSidebar on_plot_status_change={set_plot_status}/>
+                <PlotSidebar
+                    on_plot_status_change={set_plot_status}
+                    on_group_change={handle_group_change}
+                />
             </div>
 
         );

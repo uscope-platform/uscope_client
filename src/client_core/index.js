@@ -24,7 +24,7 @@ export {set_address, set_auth_config} from './proxy/backend'
 
 export {sign_in} from './proxy/auth'
 export {add_user, remove_user, get_users_list, dump_database, restore_database, do_onboarding, need_onboarding} from './proxy/platform'
-export {fetch_data, set_channel_status, set_scaling_factors, create_plot_channel, get_channels_from_group, get_channel_number_from_id} from './proxy/plot'
+export { set_channel_status, set_scaling_factors, direct_fetch} from './proxy/plot'
 
 
 // DATA MODEL
@@ -45,6 +45,7 @@ export {import_application, import_peripherals} from './data_handling/import'
 export {get_next_id} from './utilities/id_management'
 export {download_json, download_plot} from './utilities/downloads'
 export {upload_json, upload_raw} from './utilities/uploads'
+export {get_channel_number_from_id, get_channels_from_group, create_plot_channel, initialize_plot} from "./plot_handling";
 export const set_redux_store = (rs) => {
     store = rs;
 }

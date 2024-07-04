@@ -13,23 +13,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from 'react';
-import {useDispatch, useSelector, useStore} from "react-redux";
+import React, {useCallback, useState} from 'react';
+import {useSelector, useStore} from "react-redux";
 
 import {FormLayout,SelectField} from "../../UI_elements";
 
-import {initialize_channels} from "../../../redux/Actions/plotActions";
 import {
     set_channel_status,
     up_peripheral,
-    create_plot_channel,
     get_channels_from_group,
     set_scaling_factors
 } from "../../../client_core";
 
 let  EnablesProperties = props =>{
 
-    const dispatch = useDispatch();
     const settings = useSelector(state => state.settings);
     const applications_list = useSelector(state => state.applications);
 
@@ -38,10 +35,12 @@ let  EnablesProperties = props =>{
 
     const [application, ] = useState(applications_list[settings['application']])
     const [channelGroups, ] = useState(applications_list[settings['application']]['channel_groups']);
+    const [group_options, ] = useState(channelGroups.map((group,i) => (
+        {label:group.group_name, value:group.group_name}
+    )));
     const [scope_mux_address, ] = useState(parseInt(applications_list[settings['application']]['miscellaneous']['scope_mux_address']));
 
-
-    let handleChGroupChange = (event) => {
+    let handleChGroupChange = useCallback((event) => {
         let group_name = event.value;
         set_selected(event.target);
         let group = []
@@ -52,12 +51,10 @@ let  EnablesProperties = props =>{
             }
         }
         //GET SET UP PLOT WITH NEW CHANNELS
+
         let channels = get_channels_from_group(group, application.channels);
-        let ch_obj = [];
-        for(let item of channels){
-            ch_obj.push(create_plot_channel(item))
-        }
-        dispatch(initialize_channels(ch_obj));
+        props.on_group_change(group)
+        // TODO: take this stuff out of here and push it to the plot helper in core lib
         //SET UP MUXES FOR NEW GROUP
         if(scope_mux_address){
             for(let item of channels){
@@ -86,11 +83,8 @@ let  EnablesProperties = props =>{
             return 0;
         })
         set_channel_status(new_ch_state);
-    };
+    }, [application, scope_mux_address, store]);
 
-    let ch_groups = channelGroups.map((group,i) => (
-        {label:group.group_name, value:group.group_name}
-    ));
 
     const [selected, set_selected] = useState({label:settings.default_ch_group.group_name, value:settings.default_ch_group.group_name});
 
@@ -101,7 +95,7 @@ let  EnablesProperties = props =>{
                     label="Channel Group"
                     name="channel_group"
                     onChange={handleChGroupChange}
-                    options={ch_groups}
+                    options={group_options}
                     value={selected}
                 />
             </FormLayout>

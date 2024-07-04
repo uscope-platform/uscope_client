@@ -13,10 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//                  PLOT ACTONS
-export const SET_CHANNEL_STATUS = 'SET_CHANNEL_STATUS';
-export const FETCH_DATA = 'FETCH_DATA';
-export const INITIALIZE_CHANNELS = "INITIALIZE_CHANNELS";
 //                   PARAMETERS ACTIONS
 export const SAVE_PARAMETER =  'SEND_PARAMETER';
 //                   REGISTERS ACTIONS

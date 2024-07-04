@@ -31,7 +31,10 @@ const SettingsView = React.lazy(() => import('./Settings/Settings_view'));
 let TabContent = props => {
 
     let components_associations = {
-        scope:<PlotTab content={props.tab}/>,
+        scope:<PlotTab
+            content={props.tab}
+            application={props.application}
+        />,
         bitstreams: <BitstreamManager />,
         scripts: <ScriptManager />,
         peripherals:<PeripheralsManager />,

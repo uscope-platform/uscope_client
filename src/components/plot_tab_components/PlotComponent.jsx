@@ -13,39 +13,53 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
-import useInterval from "../Common_Components/useInterval";
-
+import React, {useEffect, useReducer, useState} from 'react';
 import Plotly from 'plotly.js-basic-dist';
 import createPlotlyComponent from 'react-plotly.js/factory';
-import {useSelector} from "react-redux";
 
-import {fetch_data} from '../../client_core'
 import {PlotConfigurations} from "../UI_elements";
+import {initialize_plot} from "../../client_core";
+import {update_plot_data} from "../../client_core/plot_handling";
+import useInterval from "../Common_Components/useInterval";
 
 const Plot = createPlotlyComponent(Plotly);
 
 
 
 let  PlotComponent = props =>{
-    const channels = useSelector(state => state.plot);
 
-    let  handleRefresh = () =>{
-        if(props.plot_running){
-            fetch_data();
+    const [plot_data, set_plot_data] = useState([]);
+    const [data_revision, bump_revision] = useReducer(x => x + 1, 1);
+
+    useEffect(()=>{
+        let data = initialize_plot(props.application);
+        set_plot_data(data);
+        props.on_data_init(data);
+        // TODO: handle default plot group
+    }, [props.application])
+
+    useEffect(()=>{
+        set_plot_data(props.external_data);
+    }, [props.external_data])
+
+    let  handleRefresh = async () =>{
+        if(props.plot_status){
+            let new_plot_data =await update_plot_data(plot_data);
+            set_plot_data(new_plot_data);
+            bump_revision();
         }
     };
 
-    useInterval(() => {
-        handleRefresh();
-    },  props.refreshRate);
+    useInterval(async () => {
+        await handleRefresh();
+    },  PlotConfigurations.refresh_rate);
 
     return(
         <Plot
-            data={channels.data}
+            data={plot_data}
             layout={{...PlotConfigurations.layout,...props.palette}}
             config={{...PlotConfigurations.configs, response:true}}
-            datarevision={props.datarevision}
+            datarevision={data_revision + props.external_revision}
         />
     );
 };
