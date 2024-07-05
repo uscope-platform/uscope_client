@@ -34,7 +34,8 @@ let PlotTab = function (props) {
     const [plot_palette, set_plot_palette] = useState({colorway:ColorTheme.plot_palette})
     const [external_data, set_external_data] = useState([]);
     const [external_revision, bump_ext_revision] = useReducer(x => x+1, 0);
-
+    const [request_download, set_request_download] = useState(false);
+    const [selected_group, set_selected_group] = useState(props.application.get_default_channel_group().group_name);
     let [acquisition_status, set_acquisition_status] = useState("wait");
 
 
@@ -46,6 +47,7 @@ let PlotTab = function (props) {
         }
         set_external_data(ch_obj);
         bump_ext_revision();
+        set_selected_group(group.group_name);
     }
 
     let handle_channel_status_change = (new_state) => {
@@ -108,7 +110,9 @@ let PlotTab = function (props) {
                                     external_data={external_data}
                                     on_data_init={set_external_data}
                                     external_revision={external_revision}
+                                    request_download={request_download}
                                     on_update_acquisition_status={handle_update_acquisition_status}
+                                    selected_group={selected_group}
                                 />
                             }/>
                         </UIPanel>
@@ -141,6 +145,8 @@ let PlotTab = function (props) {
                     on_plot_status_change={set_plot_status}
                     on_group_change={handle_group_change}
                     acquisition_status={acquisition_status}
+                    on_download={set_request_download}
+                    application={props.application}
                 />
             </div>
 

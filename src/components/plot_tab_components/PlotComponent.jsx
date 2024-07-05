@@ -18,10 +18,9 @@ import Plotly from 'plotly.js-basic-dist';
 import createPlotlyComponent from 'react-plotly.js/factory';
 
 import {PlotConfigurations} from "../UI_elements";
-import {initialize_plot} from "../../client_core";
+import {download_plot, initialize_plot} from "../../client_core";
 import {update_plot_data} from "../../client_core/plot_handling";
 import useInterval from "../Common_Components/useInterval";
-import {set_acquisition} from "../../client_core/proxy/plot";
 
 const Plot = createPlotlyComponent(Plotly);
 
@@ -38,8 +37,14 @@ let  PlotComponent = props =>{
         let data = initialize_plot(props.application);
         set_plot_data(data);
         props.on_data_init(data);
-        // TODO: handle default plot group
     }, [props.application])
+
+    useEffect(()=>{
+        if(plot_data.length > 0){
+            download_plot(plot_data, props.selected_group);
+        }
+
+    }, [props.request_download])
 
     useEffect(()=>{
         set_plot_data(props.external_data);

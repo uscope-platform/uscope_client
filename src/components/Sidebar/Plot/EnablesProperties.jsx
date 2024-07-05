@@ -24,12 +24,15 @@ import {
     get_channels_from_group,
     set_scaling_factors
 } from "../../../client_core";
+import {setup_scope_mux} from "../../../client_core/plot_handling";
 
 let  EnablesProperties = props =>{
 
     const settings = useSelector(state => state.settings);
     const applications_list = useSelector(state => state.applications);
 
+    let default_group = props.application.get_default_channel_group().group_name;
+    const [selected, set_selected] = useState({label:default_group, value:default_group});
 
     const store = useStore();
 
@@ -40,9 +43,9 @@ let  EnablesProperties = props =>{
     )));
     const [scope_mux_address, ] = useState(parseInt(applications_list[settings['application']]['miscellaneous']['scope_mux_address']));
 
-    let handleChGroupChange = useCallback((event) => {
-        let group_name = event.value;
-        set_selected(event.target);
+    let handleChGroupChange = useCallback((object) => {
+        let group_name = object.value;
+        set_selected(object);
         let group = []
         //GET GROUP OBJECT
         for(let item of application.channel_groups){
@@ -54,16 +57,11 @@ let  EnablesProperties = props =>{
 
         let channels = get_channels_from_group(group, application.channels);
         props.on_group_change(group)
-        // TODO: take this stuff out of here and push it to the plot helper in core lib
+
         //SET UP MUXES FOR NEW GROUP
-        if(scope_mux_address){
-            for(let item of channels){
-                if(item){
-                    let channel_address = scope_mux_address + 4*(parseInt(item.number)+1);
-                    up_peripheral.direct_register_write([[channel_address, parseInt(item.mux_setting)]]).then();
-                }
-            }
-        }
+        props.application.setup_scope_mux(channels);
+
+        // TODO: take this stuff out of here and push it to the plot helper in core lib
         //SET  UP CHANNEL WIDTHS
         let sfs = Array(6).fill(1);
 
@@ -84,9 +82,6 @@ let  EnablesProperties = props =>{
         })
         set_channel_status(new_ch_state);
     }, [application, scope_mux_address, store]);
-
-
-    const [selected, set_selected] = useState({label:settings.default_ch_group.group_name, value:settings.default_ch_group.group_name});
 
     return (
         <div style={{padding:"1rem"}}>

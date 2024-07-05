@@ -14,10 +14,8 @@
 // limitations under the License.
 
 import {SET_SETTING} from "../Actions/types";
-import {ColorTheme} from "../../components/UI_elements";
 
 const initial_state = {
-    default_ch_group:'',
     current_application:null,
     emulator_compile_warning:null,
     refresh_user_view:false

@@ -15,6 +15,7 @@
 
 
 import {direct_fetch} from "./proxy/plot";
+import {up_peripheral} from "./data_models/up_peripheral";
 
 export let create_plot_channel = (ch) => {
     return ({
@@ -76,4 +77,15 @@ export const update_plot_status = (old_data, status)=>{
             return item
         }
     });
+}
+
+export const setup_scope_mux = (channels, base_addr) =>{
+    if(base_addr){
+        for(let item of channels){
+            if(item){
+                let channel_address = base_addr + 4*(parseInt(item.number)+1);
+                up_peripheral.direct_register_write([[channel_address, parseInt(item.mux_setting)]]).then();
+            }
+        }
+    }
 }

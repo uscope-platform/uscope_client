@@ -170,8 +170,26 @@ export class up_application {
     }
 
 
+    get_default_channel_group = () =>{
+        let default_group = {}
+        for(let group of this.channel_groups){
+            if(group.default){
+                default_group = group;
+            }
+        }
+        return default_group;
+    }
 
-
+    setup_scope_mux = async (channels) =>{
+        if(this.miscellaneous.scope_mux_address){
+            for(let item of channels){
+                if(item){
+                    let channel_address = parseInt(this.miscellaneous.scope_mux_address) + 4*(parseInt(item.number)+1);
+                    await up_peripheral.direct_register_write([[channel_address, parseInt(item.mux_setting)]]);
+                }
+            }
+        }
+    }
 
     add_channel = (ch_name) =>{
         let ch = {

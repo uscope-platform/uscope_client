@@ -13,18 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useCallback} from 'react';
+import React, {useReducer} from 'react';
 
 
 import EnablesProperties from "./EnablesProperties";
 import {SimpleContent, UIPanel} from "../../UI_elements";
 import TriggerControls from "./TriggerControls";
-import {useStore} from "react-redux";
-import {download_plot} from "../../../client_core";
 
 let  PlotSidebar = props =>{
 
-    const store = useStore();
+    const [download_req, bump_download_req] = useReducer(x => x + 1, 0);
 
     let handle_play = ()=>{
         props.on_plot_status_change(true);
@@ -32,11 +30,6 @@ let  PlotSidebar = props =>{
     let handle_pause = ()=>{
         props.on_plot_status_change(false);
     }
-
-    const handle_download = useCallback(()=>{
-        let state = store.getState();
-        download_plot(state.plot.data, state.settings.default_ch_group.group_name);
-    }, [])
 
 
     return (
@@ -49,6 +42,7 @@ let  PlotSidebar = props =>{
                 <SimpleContent name="Scope Properties" content={
                     <EnablesProperties
                         on_group_change={props.on_group_change}
+                        application={props.application}
                     />
                 }/>
             </UIPanel>
@@ -58,7 +52,10 @@ let  PlotSidebar = props =>{
                         showAcquisitionStatus
                         onPlay={handle_play}
                         onPause={handle_pause}
-                        onDownload={handle_download}
+                        onDownload={()=>{
+                            props.on_download(download_req);
+                            bump_download_req();
+                        }}
                         acquisition_status={props.acquisition_status}
                     />
                 }/>

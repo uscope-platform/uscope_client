@@ -48,16 +48,8 @@ let ApplicationChooser = (props) =>{
             console.log("Error: error while choosing application");
         }
         dispatch(setSetting(["application", e]));
-        initializePlotState(app);
         props.choice_done();
     };
-
-    let initializePlotState = (app) =>{
-
-        let [channels_list, group ] = app.get_scope_setup_info();
-        dispatch(setSetting(["default_ch_group", group]));
-        // TODO: GET RID OF THIS;
-    }
 
     return (
         <div className="App">
