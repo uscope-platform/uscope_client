@@ -23,8 +23,6 @@ import {set_address, set_auth_config, set_redux_store, sign_in, need_onboarding}
 
 //////  STYLE IMPORTS
 import './App.css';
-import {useDispatch} from "react-redux";
-import {setSetting} from "./redux/Actions/SettingsActions";
 import {ThemeProvider} from "styled-components";
 import {ColorTheme} from "./components/UI_elements";
 
@@ -35,7 +33,6 @@ let App = (props) =>{
     const [logged, set_logged] = useState(false);
     const [onboarding_needed, set_onboarding_needed] = useState(true);
     const [user_role, set_user_role] = useState("operator");
-    const dispatch = useDispatch();
 
     const done = useCallback((login_credentials)=>{
         sign_in(login_credentials).then((token) =>{
@@ -43,7 +40,6 @@ let App = (props) =>{
                 localStorage.setItem('login_token', JSON.stringify(token.login_token));
             }
             set_user_role(token.role);
-            dispatch(setSetting(["access_token", token.access_token]));
             set_auth_config({headers: { Authorization: `Bearer ${token.access_token}` }});
             set_logged(true);
         }).catch(()=>{

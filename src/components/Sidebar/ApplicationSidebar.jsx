@@ -13,9 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect} from 'react';
+import React from 'react';
 
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 
 
 import {
@@ -24,7 +24,6 @@ import {
     up_application,
 } from "../../client_core";
 
-import {setSetting} from "../../redux/Actions/SettingsActions";
 import {addApplication} from "../../redux/Actions/applicationActions";
 
 import SidebarBase from "./SidebarBase";
@@ -32,8 +31,6 @@ import SidebarBase from "./SidebarBase";
 let  ApplicationSidebar = props =>{
 
     const applications_redux = useSelector(state => state.applications);
-    const settings = useSelector(state => state.settings);
-    const dispatch = useDispatch();
 
     let handleImport = (app) =>{
         let id = get_next_id(Object.values(applications_redux).map(a => a[props.selection_key]).sort());
@@ -52,7 +49,7 @@ let  ApplicationSidebar = props =>{
             content_name="Applications"
             selector="selected_application"
             onImport={handleImport}
-            initial_value={applications_redux[settings.application].application_name}
+            initial_value={props.application}
             onSelect={props.on_select}
         />
     );

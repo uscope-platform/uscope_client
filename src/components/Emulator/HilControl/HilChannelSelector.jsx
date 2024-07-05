@@ -16,7 +16,6 @@
 
 import React, {useReducer, useState} from 'react';
 import {SelectField} from "../../UI_elements";
-import {useStore} from "react-redux";
 import {get_ui_state, save_ui_state} from "../../../client_core";
 
 let HilChannelSelector = function (props) {
@@ -24,7 +23,7 @@ let HilChannelSelector = function (props) {
     let target_outputs = props.emulator ? props.emulator.get_outputs() : {};
     let [selected_channels, set_selected_channels]  = useState(()=>{
         let default_state = [{},{},{},{},{},{}];
-        let state = get_ui_state('hil_selector_channels',  default_state);
+        let state = get_ui_state(props.application,'hil_selector_channels',  default_state);
         if( state !== default_state){
             for(let i = 0; i< 6; i++) {
                 props.emulator.select_output(i, parseInt(state[i].value));
@@ -42,7 +41,7 @@ let HilChannelSelector = function (props) {
         set_selected_channels(new_ch);
         forceUpdate();
         props.emulator.select_output(ch_n-1, parseInt(value.value));
-        save_ui_state('hil_selector_channels', new_ch);
+        save_ui_state(props.application,'hil_selector_channels', new_ch);
     }
 
     let render_selectors = () =>{

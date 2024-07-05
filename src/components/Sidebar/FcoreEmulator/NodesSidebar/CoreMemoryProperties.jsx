@@ -16,13 +16,8 @@
 import React, {useReducer} from 'react';
 
 import {Checkbox, InputField, SelectField, SimpleContent} from "../../../UI_elements";
-import {useDispatch, useSelector} from "react-redux";
-import {setSetting} from "../../../../redux/Actions/SettingsActions";
-import {up_application} from "../../../../client_core";
 
 let  CoreMemoryProperties = props =>{
-
-    const settings = useSelector(state => state.settings);
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 

@@ -44,8 +44,6 @@ let get_range = (time) =>{
 
 let  EmulatorProperties = props =>{
 
-    const settings = useSelector(state => state.settings);
-
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     const [range, set_range] = useState("s");

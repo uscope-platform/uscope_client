@@ -27,7 +27,13 @@ let  HilControl = props =>{
         return(
             <UIPanel key="trigger" style={{padding:10}} level="level_2">
                 <SimpleContent name="Trigger and Acquisition" content={
-                    <TriggerControls  onPlay={props.onStart} onPause={props.onPause} onStop={props.onStop} onDownload={handle_download}/>
+                    <TriggerControls
+                        onPlay={props.onStart}
+                        onPause={props.onPause}
+                        onStop={props.onStop}
+                        onDownload={handle_download}
+                        application={props.application}
+                    />
                 }/>
             </UIPanel>
         );

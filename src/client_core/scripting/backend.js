@@ -14,10 +14,12 @@
 // limitations under the License.
 
 import {up_peripheral} from "../data_models/up_peripheral";
+import {__selected_application} from "../index";
 
 export const translate_legacy_registers = (store, registers) => {
     const state = store.getState();
-    const app_peripherals = state.applications[state.settings['application']]['peripherals'];
+
+    const app_peripherals = __selected_application.peripherals;
     const peripherals_specs = state.peripherals;
 
 

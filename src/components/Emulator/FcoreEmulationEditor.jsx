@@ -17,7 +17,6 @@ import React, {useEffect, useState} from 'react';
 
 import EmulatorDiagram from "./EmulatorDiagram";
 import {useDispatch, useSelector} from "react-redux";
-import {setSetting} from "../../redux/Actions/SettingsActions";
 import {download_json, up_emulator} from "../../client_core";
 import {SimpleContent, TabbedContent, UIPanel} from "../UI_elements";
 import CoreInputsList from "./CoreInputsList";
@@ -33,12 +32,9 @@ let FcoreEmulationEditor = function (props) {
 
 
     const emulators_store = useSelector(state => state.emulators);
-    const applications_store = useSelector(state => state.applications);
-    const settings = useSelector(state => state.settings);
 
     const [n_cores, set_n_cores] = useState(0);
 
-    const dispatch = useDispatch();
 
     const [nodes, setNodes] = useState([]);
     const [edges, setEdges] = useState([]);
@@ -116,13 +112,13 @@ let FcoreEmulationEditor = function (props) {
     let handle_run = (args) =>{
         emulator.run().then((results)=>{
             if(results.code && results.code === 7) {
-                dispatch(setSetting(["emulator_compile_warning", null]));
+                props.on_compile_done(null);
                 toast.error(results.error);
             } else if(results.code && results.code === 9){
-                dispatch(setSetting(["emulator_compile_warning", JSON.parse(results.duplicates)['duplicates']]));
+                props.on_compile_done(JSON.parse(results.duplicates)['duplicates']);
                 toast.warn(results.error);
             } else {
-                dispatch(setSetting(["emulator_compile_warning", null]));
+                props.on_compile_done(null);
                 props.onEmulationDone(results);
                 toast.success("Emulation Completed");
             }
@@ -131,7 +127,7 @@ let FcoreEmulationEditor = function (props) {
 
     let handle_deploy = () =>{
         let deploy = true;
-        if(applications_store[settings.application].application_name !== "HIL_base"){
+        if(props.application.application_name !== "HIL_base"){
             if(!window.confirm("This feature is only meant to work with the HIL_base application, do you wish to continue regardless:")){
                 deploy = false;
             }
@@ -140,12 +136,12 @@ let FcoreEmulationEditor = function (props) {
             emulator.deploy().then((ret)=>{
                 if(ret.code && ret.code === 8) {
                     toast.error(ret.error);
-                    dispatch(setSetting(["emulator_compile_warning", null]));
+                    props.on_compile_done(null);
                 } else if(ret.code && ret.code === 9){
-                    dispatch(setSetting(["emulator_compile_warning", "test"]));
+                    props.on_compile_done("test");
                     toast.warn(ret.error);
                 } else {
-                    dispatch(setSetting(["emulator_compile_warning", null]));
+                    props.on_compile_done(null);
                     props.onDeploy();
                     toast.success("HIL correctly deployed");
                 }

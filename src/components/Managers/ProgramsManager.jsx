@@ -110,7 +110,10 @@ let ProgramsManager = props =>{
     let get_tabs_content = ()=>{
         let res = [
             <div key="program_editor">
-                <ProgramsEditor program={selected_program} />
+                <ProgramsEditor
+                    program={selected_program}
+                    application={props.application}
+                />
             </div>
         ]
         if(selected_program.program_type==="C"){
@@ -174,7 +177,10 @@ let ProgramsManager = props =>{
                 </UIPanel>
             </div>
             <div style={{minWidth:"300px"}}>
-                <ProgramSidebar on_select={handle_select}/>
+                <ProgramSidebar
+                    on_select={handle_select}
+                    application={props.application}
+                />
             </div>
         </div>
     );

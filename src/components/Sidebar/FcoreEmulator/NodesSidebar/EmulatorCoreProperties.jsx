@@ -21,7 +21,6 @@ import {useSelector} from "react-redux";
 let  EmulatorCoreProperties = props =>{
 
     const programs = useSelector(state => state.programs);
-    const settings = useSelector(state => state.settings);
 
     const [selected_program, set_selected_program] = useState({label:props.selected_core.program, value:props.selected_core.program});
 

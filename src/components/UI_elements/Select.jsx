@@ -63,7 +63,7 @@ export let  SelectField = props =>{
         };
     }, [ColorTheme])
 
-    const onSelectChange = useCallback(selected => props.onChange(selected), [props.onChange]);
+    const onSelectChange = useCallback((value, event) => props.onChange(value, event), [props.onChange]);
 
     return(
         <SelectWrapper>

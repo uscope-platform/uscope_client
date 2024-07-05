@@ -95,9 +95,17 @@ let  FcoreEmulatorSidebar = props =>{
                 selected_emulator={emulator}
             />
             <WarningsPanel
+                compile_warning={props.compile_warning}
                 enabled={props.selected_component === null}
             />
-            <HilControl onDownloadHilData={props.onDownloadHilData} enabled={props.enable_hil_controls} onStart={on_start} onStop={on_stop} onPause={on_pause}/>
+            <HilControl
+                application={props.application}
+                onDownloadHilData={props.onDownloadHilData}
+                enabled={props.enable_hil_controls}
+                onStart={on_start}
+                onStop={on_stop}
+                onPause={on_pause}
+            />
 
         </>
 

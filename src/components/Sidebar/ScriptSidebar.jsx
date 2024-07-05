@@ -15,34 +15,26 @@
 
 import React, { useReducer} from 'react';
 
-import {useDispatch, useSelector} from "react-redux"
+import {useSelector} from "react-redux"
 
 
-import {up_application, up_script} from "../../client_core";
+import {up_script} from "../../client_core";
 import SidebarBase from "./SidebarBase";
 
 let ScriptSidebar = (props) =>{
 
     const scripts_store = useSelector(state => state.scripts);
-    const applications = useSelector(state => state.applications);
-    const settings = useSelector(state => state.settings);
-
-    const applications_scripts = applications[settings.application].scripts;
-
-    const dispatch = useDispatch();
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     let handleAdd = (id) =>{
-        let app = new up_application(applications[settings.application]);
-        app.add_selected_script(id.toString()).then(()=>{
+        props.application.add_selected_script(id.toString()).then(()=>{
             forceUpdate();
         });
     };
 
     let handleRemove = (deleted) =>{
-        let app = new up_application(applications[settings.application]);
-        app.remove_selected_script(deleted.id.toString()).then();
+        props.application.remove_selected_script(deleted.id.toString()).then();
     };
 
     return(
@@ -50,7 +42,7 @@ let ScriptSidebar = (props) =>{
             objects={scripts_store}
             selection_key="id"
             template={up_script}
-            items_filter={applications_scripts}
+            items_filter={props.application.scripts}
             display_key="name"
             content_name="Script"
             selector="selected_script"

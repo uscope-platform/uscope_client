@@ -13,33 +13,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect} from 'react';
-
-import {useDispatch, useSelector} from "react-redux";
+import React, {useState} from 'react';
 
 import {SelectableList, SimpleContent, UIPanel} from "../UI_elements";
 
 import 'react-tooltip/dist/react-tooltip.css'
 import SideToolbar from "./SideToolbar";
 import {download_json, get_next_id, upload_json} from "../../client_core";
-import {setSetting} from "../../redux/Actions/SettingsActions";
 
 let  SidebarBase = props =>{
 
-    const settings = useSelector(state => state.settings);
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        return() =>{
-            dispatch(setSetting([props.selector, null]));
-        }
-    },[dispatch]);
+    const [selected, set_selected] = useState(null);
 
     let selected_item = props.initial_value ? {[props.display_key]:props.initial_value.value}: {[props.display_key]:""};
     let export_enabled = false;
-    if(settings[props.selector]  ){
+    if(selected){
         export_enabled = true;
-        selected_item = props.objects[settings[props.selector]];
+        selected_item = props.objects[selected];
     }
 
     let handleAdd = (content) => {
@@ -56,7 +46,7 @@ let  SidebarBase = props =>{
         let deleted = Object.values(props.objects).filter((obj)=>{
             return obj[props.display_key] === key;
         })[0];
-        dispatch(setSetting([props.selector, null]));
+        set_selected(null);
         props.template.delete(deleted).then((args) =>{
             if(props.onDelete){
                 props.onDelete(deleted);
@@ -135,11 +125,11 @@ let  SidebarBase = props =>{
     const [names, types] = get_content();
 
     let handleSelect = (selection) =>{
-        if(settings[props.selector] !==selection){
+        if(selected !==selection){
             let sel_item = Object.values(props.objects).filter((item)=>{
                 return item[props.display_key] === selection;
             })[0];
-            dispatch(setSetting([props.selector, sel_item[props.selection_key].toString()]));
+            set_selected(sel_item[props.selection_key].toString());
             if(props.onSelect) props.onSelect(sel_item[props.selection_key]);
         }
     };

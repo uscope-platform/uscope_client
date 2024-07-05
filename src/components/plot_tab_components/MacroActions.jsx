@@ -16,8 +16,6 @@
 import React from 'react';
 
 import {Button} from "../UI_elements"
-import {useSelector} from "react-redux";
-
 import styled from "styled-components";
 
 import {run_script, up_peripheral} from "../../client_core";
@@ -34,14 +32,9 @@ const ButtonGrid = styled.div`
 
 let  MacroActions = props =>{
 
-    const applications = useSelector(state => state.applications)
-    const settings = useSelector(state => state.settings);
-    const actions = applications[settings['application']]['macro'];
-    let parameters = applications[settings["application"]].parameters;
-
     let onClick = (event) => {
         let trigger_str = event.target.name;
-        let bulk_registers = run_script(store, trigger_str, parameters, "");
+        let bulk_registers = run_script(store, trigger_str, props.parameters, "");
         if(bulk_registers !== null){
             up_peripheral.bulk_register_write({payload: bulk_registers}).then();
         }
@@ -49,7 +42,7 @@ let  MacroActions = props =>{
 
     return(
         <ButtonGrid>
-            {actions.map((macro) => {
+            {props.macro.map((macro) => {
                 return(
                     <div key={macro.name} style={{margin:'0.5rem'}}>
                         <Button key={macro.name} className="macro_action_buttons" name={macro.trigger} onClick={onClick}>{macro.name}</Button>

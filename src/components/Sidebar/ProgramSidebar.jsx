@@ -16,7 +16,7 @@
 import React, {useReducer} from 'react';
 
 import {useSelector} from "react-redux";
-import {up_application, up_program} from "../../client_core";
+import {up_program} from "../../client_core";
 
 import SidebarBase from "./SidebarBase";
 
@@ -24,27 +24,20 @@ import SidebarBase from "./SidebarBase";
 let  ProgramSidebar = props =>{
 
     const programs_store = useSelector(state => state.programs);
-    const settings = useSelector(state => state.settings);
-    const applications = useSelector(state => state.applications);
-    const applications_programs = applications[settings.application].programs;
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
-
     let handleAdd = (id) =>{
-        let app = new up_application(applications[settings.application]);
-        app.add_selected_program(id.toString()).then(()=>{
+        props.application.add_selected_program(id.toString()).then(()=>{
             forceUpdate();
         });
     };
 
     let handleRemove = (deleted) =>{
-        let app = new up_application(applications[settings.application]);
-        app.remove_selected_program(deleted.id.toString()).then();
+        props.application.remove_selected_program(deleted.id.toString()).then();
     };
     let handle_import_done = (obj) =>{
-        let app = new up_application(applications[settings.application]);
-        app.add_selected_program(obj.id.toString()).then();
+        props.application.add_selected_program(obj.id.toString()).then();
         forceUpdate();
     }
 
@@ -53,7 +46,7 @@ let  ProgramSidebar = props =>{
             objects={programs_store}
             selection_key="id"
             template={up_program}
-            items_filter={applications_programs}
+            items_filter={props.application.programs}
             display_key="name"
             content_name="Program"
             selector="selected_program"

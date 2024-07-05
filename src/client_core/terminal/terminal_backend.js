@@ -16,8 +16,9 @@
 import {script_register_access_log, scripting_engine_peripherals} from "../scripting/script_runner";
 import {translate_registers} from "../scripting/backend";
 import {up_peripheral} from "../data_models/up_peripheral";
-import {store, up_application, up_program} from "../index";
+import {__selected_application, store, up_application, up_program} from "../index";
 import {get_version} from "../proxy/platform";
+
 
 export const terminal_backend = {
     write: (args) =>{
@@ -164,8 +165,8 @@ export const terminal_backend = {
             })
         }
         selected_program = new up_program(selected_program);
-        let application = new up_application(state.applications[state.settings['application']]);
-        let core = application.soft_cores.filter((core)=>{
+
+        let core = __selected_application.soft_cores.filter((core)=>{
             return core.id === args[1];
         })[0];
         if(core.length === 0){

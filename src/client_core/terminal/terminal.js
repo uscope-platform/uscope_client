@@ -57,7 +57,6 @@ export const init_terminal = () => {
     return terminal;
 };
 
-
 export const prefix = (words) => {
 
     if (!words[0] || words.length ===  1) return words[0] || "";

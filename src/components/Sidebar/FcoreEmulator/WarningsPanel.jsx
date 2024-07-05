@@ -14,19 +14,15 @@
 // limitations under the License.
 
 import React from 'react';
-import {useSelector} from "react-redux";
 import {SimpleContent, UIPanel} from "../../UI_elements";
 
 let  WarningsPanel = props =>{
 
-    const settings = useSelector(state => state.settings);
-
-
-    if(settings.emulator_compile_warning && props.enabled){
+    if(props.compile_warning && props.enabled){
 
         let print_warnings = (names, icons) =>{
             let ret = []
-            settings.emulator_compile_warning.map((item)=>{
+            props.compile_warning.map((item)=>{
 
                 let warning_string = item[0].source + "." + item[0].name + "[" + item[0].address + "]";
                 ret.push(

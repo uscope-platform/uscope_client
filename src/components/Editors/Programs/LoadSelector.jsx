@@ -24,23 +24,19 @@ import {useSelector} from "react-redux";
 
 
 let LoadSelector = props =>{
-    const applications_store = useSelector(state => state.applications);
-    const settings = useSelector(state => state.settings);
-
-    let selected_application = applications_store[settings.application];
     let [selected, set_selected] = useState("");
 
     let onMouseEnter = (name) =>{
         set_selected(name);
     }
     let onClick = () =>{
-        let core = Object.values(selected_application.soft_cores).filter((core)=>{
+        let core = Object.values(props.application.soft_cores).filter((core)=>{
             return selected===core.id;
         })[0];
-        props.onLoad(core, selected_application);
+        props.onLoad(core, props.application);
     }
     let renderCoresList = () =>{
-        let cores_list = Object.values(selected_application.soft_cores).map((core)=>{
+        let cores_list = Object.values(props.application.soft_cores).map((core)=>{
             return <SelectableListItem onSelect={onClick} onMouseEnter={onMouseEnter}  icon={<MdMemory style={{marginTop:"auto", marginBottom:"auto"}}/>} key={core.id} selected={selected===core.id} name={core.id}/>
         })
         return(cores_list)

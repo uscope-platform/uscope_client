@@ -28,10 +28,6 @@ import {MdPerson} from "react-icons/md";
 
 let  PlatformSidebar = props =>{
 
-    const location = useLocation();
-    const settings = useSelector(state => state.settings);
-    const dispatch = useDispatch()
-
     const [users, setUsers] = useState([])
     const [refreshList, setRefreshList] = useState(false)
 
@@ -39,7 +35,7 @@ let  PlatformSidebar = props =>{
         get_users_list().then((response)=>{
             setUsers(response)
         })
-    },[dispatch, location, settings.refresh_user_view, refreshList])
+    },[props.view_version, refreshList])
 
     let handleRemoveUser = (username) =>{
         remove_user({user:username}).then((response)=>{

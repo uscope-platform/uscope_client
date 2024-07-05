@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from 'react';
+import React, {useReducer, useState} from 'react';
 
 import {useDispatch, useSelector} from "react-redux"
 import {
@@ -25,7 +25,6 @@ import {
     SelectField, ColorTheme
 } from "../UI_elements"
 
-import {setSetting} from "../../redux/Actions/SettingsActions";
 import {add_user, do_onboarding, dump_database, restore_database, upload_json} from "../../client_core";
 import { MdDownload, MdUpload} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
@@ -34,31 +33,26 @@ import PlatformSidebar from "../Sidebar/PlatformSidebar";
 
 let  PlatformManager = props =>{
 
-    const settings = useSelector(state => state.settings);
-    const dispatch = useDispatch()
-
     const [selected_user, set_selected_user] = useState();
-    
+    const [view_version, bump_user_version] = useReducer(x=>x+1, 0);
     
     let handle_select = (user) =>{
         set_selected_user(user);
     }
     
-    let handle_add_user = (event) =>{
+    let handle_add_user = async (event) =>{
 
         event.preventDefault();
         let username = event.target.user.value;
         let pass = event.target.pass.value;
         let role = event.target.role.value;
         if(props.onboarding){
-            do_onboarding({user:username,password:pass, role:role}).then(res =>{
-                dispatch(setSetting(["refresh_user_view", !settings.refresh_user_view]));
-            })
+            await do_onboarding({user:username,password:pass, role:role});
+            bump_user_version();
             props.onboarding_done();
         } else{
-            add_user({user:username,password:pass, role:role}).then(res =>{
-                dispatch(setSetting(["refresh_user_view", !settings.refresh_user_view]));
-            })
+            await add_user({user:username,password:pass, role:role});
+            bump_user_version();
         }
 
     };
@@ -130,7 +124,11 @@ let  PlatformManager = props =>{
                 }/>
             </UIPanel>
             <div style={{minWidth:"300px", height:"100%"}}>
-                <PlatformSidebar  user={selected_user} on_select={handle_select}/>
+                <PlatformSidebar
+                    user={selected_user}
+                    on_select={handle_select}
+                    view_version={view_version}
+                />
             </div>
         </div>
 

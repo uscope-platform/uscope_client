@@ -19,6 +19,7 @@ import {up_peripheral} from "../data_models/up_peripheral";
 import {context_cleaner, parseFunction} from "./frontend";
 import {translate_legacy_registers, translate_registers} from "./backend";
 import {set_write_callback} from "../data_models/register_proxy";
+import {__selected_application} from "../index";
 
 export let scripting_engine_peripherals = {}
 export let script_register_access_log = [];
@@ -88,9 +89,8 @@ export const run_script = (store, trigger_string, parameters, current_parameter)
 };
 
 export const run_parameter_script = (store, parameter) => {
-    const state = store.getState();
-    const settings = state.settings;
-    let parameters = state.applications[state.settings['application']].parameters;
+
+    let parameters = __selected_application.parameters;
 
     let floatValue = parseFloat(parameter.value);
     let objIndex = parameters.findIndex((obj => obj.parameter_id === parameter.name));
@@ -102,7 +102,7 @@ export const run_parameter_script = (store, parameter) => {
         let bulk_registers = run_script(store, parameters[objIndex].trigger, parameters,  parameter.name);
 
         //update value of parameter in redux
-        store.dispatch(saveParameter({name:parameter.name, value:floatValue, app:settings["application"]}))
+        store.dispatch(saveParameter({name:parameter.name, value:floatValue, app:__selected_application.id}))
 
         if(bulk_registers !== null && bulk_registers.length !== 0){
             return up_peripheral.bulk_register_write({payload: bulk_registers}).then();

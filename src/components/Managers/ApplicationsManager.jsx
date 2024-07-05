@@ -438,7 +438,10 @@ let  ApplicationsManager = props =>{
                                selected={selectedTab} onSelect={set_selectedTab}/>
             </UIPanel>
             <div style={{minWidth:"300px"}}>
-                <ApplicationSidebar on_select={handle_select}/>
+                <ApplicationSidebar
+                    on_select={handle_select}
+                    application={selected_app}
+                />
             </div>
         </div>
     );

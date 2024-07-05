@@ -1,7 +1,5 @@
 import {applyMiddleware, combineReducers, createStore} from "redux";
 import BitstreamsReducer from "../../../src/redux/Reducers/bitstreamsReducer";
-import settingsReducer from "../../../src/redux/Reducers/settingsReducer";
-import plotReducer from "../../../src/redux/Reducers/plotReducer";
 import registerValuesReducer from "../../../src/redux/Reducers/registerReducer";
 import PeripheralsReducer from "../../../src/redux/Reducers/PeripheralsReducer";
 import ApplicationsReducer from "../../../src/redux/Reducers/applicationsReducer";
@@ -301,7 +299,6 @@ const rootReducer = (state, action) => {
 
 export const mock_reducer = combineReducers({
     bitstreams:BitstreamsReducer,
-    settings : settingsReducer,
     registerValues: registerValuesReducer,
     peripherals:PeripheralsReducer,
     applications : ApplicationsReducer,

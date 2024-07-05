@@ -27,6 +27,7 @@ let HilView = function (props) {
     let [selected_iom, set_selected_iom] = useState(null);
     let [selected_tab, set_selected_tab] = useState(0);
     let [emulator_selector, set_selected_emulator] = useState(null);
+    let [compiler_warnings, set_compiler_warnings] = useState(null);
 
     let [hil_plot_running, set_hil_plot_running] = useState(false);
     let [download_data_request, set_download_data_request] = useState(null);
@@ -65,6 +66,7 @@ let HilView = function (props) {
             <UIPanel style={{flexGrow:1}} key="emulator_diagram" level="level_2">
                 <TabbedContent height="100%" names={["Emulation setup", "Emulation Results", "Hil Scope"]} contents={[
                     <FcoreEmulationEditor
+                        application={props.application}
                         onEmulationDone={set_emulation_results}
                         onInputDataChange={set_input_data}
                         onDeploy={()=>{set_deployed(true)}}
@@ -73,9 +75,11 @@ let HilView = function (props) {
                         on_iom_select={handle_iom_select}
                         selected_component={selected_component}
                         selected_iom={selected_iom}
+                        on_compile_done={set_compiler_warnings}
                     />,
                     <EmulationResults results={emulation_results} inputs={input_data}/>,
                     <HilPlotTab
+                        application={props.application}
                         deployed={deployed}
                         emulator_selector={emulator_selector}
                         hil_plot_running={hil_plot_running}
@@ -86,6 +90,7 @@ let HilView = function (props) {
             </UIPanel>
             <div style={{height:"100%"}}>
                 <FcoreEmulatorSidebar
+                    application={props.application}
                     selected_component={selected_component}
                     on_select={handle_emulator_select}
                     on_iom_modify={handle_iom_select}
@@ -96,6 +101,7 @@ let HilView = function (props) {
                     on_plot_status_update={set_hil_plot_running}
                     hil_plot_running={hil_plot_running}
                     onDownloadHilData={set_download_data_request}
+                    compile_warning={compiler_warnings}
                 />
             </div>
         </div>

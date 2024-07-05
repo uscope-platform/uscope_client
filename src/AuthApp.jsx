@@ -27,7 +27,7 @@ import ApplicationChooser from "./components/AppChooser";
 //////  STYLE IMPORTS
 import './App.css';
 
-import {initialize_scripting_engine, refresh_caches, up_application} from "./client_core";
+import {initialize_scripting_engine, refresh_caches, setup_client_core, up_application} from "./client_core";
 import {Routes} from "react-router";
 import {addApplication} from "./redux/Actions/applicationActions";
 
@@ -43,18 +43,18 @@ let admin_views =["Peripherals", "Platform", "Settings"];
 
 let AuthApp = (props) =>{
 
-    const settings = useSelector(state => state.settings);
     const peripherals = useSelector(state => state.peripherals);
     const applications = useSelector(state => state.applications);
 
     const [views, set_views] = useState([]);
 
     const [app_stage, set_app_stage] = useState("WAITING");
+    const [application, set_application] = useState(null);
 
-
-    const selected_application = settings.application ? new up_application(applications[settings.application]) : null;
-
-    let app_choice_done = ()=>{
+    let app_choice_done = (application)=>{
+        let app = new up_application(applications[application]);
+        set_application(app);
+        setup_client_core(app);
         populate_views();
         set_app_stage("NORMAL");
     };
@@ -83,9 +83,9 @@ let AuthApp = (props) =>{
     },[props.needs_onboarding])
 
     useEffect(()=>{
-        if(settings.application)
-            initialize_scripting_engine(applications[settings.application], peripherals)
-    }, [settings.application, peripherals, applications])
+        if(application)
+            initialize_scripting_engine(application, peripherals)
+    }, [application, peripherals])
 
     let construct_routes = () =>{
         let routes = [];
@@ -94,7 +94,7 @@ let AuthApp = (props) =>{
             if(v!=='scope'){
                 route += views[v].type;
             }
-            routes.push(<Route key={views[v].type} path={route} element={<TabContent className="main_content_tab"  application={selected_application} tab={views[v]}/>}/>,)
+            routes.push(<Route key={views[v].type} path={route} element={<TabContent className="main_content_tab"  application={application} tab={views[v]}/>}/>,)
         }
 
         return(routes);

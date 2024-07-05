@@ -52,6 +52,7 @@ let  PlotSidebar = props =>{
                         showAcquisitionStatus
                         onPlay={handle_play}
                         onPause={handle_pause}
+                        application={props.application}
                         onDownload={()=>{
                             props.on_download(download_req);
                             bump_download_req();

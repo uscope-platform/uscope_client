@@ -16,9 +16,6 @@
 import React, {useReducer} from 'react';
 
 import {InputField, SelectField, SimpleContent} from "../../../UI_elements";
-import {useDispatch, useSelector} from "react-redux";
-import {setSetting} from "../../../../redux/Actions/SettingsActions";
-
 let  CoreInputProperties = props =>{
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);

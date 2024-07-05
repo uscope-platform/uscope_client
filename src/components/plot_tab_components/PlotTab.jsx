@@ -130,12 +130,17 @@ let PlotTab = function (props) {
                     }}>
                         <UIPanel style={{flexGrow: 0.4}} key="parameters" level="level_2">
                             <SimpleContent name="Parameters" content={
-                                <ParametersArea/>
+                                <ParametersArea
+                                    parameters={props.application.parameters}
+                                />
                             }/>
                         </UIPanel>
                         <UIPanel style={{flexGrow: 1}} key="macro" level="level_2">
                             <SimpleContent name="Macro" content={
-                                <MacroActions/>
+                                <MacroActions
+                                    parameters={props.application.parameters}
+                                    macro={props.application.macro}
+                                />
                             }/>
                         </UIPanel>
                     </div>

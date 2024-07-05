@@ -36,14 +36,22 @@ let TabContent = props => {
             application={props.application}
         />,
         bitstreams: <BitstreamManager />,
-        scripts: <ScriptManager />,
+        scripts: <ScriptManager
+            application={props.application}
+        />,
         peripherals:<PeripheralsManager />,
         applications: <ApplicationsManager selected_item={props.selected_item}/>,
-        programs: <ProgramsManager />,
+        programs: <ProgramsManager
+            application={props.application}
+        />,
         platform: <PlatformManager />,
         filters: <FilterManager />,
-        emulator:<HilView/>,
-        settings:<SettingsView/>
+        emulator:<HilView
+            application={props.application}
+        />,
+        settings:<SettingsView
+            application={props.application}
+        />
     };
 
 

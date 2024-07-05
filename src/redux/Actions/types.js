@@ -18,8 +18,6 @@ export const SAVE_PARAMETER =  'SEND_PARAMETER';
 //                   REGISTERS ACTIONS
 export const LOAD_REGISTERS = 'LOAD_REGISTERS';
 export const SEND_REGISTER = 'SEND_REGISTER';
-//                   GENERAL SETTINGS ACTIONS
-export const SET_SETTING = 'SET_SETTING';
 //                   SCRIPTS ACTIONS
 export const ADD_SCRIPT = "ADD_SCRIPT";
 export const REMOVE_SCRIPT = "REMOVE_SCRIPT";

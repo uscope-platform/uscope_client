@@ -17,8 +17,6 @@
 import React from 'react';
 //       REDUX IMPORTS
 import {useDispatch, useSelector} from "react-redux";
-import {setSetting} from "../redux/Actions/SettingsActions";
-
 
 import ApplicationChooserView from "./Common_Components/ApplicationChooserView";
 
@@ -32,8 +30,6 @@ import 'react-toastify/dist/ReactToastify.css';
 let ApplicationChooser = (props) =>{
 
     const applications = useSelector(state => state.applications);
-    const dispatch = useDispatch();
-
 
     let handleApplicationChosen = async e =>{
         let app = new up_application(applications[e]);
@@ -43,12 +39,10 @@ let ApplicationChooser = (props) =>{
                 toast.error("LOADING FAILED FOR THE FOLLOWING CORES: " + failures.join(", "));
                 return;
             }
-            dispatch(setSetting(["current_application", e]));
         }catch (error){
             console.log("Error: error while choosing application");
         }
-        dispatch(setSetting(["application", e]));
-        props.choice_done();
+        props.choice_done(e);
     };
 
     return (

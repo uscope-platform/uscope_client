@@ -39,13 +39,20 @@ export {up_emulator} from './data_models/up_emulator'
 export {application_diff_engine} from './data_models/diff_engine'
 //filter
 export {filter_calculate_keepouts} from './filters/filter_preview'
+
 export let store = null;
+export let __selected_application = null;
 
 export {import_application, import_peripherals} from './data_handling/import'
 export {get_next_id} from './utilities/id_management'
 export {download_json, download_plot} from './utilities/downloads'
 export {upload_json, upload_raw} from './utilities/uploads'
 export {get_channel_number_from_id, get_channels_from_group, create_plot_channel, initialize_plot} from "./plot_handling";
+
 export const set_redux_store = (rs) => {
     store = rs;
+}
+
+export const setup_client_core = (app) => {
+    __selected_application = app;
 }

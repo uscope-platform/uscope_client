@@ -34,19 +34,14 @@ let SettingsView = function (props) {
         application_name:""
     };
 
-
-    const settings = useSelector(state => state.settings);
-    const applications = useSelector(state => state.applications);
-
-    const selected_app = settings.current_application ?applications[settings.current_application]: {};
+    const selected_app = props.application ? props.application: {};
 
     const hil_present = selected_app.application_name === "HIL_base";
 
     let handle_edit_clocks = async (event) =>{
 
         if(event.key==="Enter"|| event.key ==="Tab"){
-            let app = new up_application(selected_app);
-            await app.edit_clock_frequency(event.target.name.replace("fclk_", ""), parseFloat(event.target.value))
+            await props.application.edit_clock_frequency(event.target.name.replace("fclk_", ""), parseFloat(event.target.value))
             props.forceUpdate();
         }
     }

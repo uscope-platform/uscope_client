@@ -22,14 +22,10 @@ import {run_parameter_script} from "../../client_core";
 import store from "../../store";
 
 let  ParametersArea = props =>{
-    const applications = useSelector(state => state.applications)
-    const settings = useSelector(state => state.settings);
-
-    let parameters = applications[settings["application"]].parameters;
 
     //This effect hook initializes the parameters values
     useEffect(() => {
-        for(let elem of parameters){
+        for(let elem of props.parameters){
             let local_elem = elem;
             local_elem.name = elem.parameter_id;
             run_parameter_script(store, local_elem);
@@ -51,7 +47,7 @@ let  ParametersArea = props =>{
         <form onSubmit={handleSubmit}>
             <FormLayout>
                     {
-                        parameters.map((param, i) => {
+                        props.parameters.map((param, i) => {
                             if(param.visible){
                                 return(
                                     <SingleValueField key={i} name={param.parameter_id} placeholder={param.value} description={param.description}/>
