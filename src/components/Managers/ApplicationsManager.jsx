@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useReducer, useState} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 
 import {useSelector} from "react-redux"
 
@@ -70,7 +70,7 @@ let  ApplicationsManager = props =>{
     }
 
     const calculate_selected_scripts = () =>{
-        return selected_app.scripts.map((scr)=>{
+        return  selected_app.scripts.map((scr)=>{
             if(scripts.hasOwnProperty(scr)){
                 return scripts[scr].name;
             }
@@ -108,6 +108,12 @@ let  ApplicationsManager = props =>{
     const [selected_programs, set_selected_programs] = useState(calculate_selected_programs())
     let [available_programs,set_available_programs] = useState(calculate_available_programs(selected_programs));
 
+    useEffect(() => {
+        set_selected_scripts(calculate_selected_scripts());
+        set_available_scripts(calculate_available_scripts(selected_scripts));
+        set_selected_programs(calculate_selected_programs());
+        set_available_programs(calculate_available_programs(selected_programs));
+    }, [selected_app]);
 
     let add_content = (name, type) =>{
         switch (type) {
