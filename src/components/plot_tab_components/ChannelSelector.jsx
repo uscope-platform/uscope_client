@@ -17,7 +17,7 @@ import React from 'react';
 
 import ChannelSelectorItem from "./ChannelSelectorItem";
 
-import {set_channel_status, get_channel_number_from_id} from "../../client_core";
+import {get_channel_number_from_id} from "../../client_core";
 
 let ChannelSelector = function(props) {
 
@@ -34,7 +34,6 @@ let ChannelSelector = function(props) {
         let new_state = get_state();
         let channel_number = get_channel_number_from_id(status.id, props.data);
         new_state[parseInt(channel_number)] = status.status;
-        set_channel_status(new_state);
         props.on_channel_status_change(new_state);
 
     }

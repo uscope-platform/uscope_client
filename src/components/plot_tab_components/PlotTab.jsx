@@ -39,8 +39,9 @@ let PlotTab = function (props) {
     let [acquisition_status, set_acquisition_status] = useState("wait");
 
 
-    const handle_group_change = (group) =>{
+    const handle_group_change = async (group) =>{
         let channels = get_channels_from_group(group, props.application.channels);
+
         let ch_obj = [];
         for(let item of channels){
             ch_obj.push(create_plot_channel(item))
@@ -48,9 +49,11 @@ let PlotTab = function (props) {
         set_external_data(ch_obj);
         bump_ext_revision();
         set_selected_group(group.group_name);
+        await props.application.change_scope_channel_group(group);
+
     }
 
-    let handle_channel_status_change = (new_state) => {
+    let handle_channel_status_change = async (new_state) => {
         set_external_data(update_plot_status(external_data, new_state));
         let palette = [];
         for(let item in new_state){
@@ -60,6 +63,7 @@ let PlotTab = function (props) {
         }
         set_plot_palette({colorway: palette});
         bump_ext_revision();
+        await props.application.setup_scope_statuses(new_state);
     }
 
     useInterval(async () => {

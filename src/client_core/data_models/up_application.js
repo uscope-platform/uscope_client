@@ -13,13 +13,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {get_channels_from_group, set_scaling_factors, store, up_peripheral, up_program} from "../index";
+import {
+    get_channels_from_group,
+    set_channel_status,
+    set_scaling_factors,
+    store,
+    up_peripheral,
+    up_program
+} from "../index";
 import {backend_get, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
 import {addApplication, removeApplication} from "../../redux/Actions/applicationActions";
-import  objectHash from "object-hash";
 import {set_scope_address} from "../proxy/plot";
-import {setSetting} from "../../redux/Actions/SettingsActions";
 
 
 export class up_application {
@@ -88,25 +93,11 @@ export class up_application {
     setup_scope = async () =>{
 
         let [channels, ] = this.get_scope_setup_info();
-        if(this.miscellaneous.scope_mux_address){
-            for(let item of channels){
-                if(item){
-                    let channel_address = parseInt(this.miscellaneous.scope_mux_address) + 4*(parseInt(item.number)+1);
-                    await up_peripheral.direct_register_write([[channel_address, parseInt(item.mux_setting)]])
-                }
-            }
-            await set_scope_address({address:parseInt(this.miscellaneous.scope_mux_address), dma_buffer_offset:0x208})
-        }
+        await this.setup_scope_mux(channels);
+        await this.setup_scaling_factors(channels);
+        await this.setup_scope_statuses(this.get_channel_statuses(channels));
+        await set_scope_address({address:parseInt(this.miscellaneous.scope_mux_address), dma_buffer_offset:0x208})
 
-        if(channels.length !== 0){
-            let sfs = Array(6).fill(1);
-            for(let item of channels){
-                if(item.scaling_factor){
-                    sfs[parseInt(item.number)] = parseFloat(item.scaling_factor);
-                }
-            }
-            await set_scaling_factors(sfs);
-        }
     }
 
     load_irv = () =>{
@@ -169,6 +160,13 @@ export class up_application {
         return [channels_list, default_group]
     }
 
+    get_channel_statuses = (channels)=>{
+        let statuses = {};
+        for(let item of channels){
+            statuses[item.number] = item.enabled;
+        }
+        return statuses;
+    }
 
     get_default_channel_group = () =>{
         let default_group = {}
@@ -189,6 +187,40 @@ export class up_application {
                 }
             }
         }
+    }
+
+
+    change_scope_channel_group = async (group) =>{
+        let channels = get_channels_from_group(group, this.channels);
+        await this.setup_scope_mux(channels);
+        await this.setup_scaling_factors(channels);
+        await this.setup_scope_statuses(this.get_channel_statuses(channels));
+    };
+
+    setup_scaling_factors = async (channels) =>{
+        let sfs = Array(6).fill(1);
+
+        for(let item of channels){
+            if(item.scaling_factor){
+                sfs[parseInt(item.number)] = parseFloat(item.scaling_factor);
+            }
+        }
+
+        await set_scaling_factors(sfs);
+    }
+
+    setup_scope_statuses = async (statuses) =>{
+        await set_channel_status(statuses);
+    }
+
+    get_group_by_name = (group_name) =>{
+        let group = []
+        for(let item of this.channel_groups){
+            if(item.group_name === group_name) {
+                group = item;
+            }
+        }
+        return group;
     }
 
     add_channel = (ch_name) =>{
