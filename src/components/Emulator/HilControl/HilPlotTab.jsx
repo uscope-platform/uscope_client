@@ -69,7 +69,6 @@ let HilPlotTab = function (props) {
                    <UIPanel key="hil_channel_selector" style={{flexGrow:1}}  level="level_2">
                        <SimpleContent name="Channel Selector" height="100%" content={
                            <HilChannelSelector
-                               application={props.application}
                                emulator={emulator}
                            />
                        }/>

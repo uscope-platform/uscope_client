@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect, useReducer, useState} from 'react';
+import React, {useContext, useEffect, useReducer, useState} from 'react';
 import Plotly from 'plotly.js-basic-dist';
 import createPlotlyComponent from 'react-plotly.js/factory';
 
@@ -21,6 +21,7 @@ import {PlotConfigurations} from "../UI_elements";
 import {download_plot, initialize_plot} from "../../client_core";
 import {update_plot_data} from "../../client_core/plot_handling";
 import useInterval from "../Common_Components/useInterval";
+import {ApplicationContext} from "../../AuthApp";
 
 const Plot = createPlotlyComponent(Plotly);
 
@@ -28,16 +29,18 @@ const Plot = createPlotlyComponent(Plotly);
 
 let  PlotComponent = props =>{
 
+    const application = useContext(ApplicationContext);
+
     const [plot_data, set_plot_data] = useState([]);
     const [data_revision, bump_revision] = useReducer(x => x + 1, 1);
 
     const [acquisition_counter, set_acquisition_counter] = useState(0);
 
     useEffect(()=>{
-        let data = initialize_plot(props.application);
+        let data = initialize_plot(application);
         set_plot_data(data);
         props.on_data_init(data);
-    }, [props.application])
+    }, [application])
 
     useEffect(()=>{
         if(plot_data.length > 0){

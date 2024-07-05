@@ -13,27 +13,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useContext, useState} from 'react';
 
 import {FormLayout,SelectField} from "../../UI_elements";
+import {ApplicationContext} from "../../../AuthApp";
 
 
 let  EnablesProperties = props =>{
 
-    let default_group = props.application.get_default_channel_group().group_name;
+    const application = useContext(ApplicationContext);
+
+    let default_group = application.get_default_channel_group().group_name;
     const [selected, set_selected] = useState({label:default_group, value:default_group});
 
-    const group_options = props.application.channel_groups.map((group,i) => (
+    const group_options = application.channel_groups.map((group,i) => (
         {label:group.group_name, value:group.group_name}
     ));
 
     let handleChGroupChange = useCallback((object) => {
 
         set_selected(object);
-        let group = props.application.get_group_by_name(object.value)
+        let group = application.get_group_by_name(object.value)
         props.on_group_change(group)
 
-    }, [props.application.channel_groups]);
+    }, [application.channel_groups]);
 
     return (
         <div style={{padding:"1rem"}}>

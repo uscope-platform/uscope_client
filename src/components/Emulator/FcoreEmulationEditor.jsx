@@ -13,10 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import EmulatorDiagram from "./EmulatorDiagram";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {download_json, up_emulator} from "../../client_core";
 import {SimpleContent, TabbedContent, UIPanel} from "../UI_elements";
 import CoreInputsList from "./CoreInputsList";
@@ -26,10 +26,12 @@ import CoreInputFilesList from "./CoreInputFilesList";
 
 import {ToastContainer, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import {ApplicationContext} from "../../AuthApp";
 
 
 let FcoreEmulationEditor = function (props) {
 
+    const application = useContext(ApplicationContext);
 
     const emulators_store = useSelector(state => state.emulators);
 
@@ -127,7 +129,7 @@ let FcoreEmulationEditor = function (props) {
 
     let handle_deploy = () =>{
         let deploy = true;
-        if(props.application.application_name !== "HIL_base"){
+        if(application.application_name !== "HIL_base"){
             if(!window.confirm("This feature is only meant to work with the HIL_base application, do you wish to continue regardless:")){
                 deploy = false;
             }

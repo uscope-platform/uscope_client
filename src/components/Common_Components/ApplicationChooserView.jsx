@@ -16,9 +16,7 @@
 import React, {useState} from 'react';
 
 import {Button, SelectField} from "../UI_elements"
-import {useSelector} from "react-redux";
 import styled from "styled-components";
-import app from "../../App";
 
 
 const ComponentLayout = styled.div`
@@ -33,10 +31,7 @@ const Centering = styled.div`
 
 let ApplicationChooserView = props =>{
 
-    const applications = useSelector(state => state.applications);
-    const ppp = useSelector(state => state.peripherals);
-
-    let apps_list = Object.entries(applications).map((application,i) => ({
+    let apps_list = Object.entries(props.applications).map((application,i) => ({
         value:parseInt(application[0]),
         label:application[1].application_name
     }))
@@ -45,7 +40,7 @@ let ApplicationChooserView = props =>{
 
     let default_app = last_app ? {
         value:parseInt(last_app),
-        label:applications[parseInt(last_app)].application_name
+        label:props.applications[parseInt(last_app)].application_name
     }:apps_list[0];
 
     const [selected, set_selected] = useState(default_app);

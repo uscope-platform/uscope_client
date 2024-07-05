@@ -13,28 +13,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { useReducer} from 'react';
+import React, {useContext, useReducer} from 'react';
 
 import {useSelector} from "react-redux"
 
 
 import {up_script} from "../../client_core";
 import SidebarBase from "./SidebarBase";
+import {ApplicationContext} from "../../AuthApp";
 
 let ScriptSidebar = (props) =>{
+
+    const application = useContext(ApplicationContext);
 
     const scripts_store = useSelector(state => state.scripts);
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     let handleAdd = (id) =>{
-        props.application.add_selected_script(id.toString()).then(()=>{
+        application.add_selected_script(id.toString()).then(()=>{
             forceUpdate();
         });
     };
 
     let handleRemove = (deleted) =>{
-        props.application.remove_selected_script(deleted.id.toString()).then();
+        application.remove_selected_script(deleted.id.toString()).then();
     };
 
     return(
@@ -42,7 +45,7 @@ let ScriptSidebar = (props) =>{
             objects={scripts_store}
             selection_key="id"
             template={up_script}
-            items_filter={props.application.scripts}
+            items_filter={application.scripts}
             display_key="name"
             content_name="Script"
             selector="selected_script"

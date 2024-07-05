@@ -99,7 +99,6 @@ let  FcoreEmulatorSidebar = props =>{
                 enabled={props.selected_component === null}
             />
             <HilControl
-                application={props.application}
                 onDownloadHilData={props.onDownloadHilData}
                 enabled={props.enable_hil_controls}
                 onStart={on_start}

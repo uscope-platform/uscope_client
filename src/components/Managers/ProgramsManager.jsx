@@ -112,7 +112,6 @@ let ProgramsManager = props =>{
             <div key="program_editor">
                 <ProgramsEditor
                     program={selected_program}
-                    application={props.application}
                 />
             </div>
         ]
@@ -179,7 +178,6 @@ let ProgramsManager = props =>{
             <div style={{minWidth:"300px"}}>
                 <ProgramSidebar
                     on_select={handle_select}
-                    application={props.application}
                 />
             </div>
         </div>

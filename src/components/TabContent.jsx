@@ -33,25 +33,16 @@ let TabContent = props => {
     let components_associations = {
         scope:<PlotTab
             content={props.tab}
-            application={props.application}
         />,
         bitstreams: <BitstreamManager />,
-        scripts: <ScriptManager
-            application={props.application}
-        />,
+        scripts: <ScriptManager/>,
         peripherals:<PeripheralsManager />,
         applications: <ApplicationsManager selected_item={props.selected_item}/>,
-        programs: <ProgramsManager
-            application={props.application}
-        />,
+        programs: <ProgramsManager/>,
         platform: <PlatformManager />,
         filters: <FilterManager />,
-        emulator:<HilView
-            application={props.application}
-        />,
-        settings:<SettingsView
-            application={props.application}
-        />
+        emulator:<HilView/>,
+        settings:<SettingsView />
     };
 
 

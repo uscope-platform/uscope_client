@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 
 import {MdCable, MdMemory} from 'react-icons/md'
 import {ColorTheme, SelectableListItem} from "../../UI_elements";
@@ -21,22 +21,25 @@ import {ColorTheme, SelectableListItem} from "../../UI_elements";
 import 'react-toastify/dist/ReactToastify.css';
 import Popup from "reactjs-popup";
 import {useSelector} from "react-redux";
+import {ApplicationContext} from "../../../AuthApp";
 
 
 let LoadSelector = props =>{
     let [selected, set_selected] = useState("");
 
+    const application = useContext(ApplicationContext);
+
     let onMouseEnter = (name) =>{
         set_selected(name);
     }
     let onClick = () =>{
-        let core = Object.values(props.application.soft_cores).filter((core)=>{
+        let core = Object.values(application.soft_cores).filter((core)=>{
             return selected===core.id;
         })[0];
-        props.onLoad(core, props.application);
+        props.onLoad(core, application);
     }
     let renderCoresList = () =>{
-        let cores_list = Object.values(props.application.soft_cores).map((core)=>{
+        let cores_list = Object.values(application.soft_cores).map((core)=>{
             return <SelectableListItem onSelect={onClick} onMouseEnter={onMouseEnter}  icon={<MdMemory style={{marginTop:"auto", marginBottom:"auto"}}/>} key={core.id} selected={selected===core.id} name={core.id}/>
         })
         return(cores_list)

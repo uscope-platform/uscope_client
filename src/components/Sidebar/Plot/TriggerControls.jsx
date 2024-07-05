@@ -14,16 +14,19 @@
 // limitations under the License.
 
 
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import {Chip, InputField, SelectField} from "../../UI_elements";
 import {set_acquisition} from "../../../client_core/proxy/plot";
 import PlotControls from "../../plot_tab_components/PlotControls";
 import {get_ui_state, save_ui_state} from "../../../client_core";
+import {ApplicationContext} from "../../../AuthApp";
 
 let  TriggerControls = props =>{
 
-    let [controls_state, set_controls_state] = useState(get_ui_state(props.application,'trigger_and_acquisition',  {
+    const application = useContext(ApplicationContext);
+
+    let [controls_state, set_controls_state] = useState(get_ui_state(application,'trigger_and_acquisition',  {
         acquisition_mode: {label:"continuous", value:"continuous"},
         trigger_mode:{label:"rising edge", value:"rising_edge"},
         trigger_source:{label:"1", value:"1"},
@@ -34,7 +37,7 @@ let  TriggerControls = props =>{
 
     let update_control_state = (state) =>{
         set_controls_state(state);
-        save_ui_state(props.application,'trigger_and_acquisition', state);
+        save_ui_state(application,'trigger_and_acquisition', state);
     }
 
     let [remote_version, set_remote_version] = useState(0);

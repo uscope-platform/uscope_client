@@ -77,7 +77,6 @@ let ScriptManager = (props) =>{
             </div>
             <ScriptSidebar
                 on_select={handle_select}
-                application={props.application}
             />
         </div>
 

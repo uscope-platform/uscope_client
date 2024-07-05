@@ -66,7 +66,6 @@ let HilView = function (props) {
             <UIPanel style={{flexGrow:1}} key="emulator_diagram" level="level_2">
                 <TabbedContent height="100%" names={["Emulation setup", "Emulation Results", "Hil Scope"]} contents={[
                     <FcoreEmulationEditor
-                        application={props.application}
                         onEmulationDone={set_emulation_results}
                         onInputDataChange={set_input_data}
                         onDeploy={()=>{set_deployed(true)}}
@@ -79,7 +78,6 @@ let HilView = function (props) {
                     />,
                     <EmulationResults results={emulation_results} inputs={input_data}/>,
                     <HilPlotTab
-                        application={props.application}
                         deployed={deployed}
                         emulator_selector={emulator_selector}
                         hil_plot_running={hil_plot_running}
@@ -90,7 +88,6 @@ let HilView = function (props) {
             </UIPanel>
             <div style={{height:"100%"}}>
                 <FcoreEmulatorSidebar
-                    application={props.application}
                     selected_component={selected_component}
                     on_select={handle_emulator_select}
                     on_iom_modify={handle_iom_select}

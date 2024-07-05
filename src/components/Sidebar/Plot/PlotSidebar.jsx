@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useReducer} from 'react';
+import React, {useContext, useReducer} from 'react';
 
 
 import EnablesProperties from "./EnablesProperties";
@@ -42,7 +42,6 @@ let  PlotSidebar = props =>{
                 <SimpleContent name="Scope Properties" content={
                     <EnablesProperties
                         on_group_change={props.on_group_change}
-                        application={props.application}
                     />
                 }/>
             </UIPanel>
@@ -52,7 +51,6 @@ let  PlotSidebar = props =>{
                         showAcquisitionStatus
                         onPlay={handle_play}
                         onPause={handle_pause}
-                        application={props.application}
                         onDownload={()=>{
                             props.on_download(download_req);
                             bump_download_req();

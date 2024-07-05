@@ -13,31 +13,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useReducer} from 'react';
+import React, {useContext, useReducer} from 'react';
 
 import {useSelector} from "react-redux";
 import {up_program} from "../../client_core";
 
 import SidebarBase from "./SidebarBase";
+import {ApplicationContext} from "../../AuthApp";
 
 
 let  ProgramSidebar = props =>{
 
     const programs_store = useSelector(state => state.programs);
+    const application = useContext(ApplicationContext);
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     let handleAdd = (id) =>{
-        props.application.add_selected_program(id.toString()).then(()=>{
+        application.add_selected_program(id.toString()).then(()=>{
             forceUpdate();
         });
     };
 
     let handleRemove = (deleted) =>{
-        props.application.remove_selected_program(deleted.id.toString()).then();
+        application.remove_selected_program(deleted.id.toString()).then();
     };
     let handle_import_done = (obj) =>{
-        props.application.add_selected_program(obj.id.toString()).then();
+        application.add_selected_program(obj.id.toString()).then();
         forceUpdate();
     }
 
@@ -46,7 +48,7 @@ let  ProgramSidebar = props =>{
             objects={programs_store}
             selection_key="id"
             template={up_program}
-            items_filter={props.application.programs}
+            items_filter={application.programs}
             display_key="name"
             content_name="Program"
             selector="selected_program"

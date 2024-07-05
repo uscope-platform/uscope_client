@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useReducer, useState} from 'react';
+import React, {useContext, useReducer, useState} from 'react';
 import {useSelector} from "react-redux";
 
 import ChannelSelector from "./ChannelSelector";
@@ -26,21 +26,23 @@ import PlotSidebar from "../Sidebar/Plot/PlotSidebar";
 import {create_plot_channel, get_channels_from_group, update_plot_status} from "../../client_core/plot_handling";
 import {get_acquisition_status} from "../../client_core/proxy/plot";
 import useInterval from "../Common_Components/useInterval";
+import {ApplicationContext} from "../../AuthApp";
 
 let PlotTab = function (props) {
     const channels = useSelector(state => state.channels);
+    const application = useContext(ApplicationContext);
 
     const [plot_status, set_plot_status] = useState(false);
     const [plot_palette, set_plot_palette] = useState({colorway:ColorTheme.plot_palette})
     const [external_data, set_external_data] = useState([]);
     const [external_revision, bump_ext_revision] = useReducer(x => x+1, 0);
     const [request_download, set_request_download] = useState(false);
-    const [selected_group, set_selected_group] = useState(props.application.get_default_channel_group().group_name);
+    const [selected_group, set_selected_group] = useState(application.get_default_channel_group().group_name);
     let [acquisition_status, set_acquisition_status] = useState("wait");
 
 
     const handle_group_change = async (group) =>{
-        let channels = get_channels_from_group(group, props.application.channels);
+        let channels = get_channels_from_group(group, application.channels);
 
         let ch_obj = [];
         for(let item of channels){
@@ -49,7 +51,7 @@ let PlotTab = function (props) {
         set_external_data(ch_obj);
         bump_ext_revision();
         set_selected_group(group.group_name);
-        await props.application.change_scope_channel_group(group);
+        await application.change_scope_channel_group(group);
 
     }
 
@@ -63,7 +65,7 @@ let PlotTab = function (props) {
         }
         set_plot_palette({colorway: palette});
         bump_ext_revision();
-        await props.application.setup_scope_statuses(new_state);
+        await application.setup_scope_statuses(new_state);
     }
 
     useInterval(async () => {
@@ -108,7 +110,6 @@ let PlotTab = function (props) {
                         <UIPanel key="scope" style={{flexGrow: 1}} level="level_2">
                             <SimpleContent name="Scope" content={
                                 <PlotComponent
-                                    application={props.application}
                                     plot_status={plot_status}
                                     palette={plot_palette}
                                     external_data={external_data}
@@ -131,15 +132,15 @@ let PlotTab = function (props) {
                         <UIPanel style={{flexGrow: 0.4}} key="parameters" level="level_2">
                             <SimpleContent name="Parameters" content={
                                 <ParametersArea
-                                    parameters={props.application.parameters}
+                                    parameters={application.parameters}
                                 />
                             }/>
                         </UIPanel>
                         <UIPanel style={{flexGrow: 1}} key="macro" level="level_2">
                             <SimpleContent name="Macro" content={
                                 <MacroActions
-                                    parameters={props.application.parameters}
-                                    macro={props.application.macro}
+                                    parameters={application.parameters}
+                                    macro={application.macro}
                                 />
                             }/>
                         </UIPanel>
@@ -155,7 +156,6 @@ let PlotTab = function (props) {
                     on_group_change={handle_group_change}
                     acquisition_status={acquisition_status}
                     on_download={set_request_download}
-                    application={props.application}
                 />
             </div>
 

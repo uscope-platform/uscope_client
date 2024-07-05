@@ -15,8 +15,6 @@
 
 //       REACT IMPORTS
 import React from 'react';
-//       REDUX IMPORTS
-import {useDispatch, useSelector} from "react-redux";
 
 import ApplicationChooserView from "./Common_Components/ApplicationChooserView";
 
@@ -29,10 +27,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 let ApplicationChooser = (props) =>{
 
-    const applications = useSelector(state => state.applications);
 
     let handleApplicationChosen = async e =>{
-        let app = new up_application(applications[e]);
+        let app = new up_application(props.applications[e]);
         try {
             let failures = await app.set_active();
             if(failures.length !== 0){
@@ -59,7 +56,9 @@ let ApplicationChooser = (props) =>{
                 pauseOnHover
                 theme="dark"
             />
-            <ApplicationChooserView done={handleApplicationChosen}/>
+            <ApplicationChooserView
+                applications={props.applications}
+                done={handleApplicationChosen}/>
         </div>
     );
 

@@ -96,7 +96,6 @@ let ProgramsEditor = props =>{
                 <div id="load_icon">
                     <LoadSelector
                         onLoad={handle_load}
-                        application={props.application}
                     />
                 </div>
             </div>

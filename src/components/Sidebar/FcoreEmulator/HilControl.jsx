@@ -32,7 +32,6 @@ let  HilControl = props =>{
                         onPause={props.onPause}
                         onStop={props.onStop}
                         onDownload={handle_download}
-                        application={props.application}
                     />
                 }/>
             </UIPanel>

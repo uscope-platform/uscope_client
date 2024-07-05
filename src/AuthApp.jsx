@@ -41,6 +41,9 @@ let user_views = ["Scripts", "Applications", "Programs", "Bitstreams", "Filters"
 let admin_views =["Peripherals", "Platform", "Settings"];
 
 
+export const ApplicationContext = React.createContext(null);
+
+
 let AuthApp = (props) =>{
 
     const peripherals = useSelector(state => state.peripherals);
@@ -94,7 +97,7 @@ let AuthApp = (props) =>{
             if(v!=='scope'){
                 route += views[v].type;
             }
-            routes.push(<Route key={views[v].type} path={route} element={<TabContent className="main_content_tab"  application={application} tab={views[v]}/>}/>,)
+            routes.push(<Route key={views[v].type} path={route} element={<TabContent className="main_content_tab" tab={views[v]}/>}/>,)
         }
 
         return(routes);
@@ -143,32 +146,37 @@ let AuthApp = (props) =>{
         case "APP_CHOICE":
             return (
                 <div className="App">
-                    <ApplicationChooser choice_done={app_choice_done}/>
+                    <ApplicationChooser
+                        applications={applications}
+                        choice_done={app_choice_done}
+                    />
                 </div>
             );
 
         case "NORMAL":
             return (
                 <div className="App">
-                    <div style={{display: "flex", gap: InterfaceParameters.main_window.columns_gap}}>
-                        <div style={{
-                            minWidth: InterfaceParameters.main_window.columns_min_widths[0],
-                            height:"1000px"
-                        }} key="nav">
-                            <Navbar views={views}/>
+                    <ApplicationContext.Provider value={application}>
+                        <div style={{display: "flex", gap: InterfaceParameters.main_window.columns_gap}}>
+                            <div style={{
+                                minWidth: InterfaceParameters.main_window.columns_min_widths[0],
+                                height: "1000px"
+                            }} key="nav">
+                                <Navbar views={views}/>
+                            </div>
+                            <UIPanel key="main"
+                                     style={{
+                                         padding: InterfaceParameters.main_window.padding,
+                                         minWidth: InterfaceParameters.main_window.columns_min_widths[1],
+                                         flexGrow: 6,
+                                         height: "1000px"
+                                     }} level="level_1">
+                                <Routes>
+                                    {construct_routes()}
+                                </Routes>
+                            </UIPanel>
                         </div>
-                        <UIPanel key="main"
-                                 style={{
-                                     padding:InterfaceParameters.main_window.padding,
-                                     minWidth:InterfaceParameters.main_window.columns_min_widths[1],
-                                     flexGrow:6,
-                                     height:"1000px"
-                        }} level="level_1">
-                            <Routes>
-                                {construct_routes()}
-                            </Routes>
-                        </UIPanel>
-                    </div>
+                    </ApplicationContext.Provider>
                 </div>
             );
         default:
