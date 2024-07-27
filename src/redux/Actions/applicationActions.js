@@ -13,7 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {ADD_APPLICATION, LOAD_APPLICATIONS, REMOVE_APPLICATION, SAVE_PARAMETER} from "./types";
+import {ADD_APPLICATION, LOAD_APPLICATIONS, REMOVE_APPLICATION, SAVE_PARAMETER, UPDATE_APPLICATION} from "./types";
+import app from "../../App";
 
 
 export const saveParameter = (parameter) => ({
@@ -41,5 +42,8 @@ export const removeApplication = application =>({
     payload:application
 });
 
-
+export const updateApplication = application =>({
+    type:UPDATE_APPLICATION,
+    payload:application
+})
 

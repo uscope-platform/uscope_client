@@ -17,7 +17,7 @@ import {
     ADD_APPLICATION,
     LOAD_APPLICATIONS,
     REMOVE_APPLICATION,
-    SAVE_PARAMETER
+    SAVE_PARAMETER, UPDATE_APPLICATION
 } from "../Actions/types";
 import produce from "immer";
 
@@ -42,6 +42,10 @@ let ApplicationsReducer = function (state = [], action) {
                     obj[key] = state[key];
                     return obj;
                 }, {});
+        case UPDATE_APPLICATION:
+            return produce(state, draftState =>{
+                draftState[action.payload.id] = action.payload;
+            });
         case ADD_APPLICATION:
             return {...state, ...action.payload}
         default:
