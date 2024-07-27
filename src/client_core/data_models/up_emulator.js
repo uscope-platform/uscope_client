@@ -85,6 +85,7 @@ export class up_emulator {
         this.cores[id] = c;
         let edit = {emulator:this.id, core:c, action:"add_core"};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        store.dispatch(update_emulator(this.deep_copy()));
         return c;
     }
 
@@ -92,26 +93,26 @@ export class up_emulator {
         let edit = {emulator:this.id, value:new_name, action:"edit_name"};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         this.name = new_name;
-        store.dispatch(update_emulator(this));
+        store.dispatch(update_emulator(this.deep_copy()));
     };
     edit_emulation_time =async (emu_time) =>{
         let edit = {emulator:this.id, value:emu_time, action:"edit_emu_time"};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         this.emulation_time = emu_time;
-        store.dispatch(update_emulator(this));
+        store.dispatch(update_emulator(this.deep_copy()));
     };
     edit_core_props = async (core_id, field, value) =>{
         let edit = {emulator:this.id, core:core_id.toString(), field_name:field, value:value, action:"edit_core_props"};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit)
         this.cores[core_id][field] = value;
-        store.dispatch(update_emulator(this));
+        store.dispatch(update_emulator(this.deep_copy()));
     }
 
     remove_core = async (core_id) =>{
         delete this.cores[core_id];
         let edit = {emulator:this.id, core:core_id.toString(), action:"remove_core"};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
-        store.dispatch(update_emulator(this));
+        store.dispatch(update_emulator(this.deep_copy()));
     }
 
     add_output = async (core_id, progressive) => {
@@ -124,7 +125,7 @@ export class up_emulator {
         this.cores[core_id].outputs.push(output);
         let edit = {emulator:this.id, core:core_id.toString(), output:output, action:"add_output"};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
-        store.dispatch(update_emulator(this));
+        store.dispatch(update_emulator(this.deep_copy()));
     }
 
     edit_output = async (core_id, field, value, output_name) =>{
@@ -137,7 +138,7 @@ export class up_emulator {
                 return item;
             }
         });
-        store.dispatch(update_emulator(this));
+        store.dispatch(update_emulator(this.deep_copy()));
     }
 
     add_input_file = async (core_id, input_name,  data) =>{
@@ -148,7 +149,7 @@ export class up_emulator {
         this.cores[core_id].input_data.push(i_d);
         let edit = {emulator:this.id, core:core_id.toString(), input_data:i_d, action:"add_input_data"};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
-        store.dispatch(update_emulator(this));
+        store.dispatch(update_emulator(this.deep_copy()));
     }
 
     remove_input_file = async (core_id, obj_name) => {
@@ -157,7 +158,7 @@ export class up_emulator {
         })
         let edit = {emulator:this.id, core:core_id.toString(), name:obj_name, action:"remove_input_data"};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
-        store.dispatch(update_emulator(this));
+        store.dispatch(update_emulator(this.deep_copy()));
     }
 
     add_input =async (core_id, progressive) => {
@@ -176,7 +177,7 @@ export class up_emulator {
         this.cores[core_id].inputs.push(input);
         let edit = {emulator:this.id, core:core_id.toString(), input:input, action:"add_input"};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
-        store.dispatch(update_emulator(this));
+        store.dispatch(update_emulator(this.deep_copy()));
     }
 
     edit_input =async (core_id, field, value, input_name) =>{
@@ -189,7 +190,7 @@ export class up_emulator {
                 return item;
             }
         });
-        store.dispatch(update_emulator(this));
+        store.dispatch(update_emulator(this.deep_copy()));
     }
 
     add_memory = async (core_id, progressive) =>{
@@ -205,7 +206,7 @@ export class up_emulator {
         this.cores[core_id].memory_init.push(mem);
         let edit = {emulator:this.id, core:core_id.toString(), memory:mem, action:"add_memory"};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
-        store.dispatch(update_emulator(this));
+        store.dispatch(update_emulator(this.deep_copy()));
     }
 
     edit_memory = async (core_id, field, value, memory_name) =>{
@@ -218,7 +219,7 @@ export class up_emulator {
                 return item;
             }
         });
-        store.dispatch(update_emulator(this));
+        store.dispatch(update_emulator(this.deep_copy()));
     }
 
     remove_output =async (core_id, obj_name) => {
@@ -227,7 +228,7 @@ export class up_emulator {
         })
         let edit = {emulator:this.id, core:core_id.toString(), name:obj_name, action:"remove_output"};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
-        store.dispatch(update_emulator(this));
+        store.dispatch(update_emulator(this.deep_copy()));
     }
 
     remove_input = async (core_id, obj_name) => {
@@ -236,7 +237,7 @@ export class up_emulator {
         })
         let edit = {emulator:this.id, core:core_id.toString(), name:obj_name, action:"remove_input"};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
-        store.dispatch(update_emulator(this));
+        store.dispatch(update_emulator(this.deep_copy()));
     }
 
     remove_memory =async (core_id, obj_name) =>{
@@ -245,7 +246,7 @@ export class up_emulator {
         })
         let edit = {emulator:this.id, core:core_id.toString(), name:obj_name, action:"remove_memory"};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
-        store.dispatch(update_emulator(this));
+        store.dispatch(update_emulator(this.deep_copy()));
     }
 
     add_dma_connection = async (source_id, target_id) =>{
@@ -257,7 +258,7 @@ export class up_emulator {
         this.connections.push(c);
         let edit = {emulator:this.id, connection:c, action:"add_connection"};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
-        store.dispatch(update_emulator(this));
+        store.dispatch(update_emulator(this.deep_copy()));
         return c;
     }
 
@@ -267,7 +268,7 @@ export class up_emulator {
         });
         let edit = {emulator:this.id, source:source_id, target:target_id, action:"remove_connection"};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
-        store.dispatch(update_emulator(this));
+        store.dispatch(update_emulator(this.deep_copy()));
     }
 
     remove_node_connections =async (node_id) =>{
@@ -276,7 +277,7 @@ export class up_emulator {
         });
         let edit = {emulator:this.id, node:node_id, action:"remove_node_connections"};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
-        store.dispatch(update_emulator(this));
+        store.dispatch(update_emulator(this.deep_copy()));
     }
 
     add_dma_channel = async (source, target, progressive) =>{
@@ -298,7 +299,7 @@ export class up_emulator {
         dma_obj.channels.push(c);
         let edit = {emulator:this.id, source:source, target:target, channel:c, action:"add_dma_channel"};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
-        store.dispatch(update_emulator(this));
+        store.dispatch(update_emulator(this.deep_copy()));
     }
 
 
@@ -315,7 +316,7 @@ export class up_emulator {
                 return item;
             }
         })
-        store.dispatch(update_emulator(this));
+        store.dispatch(update_emulator(this.deep_copy()));
     }
 
 
@@ -333,7 +334,7 @@ export class up_emulator {
                 return item;
             }
         });
-        store.dispatch(update_emulator(this));
+        store.dispatch(update_emulator(this.deep_copy()));
     }
 
 

@@ -23,7 +23,7 @@ let emulatorsReducer = function (state = [], action) {
         case REMOVE_EMULATOR:
             return  Object.keys(state)
                 .filter(key => {
-                    return key !== action.payload.id.toString();
+                    return key !== action.payload.toString();
                 })
                 .reduce((obj, key) => {
                     obj[key] = state[key];
@@ -33,9 +33,9 @@ let emulatorsReducer = function (state = [], action) {
             state = action.payload;
             return state;
         case UPDATE_EMULATOR:
-            return produce(state, draftState =>{
-                draftState = action.payload;
-            });
+            return produce(state, (draftState) => {
+                draftState[parseInt(action.payload.id)] = action.payload
+            })
         default:
             return state;
     }

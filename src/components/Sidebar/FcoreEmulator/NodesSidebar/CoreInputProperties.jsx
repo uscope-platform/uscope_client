@@ -111,7 +111,7 @@ let  CoreInputProperties = props =>{
                     key="source_value"
                     label="Data Series"
                     onChange={handle_select}
-                    value={{value: sel_in.source.type, label: sel_in.source.type}}
+                    value={{value: sel_in.source.value, label: sel_in.source.value}}
                     defaultValue="Select data series"
                     name="source_value"
                     options={files}

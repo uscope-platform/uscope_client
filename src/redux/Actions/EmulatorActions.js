@@ -15,7 +15,7 @@
 
 import {ADD_EMULATOR, REMOVE_EMULATOR, LOAD_ALL_EMULATOR, UPDATE_EMULATOR} from "./types";
 
-export const AddEmulator = emulator =>({
+export const addEmulator = emulator =>({
     type: ADD_EMULATOR,
     payload:emulator
 });
