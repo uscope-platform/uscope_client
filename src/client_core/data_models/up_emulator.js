@@ -17,7 +17,7 @@
 import {store} from "../index";
 import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
-import {removeEmulator, update_emulator} from "../../redux/Actions/EmulatorActions";
+import {addEmulator, removeEmulator, update_emulator} from "../../redux/Actions/EmulatorActions";
 
 export class up_emulator {
     constructor(emulator_obj) {
@@ -57,7 +57,9 @@ export class up_emulator {
 
     add_remote = async () => {
         try{
-            return await backend_post(api_dictionary.emulators.add + '/' + this.id, this._get_emulator());
+            let ret = await backend_post(api_dictionary.emulators.add + '/' + this.id, this._get_emulator());
+            store.dispatch(addEmulator(this));
+            return ret;
         } catch (error) {
             alert(error.response.data.message);
         }
@@ -343,22 +345,24 @@ export class up_emulator {
     build = () =>{
         return {
             cores: Object.values(this.cores).map((item) => {
-                let merged_data = {};
-                if (item.input_data.length !== 0) {
-
-                    item.input_data.map((d) => {
-                        merged_data = {...merged_data.data, ...d.data};
-                    })
-                }
                 return ({
                     id: item.name,
                     order: item.order,
-                    input_data: merged_data,
+                    input_data: item.input_data,
                     inputs: item.inputs.map((in_obj) => {
+                        let source = in_obj.source;
+                        if(in_obj.source.type === "file"){
+                            let tok = in_obj.source.value.split(".");
+                            source = {
+                                type: in_obj.source.type,
+                                file: tok[0],
+                                series: tok[1]
+                            };
+                        }
                         return {
                             name: in_obj.name,
                             type: in_obj.type,
-                            source:in_obj.source,
+                            source:source,
                             reg_n: parseInt(in_obj.reg_n),
                             channel: in_obj.channel,
                             register_type: in_obj.register_type,

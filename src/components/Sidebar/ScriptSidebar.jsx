@@ -30,8 +30,8 @@ let ScriptSidebar = (props) =>{
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
-    let handleAdd = (id) =>{
-        application.add_selected_script(id.toString()).then(()=>{
+    let handleAdd = (added_obj) =>{
+        application.add_selected_script(added_obj.id.toString()).then(()=>{
             forceUpdate();
         });
     };

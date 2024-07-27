@@ -37,7 +37,7 @@ let  SidebarBase = props =>{
         let obj = props.template.construct_empty(id);
         obj.add_remote().then((args)=>{
             if(props.onAdd){
-                props.onAdd(id);
+                props.onAdd({id:id, object:obj});
             }
         });
     };
