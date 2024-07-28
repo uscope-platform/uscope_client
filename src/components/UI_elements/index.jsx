@@ -35,22 +35,11 @@ export {TwoColumnSelector} from "./TwoColumnSelector"
 export {Chip} from "./Chip"
 export {Radio} from "./Radio"
 export {ToggleField} from "./ToggleField"
+export {RangedInputField} from "./RangedInputField"
 
 export {FormLayout} from "./Layouts/FormLayout"
 export {SidebarCollapsableNameLayout} from "./Layouts/SidebarCollapsableNameLayout"
 export {SidebarCollapsableContentLayout} from "./Layouts/SidebarCollapsableContentLayout"
-
-export {SoftCoreProperties} from "./SidebarComponents/Application/SoftCoreProperties"
-export {FilterProperties} from "./SidebarComponents/Application/FiterProperties"
-export {MiscFieldProperties} from "./SidebarComponents/Application/MiscFieldProperties"
-export {PeripheralProperties} from "./SidebarComponents/Application/PeripheralProperties"
-export {InitialRegisterValue} from "./SidebarComponents/Application/InitialRegisterValueProperties"
-export {MacroProperties} from "./SidebarComponents/Application/MacroProperties"
-export {ParameterProperties} from "./SidebarComponents/Application/ParameterProperties"
-export {PlotChannelProperties} from "./SidebarComponents/Application/PlotChannelProperties"
-export {PlotChannelGroupProperties} from "./SidebarComponents/Application/PlotChannelGroupProperties"
-export {RegisterProperties} from "./SidebarComponents/RegisterProperties"
-
 
 export {SimpleContent} from './panels/SimpleContent'
 export {TabbedContent} from './panels/TabbedContent'

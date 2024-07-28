@@ -15,17 +15,17 @@
 
 import React, {Suspense} from 'react';
 
-import PlotTab from "./plot_tab_components/PlotTab";
+import PlotTab from "./Views/Plot/PlotTab";
 
-const FilterManager = React.lazy(() => import('./Filter Designer/FilterManager'));
-const ScriptManager = React.lazy(() => import('./Managers/ScriptManager'));
-const PeripheralsManager = React.lazy(() => import('./Managers/PeripheralsManager'));
-const ApplicationsManager = React.lazy(() => import('./Managers/ApplicationsManager'));
-const ProgramsManager = React.lazy(()=> import('./Managers/ProgramsManager'));
-const PlatformManager = React.lazy(()=> import('./Managers/PlatformManager'));
-const BitstreamManager = React.lazy(()=> import('./Managers/BitstreamManager'));
-const HilView = React.lazy(() => import('./Emulator/HilView'));
-const SettingsView = React.lazy(() => import('./Settings/Settings_view'));
+const FilterManager = React.lazy(() => import('./Views/Filters/FilterManager'));
+const ScriptManager = React.lazy(() => import('./Views/Scripts/ScriptManager'));
+const PeripheralsManager = React.lazy(() => import('./Views/Peripherals/PeripheralsManager'));
+const ApplicationsManager = React.lazy(() => import('./Views/Applications/ApplicationsManager'));
+const ProgramsManager = React.lazy(()=> import('./Views/Programs/ProgramsManager'));
+const PlatformManager = React.lazy(()=> import('./Views/Programs/PlatformManager'));
+const BitstreamManager = React.lazy(()=> import('./Views/Bitstreams/BitstreamManager'));
+const HilView = React.lazy(() => import('./Views/Emulators/HilView'));
+const SettingsView = React.lazy(() => import('./Views/Settings/Settings_view'));
 
 
 let TabContent = props => {

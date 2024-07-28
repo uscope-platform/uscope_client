@@ -32,7 +32,7 @@ import {Routes} from "react-router";
 import {addApplication} from "./redux/Actions/applicationActions";
 
 import {UIPanel} from "./components/UI_elements";
-import PlatformManager from "./components/Managers/PlatformManager";
+import PlatformManager from "./components/Views/Programs/PlatformManager";
 import {InterfaceParameters} from "./components/UI_elements/InterfaceParameters";
 
 
