@@ -94,7 +94,7 @@ export let  PeripheralProperties = props =>{
 
     let render_hdl_parameters = ()=>{
       return Object.keys(props.peripheral.hdl_parameters).map((item) =>{
-          return(<HdlParameterProperties name={item} value={props.peripheral.hdl_parameters[item]} onChange={handle_parameter_change}/>)
+          return(<HdlParameterProperties key={name} name={item} value={props.peripheral.hdl_parameters[item]} onChange={handle_parameter_change}/>)
       })
     };
 

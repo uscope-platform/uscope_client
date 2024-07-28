@@ -274,7 +274,7 @@ let  ApplicationsManager = props =>{
                         selected_app.channel_groups.map((group) => {
                             return (
                                 <PlotChannelGroupProperties
-                                    key={group.name}
+                                    key={group.group_name}
                                     application={selected_app}
                                     forceUpdate={forceUpdate}
                                     group={group}
@@ -344,7 +344,7 @@ let  ApplicationsManager = props =>{
                         selected_app.parameters.map((parameter) => {
                             return (
                                 <ParameterProperties
-                                    key={parameter.name}
+                                    key={parameter.parameter_id}
                                     application={selected_app}
                                     forceUpdate={forceUpdate}
                                     parameter={parameter}
