@@ -86,11 +86,11 @@ let ProgramsEditor = props =>{
             <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
                 <div id="save_icon">
                     <MdSave onClick={handle_save} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={save_color}/>
-                    <Tooltip anchorId="save_icon" content="Save Program" place="top" />
+                    <Tooltip anchorSelect="save_icon" content="Save Program" place="top" />
                 </div>
                 <div id="build_icon">
                     <MdBuild onClick={handle_build} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
-                    <Tooltip anchorId="build_icon" content="Compile Program" place="top" />
+                    <Tooltip anchorSelect="build_icon" content="Compile Program" place="top" />
                 </div>
 
                 <div id="load_icon">

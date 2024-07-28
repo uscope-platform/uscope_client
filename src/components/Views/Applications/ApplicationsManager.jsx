@@ -112,10 +112,16 @@ let  ApplicationsManager = props =>{
     let [available_programs,set_available_programs] = useState(calculate_available_programs(selected_programs));
 
     useEffect(() => {
-        set_selected_scripts(calculate_selected_scripts());
-        set_available_scripts(calculate_available_scripts(selected_scripts));
-        set_selected_programs(calculate_selected_programs());
-        set_available_programs(calculate_available_programs(selected_programs));
+        let new_selected_scripts = calculate_selected_scripts();
+        let new_available_scripts = calculate_available_scripts(new_selected_scripts)
+
+        let new_selected_programs = calculate_selected_programs();
+        let new_available_programs = calculate_available_programs(new_selected_programs)
+
+        set_selected_scripts(new_selected_scripts);
+        set_available_scripts(new_available_scripts);
+        set_selected_programs(new_selected_programs);
+        set_available_programs(new_available_programs);
     }, [selected_app]);
 
     let add_content = (name, type) =>{
