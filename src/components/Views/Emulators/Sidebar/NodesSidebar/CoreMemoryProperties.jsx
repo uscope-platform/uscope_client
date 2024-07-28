@@ -69,15 +69,15 @@ let  CoreMemoryProperties = props =>{
 
     let render_vector_init_props = () =>{
         if(sel_mem.register_type === "vector"){
-            return(<InputField inline key="vector_size" ID="vector_size" name="vector_size" label="Vector size" defaultValue={sel_mem.vector_size} onKeyDown={handle_change_iom}/>);
+            return(<InputField inline id="vector_size" name="vector_size" label="Vector size" defaultValue={sel_mem.vector_size} onKeyDown={handle_change_iom}/>);
         }
     }
 
     return(
         <SimpleContent name="Memory Properties" content={
             <div key="memory_props">
-                <InputField inline ID="name" name="name" label="Name" defaultValue={sel_mem.name} onKeyDown={handle_change_iom}/>
-                <InputField inline ID="reg_n" name="reg_n" label="Register #" defaultValue={sel_mem.reg_n} onKeyDown={handle_change_iom}/>
+                <InputField inline id="name" name="name" label="Name" defaultValue={sel_mem.name} onKeyDown={handle_change_iom}/>
+                <InputField inline id="reg_n" name="reg_n" label="Register #" defaultValue={sel_mem.reg_n} onKeyDown={handle_change_iom}/>
                 <SelectField
                     inline
                     label="Type"
@@ -103,7 +103,7 @@ let  CoreMemoryProperties = props =>{
                     ]}
                 />
                 {render_vector_init_props()}
-                <InputField inline ID="value" name="value" label="Value" defaultValue={sel_mem.value} onKeyDown={handle_change_iom}/>
+                <InputField inline id="value" name="value" label="Value" defaultValue={sel_mem.value} onKeyDown={handle_change_iom}/>
                 <Checkbox name='is_output' value={sel_mem.is_output} onChange={handle_change_output} label="Use as Output"/>
             </div>
         }/>

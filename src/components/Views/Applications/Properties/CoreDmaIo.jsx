@@ -189,7 +189,7 @@ export let  CoreDmaIo = props =>{
     let render_io_properties = () =>{
         if(selected_io){
            return <div style={{display: "flex", flexDirection: "column"}}>
-               <InputField inline key={selected_io.name} ID="name" name='name' defaultValue={selected_io.name}
+               <InputField inline id={selected_io.name} name='name' defaultValue={selected_io.name}
                            onKeyDown={handle_edit_logic_io} label="Name"/>
                <SelectField
                    inline
@@ -213,7 +213,7 @@ export let  CoreDmaIo = props =>{
                    name="assoc_core_io"
                    options={get_core_io()}
                />
-               <InputField inline key={selected_io.address} ID="address" name='address' defaultValue={selected_io.address}
+               <InputField inline id={selected_io.address} name='address' defaultValue={selected_io.address}
                            onKeyDown={handle_edit_logic_io} label="Address"/>
            </div>
         }

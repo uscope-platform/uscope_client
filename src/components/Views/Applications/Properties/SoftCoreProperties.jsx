@@ -67,8 +67,8 @@ export let  SoftCoreProperties = props =>{
             name={props.core.id}
             onRemove={handleRemove}
         >
-            <InputField inline ID="id" name="id" defaultValue={props.core.id} onKeyDown={handleonKeyDown} label="Core ID"/>
-            <InputField inline ID="address" name='address' defaultValue={props.core.address} onKeyDown={handleonKeyDown} label="Address"/>
+            <InputField inline id="id" name="id" defaultValue={props.core.id} onKeyDown={handleonKeyDown} label="Core ID"/>
+            <InputField inline id="address" name='address' defaultValue={props.core.address} onKeyDown={handleonKeyDown} label="Address"/>
             <SelectField
                 label="Default Program"
                 onChange={handleProgramChange}

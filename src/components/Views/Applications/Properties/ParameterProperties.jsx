@@ -57,10 +57,10 @@ export let  ParameterProperties = props =>{
                 value:props.parameter.visible
             }}
         >
-            <InputField inline ID="parameter_name" name="parameter_name" defaultValue={props.parameter.parameter_name} onKeyDown={handleonKeyDown} label="Name"/>
-            <InputField inline ID="parameter_id" name='parameter_id' defaultValue={props.parameter.parameter_id} onKeyDown={handleonKeyDown} label="Parameter ID"/>
-            <InputField inline ID="trigger" name='trigger' defaultValue={props.parameter.trigger} onKeyDown={handleonKeyDown} label="Trigger"/>
-            <InputField inline ID="value" name='value' defaultValue={props.parameter.value} onKeyDown={handleonKeyDown} label="Value"/>
+            <InputField inline id="parameter_name" name="parameter_name" defaultValue={props.parameter.parameter_name} onKeyDown={handleonKeyDown} label="Name"/>
+            <InputField inline id="parameter_id" name='parameter_id' defaultValue={props.parameter.parameter_id} onKeyDown={handleonKeyDown} label="Parameter ID"/>
+            <InputField inline id="trigger" name='trigger' defaultValue={props.parameter.trigger} onKeyDown={handleonKeyDown} label="Trigger"/>
+            <InputField inline id="value" name='value' defaultValue={props.parameter.value} onKeyDown={handleonKeyDown} label="Value"/>
         </Card>
     );
 };

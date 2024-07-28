@@ -97,14 +97,14 @@ export let  RegisterProperties = props =>{
         if(props.register.parametric) {
             return (
                 <div style={{display: "flex", flexDirection: "column"}}>
-                    <InputField inline ID="order" name='order' defaultValue={props.register.order} onKeyDown={handleonKeyDown} label="Order"/>
-                    <InputField inline ID="n_registers" name='n_registers' defaultValue={props.register.n_registers[0]} onKeyDown={handleonKeyDown} label="Number of Registers"/>
+                    <InputField inline name='order' defaultValue={props.register.order} onKeyDown={handleonKeyDown} label="Order"/>
+                    <InputField inline name='n_registers' defaultValue={props.register.n_registers[0]} onKeyDown={handleonKeyDown} label="Number of Registers"/>
                 </div>
             )
         } else{
             return (
                 <div style={{display: "flex", flexDirection: "column"}}>
-                    <InputField inline ID="offset" name='offset' defaultValue={props.register.offset} onKeyDown={handleonKeyDown} label="Address offset"/>
+                    <InputField inline name='offset' defaultValue={props.register.offset} onKeyDown={handleonKeyDown} label="Address offset"/>
                 </div>
             )
         }
@@ -119,8 +119,8 @@ export let  RegisterProperties = props =>{
             name={props.register.register_name}
             onRemove={handleRemove}
         >
-            <InputField inline ID="register_name" name="register_name" defaultValue={props.register.register_name} onKeyDown={handleEditNameChange} label="Name"/>
-            <InputField inline ID="ID" name='ID' defaultValue={props.register.ID} onKeyDown={handleonKeyDown} label="Register ID"/>
+            <InputField inline name="register_name" defaultValue={props.register.register_name} onKeyDown={handleEditNameChange} label="Name"/>
+            <InputField inline name='ID' defaultValue={props.register.ID} onKeyDown={handleonKeyDown} label="Register ID"/>
 
             {render_parametric_properties()}
             <InputField inline ID="description" name='description' defaultValue={props.register.description} onKeyDown={handleonKeyDown} label="Description"/>

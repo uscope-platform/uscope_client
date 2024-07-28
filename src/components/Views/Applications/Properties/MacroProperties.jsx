@@ -46,8 +46,8 @@ export let  MacroProperties = props =>{
             name={props.macro.name}
             onRemove={handleRemove}
         >
-            <InputField inline ID='name' name='name' defaultValue={props.macro.name} onKeyDown={handleonKeyDown} label="Name"/>
-            <InputField inline ID='trigger'  name='trigger' defaultValue={props.macro.trigger} onKeyDown={handleonKeyDown} label="Trigger"/>
+            <InputField inline id='name' name='name' defaultValue={props.macro.name} onKeyDown={handleonKeyDown} label="Name"/>
+            <InputField inline id='trigger'  name='trigger' defaultValue={props.macro.trigger} onKeyDown={handleonKeyDown} label="Trigger"/>
         </Card>
     );
 };

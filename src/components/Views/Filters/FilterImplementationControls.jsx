@@ -18,12 +18,6 @@ import React from 'react';
 import styled from "styled-components";
 import {InputField} from "../../UI_elements";
 
-const ComponentStyle = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-direction: row;
-`
-
 let  FilterImplementationControls = props =>{
 
     let handle_edit_field = (event) => {
@@ -37,7 +31,7 @@ let  FilterImplementationControls = props =>{
     let render_controls = () =>{
         let ret = []
 
-        ret.push(<InputField inline name="taps_width" defaultValue={props.filter_parameters.taps_width} onKeyDown={handle_edit_field} label="Width of the filter taps"/>);
+        ret.push(<InputField key="taps_width" inline name="taps_width" defaultValue={props.filter_parameters.taps_width} onKeyDown={handle_edit_field} label="Width of the filter taps"/>);
 
         return ret;
     }

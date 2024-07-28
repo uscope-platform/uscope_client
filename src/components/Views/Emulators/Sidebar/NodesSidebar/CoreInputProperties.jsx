@@ -65,7 +65,7 @@ let  CoreInputProperties = props =>{
 
     let render_vector_input_properties = () =>{
         if(sel_in.register_type==="vector" || sel_in.register_type==="explicit_vector"){
-            return <InputField ID="labels" name="labels" label="Labels" defaultValue={sel_in.labels} onKeyDown={handle_change_iom}/>
+            return <InputField id="labels" name="labels" label="Labels" defaultValue={sel_in.labels} onKeyDown={handle_change_iom}/>
         }
     }
 
@@ -91,12 +91,11 @@ let  CoreInputProperties = props =>{
                 ret.push(
                     <InputField
                         Inline
-                        ID="source_value"
+                        id="source_value"
                         name="source_value"
                         label="Value"
                         defaultValue={sel_in.source.value}
                         onKeyDown={handle_change_iom}
-                        key="source_value"
                     />
                 )
             }else if(sel_in.source.type==="file"){
@@ -124,9 +123,9 @@ let  CoreInputProperties = props =>{
     return(
         <SimpleContent name="Input Properties" content={
             <div key="input_props">
-                <InputField ID="name" name="name" label="Name" defaultValue={sel_in.name} onKeyDown={handle_change_iom}/>
-                <InputField ID="channel" name="channel" label="Channel" defaultValue={sel_in.channel} onKeyDown={handle_change_iom}/>
-                <InputField ID="reg_n" name="reg_n" label="Register #" defaultValue={sel_in.reg_n} onKeyDown={handle_change_iom}/>
+                <InputField id="name" name="name" label="Name" defaultValue={sel_in.name} onKeyDown={handle_change_iom}/>
+                <InputField id="channel" name="channel" label="Channel" defaultValue={sel_in.channel} onKeyDown={handle_change_iom}/>
+                <InputField id="reg_n" name="reg_n" label="Register #" defaultValue={sel_in.reg_n} onKeyDown={handle_change_iom}/>
                 <SelectField
                     inline
                     label="Data Type"

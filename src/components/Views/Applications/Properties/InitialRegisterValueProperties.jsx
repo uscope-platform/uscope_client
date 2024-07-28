@@ -47,8 +47,8 @@ export let  InitialRegisterValue = props =>{
             name={props.irv.address}
             onRemove={handleRemove}
         >
-            <InputField inline ID="address" name="address" defaultValue={props.irv.address} onKeyDown={handleonKeyDown} label="Address"/>
-            <InputField inline ID="value" name='value' defaultValue={props.irv.value} onKeyDown={handleonKeyDown} label="Value"/>
+            <InputField inline id="address" name="address" defaultValue={props.irv.address} onKeyDown={handleonKeyDown} label="Address"/>
+            <InputField inline id="value" name='value' defaultValue={props.irv.value} onKeyDown={handleonKeyDown} label="Value"/>
         </Card>
     );
 };

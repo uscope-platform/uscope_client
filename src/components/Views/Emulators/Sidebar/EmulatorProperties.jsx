@@ -91,7 +91,7 @@ let  EmulatorProperties = props =>{
                 {
                     <SimpleContent name={"Emulator Properties"} content={
                         <div style={{padding:10}} key="emulator_props">
-                            <InputField inline ID="name" name="name" label="Emulator Name" defaultValue={props.selected_emulator.name} onKeyDown={handle_change}/>
+                            <InputField inline id="name" name="name" label="Emulator Name" defaultValue={props.selected_emulator.name} onKeyDown={handle_change}/>
 
                             <RangedInputField
                                 ID="emulation_time"

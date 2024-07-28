@@ -60,11 +60,11 @@ export let  PlotChannelProperties = props =>{
                 value:props.channel.enabled
             }}
         >
-            <InputField color={ColorTheme.background.level_4} inline ID="name" name="name" defaultValue={props.channel.name} onKeyDown={handleonKeyDown} label="Name"/>
-            <InputField color={ColorTheme.background.level_4} inline ID="id" name='id' defaultValue={props.channel.id} onKeyDown={handleonKeyDown} label="Channel ID"/>
-            <InputField color={ColorTheme.background.level_4} inline ID="number" name='number' defaultValue={props.channel.number} onKeyDown={handleonKeyDown} label="Channel Number"/>
-            <InputField color={ColorTheme.background.level_4} inline ID="mux_setting" name='mux_setting' defaultValue={props.channel.mux_setting} onKeyDown={handleonKeyDown} label="Mux Setting"/>
-            <InputField color={ColorTheme.background.level_4} inline ID="scaling_factor" name='scaling_factor' defaultValue={props.channel.scaling_factor} onKeyDown={handleonKeyDown} label="Scaling Factor"/>
+            <InputField color={ColorTheme.background.level_4} inline id="name" name="name" defaultValue={props.channel.name} onKeyDown={handleonKeyDown} label="Name"/>
+            <InputField color={ColorTheme.background.level_4} inline id="id" name='id' defaultValue={props.channel.id} onKeyDown={handleonKeyDown} label="Channel ID"/>
+            <InputField color={ColorTheme.background.level_4} inline id="number" name='number' defaultValue={props.channel.number} onKeyDown={handleonKeyDown} label="Channel Number"/>
+            <InputField color={ColorTheme.background.level_4} inline id="mux_setting" name='mux_setting' defaultValue={props.channel.mux_setting} onKeyDown={handleonKeyDown} label="Mux Setting"/>
+            <InputField color={ColorTheme.background.level_4} inline id="scaling_factor" name='scaling_factor' defaultValue={props.channel.scaling_factor} onKeyDown={handleonKeyDown} label="Scaling Factor"/>
         </Card>
     );
 };

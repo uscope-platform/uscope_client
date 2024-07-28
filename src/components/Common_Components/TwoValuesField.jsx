@@ -52,8 +52,8 @@ let TwoValuesField = props => {
     if(props.preview_only){
         return(
             <LayoutWrapper>
-                <InputField description={props.field_descriptions[0]} ID={props.ID} name={props.register_name+'.1'} label={props.field_names[0]}/>
-                <InputField description={props.field_descriptions[1]} ID={props.ID} name={props.register_name+'.2'} label={props.field_names[1]}/>
+                <InputField description={props.field_descriptions[0]} id={props.ID + '.1'} name={props.register_name+'.1'} label={props.field_names[0]}/>
+                <InputField description={props.field_descriptions[1]} id={props.ID + '.2'} name={props.register_name+'.2'} label={props.field_names[1]}/>
                 <MdEdit color={ColorTheme.icons_color} onClick={localEditHandler} />
                 <MdDelete color={ColorTheme.icons_color} onClick={localRemoveHandler}/>
             </LayoutWrapper>
@@ -61,8 +61,8 @@ let TwoValuesField = props => {
     } else{
         return(
             <DualWrapper>
-                <InputField description={props.field_descriptions[0]} value={props.value[0]} ID={props.ID} name={props.register_name+'.1'} label={props.field_names[0]}/>
-                <InputField description={props.field_descriptions[1]} value={props.value[1]} ID={props.ID} name={props.register_name+'.2'} label={props.field_names[1]}/>
+                <InputField description={props.field_descriptions[0]} value={props.value[0]} id={props.ID + '.1'} name={props.register_name+'.1'} label={props.field_names[0]}/>
+                <InputField description={props.field_descriptions[1]} value={props.value[1]} id={props.ID + '.2'} name={props.register_name+'.2'} label={props.field_names[1]}/>
             </DualWrapper>
         );
     }

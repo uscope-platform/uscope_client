@@ -58,8 +58,8 @@ let  CoreOutputProperties = props =>{
     return(
         <SimpleContent name="Output Properties" content={
             <div key="output_props">
-                <InputField inline ID="name" name="name" label="Name" defaultValue={sel_out.name} onKeyDown={handle_change_iom}/>
-                <InputField inline ID="reg_n" name="reg_n" label="Register #" defaultValue={sel_out.reg_n} onKeyDown={handle_change_iom}/>
+                <InputField inline id="name" name="name" label="Name" defaultValue={sel_out.name} onKeyDown={handle_change_iom}/>
+                <InputField inline id="reg_n" name="reg_n" label="Register #" defaultValue={sel_out.reg_n} onKeyDown={handle_change_iom}/>
                 <SelectField
                     inline
                     label="Type"

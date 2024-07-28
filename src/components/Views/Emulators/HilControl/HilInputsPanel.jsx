@@ -38,9 +38,8 @@ let HilInputsPanel = function (props) {
             ret.push(
                 <InputField
                     inline
-                    ID={ti.name}
                     name={ti.name}
-                    key={ti.name}
+                    id={ti.name}
                     label={ti.name}
                     defaultValue={ti.value}
                     onKeyDown={handle_input}

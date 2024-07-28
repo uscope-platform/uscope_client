@@ -55,8 +55,8 @@ let  EmulatorCoreProperties = props =>{
 
     return(
         <div key="node_props">
-            <InputField inline ID="name" name="name" label="Core Name" defaultValue={props.selected_core.name} onKeyDown={handle_change}/>
-            <InputField inline ID="channels" name="channels" label="Channels #" defaultValue={props.selected_core.channels} onKeyDown={handle_change}/>
+            <InputField inline id="name" name="name" label="Core Name" defaultValue={props.selected_core.name} onKeyDown={handle_change}/>
+            <InputField inline id="channels" name="channels" label="Channels #" defaultValue={props.selected_core.channels} onKeyDown={handle_change}/>
             <SelectField
                 label="Program"
                 onChange={handle_program_change}
@@ -65,10 +65,10 @@ let  EmulatorCoreProperties = props =>{
                 name="program"
                 placeholder="Program"
                 options={programs_list}/>
-            <InputField inline ID="order" name="order" label="Execution Order" defaultValue={props.selected_core.order} onKeyDown={handle_change}/>
-            <InputField inline ID="efi_implementation" name="efi_implementation" label="EFI" defaultValue={props.selected_core.options.efi_implementation} onKeyDown={handle_change}/>
-            <InputField inline ID="comparators" name="comparators" label="comparators" defaultValue={props.selected_core.options.comparators} onKeyDown={handle_change}/>
-            <InputField inline ID="sampling_frequency" name="sampling_frequency" label="Sampling Frequency" defaultValue={props.selected_core.sampling_frequency} onKeyDown={handle_change}/>
+            <InputField inline id="order" name="order" label="Execution Order" defaultValue={props.selected_core.order} onKeyDown={handle_change}/>
+            <InputField inline id="efi_implementation" name="efi_implementation" label="EFI" defaultValue={props.selected_core.options.efi_implementation} onKeyDown={handle_change}/>
+            <InputField inline id="comparators" name="comparators" label="comparators" defaultValue={props.selected_core.options.comparators} onKeyDown={handle_change}/>
+            <InputField inline id="sampling_frequency" name="sampling_frequency" label="Sampling Frequency" defaultValue={props.selected_core.sampling_frequency} onKeyDown={handle_change}/>
         </div>
     );
 };

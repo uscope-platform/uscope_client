@@ -110,9 +110,9 @@ let  DmaChannelProperties = props =>{
         let ret = [];
 
         if(props.selected_channel.type !== "scalar_transfer")
-            ret.push(<InputField  ID="length" name="length" label="Length" defaultValue={props.selected_channel.length} onKeyDown={handle_change}/>);
+            ret.push(<InputField  id="length" name="length" label="Length" defaultValue={props.selected_channel.length} onKeyDown={handle_change}/>);
         if(props.selected_channel.type ==="2d_vector_transfer")
-            ret.push(<InputField ID="stride" name="stride" label="Stride" defaultValue={props.selected_channel.stride} onKeyDown={handle_change}/>)
+            ret.push(<InputField id="stride" name="stride" label="Stride" defaultValue={props.selected_channel.stride} onKeyDown={handle_change}/>)
 
         return ret;
     }
@@ -120,7 +120,7 @@ let  DmaChannelProperties = props =>{
 
     return(
         <div key="dma_channel_props">
-            <InputField ID="name" name="name" label="Name" defaultValue={props.selected_channel.name} onKeyDown={handle_change}/>
+            <InputField id="name" name="name" label="Name" defaultValue={props.selected_channel.name} onKeyDown={handle_change}/>
             <SelectField
                 inline
                 label="Type"
@@ -137,8 +137,8 @@ let  DmaChannelProperties = props =>{
                 ]}
             />
             {plot_vector_transfer_props()}
-            <InputField ID="source_channel" name="source_channel" label="Source Channel" defaultValue={props.selected_channel.source.channel} onKeyDown={handle_change}/>
-            <InputField ID="source_register" name="source_register" label="Source Register" defaultValue={props.selected_channel.source.register} onKeyDown={handle_change}/>
+            <InputField id="source_channel" name="source_channel" label="Source Channel" defaultValue={props.selected_channel.source.channel} onKeyDown={handle_change}/>
+            <InputField id="source_register" name="source_register" label="Source Register" defaultValue={props.selected_channel.source.register} onKeyDown={handle_change}/>
             <SelectField
                 inline
                 label="Source Core Output"
@@ -150,8 +150,8 @@ let  DmaChannelProperties = props =>{
                     return {label:outs, value:outs};
                 })}
             />
-            <InputField ID="target_channel" name="target_channel" label="Target Channel" defaultValue={props.selected_channel.target.channel} onKeyDown={handle_change}/>
-            <InputField ID="target_register" name="target_register" label="Target Register" defaultValue={props.selected_channel.target.register} onKeyDown={handle_change}/>
+            <InputField id="target_channel" name="target_channel" label="Target Channel" defaultValue={props.selected_channel.target.channel} onKeyDown={handle_change}/>
+            <InputField id="target_register" name="target_register" label="Target Register" defaultValue={props.selected_channel.target.register} onKeyDown={handle_change}/>
             <SelectField
                 inline
                 label="Target Core Input"

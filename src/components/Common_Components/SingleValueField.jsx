@@ -45,18 +45,18 @@ let SingleValueField = props => {
     if(props.preview_only){
         return(
             <LayoutWrapper>
-                <InputField description={props.description} ID={props.ID} name={props.name} label={props.name}/>
+                <InputField description={props.description} id={props.ID} name={props.name} label={props.name}/>
                 <MdEdit color={ColorTheme.icons_color} onClick={localEditHandler} />
                 <MdDelete color={ColorTheme.icons_color} onClick={localRemoveHandler}/>
             </LayoutWrapper>
         );
     } else if(props.value){
         return(
-            <InputField description={props.description} value={props.value} placeholder={props.placeholder} ID={props.ID} name={props.name} label={props.name}/>
+            <InputField description={props.description} value={props.value} placeholder={props.placeholder} id={props.ID} name={props.name} label={props.name}/>
         );
     } else {
         return(
-            <InputField description={props.description} value={props.value} placeholder={props.placeholder} ID={props.ID} name={props.name} label={props.name}/>
+            <InputField description={props.description} value={props.value} placeholder={props.placeholder} id={props.ID} name={props.name} label={props.name}/>
         );
     }
 };

@@ -21,14 +21,13 @@ import {useSelector} from "react-redux"
 import {
     CardStack, Checkbox, ColorTheme,
     InputField,
-    RegisterProperties,
     SimpleContent, UIPanel
 } from "../../UI_elements"
 
 import {get_next_id, up_peripheral} from "../../../client_core"
 import PeripheralsSidebar from "./PeripheralsSidebar";
 import {MdAdd} from "react-icons/md";
-import {Tooltip} from "react-tooltip";
+import {RegisterProperties} from './RegisterProperties'
 
 
 let PeripheralsManager = (props)=>{

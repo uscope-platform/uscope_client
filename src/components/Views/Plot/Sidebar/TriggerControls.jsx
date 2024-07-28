@@ -118,7 +118,6 @@ let  TriggerControls = props =>{
             {plot_status()}
             <InputField
                 inline
-                ID="trigger_level"
                 name='trigger_level'
                 defaultValue={controls_state.trigger_level}
                 onKeyDown={handle_set_value}
@@ -126,7 +125,6 @@ let  TriggerControls = props =>{
             />
             <InputField
                 inline
-                ID="trigger_point"
                 name='trigger_point'
                 defaultValue={controls_state.trigger_point}
                 onKeyDown={handle_set_value}
@@ -173,7 +171,6 @@ let  TriggerControls = props =>{
             />
             <InputField
                 inline
-                ID="tb_prescaler"
                 name='tb_prescaler'
                 defaultValue={controls_state.tb_prescaler}
                 onKeyDown={handle_set_value}

@@ -48,8 +48,8 @@ export let  MiscFieldProperties = props =>{
             name={props.name}
             onRemove={handleRemove}
         >
-            <InputField inline ID="name" name="name" defaultValue={props.name} onKeyDown={handleonKeyDown} label="Name"/>
-            <InputField inline ID="value"  name='value' defaultValue={props.value} onKeyDown={handleonKeyDown} label="Value"/>
+            <InputField inline id="name" name="name" defaultValue={props.name} onKeyDown={handleonKeyDown} label="Name"/>
+            <InputField inline id="value"  name='value' defaultValue={props.value} onKeyDown={handleonKeyDown} label="Value"/>
         </Card>
     );
 };

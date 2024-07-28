@@ -84,8 +84,8 @@ export let  HdlParameterProperties = props =>{
         if(is_open)
             return(
                 <SidebarCollapsableContentLayout>
-                    <InputField inline ID="name" name="name" defaultValue={props.name} onKeyDown={handleEditNameChange} label="Name"/>
-                    <InputField inline ID="value" name='value' defaultValue={props.value} onKeyDown={handleonKeyDown} label="Value"/>
+                    <InputField inline id="name" name="name" defaultValue={props.name} onKeyDown={handleEditNameChange} label="Name"/>
+                    <InputField inline id="value" name='value' defaultValue={props.value} onKeyDown={handleonKeyDown} label="Value"/>
                     <Button onClick={handleRemove} >Remove</Button>
                 </SidebarCollapsableContentLayout>
             )

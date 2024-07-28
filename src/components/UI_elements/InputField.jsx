@@ -51,12 +51,15 @@ flex-flow: wrap;
 
 
 export let  InputField = props =>{
+    let key = props.name;
+    if(props.defaultValue) key += props.defaultValue;
+
     if(props.compact){
         return (
             <InnerInput
-                id={props.ID}
+                id={props.id}
                 name={props.name}
-                key={props.key ? props.key + String(props.defaultValue) : props.name + String(props.defaultValue)}
+                key={key}
                 type={(props.type)?props.type:"text"}
                 placeholder={props.label}
                 color={props.color ? props.color : ColorTheme.background.level_3}
@@ -73,7 +76,7 @@ export let  InputField = props =>{
                 <Label htmlFor={props.ID} inline={props.inline}>{props.label}</Label>
                 <InnerInput
                     name={props.name}
-                    key={props.key ? props.key + String(props.defaultValue) : props.name + String(props.defaultValue)}
+                    key={key}
                     placeholder={props.placeholder}
                     id={props.ID}
                     color={props.color ? props.color : ColorTheme.background.level_3}
@@ -94,7 +97,7 @@ export let  InputField = props =>{
                 <InnerInput
                     placeholder={props.placeholder}
                     name={props.name}
-                    key={props.key ? props.key + String(props.defaultValue) : props.name + String(props.defaultValue)}
+                    key={key}
                     color={props.color ? props.color : ColorTheme.background.level_3}
                     id={props.ID}
                     type={(props.type)?props.type:"text"}
