@@ -651,10 +651,9 @@ export class up_application {
     }
 
     remove_macro = async (macro_name) => {
-        let idx  = this.macro.filter((m) =>{
-            return m.name === macro_name;
+        this.macro = this.macro.filter(m=>{
+            return m.name !== macro_name;
         })
-        this.macro.splice(idx,1);
 
         let edit = {
             application:this.id,
