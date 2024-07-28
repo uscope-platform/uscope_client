@@ -52,6 +52,17 @@ export class up_program {
         return new up_program(program_obj);
     }
 
+    deep_copy = () =>{
+        let ret = {};
+        ret.id = this.id;
+        ret.name = this.name;
+        ret.program_content =this.program_content;
+        ret.program_type =this.program_type;
+        ret.build_settings = JSON.parse(JSON.stringify(this.build_settings));
+
+        return ret;
+    }
+
     add_remote = () => {
         store.dispatch(AddProgram(this));
         return backend_post(api_dictionary.programs.add+'/'+this.id, this._get_program());
@@ -61,11 +72,11 @@ export class up_program {
         return this.edit_field('program_content', content);
     }
 
-    edit_field = (field, value) => {
+    edit_field = async (field, value) => {
         this[field] = value;
-        store.dispatch(AddProgram(this));
         let edit = {program:this.id, field:field, value:value};
-        return backend_patch(api_dictionary.programs.edit+'/'+this.id,edit)
+        await backend_patch(api_dictionary.programs.edit+'/'+this.id,edit)
+        store.dispatch(AddProgram(this.deep_copy()));
     }
 
     add_header = (id) =>{

@@ -77,17 +77,6 @@ let PeripheralsManager = (props)=>{
     }
 
 
-    let render_periph_prop = () => {
-        return (<div>
-            <InputField inline name="edit_name" defaultValue={selected_peripheral._get_periph().peripheral_name}
-                        onKeyDown={handleEditName} label="Name"/>
-            <InputField inline name="edit_version" defaultValue={selected_peripheral._get_periph().version}
-                        onKeyDown={handleEditVersion} label="Version"/>
-            <Checkbox name='parametric' value={selected_peripheral._get_periph().parametric}
-                      onChange={handleEditParametric} label="Parametric"/>
-        </div>)
-    }
-
     return (
         <div style={{
             display: "flex",
@@ -103,7 +92,18 @@ let PeripheralsManager = (props)=>{
                 height: "100%"
             }}>
                 <UIPanel style={{minHeight:"150px"}} key="properties" level="level_2">
-                    <SimpleContent name="Peripheral Properties" content={render_periph_prop()}/>
+                    <SimpleContent name="Peripheral Properties" content={
+                        <div>
+                            <InputField inline name="edit_name"
+                                        defaultValue={selected_peripheral.peripheral_name}
+                                        onKeyDown={handleEditName} label="Name"/>
+                            <InputField inline name="edit_version"
+                                        defaultValue={selected_peripheral.version}
+                                        onKeyDown={handleEditVersion} label="Version"/>
+                            <Checkbox name='parametric' value={selected_peripheral.parametric}
+                                      onChange={handleEditParametric} label="Parametric"/>
+                        </div>
+                    }/>
 
                 </UIPanel>
                 <UIPanel style={{flexGrow: 1}}

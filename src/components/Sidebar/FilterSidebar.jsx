@@ -32,7 +32,7 @@ let  FilterSidebar = props =>{
             display_key="name"
             content_name="Filter"
             selector="selected_filter"
-            onSelect={props.handle_select}
+            onSelect={props.on_select}
         />
     );
 };
