@@ -33,13 +33,11 @@ let  CoreOutputProperties = props =>{
             let value = event.target.value;
 
             if(field === "reg_n" || field === "channel") {
-                if(field === "reg_n" &&  sel_out.register_type === "vector"){
-                    value = value.split(",").map((item) =>{
-                        return parseInt(item.trim());
-                    });
-                } else {
-                    value = parseInt(value);
-                }
+                value = value.replace(/\s/g, '');
+                let value_tokens = value.split(",")
+                value = value_tokens.map(val =>{
+                    return parseInt(val);
+                })
             }
 
             await props.selected_emulator.edit_output(props.selected_component.obj.id,

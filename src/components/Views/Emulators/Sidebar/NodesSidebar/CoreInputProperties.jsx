@@ -20,15 +20,32 @@ let  CoreInputProperties = props =>{
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
+    let sel_in = props.selected_core.inputs.filter((item)=>{
+        return item.name === props.selected_iom.obj
+    })[0];
+
+
     let handle_change_iom = (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab") {
             let field = event.target.name;
             let value = event.target.value;
 
-            if(field === "reg_n" || field === "channel") value = parseInt(value);
-            if(field === "source_value") {
+            if(field === "reg_n" || field === "channel"){
+                value = value.replace(/\s/g, '');
+                let value_tokens = value.split(",")
+                value = value_tokens.map(val =>{
+                    return parseInt(val);
+                })
+            }
+            if(field === "constant_value") {
                 field = "source";
-                if(sel_in.source.type === "constant") value = parseFloat(value);
+                if(sel_in.source.type === "constant") {
+                    value = value.replace(/\s/g, '');
+                    let value_tokens = value.split(",")
+                    value = value_tokens.map(val =>{
+                        return parseFloat(val);
+                    })
+                }
                 value = {...sel_in.source, ...{"value":value}};
             }
 
@@ -59,10 +76,6 @@ let  CoreInputProperties = props =>{
         });
     }
 
-    let sel_in = props.selected_core.inputs.filter((item)=>{
-        return item.name === props.selected_iom.obj
-    })[0];
-
     let render_vector_input_properties = () =>{
         if(sel_in.register_type==="vector" || sel_in.register_type==="explicit_vector"){
             return <InputField id="labels" name="labels" label="Labels" defaultValue={sel_in.labels} onKeyDown={handle_change_iom}/>
@@ -91,8 +104,9 @@ let  CoreInputProperties = props =>{
                 ret.push(
                     <InputField
                         Inline
-                        id="source_value"
-                        name="source_value"
+                        key={"constant_value" + String(sel_in.source.value)}
+                        id="constant_value"
+                        name="constant_value"
                         label="Value"
                         defaultValue={sel_in.source.value}
                         onKeyDown={handle_change_iom}

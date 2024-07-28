@@ -36,7 +36,18 @@ let  CoreMemoryProperties = props =>{
             let field = event.target.name;
             let value = event.target.value;
 
-            if(field === "reg_n" || field === "channel"|| field==="vector_size") value = parseInt(value);
+
+
+
+            if(field === "reg_n" || field === "channel"){
+                value = value.replace(/\s/g, '');
+                let value_tokens = value.split(",");
+                value = value_tokens.map(val =>{
+                    return parseInt(val);
+                });
+            }
+
+            if(field==="vector_size") value = parseInt(value);
 
             props.selected_emulator.edit_memory(props.selected_component.obj.id,
                 field, value, props.selected_iom.obj).then(()=>{
