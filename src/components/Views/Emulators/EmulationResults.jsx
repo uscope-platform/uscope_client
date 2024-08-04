@@ -39,54 +39,24 @@ let EmulationResults = function (props) {
     let plot_config = {...PlotConfigurations.configs, response:true};
 
     let handle_select_channel = (channel,multi_selection)=>{
-        let data = props.results.get_data_series(selected_source, selected_output, channel, 0);
-        set_data([{
-            name:selected_output + "(" + selected_channel + ")",
-            x: props.results.get_timebase(),
-            y: data,
-            type: 'scatter',
-            mode: 'lines'
-        }]);
-        set_selected_channel(channel);
-    }
-
-    let handle_datapoint_select = (datapoint, multi_selection) =>{
-        set_selected_output((datapoint))
-
-        if(selected_output.includes(datapoint)) return;
-        let selected_data = [];
-        if(props.results.hasOwnProperty(selected_source)){
-            selected_data = props.results[selected_source].outputs[datapoint];
+        if(multi_selection){
+            props.results.add_data_series(selected_source, selected_output, channel, 0);
         } else {
-            selected_data = props.inputs[selected_source][datapoint];
+            props.results.set_data_series(selected_source, selected_output, channel, 0);
         }
-        if(selected_data[0].length === undefined){
-            selected_data = [{
-                name:datapoint,
-                x: props.results.get_timebase(),
-                y: selected_data,
+
+        let [timebase, data] = props.results.get_data_series();
+
+        set_data(data.map((item)=>{
+            return({
+                name:item.name,
+                x: timebase,
+                y: item.content,
                 type: 'scatter',
                 mode: 'lines'
-            }];
-        } else {
-
-            selected_data = selected_data.map((trace)=>{
-                return {
-                    name:datapoint,
-                    x: props.results.get_timebase(),
-                    y: trace,
-                    type: 'scatter',
-                    mode: 'lines'
-                };
             })
-        }
-        if(multi_selection){
-            set_data([...data, ...selected_data]);
-            set_selected_output([...selected_output, datapoint]);
-        } else{
-            set_selected_output([datapoint]);
-            set_data(selected_data);
-        }
+        }));
+        set_selected_channel(channel);
         update_data();
     }
 

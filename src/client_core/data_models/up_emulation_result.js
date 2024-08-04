@@ -22,6 +22,7 @@ export class up_emulator_result {
         delete this.data.timebase;
         this.inputs = inputs;
         this.timebase = res_obj.timebase;
+        this.selected_data_series = [];
     }
 
     get_timebase = () =>{return this.timebase}
@@ -57,8 +58,23 @@ export class up_emulator_result {
         return [];
     }
 
-    get_data_series(data_source, data_series, channel, index) {
-        return this.data[data_source].outputs[data_series][parseInt(channel)][index];
+    get_data_series() {
+        return [this.timebase, this.selected_data_series];
+    }
+
+
+    add_data_series(data_source, data_series, channel, index) {
+        this.selected_data_series.push({
+            name:data_source + "." + data_series + "." + channel + "[" + index + "]",
+            content:this.data[data_source].outputs[data_series][parseInt(channel)][index]
+        });
+    }
+
+    set_data_series(data_source, data_series, channel, index) {
+        this.selected_data_series =[{
+            name:data_source + "." + data_series + "." + channel + "[" + index + "]",
+            content:this.data[data_source].outputs[data_series][parseInt(channel)][index]
+        }];
     }
 
 }
