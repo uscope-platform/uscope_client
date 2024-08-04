@@ -27,6 +27,7 @@ import CoreInputFilesList from "./CoreInputFilesList";
 import {ToastContainer, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {ApplicationContext} from "../../../AuthApp";
+import {up_emulator_result} from "../../../client_core/data_models/up_emulation_result";
 
 
 let FcoreEmulationEditor = function (props) {
@@ -121,7 +122,7 @@ let FcoreEmulationEditor = function (props) {
                 toast.warn(results.error);
             } else {
                 props.on_compile_done(null);
-                props.onEmulationDone(results);
+                props.onEmulationDone(new up_emulator_result(results, props.input_data));
                 toast.success("Emulation Completed");
             }
         });

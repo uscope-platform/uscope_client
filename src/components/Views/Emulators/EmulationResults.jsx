@@ -23,41 +23,14 @@ const Plot = createPlotlyComponent(Plotly);
 
 let EmulationResults = function (props) {
 
-    let [selected_core, set_selected_core] = useState();
-    let [timebase, set_timebase] = useState();
+    let [selected_source, set_selected_source] = useState();
     let [selected_output, set_selected_output] = useState([]);
-
-    let [cores, set_cores] = useState([]);
-    let [outputs, set_outputs] = useState([]);
+    let [selected_channel, set_selected_channel] = useState([]);
 
     let [data, set_data] = useState([
     ])
 
     const [data_revision,update_data ] = useReducer(x => x + 1, 0);
-
-    useEffect(() => {
-        let cores = [...Object.keys(props.results)];
-        cores = cores.filter(item => {return item !== "timebase"});
-        if(props.inputs){
-            cores = [...cores, ...Object.keys(props.inputs)];
-        }
-        set_timebase(props.results['timebase']);
-        set_cores(cores);
-    }, [props.results]);
-
-
-    useEffect(() => {
-        if(props.results && selected_core){
-            let outputs = []
-            if(props.results.hasOwnProperty(selected_core)){
-                outputs = Object.keys(props.results[selected_core].outputs);
-            } else {
-                outputs = Object.keys(props.inputs[selected_core]);
-            }
-            set_outputs(outputs);
-        }
-    }, [selected_core]);
-
 
     let plot_layout = {...PlotConfigurations.layout,colorway:ColorTheme.plot_palette};
     plot_layout.width = 800;
@@ -65,19 +38,32 @@ let EmulationResults = function (props) {
 
     let plot_config = {...PlotConfigurations.configs, response:true};
 
+    let handle_select_channel = (channel,multi_selection)=>{
+        let data = props.results.get_data_series(selected_source, selected_output, channel, 0);
+        set_data([{
+            name:selected_output + "(" + selected_channel + ")",
+            x: props.results.get_timebase(),
+            y: data,
+            type: 'scatter',
+            mode: 'lines'
+        }]);
+        set_selected_channel(channel);
+    }
+
     let handle_datapoint_select = (datapoint, multi_selection) =>{
+        set_selected_output((datapoint))
 
         if(selected_output.includes(datapoint)) return;
         let selected_data = [];
-        if(props.results.hasOwnProperty(selected_core)){
-            selected_data = props.results[selected_core].outputs[datapoint];
+        if(props.results.hasOwnProperty(selected_source)){
+            selected_data = props.results[selected_source].outputs[datapoint];
         } else {
-            selected_data = props.inputs[selected_core][datapoint];
+            selected_data = props.inputs[selected_source][datapoint];
         }
         if(selected_data[0].length === undefined){
             selected_data = [{
                 name:datapoint,
-                x: timebase,
+                x: props.results.get_timebase(),
                 y: selected_data,
                 type: 'scatter',
                 mode: 'lines'
@@ -87,7 +73,7 @@ let EmulationResults = function (props) {
             selected_data = selected_data.map((trace)=>{
                 return {
                     name:datapoint,
-                    x: timebase,
+                    x: props.results.get_timebase(),
                     y: trace,
                     type: 'scatter',
                     mode: 'lines'
@@ -131,14 +117,21 @@ let EmulationResults = function (props) {
                 <UIPanel style={{flexGrow:1}} key="emulation_result_core_sel" level="level_2">
                     <SimpleContent name="Core Selector" height="100%" content={
                         <div>
-                            <SelectableList items={cores} selected_item={selected_core} onSelect={set_selected_core} />
+                            <SelectableList items={props.results.get_data_sources()} selected_item={selected_source} onSelect={set_selected_source} />
                         </div>
                     }/>
                 </UIPanel>
                 <UIPanel style={{flexGrow:1}} key="emulation_result_data_sel" level="level_2">
                     <SimpleContent name="Data Selector" height="100%" content={
                         <div>
-                            <SelectableList multi_select items={outputs} selected_item={selected_output} onSelect={handle_datapoint_select} />
+                            <SelectableList multi_select items={props.results.get_available_data_series(selected_source)} selected_item={selected_output} onSelect={set_selected_output} />
+                        </div>
+                    }/>
+                </UIPanel>
+                <UIPanel style={{flexGrow:1}} key="emulation_channel_select" level="level_2">
+                    <SimpleContent name="Channel Selector" height="100%" content={
+                        <div>
+                            <SelectableList multi_select items={props.results.get_series_channels(selected_source, selected_output)} selected_item={selected_channel} onSelect={handle_select_channel} />
                         </div>
                     }/>
                 </UIPanel>

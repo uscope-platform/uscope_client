@@ -68,6 +68,7 @@ let HilView = function (props) {
                     <FcoreEmulationEditor
                         onEmulationDone={set_emulation_results}
                         onInputDataChange={set_input_data}
+                        input_data={input_data}
                         onDeploy={()=>{set_deployed(true)}}
                         emulator_selector={emulator_selector}
                         on_component_select={handle_component_select}
