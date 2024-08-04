@@ -58,6 +58,23 @@ export class up_emulator_result {
         return [];
     }
 
+    get_array_indices(data_source, data_series, channel){
+        if(this.data.hasOwnProperty(data_source)){
+            if(this.data[data_source].outputs.hasOwnProperty(data_series)){
+                if(typeof channel === "string"){
+                    let array = this.data[data_source].outputs[data_series][0];
+                    let res = []
+                    let i = 0;
+                    for(let i = 0; i<array.length; i++){
+                        res.push(String(i));
+                    }
+                    return res
+                }
+            }
+        }
+        return [];
+    }
+
     get_data_series() {
         return [this.timebase, this.selected_data_series];
     }

@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect, useReducer, useState} from 'react';
+import React, { useReducer, useState} from 'react';
 import {ColorTheme, PlotConfigurations, SelectableList, SimpleContent, UIPanel} from "../../UI_elements";
 import createPlotlyComponent from "react-plotly.js/factory";
 import Plotly from "plotly.js-basic-dist";
@@ -26,6 +26,8 @@ let EmulationResults = function (props) {
     let [selected_source, set_selected_source] = useState();
     let [selected_output, set_selected_output] = useState([]);
     let [selected_channel, set_selected_channel] = useState([]);
+    let [selected_index, set_selected_index] = useState([]);
+
 
     let [data, set_data] = useState([
     ])
@@ -38,11 +40,11 @@ let EmulationResults = function (props) {
 
     let plot_config = {...PlotConfigurations.configs, response:true};
 
-    let handle_select_channel = (channel,multi_selection)=>{
+    let handle_select_index = (index,multi_selection)=>{
         if(multi_selection){
-            props.results.add_data_series(selected_source, selected_output, channel, 0);
+            props.results.add_data_series(selected_source, selected_output, selected_channel, index);
         } else {
-            props.results.set_data_series(selected_source, selected_output, channel, 0);
+            props.results.set_data_series(selected_source, selected_output, selected_channel, index);
         }
 
         let [timebase, data] = props.results.get_data_series();
@@ -56,7 +58,7 @@ let EmulationResults = function (props) {
                 mode: 'lines'
             })
         }));
-        set_selected_channel(channel);
+        set_selected_index(index);
         update_data();
     }
 
@@ -101,7 +103,14 @@ let EmulationResults = function (props) {
                 <UIPanel style={{flexGrow:1}} key="emulation_channel_select" level="level_2">
                     <SimpleContent name="Channel Selector" height="100%" content={
                         <div>
-                            <SelectableList multi_select items={props.results.get_series_channels(selected_source, selected_output)} selected_item={selected_channel} onSelect={handle_select_channel} />
+                            <SelectableList multi_select items={props.results.get_series_channels(selected_source, selected_output)} selected_item={selected_channel} onSelect={set_selected_channel} />
+                        </div>
+                    }/>
+                </UIPanel>
+                <UIPanel style={{flexGrow:1}} key="emulation_array_select" level="level_2">
+                    <SimpleContent name="Array selector" height="100%" content={
+                        <div>
+                            <SelectableList multi_select items={props.results.get_array_indices(selected_source,selected_output, selected_channel)} selected_item={selected_index} onSelect={handle_select_index} />
                         </div>
                     }/>
                 </UIPanel>
