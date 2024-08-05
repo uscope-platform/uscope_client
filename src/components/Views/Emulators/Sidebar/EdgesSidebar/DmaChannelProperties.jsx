@@ -64,10 +64,18 @@ let  DmaChannelProperties = props =>{
                 let split_field = field.split("_");
                 if(split_field[0] === 'source'){
                     value = props.selected_channel.source;
-                    value[split_field[1]] = parseInt(event.target.value);
+                    let raw_value = event.target.value.replace(/\s/g, '');
+                    let value_tokens = raw_value.split(",");
+                    value[split_field[1]] = value_tokens.map(val =>{
+                        return parseInt(val);
+                    });
                 } else {
                     value = props.selected_channel.target;
-                    value[split_field[1]] = parseInt(event.target.value);
+                    let raw_value = event.target.value.replace(/\s/g, '');
+                    let value_tokens = raw_value.split(",");
+                    value[split_field[1]] = value_tokens.map(val =>{
+                        return parseInt(val);
+                    });
                 }
                 field = split_field[0];
             }
