@@ -14,8 +14,8 @@
 // limitations under the License.
 
 import React, {useReducer} from 'react';
-
 import {InputField, SelectField, SimpleContent} from "../../../../UI_elements";
+
 let  CoreInputProperties = props =>{
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
@@ -133,43 +133,45 @@ let  CoreInputProperties = props =>{
         }
         return(ret);
     }
+    if(sel_in){
+        return(
+            <SimpleContent name="Input Properties" content={
+                <div key="input_props">
+                    <InputField id="name" name="name" label="Name" defaultValue={sel_in.name} onKeyDown={handle_change_iom}/>
+                    <InputField id="channel" name="channel" label="Channel" defaultValue={sel_in.channel} onKeyDown={handle_change_iom}/>
+                    <InputField id="reg_n" name="reg_n" label="Register #" defaultValue={sel_in.reg_n} onKeyDown={handle_change_iom}/>
+                    <SelectField
+                        inline
+                        label="Data Type"
+                        onChange={handle_select}
+                        value={{value: sel_in.type, label: sel_in.type}}
+                        defaultValue="Select Data Type"
+                        name="type"
+                        options={[
+                            {label: "float", value: "float"},
+                            {label: "integer", value: "integer"}
+                        ]}
+                    />
+                    <SelectField
+                        inline
+                        label="Register Type"
+                        onChange={handle_select}
+                        value={{value: sel_in.register_type, label: sel_in.register_type}}
+                        defaultValue="Select Register Type"
+                        name="register_type"
+                        options={[
+                            {label: "scalar", value: "scalar"},
+                            {label: "vector", value: "vector"},
+                            {label: "explicit_vector", value: "explicit_vector"}
+                        ]}
+                    />
+                    {render_source_options()}
+                    {render_vector_input_properties()}
+                </div>
+            }/>
+        )
+    }
 
-    return(
-        <SimpleContent name="Input Properties" content={
-            <div key="input_props">
-                <InputField id="name" name="name" label="Name" defaultValue={sel_in.name} onKeyDown={handle_change_iom}/>
-                <InputField id="channel" name="channel" label="Channel" defaultValue={sel_in.channel} onKeyDown={handle_change_iom}/>
-                <InputField id="reg_n" name="reg_n" label="Register #" defaultValue={sel_in.reg_n} onKeyDown={handle_change_iom}/>
-                <SelectField
-                    inline
-                    label="Data Type"
-                    onChange={handle_select}
-                    value={{value: sel_in.type, label: sel_in.type}}
-                    defaultValue="Select Data Type"
-                    name="type"
-                    options={[
-                        {label: "float", value: "float"},
-                        {label: "integer", value: "integer"}
-                    ]}
-                />
-                <SelectField
-                    inline
-                    label="Register Type"
-                    onChange={handle_select}
-                    value={{value: sel_in.register_type, label: sel_in.register_type}}
-                    defaultValue="Select Register Type"
-                    name="register_type"
-                    options={[
-                        {label: "scalar", value: "scalar"},
-                        {label: "vector", value: "vector"},
-                        {label: "explicit_vector", value: "explicit_vector"}
-                    ]}
-                />
-                {render_source_options()}
-                {render_vector_input_properties()}
-            </div>
-        }/>
-    )
 
 };
 

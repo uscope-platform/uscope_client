@@ -84,41 +84,44 @@ let  CoreMemoryProperties = props =>{
         }
     }
 
-    return(
-        <SimpleContent name="Memory Properties" content={
-            <div key="memory_props">
-                <InputField inline id="name" name="name" label="Name" defaultValue={sel_mem.name} onKeyDown={handle_change_iom}/>
-                <InputField inline id="reg_n" name="reg_n" label="Register #" defaultValue={sel_mem.reg_n} onKeyDown={handle_change_iom}/>
-                <SelectField
-                    inline
-                    label="Type"
-                    onChange={handle_change_type}
-                    value={{value: sel_mem.type, label: sel_mem.type}}
-                    defaultValue="Select Type"
-                    name="type"
-                    options={[
-                        {label: "float", value: "float"},
-                        {label: "integer", value: "integer"}
-                    ]}
-                />
-                <SelectField
-                    inline
-                    label="Register Type"
-                    onChange={handle_select}
-                    value={{value: sel_mem.register_type, label: sel_mem.register_type}}
-                    defaultValue="Select Register Type"
-                    name="register_type"
-                    options={[
-                        {label: "scalar", value: "scalar"},
-                        {label: "vector", value: "vector"}
-                    ]}
-                />
-                {render_vector_init_props()}
-                <InputField inline id="value" name="value" label="Value" defaultValue={sel_mem.value} onKeyDown={handle_change_iom}/>
-                <Checkbox name='is_output' value={sel_mem.is_output} onChange={handle_change_output} label="Use as Output"/>
-            </div>
-        }/>
-    )
+    if(sel_mem){
+        return(
+            <SimpleContent name="Memory Properties" content={
+                <div key="memory_props">
+                    <InputField inline id="name" name="name" label="Name" defaultValue={sel_mem.name} onKeyDown={handle_change_iom}/>
+                    <InputField inline id="reg_n" name="reg_n" label="Register #" defaultValue={sel_mem.reg_n} onKeyDown={handle_change_iom}/>
+                    <SelectField
+                        inline
+                        label="Type"
+                        onChange={handle_change_type}
+                        value={{value: sel_mem.type, label: sel_mem.type}}
+                        defaultValue="Select Type"
+                        name="type"
+                        options={[
+                            {label: "float", value: "float"},
+                            {label: "integer", value: "integer"}
+                        ]}
+                    />
+                    <SelectField
+                        inline
+                        label="Register Type"
+                        onChange={handle_select}
+                        value={{value: sel_mem.register_type, label: sel_mem.register_type}}
+                        defaultValue="Select Register Type"
+                        name="register_type"
+                        options={[
+                            {label: "scalar", value: "scalar"},
+                            {label: "vector", value: "vector"}
+                        ]}
+                    />
+                    {render_vector_init_props()}
+                    <InputField inline id="value" name="value" label="Value" defaultValue={sel_mem.value} onKeyDown={handle_change_iom}/>
+                    <Checkbox name='is_output' value={sel_mem.is_output} onChange={handle_change_output} label="Use as Output"/>
+                </div>
+            }/>
+        )
+    }
+
 
 };
 
