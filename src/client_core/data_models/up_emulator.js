@@ -291,7 +291,8 @@ export class up_emulator {
             target: {
                 channel:0,
                 register: 0
-            }
+            },
+            length:1
         }
         let dma_obj = this.connections.filter((item)=>{
             return item.source === source && item.target === target;
@@ -428,6 +429,7 @@ export class up_emulator {
                             destination_input: item.target_input
                         };
                         if (item.length) ret.length = item.length;
+                        else ret.length = 1;
                         if (item.stride) ret.stride = item.stride;
                         return ret;
                     })
