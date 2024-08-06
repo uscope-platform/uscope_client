@@ -458,9 +458,18 @@ export class up_emulator {
         Object.values(this.connections).map((dma)=>{
             dma.channels.map((ch)=>{
                 switch (ch.type){
+                    case "vector_transfer":
+                        alert("not implemented yet")
+                        break;
+                    case "scatter_transfer":
+                        alert("not implemented yet")
+                        break;
+                    case "gather_transfer":
+                        alert("not implemented yet")
+                        break;
                     case "2d_vector_transfer":
                         for(let i = 0; i<ch.stride; i++){
-                            target_outputs[ch.target.register + i] = ch.name + "[" + i + "]";
+                            target_outputs[ch.target.register[i]] = ch.name + "[" + i + "]";
                         }
                         break;
                     case "scalar_transfer":
