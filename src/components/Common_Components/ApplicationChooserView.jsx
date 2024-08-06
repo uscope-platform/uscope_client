@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {Button, SelectField} from "../UI_elements"
 import styled from "styled-components";
@@ -36,14 +36,22 @@ let ApplicationChooserView = props =>{
         label:application[1].application_name
     }))
 
-    let last_app = localStorage.getItem("last_selected_application");
+    const [selected, set_selected] = useState(null);
 
-    let default_app = last_app ? {
-        value:parseInt(last_app),
-        label:props.applications[parseInt(last_app)].application_name
-    }:apps_list[0];
+    useEffect(()=>{
+        let last_app = localStorage.getItem("last_selected_application");
+        if(last_app && props.applications.hasOwnProperty(parseInt(last_app))){
+            set_selected({
+                value:parseInt(last_app),
+                label:props.applications[parseInt(last_app)].application_name
+            })
+        } else {
+            set_selected(apps_list[0]);
+        }
+    },[])
 
-    const [selected, set_selected] = useState(default_app);
+
+
 
     let handle_close = (event) =>{
         event.preventDefault();
