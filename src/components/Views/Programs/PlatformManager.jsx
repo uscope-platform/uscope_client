@@ -110,12 +110,18 @@ let  PlatformManager = props =>{
                             <FormLayout>
                                 <InputField defaultValue={selected_user} inline name="user" label="Username"/>
                                 <InputField inline name="pass" label="Password"/>
-                                <SelectField label="Role" defaultValue="role"
-                                             name="role" placeholder="Role" options={[
-                                    {value:"admin",label:"admin"},
-                                    {value:"user",label:"user"},
-                                    {value:"operator",label:"operator"}
-                                ]}/>
+                                <SelectField
+                                    label="Role"
+                                    defaultValue="role"
+                                    name="role"
+                                    placeholder="Role"
+                                    onChange={()=>{}}
+                                    options={[
+                                        {value:"admin",label:"admin"},
+                                        {value:"user",label:"user"},
+                                        {value:"operator",label:"operator"}
+                                    ]}
+                                />
                                 <Button> Add User </Button>
                             </FormLayout>
                         </form>
