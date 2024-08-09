@@ -23,17 +23,26 @@ let HilChannelSelector = function (props) {
 
     const application = useContext(ApplicationContext);
 
-    let target_outputs = props.emulator ? props.emulator.get_outputs() : {};
     let [selected_channels, set_selected_channels]  = useState(()=>{
         let default_state = [{},{},{},{},{},{}];
         let state = get_ui_state(application,'hil_selector_channels',  default_state);
         if( state !== default_state){
             for(let i = 0; i< 6; i++) {
-                props.emulator.select_output(i, parseInt(state[i].value));
+                props.emulator.select_output(i, state[i].value);
             }
         }
         return state;
     });
+
+    let produce_data_options = ()=>{
+        if(!props.emulator){
+            return {}
+        }
+
+        return props.emulator.get_hil_data_points().map(item=>{
+            return{label:item.name, value:item}
+        })
+    }
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
@@ -43,7 +52,7 @@ let HilChannelSelector = function (props) {
         new_ch[ch_n-1] = value;
         set_selected_channels(new_ch);
         forceUpdate();
-        props.emulator.select_output(ch_n-1, parseInt(value.value));
+        props.emulator.select_output(ch_n-1, value.value);
         save_ui_state(application,'hil_selector_channels', new_ch);
     }
 
@@ -59,7 +68,7 @@ let HilChannelSelector = function (props) {
                     value={selected_channels[i]}
                     defaultValue="Select Datapoint"
                     name={"channel_" + (i+1)}
-                    options={Object.keys(target_outputs).map((addr)=>{return{label:target_outputs[addr], value:addr}})}
+                    options={produce_data_options()}
                 />
             )
         }
