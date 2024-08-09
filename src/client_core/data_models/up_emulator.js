@@ -464,7 +464,7 @@ export class up_emulator {
                         processed_iom.push([dma.source, ch.source_output, 0, 0])
                         dp.push({
                             name: source_core + "." + ch.source_output,
-                            source:dma.source,
+                            source:source_core,
                             output:ch.source_output,
                             address: ch.source.register[0],
                             channel:ch.source.channel[0]
@@ -475,7 +475,7 @@ export class up_emulator {
                             processed_iom.push([dma.source, ch.source_output, i, 0])
                             dp.push({
                                 name: source_core+ "." + ch.source_output + "(" + i + ",0)",
-                                source:dma.source,
+                                source:source_core,
                                 output:ch.source_output,
                                 address: ch.source.register[0] + i,
                                 channel:ch.source.channel[0]
@@ -487,7 +487,7 @@ export class up_emulator {
                             processed_iom.push([dma.source, ch.source_output, i, 0])
                             dp.push({
                                 name: source_core + "." + ch.source_output + "(0," + i+ ")",
-                                source:dma.source,
+                                source:source_core,
                                 output:ch.source_output,
                                 address: ch.source.register[0],
                                 channel:ch.source.channel[0] + i
@@ -500,7 +500,7 @@ export class up_emulator {
                             processed_iom.push([dma.source, ch.source_output,i, i])
                             dp.push({
                                 name: source_core + "." + ch.source_output + "("+ i+"," + i+ ")",
-                                source:dma.source,
+                                source:source_core,
                                 output:ch.source_output,
                                 address: ch.source.register[0]+ i,
                                 channel:ch.source.channel[0] + i
@@ -513,7 +513,7 @@ export class up_emulator {
                                 processed_iom.push([dma.source, ch.source_output, j , i])
                                 dp.push({
                                     name: source_core + "." + ch.source_output + "(" +j + "," + i + ")",
-                                    source: dma.source,
+                                    source: source_core,
                                     output:ch.source_output,
                                     address: ch.source.register[0] + j,
                                     channel: ch.source.channel[0] + i
@@ -532,7 +532,7 @@ export class up_emulator {
                         if (!processed_iom.some(e =>  JSON.stringify(e) === JSON.stringify([core.id, out.name, j, i]))) {
                             dp.push({
                                 name: core.name + "." + out.name + "(" +j + "," + i + ")",
-                                source: core.id,
+                                source: core.name,
                                 output:out.name,
                                 address: out.reg_n[0] + j,
                                 channel: i
