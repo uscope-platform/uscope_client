@@ -101,5 +101,8 @@ export const api_dictionary = {
         set_input: 'hil/set_input',
         start:'hil/start',
         stop:'hil/stop'
+    },
+    settings:{
+        debug_level:'settings/debug_level'
     }
 }

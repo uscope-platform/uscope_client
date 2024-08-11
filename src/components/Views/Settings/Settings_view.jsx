@@ -13,31 +13,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useContext} from 'react';
-import {InputField, SimpleContent, UIPanel} from "../../UI_elements";
+import React, {useContext, useState} from 'react';
+import {InputField, SelectField, SimpleContent, UIPanel} from "../../UI_elements";
 import {ApplicationContext} from "../../../AuthApp";
+import {up_settings} from "../../../client_core/data_models/up_settings";
 
 let SettingsView = function (props) {
 
     const application = useContext(ApplicationContext);
 
-    const empty_app = {
-        channels:[],
-        channel_groups:[],
-        initial_registers_values:[],
-        macro:[],
-        parameters:[],
-        peripherals:[],
-        soft_cores:[],
-        filters:[],
-        scripts:[],
-        programs:[],
-        application_name:""
-    };
 
     const selected_app = application ? application: {};
 
     const hil_present = selected_app.application_name === "HIL_base";
+
+    const [debug_level, set_debug_level] = useState({level:"debug", value:"debug"});
 
     let handle_edit_clocks = async (event) =>{
 
@@ -47,8 +37,9 @@ let SettingsView = function (props) {
         }
     }
 
-    let handle_edit_platform_settings = (event) =>{
-        let i= 0;
+    let handle_set_debug_level =async (value, event) =>{
+        await up_settings.set_debug_level(value.value);
+        set_debug_level(value);
     }
 
     let render_hil_components = () =>{
@@ -86,7 +77,19 @@ let SettingsView = function (props) {
             <UIPanel key="platform_settings" style={{minHeight:"100px"}} level="level_2">
                 <SimpleContent name="Platform settings" content={
                     <div>
-                        <InputField inline name="driver_log_level" defaultValue={123} onKeyDown={handle_edit_platform_settings} label="Driver log level"/>
+                        <SelectField
+                            inline
+                            label="Driver Log Level"
+                            onChange={handle_set_debug_level}
+                            value={debug_level}
+                            defaultValue="Select Datapoint"
+                            name="driver_log_level"
+                            options={[
+                                {label:"minimal", value:"minimal"},
+                                {label:"debug", value:"debug"},
+                                {label:"trace", value:"trace"}
+                            ]}
+                        />
                     </div>
                 }/>
             </UIPanel>
