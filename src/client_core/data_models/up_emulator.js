@@ -285,12 +285,12 @@ export class up_emulator {
             name:"new_dma_channel_" + progressive,
             type:"scalar_transfer",
             source:{
-                channel:0,
-                register:0
+                channel:[0],
+                register:[0]
             },
             target: {
-                channel:0,
-                register: 0
+                channel:[0],
+                register: [0]
             },
             length:1
         }
