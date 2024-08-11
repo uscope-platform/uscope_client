@@ -61,6 +61,23 @@ let EmulationResults = function (props) {
         set_selected_index(index);
         update_data();
     }
+    let handle_select_source = source =>{
+        set_selected_source(source);
+        set_selected_output([]);
+        set_selected_channel([]);
+        set_selected_index([]);
+    }
+
+    let handle_select_output = output =>{
+        set_selected_output(output);
+        set_selected_channel([]);
+        set_selected_index([]);
+    }
+
+    let handle_select_channel = channel =>{
+        set_selected_channel(channel);
+        set_selected_index([]);
+    }
 
     return(
         <div style={{
@@ -89,21 +106,21 @@ let EmulationResults = function (props) {
                 <UIPanel style={{flexGrow:1}} key="emulation_result_core_sel" level="level_2">
                     <SimpleContent name="Core Selector" height="100%" content={
                         <div>
-                            <SelectableList items={props.results.get_data_sources()} selected_item={selected_source} onSelect={set_selected_source} />
+                            <SelectableList items={props.results.get_data_sources()} selected_item={selected_source} onSelect={handle_select_source} />
                         </div>
                     }/>
                 </UIPanel>
                 <UIPanel style={{flexGrow:1}} key="emulation_result_data_sel" level="level_2">
                     <SimpleContent name="Data Selector" height="100%" content={
                         <div>
-                            <SelectableList multi_select items={props.results.get_available_data_series(selected_source)} selected_item={selected_output} onSelect={set_selected_output} />
+                            <SelectableList multi_select items={props.results.get_available_data_series(selected_source)} selected_item={selected_output} onSelect={handle_select_output} />
                         </div>
                     }/>
                 </UIPanel>
                 <UIPanel style={{flexGrow:1}} key="emulation_channel_select" level="level_2">
                     <SimpleContent name="Channel Selector" height="100%" content={
                         <div>
-                            <SelectableList multi_select items={props.results.get_series_channels(selected_source, selected_output)} selected_item={selected_channel} onSelect={set_selected_channel} />
+                            <SelectableList multi_select items={props.results.get_series_channels(selected_source, selected_output)} selected_item={selected_channel} onSelect={handle_select_channel} />
                         </div>
                     }/>
                 </UIPanel>
