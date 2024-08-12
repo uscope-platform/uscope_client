@@ -502,7 +502,7 @@ export class up_emulator {
                                 name: source_core + "." + ch.source_output + "("+ i+"," + i+ ")",
                                 source:source_core,
                                 output:ch.source_output,
-                                address: ch.source.register[0]+ i,
+                                address: ch.source.register[0],
                                 channel:ch.source.channel[0] + i
                             })
                         }
