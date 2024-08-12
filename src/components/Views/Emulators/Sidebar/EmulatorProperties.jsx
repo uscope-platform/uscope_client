@@ -15,7 +15,7 @@
 
 import React, {useEffect, useReducer, useState} from 'react';
 
-import {InputField, SimpleContent, UIPanel, RangedInputField} from "../../../UI_elements";
+import {InputField, SimpleContent, UIPanel, RangedInputField, Checkbox} from "../../../UI_elements";
 
 
 const ranges_map = {s:1, ms:1e-3, us:1e-6};
@@ -84,6 +84,9 @@ let  EmulatorProperties = props =>{
             forceUpdate();
         });
     }
+    const handle_deployment_mode = (event) =>{
+        props.selected_emulator.edit_deployment_mode(event.target.checked);
+    }
 
     if(props.selected_emulator && props.enabled){
         return(
@@ -103,7 +106,7 @@ let  EmulatorProperties = props =>{
                                 value={indicated_time}
                                 range={range}
                             />
-
+                            <Checkbox name='deployment_mode' value={props.selected_emulator.deployment_mode} onChange={handle_deployment_mode} label="Custom deployment mode"/>
                         </div>
                     }
                     />

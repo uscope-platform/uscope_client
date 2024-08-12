@@ -27,6 +27,7 @@ export class up_emulator {
         this.name = emulator_obj.name;
         this.cores = emulator_obj.cores;
         this.emulation_time = emulator_obj.emulation_time;
+        this.deployment_mode = emulator_obj.deployment_mode;
         if(!emulator_obj.connections){
             this.connections = [];
         } else {
@@ -36,6 +37,7 @@ export class up_emulator {
 
     deep_copy = ()=>{
         let ret = {};
+        ret.deployment_mode = this.deployment_mode;
         ret.id = this.id;
         ret.name = this.name;
         ret.cores = JSON.parse(JSON.stringify(this.cores));
@@ -50,7 +52,8 @@ export class up_emulator {
             name:'new_emulator_'+ emulator_id,
             cores:{},
             connections:[],
-            emulation_time:0.001
+            emulation_time:0.001,
+            deployment_mode:false
         };
         return new up_emulator(emulator_obj);
     }
@@ -95,12 +98,22 @@ export class up_emulator {
         this.name = new_name;
         store.dispatch(update_emulator(this.deep_copy()));
     };
+
     edit_emulation_time =async (emu_time) =>{
         let edit = {emulator:this.id, value:emu_time, action:"edit_emu_time"};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         this.emulation_time = emu_time;
         store.dispatch(update_emulator(this.deep_copy()));
     };
+
+    edit_deployment_mode =async (mode) =>{
+        let edit = {emulator:this.id, value:mode, action:"edit_deployment_mode"};
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        this.deployment_mode = mode;
+        store.dispatch(update_emulator(this.deep_copy()));
+    };
+
+
     edit_core_props = async (core_id, field, value) =>{
         let edit = {emulator:this.id, core:core_id.toString(), field_name:field, value:value, action:"edit_core_props"};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit)
