@@ -34,6 +34,7 @@ import {addApplication} from "./redux/Actions/applicationActions";
 import {UIPanel} from "./components/UI_elements";
 import PlatformManager from "./components/Views/Programs/PlatformManager";
 import {InterfaceParameters} from "./components/UI_elements/InterfaceParameters";
+import {up_settings} from "./client_core/data_models/up_settings";
 
 
 let operator_views = ["Scope"];
@@ -54,11 +55,12 @@ let AuthApp = (props) =>{
     const [app_stage, set_app_stage] = useState("WAITING");
     const [application, set_application] = useState(null);
 
-    let app_choice_done = (application)=>{
+    let app_choice_done = async (application)=>{
         let app = new up_application(applications[application]);
         set_application(app);
         setup_client_core(app);
         populate_views();
+        await up_settings.initialize_default_driver_address_map();
         set_app_stage("NORMAL");
     };
 

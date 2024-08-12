@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {backend_post} from "../proxy/backend";
+import {backend_get, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
 
 export class up_settings {
@@ -22,5 +22,37 @@ export class up_settings {
         return backend_post(api_dictionary.settings.debug_level, {level:level});
     }
 
+    static get_debug_level(){
+        return backend_get(api_dictionary.settings.debug_level);
+    }
 
+    static get_hil_address_map() {
+        return backend_get(api_dictionary.settings.hil_address_map);
+    }
+
+    static set_hil_address_map(map) {
+        return backend_post(api_dictionary.settings.hil_address_map, map);
+    }
+
+    static initialize_default_driver_address_map() {
+       return backend_post(api_dictionary.settings.hil_address_map, {
+            "bases": {
+                "controller": 18316591104,
+                "cores_control": 18316656640,
+                "cores_inputs": 8192,
+                "cores_rom": 21474836480,
+                "dma": 18316660736,
+                "hil_control": 18316525568,
+                "scope_mux": 18316853248
+            },
+            "offsets": {
+                "controller": 4096,
+                "cores_control": 65536,
+                "cores_inputs": 4096,
+                "cores_rom": 268435456,
+                "dma": 65536,
+                "hil_tb": 0
+            }
+        })
+    }
 }

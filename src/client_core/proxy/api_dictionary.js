@@ -103,6 +103,7 @@ export const api_dictionary = {
         stop:'hil/stop'
     },
     settings:{
-        debug_level:'settings/debug_level'
+        debug_level:'settings/debug_level',
+        hil_address_map:'settings/hil_address_map',
     }
 }
