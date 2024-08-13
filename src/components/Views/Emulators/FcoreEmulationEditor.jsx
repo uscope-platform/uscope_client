@@ -158,23 +158,25 @@ let FcoreEmulationEditor = function (props) {
 
 
     let handle_link_nodes = (event, from, to) =>{
-
-        let found_edges = emulator.connections.filter((conn)=>{
-            return conn.source === from.id && conn.target === to.id;
-        })
-        if(found_edges.length === 0){
-            emulator.add_dma_connection(from.id, to.id).then(()=>{
-                const id = `${from.id}-${to.id}`;
-                setEdges([
-                    ...edges,
-                    {
-                        id,
-                        from: from.id,
-                        to: to.id
-                    }
-                ]);
-            });
+        if(!emulator.deployment_mode){
+            let found_edges = emulator.connections.filter((conn)=>{
+                return conn.source === from.id && conn.target === to.id;
+            })
+            if(found_edges.length === 0){
+                emulator.add_dma_connection(from.id, to.id).then(()=>{
+                    const id = `${from.id}-${to.id}`;
+                    setEdges([
+                        ...edges,
+                        {
+                            id,
+                            from: from.id,
+                            to: to.id
+                        }
+                    ]);
+                });
+            }
         }
+
     }
 
     let handle_node_remove = (result, node)=>{

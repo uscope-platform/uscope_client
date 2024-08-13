@@ -593,9 +593,9 @@ export class up_emulator {
             name: this.name,
             cores: this.cores,
             emulation_time:this.emulation_time,
-            connections: this.connections
+            connections: this.connections,
+            deployment_mode: this.deployment_mode
         };
     }
-
 
 }

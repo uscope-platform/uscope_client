@@ -17,7 +17,7 @@ import React from 'react';
 
 import {ColorTheme} from "../../UI_elements";
 import {Tooltip} from "react-tooltip";
-import {MdAdd, MdBuild, MdConstruction, MdDownload, MdPlayArrow} from "react-icons/md";
+import {MdAdd, MdConstruction, MdDownload, MdPlayArrow} from "react-icons/md";
 
 let  EmulatorToolbar = props =>{
 

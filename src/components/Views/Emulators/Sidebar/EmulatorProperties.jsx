@@ -78,7 +78,6 @@ let  EmulatorProperties = props =>{
     }
 
     const handle_range_change = (value)=>{
-        //TODO: HANDLE RANGE CHANGE
         let time = indicated_time*ranges_map[value];
         props.selected_emulator.edit_emulation_time(time).then(()=>{
             forceUpdate();
