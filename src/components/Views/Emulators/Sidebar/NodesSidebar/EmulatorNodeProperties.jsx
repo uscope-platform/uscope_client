@@ -18,6 +18,7 @@ import React from 'react';
 import {SimpleContent, UIPanel} from "../../../../UI_elements";
 import NodeIomProperties from "./NodeIomProperties";
 import EmulatorCoreProperties from "./EmulatorCoreProperties";
+import EmulatorCoreDeploymentProperties from "./EmulatorCoreDeploymentProperties";
 
 let  EmulatorNodeProperties = props =>{
 
@@ -27,6 +28,21 @@ let  EmulatorNodeProperties = props =>{
             return item.id === props.selected_component.obj.id;
         })[0];
 
+        const render_core_deploy_properties = () =>{
+            if(props.selected_emulator.deployment_mode){
+                return(
+                    <UIPanel key={"Deployment Properties"}  level="level_2">
+                        <SimpleContent name={"Deployment Properties"} content={
+                            <EmulatorCoreDeploymentProperties
+                                selected_core={selected_core}
+                                deployment={selected_core.deployment}
+                                emulator={props.selected_emulator}
+                            />
+                        } />
+                    </UIPanel>
+                )
+            }
+        }
         return(
             <div style={{
                 display: "flex",
@@ -43,6 +59,7 @@ let  EmulatorNodeProperties = props =>{
                         />
                     } />
                 </UIPanel>
+                {render_core_deploy_properties()}
                 <UIPanel style={{minHeight:"200px"}} key={"iom properties"} level="level_2">
                     <NodeIomProperties
                         selected_core={selected_core}

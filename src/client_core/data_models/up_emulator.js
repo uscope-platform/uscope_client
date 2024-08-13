@@ -83,7 +83,12 @@ export class up_emulator {
                 comparators:"reducing",
                 efi_implementation:"none"
             },
-            sampling_frequency:0
+            sampling_frequency:0,
+            deployment:{
+                rom_address:0,
+                control_address:0,
+                has_reciprocal:false
+            }
         };
         this.cores[id] = c;
         let edit = {emulator:this.id, core:c, action:"add_core"};
@@ -203,6 +208,13 @@ export class up_emulator {
                 return item;
             }
         });
+        store.dispatch(update_emulator(this.deep_copy()));
+    }
+
+    edit_deployment_options = async (core_id, options_obj) =>{
+        let edit = {emulator:this.id, core:core_id.toString(),  value:options_obj, action:"edit_deployment_options"};
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        this.cores[core_id].deployment = options_obj;
         store.dispatch(update_emulator(this.deep_copy()));
     }
 

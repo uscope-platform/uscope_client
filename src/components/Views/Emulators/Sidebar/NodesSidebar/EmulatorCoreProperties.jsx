@@ -53,17 +53,6 @@ let  EmulatorCoreProperties = props =>{
         });
     }
 
-    let render_custom_deploy_properties = () =>{
-        if(props.selected_emulator.deployment_mode) {
-            return(
-                <div>
-                    <InputField inline id="rom_address" name="rom_address" label="Code address" defaultValue={props.selected_core.rom_address} onKeyDown={handle_change}/>
-                    <InputField inline id="control_address" name="control_address" label="Control address" defaultValue={props.selected_core.control_address} onKeyDown={handle_change}/>
-                </div>
-            )
-        }
-    }
-
     return(
         <div key="node_props">
             <InputField inline id="name" name="name" label="Core Name" defaultValue={props.selected_core.name} onKeyDown={handle_change}/>
@@ -80,7 +69,6 @@ let  EmulatorCoreProperties = props =>{
             <InputField inline id="efi_implementation" name="efi_implementation" label="EFI" defaultValue={props.selected_core.options.efi_implementation} onKeyDown={handle_change}/>
             <InputField inline id="comparators" name="comparators" label="comparators" defaultValue={props.selected_core.options.comparators} onKeyDown={handle_change}/>
             <InputField inline id="sampling_frequency" name="sampling_frequency" label="Sampling Frequency" defaultValue={props.selected_core.sampling_frequency} onKeyDown={handle_change}/>
-            {render_custom_deploy_properties()}
         </div>
     );
 };
