@@ -426,6 +426,7 @@ export class up_emulator {
                             value: init_val
                         };
                     }),
+                    deployment:item.deployment,
                     channels: item.channels,
                     program: (() => {
                         let prog = Object.values(store.getState().programs).filter((p) => {
@@ -460,7 +461,8 @@ export class up_emulator {
                     })
                 };
             }),
-            emulation_time:this.emulation_time
+            emulation_time:this.emulation_time,
+            deployment_mode:this.deployment_mode
         };
     }
 
