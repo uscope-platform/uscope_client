@@ -34,7 +34,6 @@ let SettingsView = function (props) {
             "cores_control": 0,
             "cores_inputs": 0,
             "controller": 0,
-            "dma": 0,
             "hil_control": 0,
             "scope_mux": 0
         },
@@ -123,9 +122,9 @@ let SettingsView = function (props) {
                                             defaultValue={'0x'+hil_address_map.offsets.controller.toString(16)}
                                             onKeyDown={handle_edit_hil_setting} label="Offset"/>
                             </div>
-                            <InputField inline name="dma.bases"
-                                        defaultValue={'0x'+hil_address_map.bases.dma.toString(16)}
-                                        onKeyDown={handle_edit_hil_setting} label="DMA: base"/>
+                            <InputField inline name="dma.offsets"
+                                        defaultValue={'0x'+hil_address_map.offsets.dma.toString(16)}
+                                        onKeyDown={handle_edit_hil_setting} label="DMA offset"/>
                             <InputField inline name="hil_control.bases"
                                         defaultValue={'0x'+hil_address_map.bases.hil_control.toString(16)}
                                         onKeyDown={handle_edit_hil_setting} label="HIL control Address"/>
