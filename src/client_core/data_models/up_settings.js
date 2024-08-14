@@ -41,7 +41,7 @@ export class up_settings {
                 "cores_control": 18316656640,
                 "cores_inputs": 8192,
                 "cores_rom": 21474836480,
-                "dma": 18316660736,
+                "dma": 4096,
                 "hil_control": 18316525568,
                 "scope_mux": 18316853248
             },
@@ -50,7 +50,6 @@ export class up_settings {
                 "cores_control": 65536,
                 "cores_inputs": 4096,
                 "cores_rom": 268435456,
-                "dma": 65536,
                 "hil_tb": 0
             }
         })
