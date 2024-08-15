@@ -88,14 +88,15 @@ let  CoreInputProperties = props =>{
             <SelectField
                 inline
                 key="source_type"
-                label="Source Type"
+                label="Input Type"
                 onChange={handle_select}
                 value={{value: sel_in.source.type, label: sel_in.source.type}}
-                defaultValue="Select Source Type"
+                defaultValue="Select Input Type"
                 name="source_type"
                 options={[
                     {label: "constant", value: "constant"},
-                    {label: "file", value: "file"}
+                    {label: "file", value: "file"},
+                    {label: "external", value:"external"}
                 ]}
             />
         )
