@@ -76,12 +76,6 @@ let  CoreInputProperties = props =>{
         });
     }
 
-    let render_vector_input_properties = () =>{
-        if(sel_in.register_type==="vector" || sel_in.register_type==="explicit_vector"){
-            return <InputField id="labels" name="labels" label="Labels" defaultValue={sel_in.labels} onKeyDown={handle_change_iom}/>
-        }
-    }
-
     let render_source_options = () => {
         let ret = []
         ret.push(
@@ -167,7 +161,6 @@ let  CoreInputProperties = props =>{
                         ]}
                     />
                     {render_source_options()}
-                    {render_vector_input_properties()}
                 </div>
             }/>
         )

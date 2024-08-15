@@ -390,10 +390,9 @@ export class up_emulator {
                             name: in_obj.name,
                             type: in_obj.type,
                             source:source,
-                            reg_n: parseInt(in_obj.reg_n),
+                            reg_n: in_obj.reg_n,
                             channel: in_obj.channel,
-                            register_type: in_obj.register_type,
-                            vector_labels: in_obj.labels.split(",").map(item => item.trim())
+                            register_type: in_obj.register_type
                         };
                     }),
                     outputs: item.outputs.map((out) => {
