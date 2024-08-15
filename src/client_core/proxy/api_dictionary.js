@@ -88,7 +88,7 @@ export const api_dictionary = {
         get_response: "filters/response"
     },
     emulators:{
-        get_hash:'emulators/hash',
+        get_hash:'emulators/digest',
         load_all: 'emulators/none',
         add: 'emulators',
         edit: 'emulators',

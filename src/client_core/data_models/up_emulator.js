@@ -136,6 +136,8 @@ export class up_emulator {
     add_output = async (core_id, progressive) => {
         let output = {
             reg_n: 0,
+            width: 32,
+            signed: true,
             type: "float",
             name: "new_output_" + progressive
         }
@@ -182,6 +184,8 @@ export class up_emulator {
         let input = {
             reg_n: 0,
             type: "float",
+            width: 32,
+            signed: true,
             source:{
                 type:"constant",
                 value:""
@@ -220,6 +224,8 @@ export class up_emulator {
         let mem = {
             reg_n: 0,
             type: "float",
+            width: 32,
+            signed: true,
             value:0,
             name: "new_memory_" + progressive,
             vector_size:0,
@@ -386,6 +392,8 @@ export class up_emulator {
                         return {
                             name: in_obj.name,
                             type: in_obj.type,
+                            width: in_obj.width,
+                            signed: in_obj.signed,
                             source:source,
                             reg_n: in_obj.reg_n,
                             channel: in_obj.channel
@@ -396,7 +404,9 @@ export class up_emulator {
                         return {
                             name: out.name,
                             type: out.type,
-                            reg_n: out.reg_n
+                            reg_n: out.reg_n,
+                            width: out.width,
+                            signed: out.signed,
                         };
                     }),
                     memory_init: item.memory_init.map((mem) => {
@@ -413,6 +423,8 @@ export class up_emulator {
                             name: mem.name,
                             type: mem.type,
                             is_output: mem.is_output,
+                            width: mem.width,
+                            signed: mem.signed,
                             reg_n: init_add,
                             value: init_val
                         };

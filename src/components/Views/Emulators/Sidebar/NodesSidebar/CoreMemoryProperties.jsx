@@ -36,7 +36,9 @@ let  CoreMemoryProperties = props =>{
             let field = event.target.name;
             let value = event.target.value;
 
-
+            if(field === "width"){
+                value = parseInt(value);
+            }
 
 
             if(field === "reg_n" || field === "channel"){
@@ -46,8 +48,6 @@ let  CoreMemoryProperties = props =>{
                     return parseInt(val);
                 });
             }
-
-            if(field==="vector_size") value = parseInt(value);
 
             props.selected_emulator.edit_memory(props.selected_component.obj.id,
                 field, value, props.selected_iom.obj).then(()=>{
@@ -71,31 +71,47 @@ let  CoreMemoryProperties = props =>{
     })[0];
 
 
-    let render_vector_init_props = () =>{
-        if(sel_mem.register_type === "vector"){
-            return(<InputField inline id="vector_size" name="vector_size" label="Vector size" defaultValue={sel_mem.vector_size} onKeyDown={handle_change_iom}/>);
+    let handle_change_signed = (event) =>{
+        let field = event.target.name;
+        let value = event.target.checked;
+
+        props.selected_emulator.edit_memory(props.selected_component.obj.id,
+            field, value, props.selected_iom.obj).then(()=>{
+            forceUpdate();
+        });
+    }
+
+    let render_type_options = () =>{
+        let ret = [
+            <SelectField
+                inline
+                label="Type"
+                onChange={handle_change_type}
+                value={{value: sel_mem.type, label: sel_mem.type}}
+                defaultValue="Select Type"
+                name="type"
+                options={[
+                    {label: "float", value: "float"},
+                    {label: "integer", value: "integer"}
+                ]}
+            />
+        ];
+
+        if(sel_mem.type==="integer"){
+            ret.push(<InputField id="width" name="width" label="Input width" defaultValue={sel_mem.width} onKeyDown={handle_change_iom}/>);
+            ret.push(<Checkbox name='signed' value={sel_mem.signed} onChange={handle_change_signed} label="Signed"/>);
         }
+
+        return ret;
     }
 
     if(sel_mem){
         return(
             <SimpleContent name="Memory Properties" content={
-                <div key="memory_props">
+                <div key="memory_props" style={{maxHeight:"13em"}}>
                     <InputField inline id="name" name="name" label="Name" defaultValue={sel_mem.name} onKeyDown={handle_change_iom}/>
                     <InputField inline id="reg_n" name="reg_n" label="Register #" defaultValue={sel_mem.reg_n} onKeyDown={handle_change_iom}/>
-                    <SelectField
-                        inline
-                        label="Type"
-                        onChange={handle_change_type}
-                        value={{value: sel_mem.type, label: sel_mem.type}}
-                        defaultValue="Select Type"
-                        name="type"
-                        options={[
-                            {label: "float", value: "float"},
-                            {label: "integer", value: "integer"}
-                        ]}
-                    />
-                    {render_vector_init_props()}
+                    {render_type_options()}
                     <InputField inline id="value" name="value" label="Value" defaultValue={sel_mem.value} onKeyDown={handle_change_iom}/>
                     <Checkbox name='is_output' value={sel_mem.is_output} onChange={handle_change_output} label="Use as Output"/>
                 </div>

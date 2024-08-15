@@ -15,7 +15,7 @@
 
 import React from 'react';
 
-import {InputField, SelectField, SimpleContent} from "../../../../UI_elements";
+import {Checkbox, InputField, SelectField, SimpleContent} from "../../../../UI_elements";
 
 let  CoreOutputProperties = props =>{
 
@@ -36,12 +36,13 @@ let  CoreOutputProperties = props =>{
                     return parseInt(val);
                 })
             }
+            if(field === "width"){
+                value = parseInt(value);
+            }
 
             await props.selected_emulator.edit_output(props.selected_component.obj.id,
                 field, value, props.selected_iom.obj);
-            if(field === 'name'){
-                props.on_modify({type:props.selected_iom.type, obj:value});
-            }
+
         }
     };
 
@@ -49,24 +50,45 @@ let  CoreOutputProperties = props =>{
         await props.selected_emulator.edit_output(props.selected_component.obj.id, e.name, object.value, props.selected_iom.obj);
     }
 
+    let handle_change_signed = async (event) =>{
+        let field = event.target.name;
+        let value = event.target.checked;
+
+        await props.selected_emulator.edit_output(props.selected_component.obj.id,
+            field, value, props.selected_iom.obj);
+    }
+
+    let render_type_options = () =>{
+        let ret = [
+            <SelectField
+                inline
+                label="Type"
+                onChange={handle_select}
+                value={{value: sel_out.type, label: sel_out.type}}
+                defaultValue="Select Type"
+                name="type"
+                options={[
+                    {label: "float", value: "float"},
+                    {label: "integer", value: "integer"}
+                ]}
+            />
+        ];
+
+        if(sel_out.type==="integer"){
+            ret.push(<InputField id="width" name="width" label="Input width" defaultValue={sel_out.width} onKeyDown={handle_change_iom}/>);
+            ret.push(<Checkbox name='signed' value={sel_out.signed} onChange={handle_change_signed} label="Signed"/>);
+        }
+
+        return ret;
+    }
+
     if(sel_out){
         return(
             <SimpleContent name="Output Properties" content={
-                <div key="output_props">
+                <div key="output_props" style={{maxHeight:"13em"}}>
                     <InputField inline id="name" name="name" label="Name" defaultValue={sel_out.name} onKeyDown={handle_change_iom}/>
                     <InputField inline id="reg_n" name="reg_n" label="Register #" defaultValue={sel_out.reg_n} onKeyDown={handle_change_iom}/>
-                    <SelectField
-                        inline
-                        label="Type"
-                        onChange={handle_select}
-                        value={{value: sel_out.type, label: sel_out.type}}
-                        defaultValue="Select Type"
-                        name="type"
-                        options={[
-                            {label: "float", value: "float"},
-                            {label: "integer", value: "integer"}
-                        ]}
-                    />
+                    {render_type_options()}
                 </div> }/>
         )
     }

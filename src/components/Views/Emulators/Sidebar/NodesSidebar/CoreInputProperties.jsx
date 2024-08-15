@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React, {useReducer} from 'react';
-import {InputField, SelectField, SimpleContent} from "../../../../UI_elements";
+import {Checkbox, InputField, SelectField, SimpleContent} from "../../../../UI_elements";
 
 let  CoreInputProperties = props =>{
 
@@ -37,6 +37,11 @@ let  CoreInputProperties = props =>{
                     return parseInt(val);
                 })
             }
+
+            if(field === "width"){
+                value = parseInt(value);
+            }
+
             if(field === "constant_value") {
                 field = "source";
                 if(sel_in.source.type === "constant") {
@@ -58,6 +63,16 @@ let  CoreInputProperties = props =>{
             });
         }
     };
+
+    let handle_change_signed = (event) =>{
+        let field = event.target.name;
+        let value = event.target.checked;
+
+        props.selected_emulator.edit_input(props.selected_component.obj.id,
+            field, value, props.selected_iom.obj).then(()=>{
+            forceUpdate();
+        });
+    }
 
     let handle_select = (obj, e) =>{
         let field = e.name;
@@ -128,25 +143,40 @@ let  CoreInputProperties = props =>{
         }
         return(ret);
     }
+
+    let render_type_options = () =>{
+        let ret = [
+            <SelectField
+                inline
+                label="Data Type"
+                onChange={handle_select}
+                value={{value: sel_in.type, label: sel_in.type}}
+                defaultValue="Select Data Type"
+                name="type"
+                options={[
+                    {label: "float", value: "float"},
+                    {label: "integer", value: "integer"}
+                ]}
+            />
+        ];
+
+        if(sel_in.type==="integer"){
+            ret.push(<InputField id="width" name="width" label="Input width" defaultValue={sel_in.width} onKeyDown={handle_change_iom}/>);
+            ret.push(<Checkbox name='signed' value={sel_in.signed} onChange={handle_change_signed} label="Signed"/>);
+        }
+
+        return ret;
+    }
+
     if(sel_in){
         return(
-            <SimpleContent name="Input Properties" content={
-                <div key="input_props">
+            <SimpleContent  name="Input Properties" content={
+                <div key="input_props" style={{maxHeight:"13em"}}>
                     <InputField id="name" name="name" label="Name" defaultValue={sel_in.name} onKeyDown={handle_change_iom}/>
                     <InputField id="channel" name="channel" label="Channel" defaultValue={sel_in.channel} onKeyDown={handle_change_iom}/>
                     <InputField id="reg_n" name="reg_n" label="Register #" defaultValue={sel_in.reg_n} onKeyDown={handle_change_iom}/>
-                    <SelectField
-                        inline
-                        label="Data Type"
-                        onChange={handle_select}
-                        value={{value: sel_in.type, label: sel_in.type}}
-                        defaultValue="Select Data Type"
-                        name="type"
-                        options={[
-                            {label: "float", value: "float"},
-                            {label: "integer", value: "integer"}
-                        ]}
-                    />
+
+                    {render_type_options()}
                     {render_source_options()}
                 </div>
             }/>
