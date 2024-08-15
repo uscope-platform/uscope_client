@@ -156,8 +156,7 @@ let  CoreInputProperties = props =>{
                         name="register_type"
                         options={[
                             {label: "scalar", value: "scalar"},
-                            {label: "vector", value: "vector"},
-                            {label: "explicit_vector", value: "explicit_vector"}
+                            {label: "vector", value: "vector"}
                         ]}
                     />
                     {render_source_options()}
