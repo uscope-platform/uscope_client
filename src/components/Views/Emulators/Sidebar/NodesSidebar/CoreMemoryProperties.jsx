@@ -71,13 +71,6 @@ let  CoreMemoryProperties = props =>{
     })[0];
 
 
-    let handle_select = (selection, event) =>{
-        props.selected_emulator.edit_memory(props.selected_component.obj.id,
-            event.name, selection.value, props.selected_iom.obj).then(()=>{
-            forceUpdate();
-        });
-    }
-
     let render_vector_init_props = () =>{
         if(sel_mem.register_type === "vector"){
             return(<InputField inline id="vector_size" name="vector_size" label="Vector size" defaultValue={sel_mem.vector_size} onKeyDown={handle_change_iom}/>);
@@ -100,18 +93,6 @@ let  CoreMemoryProperties = props =>{
                         options={[
                             {label: "float", value: "float"},
                             {label: "integer", value: "integer"}
-                        ]}
-                    />
-                    <SelectField
-                        inline
-                        label="Register Type"
-                        onChange={handle_select}
-                        value={{value: sel_mem.register_type, label: sel_mem.register_type}}
-                        defaultValue="Select Register Type"
-                        name="register_type"
-                        options={[
-                            {label: "scalar", value: "scalar"},
-                            {label: "vector", value: "vector"}
                         ]}
                     />
                     {render_vector_init_props()}

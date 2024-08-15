@@ -67,18 +67,6 @@ let  CoreOutputProperties = props =>{
                             {label: "integer", value: "integer"}
                         ]}
                     />
-                    <SelectField
-                        inline
-                        label="Register Type"
-                        onChange={handle_select}
-                        value={{value: sel_out.register_type, label: sel_out.register_type}}
-                        defaultValue="Select Register Type"
-                        name="register_type"
-                        options={[
-                            {label: "scalar", value: "scalar"},
-                            {label: "vector", value: "vector"}
-                        ]}
-                    />
                 </div> }/>
         )
     }

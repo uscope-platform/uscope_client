@@ -137,8 +137,7 @@ export class up_emulator {
         let output = {
             reg_n: 0,
             type: "float",
-            name: "new_output_" + progressive,
-            register_type:"scalar"
+            name: "new_output_" + progressive
         }
         this.cores[core_id].outputs.push(output);
         let edit = {emulator:this.id, core:core_id.toString(), output:output, action:"add_output"};
@@ -189,7 +188,6 @@ export class up_emulator {
             },
             channel:0,
             name: "new_input_" + progressive,
-            register_type:"scalar",
             labels:""
         }
         this.cores[core_id].inputs.push(input);
@@ -224,7 +222,6 @@ export class up_emulator {
             type: "float",
             value:0,
             name: "new_memory_" + progressive,
-            register_type:"scalar",
             vector_size:0,
             is_output:false
         }
@@ -391,8 +388,7 @@ export class up_emulator {
                             type: in_obj.type,
                             source:source,
                             reg_n: in_obj.reg_n,
-                            channel: in_obj.channel,
-                            register_type: in_obj.register_type
+                            channel: in_obj.channel
                         };
                     }),
                     outputs: item.outputs.map((out) => {
@@ -400,21 +396,17 @@ export class up_emulator {
                         return {
                             name: out.name,
                             type: out.type,
-                            reg_n: out.reg_n,
-                            register_type: out.register_type
+                            reg_n: out.reg_n
                         };
                     }),
                     memory_init: item.memory_init.map((mem) => {
                         let init_val = [];
                         let init_add = [];
-                        if (mem.register_type === "vector") {
-                            for (let i = 0; i < mem.vector_size; i++) {
-                                init_val.push(parseInt(mem.value));
-                                init_add.push(parseInt(mem.reg_n) + i);
-                            }
-                        } else {
-                            init_val = parseInt(mem.value);
-                            init_add = parseInt(mem.reg_n);
+                        let vect_size = mem.vector_size;
+                        if(vect_size === 0) vect_size++;
+                        for (let i = 0; i < vect_size; i++) {
+                            init_val.push(parseInt(mem.value));
+                            init_add.push(parseInt(mem.reg_n) + i);
                         }
 
                         return {
