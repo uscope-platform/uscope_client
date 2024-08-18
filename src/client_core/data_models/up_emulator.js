@@ -228,7 +228,6 @@ export class up_emulator {
             signed: true,
             value:0,
             name: "new_memory_" + progressive,
-            vector_size:0,
             is_output:false
         }
         this.cores[core_id].memory_init.push(mem);
@@ -412,7 +411,7 @@ export class up_emulator {
                     memory_init: item.memory_init.map((mem) => {
                         let init_val = [];
                         let init_add = [];
-                        let vect_size = mem.vector_size;
+                        let vect_size = mem.reg_n.length;
                         if(vect_size === 0) vect_size++;
                         for (let i = 0; i < vect_size; i++) {
                             init_val.push(parseInt(mem.value));
