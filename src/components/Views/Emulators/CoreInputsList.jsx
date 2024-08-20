@@ -13,37 +13,65 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useReducer} from 'react';
-import IomProperties from "./IomProperties";
+import React, {useEffect, useState} from 'react';
+import {MdAdd} from "react-icons/md";
+import {SelectableList} from "../../UI_elements";
 
 let  CoreInputsList = props =>{
 
     let selected_core_id = props.selected_component ? props.selected_component.obj.id : null;
 
-    const [, forceUpdate] = useReducer(x => x + 1, 0);
+    let [selected, set_selected] = useState(null);
 
-    let handle_add = (input_size) =>{
-        props.emulator.add_input(selected_core_id, input_size).then(()=>{
-            forceUpdate();
+    let [inputs, set_inputs] = useState([]);
+
+    useEffect(() => {
+        if(props.selected_component && props.selected_component.type === "node"){
+            set_inputs(props.emulator.get_input_names(selected_core_id));
+        } else set_inputs([]);
+    }, [props.selected_component]);
+
+
+    useEffect(() => {
+        if(props.selected_iom){
+            if(props.selected_iom.type !== "inputs"){
+                set_selected(null);
+            }
+        }
+
+    }, [props.selected_iom]);
+
+
+    let handle_add = () =>{
+        props.emulator.add_input(selected_core_id, inputs.length).then(()=>{
+            set_inputs(props.emulator.get_input_names(selected_core_id));
         });
     }
 
     let handle_remove = (removed_item) =>{
         props.emulator.remove_input(selected_core_id, removed_item).then(()=>{
-            forceUpdate();
+            set_inputs(props.emulator.get_input_names(selected_core_id));
         });
     }
 
-    return(
-        <IomProperties
-            emulator={props.emulator}
-            onRemove={handle_remove}
-            onAdd={handle_add}
-            selected_iom={props.selected_iom}
-            selected_component={props.selected_component}
-            on_select={props.on_iom_select}
-            content_type="inputs"
-        />
+    let handle_select = (args) =>{
+        props.on_iom_select({type:"inputs", obj:args});
+        set_selected(args)
+    }
+
+
+    return (
+        <div>
+            <div style={{
+                display: "flex",
+                flexDirection: "row",
+                marginTop: "0.25em"
+            }}>
+                <MdAdd style={{marginLeft: "auto"}} onClick={handle_add}/>
+            </div>
+            <SelectableList items={inputs} selected_item={selected} onSelect={handle_select}
+                            onRemove={handle_remove}/>
+        </div>
     );
 };
 

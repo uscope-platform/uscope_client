@@ -371,6 +371,24 @@ export class up_emulator {
         store.dispatch(removeEmulator(emulator.id));
     }
 
+    get_output_names = (core_id) =>{
+        return this.cores[core_id].outputs.map((item)=>{
+            return item.name;
+        })
+    }
+
+    get_memory_names = (core_id) =>{
+        return this.cores[core_id].memory_init.map((item)=>{
+            return item.name;
+        })
+    }
+
+    get_input_names = (core_id) =>{
+        return this.cores[core_id].inputs.map((item)=>{
+            return item.name;
+        })
+    }
+
     build = () =>{
         return {
             cores: Object.values(this.cores).map((item) => {
