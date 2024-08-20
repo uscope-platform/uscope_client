@@ -21,34 +21,92 @@ import {MdAdd, MdArticle, MdConstruction, MdDownload, MdPlayArrow} from "react-i
 
 let  EmulatorToolbar = props =>{
 
-    return(
-        <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
+    let render_add = () =>{
+        let handle_click = (event) =>{
+            if(props.enable.add) {
+                props.onAdd(event);
+            }
+        };
+        let icon_color = props.enable.add ? ColorTheme.icons_color : ColorTheme.disabled_icon_color;
+        return (
             <div key="add_icon" id="add_icon">
-                <MdAdd onClick={props.onAdd} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
-                       color={ColorTheme.icons_color}/>
+                <MdAdd onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
+                       color={icon_color}/>
                 <Tooltip anchorSelect="add_icon" content={"Add Core"} place="top"/>
             </div>
+        )
+    }
+
+    let render_edit = () => {
+        let handle_click = (event) =>{
+            if(props.enable.edit){
+                props.onEdit(event);
+            }
+        };
+        let icon_color = props.enable.edit ? ColorTheme.icons_color : ColorTheme.disabled_icon_color;
+        return (
             <div key="edit" id="edit">
-                <MdArticle onClick={props.onEdit} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
-                                color={ColorTheme.icons_color}/>
+                <MdArticle onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
+                           color={icon_color}/>
                 <Tooltip anchorSelect="edit" content={"Edit Program"} place="top"/>
             </div>
+        )
+    }
+
+    let render_build = () => {
+        let handle_click = (event) =>{
+            if(props.enable.build) {
+                props.onBuild(event);
+            }
+        };
+        let icon_color = props.enable.build ? ColorTheme.icons_color : ColorTheme.disabled_icon_color;
+        return (
             <div key="build" id="build">
-                <MdDownload onClick={props.onBuild} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
-                            color={ColorTheme.icons_color}/>
+                <MdDownload onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
+                            color={icon_color}/>
                 <Tooltip anchorSelect="build" content={"Build"} place="top"/>
             </div>
+        )
+    }
+
+    let render_run = () => {
+        let handle_click = (event) =>{
+            if(props.enable.run) {
+                props.onRun(event);
+            }
+        };
+        let icon_color = props.enable.run ? ColorTheme.icons_color : ColorTheme.disabled_icon_color;
+        return (
             <div key="run" id="run">
-                <MdPlayArrow onClick={props.onRun} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
-                             color={ColorTheme.icons_color}/>
+                <MdPlayArrow onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
+                             color={icon_color}/>
                 <Tooltip anchorSelect="run" content={"Run"} place="top"/>
             </div>
+        )
+    }
+
+    let render_deploy = () => {
+        let handle_click = (event) =>{
+            if(props.enable.deploy){
+                props.onDeploy(event);
+            }
+        };
+        let icon_color = props.enable.deploy ? ColorTheme.icons_color : ColorTheme.disabled_icon_color;
+        return (
             <div key="deploy" id="deploy">
-                <MdConstruction onClick={props.onDeploy} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
-                                color={ColorTheme.icons_color}/>
+                <MdConstruction onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
+                                color={icon_color}/>
                 <Tooltip anchorSelect="deploy" content={"Deploy"} place="top"/>
             </div>
-
+        )
+    }
+    return (
+        <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
+            {render_add()}
+            {render_edit()}
+            {render_build()}
+            {render_run()}
+            {render_deploy()}
         </div>
     );
 };

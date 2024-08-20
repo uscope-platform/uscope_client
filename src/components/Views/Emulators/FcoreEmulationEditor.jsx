@@ -35,11 +35,16 @@ let FcoreEmulationEditor = function (props) {
     const application = useContext(ApplicationContext);
 
 
-    const programs_store = useSelector(state => state.programs);
     const emulators_store = useSelector(state => state.emulators);
 
     const [n_cores, set_n_cores] = useState(0);
-
+    const [enabled_actions, set_enabled_actions] = useState({
+        add: false,
+        edit: false,
+        build: false,
+        run: false,
+        deploy: false
+    })
     const navigate = useNavigate();
 
 
@@ -61,9 +66,40 @@ let FcoreEmulationEditor = function (props) {
         }
     };
 
+    useEffect(() =>{
+        if(props.selected_component){
+            if(props.selected_component.type === "node"){
+                set_enabled_actions({
+                    add: enabled_actions.add,
+                    edit: true,
+                    build: enabled_actions.build,
+                    run: enabled_actions.run,
+                    deploy: enabled_actions.deploy
+                });
+                return;
+            }
+        }
+        set_enabled_actions({
+            add: enabled_actions.add,
+            edit: false,
+            build: enabled_actions.build,
+            run: enabled_actions.run,
+            deploy: enabled_actions.deploy
+        });
+
+    },[props.selected_component])
+
     useEffect(() => {
         //SETUP NODES
-        if(emulator){
+        if(emulator.name !== ""){
+            set_enabled_actions({
+                add: true,
+                edit: false,
+                build: true,
+                run: true,
+                deploy: true
+            });
+
             let initial_nodes = [];
             let n = 0;
             Object.values(emulator.cores).map((c)=>{
@@ -247,6 +283,7 @@ let FcoreEmulationEditor = function (props) {
                                 onEdit={handle_edit}
                                 nodes={nodes}
                                 edges={edges}
+                                enabled_actions={enabled_actions}
                             />
                         }/>
                     </UIPanel>
