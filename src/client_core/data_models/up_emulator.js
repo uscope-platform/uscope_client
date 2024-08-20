@@ -390,9 +390,11 @@ export class up_emulator {
                         }
                         return {
                             name: in_obj.name,
-                            type: in_obj.type,
-                            width: in_obj.width,
-                            signed: in_obj.signed,
+                            metadata:{
+                                type: in_obj.type,
+                                width: in_obj.width,
+                                signed: in_obj.signed,
+                            },
                             source:source,
                             reg_n: in_obj.reg_n,
                             channel: in_obj.channel
@@ -402,10 +404,12 @@ export class up_emulator {
 
                         return {
                             name: out.name,
-                            type: out.type,
                             reg_n: out.reg_n,
-                            width: out.width,
-                            signed: out.signed,
+                            metadata:{
+                                type: out.type,
+                                width: out.width,
+                                signed: out.signed
+                            }
                         };
                     }),
                     memory_init: item.memory_init.map((mem) => {
@@ -420,10 +424,12 @@ export class up_emulator {
 
                         return {
                             name: mem.name,
-                            type: mem.type,
+                            metadata:{
+                                type: mem.type,
+                                width: mem.width,
+                                signed: mem.signed,
+                            },
                             is_output: mem.is_output,
-                            width: mem.width,
-                            signed: mem.signed,
                             reg_n: init_add,
                             value: init_val
                         };
