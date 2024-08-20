@@ -17,7 +17,7 @@ import React from 'react';
 
 import {ColorTheme} from "../../UI_elements";
 import {Tooltip} from "react-tooltip";
-import {MdAdd, MdConstruction, MdDownload, MdPlayArrow} from "react-icons/md";
+import {MdAdd, MdArticle, MdConstruction, MdDownload, MdPlayArrow} from "react-icons/md";
 
 let  EmulatorToolbar = props =>{
 
@@ -28,9 +28,14 @@ let  EmulatorToolbar = props =>{
                        color={ColorTheme.icons_color}/>
                 <Tooltip anchorSelect="add_icon" content={"Add Core"} place="top"/>
             </div>
+            <div key="edit" id="edit">
+                <MdArticle onClick={props.onEdit} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
+                                color={ColorTheme.icons_color}/>
+                <Tooltip anchorSelect="edit" content={"Edit Program"} place="top"/>
+            </div>
             <div key="build" id="build">
                 <MdDownload onClick={props.onBuild} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
-                         color={ColorTheme.icons_color}/>
+                            color={ColorTheme.icons_color}/>
                 <Tooltip anchorSelect="build" content={"Build"} place="top"/>
             </div>
             <div key="run" id="run">
@@ -40,9 +45,10 @@ let  EmulatorToolbar = props =>{
             </div>
             <div key="deploy" id="deploy">
                 <MdConstruction onClick={props.onDeploy} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
-                             color={ColorTheme.icons_color}/>
+                                color={ColorTheme.icons_color}/>
                 <Tooltip anchorSelect="deploy" content={"Deploy"} place="top"/>
             </div>
+
         </div>
     );
 };

@@ -14,18 +14,18 @@
 // limitations under the License.
 
 import React, {useContext, useEffect, useState} from 'react';
+import {useNavigate} from "react-router";
+import {ToastContainer, toast} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import {useSelector} from "react-redux";
 
 import EmulatorDiagram from "./EmulatorDiagram";
-import {useSelector} from "react-redux";
-import {download_json, up_emulator} from "../../../client_core";
+import {download_json, up_emulator, up_program} from "../../../client_core";
 import {SimpleContent, TabbedContent, UIPanel} from "../../UI_elements";
 import CoreInputsList from "./CoreInputsList";
 import CoreOutputsList from "./CoreOutputsList";
 import CoreMemoriesList from "./CoreMemoriesList";
 import CoreInputFilesList from "./CoreInputFilesList";
-
-import {ToastContainer, toast} from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
 import {ApplicationContext} from "../../../AuthApp";
 import {up_emulator_result} from "../../../client_core/data_models/up_emulation_result";
 
@@ -34,9 +34,13 @@ let FcoreEmulationEditor = function (props) {
 
     const application = useContext(ApplicationContext);
 
+
+    const programs_store = useSelector(state => state.programs);
     const emulators_store = useSelector(state => state.emulators);
 
     const [n_cores, set_n_cores] = useState(0);
+
+    const navigate = useNavigate();
 
 
     const [nodes, setNodes] = useState([]);
@@ -152,10 +156,13 @@ let FcoreEmulationEditor = function (props) {
         }
     }
 
+    let handle_edit = () => {
+        navigate("/programs", {state: {selected_program:emulator.cores[props.selected_component.obj.id].program}});
+    }
+
     let handle_canvas_click = ()=>{
         props.on_component_select(null);
     }
-
 
     let handle_link_nodes = (event, from, to) =>{
         if(!emulator.deployment_mode){
@@ -237,6 +244,7 @@ let FcoreEmulationEditor = function (props) {
                                 onBuild={handle_build}
                                 onRun={handle_run}
                                 onDeploy={handle_deploy}
+                                onEdit={handle_edit}
                                 nodes={nodes}
                                 edges={edges}
                             />

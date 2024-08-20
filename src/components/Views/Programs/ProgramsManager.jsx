@@ -13,7 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
+import {useSelector} from "react-redux";
+import {useLocation} from "react-router-dom";
+
 import {
     UIPanel,
     SimpleContent,
@@ -22,20 +25,18 @@ import {
     SelectField,
     TabbedContent, TwoColumnSelector
 } from "../../UI_elements";
-
-import {useSelector} from "react-redux";
 import ProgramsEditor from "./Editor/ProgramsEditor";
 import {up_program} from "../../../client_core";
 import BuildSettings from "./Editor/BuildSettings";
 import ProgramSidebar from "./ProgramSidebar";
-
 let ProgramsManager = props =>{
 
+    const location = useLocation();
 
     const programs_store = useSelector(state => state.programs);
 
-    let [selected_program, set_selected_program] = useState({});
 
+    let [selected_program, set_selected_program] = useState({});
     let [selectedTab, set_selectedTab] = useState(0);
 
     let allowed_types = [
@@ -47,7 +48,12 @@ let ProgramsManager = props =>{
     const headers = Object.values(programs_store).filter((p) =>{
         return p.program_type === "H";
     })
-
+    useEffect(() => {
+        let prog = Object.values(programs_store).filter((prog)=>{
+            return prog.name === location.state.selected_program
+        })[0];
+        if(location.state.selected_program) set_selected_program(new up_program(prog));
+    }, []);
 
     let handle_select = (sel) =>{
         set_selected_program(new up_program(programs_store[sel]));
