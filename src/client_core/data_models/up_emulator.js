@@ -186,6 +186,7 @@ export class up_emulator {
             type: "float",
             width: 32,
             signed: true,
+            scalar_io: false,
             source:{
                 type:"constant",
                 value:""
@@ -412,6 +413,7 @@ export class up_emulator {
                                 type: in_obj.type,
                                 width: in_obj.width,
                                 signed: in_obj.signed,
+                                scalar_io:in_obj.scalar_io
                             },
                             source:source,
                             reg_n: in_obj.reg_n,

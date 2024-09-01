@@ -165,6 +165,7 @@ let  CoreInputProperties = props =>{
             ret.push(<Checkbox name='signed' value={sel_in.signed} onChange={handle_change_signed} label="Signed"/>);
         }
 
+        ret.push(<Checkbox name='scalar_io' value={sel_in.scalar_io} onChange={handle_change_signed} label="Scalar IO"/>);
         return ret;
     }
 
