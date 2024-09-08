@@ -58,7 +58,8 @@ export const api_dictionary = {
         set_channel_status: 'plot/channels/status',
         scaling_factors: 'plot/channels/scaling_factors',
         acquisition: 'plot/acquisition',
-        address:'plot/address'
+        address:'plot/address',
+        dma_disable:'plot/dma_disable'
     },
     programs:{
         get_hash:'program/hash',

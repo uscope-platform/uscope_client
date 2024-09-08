@@ -102,6 +102,7 @@ export class up_application {
     }
 
     set_active = async () => {
+        await backend_post(api_dictionary.plot.dma_disable,true);
         await backend_get(api_dictionary.applications.set + '/' + this.id);
         for(let i in this.pl_clocks){
             await this.set_global_clock_frequency(parseInt(i), this.pl_clocks[i]);
