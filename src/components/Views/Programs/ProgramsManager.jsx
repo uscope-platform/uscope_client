@@ -29,6 +29,7 @@ import ProgramsEditor from "./Editor/ProgramsEditor";
 import {up_program} from "../../../client_core";
 import BuildSettings from "./Editor/BuildSettings";
 import ProgramSidebar from "./ProgramSidebar";
+
 let ProgramsManager = props =>{
 
     const location = useLocation();
@@ -49,10 +50,14 @@ let ProgramsManager = props =>{
         return p.program_type === "H";
     })
     useEffect(() => {
-        let prog = Object.values(programs_store).filter((prog)=>{
-            return prog.name === location.state.selected_program
-        })[0];
-        if(location.state.selected_program) set_selected_program(new up_program(prog));
+        if(location.state){
+            if(location.state.selected_program){
+                let prog = Object.values(programs_store).filter((prog)=>{
+                    return prog.name === location.state.selected_program
+                })[0];
+                set_selected_program(new up_program(prog));
+            }
+        }
     }, []);
 
     let handle_select = (sel) =>{
