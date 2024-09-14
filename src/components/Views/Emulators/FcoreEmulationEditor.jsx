@@ -158,7 +158,7 @@ let FcoreEmulationEditor = function (props) {
                 props.on_compile_done(null);
                 toast.error(results.error);
             } else if(results.code && results.code === 9){
-                props.on_compile_done(JSON.parse(results.duplicates)['duplicates']);
+                props.on_compile_done(JSON.parse(results.duplicates));
                 toast.warn(results.error);
             } else {
                 props.on_compile_done(null);
