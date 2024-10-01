@@ -14,38 +14,61 @@
 // limitations under the License.
 
 export const api_dictionary = {
+    operations: {
+        load_application:"operations/load_application",
+        write_registers:"operations/write_registers",
+        read_register:"operations/read_register",
+        compile_program:"operations/compile_program",
+        apply_program:"operations/apply_program",
+        clock: "operations/clock",
+
+        fetch_data:'operations/plot/data',
+        set_channel_status: 'operations/plot/channel_status',
+        scaling_factors: 'operations/plot/channel_scaling',
+        acquisition: 'operations/plot/acquisition',
+        scope_address:'operations/plot/address',
+        dma_disable:'operations/plot/dma_disable',
+
+        hil_deploy: 'operations/hil/deploy',
+        hil_emulate: 'operations/hil/emulate',
+        hil_select_output: 'operations/hil/select_out',
+        hil_set_input: 'operations/hil/set_input',
+        hil_start:'operations/hil/start',
+        hil_stop:'operations/hil/stop',
+        filter_design:"operations/filter_design",
+        filter_implement:"operations/filter_implement",
+        filter_apply:"operations/filter_apply",
+    },
     applications:{
-        get_hash: 'application/digest',
-        load_all: 'application/all/specs',
+        get_hash: 'application/hash',
+        load_all: 'application/load_all',
         add: 'application/add',
         edit: 'application/edit',
-        remove: 'application/remove',
-        set:'application/set',
-        clock: 'application/clock'
+        remove: 'application/remove'
     },
     bitstream:{
-        get_hash: 'bitstream/digest',
-        load_all: 'bitstream/none',
+        get_hash: 'bitstream/hash',
+        load_all: 'bitstream/load_all',
         add: 'bitstream',
         edit: 'bitstream',
         delete: 'bitstream'
     },
     peripherals:{
-        get_hash: 'registers/digest',
-        load_all: 'registers/all_peripheral/descriptions',
-        bulk_write: 'registers/bulk_write',
-        direct_read: 'registers/direct_read',
+        get_hash: 'peripheral/hash',
+        load_all: 'peripheral/load_all',
         add: 'tab_creator/create_peripheral',
         edit: 'tab_creator/edit_peripheral',
         delete: 'tab_creator/remove_peripheral'
     },
     platform:{
         users:{
-            add:'auth/user',
-            delete: 'auth/user',
-            need_onboarding: 'auth/onboarding',
-            do_onboarding: 'auth/onboarding',
-            get_list: 'auth/user'
+            add:'platform/user',
+            delete: 'platform/user',
+            need_onboarding: 'platform/onboarding',
+            do_onboarding: 'platform/onboarding',
+            get_list: 'platform/user',
+            manual_login: 'platform/login/manual',
+            auto_login: 'platform/login/auto'
         },
         db:{
             dump:'database/export',
@@ -53,17 +76,9 @@ export const api_dictionary = {
             versions:'database/versions'
         }
     },
-    plot:{
-        fetch_data:'plot/channels/data',
-        set_channel_status: 'plot/channels/status',
-        scaling_factors: 'plot/channels/scaling_factors',
-        acquisition: 'plot/acquisition',
-        address:'plot/address',
-        dma_disable:'plot/dma_disable'
-    },
     programs:{
         get_hash:'program/hash',
-        load_all: 'program/none',
+        load_all: 'program/load_all',
         add: 'program',
         edit: 'program',
         delete: 'program',
@@ -72,28 +87,28 @@ export const api_dictionary = {
     },
     scripts:{
         get_hash:'script/hash',
-        load_all: 'script/none',
+        load_all: 'script/load_all',
         add: 'script',
         edit: 'script',
         delete: 'script',
     },
     filters:{
-        get_hash: 'filters/digest',
-        load_all: 'filters/none',
-        load: 'filters',
-        add: 'filters',
-        edit: 'filters',
-        delete: 'filters',
-        design:'filters/design',
-        implement:'filters/implement',
-        get_response: "filters/response"
+        get_hash: 'filter/hash',
+        load_all: 'filter/load_all',
+        load: 'filter',
+        add: 'filter',
+        edit: 'filter',
+        delete: 'filter',
+        design:'filter/design',
+        implement:'filter/implement',
+        get_response: "filter/response"
     },
     emulators:{
-        get_hash:'emulators/digest',
-        load_all: 'emulators/none',
-        add: 'emulators',
-        edit: 'emulators',
-        delete: 'emulators',
+        get_hash:'emulator/hash',
+        load_all: 'emulator/load_all',
+        add: 'emulator',
+        edit: 'emulator',
+        delete: 'emulator',
         run:'emulators/run'
     },
     hil:{

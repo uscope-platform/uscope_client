@@ -25,6 +25,7 @@ import {set_address, set_auth_config, set_redux_store, sign_in, need_onboarding}
 import './App.css';
 import {ThemeProvider} from "styled-components";
 import {ColorTheme} from "./components/UI_elements";
+import {auto_sign_in, manual_sign_in} from "./client_core/proxy/auth";
 
 
 let App = (props) =>{
@@ -34,17 +35,24 @@ let App = (props) =>{
     const [onboarding_needed, set_onboarding_needed] = useState(true);
     const [user_role, set_user_role] = useState("operator");
 
-    const done = useCallback((login_credentials)=>{
-        sign_in(login_credentials).then((token) =>{
+    const done = useCallback(async (login_credentials)=>{
+        try {
+            let token = null;
+            if(login_credentials.login_type === "user"){
+                token = await manual_sign_in(login_credentials);
+            } else {
+                token = await auto_sign_in(login_credentials);
+            }
             if(token.login_token){
                 localStorage.setItem('login_token', JSON.stringify(token.login_token));
             }
             set_user_role(token.role);
             set_auth_config({headers: { Authorization: `Bearer ${token.access_token}` }});
             set_logged(true);
-        }).catch(()=>{
+        } catch (e) {
             localStorage.removeItem('login_token');
-        });
+        }
+
     }, []);
 
 
@@ -67,7 +75,7 @@ let App = (props) =>{
     let try_automated_login = () =>{
         let token = JSON.parse(localStorage.getItem('login_token'));
         if(token){
-            if (Date.now() > token.expiry){
+            if (Date.now() < Date.parse(token.expiry)){
                 token.login_type = 'automated';
                 done(token)
             } else {

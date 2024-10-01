@@ -189,7 +189,7 @@ export class up_peripheral {
     }
 
     static bulk_register_write(data){
-        return backend_post(api_dictionary.peripherals.bulk_write, data);
+        return backend_post(api_dictionary.operations.write_registers, data);
     }
 
     static direct_register_write(writes){
@@ -202,7 +202,7 @@ export class up_peripheral {
     }
 
     static direct_register_read(address){
-        return backend_get(api_dictionary.peripherals.direct_read + '/' +address);
+        return backend_get(api_dictionary.operations.read_register + '/' +address);
     }
 
     get_raw_obj = () => {

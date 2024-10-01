@@ -14,10 +14,35 @@
 // limitations under the License.
 
 import {backend_post} from "./backend";
+import {api_dictionary} from "./api_dictionary";
 
 export const sign_in = (credentials) => {
     return new Promise((resolve, reject) => {
         backend_post("auth/login", credentials).then((res)=>{
+            resolve(res);
+        }).catch((err)=>{
+            alert("login failed");
+            reject(err);
+        })
+    });
+};
+
+export const manual_sign_in = (credentials) => {
+    return new Promise((resolve, reject) => {
+        backend_post(api_dictionary.platform.users.manual_login, credentials).then((res)=>{
+            resolve(res);
+        }).catch((err)=>{
+            alert("login failed");
+            reject(err);
+        })
+    });
+};
+
+
+
+export const auto_sign_in = (credentials) => {
+    return new Promise((resolve, reject) => {
+        backend_post(api_dictionary.platform.users.auto_login, credentials).then((res)=>{
             resolve(res);
         }).catch((err)=>{
             alert("login failed");

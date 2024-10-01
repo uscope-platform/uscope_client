@@ -29,84 +29,85 @@ import {loadAllFilters} from "../redux/Actions/FiltersActons";
 import {up_filter} from "./data_models/up_filter";
 import {loadAllEmulators} from "../redux/Actions/EmulatorActions";
 
-let load_all_applications = () => {
-    return backend_get(api_dictionary.applications.load_all).then(res=>{
-        let apps_dict = {}
-        for (let item in res) {
-            apps_dict[item] = new up_application(res[item]);
-        }
-        store.dispatch(loadApplications(apps_dict));
-        return apps_dict;
-    })
+let load_all_applications = async () => {
+
+    let raw_apps = await backend_get(api_dictionary.applications.load_all);
+    let apps_dict = {}
+    for (let item in raw_apps) {
+        let id = raw_apps[item].id;
+        apps_dict[id] = new up_application(raw_apps[item]);
+    }
+    store.dispatch(loadApplications(apps_dict));
+    return apps_dict;
 
 }
 
-let load_all_peripherals = () => {
-    return backend_get(api_dictionary.peripherals.load_all).then(res=>{
-        let periph_dict = {}
-        for (let item in res) {
-            periph_dict[item] = new up_peripheral(res[item]);
-        }
-        store.dispatch(loadPeripherals(periph_dict));
-        return periph_dict;
-    })
+let load_all_peripherals = async () => {
+    let raw_periph = await backend_get(api_dictionary.peripherals.load_all);
+    let periph_dict = {}
+    for (let item in raw_periph) {
+        let id = raw_periph[item].id;
+        periph_dict[id] = new up_peripheral(raw_periph[item]);
+    }
+    store.dispatch(loadPeripherals(periph_dict));
+    return periph_dict;
 
 }
 
-let load_all_scripts = () => {
-    return backend_get(api_dictionary.scripts.load_all).then(res=>{
-        let scripts_dict = {}
-        for (let item in res) {
-            scripts_dict[item] = new up_script(res[item]);
-        }
-        store.dispatch(loadAllScripts(scripts_dict));
-        return scripts_dict;
-    })
+let load_all_scripts = async () => {
+    let raw_scr = await  backend_get(api_dictionary.scripts.load_all);
+    let scripts_dict = {}
+    for (let item in raw_scr) {
+        let id = raw_scr[item].id;
+        scripts_dict[id] = new up_script(raw_scr[item]);
+    }
+    store.dispatch(loadAllScripts(scripts_dict));
+    return scripts_dict;
 }
 
-let load_all_programs = () => {
-    return backend_get(api_dictionary.programs.load_all).then(res=>{
-        let programs_dict = {}
-        for (let item in res) {
-            programs_dict[item] = new up_program(res[item]);
-        }
-        store.dispatch(loadAllPrograms(programs_dict));
-        return programs_dict;
-    })
+let load_all_programs =async () => {
+    let raw_prog = await backend_get(api_dictionary.programs.load_all);
+    let programs_dict = {}
+    for (let item in raw_prog) {
+        let id = raw_prog[item].id;
+        programs_dict[id] = new up_program(raw_prog[item]);
+    }
+    store.dispatch(loadAllPrograms(programs_dict));
+    return programs_dict;
 }
 
-let load_all_bitstreams = () =>{
-    return backend_get(api_dictionary.bitstream.load_all).then(res=>{
-        let bitstreams_dict = {}
-        for (let item in res) {
-            bitstreams_dict[item] = new up_bitstream(res[item]);
-        }
-        store.dispatch(loadAllBitstreams(bitstreams_dict));
-        return bitstreams_dict;
-    })
+let load_all_bitstreams = async () =>{
+    let raw_bit =await backend_get(api_dictionary.bitstream.load_all);
+    let bitstreams_dict = {}
+    for (let item in raw_bit) {
+        let id = raw_bit[item].id;
+        bitstreams_dict[id] = new up_bitstream(raw_bit[item]);
+    }
+    store.dispatch(loadAllBitstreams(bitstreams_dict));
+    return bitstreams_dict;
 }
 
-let load_all_filters = () =>{
-    return backend_get(api_dictionary.filters.load_all).then(res=>{
-        let filters_dict = {}
-        for (let item in res) {
-            filters_dict[item] = new up_filter(res[item]);
-        }
-        store.dispatch(loadAllFilters(filters_dict));
-        return filters_dict;
-    })
+let load_all_filters = async () =>{
+    let raw_flt = await backend_get(api_dictionary.filters.load_all);
+    let filters_dict = {}
+    for (let item in raw_flt) {
+        let id = raw_flt[item].id;
+        filters_dict[id] = new up_filter(raw_flt[item]);
+    }
+    store.dispatch(loadAllFilters(filters_dict));
+    return filters_dict;
 }
 
 
-let load_all_emulators = () =>{
-    return backend_get(api_dictionary.emulators.load_all).then(res=>{
-        let emulators_dict = {}
-        for (let item in res) {
-            emulators_dict[item] = new up_emulator(res[item]);
-        }
-        store.dispatch(loadAllEmulators(emulators_dict));
-        return emulators_dict;
-    })
+let load_all_emulators = async () =>{
+    let raw_emu = await backend_get(api_dictionary.emulators.load_all);
+    let emulators_dict = {}
+    for (let item in raw_emu) {
+        let id = raw_emu[item].id;
+        emulators_dict[id] = new up_emulator(raw_emu[item]);
+    }
+    store.dispatch(loadAllEmulators(emulators_dict));
+    return emulators_dict;
 }
 
 

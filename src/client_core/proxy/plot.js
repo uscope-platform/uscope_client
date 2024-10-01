@@ -20,7 +20,7 @@ import {api_dictionary} from './api_dictionary'
 
 export const direct_fetch = () =>  {
     return new Promise((resolve, reject)=>{
-        backend_get(api_dictionary.plot.fetch_data).then((res) => {
+        backend_get(api_dictionary.operations.fetch_data).then((res) => {
             resolve(res)
         }).catch((err) =>{
             reject(err);
@@ -32,7 +32,7 @@ export const direct_fetch = () =>  {
 
 export const set_channel_status = (channel) => {
     return new Promise((resolve, reject)=>{
-        backend_post(api_dictionary.plot.set_channel_status, channel).then((res) => {
+        backend_post(api_dictionary.operations.set_channel_status, channel).then((res) => {
             resolve(res)
         }).catch((err) =>{
             alert('ERROR: error while setting a channel status\n' + err.message);
@@ -44,7 +44,7 @@ export const set_channel_status = (channel) => {
 
 export const set_scaling_factors = (scaling_factors) => {
     return new Promise((resolve, reject)=>{
-        backend_post(api_dictionary.plot.scaling_factors, {scaling_factors}).then((res) => {
+        backend_post(api_dictionary.operations.scaling_factors, scaling_factors).then((res) => {
             resolve(res)
         }).catch((err) =>{
             alert('ERROR: error while setting up channel scaling factors\n' + err.message);
@@ -55,7 +55,7 @@ export const set_scaling_factors = (scaling_factors) => {
 
 export let get_acquisition_status = () =>{
     return new Promise((resolve, reject)=>{
-        backend_get(api_dictionary.plot.acquisition).then((res) => {
+        backend_get(api_dictionary.operations.acquisition).then((res) => {
             resolve(res)
         }).catch((err) =>{
             reject(err);
@@ -65,7 +65,7 @@ export let get_acquisition_status = () =>{
 
 export let set_acquisition = (args) =>{
     return new Promise((resolve, reject)=>{
-        backend_post(api_dictionary.plot.acquisition, args).then((res) => {
+        backend_post(api_dictionary.operations.acquisition, args).then((res) => {
             resolve(res)
         }).catch((err) =>{
             reject(err);
