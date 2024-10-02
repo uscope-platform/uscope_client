@@ -37,6 +37,7 @@ export const api_dictionary = {
         hil_stop:'operations/hil/stop',
         filter_design:"operations/filter_design",
         filter_implement:"operations/filter_implement",
+        filter_response:"operations/filter_response",
         filter_apply:"operations/filter_apply",
     },
     applications:{
@@ -98,10 +99,7 @@ export const api_dictionary = {
         load: 'filter',
         add: 'filter',
         edit: 'filter',
-        delete: 'filter',
-        design:'filter/design',
-        implement:'filter/implement',
-        get_response: "filter/response"
+        delete: 'filter'
     },
     emulators:{
         get_hash:'emulator/hash',

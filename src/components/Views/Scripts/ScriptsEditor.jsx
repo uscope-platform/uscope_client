@@ -40,7 +40,7 @@ let ScriptsEditor = props =>{
 
     useEffect(()=>{
         if(typeof props.script !== 'undefined' && props.script !== null){
-            set_editor_content(props.script.script_content);
+            set_editor_content(props.script.content);
         }
     },[props.script])
 
@@ -56,7 +56,7 @@ let ScriptsEditor = props =>{
 
     let handle_save = ()=> {
         let script = new up_script(props.script);
-        script.edit_field("script_content", editor_content).then(()=>{
+        script.edit_field("content", editor_content).then(()=>{
             set_dirty(false);
         });
     }

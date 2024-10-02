@@ -224,21 +224,21 @@ let scripts_init = {
         id: 1,
         name: 'test_trigger',
         path: null,
-        script_content: test_script,
+        content: test_script,
         triggers: 'test_trigger'
     }),
     '2': new up_script({
         id: 2,
         name: 'fp_dta',
         path: null,
-        script_content: test_script,
+        content: test_script,
         triggers: 'fp_dta_trg'
     }),
     '3': new up_script({
         id: 3,
         name: 'test_script',
         path: null,
-        script_content: "",
+        content: "",
         triggers: 'test_trigger'
     })
 

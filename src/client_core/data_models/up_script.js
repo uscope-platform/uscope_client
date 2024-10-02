@@ -38,12 +38,12 @@ export class up_script {
         this.id = script_obj.id;
         this.name = script_obj.name;
         this.path = script_obj.path;
-        this.script_content = script_obj.script_content;
+        this.content = script_obj.content;
         this.triggers = script_obj.triggers;
     }
 
     static construct_empty(script_id){
-        let script_obj = {id:script_id, name:'new script_'+script_id,path:`new script_${script_id}.js`, script_content:default_script_content, triggers:''};
+        let script_obj = {id:script_id, name:'new script_'+script_id,path:`new script_${script_id}.js`, content:default_script_content, triggers:''};
         return new up_script(script_obj);
     }
 
@@ -74,7 +74,7 @@ export class up_script {
                 id: this.id,
                 path: this.path,
                 name: this.name,
-                script_content: this.script_content,
+                content: this.content,
                 triggers: this.triggers
             };
     }

@@ -49,7 +49,7 @@ export const run_script = (store, trigger_string, parameters, current_parameter)
     let trigger = Object.values(scripts).filter((script)=>{
         return script.triggers.includes(trigger_string);
     });
-    let content = trigger[0].script_content;
+    let content = trigger[0].content;
 
     let context = context_cleaner(old_registers, parameters, current_parameter);
     context["workspace"] = state.scriptsWorkspace;

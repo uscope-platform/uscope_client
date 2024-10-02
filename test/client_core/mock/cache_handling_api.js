@@ -178,21 +178,21 @@ export const scripts_init = {
         id: 1,
         name: 'test_trigger',
         path: null,
-        script_content: test_script,
+        content: test_script,
         triggers: 'test_trigger'
     },
     '2': {
         id: 2,
         name: 'fp_dta',
         path: null,
-        script_content: test_script,
+        content: test_script,
         triggers: 'fp_dta_trg'
     },
     '3': {
         id: 3,
         name: 'test_script',
         path: null,
-        script_content: "",
+        content: "",
         triggers: 'test_trigger'
     }
 

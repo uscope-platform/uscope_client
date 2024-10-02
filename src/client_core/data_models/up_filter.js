@@ -28,6 +28,8 @@ export class up_filter {
         this.id = filter_obj.id;
         this.name = filter_obj.name;
         this.parameters = filter_obj.parameters;
+        this.ideal_taps = filter_obj.ideal_taps;
+        this.quantized_taps = filter_obj.quantized_taps;
     }
 
     static construct_empty(filter_id){
@@ -43,20 +45,22 @@ export class up_filter {
                 stop_band_edge_2:0,
                 sampling_frequency:0,
                 taps_width:16
-            }
+            },
+            ideal_taps:[],
+            quantized_taps:[]
         };
         return new up_filter(filter_obj);
     }
 
     design = () =>{
-        return backend_get(api_dictionary.filters.design + '/' + this.id);
+        return backend_get(api_dictionary.operations.filter_design + '/' + this.id);
     }
     implement = () =>{
-        return backend_get(api_dictionary.filters.implement + '/' + this.id);
+        return backend_get(api_dictionary.operations.filter_implement + '/' + this.id);
     }
 
     get_plots = () =>{
-        return backend_get(api_dictionary.filters.load + '/' + this.id);
+        return backend_get(api_dictionary.operations.filter_response + '/' + this.id);
     }
 
     add_remote = () => {
@@ -93,7 +97,9 @@ export class up_filter {
         return {
                 id: this.id,
                 name: this.name,
-                parameters: this.parameters
+                parameters: this.parameters,
+                ideal_taps: this.ideal_taps,
+                quantized_taps: this.quantized_taps
             };
     }
 

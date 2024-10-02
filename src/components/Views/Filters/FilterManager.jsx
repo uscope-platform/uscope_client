@@ -67,12 +67,13 @@ let FilterManager = props =>{
         set_plot_filter({ideal: {x:[], y:[]}, quantized: {x:[], y:[]}});
     }, [selected_filter]);
 
-    let handleDesign = () =>{
-        selected_filter.design().then((resp)=>{
-            set_plot_filter({ideal: {x:resp["frequency"], y:resp["response"]}, quantized: plot_filter.quantized});
-        }).catch((err)=>{
-            toast.error(err);
-        })
+    let handleDesign = async () =>{
+        let filter = await selected_filter.design();
+        try {
+            set_plot_filter({ideal: {x:filter["frequency"], y:filter["response"]}, quantized: plot_filter.quantized});
+        } catch (e) {
+            toast.error(e);
+        }
     }
     let handleImplement = () =>{
         selected_filter.implement().then((resp)=>{

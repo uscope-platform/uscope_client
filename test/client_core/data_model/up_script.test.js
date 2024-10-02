@@ -24,7 +24,7 @@ test("script creation", () => {
             id:1,
             name:"new script_1",
             path:"new script_1.js",
-            script_content:`
+        content:`
     function script_main(parameters, context) {
     
         let ws = []; 
@@ -47,7 +47,7 @@ test("remote add", () => {
                 id:1,
                 name:"new script_1",
                 path:"new script_1.js",
-                script_content:`
+                content:`
     function script_main(parameters, context) {
     
         let ws = []; 
@@ -72,16 +72,16 @@ test("remote add", () => {
 test("set content", () => {
     let script = up_script.construct_empty(1);
     return script.add_remote().then(()=>{
-        return script.edit_field("script_content", "TEST CONTENT").then(()=>{
+        return script.edit_field("content", "TEST CONTENT").then(()=>{
             let check_script = {
                 id:1,
                 name:"new script_1",
                 path:"new script_1.js",
-                script_content:"TEST CONTENT",
+                content:"TEST CONTENT",
                 triggers:""
             };
 
-            expect(script_edit_data).toStrictEqual({id:"1", body:{field:"script_content", script:1,value:"TEST CONTENT"}});
+            expect(script_edit_data).toStrictEqual({id:"1", body:{field:"content", script:1,value:"TEST CONTENT"}});
             let state = mock_store.getState();
             expect(state.scripts[1]._get_script()).toStrictEqual(check_script);
         });
