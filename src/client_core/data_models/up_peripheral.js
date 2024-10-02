@@ -26,7 +26,7 @@ export class up_peripheral {
             return null;
 
         this.id = periph_data_obj.id;
-        this.peripheral_name = periph_data_obj.peripheral_name;
+        this.name = periph_data_obj.name;
         this.version = periph_data_obj.version;
         this.parametric = periph_data_obj.parametric;
         this.registers = [];
@@ -38,7 +38,7 @@ export class up_peripheral {
     static construct_empty(periph_id){
         let periph_data_obj = {
             id:periph_id,
-            peripheral_name: 'new peripheral_' + periph_id,
+            name: 'new peripheral_' + periph_id,
             version:0.1,
             registers:[],
             parametric:false
@@ -214,9 +214,9 @@ export class up_peripheral {
         for(let i of this.registers){
             cleaned_registers.push(i._get_register());
         }
-        return {[this.peripheral_name]:{
+        return {[this.name]:{
             id:this.id,
-            peripheral_name:this.peripheral_name,
+            name:this.name,
             version:this.version,
             parametric:this.parametric,
             registers:cleaned_registers

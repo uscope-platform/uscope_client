@@ -159,7 +159,7 @@ let applications_init = {
 
 let test_peripheral =  {
     image: 'static/Images/ADC_processing.png',
-    peripheral_name: 'ADC_processing',
+    name: 'ADC_processing',
     registers: [
         {
             ID: 'cmp_thr_1',

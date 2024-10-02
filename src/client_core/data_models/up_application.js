@@ -315,10 +315,10 @@ export class up_application {
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
-    add_peripheral = async (peripheral_name) => {
+    add_peripheral = async (name) => {
         let p = {
-            name: peripheral_name,
-            peripheral_id: peripheral_name.replace(/\s/g, "_").toLowerCase(),
+            name: name,
+            peripheral_id: name.replace(/\s/g, "_").toLowerCase(),
             base_address: '0',
             hdl_parameters:{},
             proxied: false,

@@ -32,7 +32,7 @@ let simple_app = {
 
 let simple_periph = {
     1: {
-        "peripheral_name": "AdcProcessing2",
+        "name": "AdcProcessing2",
         "id": 1,
         "version": "1.0",
         "parametric":false,
@@ -287,7 +287,7 @@ let parametric_app = {
 
 let parametric_periph = {
     1: {
-        "peripheral_name": "AdcProcessing2",
+        "name": "AdcProcessing2",
         "id":1,
         "version": "1.0",
         "parametric":true,

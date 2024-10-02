@@ -34,7 +34,7 @@ export const initialize_scripting_engine = (application, peripherals) =>{
                 return val.id === parseInt(p.spec_id);
             })[0];
             let periph = new up_peripheral(p_obj);
-            scripting_engine_peripherals[p.peripheral_id] = {regs:periph.get_proxied_registers(p.peripheral_id, p.hdl_parameters), periph_obj:p, spec_obj:periph._get_periph()[periph.peripheral_name]};
+            scripting_engine_peripherals[p.peripheral_id] = {regs:periph.get_proxied_registers(p.peripheral_id, p.hdl_parameters), periph_obj:p, spec_obj:periph._get_periph()[periph.name]};
         }
     }
 }

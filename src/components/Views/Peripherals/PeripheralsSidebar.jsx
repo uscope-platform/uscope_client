@@ -45,7 +45,7 @@ let  PeripheralsSidebar = props =>{
             objects={peripherals_redux}
             selection_key="id"
             template={up_peripheral}
-            display_key="peripheral_name"
+            display_key="name"
             content_name="Peripherals"
             selector="current_peripheral"
             onImport={handleImport}

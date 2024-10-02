@@ -2,7 +2,7 @@
     "peripherals": [
         {
         "id": 1,
-        "peripheral_name": "enable_generator",
+        "name": "enable_generator",
         "parametric": false,
         "registers": [
           {
@@ -38,7 +38,7 @@
         {
           "id": 2,
           "parametric": true,
-          "peripheral_name": "AdcProcessing",
+          "name": "AdcProcessing",
           "registers": [
             {
               "ID": "cmp_low_f",

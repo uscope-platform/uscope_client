@@ -10,7 +10,7 @@ export let peripheral_schema = {
           "id": {
             "type": "integer"
           },
-          "peripheral_name": {
+          "name": {
             "type": "string"
           },
           "parametric": {
@@ -114,7 +114,7 @@ export let peripheral_schema = {
         "additionalProperties": false,
         "required": [
           "id",
-          "peripheral_name",
+          "name",
           "parametric",
           "registers",
           "version"

@@ -29,7 +29,7 @@ import {HdlParameterProperties} from "./HdlParameterProperties";
 export let  PeripheralProperties = props =>{
 
     let peripherals_list = Object.entries(props.peripherals).map((periph)=>{
-        return {label:periph[1].peripheral_name, value:periph[0]}
+        return {label:periph[1].name, value:periph[0]}
     })
 
     let [selected, set_selected] = useState((()=>{
@@ -37,7 +37,7 @@ export let  PeripheralProperties = props =>{
             return p.id === parseInt(props.peripheral.spec_id);
         })[0];
         if(props.peripheral.spec_id !== ""){
-            return {label:p.peripheral_name, value:parseInt(props.peripheral.spec_id)}
+            return {label:p.name, value:parseInt(props.peripheral.spec_id)}
         } else {
             return {label: "", value: null}
         }

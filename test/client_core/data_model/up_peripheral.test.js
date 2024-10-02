@@ -24,7 +24,7 @@ import {
 test("peripheral creation", () => {
     let periph = up_peripheral.construct_empty(1);
     let check_periph = {"new peripheral_1":{
-            peripheral_name:"new peripheral_1",
+            name:"new peripheral_1",
             id:1,
             version:0.1,
             parametric:false,
@@ -39,7 +39,7 @@ test("remote add", () => {
     return periph.add_remote().then(()=>{
         let check_periph =  {payload:{
             "new peripheral_1":{
-                    peripheral_name:"new peripheral_1",
+                    name:"new peripheral_1",
                     id:1,
                     version:0.1,
                     parametric: false,
@@ -71,7 +71,7 @@ test("add_register", () => {
 
             let check_periph =  {
                 "new peripheral_1":{
-                    peripheral_name:"new peripheral_1",
+                    name:"new peripheral_1",
                     id:1,
                     version:0.1,
                     registers:[{
@@ -95,7 +95,7 @@ test("edit_version", () => {
         return periph.set_version(0.3).then(() => {
             let check_periph =  {payload:{
                     "new peripheral_1":{
-                        peripheral_name:"new peripheral_1",
+                        name:"new peripheral_1",
                         id:1,
                         version:0.3,
                         parametric:false,

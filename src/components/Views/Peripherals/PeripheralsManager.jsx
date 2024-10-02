@@ -95,7 +95,7 @@ let PeripheralsManager = (props)=>{
                     <SimpleContent name="Peripheral Properties" content={
                         <div>
                             <InputField inline name="edit_name"
-                                        defaultValue={selected_peripheral.peripheral_name}
+                                        defaultValue={selected_peripheral.name}
                                         onKeyDown={handleEditName} label="Name"/>
                             <InputField inline name="edit_version"
                                         defaultValue={selected_peripheral.version}

@@ -130,7 +130,7 @@ export const applications_init = {
 
 export const peripherals_init = {
     ADC_processing: {
-        peripheral_name: 'ADC_processing',
+        name: 'ADC_processing',
         registers: [
             {
                 ID: 'cmp_thr_1',
