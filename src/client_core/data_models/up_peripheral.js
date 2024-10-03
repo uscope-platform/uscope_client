@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import {construct_proxied_register, store} from "../index";
-import {backend_get, backend_post} from "../proxy/backend";
+import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
 import {addPeripheral, removePeripheral} from "../../redux/Actions/peripheralsActions";
 import {up_register} from "./up_register";
@@ -71,35 +71,40 @@ export class up_peripheral {
         return ["AdcProcessing"];
     }
 
-    add_remote = () => {
-        store.dispatch(addPeripheral({payload:{[this.id]:this}}))
-        return backend_post(api_dictionary.peripherals.add, {payload:this._get_periph()});
+    add_remote = async () => {
+        let resp = await backend_post(api_dictionary.peripherals.add, this._get_periph()[this.name]);
+        store.dispatch(addPeripheral({payload:{[this.id]:this}}));
+        return resp;
     }
 
     add_register = (reg_name) =>{
         let reg = up_register.construct_empty(reg_name, this.id);
         this.registers.push(reg);
         store.dispatch(addPeripheral({payload:{[this.id]:this}}));
-        let edit ={peripheral:this.id, action:"add_register",register:reg._get_register()};
-        return backend_post(api_dictionary.peripherals.edit, edit);
+        let edit ={peripheral:this.id, field:"registers", action:"add_register",register:reg._get_register()};
+        return backend_patch(api_dictionary.peripherals.edit + '/' + this.id, edit);
     }
 
     set_version = (ver) =>{
         this.version = ver;
-        let edit ={peripheral:this.id, action:"edit_version", version:parseFloat(ver)};
+        let edit ={peripheral:this.id, field:"version", value:parseFloat(ver)};
         store.dispatch(addPeripheral({payload:{[this.id]:this}}))
-        return backend_post(api_dictionary.peripherals.edit, edit);
+        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.id, edit);
     };
 
-    edit_name = (name) =>{
-        alert("NOT IMPLEMENTED YET");
+    edit_name = async (name) =>{
+        this.name = name;
+        let edit ={peripheral:this.id, field:"name", value:name};
+        await store.dispatch(removePeripheral(this.id))
+        await store.dispatch(addPeripheral({payload:{[this.id]:this}}))
+        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.id, edit);
     };
 
     edit_parametric = (value) =>{
         this.parametric = value;
-        let edit ={peripheral:this.id, action:"edit_parametric", parametric:value};
+        let edit ={peripheral:this.id, field:"parameteric", value:value};
         store.dispatch(addPeripheral({payload:{[this.id]:this}}))
-        return backend_post(api_dictionary.peripherals.edit, edit);
+        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.id, edit);
     };
 
     get_register_offset = (name, parameters) =>{
@@ -183,7 +188,7 @@ export class up_peripheral {
     }
 
     static delete(periph){
-        return backend_get(api_dictionary.peripherals.delete+'/'+ periph.id).then(()=>{
+        return backend_delete(api_dictionary.peripherals.delete+'/'+ periph.id).then(()=>{
             store.dispatch(removePeripheral(periph.id));
         })
     }

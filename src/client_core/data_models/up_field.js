@@ -16,7 +16,7 @@
 
 import {store} from "../index";
 import {removeField, upsertField} from "../../redux/Actions/peripheralsActions";
-import {backend_post} from "../proxy/backend";
+import {backend_patch} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
 
 export class up_field {
@@ -51,46 +51,46 @@ export class up_field {
         let old_name = this.name;
         this.name = name;
         store.dispatch(upsertField(this, old_name, this.parent_register, this.parent_peripheral));
-        return backend_post(api_dictionary.peripherals.edit, edit)
+        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_peripheral, edit)
     }
 
     edit_description = (description) =>{
         let edit = {peripheral:this.parent_peripheral, register:this.parent_register, field:"description",field_name:this.name, value:description, action:"edit_field"};
         this.description = description;
         store.dispatch(upsertField(this, this.name, this.parent_register, this.parent_peripheral));
-        return backend_post(api_dictionary.peripherals.edit, edit)
+        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_peripheral, edit)
     };
 
     edit_length = (length) => {
         let edit = {peripheral:this.parent_peripheral, register:this.parent_register, field:"length",field_name:this.name, value:length, action:"edit_field"};
         this.length = length;
         store.dispatch(upsertField(this, this.name, this.parent_register, this.parent_peripheral));
-        return backend_post(api_dictionary.peripherals.edit, edit)
+        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_peripheral, edit)
     }
 
     edit_order = (order) => {
         let edit = {peripheral:this.parent_peripheral, register:this.parent_register, field:"order",field_name:this.name, value:order, action:"edit_field"};
         this.order = order;
         store.dispatch(upsertField(this, this.name, this.parent_register, this.parent_peripheral));
-        return backend_post(api_dictionary.peripherals.edit, edit)
+        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_peripheral, edit)
     }
 
     edit_n_fields = (n_fields) => {
         let edit = {peripheral:this.parent_peripheral, register:this.parent_register, field:"n_fields",field_name:this.name, value:[n_fields], action:"edit_field"};
         this.n_fields = [n_fields];
         store.dispatch(upsertField(this, this.name, this.parent_register, this.parent_peripheral));
-        return backend_post(api_dictionary.peripherals.edit, edit)
+        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_peripheral, edit)
     }
     edit_offset = (offset) => {
         let edit = {peripheral:this.parent_peripheral, register:this.parent_register, field:"offset",field_name:this.name, value:offset, action:"edit_field"};
         this.offset = offset;
         store.dispatch(upsertField(this, this.name, this.parent_register, this.parent_peripheral));
-        return backend_post(api_dictionary.peripherals.edit, edit)
+        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_peripheral, edit)
     }
 
     static remove_field(periph, reg, field){
         let edit = {peripheral:periph, register:reg,field_name:field, action:"remove_field"};
-        return backend_post(api_dictionary.peripherals.edit, edit).then(()=>{
+        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_peripheral, edit).then(()=>{
             store.dispatch(removeField(periph, reg, field));
         })
     }

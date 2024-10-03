@@ -15,7 +15,7 @@
 
 import {store} from "../index";
 import {up_field} from "./up_field";
-import {backend_post} from "../proxy/backend";
+import {backend_patch} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
 import {removeRegister, upsertRegister} from "../../redux/Actions/peripheralsActions";
 
@@ -78,14 +78,14 @@ export class up_register {
         let edit = {peripheral:this.parent_periph, register:this.register_name, field:"description", value:descr, action:"edit_register"};
         this.description = descr;
         store.dispatch(upsertRegister(this, this.ID, this.parent_periph));
-        return backend_post(api_dictionary.peripherals.edit, edit)
+        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_periph, edit)
     }
 
     edit_name = (name) =>{
         let edit = {peripheral:this.parent_periph, register:this.register_name, field:"register_name", value:name, action:"edit_register"};
         this.register_name = name;
         store.dispatch(upsertRegister(this, this.ID, this.parent_periph));
-        return backend_post(api_dictionary.peripherals.edit, edit)
+        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_periph, edit)
     };
 
     edit_direction = (raw_direction) =>{
@@ -128,27 +128,27 @@ export class up_register {
         let edit = {peripheral:this.parent_periph, register:this.register_name, field:"direction", value:direction, action:"edit_register"};
         this.direction = direction;
         store.dispatch(upsertRegister(this, this.ID, this.parent_periph));
-        return backend_post(api_dictionary.peripherals.edit, edit)
+        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_periph, edit)
     }
 
     edit_offset = (offset) => {
         let edit = {peripheral:this.parent_periph, register:this.register_name, field:"offset", value:offset, action:"edit_register"};
         this.offset = offset;
         store.dispatch(upsertRegister(this, this.ID, this.parent_periph));
-        return backend_post(api_dictionary.peripherals.edit, edit)
+        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_periph, edit)
     }
     edit_order = (order) => {
         this.order = order;
         let edit = {peripheral:this.parent_periph, register:this.register_name, field:"order", value:order, action:"edit_register"};
         store.dispatch(upsertRegister(this, this.ID, this.parent_periph));
-        return backend_post(api_dictionary.peripherals.edit, edit)
+        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_periph, edit)
     }
 
     edit_n_registers = (value) => {
         this.n_registers = [value];
         let edit = {peripheral:this.parent_periph, register:this.register_name, field:"n_registers", value:[value], action:"edit_register"};
         store.dispatch(upsertRegister(this, this.ID, this.parent_periph));
-        return backend_post(api_dictionary.peripherals.edit, edit)
+        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_periph, edit)
     }
 
     edit_id = (id) =>{
@@ -156,7 +156,7 @@ export class up_register {
         let old_id = this.ID;
         this.ID = id;
         store.dispatch(upsertRegister(this, old_id, this.parent_periph));
-        return backend_post(api_dictionary.peripherals.edit, edit);
+        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_periph, edit);
     }
 
     set_fields = (fields) => {
@@ -169,7 +169,7 @@ export class up_register {
 
     static remove_register(periph, reg){
         let edit = {peripheral:periph, register:reg, action:"remove_register"};
-         return backend_post(api_dictionary.peripherals.edit, edit).then(()=>{
+         return backend_patch(api_dictionary.peripherals.edit+ '/' + periph.id, edit).then(()=>{
              store.dispatch(removeRegister(periph, reg));
          })
     }

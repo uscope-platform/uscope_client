@@ -57,9 +57,9 @@ export const api_dictionary = {
     peripherals:{
         get_hash: 'peripheral/hash',
         load_all: 'peripheral/load_all',
-        add: 'tab_creator/create_peripheral',
-        edit: 'tab_creator/edit_peripheral',
-        delete: 'tab_creator/remove_peripheral'
+        add: 'peripheral',
+        edit: 'peripheral',
+        delete: 'peripheral'
     },
     platform:{
         users:{
