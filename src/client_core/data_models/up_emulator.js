@@ -239,9 +239,14 @@ export class up_emulator {
     }
 
     edit_deployment_options = async (core_id, options_obj) =>{
-        let edit = {emulator:this.id, core:core_id.toString(),  value:options_obj, action:"edit_deployment_options"};
+
+        let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
+        core.deployment = options_obj;
+
+
+        let edit = {id:this.id, field:"cores",  action:"edit", value:core};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
-        this.cores[core_id].deployment = options_obj;
+        this.cores[core_id] = core;
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
