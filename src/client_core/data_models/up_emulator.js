@@ -90,29 +90,30 @@ export class up_emulator {
                 has_reciprocal:false
             }
         };
-        this.cores[id] = c;
-        let edit = {emulator:this.id, core:c, action:"add_core"};
+
+        let edit = {id:this.id, field:"cores",  action:"add", value:c};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        this.cores[id] = c;
         store.dispatch(update_emulator(this.deep_copy()));
         return c;
     }
 
     edit_name = async (new_name) =>{
-        let edit = {emulator:this.id, value:new_name, action:"edit_name"};
+        let edit = {id:this.id, field:"name",  action:"edit", value:new_name};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         this.name = new_name;
         store.dispatch(update_emulator(this.deep_copy()));
     };
 
     edit_emulation_time =async (emu_time) =>{
-        let edit = {emulator:this.id, value:emu_time, action:"edit_emu_time"};
+        let edit = {id:this.id, field:"emulation_time",  action:"edit", value:emu_time};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         this.emulation_time = emu_time;
         store.dispatch(update_emulator(this.deep_copy()));
     };
 
     edit_deployment_mode =async (mode) =>{
-        let edit = {emulator:this.id, value:mode, action:"edit_deployment_mode"};
+        let edit = {id:this.id, field:"deployment_mode",  action:"edit", value:mode};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         this.deployment_mode = mode;
         store.dispatch(update_emulator(this.deep_copy()));
@@ -127,9 +128,9 @@ export class up_emulator {
     }
 
     remove_core = async (core_id) =>{
-        delete this.cores[core_id];
-        let edit = {emulator:this.id, core:core_id.toString(), action:"remove_core"};
+        let edit = {id:this.id, field:"cores",  action:"remove", value:core_id};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        delete this.cores[core_id];
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
