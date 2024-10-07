@@ -144,22 +144,27 @@ export class up_emulator {
             type: "float",
             name: "new_output_" + progressive
         }
-        this.cores[core_id].outputs.push(output);
-        let edit = {emulator:this.id, core:core_id.toString(), output:output, action:"add_output"};
+        let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
+        core.outputs.push(output);
+        let edit = {id:this.id, field:"cores",  action:"edit", value:core};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        this.cores[core_id] = core;
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
     edit_output = async (core_id, field, value, output_name) =>{
-        let edit = {emulator:this.id, core:core_id.toString(), field_name:field, value:value, output:output_name, action:"edit_output"};
-        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
-        this.cores[core_id].outputs = this.cores[core_id].outputs.map((item)=>{
+
+        let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
+        core.outputs = core.outputs.map((item)=>{
             if(item.name === output_name){
                 return  {...item, ...{[field]:value}};
             } else {
                 return item;
             }
         });
+        let edit = {id:this.id, field:"cores",  action:"edit", value:core};
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        this.cores[core_id] = core;
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
@@ -234,31 +239,44 @@ export class up_emulator {
             name: "new_memory_" + progressive,
             is_output:false
         }
-        this.cores[core_id].memory_init.push(mem);
-        let edit = {emulator:this.id, core:core_id.toString(), memory:mem, action:"add_memory"};
+
+        let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
+        core.memory_init.push(mem);
+
+        let edit = {id:this.id, field:"cores",  action:"edit", value:core};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        this.cores[core_id] = core;
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
     edit_memory = async (core_id, field, value, memory_name) =>{
-        let edit = {emulator:this.id, core:core_id.toString(), field_name:field, value:value, memory:memory_name, action:"edit_memory"};
-        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
-        this.cores[core_id].memory_init = this.cores[core_id].memory_init.map((item)=>{
+
+        let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
+        core.memory_init = core.memory_init.map((item)=>{
             if(item.name === memory_name){
                 return  {...item, ...{[field]:value}};
             } else {
                 return item;
             }
         });
+
+        let edit = {id:this.id, field:"cores",  action:"edit", value:core};
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        this.cores[core_id] = core;
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
     remove_output =async (core_id, obj_name) => {
-        this.cores[core_id].outputs = this.cores[core_id].outputs.filter((item)=>{
+
+        let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
+
+        core.outputs = core.outputs.filter((item)=>{
             return item.name !== obj_name;
         })
-        let edit = {emulator:this.id, core:core_id.toString(), name:obj_name, action:"remove_output"};
+
+        let edit = {id:this.id, field:"cores",  action:"edit", value:core};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        this.cores[core_id] = core;
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
@@ -272,11 +290,16 @@ export class up_emulator {
     }
 
     remove_memory =async (core_id, obj_name) =>{
-        this.cores[core_id].memory_init = this.cores[core_id].memory_init.filter((item)=>{
+
+        let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
+
+        core.memory_init = core.memory_init.filter((item)=>{
             return item.name !== obj_name;
         })
-        let edit = {emulator:this.id, core:core_id.toString(), name:obj_name, action:"remove_memory"};
+
+        let edit = {id:this.id, field:"cores",  action:"edit", value:core};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        this.cores[core_id] = core;
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
