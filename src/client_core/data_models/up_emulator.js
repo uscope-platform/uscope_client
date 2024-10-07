@@ -330,28 +330,20 @@ export class up_emulator {
             target:target_id,
             channels:[]
         }
-        this.connections.push(c);
-        let edit = {emulator:this.id, connection:c, action:"add_connection"};
+        let edit = {id:this.id, field:"connections",  action:"add", value:c};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        this.connections.push(c);
         store.dispatch(update_emulator(this.deep_copy()));
         return c;
     }
 
     remove_dma_connection = async (source_id, target_id) =>{
+
+        let edit = {id:this.id, field:"connections",  action:"remove", value:{source:source_id, destination:target_id}};
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         this.connections = this.connections.filter((item)=>{
             return item.source !== source_id && item.target !== target_id;
         });
-        let edit = {emulator:this.id, source:source_id, target:target_id, action:"remove_connection"};
-        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
-        store.dispatch(update_emulator(this.deep_copy()));
-    }
-
-    remove_node_connections =async (node_id) =>{
-        this.connections = this.connections.filter((item)=>{
-            return item.source !== node_id && item.target !== node_id;
-        });
-        let edit = {emulator:this.id, node:node_id, action:"remove_node_connections"};
-        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
@@ -410,6 +402,17 @@ export class up_emulator {
                 return item;
             }
         });
+        store.dispatch(update_emulator(this.deep_copy()));
+    }
+
+    remove_node_connections =async (node_id) =>{
+
+        for(let c of this.connections){
+            if(c.source === node_id || c.target === node_id) {
+                await this.remove_dma_connection(c.source, c.target);
+            }
+        }
+
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
