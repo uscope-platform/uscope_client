@@ -173,18 +173,26 @@ export class up_emulator {
             name:input_name,
             data:data
         }
-        this.cores[core_id].input_data.push(i_d);
-        let edit = {emulator:this.id, core:core_id.toString(), input_data:i_d, action:"add_input_data"};
+
+        let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
+        core.input_data.push(i_d);
+
+        let edit = {id:this.id, field:"cores",  action:"edit", value:core};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        this.cores[core_id] = core;
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
     remove_input_file = async (core_id, obj_name) => {
-        this.cores[core_id].input_data = this.cores[core_id].input_data.filter((item)=>{
+
+        let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
+        core.input_data = core.input_data.filter((item)=>{
             return item.name !== obj_name;
         })
-        let edit = {emulator:this.id, core:core_id.toString(), name:obj_name, action:"remove_input_data"};
+
+        let edit = {id:this.id, field:"cores",  action:"edit", value:core};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        this.cores[core_id] = core;
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
@@ -203,22 +211,30 @@ export class up_emulator {
             name: "new_input_" + progressive,
             labels:""
         }
-        this.cores[core_id].inputs.push(input);
-        let edit = {emulator:this.id, core:core_id.toString(), input:input, action:"add_input"};
+
+        let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
+        core.inputs.push(input);
+
+        let edit = {id:this.id, field:"cores",  action:"edit", value:core};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        this.cores[core_id] = core;
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
     edit_input =async (core_id, field, value, input_name) =>{
-        let edit = {emulator:this.id, core:core_id.toString(), field_name:field, value:value, input:input_name, action:"edit_input"};
-        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
-        this.cores[core_id].inputs = this.cores[core_id].inputs.map((item)=>{
+
+        let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
+        core.inputs = core.inputs.map((item)=>{
             if(item.name === input_name){
                 return  {...item, ...{[field]:value}};
             } else {
                 return item;
             }
         });
+
+        let edit = {id:this.id, field:"cores",  action:"edit", value:core};
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        this.cores[core_id] = core;
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
@@ -281,11 +297,16 @@ export class up_emulator {
     }
 
     remove_input = async (core_id, obj_name) => {
-        this.cores[core_id].inputs = this.cores[core_id].inputs.filter((item)=>{
+
+        let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
+
+        core.inputs = core.inputs.filter((item)=>{
             return item.name !== obj_name;
         })
-        let edit = {emulator:this.id, core:core_id.toString(), name:obj_name, action:"remove_input"};
+
+        let edit = {id:this.id, field:"cores",  action:"edit", value:core};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        this.cores[core_id] = core;
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
