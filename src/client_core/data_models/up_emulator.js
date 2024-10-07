@@ -121,9 +121,11 @@ export class up_emulator {
 
 
     edit_core_props = async (core_id, field, value) =>{
-        let edit = {emulator:this.id, core:core_id.toString(), field_name:field, value:value, action:"edit_core_props"};
-        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit)
-        this.cores[core_id][field] = value;
+        let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
+        core[field] = value;
+        let edit = {id:this.id, field:"cores",  action:"edit", value:core};
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        this.cores[core_id] = core;
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
