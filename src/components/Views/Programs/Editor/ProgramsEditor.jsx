@@ -37,8 +37,8 @@ let ProgramsEditor = props =>{
 
     useEffect(()=>{
         if(typeof props.program !== 'undefined' && props.program !== null){
-            set_editor_content(props.program.program_content);
-            set_language(props.program.program_type);
+            set_editor_content(props.program.content);
+            set_language(props.program.type);
             set_dirty(false);
         }
     },[props.program])
@@ -50,7 +50,7 @@ let ProgramsEditor = props =>{
 
     let handle_save = (event) => {
         let program = new up_program(props.program);
-        program.edit_field('program_content', editor_content).then(()=>{
+        program.edit_field('content', editor_content).then(()=>{
             set_dirty(false);
         })
     };

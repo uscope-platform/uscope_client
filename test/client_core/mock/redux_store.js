@@ -254,8 +254,8 @@ let programs_init = {
     1:new up_program({
         "id": 1,
         "name": "new_program_1",
-        "program_content": "iocbnojrenjcor",
-        "program_type": "asm"
+        "content": "iocbnojrenjcor",
+        "type": "asm"
     })
 }
 

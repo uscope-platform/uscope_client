@@ -52,7 +52,7 @@ let  ProgramSidebar = props =>{
             display_key="name"
             content_name="Program"
             selector="selected_program"
-            type_prop="program_type"
+            type_prop="type"
             onDelete={handleRemove}
             onAdd={handleAdd}
             omImportDone={handle_import_done}

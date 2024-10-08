@@ -47,7 +47,7 @@ let ProgramsManager = props =>{
     ];
 
     const headers = Object.values(programs_store).filter((p) =>{
-        return p.program_type === "H";
+        return p.type === "H";
     })
     useEffect(() => {
         if(location.state){
@@ -105,7 +105,7 @@ let ProgramsManager = props =>{
 
 
     let handleTypeChange = (event) =>{
-        selected_program.edit_field("program_type", event.value).then();
+        selected_program.edit_field("type", event.value).then();
     }
 
     let handle_name_change = (event) => {
@@ -126,7 +126,7 @@ let ProgramsManager = props =>{
                 />
             </div>
         ]
-        if(selected_program.program_type==="C"){
+        if(selected_program.type==="C"){
             res.push(
                 <div key="build_settings">
                     <BuildSettings  language={selected_program.language} build_settings={selected_program.build_settings} onEdit={handle_settings_edit}/>
@@ -174,9 +174,9 @@ let ProgramsManager = props =>{
                             <SelectField
                                 label="Program type"
                                 onChange={handleTypeChange}
-                                value={{label:selected_program.program_type, value:selected_program.program_type}}
+                                value={{label:selected_program.type, value:selected_program.type}}
                                 defaultValue="Select Type"
-                                name="program_type"
+                                name="type"
                                 placeholder="Program type"
                                 options={allowed_types}/>
                         </FormLayout>

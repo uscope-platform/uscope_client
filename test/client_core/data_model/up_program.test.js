@@ -37,8 +37,8 @@ test("program creation", () => {
             },
             headers:[],
             name:"new program_1",
-            program_content:'',
-            program_type:''
+            content:'',
+            type:''
         };
 
     expect(program._get_program()).toStrictEqual(check_program)
@@ -59,8 +59,8 @@ test("remote add", () => {
                 },
                 headers:[],
                 name:"new program_1",
-                program_content:'',
-                program_type:''
+                content:'',
+                type:''
             },
             id:"1"
         };
@@ -87,11 +87,11 @@ test("set content", () => {
                 },
                 headers:[],
                 name:"new program_1",
-                program_content:'TEST CONTENT',
-                program_type:''
+                content:'TEST CONTENT',
+                type:''
             };
 
-            expect(edit_program_data).toStrictEqual({id:"1", body:{field:"program_content", program:1, value:"TEST CONTENT"}});
+            expect(edit_program_data).toStrictEqual({id:"1", body:{field:"content", program:1, value:"TEST CONTENT"}});
             let state = mock_store.getState();
             expect(state.programs[1]._get_program()).toStrictEqual(check_program);
         });

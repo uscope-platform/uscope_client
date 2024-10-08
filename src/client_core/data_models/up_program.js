@@ -25,8 +25,8 @@ export class up_program {
             return;
         this.id = program_obj.id;
         this.name = program_obj.name;
-        this.program_content = program_obj.program_content;
-        this.program_type = program_obj.program_type;
+        this.content = program_obj.content;
+        this.type = program_obj.type;
         this.build_settings = program_obj.build_settings;
         if(!program_obj.headers){
             this.headers = [];
@@ -39,8 +39,8 @@ export class up_program {
         let program_obj = {
             id:program_id,
             name:'new program_'+program_id,
-            program_content:'',
-            program_type:'',
+            content:'',
+            type:'',
             build_settings:{
                 io:{
                     inputs: [],
@@ -56,8 +56,8 @@ export class up_program {
         let ret = {};
         ret.id = this.id;
         ret.name = this.name;
-        ret.program_content =this.program_content;
-        ret.program_type =this.program_type;
+        ret.content =this.content;
+        ret.type =this.type;
         ret.build_settings = JSON.parse(JSON.stringify(this.build_settings));
 
         return ret;
@@ -69,7 +69,7 @@ export class up_program {
     }
 
     set_content = (content) => {
-        return this.edit_field('program_content', content);
+        return this.edit_field('content', content);
     }
 
     edit_field = async (field, value) => {
@@ -94,14 +94,14 @@ export class up_program {
      compile = async () =>{
          let headers = this.headers.map((h)=>{
              let header = store.getState().programs[h];
-             return {name: header.name, content: header.program_content};
+             return {name: header.name, content: header.content};
          })
 
          let data_package = {
-             content:this.program_content,
+             content:this.content,
              headers:headers,
              io:[],
-             type:this.program_type
+             type:this.type
          }
         return backend_post(api_dictionary.programs.compile+'/'+this.id, data_package)
     };
@@ -110,14 +110,14 @@ export class up_program {
 
         let headers = this.headers.map((h)=>{
             let header = store.getState().programs[h];
-            return {name: header.name, content: header.program_content};
+            return {name: header.name, content: header.content};
         })
 
         let data_package = {
-            content:this.program_content,
+            content:this.content,
             headers:headers,
             io:core.io,
-            type:this.program_type,
+            type:this.type,
             core_address:core.address
         }
         let h = objectHash(data_package)
@@ -140,8 +140,8 @@ export class up_program {
         return {
             id: this.id,
             name: this.name,
-            program_content: this.program_content,
-            program_type: this.program_type,
+            content: this.content,
+            type: this.type,
             build_settings: this.build_settings,
             headers: this.headers
         };
