@@ -239,7 +239,7 @@ let FcoreEmulationEditor = function (props) {
 
     let handle_edge_remove = (edge) =>{
         props.on_component_select(null);
-        props.emulator.remove_dma_connection(edge.from, edge.to).then(()=>{
+        emulator.remove_dma_connection(edge.from, edge.to).then(()=>{
             let n_e = edges.filter((item) =>{ return item.id !== edge.id});
             setEdges(n_e);
         });

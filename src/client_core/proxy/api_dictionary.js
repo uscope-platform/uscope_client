@@ -106,15 +106,7 @@ export const api_dictionary = {
         load_all: 'emulator/load_all',
         add: 'emulator',
         edit: 'emulator',
-        delete: 'emulator',
-        run:'emulators/run'
-    },
-    hil:{
-        deploy: 'hil/deploy',
-        select_output: 'hil/select_out',
-        set_input: 'hil/set_input',
-        start:'hil/start',
-        stop:'hil/stop'
+        delete: 'emulator'
     },
     settings:{
         debug_level:'settings/debug_level',

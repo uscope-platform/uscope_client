@@ -558,12 +558,12 @@ export class up_emulator {
 
     run = async () =>{
         let specs = this.build();
-        return await backend_post(api_dictionary.emulators.run, specs);
+        return await backend_post(api_dictionary.operations.hil_emulate, specs);
     };
 
     deploy = async () =>{
         let specs = this.build();
-        return await backend_post(api_dictionary.hil.deploy, specs);
+        return await backend_post(api_dictionary.operations.hil_deploy, specs);
     }
 
     get_raw_obj = () => {
@@ -663,7 +663,7 @@ export class up_emulator {
     }
 
     select_output = (channel, output) =>{
-        return backend_post(api_dictionary.hil.select_output, {channel:channel, output:output});
+        return backend_post(api_dictionary.operations.hil_select_output, {channel:channel, output:output});
     }
 
     get_inputs =() =>{
@@ -680,14 +680,14 @@ export class up_emulator {
     }
 
     set_input = (core, address, value) =>{
-        return backend_post(api_dictionary.hil.set_input, {"address":address, "value":value, "core": core});
+        return backend_post(api_dictionary.operations.hil_set_input, {"address":address, "value":value, "core": core});
     }
 
     start_hil = () =>{
-        return backend_get(api_dictionary.hil.start);
+        return backend_get(api_dictionary.operations.hil_start);
     }
     stop_hil = () =>{
-        return backend_get(api_dictionary.hil.stop);
+        return backend_get(api_dictionary.operations.hil_stop);
     }
 
 
