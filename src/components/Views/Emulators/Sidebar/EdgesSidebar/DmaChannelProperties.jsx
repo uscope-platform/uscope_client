@@ -30,7 +30,7 @@ let  DmaChannelProperties = props =>{
     })[0].program;
 
     let target_program = Object.values(props.selected_emulator.cores).filter((c)=>{
-        return c.id === props.selected_component.target;
+        return c.id === props.selected_component.destination;
     })[0].program;
 
     let source_outputs = [];
@@ -158,8 +158,8 @@ let  DmaChannelProperties = props =>{
                     return {label:outs, value:outs};
                 })}
             />
-            <InputField id="target_channel" name="target_channel" label="Target Channel" defaultValue={props.selected_channel.target.channel} onKeyDown={handle_change}/>
-            <InputField id="target_register" name="target_register" label="Target Register" defaultValue={props.selected_channel.target.register} onKeyDown={handle_change}/>
+            <InputField id="target_channel" name="target_channel" label="Target Channel" defaultValue={props.selected_channel.destination.channel} onKeyDown={handle_change}/>
+            <InputField id="target_register" name="target_register" label="Target Register" defaultValue={props.selected_channel.destination.register} onKeyDown={handle_change}/>
             <SelectField
                 inline
                 label="Target Core Input"

@@ -329,10 +329,10 @@ export class up_emulator {
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
-    add_dma_connection = async (source_id, target_id) =>{
+    add_dma_connection = async (source_id, destination_id) =>{
         let c = {
             source:source_id,
-            target:target_id,
+            destination:destination_id,
             channels:[]
         }
         let edit = {id:this.id, field:"connections",  action:"add", value:c};
@@ -342,17 +342,17 @@ export class up_emulator {
         return c;
     }
 
-    remove_dma_connection = async (source_id, target_id) =>{
+    remove_dma_connection = async (source_id, destination_id) =>{
 
-        let edit = {id:this.id, field:"connections",  action:"remove", value:{source:source_id, destination:target_id}};
+        let edit = {id:this.id, field:"connections",  action:"remove", value:{source:source_id, destination:destination_id}};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         this.connections = this.connections.filter((item)=>{
-            return item.source !== source_id && item.target !== target_id;
+            return item.source !== source_id && item.destination !== destination_id;
         });
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
-    add_dma_channel = async (source, target, progressive) =>{
+    add_dma_channel = async (source, destination, progressive) =>{
         let c = {
             name:"new_dma_channel_" + progressive,
             type:"scalar_transfer",
@@ -360,7 +360,7 @@ export class up_emulator {
                 channel:[0],
                 register:[0]
             },
-            target: {
+            destination: {
                 channel:[0],
                 register: [0]
             },
@@ -368,11 +368,11 @@ export class up_emulator {
         }
 
 
-        let edit = {id:this.id, field:"dma_channel",  action:"add", value:{source:source, destination:target, object:c}};
+        let edit = {id:this.id, field:"dma_channel",  action:"add", value:{source:source, destination:destination, object:c}};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
 
         let dma_obj = this.connections.filter((item)=>{
-            return item.source === source && item.target === target;
+            return item.source === source && item.destination === destination;
         })[0];
         dma_obj.channels.push(c);
 
@@ -380,9 +380,9 @@ export class up_emulator {
     }
 
 
-    edit_dma_channel = async (source, target,field, value, channel_name) =>{
+    edit_dma_channel = async (source, destination,field, value, channel_name) =>{
         let dma_obj = this.connections.filter((item)=>{
-            return item.source === source && item.target === target;
+            return item.source === source && item.destination === destination;
         })[0];
         let edited_channel = null;
         let next_channels = dma_obj.channels.map((item)=>{
@@ -393,18 +393,18 @@ export class up_emulator {
                 return item;
             }
         })
-        let edit = {id:this.id, field:"dma_channel",  action:"edit", value:{source:source, destination:target, object:edited_channel}};
+        let edit = {id:this.id, field:"dma_channel",  action:"edit", value:{source:source, destination:destination, object:edited_channel}};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         dma_obj.channels = next_channels;
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
 
-    remove_dma_channel =  async (source, target, obj_name) =>{
-        let edit = {id:this.id, field:"dma_channel",  action:"remove", value:{source:source, destination:target, name:obj_name}};
+    remove_dma_channel =  async (source, destination, obj_name) =>{
+        let edit = {id:this.id, field:"dma_channel",  action:"remove", value:{source:source, destination:destination, name:obj_name}};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         this.connections = this.connections.map((item)=>{
-            if(item.source === source && item.target === target){
+            if(item.source === source && item.destination === destination){
                 let ret = item;
                 ret.channels = ret.channels.filter((item)=>{
                     return item.name !== obj_name;
@@ -420,8 +420,8 @@ export class up_emulator {
     remove_node_connections =async (node_id) =>{
 
         for(let c of this.connections){
-            if(c.source === node_id || c.target === node_id) {
-                await this.remove_dma_connection(c.source, c.target);
+            if(c.source === node_id || c.destination === node_id) {
+                await this.remove_dma_connection(c.source, c.destination);
             }
         }
 
@@ -534,14 +534,14 @@ export class up_emulator {
             interconnect: this.connections.map((item) => {
                 return {
                     source: this.cores[item.source].name,
-                    destination: this.cores[item.target].name,
+                    destination: this.cores[item.destination].name,
                     channels: item.channels.map((item) => {
                         let ret = {
                             name: item.name,
                             type: item.type,
                             source: item.source,
                             source_output: item.source_output,
-                            destination: item.target,
+                            destination: item.destination,
                             destination_input: item.target_input
                         };
                         if (item.length) ret.length = item.length;

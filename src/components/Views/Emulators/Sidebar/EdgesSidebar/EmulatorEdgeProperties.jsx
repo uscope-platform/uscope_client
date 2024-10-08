@@ -25,7 +25,7 @@ let  EmulatorEdgeProperties = props =>{
 
     let selected_component = null;
     let connections_list = []
-    let selected_channel = {name:"", source:{channel:"", register:""}, target:{channel:"", register: ""}};
+    let selected_channel = {name:"", source:{channel:"", register:""}, destination:{channel:"", register: ""}};
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
@@ -36,7 +36,7 @@ let  EmulatorEdgeProperties = props =>{
     if(props.enabled && props.selected_emulator){
 
         selected_component = props.selected_emulator.connections.filter((item) => {
-            return item.source === props.selected_component.obj.from && item.target === props.selected_component.obj.to;
+            return item.source === props.selected_component.obj.from && item.destination === props.selected_component.obj.to;
         })[0];
 
         connections_list = selected_component.channels.map((item) => {
@@ -50,7 +50,7 @@ let  EmulatorEdgeProperties = props =>{
             selected_channel = selected_component.channels.filter((item) =>{
                 return item.name === selected_dma_channel;
             })[0];
-            if(!selected_channel) selected_channel = {name:"", source:{channel:"", register:""},source_output:"", target:{channel:"", register: ""}, target_input:""};
+            if(!selected_channel) selected_channel = {name:"", source:{channel:"", register:""},source_output:"", destination:{channel:"", register: ""}, target_input:""};
         }
 
         return(

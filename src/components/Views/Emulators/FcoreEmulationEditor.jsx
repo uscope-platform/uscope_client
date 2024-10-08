@@ -111,11 +111,11 @@ let FcoreEmulationEditor = function (props) {
             //SETUP EDGES
             let initial_edges = [];
             Object.values(emulator.connections).map((c)=>{
-                const id = `${c.source}-${c.target}`;
+                const id = `${c.source}-${c.destination}`;
                 initial_edges.push({
                     id,
                     from: c.source,
-                    to: c.target
+                    to: c.destination
                 })
             });
             setEdges(edges =>(initial_edges));
@@ -203,7 +203,7 @@ let FcoreEmulationEditor = function (props) {
     let handle_link_nodes = (event, from, to) =>{
         if(!emulator.deployment_mode){
             let found_edges = emulator.connections.filter((conn)=>{
-                return conn.source === from.id && conn.target === to.id;
+                return conn.source === from.id && conn.destination === to.id;
             })
             if(found_edges.length === 0){
                 emulator.add_dma_connection(from.id, to.id).then(()=>{
