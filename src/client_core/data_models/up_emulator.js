@@ -366,35 +366,42 @@ export class up_emulator {
             },
             length:1
         }
+
+
+        let edit = {id:this.id, field:"dma_channel",  action:"add", value:{source:source, destination:target, object:c}};
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+
         let dma_obj = this.connections.filter((item)=>{
             return item.source === source && item.target === target;
         })[0];
         dma_obj.channels.push(c);
-        let edit = {emulator:this.id, source:source, target:target, channel:c, action:"add_dma_channel"};
-        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
 
     edit_dma_channel = async (source, target,field, value, channel_name) =>{
-        let edit = {emulator:this.id, source:source, target:target, field_name:field, value:value, channel:channel_name, action:"edit_dma_channel"};
-        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         let dma_obj = this.connections.filter((item)=>{
             return item.source === source && item.target === target;
         })[0];
-        dma_obj.channels = dma_obj.channels.map((item)=>{
+        let edited_channel = null;
+        let next_channels = dma_obj.channels.map((item)=>{
             if(item.name === channel_name){
-                return  {...item, ...{[field]:value}};
+                edited_channel =  {...item, ...{[field]:value}};
+                return edited_channel;
             } else {
                 return item;
             }
         })
+        let edit = {id:this.id, field:"dma_channel",  action:"edit", value:{source:source, destination:target, object:edited_channel}};
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        dma_obj.channels = next_channels;
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
 
     remove_dma_channel =  async (source, target, obj_name) =>{
-        let edit = {emulator:this.id, source:source, target:target, name:obj_name, action:"remove_dma_channel"};
+        let edit = {id:this.id, field:"dma_channel",  action:"remove", value:{source:source, destination:target, name:obj_name}};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         this.connections = this.connections.map((item)=>{
             if(item.source === source && item.target === target){
