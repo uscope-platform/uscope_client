@@ -20,7 +20,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {useSelector} from "react-redux";
 
 import EmulatorDiagram from "./EmulatorDiagram";
-import {download_json, up_emulator, up_program} from "../../../client_core";
+import {download_json, up_emulator} from "../../../client_core";
 import {SimpleContent, TabbedContent, UIPanel} from "../../UI_elements";
 import CoreInputsList from "./CoreInputsList";
 import CoreOutputsList from "./CoreOutputsList";

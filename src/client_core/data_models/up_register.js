@@ -17,7 +17,7 @@ import {store} from "../index";
 import {up_field} from "./up_field";
 import {backend_patch} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
-import {removeRegister, upsertRegister} from "../../redux/Actions/peripheralsActions";
+import { removeRegister, upsertRegister} from "../../redux/Actions/peripheralsActions";
 
 export class up_register {
     constructor(register_obj, parent_periph, parametric) {
@@ -62,33 +62,45 @@ export class up_register {
     }
 
     static construct_empty(register_name, parent_periph, parametric){
-        let register_obj = {};
+        let register_obj;
         if(parametric){
-             register_obj = {ID:register_name.replace(/\s/g, "_").toLowerCase(), register_name:register_name,
-                description:"", direction:"", order:0, n_registers:[], value:0, fields: []};
+             register_obj = {
+                 ID:register_name.replace(/\s/g, "_").toLowerCase(),
+                 register_name:register_name,
+                 description:"",
+                 direction:"",
+                 order:0,
+                 n_registers:[],
+                 value:0,
+                 fields: []
+             };
         } else{
-            register_obj = {ID:register_name.replace(/\s/g, "_").toLowerCase(), register_name:register_name,
-                description:"", direction:"", offset:"0x0", value:0, fields: []};
+            register_obj = {
+                ID:register_name.replace(/\s/g, "_").toLowerCase(),
+                register_name:register_name,
+                description:"",
+                direction:"",
+                offset:"0x0",
+                value:0,
+                fields: []
+            };
         }
 
         return new up_register(register_obj, parent_periph, parametric);
     }
 
-    edit_description = (descr) => {
-        let edit = {peripheral:this.parent_periph, register:this.register_name, field:"description", value:descr, action:"edit_register"};
+    edit_description = async (descr) => {
         this.description = descr;
-        store.dispatch(upsertRegister(this, this.ID, this.parent_periph));
-        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_periph, edit)
+        return this.push_edit();
     }
 
-    edit_name = (name) =>{
-        let edit = {peripheral:this.parent_periph, register:this.register_name, field:"register_name", value:name, action:"edit_register"};
+    edit_name = async (name) =>{
+
         this.register_name = name;
-        store.dispatch(upsertRegister(this, this.ID, this.parent_periph));
-        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_periph, edit)
+        return this.push_edit();
     };
 
-    edit_direction = (raw_direction) =>{
+    edit_direction = async (raw_direction) =>{
         let direction = "";
         switch (raw_direction.name) {
             case "direction_read":
@@ -124,39 +136,39 @@ export class up_register {
             default:
                 return;
         }
-
-        let edit = {peripheral:this.parent_periph, register:this.register_name, field:"direction", value:direction, action:"edit_register"};
         this.direction = direction;
-        store.dispatch(upsertRegister(this, this.ID, this.parent_periph));
-        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_periph, edit)
+        return this.push_edit();
+
     }
 
-    edit_offset = (offset) => {
-        let edit = {peripheral:this.parent_periph, register:this.register_name, field:"offset", value:offset, action:"edit_register"};
+    edit_offset = async (offset) => {
         this.offset = offset;
-        store.dispatch(upsertRegister(this, this.ID, this.parent_periph));
-        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_periph, edit)
+        return this.push_edit();
     }
-    edit_order = (order) => {
+    edit_order = async (order) => {
         this.order = order;
-        let edit = {peripheral:this.parent_periph, register:this.register_name, field:"order", value:order, action:"edit_register"};
-        store.dispatch(upsertRegister(this, this.ID, this.parent_periph));
-        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_periph, edit)
+        return this.push_edit();
     }
 
-    edit_n_registers = (value) => {
+    edit_n_registers = async (value) => {
         this.n_registers = [value];
-        let edit = {peripheral:this.parent_periph, register:this.register_name, field:"n_registers", value:[value], action:"edit_register"};
-        store.dispatch(upsertRegister(this, this.ID, this.parent_periph));
-        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_periph, edit)
+        return this.push_edit();
     }
 
-    edit_id = (id) =>{
-        let edit = {peripheral:this.parent_periph, register:this.register_name, field:"ID", value:id, action:"edit_register"};
+    edit_id = async (id) =>{
         let old_id = this.ID;
         this.ID = id;
-        store.dispatch(upsertRegister(this, old_id, this.parent_periph));
-        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_periph, edit);
+        let edit = {peripheral:this.parent_periph, field:"register", action:"remove", value:old_id};
+        await backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_periph, edit)
+        edit = {peripheral:this.parent_periph, field:"register", action:"add", value:this._get_register()};
+        await backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_periph, edit)
+        return store.dispatch(upsertRegister(this, old_id, this.parent_periph));
+    }
+
+    push_edit = async () =>{
+        let edit = {peripheral:this.parent_periph, field:"register", action:"edit", value:this._get_register()};
+        await backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_periph, edit)
+        return store.dispatch(upsertRegister(this, this.ID, this.parent_periph));
     }
 
     set_fields = (fields) => {
@@ -167,11 +179,10 @@ export class up_register {
         this.fields.push(field);
     }
 
-    static remove_register(periph, reg){
-        let edit = {peripheral:periph, register:reg, action:"remove_register"};
-         return backend_patch(api_dictionary.peripherals.edit+ '/' + periph.id, edit).then(()=>{
-             store.dispatch(removeRegister(periph, reg));
-         })
+    static async remove_register(periph, reg){
+        let edit = {peripheral:periph, field:"register", action:"remove", value:reg};
+        await backend_patch(api_dictionary.peripherals.edit+ '/' + periph, edit)
+        return store.dispatch(removeRegister(periph, reg));
     }
 
     get_fields_names = () => {

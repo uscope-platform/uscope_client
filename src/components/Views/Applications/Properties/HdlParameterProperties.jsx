@@ -73,7 +73,7 @@ export let  HdlParameterProperties = props =>{
 
 
     let handleRemove= (event) =>{
-        up_field.remove_field(props.peripheral.name, props.register.register_name, props.field.field_name).then(()=>{
+        up_field.remove_field(props.peripheral.id, props.register.ID, props.field.field_name).then(()=>{
             props.forceUpdate();
         });
     }

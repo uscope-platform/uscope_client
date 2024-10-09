@@ -72,7 +72,7 @@ let PeripheralsReducer = function (state = null, action) {
             return state;
         case REMOVE_FIELD:
             state[action.payload.periph].registers = state[action.payload.periph].registers.map((reg) =>{
-                if(reg.register_name === action.payload.reg) {
+                if(reg.ID === action.payload.reg) {
                     reg.fields = reg.fields.filter((f) => {
                         return f.name !== action.payload.field
                     })

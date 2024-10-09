@@ -41,7 +41,7 @@ export const FieldPropsLayout = styled.div`
 
 
 export let  FieldProperties = props =>{
-    const field_obj = new up_field(props.field, props.register.register_name, props.peripheral.name, props.parametric);
+    const field_obj = new up_field(props.field, props.register.ID, props.peripheral.id, props.parametric);
 
     const [is_open, set_is_open] = useState(true);
     let handleOpen = ()=>{
@@ -97,7 +97,7 @@ export let  FieldProperties = props =>{
 
 
     let handleRemove= (event) =>{
-        up_field.remove_field(props.peripheral.name, props.register.register_name, props.field.field_name).then(()=>{
+        up_field.remove_field(props.peripheral.id, props.register.ID, props.field.name).then(()=>{
             props.forceUpdate();
         });
     }

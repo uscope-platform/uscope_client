@@ -36,7 +36,7 @@ export class up_field {
 
     static construct_empty(field_name, parent_r, parent_p, parametric){
 
-        let field_obj = {};
+        let field_obj;
         if(parametric){
             field_obj = {name:field_name, description:"", length:1,  offset:0, order:0, n_fields:[]};
         } else{
@@ -46,53 +46,54 @@ export class up_field {
         return new up_field(field_obj, parent_r, parent_p, parametric);
     }
 
-    edit_name = (name) =>{
-        let edit = {peripheral:this.parent_peripheral, register:this.parent_register, field:"name",field_name:this.name, value:name, action:"edit_field"};
-        let old_name = this.name;
+    edit_name = async (name) =>{
+        let old_name = JSON.parse(JSON.stringify(this.name));
         this.name = name;
-        store.dispatch(upsertField(this, old_name, this.parent_register, this.parent_peripheral));
-        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_peripheral, edit)
+        let edit = {peripheral:this.parent_peripheral, field:"field", action:"remove", value: {id:this.parent_register, object: old_name}};
+        await backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_peripheral, edit)
+        edit = {peripheral:this.parent_peripheral, field:"field", action:"add", value:{id:this.parent_register, object: this._get_field()}};
+        await backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_peripheral, edit)
+        return store.dispatch(upsertField(this, old_name, this.parent_register, this.parent_peripheral));
     }
 
-    edit_description = (description) =>{
-        let edit = {peripheral:this.parent_peripheral, register:this.parent_register, field:"description",field_name:this.name, value:description, action:"edit_field"};
+    edit_description = async (description) =>{
         this.description = description;
-        store.dispatch(upsertField(this, this.name, this.parent_register, this.parent_peripheral));
-        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_peripheral, edit)
+        return this.push_edit();
     };
 
-    edit_length = (length) => {
-        let edit = {peripheral:this.parent_peripheral, register:this.parent_register, field:"length",field_name:this.name, value:length, action:"edit_field"};
+    edit_length =async (length) => {
         this.length = length;
-        store.dispatch(upsertField(this, this.name, this.parent_register, this.parent_peripheral));
-        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_peripheral, edit)
+        return this.push_edit();
     }
 
-    edit_order = (order) => {
-        let edit = {peripheral:this.parent_peripheral, register:this.parent_register, field:"order",field_name:this.name, value:order, action:"edit_field"};
+    edit_order = async (order) => {
         this.order = order;
-        store.dispatch(upsertField(this, this.name, this.parent_register, this.parent_peripheral));
-        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_peripheral, edit)
+        return this.push_edit();
     }
 
-    edit_n_fields = (n_fields) => {
-        let edit = {peripheral:this.parent_peripheral, register:this.parent_register, field:"n_fields",field_name:this.name, value:[n_fields], action:"edit_field"};
+    edit_n_fields = async (n_fields) => {
         this.n_fields = [n_fields];
-        store.dispatch(upsertField(this, this.name, this.parent_register, this.parent_peripheral));
-        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_peripheral, edit)
+        return this.push_edit();
+
     }
-    edit_offset = (offset) => {
-        let edit = {peripheral:this.parent_peripheral, register:this.parent_register, field:"offset",field_name:this.name, value:offset, action:"edit_field"};
+    edit_offset =async (offset) => {
         this.offset = offset;
-        store.dispatch(upsertField(this, this.name, this.parent_register, this.parent_peripheral));
-        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_peripheral, edit)
+        return this.push_edit();
     }
 
-    static remove_field(periph, reg, field){
-        let edit = {peripheral:periph, register:reg,field_name:field, action:"remove_field"};
-        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_peripheral, edit).then(()=>{
-            store.dispatch(removeField(periph, reg, field));
-        })
+
+    push_edit = async () =>{
+        let edit = {peripheral:this.parent_peripheral, field:"field", action:"edit", value: {id:this.parent_register, object: this._get_field()}};
+        await backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_peripheral, edit)
+        return store.dispatch(upsertField(this, this.name, this.parent_register, this.parent_peripheral));
+    }
+
+    static async remove_field(periph, reg, field){
+
+        let edit = {peripheral:periph, field:"field", action:"remove", value: {id:reg, object: field}};
+        console.log(edit);
+        await backend_patch(api_dictionary.peripherals.edit+ '/' + periph, edit);
+        return store.dispatch(removeField(periph, reg, field));
     }
 
     _get_field = () => {

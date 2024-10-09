@@ -77,34 +77,35 @@ export class up_peripheral {
         return resp;
     }
 
-    add_register = (reg_name) =>{
-        let reg = up_register.construct_empty(reg_name, this.id);
+    add_register = async (reg_name) =>{
+        let reg = up_register.construct_empty(reg_name, this.id, this.parametric);
+        let edit = {peripheral:this.id, field:"register", action:"add", value:reg._get_register()};
+        await backend_patch(api_dictionary.peripherals.edit + '/' + this.id, edit);
         this.registers.push(reg);
-        store.dispatch(addPeripheral({payload:{[this.id]:this}}));
-        let edit ={peripheral:this.id, field:"registers", action:"add_register",register:reg._get_register()};
-        return backend_patch(api_dictionary.peripherals.edit + '/' + this.id, edit);
+        return store.dispatch(addPeripheral({payload:{[this.id]:this}}));
     }
 
-    set_version = (ver) =>{
+    set_version = async (ver) =>{
         this.version = ver;
-        let edit ={peripheral:this.id, field:"version", value:parseFloat(ver)};
-        store.dispatch(addPeripheral({payload:{[this.id]:this}}))
-        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.id, edit);
+        let edit ={peripheral:this.id, field:"version", action:"edit", value:parseFloat(ver)};
+        await backend_patch(api_dictionary.peripherals.edit+ '/' + this.id, edit);
+        return store.dispatch(addPeripheral({payload:{[this.id]:this}}))
+
     };
 
     edit_name = async (name) =>{
         this.name = name;
-        let edit ={peripheral:this.id, field:"name", value:name};
+        let edit ={peripheral:this.id, field:"name", action:"edit", value:name};
+        await backend_patch(api_dictionary.peripherals.edit+ '/' + this.id, edit);
         await store.dispatch(removePeripheral(this.id))
-        await store.dispatch(addPeripheral({payload:{[this.id]:this}}))
-        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.id, edit);
+        return  store.dispatch(addPeripheral({payload:{[this.id]:this}}))
     };
 
-    edit_parametric = (value) =>{
+    edit_parametric = async (value) =>{
         this.parametric = value;
-        let edit ={peripheral:this.id, field:"parameteric", value:value};
-        store.dispatch(addPeripheral({payload:{[this.id]:this}}))
-        return backend_patch(api_dictionary.peripherals.edit+ '/' + this.id, edit);
+        let edit ={peripheral:this.id, field:"parametric", action:"edit",  value:value};
+        await backend_patch(api_dictionary.peripherals.edit+ '/' + this.id, edit);
+        return store.dispatch(addPeripheral({payload:{[this.id]:this}}))
     };
 
     get_register_offset = (name, parameters) =>{
