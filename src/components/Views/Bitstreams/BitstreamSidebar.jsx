@@ -39,19 +39,25 @@ let  BitstreamSidebar = props =>{
         }
     };
 
-    let handleAdd = () =>{
+    let handleAdd = async () =>{
 
         let ids = Object.values(bitstreams_store).map(a => a.id).sort();
         let id = get_next_id(ids);
         set_bitstream_object({ id:id, name:'new_bitstream_'+id});
-        upload_raw().then((event)=>{
-            up_bitstream.get_file_content( event).then((file =>{
-                bitstream_object['content'] = file.content;
-                bitstream_object['name'] = file.name.replace(".bit", "")
-                let bitstream = new up_bitstream(bitstream_object);
-                bitstream.add_remote().then();
-            }));
-        })
+        let event = await upload_raw();
+        let file = await  up_bitstream.get_file_content( event);
+
+        const decoder = new TextDecoder('utf-8');
+
+
+        let name = 'new_bitstream_'+id;
+        let bitstream = new up_bitstream({
+            id:id,
+            name:name,
+            data:decoder.decode(file.content),
+            path:name
+        });
+        bitstream.add_remote().then();
 
     };
 

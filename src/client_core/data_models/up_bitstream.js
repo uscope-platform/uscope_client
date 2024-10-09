@@ -24,7 +24,7 @@ export class up_bitstream {
             return;
         this.id = bitstream_obj.id;
         this.name = bitstream_obj.name;
-        this.content = bitstream_obj.content;
+        this.data = bitstream_obj.data;
 
     }
 
@@ -33,9 +33,9 @@ export class up_bitstream {
         return new up_bitstream(script_obj);
     }
 
-    add_remote = () => {
-        store.dispatch(AddBitstream(this));
-        return backend_post(api_dictionary.bitstream.add+'/'+this.id, this._get_bitstream());
+    add_remote = async () => {
+        await backend_post(api_dictionary.bitstream.add+'/'+this.id, this._get_bitstream());
+        return store.dispatch(AddBitstream(this));
     }
 
     edit_field = (field, value) => {
@@ -58,10 +58,10 @@ export class up_bitstream {
             if (file) {
                 let reader = new FileReader();
                 reader.onload = function (evt) {
-                    let result = {'content':reader.result.split(',')[1], name:file.name}
+                    let result = {'content':reader.result, name:file.name}
                     resolve(result)
                 }
-                reader.readAsDataURL(file);
+                reader.readAsArrayBuffer(file);
             }
         })
     }
@@ -74,7 +74,7 @@ export class up_bitstream {
         return {
             id: this.id,
             name: this.name,
-            content: this.content
+            data: this.data
         };
     }
 
