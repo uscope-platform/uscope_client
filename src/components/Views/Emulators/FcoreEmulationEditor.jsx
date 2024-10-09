@@ -152,20 +152,19 @@ let FcoreEmulationEditor = function (props) {
         download_json(product, emulator.name + "_artifact");
     }
 
-    let handle_run = (args) =>{
-        emulator.run().then((results)=>{
-            if(results.code && results.code === 7) {
-                props.on_compile_done(null);
-                toast.error(results.error);
-            } else if(results.code && results.code === 9){
-                props.on_compile_done(JSON.parse(results.duplicates));
-                toast.warn(results.error);
-            } else {
-                props.on_compile_done(null);
-                props.onEmulationDone(new up_emulator_result(results, props.input_data));
-                toast.success("Emulation Completed");
-            }
-        });
+    let handle_run = async (args) =>{
+        let results = await emulator.run();
+        if(results.code && results.code === 7) {
+            props.on_compile_done(null);
+            toast.error(results.error);
+        } else if(results.code && results.code === 9){
+            props.on_compile_done(JSON.parse(results.duplicates));
+            toast.warn(results.error);
+        } else {
+            props.on_compile_done(null);
+            props.onEmulationDone(new up_emulator_result(JSON.parse(results.results), props.input_data));
+            toast.success("Emulation Completed");
+        }
     }
 
     let handle_deploy = () =>{
