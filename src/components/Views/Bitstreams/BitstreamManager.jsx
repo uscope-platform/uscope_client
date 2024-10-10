@@ -21,7 +21,7 @@ import {
     SimpleContent,
     UIPanel
 } from "../../UI_elements";
-import {up_bitstream} from "../../../client_core";
+import {up_bitstream, upload_raw} from "../../../client_core";
 import BitstreamSidebar from "./BitstreamSidebar";
 
 
@@ -38,6 +38,7 @@ let BitstreamManager = props =>{
     };
 
     let upload_file = (event) => {
+
         sel_bit.get_file_content( inputFile).then((file_content =>{
             sel_bit.edit_field("file_content", file_content.content)
         }));
@@ -50,8 +51,15 @@ let BitstreamManager = props =>{
     }
 
 
-    let handle_open_file_chooser = (event) =>{
-        inputFile.current.click();
+    let handle_open_file_chooser = async () =>{
+
+        let event = await upload_raw();
+        let file = await  up_bitstream.get_file_content( event);
+
+        const decoder = new TextDecoder('utf-8');
+        let edit_obj = {name:file.name, content:decoder.decode(file.content)};
+        sel_bit.update_file(edit_obj);
+
     }
 
 

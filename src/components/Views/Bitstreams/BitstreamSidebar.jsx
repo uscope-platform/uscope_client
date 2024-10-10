@@ -16,7 +16,7 @@
 import React, {useState} from 'react';
 
 import {useSelector} from "react-redux";
-import {get_next_id, up_bitstream, upload_raw} from "../../../client_core";
+import {download_bitstream, get_next_id, up_bitstream, upload_raw} from "../../../client_core";
 import {
     SelectableList,
     SimpleContent,
@@ -28,7 +28,6 @@ import SideToolbar from "../../UI_elements/Sidebar/SideToolbar";
 let  BitstreamSidebar = props =>{
 
     const bitstreams_store = useSelector(state => state.bitstreams);
-    const [bitstream_object, set_bitstream_object] = useState({})
 
     let handleOnSelect = (selection) => {
         if(props.bitstream.name !==selection){
@@ -43,19 +42,14 @@ let  BitstreamSidebar = props =>{
 
         let ids = Object.values(bitstreams_store).map(a => a.id).sort();
         let id = get_next_id(ids);
-        set_bitstream_object({ id:id, name:'new_bitstream_'+id});
         let event = await upload_raw();
         let file = await  up_bitstream.get_file_content( event);
 
-        const decoder = new TextDecoder('utf-8');
-
-
-        let name = 'new_bitstream_'+id;
         let bitstream = new up_bitstream({
             id:id,
-            name:name,
-            data:decoder.decode(file.content),
-            path:name
+            name:file.name,
+            data:file.content,
+            path:file.name
         });
         bitstream.add_remote().then();
 
@@ -88,8 +82,9 @@ let  BitstreamSidebar = props =>{
 
     };
 
-    let handleExport = () =>{
-
+    let handleExport = async () =>{
+        let file = await props.bitstream.export_bitstream();
+        download_bitstream(file.data, file.name);
     };
 
 

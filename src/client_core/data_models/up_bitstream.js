@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import {store} from "../index";
-import {backend_delete, backend_patch, backend_post} from "../proxy/backend";
+import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
 import {AddBitstream, removeBitstream} from "../../redux/Actions/bitstreamsActions";
 
@@ -38,6 +38,14 @@ export class up_bitstream {
         return store.dispatch(AddBitstream(this));
     }
 
+    update_file = async (bitstream) =>{
+        let edit = {id:this.id , field:{name:"data", value:bitstream.content}};
+        await backend_patch(api_dictionary.bitstream.edit+'/'+this.id,edit);
+        edit.field = {name: "name", value: bitstream.name};
+        await backend_patch(api_dictionary.bitstream.edit+'/'+this.id,edit);
+        store.dispatch(AddBitstream(this));
+    }
+
     edit_field = (field, value) => {
         if(field !== "content")
             this[field] = value;
@@ -46,6 +54,9 @@ export class up_bitstream {
         return backend_patch(api_dictionary.bitstream.edit+'/'+this.id,edit)
     }
 
+    export_bitstream = async () => {
+        return backend_get(api_dictionary.bitstream.get + '/'+this.id + "?export-bitfile=true");
+    }
     static delete_bitstream(bitstream){
         return backend_delete(api_dictionary.bitstream.delete+'/'+bitstream.id, bitstream).then(()=>{
             store.dispatch(removeBitstream(bitstream));
@@ -61,10 +72,12 @@ export class up_bitstream {
                     let result = {'content':reader.result, name:file.name}
                     resolve(result)
                 }
-                reader.readAsArrayBuffer(file);
+                reader.readAsDataURL(file);
             }
         })
     }
+
+
 
     get_raw_obj = () => {
         return this._get_bitstream();

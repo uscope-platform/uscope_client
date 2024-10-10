@@ -50,6 +50,7 @@ export const api_dictionary = {
     bitstream:{
         get_hash: 'bitstream/hash',
         load_all: 'bitstream/load_all',
+        get: 'bitstream',
         add: 'bitstream',
         edit: 'bitstream',
         delete: 'bitstream'

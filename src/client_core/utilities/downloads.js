@@ -54,3 +54,14 @@ export let download_plot = (channels, file_name) => {
     link.click();
     link.remove();
 }
+
+
+export let download_bitstream = (content, filename) =>{
+
+    let link = document.createElement('a');
+    link.href =  "data:image/png;base64," + content;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
