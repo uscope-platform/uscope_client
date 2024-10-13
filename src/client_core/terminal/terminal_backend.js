@@ -16,7 +16,7 @@
 import {script_register_access_log, scripting_engine_peripherals} from "../scripting/script_runner";
 import {translate_registers} from "../scripting/backend";
 import {up_peripheral} from "../data_models/up_peripheral";
-import {__selected_application, store, up_application, up_program} from "../index";
+import {__selected_application, store, up_program} from "../index";
 import {get_version} from "../proxy/platform";
 
 
@@ -56,7 +56,7 @@ export const terminal_backend = {
         translate_specifier(register,value);
         let writes = translate_registers(script_register_access_log, scripting_engine_peripherals);
         script_register_access_log.length = 0;
-        up_peripheral.bulk_register_write({payload: writes}).then();
+        up_peripheral.bulk_register_write(writes).then();
         return new Promise((resolve)=>{
             resolve([])
         })
@@ -89,7 +89,7 @@ export const terminal_backend = {
 
         let writes = translate_registers(script_register_access_log, scripting_engine_peripherals);
         script_register_access_log.length = 0;
-        up_peripheral.bulk_register_write({payload: writes}).then();
+        up_peripheral.bulk_register_write(writes).then();
         return new Promise((resolve)=>{
             resolve([])
         })

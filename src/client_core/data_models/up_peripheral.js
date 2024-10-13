@@ -203,8 +203,7 @@ export class up_peripheral {
         for (const item of writes) {
            payload.push({type:"direct", proxy_type:"", proxy_address:0, address:item[0], value:item[1]})
         }
-        let write = {payload: payload}
-        return up_peripheral.bulk_register_write(write);
+        return up_peripheral.bulk_register_write(payload);
     }
 
     static direct_register_read(address){

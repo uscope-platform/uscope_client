@@ -105,7 +105,7 @@ export const run_parameter_script = (store, parameter) => {
         store.dispatch(saveParameter({name:parameter.name, value:floatValue, app:__selected_application.id}))
 
         if(bulk_registers !== null && bulk_registers.length !== 0){
-            return up_peripheral.bulk_register_write({payload: bulk_registers}).then();
+            return up_peripheral.bulk_register_write(bulk_registers).then();
         } else {
             return new Promise((resolve, reject) =>{
                 resolve();

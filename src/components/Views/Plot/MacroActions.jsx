@@ -32,11 +32,11 @@ const ButtonGrid = styled.div`
 
 let  MacroActions = props =>{
 
-    let onClick = (event) => {
+    let onClick = async (event) => {
         let trigger_str = event.target.name;
         let bulk_registers = run_script(store, trigger_str, props.parameters, "");
         if(bulk_registers !== null){
-            up_peripheral.bulk_register_write({payload: bulk_registers}).then();
+            await up_peripheral.bulk_register_write(bulk_registers);
         }
     };
 
