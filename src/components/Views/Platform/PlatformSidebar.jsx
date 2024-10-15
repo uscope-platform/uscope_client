@@ -38,7 +38,7 @@ let  PlatformSidebar = props =>{
     },[props.view_version, refreshList])
 
     let handleRemoveUser = (username) =>{
-        remove_user({user:username}).then((response)=>{
+        remove_user(username).then((response)=>{
             setRefreshList(!refreshList);
         })
     }

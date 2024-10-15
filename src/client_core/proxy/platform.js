@@ -22,7 +22,7 @@ export const add_user = user =>{
 }
 
 export const remove_user = user =>{
-    return backend_delete(api_dictionary.platform.users.delete, user);
+    return backend_delete(api_dictionary.platform.users.delete+ "/" + user);
 }
 
 export const need_onboarding = () =>{
