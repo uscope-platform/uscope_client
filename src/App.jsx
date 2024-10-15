@@ -62,8 +62,8 @@ let App = (props) =>{
         set_redux_store(store);
 
         need_onboarding().then(response =>{
-            set_onboarding_needed(response['onboarding_needed']);
-            if(response['onboarding_needed']) {
+            set_onboarding_needed(response);
+            if(response) {
                 set_logged(true);
             } else{
                 try_automated_login();
