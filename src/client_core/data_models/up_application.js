@@ -782,25 +782,22 @@ export class up_application {
     }
 
     _get_app = () =>{
-        let ret_obj = {
-            [this.application_name]:{
-                id:this.id,
-                application_name:this.application_name,
-                bitstream:this.bitstream,
-                channels:this.channels,
-                channel_groups:this.channel_groups,
-                pl_clocks:this.pl_clocks,
-                initial_registers_values:this.initial_registers_values,
-                macro:this.macro,
-                parameters:this.parameters,
-                peripherals:this.peripherals,
-                soft_cores:this.soft_cores,
-                filters:this.filters,
-                scripts:this.scripts,
-                programs:this.programs,
-                miscellaneous:this.miscellaneous
-            }
+        return {
+            id:this.id,
+            application_name:this.application_name,
+            bitstream:this.bitstream,
+            channels:this.channels,
+            channel_groups:this.channel_groups,
+            pl_clocks:this.pl_clocks,
+            initial_registers_values:this.initial_registers_values,
+            macro:this.macro,
+            parameters:this.parameters,
+            peripherals:this.peripherals,
+            soft_cores:this.soft_cores,
+            filters:this.filters,
+            scripts:this.scripts,
+            programs:this.programs,
+            miscellaneous:this.miscellaneous
         };
-        return ret_obj;
     }
 }
