@@ -23,13 +23,13 @@ let HilChannelSelector = function (props) {
 
     const application = useContext(ApplicationContext);
 
-    let [selected_channels, set_selected_channels]  = useState(()=>{
+    let [selected_channels, set_selected_channels]  = useState(async ()=>{
         let default_state = [{},{},{},{},{},{}];
         let state = get_ui_state(application,'hil_selector_channels',  default_state);
         if(state.selected_emulator === props.emulator.name){
             if( state.channels !== default_state){
                 for(let i = 0; i< 6; i++) {
-                    props.emulator.select_output(i, state.channels[i].value);
+                    await props.emulator.select_output(i, state.channels[i].value);
                 }
             }
             return state.channels;
