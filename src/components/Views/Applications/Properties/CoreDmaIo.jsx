@@ -91,6 +91,7 @@ export let  CoreDmaIo = props =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
             let field = event.target.name;
             let value = event.target.value;
+            if(field === "address" ) value = parseInt(value);
             let app = new up_application(props.application);
             let new_io = props.core.io.map((io)=>{
                 if(sel_logic_io === io.name){
@@ -179,7 +180,13 @@ export let  CoreDmaIo = props =>{
         let id = get_next_id(ids.sort());
 
 
-        let new_io = {name:"new_io_"+id, type:"input", associated_io:"", address:0};
+        let new_io = {
+            name:"new_io_"+id,
+            type:"input",
+            associated_io:"",
+            address:0,
+            common_io:false
+        };
 
         app.edit_soft_core(props.core.id,"io", [...props.core.io, new_io]).then(()=>{
             props.forceUpdate();

@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import {store} from "../index";
-import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy/backend";
+import {backend_delete, backend_patch, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
 import {AddProgram, removeProgram} from "../../redux/Actions/ProgramsActions";
 import objectHash from "object-hash";
@@ -103,7 +103,7 @@ export class up_program {
              io:[],
              type:this.type
          }
-        return backend_post(api_dictionary.programs.compile+'/'+this.id, data_package)
+        return backend_post(api_dictionary.operations.compile_program, data_package)
     };
 
     load = (core) => {
@@ -114,6 +114,8 @@ export class up_program {
         })
 
         let data_package = {
+            id:this.id,
+            name:this.name,
             content:this.content,
             headers:headers,
             io:core.io,
@@ -121,7 +123,7 @@ export class up_program {
             core_address:core.address
         }
         let h = objectHash(data_package)
-        return backend_post(api_dictionary.programs.apply+'/' + this.id, {...data_package, hash:h}).then((res)=>{
+        return backend_post(api_dictionary.operations.apply_program+'/' + this.id, {...data_package, hash:h}).then((res)=>{
             return res;
         })
     }

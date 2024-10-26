@@ -83,9 +83,7 @@ export const api_dictionary = {
         load_all: 'program/load_all',
         add: 'program',
         edit: 'program',
-        delete: 'program',
-        compile:'program/compile',
-        apply: 'program/Apply'
+        delete: 'program'
     },
     scripts:{
         get_hash:'script/hash',

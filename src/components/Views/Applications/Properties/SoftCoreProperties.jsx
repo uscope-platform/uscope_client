@@ -48,13 +48,16 @@ export let  SoftCoreProperties = props =>{
     let handleonKeyDown = (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
             let app = new up_application(props.application);
-            app.edit_soft_core(props.core.id,event.target.name, event.target.value).then(()=>{
+            let field = event.target.name;
+            let value = event.target.value;
+            if(field==="address") value = parseInt(value);
+            app.edit_soft_core(props.core.id, field, value).then(()=>{
                 props.forceUpdate();
             });
         }
     }
 
-    let handleRemove= (event) =>{
+    let handleRemove= () =>{
         let app = new up_application(props.application);
             app.remove_soft_core(props.core.id).then(()=>{
             props.forceUpdate();

@@ -48,24 +48,23 @@ let ProgramsEditor = props =>{
         set_editor_content(newValue);
     };
 
-    let handle_save = (event) => {
+    let handle_save = () => {
         let program = new up_program(props.program);
         program.edit_field('content', editor_content).then(()=>{
             set_dirty(false);
         })
     };
 
-    let handle_build = async (event) => {
+    let handle_build = async () => {
         let prog = new up_program(props.program);
         let results = await prog.compile();
-        if(results[0].status==="passed"){
+        if(results.status==="ok"){
             toast.success('✅ Compilation Successfull');
-        } else if (results[0].status==="failed"){
-            toast.error(results[0].error);
+        } else if (results.status==="error"){
+            toast.error(results.error);
+        } else {
+            toast.error("Compilation server error");
         }
-
-
-
     };
 
     let handle_load =async (core, application) => {
