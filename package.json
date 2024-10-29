@@ -1,6 +1,7 @@
 {
   "name": "test_react",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "dependencies": {
     "@codemirror/autocomplete": "^6.0.2",

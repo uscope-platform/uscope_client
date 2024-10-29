@@ -43,9 +43,9 @@ export const api_dictionary = {
     applications:{
         get_hash: 'application/hash',
         load_all: 'application/load_all',
-        add: 'application/add',
-        edit: 'application/edit',
-        remove: 'application/remove'
+        add: 'application',
+        edit: 'application',
+        remove: 'application'
     },
     bitstream:{
         get_hash: 'bitstream/hash',

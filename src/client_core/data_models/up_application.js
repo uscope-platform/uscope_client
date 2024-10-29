@@ -21,7 +21,7 @@ import {
     up_peripheral,
     up_program
 } from "../index";
-import {backend_get, backend_patch, backend_post} from "../proxy/backend";
+import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
 import {addApplication, removeApplication, updateApplication} from "../../redux/Actions/applicationActions";
 import {set_scope_address} from "../proxy/plot";
@@ -98,7 +98,7 @@ export class up_application {
 
     add_remote = () => {
         store.dispatch(addApplication({[this.id]:this}))
-        return backend_post(api_dictionary.applications.add, this._get_app());
+        return backend_post(api_dictionary.applications.add + '/'+ this.id, this._get_app());
     }
 
     set_active = async () => {
@@ -160,7 +160,7 @@ export class up_application {
 
     load_core = (core, program) =>{
 
-        let selected_program = {};
+        let selected_program;
         if(program){
             selected_program = new up_program(program);
         } else {
@@ -262,7 +262,7 @@ export class up_application {
             action:"add",
             object:"channel"
         };
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -275,7 +275,7 @@ export class up_application {
         };
         this.channel_groups.push(chg);
         let edit = {application:this.id, item:chg, action:"add", object:"channel_group"};
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -286,7 +286,7 @@ export class up_application {
         }
         this.initial_registers_values.push(irv);
         let edit = {application:this.id, item:irv, action:"add", object:"irv"};
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -297,7 +297,7 @@ export class up_application {
         };
         this.macro.push(m);
         let edit = {application:this.id, item:m, action:"add", object:"macro"};
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -311,7 +311,7 @@ export class up_application {
         };
         this.parameters.push(p)
         let edit = {application:this.id, item:p, action:"add", object:"parameter"};
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -328,7 +328,7 @@ export class up_application {
         };
         let edit = {application:this.id, item:p, action:"add", object:"peripheral"};
         this.peripherals.push(p);
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -341,21 +341,21 @@ export class up_application {
         };
         let edit = {application:this.id, item:f, action:"add", object:"filter"};
         this.filters.push(f);
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
     add_selected_script = async (script_id) =>{
         let edit = {application:this.id, item:script_id, action:"add", object:"selected_script"};
         this.scripts.push(script_id);
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
     add_selected_program = async (program_id) =>{
         let edit = {application:this.id, item:program_id, action:"add", object:"selected_program"};
         this.programs.push(program_id);
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -368,14 +368,14 @@ export class up_application {
         }
         let edit = {application:this.id, item:sc, action:"add", object:"soft_core"};
         this.soft_cores.push(sc);
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
     set_misc_param = async (param_name) =>{
         let edit = {application:this.id, item: {name:param_name, value:"0"}, action:"add", object:"misc"};
         this.miscellaneous[param_name] = 0;
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -392,7 +392,7 @@ export class up_application {
             action:"edit",
             object:"pl_clocks"
         };
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -411,7 +411,7 @@ export class up_application {
             action:"edit",
             object:"channel"
         };
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -430,7 +430,7 @@ export class up_application {
             action:"edit",
             object:"channel_group"
         };
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -449,7 +449,7 @@ export class up_application {
             action:"edit",
             object:"irv"
         };
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -470,7 +470,7 @@ export class up_application {
             action:"edit",
             object:"macro"
         };
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -491,7 +491,7 @@ export class up_application {
             action:"edit",
             object:"parameter"
         };
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -513,7 +513,7 @@ export class up_application {
             action:"edit",
             object:"peripheral"
         };
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -534,13 +534,13 @@ export class up_application {
             action:"edit",
             object:"filter"
         };
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
     edit_misc_param = async (param_name, param_value, rename_param) =>{
 
-        let edit = {}
+        let edit;
         if(rename_param) {
             edit = {
                 application: this.id,
@@ -579,7 +579,7 @@ export class up_application {
             };
             this.miscellaneous[param_name] = param_value;
         }
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -599,7 +599,7 @@ export class up_application {
             action:"edit",
             object:"soft_core"
         };
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -616,7 +616,7 @@ export class up_application {
             action:"remove",
             object:"channel"
         };
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -632,7 +632,7 @@ export class up_application {
             action:"remove",
             object:"channel_group"
         };
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -648,7 +648,7 @@ export class up_application {
             action:"remove",
             object:"irv"
         };
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -663,7 +663,7 @@ export class up_application {
             action:"remove",
             object:"macro"
         };
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -679,7 +679,7 @@ export class up_application {
             action:"remove",
             object:"parameter"
         };
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -695,7 +695,7 @@ export class up_application {
             action:"remove",
             object:"peripheral"
         };
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -711,7 +711,7 @@ export class up_application {
             action:"remove",
             object:"soft_core"
         };
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -727,7 +727,7 @@ export class up_application {
             action:"remove",
             object:"filter"
         };
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -741,7 +741,7 @@ export class up_application {
             action:"remove",
             object:"selected_script"
         };
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -755,7 +755,7 @@ export class up_application {
             action:"remove",
             object:"selected_program"
         };
-        await backend_patch(api_dictionary.applications.edit, edit);
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -767,12 +767,12 @@ export class up_application {
             action:"remove",
             object:"misc"
         };
-        await backend_patch(api_dictionary.applications.edit, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
+        store.dispatch(updateApplicationupdateApplication(this.deep_copy()));
     }
 
     static delete(app){
-        return backend_get(api_dictionary.applications.remove+'/'+app.id).then(()=>{
+        return backend_delete(api_dictionary.applications.remove+'/'+app.id).then(()=>{
             store.dispatch(removeApplication(app.id));
         })
     }
