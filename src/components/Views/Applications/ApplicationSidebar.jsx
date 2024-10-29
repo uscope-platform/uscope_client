@@ -33,7 +33,7 @@ let  ApplicationSidebar = props =>{
     const applications_redux = useSelector(state => state.applications);
 
     let handleImport = (app) =>{
-        let id = get_next_id(Object.values(applications_redux).map(a => a[props.selection_key]).sort());
+        let id = get_next_id(Object.values(applications_redux).map(a => a['id']).sort());
         import_application(app, id).then(()=>{
             addApplication(app);
         })
