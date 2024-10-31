@@ -60,7 +60,7 @@ let  DmaChannelProperties = props =>{
             let field = event.target.name;
             let value = event.target.value;
 
-            if(field.includes("source") || field.includes("target")){
+            if(field.includes("source") || field.includes("destination")){
                 let split_field = field.split("_");
                 if(split_field[0] === 'source'){
                     value = props.selected_channel.source;
@@ -70,7 +70,7 @@ let  DmaChannelProperties = props =>{
                         return parseInt(val);
                     });
                 } else {
-                    value = props.selected_channel.target;
+                    value = props.selected_channel.destination;
                     let raw_value = event.target.value.replace(/\s/g, '');
                     let value_tokens = raw_value.split(",");
                     value[split_field[1]] = value_tokens.map(val =>{
@@ -158,8 +158,8 @@ let  DmaChannelProperties = props =>{
                     return {label:outs, value:outs};
                 })}
             />
-            <InputField id="target_channel" name="target_channel" label="Target Channel" defaultValue={props.selected_channel.destination.channel} onKeyDown={handle_change}/>
-            <InputField id="target_register" name="target_register" label="Target Register" defaultValue={props.selected_channel.destination.register} onKeyDown={handle_change}/>
+            <InputField id="destination_channel" name="destination_channel" label="Destination Channel" defaultValue={props.selected_channel.destination.channel} onKeyDown={handle_change}/>
+            <InputField id="destination_register" name="destination_register" label="Destination Register" defaultValue={props.selected_channel.destination.register} onKeyDown={handle_change}/>
             <SelectField
                 inline
                 label="Target Core Input"
