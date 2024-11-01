@@ -18,12 +18,28 @@ import React, { useState} from 'react';
 import {InputField, SelectField} from "../../../../UI_elements";
 import {useSelector} from "react-redux";
 
+const efi_names = {
+    efi_trig: "Trigonometry",
+    efi_sort: "Sort",
+    efi_rec: "Reciprocal"
+}
+
 let  EmulatorCoreProperties = props =>{
 
     const programs = useSelector(state => state.programs);
 
     const [selected_program, set_selected_program] = useState({label:props.selected_core.program, value:props.selected_core.program});
 
+    const [selected_efi, set_selected_efi] = useState(()=>{
+        if(props.selected_core){
+            return {label:efi_names[props.selected_core.options.efi_implementation], value:props.selected_core.options.efi_implementation};
+        } else return {label: "", value:""};
+    })
+    const [selected_comparators, set_selected_comparators] = useState(()=>{
+        if(props.selected_core){
+            return {label:props.selected_core.options.comparators, value:props.selected_core.options.comparators};
+        } else return {label: "", value:""};
+    })
     let programs_list = Object.keys(programs).map((prog_id)=>{
         return {label:programs[prog_id].name, value:programs[prog_id].name};
     })
@@ -37,19 +53,33 @@ let  EmulatorCoreProperties = props =>{
                 value = {filename: event.target.value, type:comps[1]}
             }
             if(field === "order" || field === "channels" || field === "sampling_frequency") value = parseInt(value);
-            if(field==="efi_implementation"||field==="comparators"){
-                value = props.selected_core.options;
-                value[field] = event.target.value;
-                field = "options";
-            }
+
             props.selected_emulator.edit_core_props(props.selected_component.obj.id, field, value).then();
         }
     }
 
 
-    let handle_program_change=(prog)=>{
-        props.selected_emulator.edit_core_props(props.selected_component.obj.id, "program", prog.value).then(()=>{
-            set_selected_program(prog);
+    let handle_selection=(selection, event)=>{
+
+        let field, value;
+        if(event.name === "efi_implementation" || event.name === "comparators"){
+            field = "options";
+            value = props.selected_core.options;
+            value[event.name] = selection.value;
+        } else {
+            field = "program"
+            value = selection.value;
+        }
+
+        props.selected_emulator.edit_core_props(props.selected_component.obj.id, field, value).then(()=>{
+            if(event.name==="program"){
+                set_selected_program(selection);
+            } else if(event.name==="efi_implementation") {
+                set_selected_efi(selection);
+            } else if(event.name ==="comparators"){
+                set_selected_comparators(selection);
+            }
+
         });
     }
 
@@ -59,15 +89,37 @@ let  EmulatorCoreProperties = props =>{
             <InputField inline id="channels" name="channels" label="Channels #" defaultValue={props.selected_core.channels} onKeyDown={handle_change}/>
             <SelectField
                 label="Program"
-                onChange={handle_program_change}
+                onChange={handle_selection}
                 value={selected_program}
                 defaultValue="Select Program"
                 name="program"
                 placeholder="Program"
                 options={programs_list}/>
             <InputField inline id="order" name="order" label="Execution Order" defaultValue={props.selected_core.order} onKeyDown={handle_change}/>
-            <InputField inline id="efi_implementation" name="efi_implementation" label="EFI" defaultValue={props.selected_core.options.efi_implementation} onKeyDown={handle_change}/>
-            <InputField inline id="comparators" name="comparators" label="comparators" defaultValue={props.selected_core.options.comparators} onKeyDown={handle_change}/>
+            <SelectField
+                label="EFI"
+                onChange={handle_selection}
+                value={selected_efi}
+                defaultValue="Select EFI"
+                name="efi_implementation"
+                placeholder="efi_implementation"
+                options={[
+                    {label: "Trigonometry", value: "efi_trig"},
+                    {label: "Sort", value: "efi_sort"},
+                    {label: "FP Reciprocal", value: "efi_rec"}
+                ]}/>
+            <SelectField
+                label="Ccomparators"
+                onChange={handle_selection}
+                value={selected_comparators}
+                defaultValue="Select Comparators"
+                name="comparators"
+                placeholder="comparators"
+                options={[
+                    {label: "full", value: "full"},
+                    {label: "reducing", value: "reducing"},
+                    {label: "none", value: "none"}
+                ]}/>
             <InputField inline id="sampling_frequency" name="sampling_frequency" label="Sampling Frequency" defaultValue={props.selected_core.sampling_frequency} onKeyDown={handle_change}/>
         </div>
     );
