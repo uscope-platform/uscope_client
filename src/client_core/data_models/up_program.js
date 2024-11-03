@@ -59,7 +59,7 @@ export class up_program {
         ret.content =this.content;
         ret.type =this.type;
         ret.build_settings = JSON.parse(JSON.stringify(this.build_settings));
-
+        ret.headers = JSON.parse(JSON.stringify(this.headers));
         return ret;
     }
 
