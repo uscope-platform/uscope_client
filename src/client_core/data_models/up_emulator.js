@@ -368,7 +368,15 @@ export class up_emulator {
         }
 
 
-        let edit = {id:this.id, field:"dma_channel",  action:"add", value:{source:source, destination:destination, object:c}};
+        let edit = {
+            id:this.id,
+            field:"dma_channel",
+            action:"add",
+            value:{
+                source:source,
+                destination:destination,
+                object:c
+            }};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
 
         let dma_obj = this.connections.filter((item)=>{
@@ -393,7 +401,17 @@ export class up_emulator {
                 return item;
             }
         })
-        let edit = {id:this.id, field:"dma_channel",  action:"edit", value:{source:source, destination:destination, object:edited_channel}};
+        let edit = {
+            id:this.id,
+            field:"dma_channel",
+            action:"edit",
+            value:{
+                source:source,
+                destination:destination,
+                selector:channel_name,
+                object:edited_channel
+            }
+        };
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         dma_obj.channels = next_channels;
         store.dispatch(update_emulator(this.deep_copy()));
