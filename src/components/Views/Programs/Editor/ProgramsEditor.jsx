@@ -17,7 +17,7 @@ import React, {useState, useEffect} from "react";
 
 import CodeMirror from '@uiw/react-codemirror';
 import {cpp} from '@codemirror/lang-cpp'
-import { dracula } from '@uiw/codemirror-theme-dracula';
+import { darcula } from '@uiw/codemirror-theme-darcula';
 import {Tooltip} from "react-tooltip";
 import {MdSave, MdBuild} from 'react-icons/md'
 import {ColorTheme} from "../../../UI_elements";
@@ -31,14 +31,12 @@ import {InterfaceParameters} from "../../../UI_elements/InterfaceParameters";
 
 let ProgramsEditor = props =>{
     const [editor_content, set_editor_content] = useState('');
-    const [language, set_language] = useState('');
     const [dirty, set_dirty] = useState(false);
 
 
     useEffect(()=>{
         if(typeof props.program !== 'undefined' && props.program !== null){
             set_editor_content(props.program.content);
-            set_language(props.program.type);
             set_dirty(false);
         }
     },[props.program])
@@ -129,7 +127,7 @@ let ProgramsEditor = props =>{
                 value={editor_content}
                 width='auto'
                 height={InterfaceParameters.programs.editorHeight}
-                theme={dracula}
+                theme={darcula}
                 extensions={[cpp()]}
                 onChange={handle_change}
             />

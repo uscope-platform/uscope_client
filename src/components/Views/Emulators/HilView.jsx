@@ -20,25 +20,32 @@ import {TabbedContent, UIPanel} from "../../UI_elements"
 import EmulationResults from "./EmulationResults";
 import HilPlotTab from "./HilControl/HilPlotTab";
 import FcoreEmulatorSidebar from "./Sidebar/FcoreEmulatorSidebar";
+import AsmVisualizer from "./AsmVisualizer/AsmVisualizer.jsx";
 
 let HilView = function (props) {
 
     let [selected_component, set_selected_component] = useState(null);
     let [selected_iom, set_selected_iom] = useState(null);
     let [selected_tab, set_selected_tab] = useState(0);
+    let [selected_program, set_selected_program] = useState(null);
     let [emulator_selector, set_selected_emulator] = useState(null);
     let [compiler_warnings, set_compiler_warnings] = useState(null);
 
     let [hil_plot_running, set_hil_plot_running] = useState(false);
     let [download_data_request, set_download_data_request] = useState(null);
 
-
     let [emulation_results, set_emulation_results] = useState({});
     let [input_data, set_input_data] = useState({});
     let [deployed, set_deployed] = useState(false);
 
+    let [compiled_programs, set_compiled_programs] = useState({});
+
     let on_select = (value) =>{
         set_selected_tab(value);
+    }
+
+    let on_select_program = (value)=>{
+        set_selected_program(value);
     }
 
     let handle_component_select = (value) => {
@@ -64,7 +71,7 @@ let HilView = function (props) {
             height:"100%"
         }}>
             <UIPanel style={{flexGrow:1}} key="emulator_diagram" level="level_2">
-                <TabbedContent height="100%" names={["Emulation setup", "Emulation Results", "Hil Scope"]} contents={[
+                <TabbedContent height="100%" names={["Emulation setup", "Emulation Results", "Hil Scope", "Asm Visualizer"]} contents={[
                     <FcoreEmulationEditor
                         onEmulationDone={set_emulation_results}
                         onInputDataChange={set_input_data}
@@ -75,6 +82,7 @@ let HilView = function (props) {
                         on_iom_select={handle_iom_select}
                         selected_component={selected_component}
                         selected_iom={selected_iom}
+                        on_show_disassembly={set_compiled_programs}
                         on_compile_done={set_compiler_warnings}
                     />,
                     <EmulationResults results={emulation_results} inputs={input_data}/>,
@@ -84,6 +92,10 @@ let HilView = function (props) {
                         hil_plot_running={hil_plot_running}
                         download_data_request={download_data_request}
                         on_download_done={set_download_data_request}
+                    />,
+                    <AsmVisualizer
+                        compiled_programs={compiled_programs}
+                        selected_program={selected_program}
                     />
                 ]} onSelect={on_select} selected={selected_tab}/>
             </UIPanel>
@@ -94,12 +106,14 @@ let HilView = function (props) {
                     on_iom_modify={handle_iom_select}
                     emulator_selector={emulator_selector}
                     selected_iom={selected_iom}
-                    enable_hil_controls={selected_tab===2}
-                    enable_emulator_properties={selected_tab === 0}
+                    selected_tab={selected_tab}
                     on_plot_status_update={set_hil_plot_running}
                     hil_plot_running={hil_plot_running}
                     onDownloadHilData={set_download_data_request}
                     compile_warning={compiler_warnings}
+                    compiled_programs={compiled_programs}
+                    selected_program={selected_program}
+                    on_program_select={on_select_program}
                 />
             </div>
         </div>

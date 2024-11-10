@@ -43,7 +43,8 @@ let FcoreEmulationEditor = function (props) {
         edit: false,
         build: false,
         run: false,
-        deploy: false
+        deploy: false,
+        show:false
     })
     const navigate = useNavigate();
 
@@ -74,7 +75,8 @@ let FcoreEmulationEditor = function (props) {
                     edit: true,
                     build: enabled_actions.build,
                     run: enabled_actions.run,
-                    deploy: enabled_actions.deploy
+                    deploy: enabled_actions.deploy,
+                    show: enabled_actions.show
                 });
                 return;
             }
@@ -84,7 +86,8 @@ let FcoreEmulationEditor = function (props) {
             edit: false,
             build: enabled_actions.build,
             run: enabled_actions.run,
-            deploy: enabled_actions.deploy
+            deploy: enabled_actions.deploy,
+            show: enabled_actions.show
         });
 
     },[props.selected_component])
@@ -97,7 +100,9 @@ let FcoreEmulationEditor = function (props) {
                 edit: false,
                 build: true,
                 run: true,
-                deploy: true
+                deploy: true,
+                show: true
+
             });
 
             let initial_nodes = [];
@@ -147,12 +152,12 @@ let FcoreEmulationEditor = function (props) {
         props.on_component_select({type:"edge", obj:edge});
     }
 
-    let handle_build = (args) =>{
+    let handle_build = () =>{
         let product = emulator.build();
         download_json(product, emulator.name + "_artifact");
     }
 
-    let handle_run = async (args) =>{
+    let handle_run = async () =>{
         let results = await emulator.run();
         if(results.code && results.code === 7) {
             props.on_compile_done(null);
@@ -165,6 +170,15 @@ let FcoreEmulationEditor = function (props) {
             props.onEmulationDone(new up_emulator_result(JSON.parse(results.results), props.input_data));
             toast.success("Emulation Completed");
         }
+    }
+
+    let handle_edit = () => {
+        navigate("/programs", {state: {selected_program:emulator.cores[props.selected_component.obj.id].program}});
+    }
+
+    let handle_show = async () =>{
+        let asm = await emulator.disassemble();
+        props.on_show_disassembly(asm);
     }
 
     let handle_deploy = () =>{
@@ -189,10 +203,6 @@ let FcoreEmulationEditor = function (props) {
                 }
             });
         }
-    }
-
-    let handle_edit = () => {
-        navigate("/programs", {state: {selected_program:emulator.cores[props.selected_component.obj.id].program}});
     }
 
     let handle_canvas_click = ()=>{
@@ -280,6 +290,7 @@ let FcoreEmulationEditor = function (props) {
                                 onRun={handle_run}
                                 onDeploy={handle_deploy}
                                 onEdit={handle_edit}
+                                onShow={handle_show}
                                 nodes={nodes}
                                 edges={edges}
                                 enabled_actions={enabled_actions}

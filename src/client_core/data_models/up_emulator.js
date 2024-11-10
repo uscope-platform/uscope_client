@@ -579,6 +579,11 @@ export class up_emulator {
         return await backend_post(api_dictionary.operations.hil_emulate, specs);
     };
 
+    disassemble = async () =>{
+        let specs = this.build();
+        return await backend_post(api_dictionary.operations.hil_disassemble, specs);
+    }
+
     deploy = async () =>{
         let specs = this.build();
         return await backend_post(api_dictionary.operations.hil_deploy, specs);

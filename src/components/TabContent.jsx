@@ -27,7 +27,6 @@ const BitstreamManager = React.lazy(()=> import('./Views/Bitstreams/BitstreamMan
 const HilView = React.lazy(() => import('./Views/Emulators/HilView'));
 const SettingsView = React.lazy(() => import('./Views/Settings/Settings_view'));
 
-
 let TabContent = props => {
 
     let components_associations = {

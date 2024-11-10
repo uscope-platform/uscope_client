@@ -17,7 +17,7 @@ import React from 'react';
 
 import {ColorTheme} from "../../UI_elements";
 import {Tooltip} from "react-tooltip";
-import {MdAdd, MdArticle, MdConstruction, MdDownload, MdPlayArrow} from "react-icons/md";
+import {MdAdd, MdArticle, MdConstruction, MdDownload, MdPlayArrow, MdVisibility} from "react-icons/md";
 
 let  EmulatorToolbar = props =>{
 
@@ -100,6 +100,23 @@ let  EmulatorToolbar = props =>{
             </div>
         )
     }
+
+    let render_show = () => {
+        let handle_click = (event) =>{
+            if(props.enable.show) {
+                props.onShow(event);
+            }
+        };
+        let icon_color = props.enable.run ? ColorTheme.icons_color : ColorTheme.disabled_icon_color;
+        return (
+            <div key="show" id="show">
+                <MdVisibility onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
+                             color={icon_color}/>
+                <Tooltip anchorSelect="show" content={"Show Assembly"} place="top"/>
+            </div>
+        )
+    }
+
     return (
         <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
             {render_add()}
@@ -107,6 +124,7 @@ let  EmulatorToolbar = props =>{
             {render_build()}
             {render_run()}
             {render_deploy()}
+            {render_show()}
         </div>
     );
 };

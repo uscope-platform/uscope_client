@@ -33,19 +33,19 @@ let ScriptsEditor = props =>{
 
     const [dirty, set_dirty] = useState(false);
 
-    let handle_change = (newValue) => {
-        set_dirty(true);
-        set_editor_content(newValue);
-    };
-
     useEffect(()=>{
         if(typeof props.script !== 'undefined' && props.script !== null){
             set_editor_content(props.script.content);
         }
     },[props.script])
 
+    let handle_change = (newValue) => {
+        set_dirty(true);
+        set_editor_content(newValue);
+    };
+
     function registers_completion(context) {
-        let line = context.matchBefore(/[a-zA-Z0-9_\.]+/)
+        let line = context.matchBefore(/[a-zA-Z0-9_.]+/)
         let word = context.matchBefore(/\w*/)
         let options = autocompletion_engine(line, context.explicit);
         return {

@@ -82,6 +82,7 @@ let EmulatorDiagram = function (props) {
                 onDeploy={props.onDeploy}
                 onEdit={props.onEdit}
                 enable={props.enabled_actions}
+                onShow={props.onShow}
             />
             <Canvas
                 nodes={props.nodes}

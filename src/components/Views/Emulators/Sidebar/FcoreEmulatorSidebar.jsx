@@ -24,6 +24,7 @@ import EmulatorEdgeProperties from "./EdgesSidebar/EmulatorEdgeProperties";
 import EmulatorProperties from "./EmulatorProperties";
 import WarningsPanel from "./WarningsPanel";
 import HilControl from "./HilControl";
+import AsmSelector from "./AsmSelector.jsx";
 
 let  FcoreEmulatorSidebar = props =>{
 
@@ -91,7 +92,7 @@ let  FcoreEmulatorSidebar = props =>{
                 selected_component={props.selected_component}
             />
             <EmulatorProperties
-                enabled={ props.enable_emulator_properties && sel_component_type !== "node"  && sel_component_type !== "edge"}
+                enabled={ props.selected_tab===0 && sel_component_type !== "node"  && sel_component_type !== "edge"}
                 selected_emulator={emulator}
             />
             <WarningsPanel
@@ -100,12 +101,17 @@ let  FcoreEmulatorSidebar = props =>{
             />
             <HilControl
                 onDownloadHilData={props.onDownloadHilData}
-                enabled={props.enable_hil_controls}
+                enabled={props.selected_tab === 2}
                 onStart={on_start}
                 onStop={on_stop}
                 onPause={on_pause}
             />
-
+            <AsmSelector
+                enable={props.selected_tab === 3}
+                programs={props.compiled_programs}
+                selected_program={props.selected_program}
+                on_select={props.on_program_select}
+            />
         </>
 
     );
