@@ -18,11 +18,13 @@ import React from "react";
 import CodeMirror from '@uiw/react-codemirror';
 import {darcula} from '@uiw/codemirror-theme-darcula';
 import 'react-toastify/dist/ReactToastify.css';
+
 import {InterfaceParameters} from "../../../UI_elements/InterfaceParameters";
 import {
     SimpleContent,
     UIPanel
 } from "../../../UI_elements/index.jsx";
+import {Fcore} from "./FcoreLanguage.js";
 
 
 let AsmVisualizer = props => {
@@ -42,6 +44,7 @@ let AsmVisualizer = props => {
                         width='auto'
                         height={InterfaceParameters.programs.editorHeight}
                         theme={darcula}
+                        extensions={[Fcore()]}
                     />
                 }/>
             </UIPanel>

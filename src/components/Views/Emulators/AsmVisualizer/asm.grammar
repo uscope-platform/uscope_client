@@ -1,0 +1,65 @@
+@top Program { (instruction newline)* }
+
+@skip { Space | LineComment | BlockComment}
+
+instruction {
+  RegInstruction    |
+  CselInstruction   |
+  LoadInstruction   | 
+  ConvInstruction   |
+  IndependentOpcode 
+}
+
+RegInstruction {
+  RegOpcode Register','Register','Register
+}
+
+LoadInstruction {
+  LoadOpcode Register','(FloatNumber | IntegerNumber)
+}
+
+ConvInstruction {
+  ConvOpcode Register','Register
+}
+
+CselInstruction {
+  CselOpcode Register','Register','Register ','Register 
+}
+
+@tokens {
+
+  IntegerNumber {  @digit+}
+
+  FloatNumber{@digit+ '.' @digit+}
+
+  @precedence { FloatNumber, IntegerNumber}
+
+  RegOpcode {'add' | 'sub' | 'mul' | 'and' | 'or' | 'satp' | 'satn' | 'efi' | 'bset' | 'bsel' | 'xor'| 'ble' | 'bgt' | 'beq' | 'bne'}
+
+  ConvOpcode {'itf' | 'fti' | 'not' | 'rec' | 'abs'| 'popcnt' | 'mov'}
+
+  IndependentOpcode {'stop' | 'nop'}
+
+  CselOpcode {'csel'}
+  
+  LoadOpcode {'ldc'}
+
+  Register { 'r' @digit+}
+  
+  LineComment { "//" ("\\" (![\n] | "\\r"? "\\n") | ![\n])* }
+
+  BlockComment { "/*" blockCommentRest }
+
+  Space { @whitespace+ }
+
+  newline {"\n"}
+  
+  @precedence { newline, Space}
+  
+  blockCommentRest { ![*] blockCommentRest | "*" blockCommentAfterStar }
+
+  blockCommentAfterStar { "/" | "*" blockCommentAfterStar | ![/*] blockCommentRest }
+
+}
+
+@detectDelim
