@@ -1,38 +1,47 @@
-@top Program { (instruction newline)* }
+@top Program { Instruction* }
 
-@skip { Space | LineComment | BlockComment}
+@skip { space | LineComment | BlockComment}
 
-instruction {
-  RegInstruction    |
+Instruction {
+ ( RegInstruction    |
   CselInstruction   |
-  LoadInstruction   | 
+  LoadInstruction   |
   ConvInstruction   |
-  IndependentOpcode 
+  IndependentInstruction
+ ) newline
+}
+
+IndependentInstruction {
+  Opcode
 }
 
 RegInstruction {
-  RegOpcode Register','Register','Register
+  Opcode Register','Register','Register
 }
 
 LoadInstruction {
-  LoadOpcode Register','(FloatNumber | IntegerNumber)
+  Opcode Register','Number
 }
 
 ConvInstruction {
-  ConvOpcode Register','Register
+  Opcode Register','Register
 }
 
 CselInstruction {
-  CselOpcode Register','Register','Register ','Register 
+  Opcode Register','Register','Register ','Register
 }
 
 @tokens {
 
+  Opcode {
+    CselOpcode | ConvOpcode | LoadOpcode | RegOpcode | IndependentOpcode
+  }
+
+  Number {FloatNumber | IntegerNumber}
+
   IntegerNumber {  @digit+}
 
   FloatNumber{@digit+ '.' @digit+}
-
-  @precedence { FloatNumber, IntegerNumber}
 
   RegOpcode {'add' | 'sub' | 'mul' | 'and' | 'or' | 'satp' | 'satn' | 'efi' | 'bset' | 'bsel' | 'xor'| 'ble' | 'bgt' | 'beq' | 'bne'}
 
@@ -41,21 +50,21 @@ CselInstruction {
   IndependentOpcode {'stop' | 'nop'}
 
   CselOpcode {'csel'}
-  
+
   LoadOpcode {'ldc'}
 
   Register { 'r' @digit+}
-  
+
   LineComment { "//" ("\\" (![\n] | "\\r"? "\\n") | ![\n])* }
 
   BlockComment { "/*" blockCommentRest }
 
-  Space { @whitespace+ }
+  space { @whitespace+ }
 
   newline {"\n"}
-  
-  @precedence { newline, Space}
-  
+
+  @precedence { newline, space}
+
   blockCommentRest { ![*] blockCommentRest | "*" blockCommentAfterStar }
 
   blockCommentAfterStar { "/" | "*" blockCommentAfterStar | ![/*] blockCommentRest }

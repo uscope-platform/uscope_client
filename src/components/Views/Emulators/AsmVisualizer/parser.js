@@ -2,15 +2,15 @@
 import {LRParser} from "@lezer/lr"
 export const parser = LRParser.deserialize({
   version: 14,
-  states: "$nQ]QPOOOnQPO'#CaOsQPO'#CdOxQPO'#CfO}QPO'#CjOOQO'#Cp'#CpO!SQPO'#CmQ]QPOOO!XQPO,58{O!^QPO,59OO!cQPO,59QO!hQPO,59UOOQO,59X,59XOOQO-E6k-E6kO!mQPO1G.gO!rQPO1G.jO!wQPO1G.lO#PQPO1G.pO#UQPO7+$RO#ZQPO7+$UOOQO7+$W7+$WOOQO7+$[7+$[O#`QPO<<GmO#eQPO<<GpOOQOAN=XAN=XO#jQPOAN=[O#oQPOG22vOOQOLD(bLD(b",
-  stateData: "#z~OPOSQOSROS~OUPOXQOZRO_SO`TO~OVWO~OVXO~OVYO~OVZO~Of[O~Oe^O~Oe_O~Oe`O~OeaO~OVbO~OVcO~O[dO]dO~OVeO~OefO~OegO~OVhO~OViO~OejO~OVkO~O[]fPf~",
-  goto: "tePPPPPfPPfPfPPPfPPjPPpTTOVQVOR]VTUOV",
-  nodeNames: "⚠ Space LineComment BlockComment Program RegInstruction RegOpcode Register CselInstruction CselOpcode LoadInstruction LoadOpcode FloatNumber IntegerNumber ConvInstruction ConvOpcode IndependentOpcode",
-  maxTerm: 22,
-  skippedNodes: [0,1,2,3],
+  states: "!|Q]QPOOObQPO'#ChOjQPO'#C`OOQO'#Ci'#CiQ]QPOOOoQPO,59POOQO,58z,58zOOQO-E6g-E6gOtQPO1G.kO|QPO7+$XOOQO7+$V7+$VO!UQPO<<GmO!ZQPOAN=XO!cQPOG22vOOQOLD(bLD(b",
+  stateData: "!k~O`OSPOSQOS~OUPO~OVTOa[X~OaUO~ObWO~OVXOYYO~ObZOaZq~OV[O~Ob]OaT!R~OV^O~Oa`~",
+  goto: "m^PPPP_cPPccPccgTROSTQOSQSORVS",
+  nodeNames: "⚠ LineComment BlockComment Program Instruction RegInstruction Opcode Register CselInstruction LoadInstruction Number ConvInstruction IndependentInstruction",
+  maxTerm: 18,
+  skippedNodes: [0,1,2],
   repeatNodeCount: 1,
-  tokenData: "0_~RmXY!|YZ#qZ^!|pq!||}$h!P!Q$m!Q![)O#T#U)i#U#V*]#V#W+b#X#Y+y#Y#Z,V#]#^,c#`#a,o#a#b-Q#b#c-g#c#d-{#d#e.R#f#g.q#g#h/Y#l#m0X#y#z!|$f$g!|#BY#BZ!|$IS$I_!|$I|$JO!|$JT$JU!|$KV$KW!|&FU&FV!|~#RYP~X^!|pq!|#y#z!|$f$g!|#BY#BZ!|$IS$I_!|$I|$JO!|$JT$JU!|$KV$KW!|&FU&FV!|~#xYf~P~X^!|pq!|#y#z!|$f$g!|#BY#BZ!|$IS$I_!|$I|$JO!|$JT$JU!|$KV$KW!|&FU&FV!|~$mOe~~$pQz{$v!P!Q%}~$yTOz$vz{%Y{;'S$v;'S;=`%w<%lO$v~%]VOz$vz{%Y{!P$v!P!Q%r!Q;'S$v;'S;=`%w<%lO$v~%wOR~~%zP;=`<%l$v~&SUQ~OY%}Z#O%}#O#P&f#P;'S%};'S;=`(x<%lO%}~&kUQ~OY%}Z#O%}#O#P&}#P;'S%};'S;=`(x<%lO%}~'SYQ~OY%}Z#O%}#O#P&}#P#b%}#b#c%}#c#f%}#f#g'r#g;'S%};'S;=`(x<%lO%}~'wUQ~OY%}Z#O%}#O#P(Z#P;'S%};'S;=`(x<%lO%}~(`WQ~OY%}Z#O%}#O#P&}#P#b%}#b#c%}#c;'S%};'S;=`(x<%lO%}~({P;=`<%l%}~)TQ]~!O!P)Z!Q![)O~)^P!Q![)a~)fP[~!Q![)a~)lR#U#V)u#W#X*Q#b#c*Q~)xP#g#h){~*QO_~~*TP#W#X*W~*]OU~~*`T#X#Y*o#Z#[*u#`#a*{#b#c*{#g#h+R~*rP#e#f*W~*xP#h#i*W~+OP#X#Y*W~+UP#X#Y+X~+[Q#`#a*W#h#i*W~+eP#g#h+h~+kP#X#Y+n~+qP#`#a+t~+yOX~~+|P#Y#Z,P~,SP#]#^*W~,YP#h#i,]~,`P#]#^){~,fP#h#i,i~,lP#Y#Z){~,rP#W#X,u~,xP#V#W,{~-QOZ~~-TQ#c#d-Z#i#j-a~-^P#j#k){~-dP#`#a*W~-jP#c#d-m~-pQ#d#e-v#h#i){~-{O`~~.OP#f#g*W~.UP#c#d.X~.[P#d#e._~.bP#V#W.e~.hP#b#c.k~.nP#h#i){~.tQ!Q![.z#X#Y/S~/PPV~!Q![.z~/VP#V#W){~/]R#T#U/f#h#i/u#i#j0R~/iP#h#i/l~/oQ#b#c*W#d#e*W~/xP#c#d/{~0OP#d#e-v~0UP#U#V*W~0[P#c#d-{",
+  tokenData: "/a~RmXY!|YZ#qZ^!|pq!||}$h!P!Q$m!Q![)O#T#U)i#U#V*W#V#W+]#X#Y+o#Y#Z+{#]#^,R#`#a,_#a#b,k#b#c,z#c#d-Z#d#e-a#f#g-y#g#h.[#l#m/Z#y#z!|$f$g!|#BY#BZ!|$IS$I_!|$I|$JO!|$JT$JU!|$KV$KW!|&FU&FV!|~#RY`~X^!|pq!|#y#z!|$f$g!|#BY#BZ!|$IS$I_!|$I|$JO!|$JT$JU!|$KV$KW!|&FU&FV!|~#xYa~`~X^!|pq!|#y#z!|$f$g!|#BY#BZ!|$IS$I_!|$I|$JO!|$JT$JU!|$KV$KW!|&FU&FV!|~$mOb~~$pQz{$v!P!Q%}~$yTOz$vz{%Y{;'S$v;'S;=`%w<%lO$v~%]VOz$vz{%Y{!P$v!P!Q%r!Q;'S$v;'S;=`%w<%lO$v~%wOQ~~%zP;=`<%l$v~&SUP~OY%}Z#O%}#O#P&f#P;'S%};'S;=`(x<%lO%}~&kUP~OY%}Z#O%}#O#P&}#P;'S%};'S;=`(x<%lO%}~'SYP~OY%}Z#O%}#O#P&}#P#b%}#b#c%}#c#f%}#f#g'r#g;'S%};'S;=`(x<%lO%}~'wUP~OY%}Z#O%}#O#P(Z#P;'S%};'S;=`(x<%lO%}~(`WP~OY%}Z#O%}#O#P&}#P#b%}#b#c%}#c;'S%};'S;=`(x<%lO%}~({P;=`<%l%}~)TQY~!O!P)Z!Q![)O~)^P!Q![)a~)fPY~!Q![)a~)lR#U#V)u#W#X*Q#b#c*Q~)xP#g#h){~*QOU~~*TP#W#X){~*ZT#X#Y*j#Z#[*p#`#a*v#b#c*v#g#h*|~*mP#e#f){~*sP#h#i){~*yP#X#Y){~+PP#X#Y+S~+VQ#`#a){#h#i){~+`P#g#h+c~+fP#X#Y+i~+lP#`#a){~+rP#Y#Z+u~+xP#]#^){~,OP#h#i+u~,UP#h#i,X~,[P#Y#Z){~,bP#W#X,e~,hP#V#W){~,nQ#c#d,t#i#j+i~,wP#j#k){~,}P#c#d-Q~-TQ#d#e){#h#i){~-^P#f#g){~-dP#c#d-g~-jP#d#e-m~-pP#V#W-s~-vP#b#c*p~-|Q!Q![.S#X#Y,e~.XPV~!Q![.S~._R#T#U.h#h#i.w#i#j/T~.kP#h#i.n~.qQ#b#c){#d#e){~.zP#c#d.}~/QP#d#e){~/WP#U#V){~/^P#c#d-Z",
   tokenizers: [0],
-  topRules: {"Program":[0,4]},
-  tokenPrec: 128
+  topRules: {"Program":[0,3]},
+  tokenPrec: 70
 })
