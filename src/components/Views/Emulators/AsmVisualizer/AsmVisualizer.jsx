@@ -25,7 +25,6 @@ import {
     UIPanel
 } from "../../../UI_elements/index.jsx";
 import {Fcore} from "./FcoreLanguage.js";
-import {dracula} from "@uiw/codemirror-theme-dracula";
 
 
 let AsmVisualizer = props => {
@@ -44,7 +43,7 @@ let AsmVisualizer = props => {
                         value={props.compiled_programs[props.selected_program]}
                         width='auto'
                         height={InterfaceParameters.programs.editorHeight}
-                        theme={dracula}
+                        theme={darcula}
                         basicSetup={{
                             syntaxHighlighting: true
                         }}
