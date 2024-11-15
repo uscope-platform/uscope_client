@@ -21,6 +21,7 @@ import EmulationResults from "./EmulationResults";
 import HilPlotTab from "./HilControl/HilPlotTab";
 import FcoreEmulatorSidebar from "./Sidebar/FcoreEmulatorSidebar";
 import AsmVisualizer from "./AsmVisualizer/AsmVisualizer.jsx";
+import {Fcore} from "./AsmVisualizer/FcoreLanguage.js";
 
 let HilView = function (props) {
 
@@ -80,6 +81,7 @@ let HilView = function (props) {
                         emulator_selector={emulator_selector}
                         on_component_select={handle_component_select}
                         on_iom_select={handle_iom_select}
+                        on_tab_change={on_select}
                         selected_component={selected_component}
                         selected_iom={selected_iom}
                         on_show_disassembly={set_compiled_programs}
@@ -94,8 +96,8 @@ let HilView = function (props) {
                         on_download_done={set_download_data_request}
                     />,
                     <AsmVisualizer
-                        compiled_programs={compiled_programs}
-                        selected_program={selected_program}
+                        content={compiled_programs[selected_program]}
+                        extensions={[Fcore()]}
                     />
                 ]} onSelect={on_select} selected={selected_tab}/>
             </UIPanel>

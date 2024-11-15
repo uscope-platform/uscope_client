@@ -179,6 +179,7 @@ let FcoreEmulationEditor = function (props) {
     let handle_show = async () =>{
         let asm = await emulator.disassemble();
         props.on_show_disassembly(asm);
+        props.on_tab_change(3);
     }
 
     let handle_deploy = () =>{

@@ -24,8 +24,6 @@ import {
     SimpleContent,
     UIPanel
 } from "../../../UI_elements/index.jsx";
-import {Fcore} from "./FcoreLanguage.js";
-
 
 let AsmVisualizer = props => {
 
@@ -40,14 +38,14 @@ let AsmVisualizer = props => {
             <UIPanel key="program_properties" level="level_2">
                 <SimpleContent name="Program Properties" content={
                     <CodeMirror
-                        value={props.compiled_programs[props.selected_program]}
+                        value={props.content}
                         width='auto'
                         height={InterfaceParameters.programs.editorHeight}
                         theme={darcula}
                         basicSetup={{
                             syntaxHighlighting: true
                         }}
-                        extensions={[Fcore()]}
+                        extensions={props.extensions}
                     />
                 }/>
             </UIPanel>
