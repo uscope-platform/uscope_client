@@ -15,9 +15,7 @@
 
 import React, {useState, useEffect} from "react";
 
-import CodeMirror from '@uiw/react-codemirror';
 import {cpp} from '@codemirror/lang-cpp'
-import { darcula } from '@uiw/codemirror-theme-darcula';
 import {Tooltip} from "react-tooltip";
 import {MdSave, MdBuild} from 'react-icons/md'
 import {ColorTheme} from "../../../UI_elements";
@@ -26,7 +24,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { up_program} from "../../../../client_core";
 import LoadSelector from "./LoadSelector";
-import {InterfaceParameters} from "../../../UI_elements/InterfaceParameters";
+import TextEditor from "../../../UI_elements/TextEditor.jsx";
 
 
 let ProgramsEditor = props =>{
@@ -123,11 +121,9 @@ let ProgramsEditor = props =>{
                 theme="dark"
             />
             {constructActionsBar()}
-            <CodeMirror
-                value={editor_content}
-                width='auto'
-                height={InterfaceParameters.programs.editorHeight}
-                theme={darcula}
+
+            <TextEditor
+                content={editor_content}
                 extensions={[cpp()]}
                 onChange={handle_change}
             />

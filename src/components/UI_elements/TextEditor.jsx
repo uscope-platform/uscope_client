@@ -41,6 +41,7 @@ let TextEditor = props => {
                     syntaxHighlighting: true
                 }}
                 extensions={props.extensions}
+                onChange={props.onChange}
             />
         </div>
 

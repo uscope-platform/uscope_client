@@ -16,16 +16,14 @@
 import React, {useState, useEffect} from "react";
 import {ColorTheme} from "../../UI_elements"
 
-import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
-import { dracula } from '@uiw/codemirror-theme-dracula';
 import { autocompletion } from '@codemirror/autocomplete';
 import {
     autocompletion_engine, up_script
 } from "../../../client_core";
 import {MdSave} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
-import {InterfaceParameters} from "../../UI_elements/InterfaceParameters";
+import TextEditor from "../../UI_elements/TextEditor.jsx";
 
 
 let ScriptsEditor = props =>{
@@ -79,14 +77,10 @@ let ScriptsEditor = props =>{
                     <Tooltip anchorId="save_icon" content="Save Program" place="top" />
                 </div>
             </div>
-            <CodeMirror
-                value={editor_content}
-                width='auto'
-                height={InterfaceParameters.scripts.editorHeight}
-                theme={dracula}
+            <TextEditor
+                content={editor_content}
                 extensions={[javascript({ jsx: true }),autocompletion({override: [registers_completion]})]}
                 onChange={handle_change}
-
             />
         </div>
     );
