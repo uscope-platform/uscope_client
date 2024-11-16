@@ -20,7 +20,7 @@ import {ColorTheme, TabbedContent, UIPanel} from "../../UI_elements"
 import EmulationResults from "./EmulationResults";
 import HilPlotTab from "./HilControl/HilPlotTab";
 import FcoreEmulatorSidebar from "./Sidebar/FcoreEmulatorSidebar";
-import {Fcore} from "./AsmVisualizer/FcoreLanguage.js";
+import {Fcore} from "./FcoreDebugger/FcoreLanguage.js";
 import {json} from "@codemirror/lang-json";
 import TextEditor from "../../UI_elements/TextEditor.jsx";
 import {MdSave} from "react-icons/md";
