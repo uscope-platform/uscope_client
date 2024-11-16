@@ -1,4 +1,4 @@
-// Copyright 2021 University of Nottingham Ningbo China
+// Copyright 2024 Filippo Savi
 // Author: Filippo Savi <filssavi@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,19 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+
 import React from "react";
 
 import CodeMirror from '@uiw/react-codemirror';
 import {darcula} from '@uiw/codemirror-theme-darcula';
 import 'react-toastify/dist/ReactToastify.css';
 
-import {InterfaceParameters} from "../../../UI_elements/InterfaceParameters";
-import {
-    SimpleContent,
-    UIPanel
-} from "../../../UI_elements/index.jsx";
+import {InterfaceParameters} from "./InterfaceParameters.js";
 
-let AsmVisualizer = props => {
+let TextEditor = props => {
 
     return (
         <div style={{
@@ -35,20 +32,16 @@ let AsmVisualizer = props => {
             flexGrow: 1,
             height: "100%"
         }}>
-            <UIPanel key="program_properties" level="level_2">
-                <SimpleContent name="Program Properties" content={
-                    <CodeMirror
-                        value={props.content}
-                        width='auto'
-                        height={InterfaceParameters.programs.editorHeight}
-                        theme={darcula}
-                        basicSetup={{
-                            syntaxHighlighting: true
-                        }}
-                        extensions={props.extensions}
-                    />
-                }/>
-            </UIPanel>
+            <CodeMirror
+                value={props.content}
+                width='auto'
+                height={InterfaceParameters.programs.editorHeight}
+                theme={darcula}
+                basicSetup={{
+                    syntaxHighlighting: true
+                }}
+                extensions={props.extensions}
+            />
         </div>
 
     );
@@ -56,4 +49,4 @@ let AsmVisualizer = props => {
 
 }
 
-export default AsmVisualizer;
+export default TextEditor;

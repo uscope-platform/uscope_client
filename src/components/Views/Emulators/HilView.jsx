@@ -16,12 +16,16 @@
 import React, {useState} from 'react';
 
 import FcoreEmulationEditor from "./FcoreEmulationEditor";
-import {TabbedContent, UIPanel} from "../../UI_elements"
+import {ColorTheme, TabbedContent, UIPanel} from "../../UI_elements"
 import EmulationResults from "./EmulationResults";
 import HilPlotTab from "./HilControl/HilPlotTab";
 import FcoreEmulatorSidebar from "./Sidebar/FcoreEmulatorSidebar";
-import AsmVisualizer from "./AsmVisualizer/AsmVisualizer.jsx";
 import {Fcore} from "./AsmVisualizer/FcoreLanguage.js";
+import {json} from "@codemirror/lang-json";
+import TextEditor from "../../UI_elements/TextEditor.jsx";
+import {MdSave} from "react-icons/md";
+import {download_json, up_emulator} from "../../../client_core/index.js";
+import {useSelector} from "react-redux";
 
 let HilView = function (props) {
 
@@ -29,7 +33,6 @@ let HilView = function (props) {
     let [selected_iom, set_selected_iom] = useState(null);
     let [selected_tab, set_selected_tab] = useState(0);
     let [selected_program, set_selected_program] = useState(null);
-    let [emulator_selector, set_selected_emulator] = useState(null);
     let [compiler_warnings, set_compiler_warnings] = useState(null);
 
     let [hil_plot_running, set_hil_plot_running] = useState(false);
@@ -40,6 +43,23 @@ let HilView = function (props) {
     let [deployed, set_deployed] = useState(false);
 
     let [compiled_programs, set_compiled_programs] = useState({});
+    let [hil_json, set_hil_json] = useState(null);
+
+    const emulators_store = useSelector(state => state.emulators);
+
+    let [emulator, set_emulator] = useState({
+        name:"",
+        cores:[],
+        connections:[],
+        _get_emulator: ()=>{
+            return{
+                name:"",
+                cores:[],
+                connections:[]
+            }
+        }
+    });
+
 
     let on_select = (value) =>{
         set_selected_tab(value);
@@ -59,10 +79,14 @@ let HilView = function (props) {
     }
 
     let handle_emulator_select = (emu)=>{
-        // THE DEEP COPY IS NECESSARY BECAUSE REACT IS STUPID
-        set_selected_emulator(emu);
+        set_emulator(new up_emulator(emulators_store[emu]));
         set_selected_component(null);
     }
+
+    let handle_download_json = ()=>{
+        download_json(hil_json, emulator.name + "_artifact");
+    }
+
 
     return(
         <div style={{
@@ -72,41 +96,54 @@ let HilView = function (props) {
             height:"100%"
         }}>
             <UIPanel style={{flexGrow:1}} key="emulator_diagram" level="level_2">
-                <TabbedContent height="100%" names={["Emulation setup", "Emulation Results", "Hil Scope", "Asm Visualizer"]} contents={[
+                <TabbedContent height="100%" names={["Emulation setup", "Emulation Results", "Hil Scope", "Asm viewer", "HIL Spec Viewer"]} contents={[
                     <FcoreEmulationEditor
                         onEmulationDone={set_emulation_results}
                         onInputDataChange={set_input_data}
                         input_data={input_data}
                         onDeploy={()=>{set_deployed(true)}}
-                        emulator_selector={emulator_selector}
+                        emulator={emulator}
                         on_component_select={handle_component_select}
                         on_iom_select={handle_iom_select}
                         on_tab_change={on_select}
                         selected_component={selected_component}
                         selected_iom={selected_iom}
                         on_show_disassembly={set_compiled_programs}
+                        on_show_json={set_hil_json}
                         on_compile_done={set_compiler_warnings}
                     />,
                     <EmulationResults results={emulation_results} inputs={input_data}/>,
                     <HilPlotTab
                         deployed={deployed}
-                        emulator_selector={emulator_selector}
+                        emulator={emulator}
                         hil_plot_running={hil_plot_running}
                         download_data_request={download_data_request}
                         on_download_done={set_download_data_request}
                     />,
-                    <AsmVisualizer
+                    <TextEditor
+                        tab_name="ASM Viewer"
                         content={compiled_programs[selected_program]}
                         extensions={[Fcore()]}
-                    />
+                    />,
+                    <div>
+
+                        <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
+                            <MdSave onClick={handle_download_json} size={ColorTheme.icons_size}/>
+                        </div>
+                            <TextEditor
+                                tab_name="HIL spec Viewer"
+                                content={hil_json}
+                                extensions={[json()]}
+                            />
+                        </div>
                 ]} onSelect={on_select} selected={selected_tab}/>
             </UIPanel>
-            <div style={{height:"100%"}}>
+            <div style={{height: "100%"}}>
                 <FcoreEmulatorSidebar
                     selected_component={selected_component}
                     on_select={handle_emulator_select}
                     on_iom_modify={handle_iom_select}
-                    emulator_selector={emulator_selector}
+                    emulator={emulator}
                     selected_iom={selected_iom}
                     selected_tab={selected_tab}
                     on_plot_status_update={set_hil_plot_running}

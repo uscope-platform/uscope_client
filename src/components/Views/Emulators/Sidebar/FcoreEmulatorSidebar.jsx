@@ -33,32 +33,19 @@ let  FcoreEmulatorSidebar = props =>{
 
     const sel_component_type = props.selected_component ? props.selected_component.type : null;
 
-    let emulator = props.emulator_selector ? new up_emulator(emulators_store[props.emulator_selector]) : {
-        name:"",
-        cores:[],
-        connections:[],
-        _get_emulator: ()=>{
-            return{
-                name:"",
-                cores:[],
-                connections:[]
-            }
-        }
-    };
-
     let handle_select_emulator = (sel) =>{
         props.on_select(sel);
         props.on_iom_modify(null);
     }
     let on_start = () =>{
-        set_channel_status({0:true, 1:true, 2:true, 3:true, 4:true, 5:true});
-        emulator.start_hil().then(()=>{
+        set_channel_status({0:true, 1:true, 2:true, 3:true, 4:true, 5:true}).then();
+        props.emulator.start_hil().then(()=>{
             props.on_plot_status_update(true);
         });
     };
 
     let on_stop = () =>{
-        emulator.stop_hil().then(()=>{
+        props.emulator.stop_hil().then(()=>{
             props.on_plot_status_update(false);
         });
     }
@@ -81,19 +68,19 @@ let  FcoreEmulatorSidebar = props =>{
             />
             <EmulatorNodeProperties
                 enabled={sel_component_type==="node"}
-                selected_emulator={emulator}
+                selected_emulator={props.emulator}
                 on_iom_modify={props.on_iom_modify}
                 selected_component={props.selected_component}
                 selected_iom={props.selected_iom}
             />
             <EmulatorEdgeProperties
                 enabled={sel_component_type==="edge"}
-                selected_emulator={emulator}
+                selected_emulator={props.emulator}
                 selected_component={props.selected_component}
             />
             <EmulatorProperties
                 enabled={ props.selected_tab===0 && sel_component_type !== "node"  && sel_component_type !== "edge"}
-                selected_emulator={emulator}
+                selected_emulator={props.emulator}
             />
             <WarningsPanel
                 compile_warning={props.compile_warning}

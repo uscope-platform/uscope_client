@@ -18,24 +18,9 @@ import {SimpleContent, UIPanel} from "../../../UI_elements";
 import HilChannelSelector from "./HilChannelSelector";
 import HilInputsPanel from "./HilInputsPanel";
 import HilPlot from "./HilPlot";
-import {useSelector} from "react-redux";
-import {up_emulator} from "../../../../client_core";
 
 
 let HilPlotTab = function (props) {
-    const emulators_store = useSelector(state => state.emulators);
-    let emulator = props.emulator_selector ? new up_emulator(emulators_store[props.emulator_selector]) : {
-        name:"",
-        cores:[],
-        connections:[],
-        _get_emulator: ()=>{
-            return{
-                name:"",
-                cores:[],
-                connections:[]
-            }
-        }
-    };
 
     if(props.deployed){
         return(
@@ -63,13 +48,13 @@ let HilPlotTab = function (props) {
                }}>
                    <UIPanel key="Hil_inputs"  style={{flexGrow:1}} level="level_2">
                        <SimpleContent name="Inputs" height="100%" content={
-                           <HilInputsPanel emulator={emulator}/>
+                           <HilInputsPanel emulator={props.emulator}/>
                        }/>
                    </UIPanel>
                    <UIPanel key="hil_channel_selector" style={{flexGrow:1}}  level="level_2">
                        <SimpleContent name="Channel Selector" height="100%" content={
                            <HilChannelSelector
-                               emulator={emulator}
+                               emulator={props.emulator}
                            />
                        }/>
                    </UIPanel>
