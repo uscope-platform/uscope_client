@@ -26,6 +26,7 @@ import TextEditor from "../../UI_elements/TextEditor.jsx";
 import {MdSave} from "react-icons/md";
 import {download_json, up_emulator} from "../../../client_core/index.js";
 import {useSelector} from "react-redux";
+import FcoreDebugger from "./FcoreDebugger/FcoreDebugger.jsx";
 
 let HilView = function (props) {
 
@@ -120,10 +121,8 @@ let HilView = function (props) {
                         download_data_request={download_data_request}
                         on_download_done={set_download_data_request}
                     />,
-                    <TextEditor
-                        tab_name="ASM Viewer"
+                    <FcoreDebugger
                         content={compiled_programs[selected_program]}
-                        extensions={[Fcore()]}
                     />,
                     <div>
 

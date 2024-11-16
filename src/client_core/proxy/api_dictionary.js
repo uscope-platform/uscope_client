@@ -28,7 +28,7 @@ export const api_dictionary = {
         acquisition: 'operations/plot/acquisition',
         scope_address:'operations/plot/address',
         dma_disable:'operations/plot/dma_disable',
-
+        hil_debug: 'operations/hil/debug',
         hil_deploy: 'operations/hil/deploy',
         hil_emulate: 'operations/hil/emulate',
         hil_disassemble: 'operations/hil/disassemble',

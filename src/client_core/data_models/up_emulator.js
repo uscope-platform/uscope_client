@@ -589,6 +589,13 @@ export class up_emulator {
         return await backend_post(api_dictionary.operations.hil_deploy, specs);
     }
 
+    debug = async (action, args) =>{
+        return await backend_post(api_dictionary.operations.hil_debug, {
+            action: action,
+            arguments: args
+        });
+    }
+
     get_raw_obj = () => {
         return this._get_emulator();
     }
