@@ -20,7 +20,6 @@ import {ColorTheme, TabbedContent, UIPanel} from "../../UI_elements"
 import EmulationResults from "./EmulationResults";
 import HilPlotTab from "./HilControl/HilPlotTab";
 import FcoreEmulatorSidebar from "./Sidebar/FcoreEmulatorSidebar";
-import {Fcore} from "./FcoreDebugger/FcoreLanguage.js";
 import {json} from "@codemirror/lang-json";
 import TextEditor from "../../UI_elements/TextEditor.jsx";
 import {MdSave} from "react-icons/md";
@@ -46,7 +45,10 @@ let HilView = function (props) {
     let [compiled_programs, set_compiled_programs] = useState({});
     let [hil_json, set_hil_json] = useState(null);
 
+    let[ debugger_data, set_debugger_data] = useState({asm:"", source:""});
+
     const emulators_store = useSelector(state => state.emulators);
+    const programs_store = useSelector(state => state.programs);
 
     let [emulator, set_emulator] = useState({
         name:"",
@@ -68,6 +70,13 @@ let HilView = function (props) {
 
     let on_select_program = (value)=>{
         set_selected_program(value);
+        let program = Object.values(emulator.cores).filter(c =>{
+            return c.name === value;
+        })[0].program;
+        let src = Object.values(programs_store).filter(p =>{
+            return p.name === program;
+        })[0].content;
+        set_debugger_data({asm:compiled_programs[value], source:src});
     }
 
     let handle_component_select = (value) => {
@@ -87,6 +96,7 @@ let HilView = function (props) {
     let handle_download_json = ()=>{
         download_json(hil_json, emulator.name + "_artifact");
     }
+
 
 
     return(
@@ -122,7 +132,7 @@ let HilView = function (props) {
                         on_download_done={set_download_data_request}
                     />,
                     <FcoreDebugger
-                        content={compiled_programs[selected_program]}
+                        content={debugger_data}
                     />,
                     <div>
 

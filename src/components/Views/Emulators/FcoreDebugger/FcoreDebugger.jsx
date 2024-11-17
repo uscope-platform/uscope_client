@@ -18,12 +18,19 @@ import React from 'react';
 import {Fcore} from "./FcoreLanguage.js";
 import TextEditor from "../../../UI_elements/TextEditor.jsx";
 import DebuggerControls from "./DebuggerControls";
+import {cpp} from "@codemirror/lang-cpp";
 
 let  FcoreDebugger = props =>{
 
 
     let handle_run = ()=>{
 
+        let spec = {};
+
+        let command = {
+            command: "run",
+            arguments: spec,
+        };
     }
 
     let handle_stop = () =>{
@@ -32,11 +39,38 @@ let  FcoreDebugger = props =>{
 
     let handle_step = () =>{
 
+
+        let command = {
+            command: "spec",
+            arguments: 0,
+        };
+
     }
 
     let handle_resume = () =>{
+        let command = {
+            command: "continue",
+            arguments: 0,
+        };
 
-    }
+    };
+
+
+    let handle_add_breakpoint = (line_n) =>{
+        let command = {
+            command: "add_breakpoint",
+            arguments: line_n
+        };
+
+    };
+
+    let handle_remove_breakpoint = (line_n) =>{
+        let command = {
+            command: "remove_breakpoint",
+            arguments: line_n
+        };
+
+    };
 
     return (
         <div>
@@ -46,11 +80,22 @@ let  FcoreDebugger = props =>{
                 step={handle_step}
                 continue={handle_resume}
             />
-            <TextEditor
-                tab_name="ASM Viewer"
-                content={props.content}
-                extensions={[Fcore()]}
-            />
+            <div style={{
+                display:"grid",
+                gap: 10,
+                gridTemplateColumns: "1fr 1fr"
+            }}>
+                <TextEditor
+                    tab_name="Assembly"
+                    content={props.content.asm}
+                    extensions={[Fcore()]}
+                />
+                <TextEditor
+                    tab_name="C source"
+                    content={props.content.source}
+                    extensions={[cpp()]}
+                />
+            </div>
         </div>
     );
 };
