@@ -141,7 +141,7 @@ let FcoreEmulationEditor = function (props) {
     }
 
     let handle_run = async () =>{
-        let results = await props.emulator.run();
+        let results = await props.emulator.emulator_run();
         if(results.code && results.code === 7) {
             props.on_compile_done(null);
             toast.error(results.results);

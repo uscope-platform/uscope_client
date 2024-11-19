@@ -64,7 +64,6 @@ export class up_emulator_result {
                 if(typeof channel === "string"){
                     let array = this.data[data_source].outputs[data_series][0];
                     let res = []
-                    let i = 0;
                     for(let i = 0; i<array.length; i++){
                         res.push(String(i));
                     }

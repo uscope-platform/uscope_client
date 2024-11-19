@@ -14,90 +14,74 @@
 // limitations under the License.
 
 
-import React from 'react';
+import React, {useState} from 'react';
 import {Fcore} from "./FcoreLanguage.js";
 import TextEditor from "../../../UI_elements/TextEditor.jsx";
 import DebuggerControls from "./DebuggerControls";
 import {cpp} from "@codemirror/lang-cpp";
+import MemoryViewer from "./MemoryViewer.jsx";
+import {EditorView} from "codemirror";
 
 let  FcoreDebugger = props =>{
 
 
-    let handle_run = ()=>{
+    let [current_line, set_current_line] = useState(1);
 
-        let spec = {};
-
-        let command = {
-            command: "run",
-            arguments: spec,
-        };
+    let handle_run = async ()=>{
+        await props.emulator.debug_run();
     }
 
-    let handle_stop = () =>{
-
+    let handle_step = async () =>{
+        await props.emulator.step_over();
     }
 
-    let handle_step = () =>{
+    let handle_resume = async () =>{
+        await props.emulator.resume();
+    };
 
-
-        let command = {
-            command: "spec",
-            arguments: 0,
-        };
-
+    let produce_theme = () =>{
+        let base_theme = {}
+        base_theme['.cm-line:nth-of-type(' + current_line + ')'] = {
+            backgroundColor: 'blue'
+        }
+        return base_theme;
     }
 
-    let handle_resume = () =>{
-        let command = {
-            command: "continue",
-            arguments: 0,
-        };
+    const highLight = EditorView.theme(produce_theme());
 
-    };
-
-
-    let handle_add_breakpoint = (line_n) =>{
-        let command = {
-            command: "add_breakpoint",
-            arguments: line_n
-        };
-
-    };
-
-    let handle_remove_breakpoint = (line_n) =>{
-        let command = {
-            command: "remove_breakpoint",
-            arguments: line_n
-        };
-
-    };
 
     return (
         <div>
             <DebuggerControls
                 run={handle_run}
-                stop={handle_stop}
                 step={handle_step}
-                continue={handle_resume}
+                resume={handle_resume}
             />
             <div style={{
-                display:"grid",
+                display: "grid",
                 gap: 10,
-                gridTemplateColumns: "1fr 1fr"
+                gridTemplateRows: "3fr 1fr",
             }}>
-                <TextEditor
-                    tab_name="Assembly"
-                    content={props.content.asm}
-                    extensions={[Fcore()]}
-                />
-                <TextEditor
-                    tab_name="C source"
-                    content={props.content.source}
-                    extensions={[cpp()]}
-                />
+                <div style={{
+                    display: "grid",
+                    gap: 10,
+                    gridTemplateColumns: "1fr 1fr",
+                }}>
+                    <TextEditor
+                        tab_name="Assembly"
+                        content={props.content.asm}
+                        extensions={[Fcore(), highLight]}
+                    />
+                    <TextEditor
+                        tab_name="C source"
+                        content={props.content.source}
+                        extensions={[cpp()]}
+                    />
+                </div>
+                <MemoryViewer/>
             </div>
         </div>
-    );
-};
+            );
+            };
 
-export default FcoreDebugger;
+            export default FcoreDebugger;

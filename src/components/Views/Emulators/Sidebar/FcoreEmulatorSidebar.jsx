@@ -25,6 +25,7 @@ import EmulatorProperties from "./EmulatorProperties";
 import WarningsPanel from "./WarningsPanel";
 import HilControl from "./HilControl";
 import AsmSelector from "./AsmSelector.jsx";
+import BreakpointsPanel from "./BreakpointsPanel.jsx";
 
 let  FcoreEmulatorSidebar = props =>{
 
@@ -98,6 +99,10 @@ let  FcoreEmulatorSidebar = props =>{
                 programs={props.compiled_programs}
                 selected_program={props.selected_program}
                 on_select={props.on_program_select}
+            />
+            <BreakpointsPanel
+                emulator={props.emulator}
+                enable={props.selected_tab === 3}
             />
         </>
 

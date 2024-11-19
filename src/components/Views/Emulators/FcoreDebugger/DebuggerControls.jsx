@@ -16,11 +16,10 @@
 
 import React from 'react';
 import {ColorTheme} from "../../../UI_elements/index.jsx";
-import {MdStop, MdPlayArrow, MdArrowRightAlt, MdStart} from "react-icons/md";
+import { MdPlayArrow, MdArrowRightAlt, MdStart} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
 
 let  DebuggerControls = props =>{
-
 
     return (
         <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
@@ -28,11 +27,6 @@ let  DebuggerControls = props =>{
                 <MdPlayArrow onClick={props.run} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
                              color={ColorTheme.icons_color}/>
                 <Tooltip anchorSelect="run" content={"run"} place="top"/>
-            </div>
-            <div key="stop" id="stop">
-                <MdStop onClick={props.stop} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
-                        color={ColorTheme.icons_color}/>
-                <Tooltip anchorSelect="stop" content={"Stop"} place="top"/>
             </div>
             <div key="step" id="step">
                 <MdArrowRightAlt onClick={props.step} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}

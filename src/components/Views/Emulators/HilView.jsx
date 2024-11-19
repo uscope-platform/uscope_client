@@ -132,6 +132,7 @@ let HilView = function (props) {
                         on_download_done={set_download_data_request}
                     />,
                     <FcoreDebugger
+                        emulator={emulator}
                         content={debugger_data}
                     />,
                     <div>

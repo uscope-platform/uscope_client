@@ -14,10 +14,10 @@
 // limitations under the License.
 
 
-import {store} from "../index";
-import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy/backend";
-import {api_dictionary} from "../proxy/api_dictionary";
-import {addEmulator, removeEmulator, update_emulator} from "../../redux/Actions/EmulatorActions";
+import {store} from "../../index";
+import {backend_delete, backend_get, backend_patch, backend_post} from "../../proxy/backend";
+import {api_dictionary} from "../../proxy/api_dictionary";
+import {addEmulator, removeEmulator, update_emulator} from "../../../redux/Actions/EmulatorActions";
 
 export class up_emulator {
     constructor(emulator_obj) {
@@ -574,7 +574,7 @@ export class up_emulator {
         };
     }
 
-    run = async () =>{
+    emulator_run = async () =>{
         let specs = this.build();
         return await backend_post(api_dictionary.operations.hil_emulate, specs);
     };
@@ -589,12 +589,6 @@ export class up_emulator {
         return await backend_post(api_dictionary.operations.hil_deploy, specs);
     }
 
-    debug = async (action, args) =>{
-        return await backend_post(api_dictionary.operations.hil_debug, {
-            action: action,
-            arguments: args
-        });
-    }
 
     get_raw_obj = () => {
         return this._get_emulator();
@@ -718,6 +712,42 @@ export class up_emulator {
     }
     stop_hil = () =>{
         return backend_get(api_dictionary.operations.hil_stop);
+    }
+
+
+    add_breakpoint = async (line_n) =>{
+        return await backend_post(api_dictionary.operations.hil_debug, {
+            command: "add_breakpoint",
+            arguments: line_n
+        });
+    }
+
+    remove_breakpoint = async (line_n) =>{
+        return await backend_post(api_dictionary.operations.hil_debug, {
+            command: "remove_breakpoint",
+            arguments: line_n
+        });
+    }
+
+    step_over = async () =>{
+        return await backend_post(api_dictionary.operations.hil_debug, {
+            command: "step",
+            arguments: 0
+        });
+    }
+
+    resume = async () =>{
+        return await backend_post(api_dictionary.operations.hil_debug, {
+            command: "resume",
+            arguments: 0
+        });
+    }
+
+    debug_run = async () =>{
+        return await backend_post(api_dictionary.operations.hil_debug, {
+            command: "run",
+            arguments: this.build()
+        });
     }
 
 
