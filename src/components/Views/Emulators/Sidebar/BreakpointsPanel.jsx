@@ -23,7 +23,7 @@ let  BreakpointsPanel = props =>{
 
     let handle_remove = async (value)=>{
 
-        await props.emulator.remove_breakpoint(value);
+        await props.emulator.remove_breakpoint(props.selected_program, value);
         set_breakpoints(breakpoints.filter(b =>{
             return b !== value;
         }))
@@ -33,7 +33,7 @@ let  BreakpointsPanel = props =>{
     let handle_add = async (event)=>{
         if(event.key==="Enter"|| event.key ==="Tab") {
             let value = parseInt(event.target.value);
-            await props.emulator.add_breakpoint(value);
+            await props.emulator.add_breakpoint(props.selected_program, value);
             set_breakpoints([...breakpoints, value]);
         }
     }

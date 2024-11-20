@@ -102,6 +102,7 @@ let  FcoreEmulatorSidebar = props =>{
             />
             <BreakpointsPanel
                 emulator={props.emulator}
+                selected_program={props.selected_program}
                 enable={props.selected_tab === 3}
             />
         </>

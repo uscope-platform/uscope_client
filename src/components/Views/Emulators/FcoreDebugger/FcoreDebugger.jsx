@@ -32,11 +32,11 @@ let  FcoreDebugger = props =>{
     }
 
     let handle_step = async () =>{
-        await props.emulator.step_over();
+        await props.emulator.step_over(props.selected_program);
     }
 
     let handle_resume = async () =>{
-        await props.emulator.resume();
+        await props.emulator.resume(props.selected_program);
     };
 
     let produce_theme = () =>{

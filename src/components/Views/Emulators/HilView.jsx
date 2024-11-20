@@ -133,6 +133,7 @@ let HilView = function (props) {
                     />,
                     <FcoreDebugger
                         emulator={emulator}
+                        selected_program={selected_program}
                         content={debugger_data}
                     />,
                     <div>

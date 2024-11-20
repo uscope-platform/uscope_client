@@ -715,31 +715,31 @@ export class up_emulator {
     }
 
 
-    add_breakpoint = async (line_n) =>{
+    add_breakpoint = async (core_id, line_n) =>{
         return await backend_post(api_dictionary.operations.hil_debug, {
             command: "add_breakpoint",
-            arguments: line_n
+            arguments: {id:core_id, line:line_n},
         });
     }
 
-    remove_breakpoint = async (line_n) =>{
+    remove_breakpoint = async (core_id, line_n) =>{
         return await backend_post(api_dictionary.operations.hil_debug, {
             command: "remove_breakpoint",
-            arguments: line_n
+            arguments: {id:core_id, line:line_n},
         });
     }
 
-    step_over = async () =>{
+    step_over = async (core_id) =>{
         return await backend_post(api_dictionary.operations.hil_debug, {
             command: "step",
-            arguments: 0
+            arguments: core_id
         });
     }
 
-    resume = async () =>{
+    resume = async (core_id) =>{
         return await backend_post(api_dictionary.operations.hil_debug, {
             command: "resume",
-            arguments: 0
+            arguments: core_id
         });
     }
 
