@@ -55,7 +55,7 @@ let  CoreMemoriesList = props =>{
     }
 
     let handle_select = (args) =>{
-        props.on_iom_select({type:"memory_init", obj:args});
+        props.on_selection({type:"memory_init", obj:args});
         set_selected(args)
     }
 

@@ -50,8 +50,8 @@ let FcoreEmulationEditor = function (props) {
     let [selected_inputs_tab, set_selected_inputs_tab] = useState(0);
 
     useEffect(() =>{
-        if(props.selected_component){
-            if(props.selected_component.type === "node"){
+        if(props.selections.component){
+            if(props.selections.component.type === "node"){
                 set_enabled_actions({
                     add: enabled_actions.add,
                     edit: true,
@@ -72,7 +72,7 @@ let FcoreEmulationEditor = function (props) {
             show: enabled_actions.show
         });
 
-    },[props.selected_component])
+    },[props.selections.component])
 
     useEffect(() => {
         //SETUP NODES
@@ -156,12 +156,13 @@ let FcoreEmulationEditor = function (props) {
     }
 
     let handle_edit = () => {
-        navigate("/programs", {state: {selected_program:props.emulator.cores[props.selected_component.obj.id].program}});
+        navigate("/programs", {state: {selected_program:props.emulator.cores[props.selections.component.obj.id].program}});
     }
 
     let handle_show = async () =>{
         let asm = await props.emulator.disassemble();
         props.on_show_disassembly(asm);
+        await  props.emulator.debug_init();
         props.on_tab_change(3);
     }
 
@@ -238,6 +239,11 @@ let FcoreEmulationEditor = function (props) {
         });
     }
 
+    const handle_select_iom = (selection)=>{
+        let sel = {...props.selections, iom:selection};
+        props.on_selection(sel);
+    }
+
     if(props.emulator){
         
         return(
@@ -291,13 +297,13 @@ let FcoreEmulationEditor = function (props) {
                             <TabbedContent names={["Inputs", "Input Files"]} contents={[
                                 <CoreInputsList
                                     emulator={props.emulator}
-                                    selected_component={props.selected_component}
-                                    on_iom_select={props.on_iom_select}
-                                    selected_iom={props.selected_iom}
+                                    selected_component={props.selections.component}
+                                    on_selection={handle_select_iom}
+                                    selected_iom={props.selections.iom}
                                 />,
                                 <CoreInputFilesList
                                     emulator={props.emulator}
-                                    selected_component={props.selected_component}
+                                    selected_component={props.selections.component}
                                 />
                             ]} onSelect={set_selected_inputs_tab} selected={selected_inputs_tab}/>
                         </UIPanel>
@@ -305,9 +311,9 @@ let FcoreEmulationEditor = function (props) {
                             <SimpleContent name="Outputs" height="100%" content={
                                 <CoreOutputsList
                                     emulator={props.emulator}
-                                    selected_component={props.selected_component}
-                                    on_iom_select={props.on_iom_select}
-                                    selected_iom={props.selected_iom}
+                                    selected_component={props.selections.component}
+                                    on_selection={handle_select_iom}
+                                    selected_iom={props.selections.iom}
                                 />
                             }/>
                         </UIPanel>
@@ -315,9 +321,9 @@ let FcoreEmulationEditor = function (props) {
                             <SimpleContent name="Memory" height="100%" content={
                                 <CoreMemoriesList
                                     emulator={props.emulator}
-                                    selected_component={props.selected_component}
-                                    on_iom_select={props.on_iom_select}
-                                    selected_iom={props.selected_iom}
+                                    selected_component={props.selections.component}
+                                    on_selection={handle_select_iom}
+                                    selected_iom={props.selections.iom}
                                 />
                             }/>
                         </UIPanel>

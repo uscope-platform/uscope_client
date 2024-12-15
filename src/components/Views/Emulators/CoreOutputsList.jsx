@@ -54,7 +54,7 @@ let  CoreOutputsList = props =>{
     }
 
     let handle_select = (args) =>{
-        props.on_iom_select({type:"outputs", obj:args});
+        props.on_selection({type:"outputs", obj:args});
         set_selected(args)
     }
 

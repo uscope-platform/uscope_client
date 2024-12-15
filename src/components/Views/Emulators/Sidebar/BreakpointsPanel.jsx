@@ -14,12 +14,26 @@
 // limitations under the License.
 
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import { InputField, SelectableList, SimpleContent, UIPanel} from "../../../UI_elements/index.jsx";
 
 let  BreakpointsPanel = props =>{
 
     let [breakpoints, set_breakpoints] = React.useState([]);
+
+
+    useEffect( ()=>{
+        if(props.selected_program){
+            if(props.selected_program !== ""){
+                props.emulator.get_breakpoints(props.selected_program).then((bp)=>{
+                    set_breakpoints(bp);
+                });
+            } else {
+                set_breakpoints([]);
+            }
+
+        }
+    }, [props.emulator])
 
     let handle_remove = async (value)=>{
 

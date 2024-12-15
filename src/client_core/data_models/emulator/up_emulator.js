@@ -505,6 +505,7 @@ export class up_emulator {
                         return {
                             name: out.name,
                             reg_n: out.reg_n,
+                            type:out.type,
                             metadata:{
                                 type: out.type,
                                 width: out.width,
@@ -714,11 +715,24 @@ export class up_emulator {
         return backend_get(api_dictionary.operations.hil_stop);
     }
 
+    debug_init = async () =>{
+        return await backend_post(api_dictionary.operations.hil_debug, {
+            command: "initialize",
+            arguments: this.build()
+        });
+    }
 
     add_breakpoint = async (core_id, line_n) =>{
         return await backend_post(api_dictionary.operations.hil_debug, {
             command: "add_breakpoint",
             arguments: {id:core_id, line:line_n},
+        });
+    }
+
+    get_breakpoints = async (core_id) =>{
+        return await backend_post(api_dictionary.operations.hil_debug, {
+            command: "get_breakpoints",
+            arguments: {id:core_id},
         });
     }
 
@@ -746,7 +760,7 @@ export class up_emulator {
     debug_run = async () =>{
         return await backend_post(api_dictionary.operations.hil_debug, {
             command: "run",
-            arguments: this.build()
+            arguments:this.id
         });
     }
 

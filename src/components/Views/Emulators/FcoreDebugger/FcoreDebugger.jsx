@@ -25,10 +25,14 @@ import {EditorView} from "codemirror";
 let  FcoreDebugger = props =>{
 
 
-    let [current_line, set_current_line] = useState(1);
+    let [current_line, set_current_line] = useState(0);
 
     let handle_run = async ()=>{
-        await props.emulator.debug_run();
+
+        let res = await props.emulator.debug_run();
+        set_current_line(res.breakpoint);
+        console.log(res);
+        set_debugging(true);
     }
 
     let handle_step = async () =>{
@@ -41,8 +45,10 @@ let  FcoreDebugger = props =>{
 
     let produce_theme = () =>{
         let base_theme = {}
-        base_theme['.cm-line:nth-of-type(' + current_line + ')'] = {
-            backgroundColor: 'blue'
+        if(current_line>0){
+            base_theme['.cm-line:nth-of-type(' + current_line + ')'] = {
+                backgroundColor: 'rgb(139, 233, 253)'
+            }
         }
         return base_theme;
     }

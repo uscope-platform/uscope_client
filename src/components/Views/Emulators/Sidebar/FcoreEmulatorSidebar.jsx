@@ -32,11 +32,11 @@ let  FcoreEmulatorSidebar = props =>{
     const emulators_store = useSelector(state => state.emulators);
 
 
-    const sel_component_type = props.selected_component ? props.selected_component.type : null;
+    const sel_component_type = props.selections.component ? props.selections.component.type : null;
 
     let handle_select_emulator = (sel) =>{
         props.on_select(sel);
-        props.on_iom_modify(null);
+        props.on_selection({...props.selections, iom:null})
     }
     let on_start = () =>{
         set_channel_status({0:true, 1:true, 2:true, 3:true, 4:true, 5:true}).then();
@@ -55,6 +55,11 @@ let  FcoreEmulatorSidebar = props =>{
         props.on_plot_status_update(!props.hil_plot_running);
     }
 
+    const handle_node_iom_modify = (iom) =>{
+        let new_selection = {...props.selections, iom:iom};
+        props.on_selection(new_selection)
+    }
+
     return(
         <>
             <SidebarBase
@@ -70,40 +75,40 @@ let  FcoreEmulatorSidebar = props =>{
             <EmulatorNodeProperties
                 enabled={sel_component_type==="node"}
                 selected_emulator={props.emulator}
-                on_iom_modify={props.on_iom_modify}
-                selected_component={props.selected_component}
-                selected_iom={props.selected_iom}
+                on_iom_modify={handle_node_iom_modify}
+                selected_component={props.selections.component}
+                selected_iom={props.selections.iom}
             />
             <EmulatorEdgeProperties
                 enabled={sel_component_type==="edge"}
                 selected_emulator={props.emulator}
-                selected_component={props.selected_component}
+                selected_component={props.selections.component}
             />
             <EmulatorProperties
-                enabled={ props.selected_tab===0 && sel_component_type !== "node"  && sel_component_type !== "edge"}
+                enabled={ props.selections.tab===0 && sel_component_type !== "node"  && sel_component_type !== "edge"}
                 selected_emulator={props.emulator}
             />
             <WarningsPanel
                 compile_warning={props.compile_warning}
-                enabled={props.selected_component === null}
+                enabled={props.selections.component === null}
             />
             <HilControl
                 onDownloadHilData={props.onDownloadHilData}
-                enabled={props.selected_tab === 2}
+                enabled={props.selections.tab === 2}
                 onStart={on_start}
                 onStop={on_stop}
                 onPause={on_pause}
             />
             <AsmSelector
-                enable={props.selected_tab === 3}
+                enable={props.selections.tab === 3}
                 programs={props.compiled_programs}
-                selected_program={props.selected_program}
+                selected_program={props.selections.program}
                 on_select={props.on_program_select}
             />
             <BreakpointsPanel
                 emulator={props.emulator}
-                selected_program={props.selected_program}
-                enable={props.selected_tab === 3}
+                selected_program={props.selections.program}
+                enable={props.selections.tab === 3}
             />
         </>
 

@@ -29,10 +29,13 @@ import FcoreDebugger from "./FcoreDebugger/FcoreDebugger.jsx";
 
 let HilView = function (props) {
 
-    let [selected_component, set_selected_component] = useState(null);
-    let [selected_iom, set_selected_iom] = useState(null);
-    let [selected_tab, set_selected_tab] = useState(0);
-    let [selected_program, set_selected_program] = useState(null);
+    let [selections, set_selections] = useState({
+        component:null,
+        iom:null,
+        tab:0,
+        program:null
+    })
+
     let [compiler_warnings, set_compiler_warnings] = useState(null);
 
     let [hil_plot_running, set_hil_plot_running] = useState(false);
@@ -65,11 +68,11 @@ let HilView = function (props) {
 
 
     let on_select = (value) =>{
-        set_selected_tab(value);
+        set_selections({...selections, tab:value});
     }
 
     let on_select_program = (value)=>{
-        set_selected_program(value);
+        set_selections({...selections, program: value});
         let program = Object.values(emulator.cores).filter(c =>{
             return c.name === value;
         })[0].program;
@@ -80,17 +83,14 @@ let HilView = function (props) {
     }
 
     let handle_component_select = (value) => {
-        set_selected_component(value);
-        set_selected_iom(null);
+        set_selections({...selections, component: value, iom: null});
     }
 
-    let handle_iom_select = (value)=>{
-        set_selected_iom(value);
-    }
 
     let handle_emulator_select = (emu)=>{
+
         set_emulator(new up_emulator(emulators_store[emu]));
-        set_selected_component(null);
+        set_selections({...selections, component: null});
     }
 
     let handle_download_json = ()=>{
@@ -114,11 +114,10 @@ let HilView = function (props) {
                         input_data={input_data}
                         onDeploy={()=>{set_deployed(true)}}
                         emulator={emulator}
+                        selections={selections}
                         on_component_select={handle_component_select}
-                        on_iom_select={handle_iom_select}
+                        on_selection={set_selections}
                         on_tab_change={on_select}
-                        selected_component={selected_component}
-                        selected_iom={selected_iom}
                         on_show_disassembly={set_compiled_programs}
                         on_show_json={set_hil_json}
                         on_compile_done={set_compiler_warnings}
@@ -133,7 +132,7 @@ let HilView = function (props) {
                     />,
                     <FcoreDebugger
                         emulator={emulator}
-                        selected_program={selected_program}
+                        selected_program={selections.program}
                         content={debugger_data}
                     />,
                     <div>
@@ -147,22 +146,20 @@ let HilView = function (props) {
                                 extensions={[json()]}
                             />
                         </div>
-                ]} onSelect={on_select} selected={selected_tab}/>
+                ]} onSelect={on_select} selected={selections.tab}/>
             </UIPanel>
             <div style={{height: "100%"}}>
                 <FcoreEmulatorSidebar
-                    selected_component={selected_component}
+                    selected_component={selections.component}
                     on_select={handle_emulator_select}
-                    on_iom_modify={handle_iom_select}
+                    on_selection={set_selections}
+                    selections={selections}
                     emulator={emulator}
-                    selected_iom={selected_iom}
-                    selected_tab={selected_tab}
                     on_plot_status_update={set_hil_plot_running}
                     hil_plot_running={hil_plot_running}
                     onDownloadHilData={set_download_data_request}
                     compile_warning={compiler_warnings}
                     compiled_programs={compiled_programs}
-                    selected_program={selected_program}
                     on_program_select={on_select_program}
                 />
             </div>
