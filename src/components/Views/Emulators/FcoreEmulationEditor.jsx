@@ -127,17 +127,17 @@ let FcoreEmulationEditor = function (props) {
     };
 
     let handle_node_select = (event, node) =>{
-        props.on_component_select({type:"node", obj:node});
+        props.on_selection({...props.selections, iom:null, component:{type:"node", obj:node}});
     }
 
     let handle_edge_select = (event, edge) =>{
-        props.on_component_select({type:"edge", obj:edge});
+        props.on_selection({...props.selections, iom:null, component:{type:"edge", obj:edge}});
     }
 
     let handle_build = () =>{
         let product = props.emulator.build();
         props.on_show_json(JSON.stringify(product, null, 4));
-        props.on_tab_change(4);
+        props.on_selection({...props.selections, tab:4});
     }
 
     let handle_run = async () =>{
@@ -163,7 +163,7 @@ let FcoreEmulationEditor = function (props) {
         let asm = await props.emulator.disassemble();
         props.on_show_disassembly(asm);
         await  props.emulator.debug_init();
-        props.on_tab_change(3);
+        props.on_selection({...props.selections, tab:3});
     }
 
     let handle_deploy = () =>{
@@ -191,7 +191,7 @@ let FcoreEmulationEditor = function (props) {
     }
 
     let handle_canvas_click = ()=>{
-        props.on_component_select(null);
+        props.on_selection({...props.selections,component:null});
     }
 
     let handle_link_nodes = (event, from, to) =>{
@@ -217,7 +217,7 @@ let FcoreEmulationEditor = function (props) {
     }
 
     let handle_node_remove = (result, node)=>{
-        props.on_component_select(null);
+        props.on_selection({...props.selections,component:null});
         let new_edges = [];
         edges.map((item)=> {
             if (item.from !== node.id && item.to !== node.id) {
@@ -232,7 +232,7 @@ let FcoreEmulationEditor = function (props) {
     }
 
     let handle_edge_remove = (edge) =>{
-        props.on_component_select(null);
+        props.on_selection({...props.selections,component:null});
         props.emulator.remove_dma_connection(edge.from, edge.to).then(()=>{
             let n_e = edges.filter((item) =>{ return item.id !== edge.id});
             setEdges(n_e);

@@ -36,6 +36,10 @@ let HilView = function (props) {
         program:null
     })
 
+
+    let [breakpoints, set_breakpoints] = useState([]);
+
+
     let [compiler_warnings, set_compiler_warnings] = useState(null);
 
     let [hil_plot_running, set_hil_plot_running] = useState(false);
@@ -71,7 +75,7 @@ let HilView = function (props) {
         set_selections({...selections, tab:value});
     }
 
-    let on_select_program = (value)=>{
+    let on_select_program = async (value)=>{
         set_selections({...selections, program: value});
         let program = Object.values(emulator.cores).filter(c =>{
             return c.name === value;
@@ -80,10 +84,10 @@ let HilView = function (props) {
             return p.name === program;
         })[0].content;
         set_debugger_data({asm:compiled_programs[value], source:src});
-    }
 
-    let handle_component_select = (value) => {
-        set_selections({...selections, component: value, iom: null});
+
+       let bps= await props.emulator.get_breakpoints(props.selected_program);
+       set_breakpoints(bps);
     }
 
 
@@ -91,13 +95,26 @@ let HilView = function (props) {
 
         set_emulator(new up_emulator(emulators_store[emu]));
         set_selections({...selections, component: null});
+        set_breakpoints([]);
     }
 
     let handle_download_json = ()=>{
         download_json(hil_json, emulator.name + "_artifact");
     }
 
+    let handle_add_breakpoint = async (value) =>{
+        let vv = parseInt(value);
+        await emulator.add_breakpoint(selections.program, vv);
+        set_breakpoints([...breakpoints, vv]);
+    }
 
+    let handle_remove_breakpoint = async (raw_val) =>{
+        await emulator.remove_breakpoint(selections.program, raw_val);
+        let new_breakpoints = breakpoints.filter(b =>{
+            return b !== raw_val;
+        });
+        set_breakpoints(new_breakpoints);
+    }
 
     return(
         <div style={{
@@ -115,9 +132,7 @@ let HilView = function (props) {
                         onDeploy={()=>{set_deployed(true)}}
                         emulator={emulator}
                         selections={selections}
-                        on_component_select={handle_component_select}
                         on_selection={set_selections}
-                        on_tab_change={on_select}
                         on_show_disassembly={set_compiled_programs}
                         on_show_json={set_hil_json}
                         on_compile_done={set_compiler_warnings}
@@ -161,6 +176,9 @@ let HilView = function (props) {
                     compile_warning={compiler_warnings}
                     compiled_programs={compiled_programs}
                     on_program_select={on_select_program}
+                    on_add_breakpoint={handle_add_breakpoint}
+                    on_remove_breakpoint={handle_remove_breakpoint}
+                    breakpoints={breakpoints}
                 />
             </div>
         </div>

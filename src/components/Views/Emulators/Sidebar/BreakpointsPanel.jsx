@@ -19,46 +19,20 @@ import { InputField, SelectableList, SimpleContent, UIPanel} from "../../../UI_e
 
 let  BreakpointsPanel = props =>{
 
-    let [breakpoints, set_breakpoints] = React.useState([]);
-
-
-    useEffect( ()=>{
-        if(props.selected_program){
-            if(props.selected_program !== ""){
-                props.emulator.get_breakpoints(props.selected_program).then((bp)=>{
-                    set_breakpoints(bp);
-                });
-            } else {
-                set_breakpoints([]);
-            }
-
-        }
-    }, [props.emulator])
-
-    let handle_remove = async (value)=>{
-
-        await props.emulator.remove_breakpoint(props.selected_program, value);
-        set_breakpoints(breakpoints.filter(b =>{
-            return b !== value;
-        }))
-
-    }
-
     let handle_add = async (event)=>{
         if(event.key==="Enter"|| event.key ==="Tab") {
-            let value = parseInt(event.target.value);
-            await props.emulator.add_breakpoint(props.selected_program, value);
-            set_breakpoints([...breakpoints, value]);
+            props.on_add(event.target.value);
         }
     }
+
     if(props.enable)
     return (
         <UIPanel key="breakpoints" style={{minHeight:"200px"}} level="level_2">
             <SimpleContent name={"Breakpoints"} content={[
                     <InputField inline ID="add_breakpoint" name="add_breakpoint" label="Add Breakpoint" onKeyDown={handle_add}/>,
                     <SelectableList
-                        onRemove={handle_remove}
-                        items={breakpoints}
+                        onRemove={props.on_remove}
+                        items={props.breakpoints}
                     />
             ]}/>
         </UIPanel>
