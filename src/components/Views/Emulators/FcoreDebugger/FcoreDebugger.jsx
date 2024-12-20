@@ -75,7 +75,7 @@ let  FcoreDebugger = props =>{
                 }}>
                     <TextEditor
                         tab_name="Assembly"
-                        content={props.content.asm}
+                        content={props.content.asm.program}
                         extensions={[Fcore(), highLight]}
                     />
                     <TextEditor

@@ -26,6 +26,7 @@ import WarningsPanel from "./WarningsPanel";
 import HilControl from "./HilControl";
 import AsmSelector from "./AsmSelector.jsx";
 import BreakpointsPanel from "./BreakpointsPanel.jsx";
+import TranslationTable from "./TranslationTable.jsx";
 
 let  FcoreEmulatorSidebar = props =>{
 
@@ -111,6 +112,10 @@ let  FcoreEmulatorSidebar = props =>{
                 on_add={props.on_add_breakpoint}
                 on_remove={props.on_remove_breakpoint}
                 selected_program={props.selections.program}
+                enable={props.selections.tab === 3}
+            />
+            <TranslationTable
+                data={props.translation_table}
                 enable={props.selections.tab === 3}
             />
         </>

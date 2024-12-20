@@ -178,6 +178,7 @@ let HilView = function (props) {
                     on_program_select={on_select_program}
                     on_add_breakpoint={handle_add_breakpoint}
                     on_remove_breakpoint={handle_remove_breakpoint}
+                    translation_table={debugger_data.asm.translation_table}
                     breakpoints={breakpoints}
                 />
             </div>

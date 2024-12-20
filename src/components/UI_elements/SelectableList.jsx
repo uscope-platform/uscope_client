@@ -42,11 +42,12 @@ export let  SelectableList = props =>{
         }
         return ret;
     }
-
-    return(
-        <SelectableListLayout style={props.style}>
-            {constructListContent(props.items, props.types)}
-        </SelectableListLayout>
-    );
+    if(props.items){
+        return(
+            <SelectableListLayout style={props.style}>
+                {constructListContent(props.items, props.types)}
+            </SelectableListLayout>
+        );
+    }
 };
 

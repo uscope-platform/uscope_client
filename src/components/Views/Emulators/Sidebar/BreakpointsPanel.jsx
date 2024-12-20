@@ -14,7 +14,7 @@
 // limitations under the License.
 
 
-import React, {useEffect} from 'react';
+import React from 'react';
 import { InputField, SelectableList, SimpleContent, UIPanel} from "../../../UI_elements/index.jsx";
 
 let  BreakpointsPanel = props =>{
