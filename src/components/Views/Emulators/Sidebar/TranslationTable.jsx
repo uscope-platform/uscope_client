@@ -24,12 +24,12 @@ let  TranslationTable = props =>{
 
     useEffect(() => {
         if(props.enable){
-            set_io_addr(props.data.map((line)=>{
+            set_io_addr(["IO Address", ...props.data.map((line)=>{
                 return line[0]
-            }));
-            set_core_addr(props.data.map((line)=>{
+            })]);
+            set_core_addr(["Core Address", ...props.data.map((line)=>{
                 return line[1]
-            }));
+            })]);
         }
     }, [props.data]);
 

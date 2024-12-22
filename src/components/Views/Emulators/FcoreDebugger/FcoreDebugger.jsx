@@ -21,18 +21,24 @@ import DebuggerControls from "./DebuggerControls";
 import {cpp} from "@codemirror/lang-cpp";
 import MemoryViewer from "./MemoryViewer.jsx";
 import {EditorView} from "codemirror";
+import IoViewer from "./IoViewer.jsx";
 
 let  FcoreDebugger = props =>{
 
-
+    let [current_memory, set_current_memory] = useState([]);
     let [current_line, set_current_line] = useState(0);
+    let [current_inputs, set_current_inputs] = useState({names:[], values:[]});
 
     let handle_run = async ()=>{
 
         let res = await props.emulator.debug_run();
         set_current_line(res.breakpoint);
-        console.log(res);
-        set_debugging(true);
+        set_current_memory(res.memory_view);
+
+        set_current_inputs({
+            names:Object.keys(res.inputs),
+            values: Object.values(res.inputs)
+        })
     }
 
     let handle_step = async () =>{
@@ -66,7 +72,7 @@ let  FcoreDebugger = props =>{
             <div style={{
                 display: "grid",
                 gap: 10,
-                gridTemplateRows: "3fr 1fr",
+                gridTemplateRows: "3fr 1fr"
             }}>
                 <div style={{
                     display: "grid",
@@ -75,16 +81,23 @@ let  FcoreDebugger = props =>{
                 }}>
                     <TextEditor
                         tab_name="Assembly"
+                        height="30em"
                         content={props.content.asm.program}
                         extensions={[Fcore(), highLight]}
                     />
                     <TextEditor
                         tab_name="C source"
+                        height="30em"
                         content={props.content.source}
                         extensions={[cpp()]}
                     />
+                    <MemoryViewer
+                        memory={current_memory}
+                    />
+                    <IoViewer
+                        io={{names: current_inputs.names, values: current_inputs.values}}
+                    />
                 </div>
-                <MemoryViewer/>
             </div>
         </div>
             );

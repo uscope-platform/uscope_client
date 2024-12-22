@@ -17,19 +17,12 @@
 import React from 'react';
 import {SelectableList, SimpleContent, UIPanel} from "../../../UI_elements/index.jsx";
 
-let  MemoryViewer = props =>{
+let  IoViewer = props =>{
 
-    const addresses = Array.from(Array(64).keys());
-
-    const data = props.memory.map(val=>{
-        let v = new DataView(new ArrayBuffer(4));
-        v.setUint32(0, val);
-        return v.getFloat32(0);
-    })
 
     return (
-        <UIPanel key="memory_viewer" style={{minHeight:"200px"}} level="level_2">
-            <SimpleContent name={"Memory Viewer"} content={[
+        <UIPanel key="io_viewer" style={{minHeight:"200px"}} level="level_2">
+            <SimpleContent name={"IO Viewer"} content={[
                 <div style={{
                     display: "grid",
                     gridTemplateColumns: "1fr 1fr",
@@ -37,12 +30,12 @@ let  MemoryViewer = props =>{
                 }}>
                     <div>
                         <SelectableList
-                            items={addresses}
+                            items={props.io.names}
                         />
                     </div>
                     <div>
                         <SelectableList
-                            items={data}
+                            items={props.io.values}
                         />
                     </div>
                 </div>
@@ -51,4 +44,4 @@ let  MemoryViewer = props =>{
     );
 };
 
-export default MemoryViewer;
+export default IoViewer;

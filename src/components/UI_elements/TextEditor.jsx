@@ -36,7 +36,7 @@ let TextEditor = props => {
             <CodeMirror
                 value={props.content}
                 width='auto'
-                height={InterfaceParameters.programs.editorHeight}
+                height={props.height ? props.height: InterfaceParameters.programs.editorHeight}
                 theme={darcula}
                 basicSetup={{
                     syntaxHighlighting: true
