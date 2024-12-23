@@ -22,6 +22,8 @@ import {cpp} from "@codemirror/lang-cpp";
 import MemoryViewer from "./MemoryViewer.jsx";
 import {EditorView} from "codemirror";
 import IoViewer from "./IoViewer.jsx";
+import {toast, ToastContainer} from "react-toastify";
+import {up_emulator_result} from "../../../../client_core/index.js";
 
 let  FcoreDebugger = props =>{
 
@@ -32,13 +34,20 @@ let  FcoreDebugger = props =>{
     let handle_run = async ()=>{
 
         let res = await props.emulator.debug_run();
-        set_current_line(res.breakpoint);
-        set_current_memory(res.memory_view);
+        if(res.status === "in_progress"){
+            set_current_line(res.breakpoint);
+            set_current_memory(res.memory_view);
 
-        set_current_inputs({
-            names:Object.keys(res.inputs),
-            values: Object.values(res.inputs)
-        })
+            set_current_inputs({
+                names:Object.keys(res.inputs),
+                values: Object.values(res.inputs)
+            })
+        } else {
+            let results = new up_emulator_result(res.emulation_result, {});
+            props.on_emulation_end(results);
+            toast.success('Emulation complete');
+        }
+
     }
 
     let handle_step = async () =>{
@@ -64,6 +73,18 @@ let  FcoreDebugger = props =>{
 
     return (
         <div>
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+            />
             <DebuggerControls
                 run={handle_run}
                 step={handle_step}

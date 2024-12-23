@@ -147,6 +147,7 @@ let HilView = function (props) {
                     />,
                     <FcoreDebugger
                         emulator={emulator}
+                        on_emulation_end={set_emulation_results}
                         selected_program={selections.program}
                         content={debugger_data}
                     />,
