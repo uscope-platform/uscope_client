@@ -14,18 +14,27 @@
 // limitations under the License.
 
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {SelectableList, SimpleContent, UIPanel} from "../../../UI_elements/index.jsx";
 
 let  MemoryViewer = props =>{
 
     const addresses = Array.from(Array(64).keys());
 
-    const data = props.memory.map(val=>{
-        let v = new DataView(new ArrayBuffer(4));
-        v.setUint32(0, val);
-        return v.getFloat32(0);
-    })
+    let [data, set_data] = useState([]);
+
+    useEffect(()=>{
+        debugger;
+        set_data( props.memory.map(val=>{
+            if(props.vis_type === "float"){
+                let v = new DataView(new ArrayBuffer(4));
+                v.setUint32(0, val);
+                return v.getFloat32(0);
+            } else {
+                return val;
+            }
+        }));
+    }, [props.memory, props.vis_type]);
 
     return (
         <UIPanel key="memory_viewer" style={{minHeight:"200px"}} level="level_2">

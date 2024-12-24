@@ -20,6 +20,18 @@ import {SelectableList, SimpleContent, UIPanel} from "../../../UI_elements/index
 let  IoViewer = props =>{
 
 
+
+    const data = props.io.values.map(val=>{
+        if(props.vis_type === "float"){
+            let v = new DataView(new ArrayBuffer(4));
+            v.setUint32(0, val);
+            return v.getFloat32(0);
+        } else {
+            return val;
+        }
+    })
+
+
     return (
         <UIPanel key="io_viewer" style={{minHeight:"200px"}} level="level_2">
             <SimpleContent name={"IO Viewer"} content={[
@@ -30,12 +42,11 @@ let  IoViewer = props =>{
                 }}>
                     <div>
                         <SelectableList
-                            items={props.io.names}
                         />
                     </div>
                     <div>
                         <SelectableList
-                            items={props.io.values}
+                            items={data}
                         />
                     </div>
                 </div>

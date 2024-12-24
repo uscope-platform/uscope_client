@@ -32,7 +32,7 @@ export let  SelectableList = props =>{
             ret.push(
                 <SelectableListItem
                     multi_select={props.multi_select}
-                    key={names[i]}
+                    key={Math.random().toString(36).slice(2, 7)}
                     onRemove={props.onRemove}
                     onSelect={props.onSelect}
                     selected={selected}
@@ -42,6 +42,7 @@ export let  SelectableList = props =>{
         }
         return ret;
     }
+
     if(props.items){
         return(
             <SelectableListLayout style={props.style}>

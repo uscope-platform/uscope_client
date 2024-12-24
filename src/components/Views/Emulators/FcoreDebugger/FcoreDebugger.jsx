@@ -27,6 +27,7 @@ import {up_emulator_result} from "../../../../client_core/index.js";
 
 let  FcoreDebugger = props =>{
 
+    let [visualization_type, set_visualization_type] = useState("float");
     let [current_memory, set_current_memory] = useState([]);
     let [current_line, set_current_line] = useState(0);
     let [current_inputs, set_current_inputs] = useState({names:[], values:[]});
@@ -86,6 +87,7 @@ let  FcoreDebugger = props =>{
                 theme="dark"
             />
             <DebuggerControls
+                select_types={set_visualization_type}
                 run={handle_run}
                 step={handle_step}
                 resume={handle_resume}
@@ -113,9 +115,11 @@ let  FcoreDebugger = props =>{
                         extensions={[cpp()]}
                     />
                     <MemoryViewer
+                        vis_type={visualization_type}
                         memory={current_memory}
                     />
                     <IoViewer
+                        vis_type={visualization_type}
                         io={{names: current_inputs.names, values: current_inputs.values}}
                     />
                 </div>

@@ -15,27 +15,40 @@
 
 
 import React from 'react';
-import {ColorTheme} from "../../../UI_elements/index.jsx";
-import { MdPlayArrow, MdArrowRightAlt, MdStart} from "react-icons/md";
+import {ColorTheme, SelectField} from "../../../UI_elements/index.jsx";
+import { MdPlayArrow, MdWrapText, MdStart} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
 
 let  DebuggerControls = props =>{
 
+    let handle_types_select = (val)=>{
+        props.select_types(val.value)
+    }
+
     return (
         <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
+            <SelectField
+                defaultValue={{value: "float", label: "float"}}
+                name="type_selector"
+                onChange={handle_types_select}
+                options={[
+                    {value:"float",label:"float"},
+                    {value:"int",label:"int"}
+                ]}
+            />
             <div key="run" id="run">
                 <MdPlayArrow onClick={props.run} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
                              color={ColorTheme.icons_color}/>
                 <Tooltip anchorSelect="run" content={"run"} place="top"/>
             </div>
             <div key="step" id="step">
-                <MdArrowRightAlt onClick={props.step} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
-                                 color={ColorTheme.icons_color}/>
+                <MdWrapText onClick={props.step} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
+                            color={ColorTheme.icons_color}/>
                 <Tooltip anchorSelect="step" content={"Step over"} place="top"/>
             </div>
             <div key="resume" id="resume">
                 <MdStart onClick={props.resume} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
-                                 color={ColorTheme.icons_color}/>
+                         color={ColorTheme.icons_color}/>
                 <Tooltip anchorSelect="resume" content={"Resume"} place="top"/>
             </div>
         </div>
