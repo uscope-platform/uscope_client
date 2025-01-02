@@ -24,7 +24,6 @@ let  MemoryViewer = props =>{
     let [data, set_data] = useState([]);
 
     useEffect(()=>{
-        debugger;
         set_data( props.memory.map(val=>{
             if(props.vis_type === "float"){
                 let v = new DataView(new ArrayBuffer(4));

@@ -36,9 +36,8 @@ let  FcoreDebugger = props =>{
 
         let res = await props.emulator.debug_run();
         if(res.status === "in_progress"){
-            set_current_line(res.breakpoint);
+            set_current_line(res.breakpoint+1);
             set_current_memory(res.memory_view);
-
             set_current_inputs({
                 names:Object.keys(res.inputs),
                 values: Object.values(res.inputs)
@@ -52,7 +51,20 @@ let  FcoreDebugger = props =>{
     }
 
     let handle_step = async () =>{
-        await props.emulator.step_over(props.selected_program);
+        let results = await props.emulator.step_over(props.selected_program);
+        if(results.status === "in_progress"){
+            if(results.completed_round){
+                props.on_program_select(results.next_program);
+            }
+            set_current_line( results.breakpoint+1);
+            set_current_memory(results.memory_view);
+            set_current_inputs({
+                names:Object.keys(results.inputs),
+                values: Object.values(results.inputs)
+            })
+        }else {
+
+        }
     }
 
     let handle_resume = async () =>{

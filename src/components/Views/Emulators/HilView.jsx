@@ -86,8 +86,9 @@ let HilView = function (props) {
         set_debugger_data({asm:compiled_programs[value], source:src});
 
 
-       let bps= await props.emulator.get_breakpoints(props.selected_program);
-       set_breakpoints(bps);
+       let bps= await emulator.get_breakpoints(value);
+
+       set_breakpoints(bps.map(b=>b+1));
     }
 
 
@@ -104,12 +105,14 @@ let HilView = function (props) {
 
     let handle_add_breakpoint = async (value) =>{
         let vv = parseInt(value);
-        await emulator.add_breakpoint(selections.program, vv);
-        set_breakpoints([...breakpoints, vv]);
+        if(vv>0){
+            await emulator.add_breakpoint(selections.program, (vv-1));
+            set_breakpoints([...breakpoints, (vv)]);
+        }
     }
 
     let handle_remove_breakpoint = async (raw_val) =>{
-        await emulator.remove_breakpoint(selections.program, raw_val);
+        await emulator.remove_breakpoint(selections.program, raw_val-1);
         let new_breakpoints = breakpoints.filter(b =>{
             return b !== raw_val;
         });
@@ -149,6 +152,7 @@ let HilView = function (props) {
                         emulator={emulator}
                         on_emulation_end={set_emulation_results}
                         selected_program={selections.program}
+                        on_program_select={on_select_program}
                         content={debugger_data}
                     />,
                     <div>
