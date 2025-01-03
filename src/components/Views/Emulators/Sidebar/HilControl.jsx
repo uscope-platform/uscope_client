@@ -23,20 +23,18 @@ let  HilControl = props =>{
         props.onDownloadHilData(true);
     }, [])
 
-    if(props.enabled){
-        return(
-            <UIPanel key="trigger" style={{padding:10}} level="level_2">
-                <SimpleContent name="Trigger and Acquisition" content={
-                    <TriggerControls
-                        onPlay={props.onStart}
-                        onPause={props.onPause}
-                        onStop={props.onStop}
-                        onDownload={handle_download}
-                    />
-                }/>
-            </UIPanel>
-        );
-    }
+    return(
+        <UIPanel key="trigger" style={{padding:10}} level="level_2">
+            <SimpleContent name="Trigger and Acquisition" content={
+                <TriggerControls
+                    onPlay={props.onStart}
+                    onPause={props.onPause}
+                    onStop={props.onStop}
+                    onDownload={handle_download}
+                />
+            }/>
+        </UIPanel>
+    );
 
 
 };

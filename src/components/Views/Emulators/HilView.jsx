@@ -15,15 +15,14 @@
 
 import React, {useState} from 'react';
 
-import FcoreEmulationEditor from "./Editor/FcoreEmulationEditor";
 import {TabbedContent, UIPanel} from "../../UI_elements"
-import EmulationResults from "./EmulationResults";
-import HilPlotTab from "./HilControl/HilPlotTab";
-import FcoreEmulatorSidebar from "./Sidebar/FcoreEmulatorSidebar";
 import {up_emulator} from "../../../client_core/index.js";
 import {useSelector} from "react-redux";
-import FcoreDebugger from "./FcoreDebugger/FcoreDebugger.jsx";
-import SpecViewer from "./SpecViewer.jsx";
+import HilEditorView from "./Editor/HilEditorView.jsx";
+import HilDebuggerView from "./FcoreDebugger/HilDebuggerView.jsx";
+import HilControlView from "./HilControl/HilControlView.jsx";
+import HilResultsView from "./EmulationResults/HilResultsView.jsx";
+import HilSpecsView from "./Specs/HilSpecsView.jsx";
 
 let HilView = function (props) {
 
@@ -119,56 +118,55 @@ let HilView = function (props) {
             gap:10,
             height:"100%"
         }}>
-            <UIPanel style={{flexGrow:1}} key="emulator_diagram" level="level_2">
-                <TabbedContent height="100%" names={["Emulation setup", "Emulation Results", "Hil Scope", "Asm viewer", "HIL Spec Viewer"]} contents={[
-                    <FcoreEmulationEditor
-                        onEmulationDone={set_emulation_results}
-                        onInputDataChange={set_input_data}
+              <UIPanel style={{flexGrow:1}} key="emulator_diagram" level="level_2">
+                <TabbedContent height="100%" names={["Editor","Debugger","Hardware",  "Results", "Specs"]} contents={[
+                    <HilEditorView
+                        set_emulation_results={set_emulation_results}
+                        set_input_data={set_input_data}
                         input_data={input_data}
                         onDeploy={()=>{set_deployed(true)}}
                         emulator={emulator}
                         selections={selections}
-                        on_selection={set_selections}
-                        on_show_disassembly={set_compiled_programs}
+                        set_selections={set_selections}
+                        set_compiled_programs={set_compiled_programs}
                         on_compile_done={set_compiler_warnings}
+                        on_emulator_select={handle_emulator_select}
+                        compiler_warnings={compiler_warnings}
                     />,
-                    <EmulationResults results={emulation_results} inputs={input_data}/>,
-                    <HilPlotTab
-                        deployed={deployed}
+                    <HilDebuggerView
                         emulator={emulator}
-                        hil_plot_running={hil_plot_running}
-                        download_data_request={download_data_request}
-                        on_download_done={set_download_data_request}
-                    />,
-                    <FcoreDebugger
-                        emulator={emulator}
-                        on_emulation_end={set_emulation_results}
-                        selected_program={selections.program}
+                        selections={selections}
+                        set_selections={set_selections}
+                        on_select={handle_emulator_select}
                         on_program_select={on_select_program}
-                        translation_table={debugger_data.asm.translation_table}
-                        content={debugger_data}
+                        compiled_programs={compiled_programs}
+                        breakpoints={breakpoints}
+                        on_add_breakpoint={handle_add_breakpoint}
+                        on_remove_breakpoint={handle_remove_breakpoint}
+                        debugger_data={debugger_data}
+                        set_emulation_results={set_emulation_results}
                     />,
-                    <SpecViewer
+                    <HilControlView
                         emulator={emulator}
+                        deployed={deployed}
+                        selections={selections}
+                        set_selections={set_selections}
+                        on_select={handle_emulator_select}
+                        hil_plot_running={hil_plot_running}
+                        set_hil_plot_running={set_hil_plot_running}
+                        set_download_data_request={set_download_data_request}
+                        download_data_request={download_data_request}
+                    />,
+                    <HilResultsView
+                        emulation_results={emulation_results}
+                        input_data={input_data}
+                    />,
+                    <HilSpecsView
+                        emulator={emulator}
+                        handle_select_emulator={handle_emulator_select}
                     />
                 ]} onSelect={on_select} selected={selections.tab}/>
             </UIPanel>
-            <FcoreEmulatorSidebar
-                selected_component={selections.component}
-                on_select={handle_emulator_select}
-                on_selection={set_selections}
-                selections={selections}
-                emulator={emulator}
-                on_plot_status_update={set_hil_plot_running}
-                hil_plot_running={hil_plot_running}
-                onDownloadHilData={set_download_data_request}
-                compile_warning={compiler_warnings}
-                compiled_programs={compiled_programs}
-                on_program_select={on_select_program}
-                on_add_breakpoint={handle_add_breakpoint}
-                on_remove_breakpoint={handle_remove_breakpoint}
-                breakpoints={breakpoints}
-            />
         </div>
 
     );

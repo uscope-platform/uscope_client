@@ -161,7 +161,7 @@ let FcoreEmulationEditor = function (props) {
         let asm = await props.emulator.disassemble();
         props.on_show_disassembly(asm);
         await  props.emulator.debug_init();
-        props.on_selection({...props.selections, tab:3});
+        props.on_selection({...props.selections, tab:1});
     }
 
     let handle_deploy = () =>{
@@ -249,7 +249,8 @@ let FcoreEmulationEditor = function (props) {
                 display:"flex",
                 flexDirection: "column",
                 gap:10,
-                margin:10
+                minWidth:0,
+                flexGrow:1
             }}>
                 <ToastContainer
                     position="top-right"

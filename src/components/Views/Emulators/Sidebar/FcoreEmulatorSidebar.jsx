@@ -18,7 +18,7 @@ import React from 'react';
 import {useSelector} from "react-redux";
 
 import {set_channel_status, up_emulator} from "../../../../client_core";
-import SidebarBase from "../../../UI_elements/Sidebar/SidebarBase";
+import {SidebarBase} from "../../../UI_elements";
 import EmulatorNodeProperties from "./NodesSidebar/EmulatorNodeProperties";
 import EmulatorEdgeProperties from "./EdgesSidebar/EmulatorEdgeProperties";
 import EmulatorProperties from "./EmulatorProperties";
@@ -79,14 +79,14 @@ let  FcoreEmulatorSidebar = props =>{
                 onSelect={handle_select_emulator}
             />
             <EmulatorNodeProperties
-                enabled={sel_component_type==="node"}
+                enabled={props.selections.tab===0 && sel_component_type==="node"}
                 selected_emulator={props.emulator}
                 on_iom_modify={handle_node_iom_modify}
                 selected_component={props.selections.component}
                 selected_iom={props.selections.iom}
             />
             <EmulatorEdgeProperties
-                enabled={sel_component_type==="edge"}
+                enabled={ props.selections.tab===0 && sel_component_type==="edge"}
                 selected_emulator={props.emulator}
                 selected_component={props.selections.component}
             />

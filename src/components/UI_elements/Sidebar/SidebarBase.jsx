@@ -21,7 +21,7 @@ import 'react-tooltip/dist/react-tooltip.css'
 import SideToolbar from "./SideToolbar";
 import {download_json, get_next_id, upload_json} from "../../../client_core";
 
-let  SidebarBase = props =>{
+export let SidebarBase = props =>{
 
     const [selected, set_selected] = useState(null);
 
@@ -159,5 +159,3 @@ let  SidebarBase = props =>{
     );
 
 };
-
-export default SidebarBase;

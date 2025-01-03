@@ -19,19 +19,17 @@ import {SimpleContent, UIPanel} from "../../../UI_elements/index.jsx";
 
 let  ProgressPanel = props =>{
 
+    return (
+        <UIPanel key="progress_panel" style={{minHeight:"200px"}} level="level_2">
+            <SimpleContent name={"Progress"} content={[
+                <div
+                    key="progress_panel_content"
+                >
+                </div>
+            ]}/>
 
-    if(props.enable)
-        return (
-            <UIPanel key="progress_panel" style={{minHeight:"200px"}} level="level_2">
-                <SimpleContent name={"Progress"} content={[
-                    <div
-                        key="progress_panel_content"
-                    >
-                    </div>
-                ]}/>
-
-            </UIPanel>
-        );
+        </UIPanel>
+    );
 };
 
 export default ProgressPanel;

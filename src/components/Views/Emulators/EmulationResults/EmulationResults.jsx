@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React, { useReducer, useState} from 'react';
-import {ColorTheme, PlotConfigurations, SelectableList, SimpleContent, UIPanel} from "../../UI_elements";
+import {ColorTheme, PlotConfigurations, SelectableList, SimpleContent, UIPanel} from "../../../UI_elements";
 import createPlotlyComponent from "react-plotly.js/factory";
 import Plotly from "plotly.js-basic-dist";
 
@@ -85,7 +85,9 @@ let EmulationResults = function (props) {
             flexDirection:"column",
             gap:10,
             height:"100%",
-            margin:10
+            margin:10,
+            flexGrow:1,
+            minWidth:0
         }}>
             <UIPanel key="emulation_result_plots" level="level_2">
                 <SimpleContent name="Results Plot" height="100%" content={

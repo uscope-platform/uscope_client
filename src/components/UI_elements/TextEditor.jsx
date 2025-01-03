@@ -22,7 +22,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import {InterfaceParameters} from "./InterfaceParameters.js";
 
-let TextEditor = props => {
+export let TextEditor = props => {
 
     return (
         <div style={{
@@ -50,5 +50,3 @@ let TextEditor = props => {
 
 
 }
-
-export default TextEditor;

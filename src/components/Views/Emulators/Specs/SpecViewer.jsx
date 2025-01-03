@@ -14,11 +14,10 @@
 // limitations under the License.
 
 import React from 'react';
-import {ColorTheme} from "../../UI_elements";
+import {ColorTheme, TextEditor} from "../../../UI_elements";
 import {MdSave} from "react-icons/md";
-import TextEditor from "../../UI_elements/TextEditor.jsx";
 import {json} from "@codemirror/lang-json";
-import {download_json} from "../../../client_core/index.js";
+import {download_json} from "../../../../client_core/index.js";
 
 
 
@@ -32,12 +31,15 @@ let SpecViewer = function (props) {
     }
 
     return (
-        <div>
+        <div style={{
+            flexGrow:1,
+            minWidth:0
+        }}>
             <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
                 <MdSave onClick={handle_download_json} size={ColorTheme.icons_size}/>
             </div>
             <TextEditor
-                tab_name="HIL spec Viewer"
+                height="55em"
                 content={artifact_string}
                 extensions={[json()]}
             />

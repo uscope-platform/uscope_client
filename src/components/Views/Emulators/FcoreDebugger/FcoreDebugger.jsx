@@ -16,7 +16,7 @@
 
 import React, {useState} from 'react';
 import {Fcore} from "./FcoreLanguage.js";
-import TextEditor from "../../../UI_elements/TextEditor.jsx";
+import {TextEditor} from "../../../UI_elements";
 import DebuggerControls from "./DebuggerControls";
 import {cpp} from "@codemirror/lang-cpp";
 import MemoryViewer from "./MemoryViewer.jsx";
@@ -86,7 +86,7 @@ let  FcoreDebugger = props =>{
 
 
     return (
-        <div>
+        <div style={{flexGrow:1}}>
             <ToastContainer
                 position="top-right"
                 autoClose={5000}
@@ -157,7 +157,7 @@ let  FcoreDebugger = props =>{
                         gridArea: "2 / 5 / 3 / 7"
                     }}>
                         <TranslationTable
-                            data={props.translation_table}
+                            data={props.content.asm.translation_table}
                         />
                     </div>
                 </div>

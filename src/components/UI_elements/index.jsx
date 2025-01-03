@@ -36,6 +36,9 @@ export {Chip} from "./Chip"
 export {Radio} from "./Radio"
 export {ToggleField} from "./ToggleField"
 export {RangedInputField} from "./RangedInputField"
+export {TextEditor} from "./TextEditor.jsx"
+
+export {SidebarBase} from "./Sidebar/SidebarBase.jsx"
 
 export {FormLayout} from "./Layouts/FormLayout"
 export {SidebarCollapsableNameLayout} from "./Layouts/SidebarCollapsableNameLayout"

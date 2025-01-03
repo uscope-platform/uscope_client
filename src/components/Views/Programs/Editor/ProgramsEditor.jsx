@@ -18,13 +18,12 @@ import React, {useState, useEffect} from "react";
 import {cpp} from '@codemirror/lang-cpp'
 import {Tooltip} from "react-tooltip";
 import {MdSave, MdBuild} from 'react-icons/md'
-import {ColorTheme} from "../../../UI_elements";
+import {ColorTheme, TextEditor} from "../../../UI_elements";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { up_program} from "../../../../client_core";
 import LoadSelector from "./LoadSelector";
-import TextEditor from "../../../UI_elements/TextEditor.jsx";
 
 
 let ProgramsEditor = props =>{

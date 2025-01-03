@@ -18,7 +18,7 @@ import React, {useContext, useReducer} from 'react';
 import {useSelector} from "react-redux";
 import {up_program} from "../../../client_core";
 
-import SidebarBase from "../../UI_elements/Sidebar/SidebarBase";
+import {SidebarBase} from "../../UI_elements";
 import {ApplicationContext} from "../../../AuthApp";
 
 

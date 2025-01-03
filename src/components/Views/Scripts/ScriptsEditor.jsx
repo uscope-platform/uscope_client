@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React, {useState, useEffect} from "react";
-import {ColorTheme} from "../../UI_elements"
+import {ColorTheme, TextEditor} from "../../UI_elements"
 
 import { javascript } from '@codemirror/lang-javascript';
 import { autocompletion } from '@codemirror/autocomplete';
@@ -23,8 +23,6 @@ import {
 } from "../../../client_core";
 import {MdSave} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
-import TextEditor from "../../UI_elements/TextEditor.jsx";
-
 
 let ScriptsEditor = props =>{
     const [editor_content, set_editor_content] = useState("");
@@ -74,7 +72,7 @@ let ScriptsEditor = props =>{
             <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
                 <div id="save_icon">
                     <MdSave onClick={handle_save} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={save_color}/>
-                    <Tooltip anchorId="save_icon" content="Save Program" place="top" />
+                    <Tooltip content="Save Program" place="top" />
                 </div>
             </div>
             <TextEditor

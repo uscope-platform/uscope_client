@@ -25,7 +25,6 @@ let  BreakpointsPanel = props =>{
         }
     }
 
-    if(props.enable)
     return (
         <UIPanel key="breakpoints" style={{minHeight:"200px"}} level="level_2">
             <SimpleContent name={"Breakpoints"} content={[

@@ -1,4 +1,4 @@
-// Copyright 2021 University of Nottingham Ningbo China
+// Copyright 2025 Filippo Savi
 // Author: Filippo Savi <filssavi@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,29 +14,27 @@
 // limitations under the License.
 
 import React from 'react';
+import HilSpecsSidebar from "../Sidebar/per_panel_sidebars/HilSpecsSidebar.jsx";
+import SpecViewer from "./SpecViewer.jsx";
 
-import {useSelector} from "react-redux";
-import {up_filter} from "../../../client_core";
-import {SidebarBase} from "../../UI_elements";
-
-
-let  FilterSidebar = props =>{
-
-    const filters_store = useSelector(state => state.filters);
+let HilSpecsView = function (props) {
 
     return(
-        <SidebarBase
-            objects={filters_store}
-            selection_key="id"
-            template={up_filter}
-            display_key="name"
-            content_name="Filter"
-            selector="selected_filter"
-            onSelect={props.on_select}
-        />
+        <div style={{
+            display:"flex",
+            flexDirection:"row",
+            gap:10,
+            height:"100%"
+        }}>
+            <SpecViewer
+                emulator={props.emulator}
+            />
+            <HilSpecsSidebar
+                handle_select_emulator={props.handle_select_emulator}
+            />
+        </div>
+
     );
 };
 
-export default FilterSidebar;
-
-
+export default HilSpecsView;
