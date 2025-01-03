@@ -45,12 +45,12 @@ let EmulatorDiagram = function (props) {
         onClick(event, edge);
     };
 
-    let handle_canvas_click = (event) => {
+    let handle_canvas_click = () => {
         props.onCanvasClick();
         onCanvasClick();
     };
 
-    let handle_layout_change = (layout) => {
+    let handle_layout_change = () => {
         //console.log('Layout', layout);
     }
 
