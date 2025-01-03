@@ -15,26 +15,25 @@
 
 import React, {useEffect, useState} from 'react';
 import {MdAdd} from "react-icons/md";
-import {SelectableList} from "../../UI_elements";
+import {SelectableList} from "../../../UI_elements";
 
-let  CoreInputsList = props =>{
+let  CoreOutputsList = props =>{
 
     let selected_core_id = props.selected_component ? props.selected_component.obj.id : null;
 
     let [selected, set_selected] = useState(null);
 
-    let [inputs, set_inputs] = useState([]);
+    let [outputs, set_outputs] = useState([]);
 
     useEffect(() => {
         if(props.selected_component && props.selected_component.type === "node"){
-            set_inputs(props.emulator.get_input_names(selected_core_id));
-        } else set_inputs([]);
+            set_outputs(props.emulator.get_output_names(selected_core_id));
+        } else set_outputs([]);
     }, [props.selected_component]);
-
 
     useEffect(() => {
         if(props.selected_iom){
-            if(props.selected_iom.type !== "inputs"){
+            if(props.selected_iom.type !== "outputs"){
                 set_selected(null);
             }
         }
@@ -43,22 +42,21 @@ let  CoreInputsList = props =>{
 
 
     let handle_add = () =>{
-        props.emulator.add_input(selected_core_id, inputs.length).then(()=>{
-            set_inputs(props.emulator.get_input_names(selected_core_id));
+        props.emulator.add_output(selected_core_id, outputs.length).then(()=>{
+            set_outputs(props.emulator.get_output_names(selected_core_id));
         });
     }
 
     let handle_remove = (removed_item) =>{
-        props.emulator.remove_input(selected_core_id, removed_item).then(()=>{
-            set_inputs(props.emulator.get_input_names(selected_core_id));
+        props.emulator.remove_output(selected_core_id, removed_item).then(()=>{
+            set_outputs(props.emulator.get_output_names(selected_core_id));
         });
     }
 
     let handle_select = (args) =>{
-        props.on_selection({type:"inputs", obj:args})
+        props.on_selection({type:"outputs", obj:args});
         set_selected(args)
     }
-
 
     return (
         <div>
@@ -69,10 +67,10 @@ let  CoreInputsList = props =>{
             }}>
                 <MdAdd style={{marginLeft: "auto"}} onClick={handle_add}/>
             </div>
-            <SelectableList items={inputs} selected_item={selected} onSelect={handle_select}
+            <SelectableList items={outputs} selected_item={selected} onSelect={handle_select}
                             onRemove={handle_remove}/>
         </div>
     );
 };
 
-export default CoreInputsList;
+export default CoreOutputsList;

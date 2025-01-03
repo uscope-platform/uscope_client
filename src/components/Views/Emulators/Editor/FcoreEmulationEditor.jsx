@@ -19,13 +19,13 @@ import {ToastContainer, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 import EmulatorDiagram from "./EmulatorDiagram";
-import {up_emulator_result} from "../../../client_core";
-import {SimpleContent, TabbedContent, UIPanel} from "../../UI_elements";
+import {up_emulator_result} from "../../../../client_core";
+import {SimpleContent, TabbedContent, UIPanel} from "../../../UI_elements";
 import CoreInputsList from "./CoreInputsList";
 import CoreOutputsList from "./CoreOutputsList";
 import CoreMemoriesList from "./CoreMemoriesList";
 import CoreInputFilesList from "./CoreInputFilesList";
-import {ApplicationContext} from "../../../AuthApp";
+import {ApplicationContext} from "../../../../AuthApp";
 
 
 let FcoreEmulationEditor = function (props) {
@@ -135,8 +135,6 @@ let FcoreEmulationEditor = function (props) {
     }
 
     let handle_build = () =>{
-        let product = props.emulator.build();
-        props.on_show_json(JSON.stringify(product, null, 4));
         props.on_selection({...props.selections, tab:4});
     }
 

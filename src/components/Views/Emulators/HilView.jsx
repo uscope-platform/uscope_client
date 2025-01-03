@@ -15,17 +15,15 @@
 
 import React, {useState} from 'react';
 
-import FcoreEmulationEditor from "./FcoreEmulationEditor";
-import {ColorTheme, TabbedContent, UIPanel} from "../../UI_elements"
+import FcoreEmulationEditor from "./Editor/FcoreEmulationEditor";
+import {TabbedContent, UIPanel} from "../../UI_elements"
 import EmulationResults from "./EmulationResults";
 import HilPlotTab from "./HilControl/HilPlotTab";
 import FcoreEmulatorSidebar from "./Sidebar/FcoreEmulatorSidebar";
-import {json} from "@codemirror/lang-json";
-import TextEditor from "../../UI_elements/TextEditor.jsx";
-import {MdSave} from "react-icons/md";
-import {download_json, up_emulator} from "../../../client_core/index.js";
+import {up_emulator} from "../../../client_core/index.js";
 import {useSelector} from "react-redux";
 import FcoreDebugger from "./FcoreDebugger/FcoreDebugger.jsx";
+import SpecViewer from "./SpecViewer.jsx";
 
 let HilView = function (props) {
 
@@ -50,7 +48,6 @@ let HilView = function (props) {
     let [deployed, set_deployed] = useState(false);
 
     let [compiled_programs, set_compiled_programs] = useState({});
-    let [hil_json, set_hil_json] = useState(null);
 
     let[ debugger_data, set_debugger_data] = useState({asm:"", source:""});
 
@@ -99,10 +96,6 @@ let HilView = function (props) {
         set_breakpoints([]);
     }
 
-    let handle_download_json = ()=>{
-        download_json(hil_json, emulator.name + "_artifact");
-    }
-
     let handle_add_breakpoint = async (value) =>{
         let vv = parseInt(value);
         if(vv>0){
@@ -137,7 +130,6 @@ let HilView = function (props) {
                         selections={selections}
                         on_selection={set_selections}
                         on_show_disassembly={set_compiled_programs}
-                        on_show_json={set_hil_json}
                         on_compile_done={set_compiler_warnings}
                     />,
                     <EmulationResults results={emulation_results} inputs={input_data}/>,
@@ -156,17 +148,9 @@ let HilView = function (props) {
                         translation_table={debugger_data.asm.translation_table}
                         content={debugger_data}
                     />,
-                    <div>
-
-                        <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
-                            <MdSave onClick={handle_download_json} size={ColorTheme.icons_size}/>
-                        </div>
-                            <TextEditor
-                                tab_name="HIL spec Viewer"
-                                content={hil_json}
-                                extensions={[json()]}
-                            />
-                        </div>
+                    <SpecViewer
+                        emulator={emulator}
+                    />
                 ]} onSelect={on_select} selected={selections.tab}/>
             </UIPanel>
             <FcoreEmulatorSidebar

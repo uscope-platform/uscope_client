@@ -15,26 +15,26 @@
 
 import React, {useEffect, useState} from 'react';
 import {MdAdd} from "react-icons/md";
-import {SelectableList} from "../../UI_elements";
+import {SelectableList} from "../../../UI_elements";
 
-
-let  CoreMemoriesList = props =>{
+let  CoreInputsList = props =>{
 
     let selected_core_id = props.selected_component ? props.selected_component.obj.id : null;
 
     let [selected, set_selected] = useState(null);
 
-    let [memories, set_memories] = useState([]);
+    let [inputs, set_inputs] = useState([]);
 
     useEffect(() => {
         if(props.selected_component && props.selected_component.type === "node"){
-            set_memories(props.emulator.get_memory_names(selected_core_id));
-        } else set_memories([]);
+            set_inputs(props.emulator.get_input_names(selected_core_id));
+        } else set_inputs([]);
     }, [props.selected_component]);
+
 
     useEffect(() => {
         if(props.selected_iom){
-            if(props.selected_iom.type !== "memory_init"){
+            if(props.selected_iom.type !== "inputs"){
                 set_selected(null);
             }
         }
@@ -43,21 +43,22 @@ let  CoreMemoriesList = props =>{
 
 
     let handle_add = () =>{
-        props.emulator.add_memory(selected_core_id, memories.length).then(()=>{
-            set_memories(props.emulator.get_memory_names(selected_core_id));
+        props.emulator.add_input(selected_core_id, inputs.length).then(()=>{
+            set_inputs(props.emulator.get_input_names(selected_core_id));
         });
     }
 
     let handle_remove = (removed_item) =>{
-        props.emulator.remove_memory(selected_core_id, removed_item).then(()=>{
-            set_memories(props.emulator.get_memory_names(selected_core_id));
+        props.emulator.remove_input(selected_core_id, removed_item).then(()=>{
+            set_inputs(props.emulator.get_input_names(selected_core_id));
         });
     }
 
     let handle_select = (args) =>{
-        props.on_selection({type:"memory_init", obj:args});
+        props.on_selection({type:"inputs", obj:args})
         set_selected(args)
     }
+
 
     return (
         <div>
@@ -68,10 +69,10 @@ let  CoreMemoriesList = props =>{
             }}>
                 <MdAdd style={{marginLeft: "auto"}} onClick={handle_add}/>
             </div>
-            <SelectableList items={memories} selected_item={selected} onSelect={handle_select}
+            <SelectableList items={inputs} selected_item={selected} onSelect={handle_select}
                             onRemove={handle_remove}/>
         </div>
     );
 };
 
-export default CoreMemoriesList;
+export default CoreInputsList;
