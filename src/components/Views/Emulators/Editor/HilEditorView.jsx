@@ -13,12 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import React, {useState} from 'react';
 
 import FcoreEmulationEditor from "./../Editor/FcoreEmulationEditor";
 import HilEditorSidebar from "../Sidebar/per_panel_sidebars/HilEditorSidebar.jsx";
 
 let HilEditorView = function (props) {
+
+    let [compiler_warnings, set_compiler_warnings] = useState(null);
 
     return(
         <div style={{
@@ -36,7 +38,7 @@ let HilEditorView = function (props) {
                 selections={props.selections}
                 on_selection={props.set_selections}
                 on_debug={props.set_compiled_programs}
-                set_compiler_warnings={props.set_compiler_warnings}
+                set_compiler_warnings={set_compiler_warnings}
                 on_compile_done={props.on_compile_done}
             />
             <HilEditorSidebar
@@ -44,7 +46,7 @@ let HilEditorView = function (props) {
                 on_select={props.on_emulator_select}
                 selections={props.selections}
                 on_selection={props.set_selections}
-                compile_warning={props.compiler_warnings}
+                compile_warning={compiler_warnings}
             />
         </div>
 

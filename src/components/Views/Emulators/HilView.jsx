@@ -34,24 +34,13 @@ let HilView = function (props) {
     })
 
 
-    let [breakpoints, set_breakpoints] = useState([]);
-
-
-    let [compiler_warnings, set_compiler_warnings] = useState(null);
-
-    let [hil_plot_running, set_hil_plot_running] = useState(false);
-    let [download_data_request, set_download_data_request] = useState(null);
-
     let [emulation_results, set_emulation_results] = useState({});
     let [input_data, set_input_data] = useState({});
     let [deployed, set_deployed] = useState(false);
 
     let [compiled_programs, set_compiled_programs] = useState({});
 
-    let[ debugger_data, set_debugger_data] = useState({asm:"", source:""});
-
     const emulators_store = useSelector(state => state.emulators);
-    const programs_store = useSelector(state => state.programs);
 
     let [emulator, set_emulator] = useState({
         name:"",
@@ -71,45 +60,12 @@ let HilView = function (props) {
         set_selections({...selections, tab:value});
     }
 
-    let on_select_program = async (value)=>{
-        set_selections({...selections, program: value});
-        let program = Object.values(emulator.cores).filter(c =>{
-            return c.name === value;
-        })[0].program;
-        let src = Object.values(programs_store).filter(p =>{
-            return p.name === program;
-        })[0].content;
-        set_debugger_data({asm:compiled_programs[value], source:src});
-
-
-       let bps= await emulator.get_breakpoints(value);
-
-       set_breakpoints(bps.map(b=>b+1));
-    }
-
 
     let handle_emulator_select = (emu)=>{
-
         set_emulator(new up_emulator(emulators_store[emu]));
         set_selections({...selections, component: null});
-        set_breakpoints([]);
     }
 
-    let handle_add_breakpoint = async (value) =>{
-        let vv = parseInt(value);
-        if(vv>0){
-            await emulator.add_breakpoint(selections.program, (vv-1));
-            set_breakpoints([...breakpoints, (vv)]);
-        }
-    }
-
-    let handle_remove_breakpoint = async (raw_val) =>{
-        await emulator.remove_breakpoint(selections.program, raw_val-1);
-        let new_breakpoints = breakpoints.filter(b =>{
-            return b !== raw_val;
-        });
-        set_breakpoints(new_breakpoints);
-    }
 
     return(
         <div style={{
@@ -129,21 +85,14 @@ let HilView = function (props) {
                         selections={selections}
                         set_selections={set_selections}
                         set_compiled_programs={set_compiled_programs}
-                        on_compile_done={set_compiler_warnings}
                         on_emulator_select={handle_emulator_select}
-                        compiler_warnings={compiler_warnings}
                     />,
                     <HilDebuggerView
                         emulator={emulator}
                         selections={selections}
                         set_selections={set_selections}
                         on_select={handle_emulator_select}
-                        on_program_select={on_select_program}
                         compiled_programs={compiled_programs}
-                        breakpoints={breakpoints}
-                        on_add_breakpoint={handle_add_breakpoint}
-                        on_remove_breakpoint={handle_remove_breakpoint}
-                        debugger_data={debugger_data}
                         set_emulation_results={set_emulation_results}
                     />,
                     <HilControlView
@@ -152,10 +101,6 @@ let HilView = function (props) {
                         selections={selections}
                         set_selections={set_selections}
                         on_select={handle_emulator_select}
-                        hil_plot_running={hil_plot_running}
-                        set_hil_plot_running={set_hil_plot_running}
-                        set_download_data_request={set_download_data_request}
-                        download_data_request={download_data_request}
                     />,
                     <HilResultsView
                         emulation_results={emulation_results}

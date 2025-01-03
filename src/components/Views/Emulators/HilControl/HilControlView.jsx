@@ -13,11 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import React, {useState} from 'react';
 import HilPlotTab from "./HilPlotTab.jsx";
 import HilControlSidebar from "../Sidebar/per_panel_sidebars/HilControlSidebar.jsx";
 
 let HilControlView = function (props) {
+
+    let [hil_plot_running, set_hil_plot_running] = useState(false);
+    let [download_data_request, set_download_data_request] = useState(null);
 
     return(
         <div style={{
@@ -30,9 +33,9 @@ let HilControlView = function (props) {
             <HilPlotTab
                 emulator={props.emulator}
                 deployed={props.deployed}
-                hil_plot_running={props.hil_plot_running}
-                download_data_request={props.download_data_request}
-                on_download_done={props.set_download_data_request}
+                hil_plot_running={hil_plot_running}
+                download_data_request={download_data_request}
+                on_download_done={set_download_data_request}
             />
             <HilControlSidebar
                 emulator={props.emulator}
@@ -40,8 +43,8 @@ let HilControlView = function (props) {
                 on_selection={props.set_selections}
                 on_select={props.on_select}
                 hil_plot_running={props.hil_plot_running}
-                on_plot_status_update={props.set_hil_plot_running}
-                onDownloadHilData={props.set_download_data_request}
+                on_plot_status_update={set_hil_plot_running}
+                onDownloadHilData={set_download_data_request}
             />
         </div>
 
