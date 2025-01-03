@@ -39,7 +39,7 @@ let FcoreEmulationEditor = function (props) {
         build: false,
         run: false,
         deploy: false,
-        show:false
+        debug:false
     })
     const navigate = useNavigate();
 
@@ -58,7 +58,7 @@ let FcoreEmulationEditor = function (props) {
                     build: enabled_actions.build,
                     run: enabled_actions.run,
                     deploy: enabled_actions.deploy,
-                    show: enabled_actions.show
+                    debug: enabled_actions.debug
                 });
                 return;
             }
@@ -69,7 +69,7 @@ let FcoreEmulationEditor = function (props) {
             build: enabled_actions.build,
             run: enabled_actions.run,
             deploy: enabled_actions.deploy,
-            show: enabled_actions.show
+            debug: enabled_actions.debug
         });
 
     },[props.selections.component])
@@ -83,7 +83,7 @@ let FcoreEmulationEditor = function (props) {
                 build: true,
                 run: true,
                 deploy: true,
-                show: true
+                debug: true
 
             });
 
@@ -157,9 +157,9 @@ let FcoreEmulationEditor = function (props) {
         navigate("/programs", {state: {selected_program:props.emulator.cores[props.selections.component.obj.id].program}});
     }
 
-    let handle_show = async () =>{
+    let handle_debug = async () =>{
         let asm = await props.emulator.disassemble();
-        props.on_show_disassembly(asm);
+        props.on_debug(asm);
         await  props.emulator.debug_init();
         props.on_selection({...props.selections, tab:1});
     }
@@ -279,7 +279,7 @@ let FcoreEmulationEditor = function (props) {
                                 onRun={handle_run}
                                 onDeploy={handle_deploy}
                                 onEdit={handle_edit}
-                                onShow={handle_show}
+                                onDebug={handle_debug}
                                 nodes={nodes}
                                 edges={edges}
                                 enabled_actions={enabled_actions}
