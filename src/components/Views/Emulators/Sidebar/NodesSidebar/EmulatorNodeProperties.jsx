@@ -47,8 +47,7 @@ let  EmulatorNodeProperties = props =>{
             <div style={{
                 display: "flex",
                 flexDirection: "column",
-                gap:10,
-                margin:10
+                gap:10
             }}>
                 <UIPanel key={"Item properties"}  level="level_2">
                     <SimpleContent name={"Node Properties"} content={

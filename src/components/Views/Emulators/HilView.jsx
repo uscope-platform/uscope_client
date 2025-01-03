@@ -169,24 +169,22 @@ let HilView = function (props) {
                         </div>
                 ]} onSelect={on_select} selected={selections.tab}/>
             </UIPanel>
-            <div style={{height: "100%"}}>
-                <FcoreEmulatorSidebar
-                    selected_component={selections.component}
-                    on_select={handle_emulator_select}
-                    on_selection={set_selections}
-                    selections={selections}
-                    emulator={emulator}
-                    on_plot_status_update={set_hil_plot_running}
-                    hil_plot_running={hil_plot_running}
-                    onDownloadHilData={set_download_data_request}
-                    compile_warning={compiler_warnings}
-                    compiled_programs={compiled_programs}
-                    on_program_select={on_select_program}
-                    on_add_breakpoint={handle_add_breakpoint}
-                    on_remove_breakpoint={handle_remove_breakpoint}
-                    breakpoints={breakpoints}
-                />
-            </div>
+            <FcoreEmulatorSidebar
+                selected_component={selections.component}
+                on_select={handle_emulator_select}
+                on_selection={set_selections}
+                selections={selections}
+                emulator={emulator}
+                on_plot_status_update={set_hil_plot_running}
+                hil_plot_running={hil_plot_running}
+                onDownloadHilData={set_download_data_request}
+                compile_warning={compiler_warnings}
+                compiled_programs={compiled_programs}
+                on_program_select={on_select_program}
+                on_add_breakpoint={handle_add_breakpoint}
+                on_remove_breakpoint={handle_remove_breakpoint}
+                breakpoints={breakpoints}
+            />
         </div>
 
     );

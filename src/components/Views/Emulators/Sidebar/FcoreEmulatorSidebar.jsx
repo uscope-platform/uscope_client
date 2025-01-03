@@ -61,7 +61,12 @@ let  FcoreEmulatorSidebar = props =>{
     }
 
     return(
-        <>
+        <div
+        style={{
+            display:"flex",
+            flexDirection:"column",
+            gap:"0.5em"
+        }}>
             <SidebarBase
                 objects={emulators_store}
                 selection_key="id"
@@ -113,7 +118,7 @@ let  FcoreEmulatorSidebar = props =>{
                 selected_program={props.selections.program}
                 enable={props.selections.tab === 3}
             />
-        </>
+        </div>
 
     );
 

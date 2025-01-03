@@ -89,7 +89,7 @@ let  EmulatorProperties = props =>{
 
     if(props.selected_emulator && props.enabled){
         return(
-            <UIPanel style={{margin:10}} key={"Item properties"} level="level_2">
+            <UIPanel key={"Item properties"} level="level_2">
                 {
                     <SimpleContent name={"Emulator Properties"} content={
                         <div style={{padding:10}} key="emulator_props">
