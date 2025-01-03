@@ -24,6 +24,7 @@ import {EditorView} from "codemirror";
 import IoViewer from "./IoViewer.jsx";
 import {toast, ToastContainer} from "react-toastify";
 import {up_emulator_result} from "../../../../client_core/index.js";
+import TranslationTable from "../Sidebar/TranslationTable.jsx";
 
 let  FcoreDebugger = props =>{
 
@@ -107,37 +108,62 @@ let  FcoreDebugger = props =>{
             <div style={{
                 display: "grid",
                 gap: 10,
-                gridTemplateRows: "3fr 1fr"
+                gridTemplateRows: "3fr 1fr",
+                height:"56em"
             }}>
                 <div style={{
                     display: "grid",
                     gap: 10,
-                    gridTemplateColumns: "1fr 1fr",
+                    gridTemplateColumns: "repeat(6, 1fr)",
+                    height:"56em"
                 }}>
-                    <TextEditor
-                        tab_name="Assembly"
-                        height="30em"
-                        content={props.content.asm.program}
-                        extensions={[Fcore(), highLight]}
-                    />
-                    <TextEditor
-                        tab_name="C source"
-                        height="30em"
-                        content={props.content.source}
-                        extensions={[cpp()]}
-                    />
-                    <MemoryViewer
-                        vis_type={visualization_type}
-                        memory={current_memory}
-                    />
-                    <IoViewer
-                        vis_type={visualization_type}
-                        io={{names: current_inputs.names, values: current_inputs.values}}
-                    />
+                    <div style={{
+                        gridArea: "1 / 1 / 2 / 4"
+                    }}>
+                        <TextEditor
+                            tab_name="Assembly"
+                            height="30em"
+                            content={props.content.asm.program}
+                            extensions={[Fcore(), highLight]}
+                        />
+                    </div>
+                    <div style={{
+                        gridArea: "1 / 4 / 2 / 7"
+                    }}>
+                        <TextEditor
+                            tab_name="C source"
+                            height="30em"
+                            content={props.content.source}
+                            extensions={[cpp()]}
+                        />
+                    </div>
+                    <div style={{
+                        gridArea: "2 / 1 / 3 / 3"
+                    }}>
+                        <MemoryViewer
+                            vis_type={visualization_type}
+                            memory={current_memory}
+                        />
+                    </div>
+                    <div style={{
+                        gridArea: "2 / 3 / 3 / 5"
+                    }}>
+                        <IoViewer
+                            vis_type={visualization_type}
+                            io={{names: current_inputs.names, values: current_inputs.values}}
+                        />
+                    </div>
+                    <div style={{
+                        gridArea: "2 / 5 / 3 / 7"
+                    }}>
+                        <TranslationTable
+                            data={props.translation_table}
+                        />
+                    </div>
                 </div>
             </div>
         </div>
-            );
-            };
+    );
+};
 
-            export default FcoreDebugger;
+export default FcoreDebugger;

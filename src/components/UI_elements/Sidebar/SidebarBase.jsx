@@ -32,10 +32,10 @@ let  SidebarBase = props =>{
         selected_item = props.objects[selected];
     }
 
-    let handleAdd = (content) => {
+    let handleAdd = () => {
         let id = get_next_id(Object.values(props.objects).map(a => a[props.selection_key]).sort());
         let obj = props.template.construct_empty(id);
-        obj.add_remote().then((args)=>{
+        obj.add_remote().then(()=>{
             if(props.onAdd){
                 props.onAdd({id:id, object:obj});
             }
@@ -47,14 +47,14 @@ let  SidebarBase = props =>{
             return obj[props.display_key] === key;
         })[0];
         set_selected(null);
-        props.template.delete(deleted).then((args) =>{
+        props.template.delete(deleted).then(() =>{
             if(props.onDelete){
                 props.onDelete(deleted);
             }
         });
     };
 
-    let handleExport = (args) =>{
+    let handleExport = () =>{
         if(props.export_array){
             download_json([selected_item], selected_item[props.display_key]);
         } else {
@@ -63,7 +63,7 @@ let  SidebarBase = props =>{
 
     };
 
-    let handleImport = (args) =>{
+    let handleImport = () =>{
         upload_json().then((item)=>{
             if(props.onImport){
                 props.onImport(item.data);
@@ -137,7 +137,8 @@ let  SidebarBase = props =>{
     return(
         <UIPanel key={props.content_name+"_list"} level="level_2">
             <SimpleContent name={props.content_name + " List"} content={
-                <div>
+                <div
+                style={{height:'20em'}}>
                     <SideToolbar
                         onAdd={handleAdd}
                         onImport={handleImport}

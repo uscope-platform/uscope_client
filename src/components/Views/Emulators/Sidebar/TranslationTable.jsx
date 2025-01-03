@@ -23,7 +23,7 @@ let  TranslationTable = props =>{
     let [core_addr, set_core_addr] = useState(null);
 
     useEffect(() => {
-        if(props.enable){
+        if(props.data){
             set_io_addr(["IO Address", ...props.data.map((line)=>{
                 return line[0]
             })]);
@@ -33,30 +33,27 @@ let  TranslationTable = props =>{
         }
     }, [props.data]);
 
-
-    if(props.enable)
-        return (
-            <UIPanel key="translation_table" style={{minHeight:"200px"}} level="level_2">
-                <SimpleContent name={"Translation Table"} content={[
-                    <div style={{
-                        display: "grid",
-                        gridTemplateColumns: "1fr 1fr",
-                        gridColumnGap: "1em",
-                    }}>
-                        <div>
-                            <SelectableList
-                                items={io_addr}
-                            />
-                        </div>
-                        <div>
-                            <SelectableList
-                                items={core_addr}
-                            />
-                        </div>
-                    </div>
-                ]}/>
-            </UIPanel>
-        );
+    return (
+        <UIPanel key="translation_table" style={{minHeight:"200px"}} level="level_2">
+            <SimpleContent name={"Translation Table"} content={[
+                <div style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gridColumnGap: "1em",
+                    height: "21em"
+                }}
+                key="translation_table_content"
+                >
+                    <SelectableList
+                        items={io_addr}
+                    />
+                    <SelectableList
+                        items={core_addr}
+                    />
+                </div>
+            ]}/>
+        </UIPanel>
+    );
 };
 
 export default TranslationTable;

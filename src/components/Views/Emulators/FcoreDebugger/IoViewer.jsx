@@ -35,20 +35,19 @@ let  IoViewer = props =>{
     return (
         <UIPanel key="io_viewer" style={{minHeight:"200px"}} level="level_2">
             <SimpleContent name={"IO Viewer"} content={[
-                <div style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gridColumnGap: "1em",
-                }}>
-                    <div>
-                        <SelectableList
-                        />
-                    </div>
-                    <div>
-                        <SelectableList
-                            items={data}
-                        />
-                    </div>
+                <div
+                    style={{
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr",
+                        gridColumnGap: "1em",
+                        height: "21em"
+                    }}
+                    key="io_view_content"
+                >
+                    <SelectableList/>
+                    <SelectableList
+                        items={data}
+                    />
                 </div>
             ]}/>
         </UIPanel>

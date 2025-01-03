@@ -153,6 +153,7 @@ let HilView = function (props) {
                         on_emulation_end={set_emulation_results}
                         selected_program={selections.program}
                         on_program_select={on_select_program}
+                        translation_table={debugger_data.asm.translation_table}
                         content={debugger_data}
                     />,
                     <div>
@@ -183,7 +184,6 @@ let HilView = function (props) {
                     on_program_select={on_select_program}
                     on_add_breakpoint={handle_add_breakpoint}
                     on_remove_breakpoint={handle_remove_breakpoint}
-                    translation_table={debugger_data.asm.translation_table}
                     breakpoints={breakpoints}
                 />
             </div>
