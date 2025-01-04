@@ -62,6 +62,7 @@ let  HilDebuggerSidebar = props =>{
                 selected_program={props.selections.program}
             />
             <ProgressPanel
+                progress={props.checkpoint.progress}
             />
         </div>
 

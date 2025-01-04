@@ -19,12 +19,16 @@ import {SimpleContent, UIPanel} from "../../../UI_elements/index.jsx";
 
 let  ProgressPanel = props =>{
 
+
+    const progress_percentage = props.progress.current/props.progress.total_steps;
+
     return (
         <UIPanel key="progress_panel" style={{minHeight:"200px"}} level="level_2">
             <SimpleContent name={"Progress"} content={[
                 <div
                     key="progress_panel_content"
                 >
+                    <progress value={progress_percentage}/>
                 </div>
             ]}/>
 

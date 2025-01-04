@@ -21,10 +21,33 @@ import {useSelector} from "react-redux";
 let HilDebuggerView = function (props) {
 
 
-    let[ debugger_data, set_debugger_data] = useState({asm:"", source:""});
-    const programs_store = useSelector(state => state.programs);
+    let[ debugger_data, set_debugger_data] = useState({
+        asm:{
+            translation_table:[],
+            program:""
+        },
+        source:""
+    });
+
+    let [checkpoint, set_checkpoint] = useState({
+        breakpoint:1,
+        memory_view:[],
+        inputs:{},
+        status:"",
+        core_name:"",
+        next_program:"",
+        progress:{
+            current:0,
+            total_steps:1,
+            period:0
+        },
+        completed_round:false
+    });
 
     let [breakpoints, set_breakpoints] = useState([]);
+
+    const programs_store = useSelector(state => state.programs);
+
 
     let handle_add_breakpoint = async (value) =>{
         let vv = parseInt(value);
@@ -73,9 +96,10 @@ let HilDebuggerView = function (props) {
                 emulator={props.emulator}
                 selected_program={props.selections.program}
                 on_program_select={handle_select_program}
-                translation_table={debugger_data.asm.translation_table}
                 content={debugger_data}
                 on_emulation_end={props.set_emulation_results}
+                checkpoint={checkpoint}
+                set_checkpoint={set_checkpoint}
             />
             <HilDebuggerSidebar
                 emulator={props.emulator}
@@ -87,6 +111,7 @@ let HilDebuggerView = function (props) {
                 breakpoints={breakpoints}
                 on_add_breakpoint={handle_add_breakpoint}
                 on_remove_breakpoint={handle_remove_breakpoint}
+                checkpoint={checkpoint}
             />
         </div>
 

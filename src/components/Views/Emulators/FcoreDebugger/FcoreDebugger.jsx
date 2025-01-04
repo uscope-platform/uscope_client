@@ -29,20 +29,18 @@ import TranslationTable from "../Sidebar/TranslationTable.jsx";
 let  FcoreDebugger = props =>{
 
     let [visualization_type, set_visualization_type] = useState("float");
-    let [current_memory, set_current_memory] = useState([]);
-    let [current_line, set_current_line] = useState(0);
     let [current_inputs, set_current_inputs] = useState({names:[], values:[]});
+
 
     let handle_run = async ()=>{
 
         let res = await props.emulator.debug_run();
         if(res.status === "in_progress"){
-            set_current_line(res.breakpoint+1);
-            set_current_memory(res.memory_view);
             set_current_inputs({
                 names:Object.keys(res.inputs),
                 values: Object.values(res.inputs)
             })
+            props.set_checkpoint(res);
         } else {
             let results = new up_emulator_result(res.emulation_result, {});
             props.on_emulation_end(results);
@@ -57,12 +55,11 @@ let  FcoreDebugger = props =>{
             if(results.completed_round){
                 props.on_program_select(results.next_program);
             }
-            set_current_line( results.breakpoint+1);
-            set_current_memory(results.memory_view);
             set_current_inputs({
                 names:Object.keys(results.inputs),
                 values: Object.values(results.inputs)
             })
+            props.set_checkpoint(results);
         }else {
 
         }
@@ -74,8 +71,8 @@ let  FcoreDebugger = props =>{
 
     let produce_theme = () =>{
         let base_theme = {}
-        if(current_line>0){
-            base_theme['.cm-line:nth-of-type(' + current_line + ')'] = {
+        if(props.checkpoint.breakpoint>=0){
+            base_theme['.cm-line:nth-of-type(' + String(props.checkpoint.breakpoint+1) + ')'] = {
                 backgroundColor: 'rgb(139, 233, 253)'
             }
         }
@@ -142,7 +139,7 @@ let  FcoreDebugger = props =>{
                     }}>
                         <MemoryViewer
                             vis_type={visualization_type}
-                            memory={current_memory}
+                            memory={props.checkpoint.memory_view}
                         />
                     </div>
                     <div style={{
