@@ -13,8 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {saveScriptsWorkspace} from "@redux/Actions/scriptsActions.js";
-import {saveParameter} from "@redux/Actions/applicationActions.js";
+import {saveParameter, saveScriptsWorkspace} from "@redux";
 import {up_peripheral} from "@client_core";
 import {context_cleaner, parseFunction} from "./frontend";
 import {translate_legacy_registers, translate_registers} from "./backend";

@@ -16,7 +16,7 @@
 import {store} from "../index";
 import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
-import {AddBitstream, removeBitstream} from "@redux/Actions/bitstreamsActions.js";
+import {AddBitstream, removeBitstream} from "@redux";
 
 export class up_bitstream {
     constructor(bitstream_obj) {

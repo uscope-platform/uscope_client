@@ -25,7 +25,7 @@ import {
 } from "@client_core";
 import {SidebarBase} from "@UI";
 
-import {addApplication} from "@redux/Actions/applicationActions.js";
+import {addApplication} from "@redux";
 
 
 let  ApplicationSidebar = props =>{

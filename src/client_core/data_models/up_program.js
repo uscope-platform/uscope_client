@@ -16,7 +16,7 @@
 import {store} from "../index";
 import {backend_delete, backend_patch, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
-import {AddProgram, removeProgram} from "@redux/Actions/ProgramsActions.js";
+import {AddProgram, removeProgram} from "@redux";
 import objectHash from "object-hash";
 
 export class up_program {

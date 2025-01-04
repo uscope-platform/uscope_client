@@ -23,7 +23,7 @@ import {
 } from "../index";
 import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
-import {addApplication, removeApplication, updateApplication} from "@redux/Actions/applicationActions.js";
+import {addApplication, removeApplication, updateApplication} from "@redux";
 import {set_scope_address} from "../proxy/plot";
 
 

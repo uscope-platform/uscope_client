@@ -22,7 +22,7 @@ import {
     up_peripheral,
 } from "@client_core";
 
-import {addPeripheral} from "@redux/Actions/peripheralsActions.js";
+import {addPeripheral} from "@redux";
 import {SidebarBase} from "@UI";
 
 let  PeripheralsSidebar = props =>{

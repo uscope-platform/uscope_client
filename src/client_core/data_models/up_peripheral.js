@@ -16,7 +16,7 @@
 import {construct_proxied_register, store} from "../index";
 import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
-import {addPeripheral, removePeripheral} from "@redux/Actions/peripheralsActions.js";
+import {addPeripheral, removePeripheral} from "@redux";
 import {up_register} from "@client_core";
 
 export class up_peripheral {
