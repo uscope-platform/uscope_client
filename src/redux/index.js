@@ -5,5 +5,5 @@ export {loadAllEmulators, addEmulator, removeEmulator, update_emulator} from "./
 export {AddFilter, removeFilter, loadAllFilters} from "./Actions/FiltersActons.js"
 export {addPeripheral, loadPeripherals, removePeripheral, removeField, removeRegister, upsertField, upsertRegister} from "./Actions/peripheralsActions.js"
 export {sendRegister, loadRegisters} from "./Actions/RegisterActions.js"
-export {AddScript, loadAllScripts, removeScript, saveScriptsWorkspace} from "Actions/scriptsActions.js"
+export {AddScript, loadAllScripts, removeScript, saveScriptsWorkspace} from "./Actions/scriptsActions.js"
 export {AddProgram,loadAllPrograms, removeProgram} from "./Actions/ProgramsActions.js"
