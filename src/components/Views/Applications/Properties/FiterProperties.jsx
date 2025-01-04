@@ -19,9 +19,9 @@ import {
     Card,
     Checkbox,
     SelectField
-} from "../../../UI_elements";
+} from "@UI";
 
-import {up_application, up_peripheral} from "../../../../client_core";
+import {up_application, up_peripheral} from "@client_core";
 
 export let  FilterProperties = props =>{
 

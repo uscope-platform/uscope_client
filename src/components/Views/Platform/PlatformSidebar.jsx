@@ -15,15 +15,13 @@
 
 import React, {useEffect, useState} from 'react';
 
-import {useDispatch, useSelector} from "react-redux";
 import {
     UIPanel,
     SimpleContent,
     SelectableList, ColorTheme
-} from "../../UI_elements";
+} from "@UI";
 
-import {get_users_list, remove_user} from "../../../client_core";
-import {useLocation} from "react-router-dom";
+import {get_users_list, remove_user} from "@client_core";
 import {MdPerson} from "react-icons/md";
 
 let  PlatformSidebar = props =>{

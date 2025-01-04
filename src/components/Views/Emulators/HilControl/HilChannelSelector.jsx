@@ -15,9 +15,9 @@
 // limitations under the License.
 
 import React, {useContext, useReducer, useState} from 'react';
-import {SelectField} from "../../../UI_elements";
-import {get_ui_state, save_ui_state} from "../../../../client_core";
-import {ApplicationContext} from "../../../../AuthApp";
+import {SelectField} from "@UI";
+import {get_ui_state, save_ui_state} from "@client_core";
+import {ApplicationContext} from "@src/AuthApp.jsx";
 
 let HilChannelSelector = function (props) {
 

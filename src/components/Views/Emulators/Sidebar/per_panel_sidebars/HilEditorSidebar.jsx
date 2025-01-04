@@ -17,8 +17,8 @@ import React from 'react';
 
 import {useSelector} from "react-redux";
 
-import {up_emulator} from "../../../../../client_core";
-import {SidebarBase} from "../../../../UI_elements";
+import {up_emulator} from "@client_core";
+import {SidebarBase} from "@UI";
 import EmulatorNodeProperties from "../NodesSidebar/EmulatorNodeProperties";
 import EmulatorEdgeProperties from "../EdgesSidebar/EmulatorEdgeProperties";
 import EmulatorProperties from "../EmulatorProperties";

@@ -15,7 +15,7 @@
 
 
 import React from 'react';
-import {SimpleContent, UIPanel} from "../../../UI_elements/index.jsx";
+import {SimpleContent, UIPanel} from "@UI";
 
 let  ProgressPanel = props =>{
 

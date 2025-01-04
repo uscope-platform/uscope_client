@@ -15,7 +15,7 @@
 
 
 import React from 'react';
-import { InputField, SelectableList, SimpleContent, UIPanel} from "../../../UI_elements/index.jsx";
+import { InputField, SelectableList, SimpleContent, UIPanel} from "@UI";
 
 let  BreakpointsPanel = props =>{
 

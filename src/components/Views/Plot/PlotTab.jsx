@@ -20,13 +20,12 @@ import ChannelSelector from "./ChannelSelector";
 import PlotComponent from "./PlotComponent";
 import ParametersArea from "./ParametersArea";
 import MacroActions from "./MacroActions";
-import {ColorTheme, UIPanel, SimpleContent} from "../../UI_elements";
+import {ColorTheme, UIPanel, SimpleContent} from "@UI";
 import TerminalComponent from "./Terminal";
 import PlotSidebar from "./Sidebar/PlotSidebar";
-import {create_plot_channel, get_channels_from_group, update_plot_status} from "../../../client_core/plot_handling";
-import {get_acquisition_status} from "../../../client_core/proxy/plot";
+import {create_plot_channel, get_channels_from_group, update_plot_status, get_acquisition_status} from "@client_core";
 import useInterval from "../../Common_Components/useInterval";
-import {ApplicationContext} from "../../../AuthApp";
+import {ApplicationContext} from "@src/AuthApp.jsx";
 
 let PlotTab = function (props) {
     const channels = useSelector(state => state.channels);

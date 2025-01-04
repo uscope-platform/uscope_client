@@ -15,9 +15,9 @@
 
 import React, {useEffect} from 'react';
 
-import {Button, FormLayout} from "../../UI_elements"
+import {Button, FormLayout} from "@UI"
 import SingleValueField from "../../Common_Components/SingleValueField";
-import {run_parameter_script} from "../../../client_core";
+import {run_parameter_script} from "@client_core";
 import store from "../../../store";
 
 let  ParametersArea = props =>{

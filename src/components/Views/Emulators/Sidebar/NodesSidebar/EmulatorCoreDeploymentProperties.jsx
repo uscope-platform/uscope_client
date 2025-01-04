@@ -15,7 +15,7 @@
 
 import React from 'react';
 
-import {Checkbox, InputField} from "../../../../UI_elements";
+import {Checkbox, InputField} from "@UI";
 
 let  EmulatorCoreDeploymentProperties = props =>{
 

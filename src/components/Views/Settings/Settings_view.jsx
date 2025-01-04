@@ -14,9 +14,9 @@
 // limitations under the License.
 
 import React, {useContext, useEffect, useState} from 'react';
-import {InputField, SelectField, SimpleContent, UIPanel} from "../../UI_elements";
-import {ApplicationContext} from "../../../AuthApp";
-import {up_settings} from "../../../client_core/data_models/up_settings";
+import {InputField, SelectField, SimpleContent, UIPanel} from "@UI";
+import {ApplicationContext} from "@src/AuthApp.jsx";
+import {up_settings} from "@client_core";
 
 let SettingsView = function (props) {
 

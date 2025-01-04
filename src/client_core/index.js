@@ -24,7 +24,7 @@ export {set_address, set_auth_config} from './proxy/backend'
 
 export {sign_in} from './proxy/auth'
 export {add_user, remove_user, get_users_list, dump_database, restore_database, do_onboarding, need_onboarding} from './proxy/platform'
-export { set_channel_status, set_scaling_factors, direct_fetch} from './proxy/plot'
+export { set_channel_status, set_scaling_factors, direct_fetch, set_acquisition, get_acquisition_status} from './proxy/plot'
 
 
 // DATA MODEL
@@ -39,6 +39,8 @@ export {up_register} from  './data_models/up_register'
 export {up_emulator} from './data_models/emulator/up_emulator'
 export {up_emulator_result} from './data_models/emulator/up_emulation_result.js'
 export {application_diff_engine} from './data_models/diff_engine'
+export {up_settings} from './data_models/up_settings'
+
 //filter
 export {filter_calculate_keepouts} from './filters/filter_preview'
 
@@ -49,7 +51,7 @@ export {import_application, import_peripherals} from './data_handling/import'
 export {get_next_id} from './utilities/id_management'
 export {download_json, download_plot, download_bitstream} from './utilities/downloads'
 export {upload_json, upload_raw} from './utilities/uploads'
-export {get_channel_number_from_id, get_channels_from_group, create_plot_channel, initialize_plot} from "./plot_handling";
+export {get_channel_number_from_id, get_channels_from_group, create_plot_channel, initialize_plot, update_plot_status, update_plot_data} from "./plot_handling";
 
 export const set_redux_store = (rs) => {
     store = rs;

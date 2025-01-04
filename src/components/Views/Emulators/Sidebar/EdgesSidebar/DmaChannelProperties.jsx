@@ -15,7 +15,7 @@
 
 import React, {useReducer} from 'react';
 
-import {InputField, SelectField} from "../../../../UI_elements";
+import {InputField, SelectField} from "@UI";
 import { useSelector} from "react-redux";
 
 

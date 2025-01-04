@@ -14,9 +14,9 @@
 // limitations under the License.
 
 import React from "react";
-import {InputField, ListItem} from "../../../UI_elements";
+import {InputField, ListItem} from "@UI";
 import styled from "styled-components";
-import {InterfaceParameters} from "../../../UI_elements/InterfaceParameters";
+import {InterfaceParameters} from "@UI";
 
 const VariablesList = styled.div`
   margin-top:0.5em;

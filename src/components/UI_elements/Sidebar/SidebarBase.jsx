@@ -18,8 +18,8 @@ import React, {useState} from 'react';
 import {SelectableList, SimpleContent, UIPanel} from "../index";
 
 import 'react-tooltip/dist/react-tooltip.css'
-import SideToolbar from "./SideToolbar";
-import {download_json, get_next_id, upload_json} from "../../../client_core";
+import {SideToolbar} from "./SideToolbar";
+import {download_json, get_next_id, upload_json} from "@client_core";
 
 export let SidebarBase = props =>{
 

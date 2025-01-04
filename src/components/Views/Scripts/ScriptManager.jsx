@@ -22,8 +22,8 @@ import {
     InputField,
     SimpleContent,
     UIPanel
-} from "../../UI_elements"
-import {up_script} from "../../../client_core";
+} from "@UI"
+import {up_script} from "@client_core";
 import ScriptsEditor from "./ScriptsEditor";
 import ScriptSidebar from "./ScriptSidebar";
 

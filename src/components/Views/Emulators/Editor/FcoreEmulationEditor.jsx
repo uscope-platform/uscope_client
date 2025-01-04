@@ -19,13 +19,13 @@ import {ToastContainer, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 import EmulatorDiagram from "./EmulatorDiagram";
-import {up_emulator_result} from "../../../../client_core";
-import {SimpleContent, TabbedContent, UIPanel} from "../../../UI_elements";
+import {up_emulator_result} from "@client_core";
+import {SimpleContent, TabbedContent, UIPanel} from "@UI";
 import CoreInputsList from "./CoreInputsList";
 import CoreOutputsList from "./CoreOutputsList";
 import CoreMemoriesList from "./CoreMemoriesList";
 import CoreInputFilesList from "./CoreInputFilesList";
-import {ApplicationContext} from "../../../../AuthApp";
+import {ApplicationContext} from "@src/AuthApp.jsx";
 
 
 let FcoreEmulationEditor = function (props) {

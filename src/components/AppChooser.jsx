@@ -20,7 +20,7 @@ import ApplicationChooserView from "./Common_Components/ApplicationChooserView";
 
 import {
     up_application,
-} from "../client_core"
+} from "@client_core"
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

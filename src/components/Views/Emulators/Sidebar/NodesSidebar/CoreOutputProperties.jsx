@@ -15,7 +15,7 @@
 
 import React from 'react';
 
-import {Checkbox, InputField, SelectField, SimpleContent} from "../../../../UI_elements";
+import {Checkbox, InputField, SelectField, SimpleContent} from "@UI";
 
 let  CoreOutputProperties = props =>{
 

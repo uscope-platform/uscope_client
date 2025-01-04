@@ -13,11 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useContext, useReducer} from 'react';
+import React, {useReducer} from 'react';
 
 
 import EnablesProperties from "./EnablesProperties";
-import {SimpleContent, UIPanel} from "../../../UI_elements";
+import {SimpleContent, UIPanel} from "@UI";
 import TriggerControls from "./TriggerControls";
 
 let  PlotSidebar = props =>{

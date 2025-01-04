@@ -16,8 +16,8 @@
 import React from 'react';
 
 import {useSelector} from "react-redux";
-import {up_filter} from "../../../client_core";
-import {SidebarBase} from "../../UI_elements";
+import {up_filter} from "@client_core";
+import {SidebarBase} from "@UI";
 
 
 let  FilterSidebar = props =>{

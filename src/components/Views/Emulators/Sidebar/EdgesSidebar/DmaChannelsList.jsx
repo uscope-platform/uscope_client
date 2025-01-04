@@ -15,12 +15,12 @@
 
 import React from 'react';
 
-import {SelectableList} from "../../../../UI_elements";
+import {SelectableList} from "@UI";
 import {MdAdd} from "react-icons/md";
 
 let  DmaChannelsList = props =>{
 
-    let handle_add = (event) =>{
+    let handle_add = () =>{
         props.selected_emulator.add_dma_channel(props.source_core, props.target_core, props.connections_list.length).then(() =>{
             props.forceUpdate();
         });

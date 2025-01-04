@@ -18,14 +18,14 @@ import {
     ColorTheme,
     SimpleContent,
     UIPanel
-} from "../../UI_elements";
+} from "@UI";
 
 import FilterPlot from "./FilterPlot";
 import FilterDesignerControls from "./FilterDesignerControls";
 import {
     filter_calculate_keepouts,
     up_filter
-} from "../../../client_core";
+} from "@client_core";
 import {useSelector} from "react-redux";
 import {MdBuild, MdConstruction} from "react-icons/md";
 import {Tooltip} from "react-tooltip";

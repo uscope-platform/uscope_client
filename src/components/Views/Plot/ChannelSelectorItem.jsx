@@ -15,7 +15,7 @@
 
 import React from 'react';
 
-import {Checkbox, ColorTheme} from "../../UI_elements";
+import {Checkbox, ColorTheme} from "@UI";
 import styled from "styled-components";
 import {MdRemove} from "react-icons/md";
 

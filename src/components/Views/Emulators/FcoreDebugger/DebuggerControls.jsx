@@ -15,7 +15,7 @@
 
 
 import React from 'react';
-import {ColorTheme, SelectField} from "../../../UI_elements/index.jsx";
+import {ColorTheme, SelectField} from "@UI";
 import { MdPlayArrow, MdWrapText, MdStart} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
 

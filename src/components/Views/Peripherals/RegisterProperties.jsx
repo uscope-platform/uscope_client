@@ -14,11 +14,11 @@
 // limitations under the License.
 
 import React from "react";
-import {Label, InputField, Checkbox, Card} from "../../UI_elements";
+import {Label, InputField, Checkbox, Card} from "@UI";
 import styled from "styled-components";
 
 import {FieldProperties} from "./FieldProperties";
-import {up_register} from "../../../client_core";
+import {up_register} from "@client_core";
 
 const ChoicesWrapper = styled.div`
     display: grid;

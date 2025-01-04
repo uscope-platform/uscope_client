@@ -20,10 +20,10 @@ import {useSelector} from "react-redux";
 import {
     import_peripherals,
     up_peripheral,
-} from "../../../client_core";
+} from "@client_core";
 
 import {addPeripheral} from "../../../redux/Actions/peripheralsActions";
-import {SidebarBase} from "../../UI_elements";
+import {SidebarBase} from "@UI";
 
 let  PeripheralsSidebar = props =>{
 

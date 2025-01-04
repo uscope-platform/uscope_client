@@ -14,13 +14,13 @@
 // limitations under the License.
 
 import React, {useState, useEffect} from "react";
-import {ColorTheme, TextEditor} from "../../UI_elements"
+import {ColorTheme, TextEditor} from "@UI"
 
 import { javascript } from '@codemirror/lang-javascript';
 import { autocompletion } from '@codemirror/autocomplete';
 import {
     autocompletion_engine, up_script
-} from "../../../client_core";
+} from "@client_core";
 import {MdSave} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
 

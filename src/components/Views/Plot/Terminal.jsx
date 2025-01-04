@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React, {useEffect, useRef} from "react";
-import {init_terminal} from "../../../client_core";
+import {init_terminal} from "@client_core";
 import 'xterm/css/xterm.css';
 
 let TerminalComponent = props =>{

@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React, { useReducer, useState} from 'react';
-import {ColorTheme, PlotConfigurations, SelectableList, SimpleContent, UIPanel} from "../../../UI_elements";
+import {ColorTheme, PlotConfigurations, SelectableList, SimpleContent, UIPanel} from "@UI";
 import createPlotlyComponent from "react-plotly.js/factory";
 import Plotly from "plotly.js-basic-dist";
 

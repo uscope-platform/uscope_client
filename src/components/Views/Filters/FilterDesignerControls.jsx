@@ -16,7 +16,7 @@
 import React from 'react';
 
 import styled from "styled-components";
-import {InputField} from "../../UI_elements";
+import {InputField} from "@UI";
 import LowPass from "./filterIcons/LowPass"
 import HighPass from "./filterIcons/HighPass"
 import BandPass from "./filterIcons/BandPass"

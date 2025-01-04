@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React, {useCallback} from 'react';
-import {SimpleContent, UIPanel} from "../../../UI_elements";
+import {SimpleContent, UIPanel} from "@UI";
 import TriggerControls from "../../Plot/Sidebar/TriggerControls";
 
 let  HilControl = props =>{

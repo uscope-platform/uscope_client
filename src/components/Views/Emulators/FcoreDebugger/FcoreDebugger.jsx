@@ -16,14 +16,14 @@
 
 import React, {useState} from 'react';
 import {Fcore} from "./FcoreLanguage.js";
-import {TextEditor} from "../../../UI_elements";
+import {TextEditor} from "@UI";
 import DebuggerControls from "./DebuggerControls";
 import {cpp} from "@codemirror/lang-cpp";
 import MemoryViewer from "./MemoryViewer.jsx";
 import {EditorView} from "codemirror";
 import IoViewer from "./IoViewer.jsx";
 import {toast, ToastContainer} from "react-toastify";
-import {up_emulator_result} from "../../../../client_core/index.js";
+import {up_emulator_result} from "@client_core";
 import TranslationTable from "../Sidebar/TranslationTable.jsx";
 
 let  FcoreDebugger = props =>{

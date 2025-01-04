@@ -20,8 +20,8 @@ import {
     InputField,
     SimpleContent,
     UIPanel
-} from "../../UI_elements";
-import {up_bitstream, upload_raw} from "../../../client_core";
+} from "@UI";
+import {up_bitstream, upload_raw} from "@client_core";
 import BitstreamSidebar from "./BitstreamSidebar";
 
 

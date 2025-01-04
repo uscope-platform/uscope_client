@@ -3,6 +3,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
 import svgrPlugin from 'vite-plugin-svgr';
+import path from 'path';
 
 import * as child from "child_process";
 
@@ -11,6 +12,14 @@ const commitHash = child.execSync('git rev-parse --short HEAD').toString().trimE
 export default defineConfig({
     server:{
         port:3004
+    },
+    resolve:{
+        alias:{
+            "@src": path.resolve(__dirname, "./src"),
+            "@client_core": path.resolve(__dirname, "./src/client_core"),
+            "@components": path.resolve(__dirname, "./src/components"),
+            "@UI": path.resolve(__dirname, "./src/components/UI_elements"),
+        }
     },
     plugins: [
         react(),

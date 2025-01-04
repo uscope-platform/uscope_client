@@ -16,10 +16,10 @@
 import React, {useContext, useReducer} from 'react';
 
 import {useSelector} from "react-redux";
-import {up_program} from "../../../client_core";
+import {up_program} from "@client_core";
 
-import {SidebarBase} from "../../UI_elements";
-import {ApplicationContext} from "../../../AuthApp";
+import {SidebarBase} from "@UI";
+import {ApplicationContext} from "@src/AuthApp.jsx";
 
 
 let  ProgramSidebar = props =>{

@@ -15,7 +15,7 @@
 
 import React from 'react';
 
-import {ColorTheme, InputField} from "../UI_elements";
+import {ColorTheme, InputField} from "@UI";
 import {MdEdit, MdDelete} from "react-icons/md";
 import styled from "styled-components";
 

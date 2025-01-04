@@ -37,8 +37,11 @@ export {Radio} from "./Radio"
 export {ToggleField} from "./ToggleField"
 export {RangedInputField} from "./RangedInputField"
 export {TextEditor} from "./TextEditor.jsx"
-
 export {SidebarBase} from "./Sidebar/SidebarBase.jsx"
+export {SideToolbar} from "./Sidebar/SideToolbar.jsx"
+
+
+export {InterfaceParameters} from "./InterfaceParameters.js"
 
 export {FormLayout} from "./Layouts/FormLayout"
 export {SidebarCollapsableNameLayout} from "./Layouts/SidebarCollapsableNameLayout"

@@ -15,7 +15,7 @@
 
 
 import React, {useEffect, useState} from 'react';
-import {SelectableList, SimpleContent, UIPanel} from "../../../UI_elements/index.jsx";
+import {SelectableList, SimpleContent, UIPanel} from "@UI";
 
 let  TranslationTable = props =>{
 

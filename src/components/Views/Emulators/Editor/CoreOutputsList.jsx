@@ -15,7 +15,7 @@
 
 import React, {useEffect, useState} from 'react';
 import {MdAdd} from "react-icons/md";
-import {SelectableList} from "../../../UI_elements";
+import {SelectableList} from "@UI";
 
 let  CoreOutputsList = props =>{
 

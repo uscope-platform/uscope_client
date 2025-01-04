@@ -17,7 +17,7 @@ import React from 'react';
 
 import ChannelSelectorItem from "./ChannelSelectorItem";
 
-import {get_channel_number_from_id} from "../../../client_core";
+import {get_channel_number_from_id} from "@client_core";
 
 let ChannelSelector = function(props) {
 

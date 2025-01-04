@@ -13,16 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from 'react';
+import React from 'react';
 
 import {useSelector} from "react-redux";
-import {download_bitstream, get_next_id, up_bitstream, upload_raw} from "../../../client_core";
+import {download_bitstream, get_next_id, up_bitstream, upload_raw} from "@client_core";
 import {
     SelectableList,
     SimpleContent,
-    UIPanel
-} from "../../UI_elements";
-import SideToolbar from "../../UI_elements/Sidebar/SideToolbar";
+    UIPanel,
+    SideToolbar
+} from "@UI";
 
 
 let  BitstreamSidebar = props =>{

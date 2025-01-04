@@ -15,7 +15,7 @@
 
 
 import React from 'react';
-import {SelectableList, SimpleContent, UIPanel} from "../../../UI_elements/index.jsx";
+import {SelectableList, SimpleContent, UIPanel} from "@UI";
 
 let  IoViewer = props =>{
 

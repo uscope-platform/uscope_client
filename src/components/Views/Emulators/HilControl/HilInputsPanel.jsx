@@ -15,7 +15,7 @@
 // limitations under the License.
 
 import React from 'react';
-import {InputField} from "../../../UI_elements";
+import {InputField} from "@UI";
 
 let HilInputsPanel = function (props) {
 

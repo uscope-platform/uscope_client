@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React, {useReducer} from 'react';
-import {Checkbox, InputField, SelectField, SimpleContent} from "../../../../UI_elements";
+import {Checkbox, InputField, SelectField, SimpleContent} from "@UI";
 
 let  CoreInputProperties = props =>{
 

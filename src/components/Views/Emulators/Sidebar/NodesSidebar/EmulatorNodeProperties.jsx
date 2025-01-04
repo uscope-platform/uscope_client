@@ -15,7 +15,7 @@
 
 import React from 'react';
 
-import {SimpleContent, UIPanel} from "../../../../UI_elements";
+import {SimpleContent, UIPanel} from "@UI";
 import NodeIomProperties from "./NodeIomProperties";
 import EmulatorCoreProperties from "./EmulatorCoreProperties";
 import EmulatorCoreDeploymentProperties from "./EmulatorCoreDeploymentProperties";

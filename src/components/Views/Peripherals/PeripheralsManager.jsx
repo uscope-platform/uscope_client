@@ -22,9 +22,9 @@ import {
     CardStack, Checkbox, ColorTheme,
     InputField,
     SimpleContent, UIPanel
-} from "../../UI_elements"
+} from "@UI"
 
-import {get_next_id, up_peripheral} from "../../../client_core"
+import {get_next_id, up_peripheral} from "@client_core"
 import PeripheralsSidebar from "./PeripheralsSidebar";
 import {MdAdd} from "react-icons/md";
 import {RegisterProperties} from './RegisterProperties'

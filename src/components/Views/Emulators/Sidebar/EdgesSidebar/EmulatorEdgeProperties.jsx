@@ -15,7 +15,7 @@
 
 import React, {useReducer, useState} from 'react';
 
-import {SimpleContent, UIPanel} from "../../../../UI_elements";
+import {SimpleContent, UIPanel} from "@UI";
 import DmaChannelsList from "./DmaChannelsList";
 import DmaChannelProperties from "./DmaChannelProperties";
 

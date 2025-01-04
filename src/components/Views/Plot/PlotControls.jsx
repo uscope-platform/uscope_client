@@ -17,7 +17,7 @@ import React from 'react';
 
 import {MdDownload, MdPause, MdPlayArrow, MdStop} from 'react-icons/md'
 import styled from "styled-components";
-import {ColorTheme} from "../../UI_elements";
+import {ColorTheme} from "@UI";
 
 const ComponentStyle = styled.div`
   display: flex;

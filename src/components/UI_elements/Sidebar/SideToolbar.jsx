@@ -18,10 +18,10 @@ import React from 'react';
 
 
 import {ColorTheme, } from "../index"
-import {MdNoteAdd, MdDownload, MdUpload, MdBuild} from "react-icons/md";
+import {MdNoteAdd, MdDownload, MdUpload} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
 
-let SideToolbar = (props) =>{
+export let SideToolbar = (props) =>{
     let io_color = props.exportEnabled ? ColorTheme.icons_color:"gray";
     let click_handler = props.exportEnabled ? props.onExport:null;
     let export_tooltip = props.exportEnabled ? <Tooltip anchorId="export_icon" content={"Export "+ props.contentName} place="top" />:null;
@@ -58,6 +58,3 @@ let SideToolbar = (props) =>{
         </div>
     );
 }
-
-
-export default SideToolbar;

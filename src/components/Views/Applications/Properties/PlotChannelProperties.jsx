@@ -18,9 +18,9 @@ import {
     InputField,
     ColorTheme,
     Card
-} from "../../../UI_elements";
+} from "@UI";
 
-import {up_application} from "../../../../client_core";
+import {up_application} from "@client_core";
 
 
 export let  PlotChannelProperties = props =>{
