@@ -17,17 +17,17 @@
 import {store, up_application, up_emulator, up_peripheral} from "./index"
 import {backend_get} from "./proxy/backend";
 import {api_dictionary} from "./proxy/api_dictionary";
-import {loadApplications} from "../redux/Actions/applicationActions";
-import {loadPeripherals} from "../redux/Actions/peripheralsActions";
-import {loadAllScripts} from "../redux/Actions/scriptsActions";
+import {loadApplications} from "@redux/Actions/applicationActions";
+import {loadPeripherals} from "@redux/Actions/peripheralsActions";
+import {loadAllScripts} from "@redux/Actions/scriptsActions";
 import {up_script} from "./data_models/up_script";
 import {up_program} from "./data_models/up_program";
-import {loadAllPrograms} from "../redux/Actions/ProgramsActions";
+import {loadAllPrograms} from "@redux/Actions/ProgramsActions";
 import {up_bitstream} from "./data_models/up_bitstream";
-import {loadAllBitstreams} from "../redux/Actions/bitstreamsActions";
-import {loadAllFilters} from "../redux/Actions/FiltersActons";
+import {loadAllBitstreams} from "@redux/Actions/bitstreamsActions";
+import {loadAllFilters} from "@redux/Actions/FiltersActons";
 import {up_filter} from "./data_models/up_filter";
-import {loadAllEmulators} from "../redux/Actions/EmulatorActions";
+import {loadAllEmulators} from "@redux/Actions/EmulatorActions";
 
 let load_all_applications = async () => {
 

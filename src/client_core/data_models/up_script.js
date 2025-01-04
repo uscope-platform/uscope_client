@@ -19,7 +19,7 @@
 import {store} from "../index";
 import {backend_delete, backend_patch, backend_post} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
-import {AddScript, removeScript} from "../../redux/Actions/scriptsActions";
+import {AddScript, removeScript} from "@redux/Actions/scriptsActions.js";
 
 const default_script_content = `
     function script_main(parameters, context) {

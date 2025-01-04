@@ -19,6 +19,7 @@ export default defineConfig({
             "@client_core": path.resolve(__dirname, "./src/client_core"),
             "@components": path.resolve(__dirname, "./src/components"),
             "@UI": path.resolve(__dirname, "./src/components/UI_elements"),
+            "@redux": path.resolve(__dirname, "./src/redux"),
         }
     },
     plugins: [

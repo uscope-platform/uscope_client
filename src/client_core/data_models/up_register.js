@@ -17,7 +17,7 @@ import {store} from "../index";
 import {up_field} from "./up_field";
 import {backend_patch} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
-import { removeRegister, upsertRegister} from "../../redux/Actions/peripheralsActions";
+import { removeRegister, upsertRegister} from "@redux/Actions/peripheralsActions.js";
 
 export class up_register {
     constructor(register_obj, parent_periph, parametric) {
