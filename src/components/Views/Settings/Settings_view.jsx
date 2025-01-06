@@ -27,6 +27,7 @@ let SettingsView = function (props) {
 
     const hil_present = selected_app.application_name === "HIL_base";
 
+    const [multichannel_debug, set_multichannel_debug] = useState({label:"false", value:false});
     const [debug_level, set_debug_level] = useState({label:"", value:""});
     const [hil_address_map, set_hil_address_map] = useState({
         "bases": {
@@ -54,6 +55,10 @@ let SettingsView = function (props) {
         up_settings.get_hil_address_map().then(resp=>{
             set_hil_address_map(resp);
         })
+        up_settings.get_debugger_option("multichannel_debug").then(resp=>{
+            set_multichannel_debug({label:String(resp), value:resp});
+        })
+
     },[])
 
     let handle_edit_clocks = async (event) =>{
@@ -67,6 +72,11 @@ let SettingsView = function (props) {
     let handle_set_debug_level =async (value, event) =>{
         await up_settings.set_debug_level(value.value);
         set_debug_level(value);
+    }
+
+    let handle_multichannel_debug =async (value, event) =>{
+        await up_settings.set_debugger_option("multichannel_debug", value.value);
+        set_multichannel_debug(value);
     }
 
     let handle_edit_hil_setting = async (event) =>{
@@ -175,6 +185,17 @@ let SettingsView = function (props) {
                                 {label:"minimal", value:"minimal"},
                                 {label:"debug", value:"debug"},
                                 {label:"trace", value:"trace"}
+                            ]}
+                        />
+                        <SelectField
+                            inline
+                            label="Multichannel debug"
+                            onChange={handle_multichannel_debug}
+                            value={multichannel_debug}
+                            name="driver_log_level"
+                            options={[
+                                {label:"true", value:true},
+                                {label:"false", value:false}
                             ]}
                         />
                     </div>

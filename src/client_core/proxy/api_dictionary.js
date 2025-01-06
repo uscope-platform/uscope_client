@@ -111,5 +111,6 @@ export const api_dictionary = {
     settings:{
         debug_level:'settings/debug_level',
         hil_address_map:'settings/hil_address_map',
+        debugger_option:'settings/debugger_option',
     }
 }

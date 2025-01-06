@@ -34,6 +34,14 @@ export class up_settings {
         return backend_post(api_dictionary.settings.hil_address_map, map);
     }
 
+    static get_debugger_option(option_name){
+        return backend_get(api_dictionary.settings.debugger_option + "/" + option_name);
+    }
+
+    static set_debugger_option(option_name, value){
+        return backend_post(api_dictionary.settings.debugger_option+ "/" + option_name, {"name": option_name, "value": value});
+    }
+
     static initialize_default_driver_address_map() {
        return backend_post(api_dictionary.settings.hil_address_map, {
             "bases": {
