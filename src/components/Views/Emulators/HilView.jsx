@@ -86,6 +86,7 @@ let HilView = function (props) {
                         set_selections={set_selections}
                         set_compiled_programs={set_compiled_programs}
                         on_emulator_select={handle_emulator_select}
+                        on_compile_done={()=>{}}
                     />,
                     <HilDebuggerView
                         emulator={emulator}
