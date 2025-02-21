@@ -19,7 +19,7 @@ import {
     REMOVE_APPLICATION,
     SAVE_PARAMETER, UPDATE_APPLICATION
 } from "../Actions/types";
-import produce from "immer";
+import {produce} from "immer";
 
 
 let ApplicationsReducer = function (state = [], action) {

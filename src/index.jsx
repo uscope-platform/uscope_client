@@ -17,7 +17,7 @@ import React from 'react';
 import {createRoot} from "react-dom/client";
 import App from './App';
 import {Provider} from "react-redux";
-import store, {persistor} from "./store";
+import store from "./store";
 import {PersistGate} from "redux-persist/lib/integration/react";
 import {BrowserRouter} from "react-router-dom";
 
@@ -26,11 +26,13 @@ import './fonts/montserrat-v14-latin-ext_latin-200.woff2'
 import './fonts/montserrat-v14-latin-ext_latin-300.woff2'
 import './fonts/montserrat-v14-latin-ext_latin-regular.woff2'
 import './fonts/montserrat-v14-latin-ext_latin-500.woff2'
+import {persistStore} from "redux-persist";
 
 
 
 const container = document.getElementById("root");
 const root = createRoot(container);
+const persistor = persistStore(store);
 
 root.render(
     <Provider store={store}>

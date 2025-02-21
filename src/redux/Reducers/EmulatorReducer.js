@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import {ADD_EMULATOR, REMOVE_EMULATOR, LOAD_ALL_EMULATOR, UPDATE_EMULATOR} from "../Actions/types";
-import produce from "immer";
+import {produce} from "immer";
 
 let emulatorsReducer = function (state = [], action) {
     switch (action.type) {

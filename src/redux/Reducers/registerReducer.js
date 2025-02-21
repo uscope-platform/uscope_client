@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import {LOAD_REGISTERS, SEND_REGISTER} from "../Actions/types";
-import produce from "immer";
+import {produce} from "immer";
 
 let registerValuesReducer = function (state = {}, action) {
     switch (action.type) {
