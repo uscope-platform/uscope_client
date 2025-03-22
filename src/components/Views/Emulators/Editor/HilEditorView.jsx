@@ -42,6 +42,7 @@ let HilEditorView = function (props) {
                 on_compile_done={props.on_compile_done}
             />
             <HilEditorSidebar
+                bump_version={props.bump_version}
                 emulator={props.emulator}
                 on_select={props.on_emulator_select}
                 selections={props.selections}

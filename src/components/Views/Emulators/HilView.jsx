@@ -56,21 +56,21 @@ let HilView = function (props) {
         }
     });
 
-    let versioned_selection_handles = (value) =>{
-        let new_selection = value;
-         new_selection.obj_version = value.obj_version+1;
-         set_selections(new_selection);
+
+    let versioned_handle_selection = (value) =>{
+        let new_val = {...value, obj_version: value.obj_version + 1}
+         set_selections(new_val);
     }
 
 
     let on_select = (value) =>{
-        versioned_selection_handles({...selections, tab:value});
+        versioned_handle_selection({...selections, tab:value});
     }
 
 
     let handle_emulator_select = (emu)=>{
         set_emulator(new up_emulator(emulators_store[emu]));
-        versioned_selection_handles({...selections, component: null});
+        versioned_handle_selection({...selections, component: null});
     }
 
 
@@ -87,10 +87,11 @@ let HilView = function (props) {
                         set_emulation_results={set_emulation_results}
                         set_input_data={set_input_data}
                         input_data={input_data}
+                        bump_version={()=>{versioned_handle_selection(selections)}}
                         onDeploy={()=>{set_deployed(true)}}
                         emulator={emulator}
                         selections={selections}
-                        set_selections={versioned_selection_handles}
+                        set_selections={versioned_handle_selection}
                         set_compiled_programs={set_compiled_programs}
                         on_emulator_select={handle_emulator_select}
                         on_compile_done={()=>{}}
@@ -98,7 +99,7 @@ let HilView = function (props) {
                     <HilDebuggerView
                         emulator={emulator}
                         selections={selections}
-                        set_selections={versioned_selection_handles}
+                        set_selections={versioned_handle_selection}
                         on_select={handle_emulator_select}
                         compiled_programs={compiled_programs}
                         set_emulation_results={set_emulation_results}
@@ -107,7 +108,7 @@ let HilView = function (props) {
                         emulator={emulator}
                         deployed={deployed}
                         selections={selections}
-                        set_selections={versioned_selection_handles}
+                        set_selections={versioned_handle_selection}
                         on_select={handle_emulator_select}
                     />,
                     <HilResultsView

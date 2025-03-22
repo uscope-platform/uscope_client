@@ -55,6 +55,7 @@ let  EmulatorNodeProperties = props =>{
                             selected_core={selected_core}
                             selected_emulator={props.selected_emulator}
                             selected_component={props.selected_component}
+                            bump_version={props.bump_version}
                         />
                     } />
                 </UIPanel>

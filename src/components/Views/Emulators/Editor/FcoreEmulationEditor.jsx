@@ -76,7 +76,7 @@ let FcoreEmulationEditor = function (props) {
 
     useEffect(() => {
         //SETUP NODES
-        if(props.emulator.name !== ""){
+        if(props.emulator.name !== "" ){
             set_enabled_actions({
                 add: true,
                 edit: false,
@@ -119,12 +119,22 @@ let FcoreEmulationEditor = function (props) {
         }
     }, [props.emulator]);
 
+    useEffect(()=>{
+
+        let new_nodes = [];
+        Object.values(props.emulator.cores).map((c)=>{
+            new_nodes.push({ id: c.id, text: c.name });
+        });
+        setNodes(new_nodes);
+    }, [props.selections.obj_version])
+
     let add_core = ()=>{
         props.emulator.add_core(n_cores+1).then((core)=>{
             setNodes([...nodes, {id:core.id, text:core.name}]);
         });
         set_n_cores(n_cores+1);
     };
+
 
     let handle_node_select = (event, node) =>{
         props.on_selection({...props.selections, iom:null, component:{type:"node", obj:node}});
