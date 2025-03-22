@@ -19,26 +19,28 @@ import {SelectableList} from "@UI";
 
 let  CoreOutputsList = props =>{
 
-    let selected_core_id = props.selected_component ? props.selected_component.obj.id : null;
+    let selected_core_id = props.selections.component ? props.selections.component.obj.id : null;
 
     let [selected, set_selected] = useState(null);
 
     let [outputs, set_outputs] = useState([]);
 
     useEffect(() => {
-        if(props.selected_component && props.selected_component.type === "node"){
+        if(props.selections.component && props.selections.component.type === "node"){
             set_outputs(props.emulator.get_output_names(selected_core_id));
         } else set_outputs([]);
-    }, [props.selected_component]);
+    }, [props.selections.component, props.selections.obj_version]);
 
     useEffect(() => {
-        if(props.selected_iom){
-            if(props.selected_iom.type !== "outputs"){
+        if(props.selections.iom){
+            if(props.selections.iom.type !== "outputs"){
                 set_selected(null);
+            } else{
+                set_selected(props.selections.iom.obj);
             }
         }
 
-    }, [props.selected_iom]);
+    }, [props.selections.iom]);
 
 
     let handle_add = () =>{

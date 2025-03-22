@@ -40,9 +40,14 @@ let  CoreOutputProperties = props =>{
                 value = parseInt(value);
             }
 
-            await props.selected_emulator.edit_output(props.selected_component.obj.id,
-                field, value, props.selected_iom.obj);
+            await props.selected_emulator.edit_output(
+                props.selected_component.obj.id,
+                field, value, props.selected_iom.obj
+            );
 
+            if(field === 'name'){
+                props.on_modify({type:props.selected_iom.type, obj:value});
+            }
         }
     };
 

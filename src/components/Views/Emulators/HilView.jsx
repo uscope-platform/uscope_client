@@ -30,7 +30,8 @@ let HilView = function (props) {
         component:null,
         iom:null,
         tab:0,
-        program:null
+        program:null,
+        obj_version:0
     })
 
 
@@ -55,15 +56,21 @@ let HilView = function (props) {
         }
     });
 
+    let versioned_selection_handles = (value) =>{
+        let new_selection = value;
+         new_selection.obj_version = value.obj_version+1;
+         set_selections(new_selection);
+    }
+
 
     let on_select = (value) =>{
-        set_selections({...selections, tab:value});
+        versioned_selection_handles({...selections, tab:value});
     }
 
 
     let handle_emulator_select = (emu)=>{
         set_emulator(new up_emulator(emulators_store[emu]));
-        set_selections({...selections, component: null});
+        versioned_selection_handles({...selections, component: null});
     }
 
 
@@ -83,14 +90,15 @@ let HilView = function (props) {
                         onDeploy={()=>{set_deployed(true)}}
                         emulator={emulator}
                         selections={selections}
-                        set_selections={set_selections}
+                        set_selections={versioned_selection_handles}
                         set_compiled_programs={set_compiled_programs}
                         on_emulator_select={handle_emulator_select}
+                        on_compile_done={()=>{}}
                     />,
                     <HilDebuggerView
                         emulator={emulator}
                         selections={selections}
-                        set_selections={set_selections}
+                        set_selections={versioned_selection_handles}
                         on_select={handle_emulator_select}
                         compiled_programs={compiled_programs}
                         set_emulation_results={set_emulation_results}
@@ -99,7 +107,7 @@ let HilView = function (props) {
                         emulator={emulator}
                         deployed={deployed}
                         selections={selections}
-                        set_selections={set_selections}
+                        set_selections={versioned_selection_handles}
                         on_select={handle_emulator_select}
                     />,
                     <HilResultsView

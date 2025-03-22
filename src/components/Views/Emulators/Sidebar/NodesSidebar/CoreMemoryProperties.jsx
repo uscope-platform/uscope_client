@@ -19,19 +19,16 @@ import {Checkbox, InputField, SelectField, SimpleContent} from "@UI";
 
 let  CoreMemoryProperties = props =>{
 
-    const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     let handle_change_output = (event)=>{
 
         let field = event.target.name;
         let value = event.target.checked;
         props.selected_emulator.edit_memory(props.selected_component.obj.id,
-            field, value, props.selected_iom.obj).then(()=>{
-            forceUpdate();
-        });
+            field, value, props.selected_iom.obj);
     }
 
-    let handle_change_iom = (event) =>{
+    let handle_change_iom = async (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab") {
             let field = event.target.name;
             let value = event.target.value;
@@ -48,22 +45,16 @@ let  CoreMemoryProperties = props =>{
                     return parseInt(val);
                 });
             }
-
-            props.selected_emulator.edit_memory(props.selected_component.obj.id,
-                field, value, props.selected_iom.obj).then(()=>{
-                if(field === 'name'){
-                    props.on_modify({type:props.selected_iom.type, obj:value});
-                }
-                forceUpdate();
-            });
+            await props.selected_emulator.edit_memory(props.selected_component.obj.id, field, value, props.selected_iom.obj)
+            if(field === 'name'){
+                props.on_modify({type:props.selected_iom.type, obj:value});
+            }
         }
     };
 
     let handle_change_type = (event) =>{
         props.selected_emulator.edit_memory(props.selected_component.obj.id,
-            "type", event.value, props.selected_iom.obj).then(()=>{
-            forceUpdate();
-        });
+            "type", event.value, props.selected_iom.obj)
     }
 
     let sel_mem = props.selected_core.memory_init.filter((item)=>{
@@ -76,9 +67,7 @@ let  CoreMemoryProperties = props =>{
         let value = event.target.checked;
 
         props.selected_emulator.edit_memory(props.selected_component.obj.id,
-            field, value, props.selected_iom.obj).then(()=>{
-            forceUpdate();
-        });
+            field, value, props.selected_iom.obj);
     }
 
     let render_type_options = () =>{

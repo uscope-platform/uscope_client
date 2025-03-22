@@ -296,13 +296,12 @@ let FcoreEmulationEditor = function (props) {
                             <TabbedContent names={["Inputs", "Input Files"]} contents={[
                                 <CoreInputsList
                                     emulator={props.emulator}
-                                    selected_component={props.selections.component}
                                     on_selection={handle_select_iom}
-                                    selected_iom={props.selections.iom}
+                                    selections={props.selections}
                                 />,
                                 <CoreInputFilesList
                                     emulator={props.emulator}
-                                    selected_component={props.selections.component}
+                                    selections={props.selections}
                                 />
                             ]} onSelect={set_selected_inputs_tab} selected={selected_inputs_tab}/>
                         </UIPanel>
@@ -310,9 +309,8 @@ let FcoreEmulationEditor = function (props) {
                             <SimpleContent name="Outputs" height="100%" content={
                                 <CoreOutputsList
                                     emulator={props.emulator}
-                                    selected_component={props.selections.component}
+                                    selections={props.selections}
                                     on_selection={handle_select_iom}
-                                    selected_iom={props.selections.iom}
                                 />
                             }/>
                         </UIPanel>
@@ -320,9 +318,8 @@ let FcoreEmulationEditor = function (props) {
                             <SimpleContent name="Memory" height="100%" content={
                                 <CoreMemoriesList
                                     emulator={props.emulator}
-                                    selected_component={props.selections.component}
+                                    selections={props.selections}
                                     on_selection={handle_select_iom}
-                                    selected_iom={props.selections.iom}
                                 />
                             }/>
                         </UIPanel>

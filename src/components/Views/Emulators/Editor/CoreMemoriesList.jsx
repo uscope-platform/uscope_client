@@ -20,26 +20,28 @@ import {SelectableList} from "@UI";
 
 let  CoreMemoriesList = props =>{
 
-    let selected_core_id = props.selected_component ? props.selected_component.obj.id : null;
+    let selected_core_id = props.selections.component ? props.selections.component.obj.id : null;
 
     let [selected, set_selected] = useState(null);
 
     let [memories, set_memories] = useState([]);
 
     useEffect(() => {
-        if(props.selected_component && props.selected_component.type === "node"){
+        if(props.selections.component && props.selections.component.type === "node"){
             set_memories(props.emulator.get_memory_names(selected_core_id));
         } else set_memories([]);
-    }, [props.selected_component]);
+    }, [props.selections.component, props.selections.obj_version]);
 
     useEffect(() => {
-        if(props.selected_iom){
-            if(props.selected_iom.type !== "memory_init"){
+        if(props.selections.iom){
+            if(props.selections.iom.type !== "memory_init"){
                 set_selected(null);
+            }else{
+                set_selected(props.selections.iom.obj);
             }
         }
 
-    }, [props.selected_iom]);
+    }, [props.selections.iom]);
 
 
     let handle_add = () =>{
