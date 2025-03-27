@@ -35,6 +35,18 @@ export class up_emulator {
         }
     }
 
+    static get_dummy(){
+        let emulator_obj = {
+            id:9999,
+            name:"",
+            cores:{},
+            connections:[],
+            emulation_time:0.001,
+            deployment_mode:false
+        };
+        return new up_emulator(emulator_obj);
+    }
+
     deep_copy = ()=>{
         let ret = {};
         ret.deployment_mode = this.deployment_mode;

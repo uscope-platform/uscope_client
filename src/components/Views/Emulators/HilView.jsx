@@ -16,7 +16,7 @@
 import React, {useState} from 'react';
 
 import {TabbedContent, UIPanel} from "@UI"
-import {up_emulator} from "@client_core";
+import {up_emulator, up_emulator_result} from "@client_core";
 import {useSelector} from "react-redux";
 import HilEditorView from "./Editor/HilEditorView.jsx";
 import HilDebuggerView from "./FcoreDebugger/HilDebuggerView.jsx";
@@ -35,7 +35,7 @@ let HilView = function (props) {
     })
 
 
-    let [emulation_results, set_emulation_results] = useState({});
+    let [emulation_results, set_emulation_results] = useState(up_emulator_result.getDummy());
     let [input_data, set_input_data] = useState({});
     let [deployed, set_deployed] = useState(false);
 
@@ -43,18 +43,7 @@ let HilView = function (props) {
 
     const emulators_store = useSelector(state => state.emulators);
 
-    let [emulator, set_emulator] = useState({
-        name:"",
-        cores:[],
-        connections:[],
-        _get_emulator: ()=>{
-            return{
-                name:"",
-                cores:[],
-                connections:[]
-            }
-        }
-    });
+    let [emulator, set_emulator] = useState(up_emulator.get_dummy());
 
 
     let versioned_handle_selection = (value) =>{

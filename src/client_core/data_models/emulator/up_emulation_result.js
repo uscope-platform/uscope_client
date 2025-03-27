@@ -25,6 +25,13 @@ export class up_emulator_result {
         this.selected_data_series = [];
     }
 
+
+    static getDummy() {
+        let obj = {
+            timebase:[]
+        }
+        return new up_emulator_result(obj, {});
+    }
     get_timebase = () =>{return this.timebase}
 
     get_data_sources = () =>{
