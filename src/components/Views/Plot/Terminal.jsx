@@ -20,13 +20,18 @@ import 'xterm/css/xterm.css';
 let TerminalComponent = props =>{
 
     const term = useRef(null);
+    const hasInitialized = useRef(false);
 
     useEffect(()=>{
-        term.current = init_terminal();
+        if(!hasInitialized.current){
+            term.current = init_terminal();
+            hasInitialized.current = true;
+        }
+
     },[])
 
     return(
-        <div id="xterm" style={{ height: "25vh", width: "100%" }} />
+        <div id="xterm" style={{ height: "15em", width: "100%" }} />
     )
 };
 

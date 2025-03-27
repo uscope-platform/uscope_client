@@ -145,7 +145,7 @@ let PlotTab = function (props) {
                         </UIPanel>
                     </div>
                     <UIPanel key="terminal" level="level_2">
-                        <SimpleContent name="Terminal" content={
+                        <SimpleContent name="Terminal" height="25vh" content={
                             <TerminalComponent/>
                         }/>
                     </UIPanel>
