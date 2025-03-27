@@ -13,7 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export {StyledScrollbar} from "./StyledScrollbar"
 export {SelectField} from "./Select"
 export {Label} from "./Label"
 export {InputField} from "./InputField"
