@@ -13,9 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {applyMiddleware, createStore} from "redux";
 import thunk from "redux-thunk";
-import {composeWithDevTools} from 'redux-devtools-extension';
 import {persistReducer, persistStore} from 'redux-persist';
 import storage from 'redux-persist/lib/storage'
 import hardSet from "redux-persist/lib/stateReconciler/hardSet";
@@ -23,11 +21,8 @@ import rootReducer from './redux/Reducers';
 
 // TODO: immer AutoFreeze breaks plotly because plotly modifies his inputs!!! that are passes through redux
 import { setAutoFreeze } from 'immer';
+import {configureStore} from "@reduxjs/toolkit";
 setAutoFreeze(false);
-
-const initialState = {
-
-};
 
 
 const persistConfig = {
@@ -41,19 +36,17 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 
 
-const composeEnhancers = composeWithDevTools({
-    stateSanitizer: (state) => state.data ? { ...state, data: '<<DATA_BLOB>>' } : state
+
+const store = configureStore({
+    reducer: persistedReducer,
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: false,
+        }).concat(thunk),
+    devTools: {
+        stateSanitizer: (state) => state.data ? { ...state, data: '<<DATA_BLOB>>' } : state
+    },
 });
-
-let middleware =[thunk];
-
-const store = createStore(
-    persistedReducer,
-    initialState,
-    composeEnhancers(
-        applyMiddleware(...middleware)
-    )
-);
 
 
 export default store;
