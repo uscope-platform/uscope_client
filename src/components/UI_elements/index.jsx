@@ -33,7 +33,6 @@ export {ListItem} from './ListItem'
 export {TwoColumnSelector} from "./TwoColumnSelector"
 export {Chip} from "./Chip"
 export {Radio} from "./Radio"
-export {ToggleField} from "./ToggleField"
 export {RangedInputField} from "./RangedInputField"
 export {TextEditor} from "./TextEditor.jsx"
 export {SidebarBase} from "./Sidebar/SidebarBase.jsx"
