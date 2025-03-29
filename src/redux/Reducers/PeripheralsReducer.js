@@ -22,6 +22,8 @@ import {
     UPSERT_REGISTER
 } from "../Actions/types";
 
+import {produce} from "immer"
+
 let PeripheralsReducer = function (state = null, action) {
     switch (action.type) {
         case LOAD_PERIPHERALS:
@@ -40,8 +42,8 @@ let PeripheralsReducer = function (state = null, action) {
                 }, {});
         case UPSERT_REGISTER:
             Object.keys(state).map((key=>{
-                state[action.parent].registers = state[action.parent].registers.map((reg) =>{
-                    if(reg.ID === action.register_id)
+                state[action.payload.parent_periph].registers = state[action.payload.parent_periph].registers.map((reg) =>{
+                    if(reg.ID === action.payload.ID)
                         return action.payload;
                     else
                         return reg;
@@ -63,13 +65,11 @@ let PeripheralsReducer = function (state = null, action) {
             });
             return state;
         case REMOVE_REGISTER:
-            Object.keys(state).map((key=>{
-                state[action.payload.periph].registers = state[action.payload.periph].registers.filter((reg) =>{
+            return produce(state, draft => {
+                draft[action.payload.periph].registers = draft[action.payload.periph].registers.filter((reg) =>{
                     return reg.ID !== action.payload.reg;
                 });
-                return [];
-            }))
-            return state;
+            })
         case REMOVE_FIELD:
             state[action.payload.periph].registers = state[action.payload.periph].registers.map((reg) =>{
                 if(reg.ID === action.payload.reg) {
