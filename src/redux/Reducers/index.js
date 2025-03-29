@@ -19,7 +19,7 @@ import registerValuesReducer from "./registerReducer"
 import PeripheralSlice from './peripheralSlice.js'
 import {scriptsReducer, scriptsWorkspaceReducer} from "./scriptsReducer";
 import ApplicationSlice from './applicationSlice'
-import programsReducer from "./ProgramsReducer";
+import ProgramSlice from "./programSlice.js";
 import BitstreamSlice from "./bitstreamSlice";
 import FilterSlice from "./filterSlice";
 import EmulatorSlice from "./emulatorSlice";
@@ -29,7 +29,7 @@ export default combineReducers({
     registerValues: registerValuesReducer,
     peripherals: PeripheralSlice,
     applications: ApplicationSlice,
-    programs: programsReducer,
+    programs: ProgramSlice,
     scripts: scriptsReducer,
     scriptsWorkspace: scriptsWorkspaceReducer,
     filters: FilterSlice,
