@@ -78,6 +78,8 @@ let PlotTab = function (props) {
         set_acquisition_status(status);
     }
 
+    const parameters = JSON.parse(JSON.stringify(application.parameters));
+
     return(
             <div style={{
                 display:"flex",
@@ -131,14 +133,14 @@ let PlotTab = function (props) {
                         <UIPanel style={{flexGrow: 0.4}} key="parameters" level="level_2">
                             <SimpleContent name="Parameters" content={
                                 <ParametersArea
-                                    parameters={application.parameters}
+                                    parameters={parameters}
                                 />
                             }/>
                         </UIPanel>
                         <UIPanel style={{flexGrow: 1}} key="macro" level="level_2">
                             <SimpleContent name="Macro" content={
                                 <MacroActions
-                                    parameters={application.parameters}
+                                    parameters={parameters}
                                     macro={application.macro}
                                 />
                             }/>

@@ -42,7 +42,6 @@ export const initialize_scripting_engine = (application, peripherals) =>{
 export const run_script = (store, trigger_string, parameters, current_parameter) =>{
     const state = store.getState();
     const scripts = state.scripts;
-    const old_registers = state.registerValues;
 
 
     let trigger = Object.values(scripts).filter((script)=>{
@@ -50,7 +49,7 @@ export const run_script = (store, trigger_string, parameters, current_parameter)
     });
     let content = trigger[0].content;
 
-    let context = context_cleaner(old_registers, parameters, current_parameter);
+    let context = context_cleaner( parameters, current_parameter);
     context["workspace"] = state.scriptsWorkspace;
     let first_arg = null;
 
