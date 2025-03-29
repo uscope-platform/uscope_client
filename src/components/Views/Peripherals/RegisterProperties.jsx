@@ -88,7 +88,7 @@ export let  RegisterProperties = props =>{
     }
 
     let handleRemove= (event) =>{
-        up_register.remove_register(props.peripheral.id, props.register.register_name).then(()=>{
+        up_register.remove_register(props.peripheral.id, props.register.ID).then(()=>{
             props.forceUpdate();
         });
     }

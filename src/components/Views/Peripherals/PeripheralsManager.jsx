@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useReducer, useState} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 
 import {useSelector} from "react-redux"
 
@@ -34,11 +34,20 @@ let PeripheralsManager = (props)=>{
 
     const peripherals = useSelector(state => state.peripherals);
 
-    const [, forceUpdate] = useReducer(x => x + 1, 0);
+    const [data_version, forceUpdate] = useReducer(x => x + 1, 0);
 
     const [selected_peripheral, set_selected_peripheral] = useState({registers:[], parametric:false, _get_periph:()=>{return{}}});
 
+    const [periph_selector, set_periph_selector] = useState(null);
+
+    useEffect(()=>{
+        if(periph_selector){
+            set_selected_peripheral(new up_peripheral(peripherals[periph_selector]));
+        }
+    }, [data_version])
+
     let handle_select = (sel) =>{
+        set_periph_selector(sel);
         set_selected_peripheral(new up_peripheral(peripherals[sel]));
     }
 
