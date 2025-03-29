@@ -27,14 +27,14 @@ import ApplicationChooser from "./components/AppChooser";
 //////  STYLE IMPORTS
 import './App.css';
 
-import {initialize_scripting_engine, refresh_caches, setup_client_core, up_application} from "./client_core";
+import {initialize_scripting_engine, refresh_caches, setup_client_core, up_application} from "@client_core";
 import {Routes} from "react-router";
-import {addApplication} from "./redux/Actions/applicationActions";
+import {addApplication} from "@redux";
 
-import {UIPanel} from "./components/UI_elements";
+import {UIPanel} from "@UI";
 import PlatformManager from "./components/Views/Programs/PlatformManager";
-import {InterfaceParameters} from "./components/UI_elements/InterfaceParameters";
-import {up_settings} from "./client_core/data_models/up_settings";
+import {InterfaceParameters} from "@UI";
+import {up_settings} from "@client_core";
 
 
 let operator_views = ["Scope"];

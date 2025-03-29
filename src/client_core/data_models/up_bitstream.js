@@ -57,10 +57,9 @@ export class up_bitstream {
     export_bitstream = async () => {
         return backend_get(api_dictionary.bitstream.get + '/'+this.id + "?export-bitfile=true");
     }
-    static delete_bitstream(bitstream){
-        return backend_delete(api_dictionary.bitstream.delete+'/'+bitstream.id, bitstream).then(()=>{
-            store.dispatch(removeBitstream(bitstream));
-        })
+    static async delete_bitstream(bitstream){
+        await backend_delete(api_dictionary.bitstream.delete+'/'+bitstream.id, bitstream);
+        store.dispatch(removeBitstream(bitstream));
     }
 
     static get_file_content(input_file){
