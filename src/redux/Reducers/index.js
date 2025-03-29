@@ -18,11 +18,11 @@ import {combineReducers} from "redux";
 import registerValuesReducer from "./registerReducer"
 import PeripheralsReducer from './PeripheralsReducer'
 import {scriptsReducer, scriptsWorkspaceReducer} from "./scriptsReducer";
-import ApplicationSlice from './applicationSlice.js'
+import ApplicationSlice from './applicationSlice'
 import programsReducer from "./ProgramsReducer";
-import BitstreamSlice from "./bitstreamSlice.js";
-import filtersReducer from "./FiltersReducer";
-import emulatorsReducer from "./EmulatorReducer";
+import BitstreamSlice from "./bitstreamSlice";
+import FilterSlice from "./filterSlice";
+import EmulatorSlice from "./emulatorSlice";
 
 export default combineReducers({
     bitstreams: BitstreamSlice,
@@ -32,6 +32,6 @@ export default combineReducers({
     programs : programsReducer,
     scripts: scriptsReducer,
     scriptsWorkspace: scriptsWorkspaceReducer,
-    filters: filtersReducer,
-    emulators: emulatorsReducer
+    filters: FilterSlice,
+    emulators: EmulatorSlice
     });

@@ -16,23 +16,21 @@
  *
  */
 
+import {ADD_FILTER, LOAD_ALL_FILTERS, REMOVE_FILTER} from "@redux/Actions/types.js";
 
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {}
 
-const bitstreamSlice = createSlice({
-    name: 'bitstreams',
+const FilterSlice = createSlice({
+    name: 'filters',
     initialState,
     reducers: {
-        loadAllBitstreams(state, action) {
-            return action.payload;
-        },
-        AddBitstream(state, action) {
+        AddFilter(state, action) {
             return {...state, ...{[action.payload.id]:action.payload}}
         },
-        removeBitstream(state, action) {
-            return Object.keys(state)
+        removeFilter(state, action) {
+            return  Object.keys(state)
                 .filter(key => {
                     return key !== action.payload.id.toString();
                 })
@@ -41,16 +39,20 @@ const bitstreamSlice = createSlice({
                     return obj;
                 }, {});
         },
+        loadAllFilters(state, action) {
+            return action.payload;
+        }
     },
 })
+
 
 // `createSlice` automatically generated action creators with these names.
 // export them as named exports from this "slice" file
 export const {
-    loadAllBitstreams,
-    AddBitstream,
-    removeBitstream
-} = bitstreamSlice.actions
+    AddFilter,
+    removeFilter,
+    loadAllFilters
+} = FilterSlice.actions
 
 // Export the slice reducer as the default export
-export default bitstreamSlice.reducer
+export default FilterSlice.reducer
