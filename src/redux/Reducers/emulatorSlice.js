@@ -21,36 +21,41 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {}
 
-const bitstreamSlice = createSlice({
-    name: 'bitstreams',
+const EmulatorSlice = createSlice({
+    name: 'emulators',
     initialState,
     reducers: {
-        loadAllBitstreams(state, action) {
-            return action.payload;
-        },
-        AddBitstream(state, action) {
+        addEmulator(state, action) {
             return {...state, ...{[action.payload.id]:action.payload}}
         },
-        removeBitstream(state, action) {
-            return Object.keys(state)
+        removeEmulator(state, action) {
+            return  Object.keys(state)
                 .filter(key => {
-                    return key !== action.payload.id.toString();
+                    return key !== action.payload.toString();
                 })
                 .reduce((obj, key) => {
                     obj[key] = state[key];
                     return obj;
                 }, {});
         },
+        loadAllEmulators(state, action) {
+            return action.payload;
+        },
+        update_emulator(state, action) {
+            state[parseInt(action.payload.id)] = action.payload
+        },
     },
 })
+
 
 // `createSlice` automatically generated action creators with these names.
 // export them as named exports from this "slice" file
 export const {
-    loadAllBitstreams,
-    AddBitstream,
-    removeBitstream
-} = bitstreamSlice.actions
+    addEmulator,
+    removeEmulator,
+    loadAllEmulators,
+    update_emulator
+} = EmulatorSlice.actions
 
 // Export the slice reducer as the default export
-export default bitstreamSlice.reducer
+export default EmulatorSlice.reducer
