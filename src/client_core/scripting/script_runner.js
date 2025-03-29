@@ -92,16 +92,21 @@ export const run_parameter_script = (store, parameter) => {
     let parameters = __selected_application.parameters;
 
     let floatValue = parseFloat(parameter.value);
-    let objIndex = parameters.findIndex((obj => obj.parameter_id === parameter.name));
+    let objIndex = parameters.findIndex((obj => obj.parameter_id === parameter.parameter_id));
+    if(parameters[objIndex].trigger === "") {
+        return new Promise((resolve, reject) =>{
+            resolve();
+        });
+    }
     if(parameter.value!=="" && parameters[objIndex].value !==floatValue){
         //update parameters variable
         parameters[objIndex].value = floatValue;
         // run parameter script
 
-        let bulk_registers = run_script(store, parameters[objIndex].trigger, parameters,  parameter.name);
+        let bulk_registers = run_script(store, parameters[objIndex].trigger, parameters,  parameter.parameter_id);
 
         //update value of parameter in redux
-        store.dispatch(saveParameter({name:parameter.name, value:floatValue, app:__selected_application.id}))
+        store.dispatch(saveParameter({name:parameter.parameter_id, value:floatValue, app:__selected_application.id}))
 
         if(bulk_registers !== null && bulk_registers.length !== 0){
             return up_peripheral.bulk_register_write(bulk_registers).then();
