@@ -53,7 +53,7 @@ export class up_field {
         await backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_peripheral, edit)
         edit = {peripheral:this.parent_peripheral, field:"field", action:"add", value:{id:this.parent_register, object: this._get_field()}};
         await backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_peripheral, edit)
-        return store.dispatch(upsertField(this, old_name, this.parent_register, this.parent_peripheral));
+        store.dispatch(upsertField( {name: old_name, obj:this}));
     }
 
     edit_description = async (description) =>{
@@ -85,7 +85,7 @@ export class up_field {
     push_edit = async () =>{
         let edit = {peripheral:this.parent_peripheral, field:"field", action:"edit", value: {id:this.parent_register, object: this._get_field()}};
         await backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_peripheral, edit)
-        return store.dispatch(upsertField(this, this.name, this.parent_register, this.parent_peripheral));
+        return store.dispatch(upsertField({name: this.name, obj:this}));
     }
 
     static async remove_field(periph, reg, field){
@@ -93,7 +93,7 @@ export class up_field {
         let edit = {peripheral:periph, field:"field", action:"remove", value: {id:reg, object: field}};
         console.log(edit);
         await backend_patch(api_dictionary.peripherals.edit+ '/' + periph, edit);
-        return store.dispatch(removeField(periph, reg, field));
+        return store.dispatch(removeField({periph:periph, reg:reg, field:field}));
     }
 
     _get_field = () => {

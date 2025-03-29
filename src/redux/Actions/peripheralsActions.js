@@ -38,27 +38,22 @@ export const removePeripheral = peripheral =>({
     payload:peripheral
 });
 
-export const upsertRegister =  (register_obj, reg_id, periph) =>({
+export const upsertRegister =  register =>({
     type: UPSERT_REGISTER,
-    register_id: reg_id,
-    parent:periph,
-    payload:register_obj
+    payload: register
 });
 
-export const upsertField =  (field_obj,field_id, register, periph) =>({
+export const upsertField =  field =>({
     type: UPSERT_FIELD,
-    parent_reg:register,
-    parent_periph: periph,
-    field_id:field_id,
-    payload:field_obj
+    payload: field
 });
 
-export const removeRegister = (peripheral, register) =>({
+export const removeRegister = (register) =>({
     type: REMOVE_REGISTER,
-    payload: {periph:peripheral, reg:register}
+    payload: register
 });
 
-export const removeField = (peripheral, register, field) =>({
+export const removeField = (field) =>({
     type: REMOVE_FIELD,
-    payload: {periph:peripheral, reg:register, field:field}
+    payload: field
 });

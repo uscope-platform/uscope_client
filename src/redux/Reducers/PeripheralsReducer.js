@@ -42,9 +42,9 @@ let PeripheralsReducer = function (state = null, action) {
                 }, {});
         case UPSERT_REGISTER:
             Object.keys(state).map((key=>{
-                state[action.payload.parent_periph].registers = state[action.payload.parent_periph].registers.map((reg) =>{
-                    if(reg.ID === action.payload.ID)
-                        return action.payload;
+                state[action.payload.obj.parent_periph].registers = state[action.payload.obj.parent_periph].registers.map((reg) =>{
+                    if(reg.ID === action.payload.id)
+                        return action.payload.obj;
                     else
                         return reg;
                 });
@@ -52,11 +52,11 @@ let PeripheralsReducer = function (state = null, action) {
             }))
             return state;
         case UPSERT_FIELD:
-                state[action.parent_periph].registers = state[action.parent_periph].registers.map((reg) =>{
-                if(reg.register_name === action.parent_reg) {
+                state[action.payload.obj.parent_peripheral].registers = state[action.payload.obj.parent_peripheral].registers.map((reg) =>{
+                if(reg.register_name === action.payload.obj.parent_register) {
                     reg.fields = reg.fields.map((f) => {
-                        if (f.name === action.field_id) {
-                            return action.payload;
+                        if (f.name === action.payload.name) {
+                            return action.payload.obj;
                         } else
                             return f;
                     })

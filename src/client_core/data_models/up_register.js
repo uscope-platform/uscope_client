@@ -162,13 +162,13 @@ export class up_register {
         await backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_periph, edit)
         edit = {peripheral:this.parent_periph, field:"register", action:"add", value:this._get_register()};
         await backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_periph, edit)
-        return store.dispatch(upsertRegister(this, old_id, this.parent_periph));
+        return store.dispatch(upsertRegister({id:old_id, obj:this}));
     }
 
     push_edit = async () =>{
         let edit = {peripheral:this.parent_periph, field:"register", action:"edit", value:this._get_register()};
         await backend_patch(api_dictionary.peripherals.edit+ '/' + this.parent_periph, edit)
-        return store.dispatch(upsertRegister(this, this.ID, this.parent_periph));
+        return store.dispatch(upsertRegister({id:this.ID, obj:this}));
     }
 
     set_fields = (fields) => {
@@ -182,7 +182,8 @@ export class up_register {
     static async remove_register(periph, reg){
         let edit = {peripheral:periph, field:"register", action:"remove", value:reg};
         await backend_patch(api_dictionary.peripherals.edit+ '/' + periph, edit)
-        return store.dispatch(removeRegister(periph, reg));
+
+        return store.dispatch(removeRegister({periph:periph, reg:reg}));
     }
 
     get_fields_names = () => {
