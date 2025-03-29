@@ -16,8 +16,6 @@
  *
  */
 
-import {ADD_FILTER, LOAD_ALL_FILTERS, REMOVE_FILTER} from "@redux/Actions/types.js";
-
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {}
