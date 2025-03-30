@@ -17,7 +17,7 @@ import thunk from "redux-thunk";
 import {persistReducer, persistStore} from 'redux-persist';
 import storage from 'redux-persist/lib/storage'
 import hardSet from "redux-persist/lib/stateReconciler/hardSet";
-import rootReducer from './redux/Reducers';
+import rootReducer from './redux/Slices';
 
 // TODO: immer AutoFreeze breaks plotly because plotly modifies his inputs!!! that are passes through redux
 import { setAutoFreeze } from 'immer';
