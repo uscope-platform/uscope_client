@@ -15,7 +15,7 @@
 
 import {saveParameter, saveScriptsWorkspace} from "@redux";
 import {up_peripheral} from "@client_core";
-import {context_cleaner, parseFunction} from "./frontend";
+import {parseFunction} from "./frontend";
 import {translate_legacy_registers, translate_registers} from "./backend";
 import {set_write_callback} from "@client_core";
 import {__selected_application} from "../index";
@@ -39,10 +39,9 @@ export const initialize_scripting_engine = (application, peripherals) =>{
 }
 
 
-export const run_script = (store, trigger_string, parameters, current_parameter) =>{
+export const run_script = (store, trigger_string, parameters, current_parameter, argument) =>{
     const state = store.getState();
     const scripts = state.scripts;
-    const old_registers = state.registerValues;
 
 
     let trigger = Object.values(scripts).filter((script)=>{
@@ -50,18 +49,9 @@ export const run_script = (store, trigger_string, parameters, current_parameter)
     });
     let content = trigger[0].content;
 
-    let context = context_cleaner(old_registers, parameters, current_parameter);
+    let context =  {registers: {}, parameters: parameters};
     context["workspace"] = state.scriptsWorkspace;
-    let first_arg = null;
-
-    if(current_parameter !== ""){
-        parameters.map(item => {
-            if(item.parameter_id === current_parameter){
-                first_arg = item.value;
-            }
-            return false;
-        });
-    }
+    let first_arg = argument;
 
     let script_content =  parseFunction(content);
     if(!script_content){
@@ -93,12 +83,17 @@ export const run_parameter_script = (store, parameter) => {
 
     let floatValue = parseFloat(parameter.value);
     let objIndex = parameters.findIndex((obj => obj.parameter_id === parameter.name));
+
+    let params_map = {};
+    for(const i of parameters){
+        params_map[i.parameter_id] = i.value;
+    }
+
+
     if(parameter.value!=="" && parameters[objIndex].value !==floatValue){
-        //update parameters variable
-        parameters[objIndex].value = floatValue;
         // run parameter script
 
-        let bulk_registers = run_script(store, parameters[objIndex].trigger, parameters,  parameter.name);
+        let bulk_registers = run_script(store, parameters[objIndex].trigger, params_map,  parameter.name, floatValue);
 
         //update value of parameter in redux
         store.dispatch(saveParameter({name:parameter.name, value:floatValue, app:__selected_application.id}))

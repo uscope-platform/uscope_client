@@ -122,6 +122,14 @@ export class up_application {
 
     }
 
+    get_parameters_map = () =>{
+        let map = {}
+        for(const p of this.parameters){
+            map[p.parameter_id] = p.value;
+        }
+        return map;
+    }
+
     load_irv = () =>{
         let writes = [];
         for(let i of this.initial_registers_values){

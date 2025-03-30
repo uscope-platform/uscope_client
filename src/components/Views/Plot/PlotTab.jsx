@@ -138,7 +138,6 @@ let PlotTab = function (props) {
                         <UIPanel style={{flexGrow: 1}} key="macro" level="level_2">
                             <SimpleContent name="Macro" content={
                                 <MacroActions
-                                    parameters={application.parameters}
                                     macro={application.macro}
                                 />
                             }/>

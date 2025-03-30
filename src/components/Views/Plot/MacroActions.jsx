@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import React, {useContext} from 'react';
 
 import {Button} from "@UI"
 import styled from "styled-components";
@@ -21,6 +21,7 @@ import styled from "styled-components";
 import {run_script, up_peripheral} from "@client_core";
 
 import store from "../../../store";
+import {ApplicationContext} from "@src/AuthApp.jsx";
 
 
 const ButtonGrid = styled.div`
@@ -32,9 +33,12 @@ const ButtonGrid = styled.div`
 
 let  MacroActions = props =>{
 
+    const application = useContext(ApplicationContext);
+
     let onClick = async (event) => {
         let trigger_str = event.target.name;
-        let bulk_registers = run_script(store, trigger_str, props.parameters, "");
+        let params = application.get_parameters_map();
+        let bulk_registers = run_script(store, trigger_str, params, "", null);
         if(bulk_registers !== null){
             await up_peripheral.bulk_register_write(bulk_registers);
         }

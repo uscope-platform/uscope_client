@@ -15,7 +15,6 @@
 
 import {combineReducers} from "redux";
 
-import registerValuesReducer from "./registerReducer"
 import PeripheralsReducer from './PeripheralsReducer'
 import {scriptsReducer, scriptsWorkspaceReducer} from "./scriptsReducer";
 import ApplicationsReducer from './applicationsReducer'
@@ -26,7 +25,6 @@ import emulatorsReducer from "./EmulatorReducer";
 
 export default combineReducers({
     bitstreams:BitstreamsReducer,
-    registerValues: registerValuesReducer,
     peripherals:PeripheralsReducer,
     applications : ApplicationsReducer,
     programs : programsReducer,
