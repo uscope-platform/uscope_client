@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {ADD_SCRIPT, LOAD_ALL_SCRIPTS, REMOVE_SCRIPT, SAVE_SCRIPT_WORKSPACE} from "../Actions/types";
+import {ADD_SCRIPT, LOAD_ALL_SCRIPTS, REMOVE_SCRIPT} from "../Actions/types";
 
 
 let scriptsReducer = function (state = [], action) {
@@ -38,15 +38,4 @@ let scriptsReducer = function (state = [], action) {
 };
 
 
-let scriptsWorkspaceReducer = function(state=null, action) {
-    switch (action.type) {
-        case SAVE_SCRIPT_WORKSPACE:
-            state = {...state, ...action.payload};
-            return state;
-        default:
-            return state;
-    }
-};
-
-
-export  {scriptsReducer, scriptsWorkspaceReducer};
+export  {scriptsReducer};

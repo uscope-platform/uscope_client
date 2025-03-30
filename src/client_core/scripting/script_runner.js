@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {saveParameter, saveScriptsWorkspace} from "@redux";
+import {saveParameter} from "@redux";
 import {up_peripheral} from "@client_core";
 import {parseFunction} from "./frontend";
 import {translate_legacy_registers, translate_registers} from "./backend";
@@ -22,6 +22,9 @@ import {__selected_application} from "../index";
 
 export let scripting_engine_peripherals = {}
 export let script_register_access_log = [];
+
+
+let script_workspace = {};
 
 export const initialize_scripting_engine = (application, peripherals) =>{
     //TODO: This call is kind of redundant, this work should be done in the data_model
@@ -50,7 +53,7 @@ export const run_script = (store, trigger_string, parameters, current_parameter,
     let content = trigger[0].content;
 
     let context =  {registers: {}, parameters: parameters};
-    context["workspace"] = state.scriptsWorkspace;
+    context["workspace"] = script_workspace;
     let first_arg = argument;
 
     let script_content =  parseFunction(content);
@@ -72,7 +75,7 @@ export const run_script = (store, trigger_string, parameters, current_parameter,
     }
 
     if(workspace!== null){
-        store.dispatch(saveScriptsWorkspace(workspace))
+        script_workspace = {...script_workspace, ...workspace};
     }
     return bulk_registers;
 };

@@ -13,13 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {ADD_SCRIPT, LOAD_ALL_SCRIPTS, REMOVE_SCRIPT, SAVE_SCRIPT_WORKSPACE} from "./types";
-
-
-export const saveScriptsWorkspace = (workspace) => ({
-    type: SAVE_SCRIPT_WORKSPACE,
-    payload:workspace
-});
+import {ADD_SCRIPT, LOAD_ALL_SCRIPTS, REMOVE_SCRIPT} from "./types";
 
 export const AddScript = script =>({
     type: ADD_SCRIPT,

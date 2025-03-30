@@ -13,15 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//                   REGISTERS ACTIONS
-export const LOAD_REGISTERS = 'LOAD_REGISTERS';
-export const SEND_REGISTER = 'SEND_REGISTER';
 //                   SCRIPTS ACTIONS
 export const ADD_SCRIPT = "ADD_SCRIPT";
 export const REMOVE_SCRIPT = "REMOVE_SCRIPT";
 export const LOAD_ALL_SCRIPTS = "LOAD_ALL_SCRIPTS";
-export const SAVE_SCRIPT_WORKSPACE = "SAVE_SCRIPT_WORKSPACE";
-//                  FCORE PROGRAMS ACTIONS
-export const ADD_PROGRAM = "ADD_PROGRAM";
-export const REMOVE_PROGRAM = "REMOVE_PROGRAM";
-export const LOAD_ALL_PROGRAMS = "LOAD_ALL_PROGRAM";
