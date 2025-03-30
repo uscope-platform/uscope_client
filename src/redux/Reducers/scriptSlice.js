@@ -16,18 +16,19 @@
  *
  */
 
+
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {}
 
-const programSlice = createSlice({
-    name: 'programs',
+const scriptSlice = createSlice({
+    name: 'scripts',
     initialState,
     reducers: {
-        AddProgram(state, action) {
+        AddScript(state, action) {
             return {...state, ...{[action.payload.id]:action.payload}}
         },
-        removeProgram(state, action) {
+        removeScript(state, action) {
             return  Object.keys(state)
                 .filter(key => {
                     return key !== action.payload.id.toString();
@@ -37,8 +38,8 @@ const programSlice = createSlice({
                     return obj;
                 }, {});
         },
-        loadAllPrograms(state, action) {
-            return action.payload
+        loadAllScripts(state, action) {
+            return  action.payload;
         }
     },
 })
@@ -46,10 +47,10 @@ const programSlice = createSlice({
 // `createSlice` automatically generated action creators with these names.
 // export them as named exports from this "slice" file
 export const {
-    AddProgram,
-    removeProgram,
-    loadAllPrograms
-} = programSlice.actions
+    AddScript,
+    removeScript,
+    loadAllScripts
+} = scriptSlice.actions
 
 // Export the slice reducer as the default export
-export default programSlice.reducer
+export default scriptSlice.reducer

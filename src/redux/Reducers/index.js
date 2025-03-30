@@ -13,23 +13,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {combineReducers} from "redux";
+import {combineReducers} from "redux"
 
 import PeripheralSlice from './peripheralSlice.js'
-import {scriptsReducer, scriptsWorkspaceReducer} from "./scriptsReducer";
 import ApplicationSlice from './applicationSlice'
-import ProgramSlice from "./programSlice.js";
-import BitstreamSlice from "./bitstreamSlice";
-import FilterSlice from "./filterSlice";
-import EmulatorSlice from "./emulatorSlice";
+import ProgramSlice from "./programSlice.js"
+import BitstreamSlice from "./bitstreamSlice"
+import FilterSlice from "./filterSlice"
+import EmulatorSlice from "./emulatorSlice"
+import scriptSlice from "./scriptSlice"
 
 export default combineReducers({
     bitstreams: BitstreamSlice,
     peripherals: PeripheralSlice,
     applications: ApplicationSlice,
     programs: ProgramSlice,
-    scripts: scriptsReducer,
-    scriptsWorkspace: scriptsWorkspaceReducer,
+    scripts: scriptSlice,
     filters: FilterSlice,
     emulators: EmulatorSlice
     });
