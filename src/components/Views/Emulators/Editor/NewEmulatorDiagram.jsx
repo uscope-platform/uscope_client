@@ -28,7 +28,6 @@ import {
 
 import '@xyflow/react/dist/style.css';
 import {position} from "plotly.js/src/plots/cartesian/layout_attributes.js";
-import useInterval from "@components/Common_Components/useInterval.js";
 
 const getLayoutedElements = (nodes, edges, options) => {
     const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
@@ -100,7 +99,6 @@ let NewEmulatorDiagram = function (props) {
 
     const onLayout = useCallback(
         (direction) => {
-            console.log(nodes);
             const layouted = getLayoutedElements(nodes, edges, { direction });
 
             setNodes([...layouted.nodes]);
@@ -111,6 +109,38 @@ let NewEmulatorDiagram = function (props) {
         [nodes, edges],
     );
 
+
+    let handle_edge_add = (event) => {
+    }
+
+    let handle_node_select = (event, node) => {
+        let selected_nodes = props.nodes.filter(flt=> {
+            return String(flt.id) === node.id
+        })[0];
+        if(props.onNodeSelect) props.onNodeSelect(selected_nodes);
+    }
+
+    let handle_edge_select = (event, edge) => {
+        let node = 0;
+        if(props.onNodeSelect) props.onNodeSelect(event, node);
+    }
+
+    let handle_node_remove = (node) => {
+        let selected_nodes = props.nodes.filter(flt=> {
+            return String(flt.id) === node[0].id
+        })[0];
+        if(props.onNodeSelect) props.onNodeRemove(selected_nodes);
+    }
+
+    let handle_edge_remove = (event) => {
+        let node = 0;
+        if(props.onNodeSelect) props.onNodeSelect(event, node);
+    }
+
+
+    let handle_deselect = () => {
+        if(props.onCanvasClick) props.onCanvasClick();
+    }
 
     return(
         <div style={{
@@ -123,6 +153,12 @@ let NewEmulatorDiagram = function (props) {
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
+                onConnect={handle_edge_add}
+                onNodesDelete={handle_node_remove}
+                onEdgesDelete={handle_edge_remove}
+                onNodeClick={handle_node_select}
+                onEdgeClick={handle_edge_select}
+                onPaneClick={handle_deselect}
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
                 colorMode="dark"

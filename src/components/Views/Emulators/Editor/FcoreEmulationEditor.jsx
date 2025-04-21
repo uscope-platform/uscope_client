@@ -139,7 +139,7 @@ let FcoreEmulationEditor = function (props) {
     };
 
 
-    let handle_node_select = (event, node) =>{
+    let handle_node_select = (node) =>{
         props.on_selection({...props.selections, iom:null, component:{type:"node", obj:node}});
     }
 
