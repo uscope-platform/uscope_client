@@ -244,7 +244,9 @@ let FcoreEmulationEditor = function (props) {
     let handle_edge_remove = (edge) =>{
         props.on_selection({...props.selections,component:null});
         props.emulator.remove_dma_connection(edge.from, edge.to).then(()=>{
-            let n_e = edges.filter((item) =>{ return item.id !== edge.id});
+            let n_e = edges.filter((item) =>{
+                return item.id !== edge.id
+            });
             setEdges(n_e);
         });
     }
