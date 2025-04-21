@@ -205,20 +205,20 @@ let FcoreEmulationEditor = function (props) {
         props.on_selection({...props.selections,component:null});
     }
 
-    let handle_link_nodes = (event, from, to) =>{
+    let handle_link_nodes = (from, to) =>{
         if(!props.emulator.deployment_mode){
             let found_edges = props.emulator.connections.filter((conn)=>{
-                return conn.source === from.id && conn.destination === to.id;
+                return conn.source === from && conn.destination === to;
             })
             if(found_edges.length === 0){
-                props.emulator.add_dma_connection(from.id, to.id).then(()=>{
-                    const id = `${from.id}-${to.id}`;
+                props.emulator.add_dma_connection(from, to).then(()=>{
+                    const id = `${from}-${to}`;
                     setEdges([
                         ...edges,
                         {
                             id,
-                            from: from.id,
-                            to: to.id
+                            from: from,
+                            to: to
                         }
                     ]);
                 });

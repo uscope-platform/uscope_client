@@ -110,7 +110,8 @@ let NewEmulatorDiagram = function (props) {
     );
 
 
-    let handle_edge_add = (event) => {
+    let handle_edge_add = (connection) => {
+        if(props.onLinkNodes) props.onLinkNodes(parseInt(connection.source), parseInt(connection.target));
     }
 
     let handle_node_select = (event, node) => {
