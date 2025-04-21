@@ -26,6 +26,9 @@ import CoreOutputsList from "./CoreOutputsList";
 import CoreMemoriesList from "./CoreMemoriesList";
 import CoreInputFilesList from "./CoreInputFilesList";
 import {ApplicationContext} from "@src/AuthApp.jsx";
+import NewEmulatorDiagram from "@components/Views/Emulators/Editor/NewEmulatorDiagram.jsx";
+import EmulatorToolbar from "@components/Views/Emulators/Editor/EmulatorToolbar.jsx";
+import {ReactFlowProvider} from "@xyflow/react";
 
 
 let FcoreEmulationEditor = function (props) {
@@ -275,25 +278,40 @@ let FcoreEmulationEditor = function (props) {
                     theme="dark"
                 />
                     <UIPanel key="emulator_diagram" level="level_2">
-                        <SimpleContent name="Emulation_diagram" height="100%" content={
-                            <EmulatorDiagram
-                                selected_node={props.selected_component}
-                                onNodeSelect={handle_node_select}
-                                onNodeRemove={handle_node_remove}
-                                onEdgeSelect={handle_edge_select}
-                                onEdgeRemove={handle_edge_remove}
-                                onCanvasClick={handle_canvas_click}
-                                onLinkNodes={handle_link_nodes}
-                                onAdd={add_core}
-                                onBuild={handle_build}
-                                onRun={handle_run}
-                                onDeploy={handle_deploy}
-                                onEdit={handle_edit}
-                                onDebug={handle_debug}
-                                nodes={nodes}
-                                edges={edges}
-                                enabled_actions={enabled_actions}
-                            />
+                        <SimpleContent style={{minHeight:"700px"}}name="Emulation_diagram" height="100%" content={
+                            <div
+                            style={{
+                                display:"flex",
+                                flexDirection:"column",
+                                height:"100%",
+                                width:"100%"
+                            }}
+                            >
+                                <EmulatorToolbar
+                                    onAdd={add_core}
+                                    onBuild={handle_build}
+                                    onRun={handle_run}
+                                    onDeploy={handle_deploy}
+                                    onEdit={handle_edit}
+                                    enable={enabled_actions}
+                                    onDebug={handle_debug}
+                                />
+
+                                <ReactFlowProvider>
+                                <NewEmulatorDiagram
+                                    selected_node={props.selected_component}
+                                    onNodeSelect={handle_node_select}
+                                    onNodeRemove={handle_node_remove}
+                                    onEdgeSelect={handle_edge_select}
+                                    onEdgeRemove={handle_edge_remove}
+                                    onCanvasClick={handle_canvas_click}
+                                    onLinkNodes={handle_link_nodes}
+                                    nodes={nodes}
+                                    edges={edges}
+                                />
+                                </ReactFlowProvider>
+                            </div>
+
                         }/>
                     </UIPanel>
                     <div style={{
