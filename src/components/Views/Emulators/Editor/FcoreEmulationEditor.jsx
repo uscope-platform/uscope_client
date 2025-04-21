@@ -18,7 +18,6 @@ import {useNavigate} from "react-router";
 import {ToastContainer, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-import EmulatorDiagram from "./EmulatorDiagram";
 import {up_emulator_result} from "@client_core";
 import {SimpleContent, TabbedContent, UIPanel} from "@UI";
 import CoreInputsList from "./CoreInputsList";
@@ -143,7 +142,7 @@ let FcoreEmulationEditor = function (props) {
         props.on_selection({...props.selections, iom:null, component:{type:"node", obj:node}});
     }
 
-    let handle_edge_select = (event, edge) =>{
+    let handle_edge_select = (edge) =>{
         props.on_selection({...props.selections, iom:null, component:{type:"edge", obj:edge}});
     }
 
@@ -278,7 +277,7 @@ let FcoreEmulationEditor = function (props) {
                     theme="dark"
                 />
                     <UIPanel key="emulator_diagram" level="level_2">
-                        <SimpleContent style={{minHeight:"700px"}}name="Emulation_diagram" height="100%" content={
+                        <SimpleContent style={{minHeight:"700px"}} name="Emulation_diagram" height="100%" content={
                             <div
                             style={{
                                 display:"flex",

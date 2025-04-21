@@ -122,8 +122,10 @@ let NewEmulatorDiagram = function (props) {
     }
 
     let handle_edge_select = (event, edge) => {
-        let node = 0;
-        if(props.onNodeSelect) props.onNodeSelect(event, node);
+        let selected_edge = props.edges.filter(flt=> {
+            return String(flt.to) === edge.target && String(flt.from) === edge.source
+        })[0];
+        if(props.onEdgeSelect) props.onEdgeSelect(selected_edge);
     }
 
     let handle_node_remove = (node) => {
