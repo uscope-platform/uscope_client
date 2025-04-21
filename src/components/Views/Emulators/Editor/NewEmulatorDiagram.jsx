@@ -126,10 +126,13 @@ let NewEmulatorDiagram = function (props) {
     }
 
     let handle_node_remove = (node) => {
-        let selected_nodes = props.nodes.filter(flt=> {
+        let deleted_node = props.nodes.filter(flt=> {
             return String(flt.id) === node[0].id
         })[0];
-        if(props.onNodeSelect) props.onNodeRemove(selected_nodes);
+        let remaining_nodes = props.nodes.filter(flt=> {
+            return String(flt.id) !== node[0].id
+        });
+        if(props.onNodeRemove) props.onNodeRemove(remaining_nodes, deleted_node);
     }
 
     let handle_edge_remove = (event) => {

@@ -237,7 +237,7 @@ let FcoreEmulationEditor = function (props) {
         });
         props.emulator.remove_node_connections(node.id).then(()=>{
             props.emulator.remove_core(node.id).then();
-            setNodes(result.nodes);
+            setNodes(result);
             setEdges(new_edges);
         });
     }
