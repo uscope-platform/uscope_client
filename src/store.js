@@ -13,7 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import thunk from "redux-thunk";
 import {persistReducer, persistStore} from 'redux-persist';
 import storage from 'redux-persist/lib/storage'
 import hardSet from "redux-persist/lib/stateReconciler/hardSet";
@@ -43,7 +42,7 @@ const store = configureStore({
         getDefaultMiddleware({
             immutableCheck: false,
             serializableCheck: false,
-        }).concat(thunk),
+        }),
     devTools: {
         stateSanitizer: (state) => state.data ? { ...state, data: '<<DATA_BLOB>>' } : state
     },
