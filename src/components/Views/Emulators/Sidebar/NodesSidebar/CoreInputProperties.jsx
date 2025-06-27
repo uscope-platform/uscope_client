@@ -30,17 +30,11 @@ let  CoreInputProperties = props =>{
             let field = event.target.name;
             let value = event.target.value;
 
-            if(field === "reg_n" || field === "channel"){
-                value = value.replace(/\s/g, '');
-                let value_tokens = value.split(",")
-                value = value_tokens.map(val =>{
-                    return parseInt(val);
-                })
-            }
-
-            if(field === "width"){
+            if(field === "width" || field === "vector_size"){
                 value = parseInt(value);
             }
+
+
 
             if(field === "constant_value") {
                 field = "source";
@@ -166,6 +160,10 @@ let  CoreInputProperties = props =>{
         }
 
         ret.push(<Checkbox name='common_io' value={sel_in.common_io} onChange={handle_change_signed} label="Common IO"/>);
+        ret.push(<Checkbox name='is_vector' value={sel_in.is_vector} onChange={handle_change_signed} label="Is Vector"/>);
+        if(sel_in.is_vector){
+            ret.push(<InputField id="vector_size" name="vector_size" label="Vector Size" defaultValue={sel_in.vector_size} onKeyDown={handle_change_iom}/>);
+        }
         return ret;
     }
 
@@ -174,9 +172,6 @@ let  CoreInputProperties = props =>{
             <SimpleContent  name="Input Properties" content={
                 <div key="input_props" style={{maxHeight:"13em"}}>
                     <InputField id="name" name="name" label="Name" defaultValue={sel_in.name} onKeyDown={handle_change_iom}/>
-                    <InputField id="channel" name="channel" label="Channel" defaultValue={sel_in.channel} onKeyDown={handle_change_iom}/>
-                    <InputField id="reg_n" name="reg_n" label="Register #" defaultValue={sel_in.reg_n} onKeyDown={handle_change_iom}/>
-
                     {render_type_options()}
                     {render_source_options()}
                 </div>

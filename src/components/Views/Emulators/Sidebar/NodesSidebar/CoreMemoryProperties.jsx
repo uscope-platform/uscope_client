@@ -33,18 +33,10 @@ let  CoreMemoryProperties = props =>{
             let field = event.target.name;
             let value = event.target.value;
 
-            if(field === "width"){
+            if(field === "width" || field === "vector_size"){
                 value = parseInt(value);
             }
 
-
-            if(field === "reg_n" || field === "channel"){
-                value = value.replace(/\s/g, '');
-                let value_tokens = value.split(",");
-                value = value_tokens.map(val =>{
-                    return parseInt(val);
-                });
-            }
             await props.selected_emulator.edit_memory(props.selected_component.obj.id, field, value, props.selected_iom.obj)
             if(field === 'name'){
                 props.on_modify({type:props.selected_iom.type, obj:value});
@@ -91,6 +83,11 @@ let  CoreMemoryProperties = props =>{
             ret.push(<Checkbox name='signed' value={sel_mem.signed} onChange={handle_change_signed} label="Signed"/>);
         }
 
+        ret.push(<Checkbox name='is_vector' value={sel_mem.is_vector} onChange={handle_change_signed} label="Is Vector"/>);
+        if(sel_mem.is_vector){
+            ret.push(<InputField id="vector_size" name="vector_size" label="Vector Size" defaultValue={sel_mem.vector_size} onKeyDown={handle_change_iom}/>);
+        }
+
         return ret;
     }
 
@@ -99,7 +96,6 @@ let  CoreMemoryProperties = props =>{
             <SimpleContent name="Memory Properties" content={
                 <div key="memory_props" style={{maxHeight:"13em"}}>
                     <InputField inline id="name" name="name" label="Name" defaultValue={sel_mem.name} onKeyDown={handle_change_iom}/>
-                    <InputField inline id="reg_n" name="reg_n" label="Register #" defaultValue={sel_mem.reg_n} onKeyDown={handle_change_iom}/>
                     {render_type_options()}
                     <InputField inline id="value" name="value" label="Value" defaultValue={sel_mem.value} onKeyDown={handle_change_iom}/>
                     <Checkbox name='is_output' value={sel_mem.is_output} onChange={handle_change_output} label="Use as Output"/>

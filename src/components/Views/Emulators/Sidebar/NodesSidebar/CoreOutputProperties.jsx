@@ -29,14 +29,7 @@ let  CoreOutputProperties = props =>{
             let field = event.target.name;
             let value = event.target.value;
 
-            if(field === "reg_n" || field === "channel") {
-                value = value.replace(/\s/g, '');
-                let value_tokens = value.split(",")
-                value = value_tokens.map(val =>{
-                    return parseInt(val);
-                })
-            }
-            if(field === "width"){
+            if(field === "width" || field === "vector_size"){
                 value = parseInt(value);
             }
 
@@ -84,6 +77,10 @@ let  CoreOutputProperties = props =>{
             ret.push(<Checkbox name='signed' value={sel_out.signed} onChange={handle_change_signed} label="Signed"/>);
         }
 
+        ret.push(<Checkbox name='is_vector' value={sel_out.is_vector} onChange={handle_change_signed} label="Is Vector"/>);
+        if(sel_out.is_vector){
+            ret.push(<InputField id="vector_size" name="vector_size" label="Vector Size" defaultValue={sel_out.vector_size} onKeyDown={handle_change_iom}/>);
+        }
         return ret;
     }
 
@@ -92,7 +89,6 @@ let  CoreOutputProperties = props =>{
             <SimpleContent name="Output Properties" content={
                 <div key="output_props" style={{maxHeight:"13em"}}>
                     <InputField inline id="name" name="name" label="Name" defaultValue={sel_out.name} onKeyDown={handle_change_iom}/>
-                    <InputField inline id="reg_n" name="reg_n" label="Register #" defaultValue={sel_out.reg_n} onKeyDown={handle_change_iom}/>
                     {render_type_options()}
                 </div> }/>
         )

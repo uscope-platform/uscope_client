@@ -150,8 +150,9 @@ export class up_emulator {
 
     add_output = async (core_id, progressive) => {
         let output = {
-            reg_n: 0,
             width: 32,
+            is_vector:false,
+            vector_size: 1,
             signed: true,
             type: "float",
             name: "new_output_" + progressive
@@ -210,16 +211,16 @@ export class up_emulator {
 
     add_input =async (core_id, progressive) => {
         let input = {
-            reg_n: 0,
             type: "float",
             width: 32,
             signed: true,
             common_io: false,
+            is_vector:false,
+            vector_size: 1,
             source:{
                 type:"constant",
                 value:""
             },
-            channel:0,
             name: "new_input_" + progressive,
             labels:""
         }
@@ -264,8 +265,9 @@ export class up_emulator {
 
     add_memory = async (core_id, progressive) =>{
         let mem = {
-            reg_n: 0,
             type: "float",
+            is_vector:false,
+            vector_size: 1,
             width: 32,
             signed: true,
             value:0,
@@ -369,11 +371,9 @@ export class up_emulator {
             name:"new_dma_channel_" + progressive,
             type:"scalar_transfer",
             source:{
-                channel:[0],
                 register:[0]
             },
             destination: {
-                channel:[0],
                 register: [0]
             },
             length:1
@@ -508,15 +508,13 @@ export class up_emulator {
                                 common_io:in_obj.common_io
                             },
                             source:source,
-                            reg_n: in_obj.reg_n,
-                            channel: in_obj.channel
+                            is_vector: in_obj.is_vector
                         };
                     }),
                     outputs: item.outputs.map((out) => {
 
                         return {
                             name: out.name,
-                            reg_n: out.reg_n,
                             type:out.type,
                             metadata:{
                                 type: out.type,
@@ -527,12 +525,10 @@ export class up_emulator {
                     }),
                     memory_init: item.memory_init.map((mem) => {
                         let init_val = [];
-                        let init_add = [];
                         let vect_size = mem.reg_n.length;
                         if(vect_size === 0) vect_size++;
                         for (let i = 0; i < vect_size; i++) {
                             init_val.push(parseInt(mem.value));
-                            init_add.push(parseInt(mem.reg_n) + i);
                         }
 
                         return {
@@ -543,7 +539,6 @@ export class up_emulator {
                                 signed: mem.signed,
                             },
                             is_output: mem.is_output,
-                            reg_n: init_add,
                             value: init_val
                         };
                     }),
