@@ -489,12 +489,24 @@ export class up_emulator {
     }
 
     build = () =>{
+        let connections  = [];
+        this.connections.map((item) => {
+            let source_core = this.cores[item.source_core].name;
+            let dest_core = this.cores[item.destination_core].name;
+            connections = [...connections, ...item.ports.map((item) => {
+                return {
+                    source: source_core + "." + item.source_port,
+                    destination: dest_core + "." +  item.destination_port,
+                };
+            })];
+        });
+        debugger;
         return {
+            version:2,
             cores: Object.values(this.cores).map((item) => {
                 return ({
                     id: item.name,
                     order: item.order,
-                    input_data: item.input_data,
                     inputs: item.inputs.map((in_obj) => {
                         let source = in_obj.source;
                         if(in_obj.source.type === "file"){
@@ -514,6 +526,7 @@ export class up_emulator {
                                 common_io:in_obj.common_io
                             },
                             source:source,
+                            vector_size: in_obj.vector_size,
                             is_vector: in_obj.is_vector
                         };
                     }),
@@ -521,11 +534,12 @@ export class up_emulator {
                         return {
                             name: out.name,
                             is_vector: out.is_vector,
+                            vector_size: out.vector_size,
                             metadata:{
                                 type: out.type,
                                 width: out.width,
                                 signed: out.signed,
-                                common_io:out.common_io
+                                common_io:false
                             }
                         };
                     }),
@@ -537,12 +551,14 @@ export class up_emulator {
 
                         return {
                             name: mem.name,
+                            vector_size: mem.vector_size,
                             metadata:{
                                 type: mem.type,
                                 width: mem.width,
                                 signed: mem.signed,
                             },
                             is_output: mem.is_output,
+                            is_vector:mem.is_vector,
                             value: init_val
                         };
                     }),
@@ -561,16 +577,7 @@ export class up_emulator {
                     sampling_frequency: item.sampling_frequency
                 })
             }),
-            interconnect: this.connections.map((item) => {
-                let source_core = this.cores[item.source_core].name;
-                let dest_core = this.cores[item.destination_core].name;
-                return item.ports.map((item) => {
-                    return {
-                        source: source_core + "." + item.source_port,
-                        destination: dest_core + "." +  item.destination_port,
-                    };
-                });
-            }),
+            interconnect: connections,
             emulation_time:this.emulation_time,
             deployment_mode:this.deployment_mode
         };
