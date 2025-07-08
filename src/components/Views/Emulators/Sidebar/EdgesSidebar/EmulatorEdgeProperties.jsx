@@ -34,8 +34,6 @@ let  EmulatorEdgeProperties = props =>{
     }
 
     if(props.enabled && props.selected_emulator){
-        // TODO: These should be done in a different way (maybe by propagating the selected emulator to the prop and doing the selection there as
-        // otherwise the initial value is memoized and fails to react to additions
         selected_component = props.selected_emulator.connections.filter((item) => {
             return item.source_core === props.selected_component.obj.from && item.destination_core === props.selected_component.obj.to;
         })[0];
@@ -47,11 +45,13 @@ let  EmulatorEdgeProperties = props =>{
         const source_core = props.selected_component.obj.from;
         const target_core = props.selected_component.obj.to;
 
-        if(selected_dma_channel){
+        if(selected_dma_channel !== null){
             selected_channel = selected_component.ports.filter((item) =>{
-                return item.name === selected_dma_channel;
+                return item.id === selected_dma_channel;
             })[0];
-            if(!selected_channel) selected_channel = {name:"", source:{channel:"", register:""},source_output:"", destination:{channel:"", register: ""}, target_input:""};
+            if(!selected_channel) {
+                selected_channel = {name:"", source:{channel:"", register:""},source_output:"", destination:{channel:"", register: ""}, target_input:""};
+            }
         }
 
         return(

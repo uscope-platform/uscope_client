@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useReducer} from 'react';
+import React, {useCallback, useReducer} from 'react';
 
 import {InputField, SelectField} from "@UI";
 import { useSelector} from "react-redux";
@@ -55,75 +55,44 @@ let  DmaChannelProperties = props =>{
     }
 
 
-    let handle_change = (event) =>{
-        if(event.key==="Enter"|| event.key ==="Tab") {
-            let field = event.target.name;
-            let value = event.target.value;
-
-            if(field.includes("source") || field.includes("destination")){
-                let split_field = field.split("_");
-                if(split_field[0] === 'source'){
-                    value = props.selected_channel.destination_core;
-                    let raw_value = event.target.value.replace(/\s/g, '');
-                    let value_tokens = raw_value.split(",");
-                    value[split_field[1]] = value_tokens.map(val =>{
-                        return parseInt(val);
-                    });
-                } else {
-                    value = props.selected_channel.destination_core;
-                    let raw_value = event.target.value.replace(/\s/g, '');
-                    let value_tokens = raw_value.split(",");
-                    value[split_field[1]] = value_tokens.map(val =>{
-                        return parseInt(val);
-                    });
-                }
-                field = split_field[0];
-            }
-
-            if(field === "length" || field === "stride"){
-                value = parseInt(value);
-            }
-
-            props.selected_emulator.edit_port_link(
-                props.source_core,
-                props.target_core,
-                field,
-                value,
-                props.selected_channel.id
-            ).then(()=>{
-                if(field === 'name'){
-                    props.on_channel_edit(props.on_channel_edit);
-                }
-                forceUpdate();
-            });
-        }
-    }
-
-
     let handle_change_source_out = (value) =>{
-        props.selected_emulator.edit_port_link(props.source_core, props.target_core,
-            "source_output", value.value, props.selected_channel.id).then(()=>{
+        let id = props.selected_channel.id;
+        props.selected_emulator.edit_port_link(
+            props.source_core,
+            props.target_core,
+            "source_port",
+            value.value,
+            id
+        ).then(()=>{
             forceUpdate();
         });
     }
 
     let handle_change_target_in = (value) =>{
-        props.selected_emulator.edit_port_link(props.source_core, props.target_core,
-            "target_input", value.value, props.selected_channel.id).then(()=>{
+        let id = props.selected_channel.id;
+        props.selected_emulator.edit_port_link(
+            props.source_core,
+            props.target_core,
+            "destination_port",
+            value.value,
+            id
+        ).then(()=>{
             forceUpdate();
         });
     }
 
+
+
+
     return(
         <div key="dma_channel_props">
-            <InputField id="name" name="name" label="Name" defaultValue={props.selected_channel.name} onKeyDown={handle_change}/>
             <SelectField
                 inline
                 label="Source Core Output"
                 onChange={handle_change_source_out}
-                value={{value: props.selected_channel.source_output , label: props.selected_channel.source_output}}
+                value={{value: props.selected_channel.source_port , label: props.selected_channel.source_port}}
                 defaultValue="Select Core output"
-                name="source_output"
+                name="source_port"
                 options={source_outputs.map((outs)=>{
                     return {label:outs, value:outs};
                 })}
@@ -132,9 +101,9 @@ let  DmaChannelProperties = props =>{
                 inline
                 label="Target Core Input"
                 onChange={handle_change_target_in}
-                value={{value: props.selected_channel.target_input , label: props.selected_channel.target_input}}
+                value={{value: props.selected_channel.destination_port , label: props.selected_channel.destination_port}}
                 defaultValue="Select Core Input"
-                name="target_input"
+                name="destination_port"
                 options={target_inputs.map((ins)=>{
                     return {label:ins, value:ins};
                 })}

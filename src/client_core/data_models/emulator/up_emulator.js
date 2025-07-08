@@ -128,7 +128,8 @@ export class up_emulator {
         let edit = {id:this.id, field:"deployment_mode",  action:"edit", value:mode};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         this.deployment_mode = mode;
-        store.dispatch(update_emulator(this.deep_copy()));
+        let copy_em = this.deep_copy();
+        store.dispatch(update_emulator(copy_em));
     };
 
 
@@ -367,24 +368,25 @@ export class up_emulator {
     }
 
     add_port_link = async (source, destination, progressive) =>{
+       let link= {
+            id: progressive,
+                source_port:"",
+                destination_port:""
+        };
         let edit = {
             id:this.id,
             field:"port_link",
             action:"add",
             value:{
                 core:{source:source, destination:destination},
-                link:{
-                    id: progressive,
-                    source_port:"",
-                    destination_port:""
-                }
+                link:link
             }};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
 
         let dma_obj = this.connections.filter((item)=>{
-            return item.source === source && item.destination === destination;
+            return item.source_core === source && item.destination_core === destination;
         })[0];
-        dma_obj.channels.push(c);
+        dma_obj.ports.push(link);
 
         store.dispatch(update_emulator(this.deep_copy()));
     }
@@ -397,10 +399,10 @@ export class up_emulator {
             link_id
         ) =>{
             let dma_obj = this.connections.filter((item)=>{
-                return item.source === source && item.destination === destination;
+                return item.source_core === source && item.destination_core === destination;
             })[0];
             let edited_channel = null;
-            let next_channels = dma_obj.channels.map((item)=>{
+            let next_channels = dma_obj.ports.map((item)=>{
                 if(item.id === link_id){
                     edited_channel =  {...item, ...{[field]:value}};
                     return edited_channel;
@@ -420,7 +422,7 @@ export class up_emulator {
                 }
             };
             await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
-            dma_obj.channels = next_channels;
+            dma_obj.ports = next_channels;
             store.dispatch(update_emulator(this.deep_copy()));
         }
 
@@ -438,9 +440,9 @@ export class up_emulator {
         };
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         this.connections = this.connections.map((item)=>{
-            if(item.source === source && item.destination === destination){
+            if(item.source_core === source && item.destination_core === destination){
                 let ret = item;
-                ret.channels = ret.channels.filter((item)=>{
+                ret.ports = ret.ports.filter((item)=>{
                     return item.id !== link_id;
                 })
                 return ret;
