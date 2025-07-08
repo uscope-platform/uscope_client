@@ -34,8 +34,6 @@ let  CoreInputProperties = props =>{
                 value = parseInt(value);
             }
 
-
-
             if(field === "constant_value") {
                 field = "source";
                 if(sel_in.source.type === "constant") {

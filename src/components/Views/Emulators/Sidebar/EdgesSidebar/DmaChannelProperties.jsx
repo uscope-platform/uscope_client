@@ -26,11 +26,11 @@ let  DmaChannelProperties = props =>{
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     let source_program = Object.values(props.selected_emulator.cores).filter((c)=>{
-        return c.id === props.selected_component.source;
+        return c.id === props.selected_component.source_core;
     })[0].program;
 
     let target_program = Object.values(props.selected_emulator.cores).filter((c)=>{
-        return c.id === props.selected_component.destination;
+        return c.id === props.selected_component.destination_core;
     })[0].program;
 
     let source_outputs = [];
@@ -63,14 +63,14 @@ let  DmaChannelProperties = props =>{
             if(field.includes("source") || field.includes("destination")){
                 let split_field = field.split("_");
                 if(split_field[0] === 'source'){
-                    value = props.selected_channel.source;
+                    value = props.selected_channel.destination_core;
                     let raw_value = event.target.value.replace(/\s/g, '');
                     let value_tokens = raw_value.split(",");
                     value[split_field[1]] = value_tokens.map(val =>{
                         return parseInt(val);
                     });
                 } else {
-                    value = props.selected_channel.destination;
+                    value = props.selected_channel.destination_core;
                     let raw_value = event.target.value.replace(/\s/g, '');
                     let value_tokens = raw_value.split(",");
                     value[split_field[1]] = value_tokens.map(val =>{
@@ -84,8 +84,13 @@ let  DmaChannelProperties = props =>{
                 value = parseInt(value);
             }
 
-            props.selected_emulator.edit_dma_channel(props.source_core, props.target_core,
-                field, value, props.selected_channel.name).then(()=>{
+            props.selected_emulator.edit_port_link(
+                props.source_core,
+                props.target_core,
+                field,
+                value,
+                props.selected_channel.id
+            ).then(()=>{
                 if(field === 'name'){
                     props.on_channel_edit(props.on_channel_edit);
                 }
@@ -94,22 +99,17 @@ let  DmaChannelProperties = props =>{
         }
     }
 
-    let handle_change_type = (value) =>{
-        props.selected_emulator.edit_dma_channel(props.source_core, props.target_core,
-            "type", value.value, props.selected_channel.name).then(()=>{
-        });
-    }
 
     let handle_change_source_out = (value) =>{
-        props.selected_emulator.edit_dma_channel(props.source_core, props.target_core,
-            "source_output", value.value, props.selected_channel.name).then(()=>{
+        props.selected_emulator.edit_port_link(props.source_core, props.target_core,
+            "source_output", value.value, props.selected_channel.id).then(()=>{
             forceUpdate();
         });
     }
 
     let handle_change_target_in = (value) =>{
-        props.selected_emulator.edit_dma_channel(props.source_core, props.target_core,
-            "target_input", value.value, props.selected_channel.name).then(()=>{
+        props.selected_emulator.edit_port_link(props.source_core, props.target_core,
+            "target_input", value.value, props.selected_channel.id).then(()=>{
             forceUpdate();
         });
     }

@@ -21,13 +21,14 @@ import {MdAdd} from "react-icons/md";
 let  DmaChannelsList = props =>{
 
     let handle_add = () =>{
-        props.selected_emulator.add_dma_channel(props.source_core, props.target_core, props.connections_list.length).then(() =>{
+
+        props.selected_emulator.add_port_link(props.source_core, props.target_core, props.connections_list.length).then(() =>{
             props.forceUpdate();
         });
     }
 
     let handle_remove = (removed_item) =>{
-        props.selected_emulator.remove_dma_channel(props.source_core, props.target_core, removed_item).then(() =>{
+        props.selected_emulator.remove_link_id(props.source_core, props.target_core, removed_item).then(() =>{
             props.forceUpdate();
         });
     }

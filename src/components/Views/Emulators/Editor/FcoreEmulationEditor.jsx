@@ -97,12 +97,12 @@ let FcoreEmulationEditor = function (props) {
             setNodes(nodes => (initial_nodes));
             //SETUP EDGES
             let initial_edges = [];
-            Object.values(props.emulator.connections).map((c)=>{
-                const id = `${c.source}-${c.destination}`;
+            props.emulator.connections.map((c)=>{
+                const id = `${c.source_core}-${c.destination_core}`;
                 initial_edges.push({
                     id,
-                    from: c.source,
-                    to: c.destination
+                    from: c.source_core,
+                    to: c.destination_core
                 })
             });
             setEdges(edges =>(initial_edges));
