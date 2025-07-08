@@ -73,7 +73,7 @@ export let  InputField = props =>{
     } else if(props.description){
         return (
             <Wrapper>
-                <Label htmlFor={props.ID} inline={props.inline}>{props.label}</Label>
+                <Label htmlFor={props.ID} inline={props.inline.toString()}>{props.label}</Label>
                 <InnerInput
                     name={props.name}
                     key={key}
@@ -92,8 +92,8 @@ export let  InputField = props =>{
         );
     } else{
         return (
-            <Wrapper inline={props.inline}>
-                <Label htmlFor={props.ID} inline={props.inline}>{props.label}</Label>
+            <Wrapper inline={props.inline.toString()}>
+                <Label htmlFor={props.ID} inline={props.inline.toString()}>{props.label}</Label>
                 <InnerInput
                     placeholder={props.placeholder}
                     name={props.name}
