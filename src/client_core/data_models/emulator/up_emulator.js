@@ -518,22 +518,20 @@ export class up_emulator {
                         };
                     }),
                     outputs: item.outputs.map((out) => {
-
                         return {
                             name: out.name,
-                            type:out.type,
+                            is_vector: out.is_vector,
                             metadata:{
                                 type: out.type,
                                 width: out.width,
-                                signed: out.signed
+                                signed: out.signed,
+                                common_io:out.common_io
                             }
                         };
                     }),
                     memory_init: item.memory_init.map((mem) => {
                         let init_val = [];
-                        let vect_size = mem.reg_n.length;
-                        if(vect_size === 0) vect_size++;
-                        for (let i = 0; i < vect_size; i++) {
+                        for (let i = 0; i < mem.vector_size; i++) {
                             init_val.push(parseInt(mem.value));
                         }
 
@@ -564,24 +562,14 @@ export class up_emulator {
                 })
             }),
             interconnect: this.connections.map((item) => {
-                return {
-                    source: this.cores[item.source].name,
-                    destination: this.cores[item.destination].name,
-                    channels: item.channels.map((item) => {
-                        let ret = {
-                            name: item.name,
-                            type: item.type,
-                            source: item.source,
-                            source_output: item.source_output,
-                            destination: item.destination,
-                            destination_input: item.target_input
-                        };
-                        if (item.length) ret.length = item.length;
-                        else ret.length = 1;
-                        if (item.stride) ret.stride = item.stride;
-                        return ret;
-                    })
-                };
+                let source_core = this.cores[item.source_core].name;
+                let dest_core = this.cores[item.destination_core].name;
+                return item.ports.map((item) => {
+                    return {
+                        source: source_core + "." + item.source_port,
+                        destination: dest_core + "." +  item.destination_port,
+                    };
+                });
             }),
             emulation_time:this.emulation_time,
             deployment_mode:this.deployment_mode
