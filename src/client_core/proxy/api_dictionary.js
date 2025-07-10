@@ -32,6 +32,7 @@ export const api_dictionary = {
         hil_deploy: 'operations/hil/deploy',
         hil_emulate: 'operations/hil/emulate',
         hil_disassemble: 'operations/hil/disassemble',
+        hil_hardware_sim: 'operations/hil/hardware_sim',
         hil_select_output: 'operations/hil/select_out',
         hil_set_input: 'operations/hil/set_input',
         hil_start:'operations/hil/start',

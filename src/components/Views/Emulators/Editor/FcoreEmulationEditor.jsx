@@ -26,6 +26,7 @@ import CoreOutputsList from "./CoreOutputsList";
 import CoreMemoriesList from "./CoreMemoriesList";
 import CoreInputFilesList from "./CoreInputFilesList";
 import {ApplicationContext} from "@src/AuthApp.jsx";
+import {download_text} from "@client_core/utilities/downloads.js";
 
 
 let FcoreEmulationEditor = function (props) {
@@ -39,7 +40,8 @@ let FcoreEmulationEditor = function (props) {
         build: false,
         run: false,
         deploy: false,
-        debug:false
+        debug:false,
+        hw_sim:true
     })
     const navigate = useNavigate();
 
@@ -58,7 +60,8 @@ let FcoreEmulationEditor = function (props) {
                     build: enabled_actions.build,
                     run: enabled_actions.run,
                     deploy: enabled_actions.deploy,
-                    debug: enabled_actions.debug
+                    debug: enabled_actions.debug,
+                    hw_sim: enabled_actions.hw_sim
                 });
                 return;
             }
@@ -69,7 +72,8 @@ let FcoreEmulationEditor = function (props) {
             build: enabled_actions.build,
             run: enabled_actions.run,
             deploy: enabled_actions.deploy,
-            debug: enabled_actions.debug
+            debug: enabled_actions.debug,
+            hw_sim: enabled_actions.hw_sim
         });
 
     },[props.selections.component])
@@ -83,8 +87,8 @@ let FcoreEmulationEditor = function (props) {
                 build: true,
                 run: true,
                 deploy: true,
-                debug: true
-
+                debug: true,
+                hw_sim: true
             });
 
             let initial_nodes = [];
@@ -174,7 +178,14 @@ let FcoreEmulationEditor = function (props) {
         props.on_selection({...props.selections, tab:1});
     }
 
-    let handle_deploy = () =>{
+    let handle_hardware_sim = async () =>{
+        let data = await props.emulator.download_hardware_sim_data();
+        debugger;
+        download_text(data.control, "control_bus.txt");
+        download_text(data.code, "code_bus.txt");
+    }
+
+    let handle_deploy = async () =>{
         let deploy = true;
         if(application.application_name !== "HIL_base"){
             if(!window.confirm("This feature is only meant to work with the HIL_base application, do you wish to continue regardless:")){
@@ -182,19 +193,18 @@ let FcoreEmulationEditor = function (props) {
             }
         }
         if(deploy){
-            props.emulator.deploy().then((ret)=>{
-                if(ret.code && ret.code === 8) {
-                    toast.error(ret.error);
-                    props.on_compile_done(null);
-                } else if(ret.code && ret.code === 9){
-                    props.on_compile_done("test");
-                    toast.warn(ret.error);
-                } else {
-                    props.on_compile_done(null);
-                    props.onDeploy();
-                    toast.success("HIL correctly deployed");
-                }
-            });
+            let ret = await props.emulator.deploy();
+            if(ret.code && ret.code === 8) {
+                toast.error(ret.error);
+                props.on_compile_done(null);
+            } else if(ret.code && ret.code === 9){
+                props.on_compile_done("test");
+                toast.warn(ret.error);
+            } else {
+                props.on_compile_done(null);
+                props.onDeploy();
+                toast.success("HIL correctly deployed");
+            }
         }
     }
 
@@ -288,6 +298,7 @@ let FcoreEmulationEditor = function (props) {
                                 onBuild={handle_build}
                                 onRun={handle_run}
                                 onDeploy={handle_deploy}
+                                onHardwareSim={handle_hardware_sim}
                                 onEdit={handle_edit}
                                 onDebug={handle_debug}
                                 nodes={nodes}

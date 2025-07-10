@@ -65,3 +65,16 @@ export let download_bitstream = (content, filename) =>{
     link.click();
     document.body.removeChild(link);
 }
+
+export let download_text = (content, filename) => {
+    let blob = new Blob([content], {type: "text/plain;charset=utf-8"});
+    let url = URL.createObjectURL(blob);
+
+    let link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+

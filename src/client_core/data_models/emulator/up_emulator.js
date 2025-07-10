@@ -500,7 +500,6 @@ export class up_emulator {
                 };
             })];
         });
-        debugger;
         return {
             version:2,
             cores: Object.values(this.cores).map((item) => {
@@ -591,6 +590,11 @@ export class up_emulator {
     disassemble = async () =>{
         let specs = this.build();
         return await backend_post(api_dictionary.operations.hil_disassemble, specs);
+    }
+
+    download_hardware_sim_data = async () =>{
+        let specs = this.build();
+        return await backend_post(api_dictionary.operations.hil_hardware_sim, specs);
     }
 
     deploy = async () =>{

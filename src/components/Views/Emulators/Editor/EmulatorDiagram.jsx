@@ -80,6 +80,7 @@ let EmulatorDiagram = function (props) {
                 onBuild={props.onBuild}
                 onRun={props.onRun}
                 onDeploy={props.onDeploy}
+                onHardwareSim={props.onHardwareSim}
                 onEdit={props.onEdit}
                 enable={props.enabled_actions}
                 onDebug={props.onDebug}

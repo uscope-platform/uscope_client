@@ -17,7 +17,7 @@ import React from 'react';
 
 import {ColorTheme} from "@UI";
 import {Tooltip} from "react-tooltip";
-import {MdAdd, MdArticle, MdConstruction, MdDownload, MdPlayArrow, MdBugReport} from "react-icons/md";
+import {MdAdd, MdArticle, MdConstruction, MdDownload, MdPlayArrow, MdBugReport, MdEqualizer} from "react-icons/md";
 
 let  EmulatorToolbar = props =>{
 
@@ -117,6 +117,24 @@ let  EmulatorToolbar = props =>{
         )
     }
 
+
+
+    let render_hw_sim= () => {
+        let handle_click = (event) =>{
+            if(props.enable.hw_sim) {
+                props.onHardwareSim(event);
+            }
+        };
+        let icon_color = props.enable.run ? ColorTheme.icons_color : ColorTheme.disabled_icon_color;
+        return (
+            <div key="hw_sim" id="hw_sim">
+                <MdEqualizer onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
+                             color={icon_color}/>
+                <Tooltip anchorSelect="hw_sim" content={"Download HW simulation files"} place="top"/>
+            </div>
+        )
+    }
+
     return (
         <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
             {render_add()}
@@ -125,6 +143,7 @@ let  EmulatorToolbar = props =>{
             {render_run()}
             {render_deploy()}
             {render_debug()}
+            {render_hw_sim()}
         </div>
     );
 };
