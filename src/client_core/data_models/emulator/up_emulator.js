@@ -544,7 +544,16 @@ export class up_emulator {
                     }),
                     memory_init: item.memory_init.map((mem) => {
                         let init_val = [];
-                        for (let i = 0; i < mem.vector_size; i++) {
+                        if(mem.vector_size > 1){
+                            for (let i = 0; i < mem.vector_size; i++) {
+                                init_val.push(parseInt(mem.value));
+                            }
+                        }else if(item.channels > 1){
+                            let values = mem.value.split(",");
+                            for (let i = 0; i < item.channels; i++) {
+                                init_val.push(parseInt(values[i]));
+                            }
+                        } else {
                             init_val.push(parseInt(mem.value));
                         }
 
