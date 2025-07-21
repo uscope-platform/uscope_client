@@ -101,6 +101,7 @@ let HilView = function (props) {
                         on_select={handle_emulator_select}
                     />,
                     <HilResultsView
+                        filename={emulator.name}
                         emulation_results={emulation_results}
                         input_data={input_data}
                     />,

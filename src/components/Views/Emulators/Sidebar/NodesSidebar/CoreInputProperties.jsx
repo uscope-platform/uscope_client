@@ -97,6 +97,7 @@ let  CoreInputProperties = props =>{
                 options={[
                     {label: "constant", value: "constant"},
                     {label: "file", value: "file"},
+                    {label: "random", value: "random"},
                     {label: "external", value:"external"}
                 ]}
             />
