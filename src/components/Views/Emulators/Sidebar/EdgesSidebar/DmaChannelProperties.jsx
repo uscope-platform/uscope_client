@@ -34,6 +34,7 @@ let  DmaChannelProperties = props =>{
     let source_outputs = [];
     let source_memories = [];
     let target_inputs = [];
+    let target_memories = [];
     if(source_core && target_core){
 
 
@@ -45,7 +46,19 @@ let  DmaChannelProperties = props =>{
         } else if(source_memories){
             source_outputs = source_memories;
         }
+
         target_inputs = target_core.inputs.map((in_obj)=> in_obj.name);
+        target_memories = target_core.memory_init.map((mem)=> {
+            if(mem.is_input){
+                return mem.name;
+            }
+        });
+
+        if(target_inputs && target_memories){
+            target_inputs = [...target_inputs, ...target_memories];
+        } else if(target_memories){
+            target_inputs = target_memories;
+        }
     }
 
 

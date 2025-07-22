@@ -273,7 +273,8 @@ export class up_emulator {
             signed: true,
             value:0,
             name: "new_memory_" + progressive,
-            is_output:false
+            is_output:false,
+            is_input:false
         }
 
         let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
@@ -566,6 +567,7 @@ export class up_emulator {
                                 signed: mem.signed,
                             },
                             is_output: mem.is_output,
+                            is_input: mem.is_input,
                             is_vector:mem.is_vector,
                             value: init_val
                         };

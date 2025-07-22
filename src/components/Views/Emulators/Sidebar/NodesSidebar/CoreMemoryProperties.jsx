@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useReducer} from 'react';
+import React from 'react';
 
 import {Checkbox, InputField, SelectField, SimpleContent} from "@UI";
 
@@ -99,6 +99,7 @@ let  CoreMemoryProperties = props =>{
                     {render_type_options()}
                     <InputField inline id="value" name="value" label="Value" defaultValue={sel_mem.value} onKeyDown={handle_change_iom}/>
                     <Checkbox name='is_output' value={sel_mem.is_output} onChange={handle_change_output} label="Use as Output"/>
+                    <Checkbox name='is_input' value={sel_mem.is_input} onChange={handle_change_output} label="Use as Input"/>
                 </div>
             }/>
         )
