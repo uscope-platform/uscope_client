@@ -48,7 +48,7 @@ export class up_settings {
                 "scope_mux":     0x443C00000,
                 "controller":    0x443C10000,
                 "hil_control":   0x443C20000,
-                "noise_gen":     0x443c30000,
+                "noise_generator":     0x443c30000,
                 "cores_control": 0x443c40000,
                 "cores_inputs": 0x2000,
                 "cores_rom": 0x500000000,
