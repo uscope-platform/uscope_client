@@ -579,7 +579,7 @@ export class up_emulator {
                         let headers = prog.headers.map((h)=>{
                             return store.getState().programs[h].content;
                         })
-                        return {content: prog.content, build_settings: prog.build_settings, headers:headers};
+                        return {content: prog.content, headers:headers};
                     })(),
                     options: item.options,
                     sampling_frequency: item.sampling_frequency

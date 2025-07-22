@@ -27,7 +27,6 @@ export class up_program {
         this.name = program_obj.name;
         this.content = program_obj.content;
         this.type = program_obj.type;
-        this.build_settings = program_obj.build_settings;
         if(!program_obj.headers){
             this.headers = [];
         } else{
@@ -40,14 +39,7 @@ export class up_program {
             id:program_id,
             name:'new program_'+program_id,
             content:'',
-            type:'',
-            build_settings:{
-                io:{
-                    inputs: [],
-                    outputs: [],
-                    memories: []
-                }
-            }
+            type:''
         };
         return new up_program(program_obj);
     }
@@ -58,7 +50,6 @@ export class up_program {
         ret.name = this.name;
         ret.content =this.content;
         ret.type =this.type;
-        ret.build_settings = JSON.parse(JSON.stringify(this.build_settings));
         ret.headers = JSON.parse(JSON.stringify(this.headers));
         return ret;
     }
@@ -144,7 +135,6 @@ export class up_program {
             name: this.name,
             content: this.content,
             type: this.type,
-            build_settings: this.build_settings,
             headers: this.headers
         };
     }

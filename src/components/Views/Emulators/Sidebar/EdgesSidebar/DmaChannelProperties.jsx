@@ -13,45 +13,39 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useCallback, useReducer} from 'react';
+import React, {useReducer} from 'react';
 
-import {InputField, SelectField} from "@UI";
-import { useSelector} from "react-redux";
+import {SelectField} from "@UI";
 
 
 let  DmaChannelProperties = props =>{
 
-    const programs = useSelector(state => state.programs);
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
-    let source_program = Object.values(props.selected_emulator.cores).filter((c)=>{
+    let source_core = Object.values(props.selected_emulator.cores).filter((c)=>{
         return c.id === props.selected_component.source_core;
-    })[0].program;
+    })[0];
 
-    let target_program = Object.values(props.selected_emulator.cores).filter((c)=>{
+    let target_core = Object.values(props.selected_emulator.cores).filter((c)=>{
         return c.id === props.selected_component.destination_core;
-    })[0].program;
+    })[0];
 
     let source_outputs = [];
     let source_memories = [];
     let target_inputs = [];
-    if(source_program && target_program){
-        source_outputs = Object.values(programs).filter((p)=>{
-            return p.name === source_program;
-        })[0].build_settings.io.outputs;
-        source_memories = Object.values(programs).filter((p)=>{
-            return p.name === source_program;
-        })[0].build_settings.io.memories;
+    if(source_core && target_core){
+
+
+        source_outputs = source_core.outputs.map((out)=> out.name);
+        source_memories = source_core.memory_init.map((mem)=> mem.name);
+
         if(source_outputs && source_memories){
             source_outputs = [...source_outputs, ...source_memories];
         } else if(source_memories){
             source_outputs = source_memories;
         }
-        target_inputs = Object.values(programs).filter((p)=>{
-            return p.name === target_program;
-        })[0].build_settings.io.inputs;
-        if(!target_inputs) target_inputs = [];
+        target_inputs = target_core.inputs.map((in_obj)=> in_obj.name);
     }
 
 
@@ -80,9 +74,6 @@ let  DmaChannelProperties = props =>{
             forceUpdate();
         });
     }
-
-
-
 
     return(
         <div key="dma_channel_props">

@@ -142,6 +142,7 @@ export let  CoreDmaIo = props =>{
 
 
     let get_core_io = () =>{
+        debugger;
         if(selected_program && selected_program.build_settings){
             let core_io = [];
             if(selected_program.build_settings.io.inputs){
