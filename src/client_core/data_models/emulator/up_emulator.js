@@ -372,7 +372,9 @@ export class up_emulator {
        let link= {
             id: progressive,
                 source_port:"",
-                destination_port:""
+                source_channel:-1,
+                destination_port:"",
+                destination_channel:-1
         };
         let edit = {
             id:this.id,
@@ -497,7 +499,9 @@ export class up_emulator {
             connections = [...connections, ...item.ports.map((item) => {
                 return {
                     source: source_core + "." + item.source_port,
+                    source_channel:item.source_channel,
                     destination: dest_core + "." +  item.destination_port,
+                    destination_channel:item.destination_channel
                 };
             })];
         });

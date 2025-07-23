@@ -15,7 +15,7 @@
 
 import React, {useReducer} from 'react';
 
-import {SelectField} from "@UI";
+import {InputField, SelectField} from "@UI";
 
 
 let  DmaChannelProperties = props =>{
@@ -35,9 +35,15 @@ let  DmaChannelProperties = props =>{
     let source_memories = [];
     let target_inputs = [];
     let target_memories = [];
+    let enable_partial_channels = false;
     if(source_core && target_core){
-
-
+        let source_endpoint = source_core.memory_init.filter((mem)=>{return mem.name ===  props.selected_channel.source_port})[0];
+        let dest_endpoint = target_core.memory_init.filter((mem)=> {return mem.name === props.selected_channel.destination_port})[0];
+        if(source_endpoint && dest_endpoint && source_core.id === target_core.id){
+            if(source_endpoint.is_input && dest_endpoint.is_output){
+                enable_partial_channels = true;
+            }
+        }
         source_outputs = source_core.outputs.map((out)=> out.name);
         source_memories = source_core.memory_init.map((mem)=> mem.name);
 
@@ -75,17 +81,41 @@ let  DmaChannelProperties = props =>{
         });
     }
 
-    let handle_change_target_in = (value) =>{
-        let id = props.selected_channel.id;
-        props.selected_emulator.edit_port_link(
+    let handle_change_target_in =async (value) =>{
+        await props.selected_emulator.edit_port_link(
             props.source_core,
             props.target_core,
             "destination_port",
             value.value,
-            id
-        ).then(()=>{
+            props.selected_channel.id
+        );
+        forceUpdate();
+    }
+
+    let handle_change_partial_channels = async (event) =>{
+        if(event.key==="Enter"|| event.key ==="Tab") {
+            let field = event.target.name;
+            let value = parseInt(event.target.value);
+            await  props.selected_emulator.edit_port_link(
+                props.source_core,
+                props.target_core,
+                field,
+                value,
+                props.selected_channel.id
+            );
             forceUpdate();
-        });
+        }
+    }
+
+    let render_partial_channels = () =>{
+        if(enable_partial_channels){
+            return(
+                <>
+                    <InputField inline id="source_channel" name="source_channel" label="Source Channel" defaultValue={props.selected_channel.source_channel} onKeyDown={handle_change_partial_channels}/>
+                    <InputField inline id="destination_channel" name="destination_channel" label="Destination Channel" defaultValue={props.selected_channel.destination_channel} onKeyDown={handle_change_partial_channels}/>
+                </>
+            )
+        }
     }
 
     return(
@@ -112,6 +142,7 @@ let  DmaChannelProperties = props =>{
                     return {label:ins, value:ins};
                 })}
             />
+            {render_partial_channels()}
         </div>
     )
 
