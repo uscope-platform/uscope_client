@@ -96,7 +96,7 @@ let  CoreInputProperties = props =>{
                 name="source_type"
                 options={[
                     {label: "constant", value: "constant"},
-                    {label: "file", value: "file"},
+                    {label: "series", value: "series"},
                     {label: "random", value: "random"},
                     {label: "external", value:"external"}
                 ]}
@@ -115,10 +115,11 @@ let  CoreInputProperties = props =>{
                         onKeyDown={handle_change_iom}
                     />
                 )
-            }else if(sel_in.source.type==="file"){
+            }else if(sel_in.source.type==="series"){
                 let files = props.selected_core.input_data.map((item)=>{
                     return Object.keys(item.data).map((name)=>{
-                        return {label:item.name + "." + name, value:item.name + "." + name};
+                        let label = name.split("[")[0];
+                        return {label:item.name + "." + label, value:item.name + "." + label};
                     })
                 }).flat();
 

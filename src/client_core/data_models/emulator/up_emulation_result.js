@@ -85,19 +85,34 @@ export class up_emulator_result {
         return [this.timebase, this.selected_data_series];
     }
 
+    add_input(data_source, input_name, is_multiselection) {
 
-    add_data_series(data_source, data_series, channel, index) {
-        this.selected_data_series.push({
-            name:data_source + "." + data_series + "." + channel + "[" + index + "]",
-            content:this.data[data_source].outputs[data_series][parseInt(channel)][index]
-        });
+        if(is_multiselection){
+            this.selected_data_series.push({
+                name:data_source + "." + input_name,
+                content:this.inputs[data_source][input_name]
+            });
+        } else {
+            this.selected_data_series =[{
+                name:data_source + "." + input_name,
+                content:this.inputs[data_source][input_name]
+            }];
+        }
     }
 
-    set_data_series(data_source, data_series, channel, index) {
-        this.selected_data_series =[{
-            name:data_source + "." + data_series + "." + channel + "[" + index + "]",
-            content:this.data[data_source].outputs[data_series][parseInt(channel)][index]
-        }];
+    add_data_series(data_source, data_series, channel, index, is_multiselection) {
+        if(is_multiselection){
+            this.selected_data_series.push({
+                name:data_source + "." + data_series + "." + channel + "[" + index + "]",
+                content:this.data[data_source].outputs[data_series][parseInt(channel)][index]
+            });
+        } else {
+            this.selected_data_series =[{
+                name:data_source + "." + data_series + "." + channel + "[" + index + "]",
+                content:this.data[data_source].outputs[data_series][parseInt(channel)][index]
+            }];
+        }
+
     }
 
 }

@@ -29,8 +29,8 @@ let EmulationResults = function (props) {
     let [selected_index, set_selected_index] = useState([]);
 
 
-    let [data, set_data] = useState([
-    ])
+    let [data, set_data] = useState([])
+    let [inputs_mode, set_inputs_mode] = useState(false);
 
     const [data_revision,update_data ] = useReducer(x => x + 1, 0);
 
@@ -41,11 +41,8 @@ let EmulationResults = function (props) {
     let plot_config = {...PlotConfigurations.configs, response:true};
 
     let handle_select_index = (index,multi_selection)=>{
-        if(multi_selection){
-            props.results.add_data_series(selected_source, selected_output, selected_channel, index);
-        } else {
-            props.results.set_data_series(selected_source, selected_output, selected_channel, index);
-        }
+
+        props.results.add_data_series(selected_source, selected_output, selected_channel, index,multi_selection);
 
         let [timebase, data] = props.results.get_data_series();
 
@@ -61,17 +58,45 @@ let EmulationResults = function (props) {
         set_selected_index(index);
         update_data();
     }
+
+    let add_input_to_plot = (input_name,multi_selection) =>{
+        props.results.add_input(selected_source, input_name, multi_selection);
+        let [timebase, data] = props.results.get_data_series();
+
+        set_data(data.map((item)=>{
+            return({
+                name:item.name,
+                x: timebase,
+                y: item.content,
+                type: 'scatter',
+                mode: 'lines'
+            })
+        }));
+        set_selected_index(index);
+        update_data();
+    }
+
     let handle_select_source = source =>{
+        let srcs = props.results.get_data_sources();
+        if(source === srcs.at(-1)){
+            set_inputs_mode(true);
+        } else {
+            set_inputs_mode(false);
+        }
         set_selected_source(source);
         set_selected_output([]);
         set_selected_channel([]);
         set_selected_index([]);
     }
 
-    let handle_select_output = output =>{
-        set_selected_output(output);
-        set_selected_channel([]);
-        set_selected_index([]);
+    let handle_select_output = (output,multi_selection) =>{
+        if(inputs_mode){
+            add_input_to_plot(output,multi_selection);
+        } else {
+            set_selected_output(output);
+            set_selected_channel([]);
+            set_selected_index([]);
+        }
     }
 
     let handle_select_channel = channel =>{
