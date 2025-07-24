@@ -513,12 +513,29 @@ export class up_emulator {
                     order: item.order,
                     inputs: item.inputs.map((in_obj) => {
                         let source = in_obj.source;
-                        if(in_obj.source.type === "file"){
+                        if(in_obj.source.type === "series"){
                             let tok = in_obj.source.value.split(".");
+                            let data = [];
+                            for(let d of item.input_data){
+                                if(d.name === tok[0]){
+                                    if(item.channels > 1){
+                                        for(let i = 0; i < item.channels; i++){
+                                            let name = tok[1] + "[" + i + "]";
+                                            if(d.data[name]){
+                                                data.push(d.data[name]);
+                                            } else {
+                                                throw("Error: " + name + " not found in selected file")
+                                            }
+                                        }
+                                    } else {
+                                        data = d.data[tok[1]]
+                                    }
+
+                                }
+                            }
                             source = {
                                 type: in_obj.source.type,
-                                file: tok[0],
-                                series: tok[1]
+                                value: data
                             };
                         }
                         return {
@@ -554,10 +571,18 @@ export class up_emulator {
                                 init_val.push(parseInt(mem.value));
                             }
                         }else if(item.channels > 1){
-                            let values = mem.value.split(",");
-                            for (let i = 0; i < item.channels; i++) {
-                                init_val.push(parseInt(values[i]));
+                            if(mem.value.includes && mem.value.includes(",")){
+                                let values = mem.value.split(",");
+                                for (let i = 0; i < item.channels; i++) {
+                                    init_val.push(parseInt(values[i]));
+                                }
+                            } else {
+                                let val = parseInt(mem.value);
+                                for (let i = 0; i < item.channels; i++) {
+                                    init_val.push(val);
+                                }
                             }
+
                         } else {
                             init_val.push(parseInt(mem.value));
                         }
