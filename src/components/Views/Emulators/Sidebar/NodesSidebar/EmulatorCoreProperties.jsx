@@ -41,8 +41,8 @@ let  EmulatorCoreProperties = props =>{
         } else return {label: "", value:""};
     })
     let programs_list = Object.keys(programs).map((prog_id)=>{
-        return {label:programs[prog_id].name, value:programs[prog_id].name};
-    })
+        if(programs[prog_id].type === "C") return {label:programs[prog_id].name, value:programs[prog_id].name};
+    }).filter(item=>item)
 
     let handle_change = async (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab") {
