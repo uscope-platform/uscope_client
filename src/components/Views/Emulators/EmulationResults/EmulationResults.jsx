@@ -72,7 +72,7 @@ let EmulationResults = function (props) {
                 mode: 'lines'
             })
         }));
-        set_selected_index(index);
+        set_selected_output(input_name);
         update_data();
     }
 
@@ -140,7 +140,7 @@ let EmulationResults = function (props) {
                 <UIPanel style={{flexGrow:1}} key="emulation_result_data_sel" level="level_2">
                     <SimpleContent name="Data Selector" height="100%" content={
                         <div>
-                            <SelectableList multi_select items={props.results.get_available_data_series(selected_source)} selected_item={selected_output} onSelect={handle_select_output} />
+                            <SelectableList  items={props.results.get_available_data_series(selected_source)} selected_item={selected_output} onSelect={handle_select_output} />
                         </div>
                     }/>
                 </UIPanel>
