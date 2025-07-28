@@ -78,11 +78,14 @@ let EmulationResults = function (props) {
 
     let handle_select_source = source =>{
         let srcs = props.results.get_data_sources();
-        if(source === srcs.at(-1)){
-            set_inputs_mode(true);
-        } else {
-            set_inputs_mode(false);
+        debugger;
+        let inputs_mode = false;
+        if(srcs.n_inputs > 0){
+            if(srcs.sources.slice(srcs.sources.length-srcs.n_inputs,srcs.sources.length).includes(source)){
+                inputs_mode = true;
+            }
         }
+        set_inputs_mode(inputs_mode);
         set_selected_source(source);
         set_selected_output([]);
         set_selected_channel([]);
@@ -133,7 +136,7 @@ let EmulationResults = function (props) {
                 <UIPanel style={{flexGrow:1}} key="emulation_result_core_sel" level="level_2">
                     <SimpleContent name="Core Selector" height="100%" content={
                         <div>
-                            <SelectableList items={props.results.get_data_sources()} selected_item={selected_source} onSelect={handle_select_source} />
+                            <SelectableList items={props.results.get_data_sources().sources} selected_item={selected_source} onSelect={handle_select_source} />
                         </div>
                     }/>
                 </UIPanel>
