@@ -650,7 +650,7 @@ export class up_emulator {
         let series_header = {};
         raw_specs.split("\n").map((line, idx)=>{
             let components = line.split(",");
-            if(components.length === 4){
+            if(components.length === 5){
                 series_header[idx] = components.slice(1, components.length).join(",");
                 series_order[components[0]] = idx;
             }
