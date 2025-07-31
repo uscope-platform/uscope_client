@@ -180,9 +180,9 @@ let FcoreEmulationEditor = function (props) {
 
     let handle_hardware_sim = async () =>{
         let data = await props.emulator.download_hardware_sim_data();
-        debugger;
         download_text(data.control, "control_bus.txt");
         download_text(data.code, "code_bus.txt");
+        download_text(data.inputs, "input_bus.txt");
     }
 
     let handle_deploy = async () =>{

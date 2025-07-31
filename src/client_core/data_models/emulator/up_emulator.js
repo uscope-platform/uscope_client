@@ -491,6 +491,30 @@ export class up_emulator {
         })
     }
 
+    get_series_for_input(input_data, input_obj, n_channels){
+
+        let ret = [];
+        let tok = input_obj.source.value.split(".");
+        for(let d of input_data){
+            if(d.name === tok[0]){
+                if(n_channels > 1){
+                    for(let i = 0; i < n_channels; i++){
+                        let name = tok[1] + "[" + i + "]";
+                        if(d.data[name]){
+                            ret.push(d.data[name]);
+                        } else {
+                            throw("Error: " + name + " not found in selected file")
+                        }
+                    }
+                } else {
+                    ret = d.data[tok[1]]
+                }
+
+            }
+        }
+        return ret;
+    }
+
     build = () =>{
         let connections  = [];
         this.connections.map((item) => {
@@ -514,28 +538,9 @@ export class up_emulator {
                     inputs: item.inputs.map((in_obj) => {
                         let source = in_obj.source;
                         if(in_obj.source.type === "series"){
-                            let tok = in_obj.source.value.split(".");
-                            let data = [];
-                            for(let d of item.input_data){
-                                if(d.name === tok[0]){
-                                    if(item.channels > 1){
-                                        for(let i = 0; i < item.channels; i++){
-                                            let name = tok[1] + "[" + i + "]";
-                                            if(d.data[name]){
-                                                data.push(d.data[name]);
-                                            } else {
-                                                throw("Error: " + name + " not found in selected file")
-                                            }
-                                        }
-                                    } else {
-                                        data = d.data[tok[1]]
-                                    }
-
-                                }
-                            }
                             source = {
                                 type: in_obj.source.type,
-                                value: data
+                                value: this.get_series_for_input(item.input_data, in_obj, item.channels)
                             };
                         }
                         return {
@@ -634,7 +639,65 @@ export class up_emulator {
 
     download_hardware_sim_data = async () =>{
         let specs = this.build();
-        return await backend_post(api_dictionary.operations.hil_hardware_sim, specs);
+        let bus_data = await backend_post(api_dictionary.operations.hil_hardware_sim, specs);
+        bus_data.control = bus_data.control + "--\n" + bus_data.outputs;
+        bus_data.inputs = this.prepare_input_series(bus_data.inputs);
+        return bus_data;
+    }
+
+    prepare_input_series = (raw_specs)=>{
+        let series_order = {};
+        let series_header = {};
+        raw_specs.split("\n").map((line, idx)=>{
+            let components = line.split(",");
+            if(components.length === 4){
+                series_header[idx] = components.slice(1, components.length).join(",");
+                series_order[components[0]] = idx;
+            }
+        })
+
+        let series_data = {};
+        for(let o in series_order){
+            Object.values(this.cores).map((core)=>{
+                core.inputs.map((in_obj)=>{
+                    if(in_obj.source.type === "series"){
+                        let series = this.get_series_for_input(
+                            core.input_data,
+                            in_obj,
+                            core.channels
+                        );
+                        if(o === core.name + "." + in_obj.name){
+                            series_data[series_order[o]] = series;
+                        } else {
+                            for(let i = 0; i<series.length; i++){
+                                let data_name = core.name.replace(" ", "_")+ "[" + i.toString() + "]" +  "." + in_obj.name.replace(" ", "_");
+                                if(o === data_name){
+                                    series_data[series_order[o]] = series[i];
+                                    break;
+                                }
+                            }
+                        }
+
+
+                    }
+                });
+            })
+        }
+
+
+        let serialized_data = "";
+        for(let i in series_data){
+            serialized_data += series_header[i] + ";";
+        }
+        serialized_data = serialized_data.slice(0, -1) + "\n";
+        for(let j = 0; j<Object.values(series_data)[0].length; j++){
+            let row_data = [];
+            for(let i in series_data){
+                row_data.push(series_data[i][j]);
+            }
+            serialized_data += row_data.join(",") + "\n";
+        }
+        return serialized_data;
     }
 
     deploy = async () =>{

@@ -78,7 +78,6 @@ let EmulationResults = function (props) {
 
     let handle_select_source = source =>{
         let srcs = props.results.get_data_sources();
-        debugger;
         let inputs_mode = false;
         if(srcs.n_inputs > 0){
             if(srcs.sources.slice(srcs.sources.length-srcs.n_inputs,srcs.sources.length).includes(source)){
