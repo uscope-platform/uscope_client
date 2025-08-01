@@ -645,6 +645,16 @@ export class up_emulator {
         return bus_data;
     }
 
+    float_to_hex = (series) =>{
+        return series.map((item)=>{
+            debugger;
+            const buffer = new ArrayBuffer(4);
+            const view = new DataView(buffer);
+            view.setFloat32(0, item, true);
+            return view.getUint32(0, true);
+        })
+    }
+
     prepare_input_series = (raw_specs)=>{
         let series_order = {};
         let series_header = {};
@@ -667,12 +677,12 @@ export class up_emulator {
                             core.channels
                         );
                         if(o === core.name + "." + in_obj.name){
-                            series_data[series_order[o]] = series;
+                            series_data[series_order[o]] = this.float_to_hex(series);
                         } else {
                             for(let i = 0; i<series.length; i++){
                                 let data_name = core.name.replace(" ", "_")+ "[" + i.toString() + "]" +  "." + in_obj.name.replace(" ", "_");
                                 if(o === data_name){
-                                    series_data[series_order[o]] = series[i];
+                                    series_data[series_order[o]] = this.float_to_hex(series[i]);
                                     break;
                                 }
                             }
