@@ -58,6 +58,17 @@ export class up_emulator {
         return ret;
     }
 
+    static deep_copy_s(emulator_obj){
+        let ret = {};
+        ret.deployment_mode = emulator_obj.deployment_mode;
+        ret.id = emulator_obj.id;
+        ret.name = emulator_obj.name;
+        ret.cores = JSON.parse(JSON.stringify(emulator_obj.cores));
+        ret.connections = JSON.parse(JSON.stringify(emulator_obj.connections));
+        ret.emulation_time = emulator_obj.emulation_time;
+        return ret;
+    }
+
     static construct_empty(emulator_id){
         let emulator_obj = {
             id:emulator_id,
@@ -68,6 +79,14 @@ export class up_emulator {
             deployment_mode:false
         };
         return new up_emulator(emulator_obj);
+    }
+
+    static duplicate = async (old_emulator, new_id) => {
+        debugger;
+        let new_emulator = up_emulator.deep_copy_s(old_emulator);
+        new_emulator.id = new_id;
+        new_emulator.name = old_emulator.name + "_copy_" + new_id;
+        return new up_emulator(new_emulator);
     }
 
     add_remote = async () => {

@@ -42,6 +42,24 @@ export class up_script {
         this.triggers = script_obj.triggers;
     }
 
+    static deep_copy_s =  (old_script) => {
+        let ret = {};
+
+        ret.id = old_script.id;
+        ret.name = old_script.name;
+        ret.path = old_script.path;
+        ret.content = old_script.content;
+        ret.triggers = old_script.triggers;
+        return ret;
+    }
+
+    static duplicate = async (old_script, new_id) => {
+        let new_script = up_script.deep_copy_s(old_script);
+        new_script.id = new_id;
+        new_script.name = old_script.name + "_copy_" + new_id;
+        return new up_script(new_script);
+    }
+
     static construct_empty(script_id){
         let script_obj = {id:script_id, name:'new script_'+script_id,path:`new script_${script_id}.js`, content:default_script_content, triggers:''};
         return new up_script(script_obj);

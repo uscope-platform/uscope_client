@@ -54,6 +54,23 @@ export class up_program {
         return ret;
     }
 
+    static deep_copy_s =  (old_program) => {
+        let ret = {};
+        ret.id = old_program.id;
+        ret.name = old_program.name;
+        ret.content =old_program.content;
+        ret.type =old_program.type;
+        ret.headers = JSON.parse(JSON.stringify(old_program.headers));
+        return ret;
+    }
+
+    static duplicate = async (old_program, new_id) => {
+        let new_program = up_program.deep_copy_s(old_program);
+        new_program.id = new_id;
+        new_program.name = old_program.name + "_copy_" + new_id;
+        return new up_program(new_program);
+    }
+
     add_remote = () => {
         store.dispatch(AddProgram(this));
         return backend_post(api_dictionary.programs.add+'/'+this.id, this._get_program());
