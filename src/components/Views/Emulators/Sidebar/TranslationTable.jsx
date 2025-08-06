@@ -19,36 +19,68 @@ import {SelectableList, SimpleContent, UIPanel} from "@UI";
 
 let  TranslationTable = props =>{
 
-    let [io_addr, set_io_addr] = useState(null);
-    let [core_addr, set_core_addr] = useState(null);
+    let [channel_io_names, set_channel_io_names] = useState(null)
+    let [channel_io_addr, set_channel_io_addr] = useState(null);
+    let [channel_core_addr, set_channel_core_addr] = useState(null);
+
+    let [common_io_names, set_common_io_names] = useState(null)
+    let [common_io_addr, set_common_io_addr] = useState(null);
+    let [common_core_addr, set_common_core_addr] = useState(null);
+
 
     useEffect(() => {
-        if(props.data){
-            set_io_addr(["IO Address", ...props.data.map((line)=>{
+        if(props.channel_io){
+            set_channel_io_addr(["IO Side", ...props.channel_io.map((line)=>{
                 return line[0]
             })]);
-            set_core_addr(["Core Address", ...props.data.map((line)=>{
-                return line[1]
+            set_channel_core_addr(["Core Side", ...props.channel_io.map((line)=>{
+                return line[1].address
+            })]);
+            set_channel_io_names(["I/O name", ...props.channel_io.map((line)=>{
+                return line[1].name
             })]);
         }
-    }, [props.data]);
+        if(props.common_io){
+            set_common_io_addr(["IO Side", ...props.common_io.map((line)=>{
+                return line[0]
+            })]);
+            set_common_core_addr(["Core Side", ...props.common_io.map((line)=>{
+                return line[1].address
+            })]);
+            set_common_io_names(["I/O name", ...props.common_io.map((line)=>{
+                return line[1].name
+            })]);
+        }
+    }, [props.channel_io, props.common_io]);
 
     return (
         <UIPanel key="translation_table" style={{minHeight:"200px"}} level="level_2">
             <SimpleContent name={"Translation Table"} content={[
                 <div style={{
                     display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
+                    gridTemplateColumns: "1fr 1fr 1fr",
                     gridColumnGap: "1em",
                     height: "21em"
                 }}
                 key="translation_table_content"
                 >
                     <SelectableList
-                        items={io_addr}
+                        items={channel_io_names}
                     />
                     <SelectableList
-                        items={core_addr}
+                        items={channel_io_addr}
+                    />
+                    <SelectableList
+                        items={channel_core_addr}
+                    />
+                    <SelectableList
+                        items={common_io_names}
+                    />
+                    <SelectableList
+                        items={common_io_addr}
+                    />
+                    <SelectableList
+                        items={common_core_addr}
                     />
                 </div>
             ]}/>

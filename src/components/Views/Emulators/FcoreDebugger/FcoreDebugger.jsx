@@ -154,7 +154,8 @@ let  FcoreDebugger = props =>{
                         gridArea: "2 / 5 / 3 / 7"
                     }}>
                         <TranslationTable
-                            data={props.content.asm.translation_table}
+                            channel_io={props.content.asm.translation_table}
+                            common_io={props.content.asm.common_io_translation_table}
                         />
                     </div>
                 </div>

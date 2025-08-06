@@ -719,6 +719,7 @@ export class up_emulator {
             serialized_data += series_header[i] + ";";
         }
         serialized_data = serialized_data.slice(0, -1) + "\n";
+        if(Object.keys(series_data) .length === 0) return serialized_data;
         for(let j = 0; j<Object.values(series_data)[0].length; j++){
             let row_data = [];
             for(let i in series_data){

@@ -24,6 +24,7 @@ let HilDebuggerView = function (props) {
     let[ debugger_data, set_debugger_data] = useState({
         asm:{
             translation_table:[],
+            common_io_translation_table:[],
             program:""
         },
         source:""
