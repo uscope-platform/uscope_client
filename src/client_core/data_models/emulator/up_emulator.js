@@ -165,6 +165,11 @@ export class up_emulator {
         let edit = {id:this.id, field:"cores",  action:"remove", value:core_id};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         delete this.cores[core_id];
+        for(let i of this.connections){
+            if(i.source_core === core_id || i.destination_core === core_id){
+                await this.remove_dma_connection(i.source_core, i.destination_core);
+            }
+        }
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
