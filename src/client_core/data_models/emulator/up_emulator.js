@@ -99,7 +99,8 @@ export class up_emulator {
         }
     }
 
-    add_core = async (id) => {
+    add_core = async () => {
+        let id = this.find_free_id();
         let c = {
             name: "new_core_" + id,
             id: id,
@@ -121,12 +122,32 @@ export class up_emulator {
                 has_reciprocal:false
             }
         };
+        return this.send_core(c);
+    }
 
+    send_core = async (c) => {
         let edit = {id:this.id, field:"cores",  action:"add", value:c};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
-        this.cores[id] = c;
+        this.cores[c.id] = c;
         store.dispatch(update_emulator(this.deep_copy()));
         return c;
+    }
+
+    find_free_id = () => {
+        let id = 1;
+        while(this.cores[id] !== undefined){
+            id++;
+        }
+        return id;
+    }
+
+    duplicate_core = async (core_id) => {
+        let core = JSON.parse(JSON.stringify(this.cores[core_id]));
+        let new_id = this.find_free_id();
+        core.name = core.name + "_copy_" + new_id;
+        core.id = new_id
+        core.order = new_id+1;
+        return this.send_core(core);
     }
 
     edit_name = async (new_name) =>{

@@ -77,13 +77,13 @@ let EmulatorDiagram = function (props) {
         }}>
             <EmulatorToolbar
                 onAdd={props.onAdd}
-                onBuild={props.onBuild}
                 onRun={props.onRun}
                 onDeploy={props.onDeploy}
                 onHardwareSim={props.onHardwareSim}
                 onEdit={props.onEdit}
                 enable={props.enabled_actions}
                 onDebug={props.onDebug}
+                onCopy={props.onCopy}
             />
             <Canvas
                 nodes={props.nodes}

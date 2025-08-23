@@ -41,7 +41,8 @@ let FcoreEmulationEditor = function (props) {
         run: false,
         deploy: false,
         debug:false,
-        hw_sim:true
+        hw_sim:true,
+        copy:false
     })
     const navigate = useNavigate();
 
@@ -61,7 +62,8 @@ let FcoreEmulationEditor = function (props) {
                     run: enabled_actions.run,
                     deploy: enabled_actions.deploy,
                     debug: enabled_actions.debug,
-                    hw_sim: enabled_actions.hw_sim
+                    hw_sim: enabled_actions.hw_sim,
+                    copy:true
                 });
                 return;
             }
@@ -73,7 +75,8 @@ let FcoreEmulationEditor = function (props) {
             run: enabled_actions.run,
             deploy: enabled_actions.deploy,
             debug: enabled_actions.debug,
-            hw_sim: enabled_actions.hw_sim
+            hw_sim: enabled_actions.hw_sim,
+            copy: false
         });
 
     },[props.selections.component])
@@ -88,7 +91,8 @@ let FcoreEmulationEditor = function (props) {
                 run: true,
                 deploy: true,
                 debug: true,
-                hw_sim: true
+                hw_sim: true,
+                copy: false
             });
 
             let initial_nodes = [];
@@ -132,13 +136,19 @@ let FcoreEmulationEditor = function (props) {
         setNodes(new_nodes);
     }, [props.selections.obj_version])
 
-    let add_core = ()=>{
-        props.emulator.add_core(n_cores+1).then((core)=>{
-            setNodes([...nodes, {id:core.id, text:core.name}]);
-        });
+    let add_core = async ()=>{
+        let core = await props.emulator.add_core();
+        setNodes([...nodes, {id:core.id, text:core.name}]);
         set_n_cores(n_cores+1);
     };
 
+    const copy_core = async ()=>{
+        if(props.selections.component && props.selections.component.type === "node"){
+            let core = await props.emulator.duplicate_core(props.selections.component.obj.id);
+            setNodes([...nodes, {id:core.id, text:core.name}]);
+            set_n_cores(n_cores+1);
+        }
+    }
 
     let handle_node_select = (event, node) =>{
         props.on_selection({...props.selections, iom:null, component:{type:"node", obj:node}});
@@ -146,10 +156,6 @@ let FcoreEmulationEditor = function (props) {
 
     let handle_edge_select = (event, edge) =>{
         props.on_selection({...props.selections, iom:null, component:{type:"edge", obj:edge}});
-    }
-
-    let handle_build = () =>{
-        props.on_selection({...props.selections, tab:4});
     }
 
     let handle_run = async () =>{
@@ -295,8 +301,8 @@ let FcoreEmulationEditor = function (props) {
                                 onCanvasClick={handle_canvas_click}
                                 onLinkNodes={handle_link_nodes}
                                 onAdd={add_core}
-                                onBuild={handle_build}
                                 onRun={handle_run}
+                                onCopy={copy_core}
                                 onDeploy={handle_deploy}
                                 onHardwareSim={handle_hardware_sim}
                                 onEdit={handle_edit}
