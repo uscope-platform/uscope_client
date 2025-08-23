@@ -48,11 +48,11 @@ let HilView = function (props) {
 
     let versioned_handle_selection = (value) =>{
         let new_val = {...value, obj_version: value.obj_version + 1}
-         set_selections(new_val);
+        set_selections(new_val);
     }
 
 
-    let on_select = (value) =>{
+    let on_item_select = (value) =>{
         versioned_handle_selection({...selections, tab:value});
     }
 
@@ -109,7 +109,7 @@ let HilView = function (props) {
                         emulator={emulator}
                         handle_select_emulator={handle_emulator_select}
                     />
-                ]} onSelect={on_select} selected={selections.tab}/>
+                ]} onSelect={on_item_select} selected={selections.tab}/>
             </UIPanel>
         </div>
 

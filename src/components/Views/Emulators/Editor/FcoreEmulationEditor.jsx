@@ -209,7 +209,7 @@ let FcoreEmulationEditor = function (props) {
     }
 
     let handle_canvas_click = ()=>{
-        props.on_selection({...props.selections,component:null});
+        props.on_selection({...props.selections,...{component:null, iom:null}});
     }
 
     let handle_link_nodes = (event, from, to) =>{
@@ -287,7 +287,7 @@ let FcoreEmulationEditor = function (props) {
                     <UIPanel key="emulator_diagram" level="level_2">
                         <SimpleContent name="Emulation_diagram" height="100%" content={
                             <EmulatorDiagram
-                                selected_node={props.selected_component}
+                                selections={props.selections}
                                 onNodeSelect={handle_node_select}
                                 onNodeRemove={handle_node_remove}
                                 onEdgeSelect={handle_edge_select}
