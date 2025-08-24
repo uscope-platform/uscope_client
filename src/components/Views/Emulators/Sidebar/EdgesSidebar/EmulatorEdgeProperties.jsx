@@ -39,7 +39,7 @@ let  EmulatorEdgeProperties = props =>{
         })[0];
 
         connections_list = selected_component.ports.map((item) => {
-            return item.id;
+            if(item) return item.id;
         });
 
         const source_core = props.selected_component.obj.from;

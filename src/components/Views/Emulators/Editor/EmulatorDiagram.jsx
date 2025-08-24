@@ -82,7 +82,6 @@ let EmulatorDiagram = function (props) {
                 onHardwareSim={props.onHardwareSim}
                 onEdit={props.onEdit}
                 enable={props.enabled_actions}
-                onDebug={props.onDebug}
                 onCopy={props.onCopy}
             />
             <Canvas

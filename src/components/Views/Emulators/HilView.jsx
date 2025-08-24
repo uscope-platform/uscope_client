@@ -39,7 +39,6 @@ let HilView = function (props) {
     let [input_data, set_input_data] = useState({});
     let [deployed, set_deployed] = useState(false);
 
-    let [compiled_programs, set_compiled_programs] = useState({});
 
     const emulators_store = useSelector(state => state.emulators);
 
@@ -81,7 +80,6 @@ let HilView = function (props) {
                         emulator={emulator}
                         selections={selections}
                         set_selections={versioned_handle_selection}
-                        set_compiled_programs={set_compiled_programs}
                         on_emulator_select={handle_emulator_select}
                         on_compile_done={()=>{}}
                     />,
@@ -90,7 +88,6 @@ let HilView = function (props) {
                         selections={selections}
                         set_selections={versioned_handle_selection}
                         on_select={handle_emulator_select}
-                        compiled_programs={compiled_programs}
                         set_emulation_results={set_emulation_results}
                     />,
                     <HilControlView

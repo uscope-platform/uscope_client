@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import FcoreDebugger from "./FcoreDebugger.jsx";
 import HilDebuggerSidebar from "../Sidebar/per_panel_sidebars/HilDebuggerSidebar.jsx";
 import {useSelector} from "react-redux";
@@ -47,6 +47,8 @@ let HilDebuggerView = function (props) {
 
     let [breakpoints, set_breakpoints] = useState([]);
 
+    let [compiled_programs, set_compiled_programs] = useState({});
+
     const programs_store = useSelector(state => state.programs);
 
 
@@ -77,14 +79,23 @@ let HilDebuggerView = function (props) {
             return p.name === program;
         })[0].content;
 
-        set_debugger_data({asm:props.compiled_programs[value], source:src});
-
+        set_debugger_data({asm:compiled_programs[value], source:src});
 
         let bps= await props.emulator.get_breakpoints(value);
 
         set_breakpoints(bps.map(b=>b+1));
     }
 
+
+    useEffect(()=>{
+        if(props.emulator){
+            props.emulator.disassemble().then((asm)=>{
+                props.emulator.debug_init().then(()=>{
+                    set_compiled_programs(asm);
+                });
+            })
+        }
+    }, [props.emulator])
 
     return(
         <div style={{
@@ -108,7 +119,7 @@ let HilDebuggerView = function (props) {
                 on_selection={props.set_selections}
                 on_select={props.on_select}
                 on_program_select={handle_select_program}
-                compiled_programs={props.compiled_programs}
+                compiled_programs={compiled_programs}
                 breakpoints={breakpoints}
                 on_add_breakpoint={handle_add_breakpoint}
                 on_remove_breakpoint={handle_remove_breakpoint}

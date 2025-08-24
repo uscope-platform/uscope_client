@@ -17,7 +17,7 @@ import React from 'react';
 
 import {ColorTheme} from "@UI";
 import {Tooltip} from "react-tooltip";
-import {MdAdd, MdArticle, MdConstruction, MdDownload, MdPlayArrow, MdBugReport, MdContentCopy} from "react-icons/md";
+import {MdAdd, MdArticle, MdConstruction, MdDownload, MdPlayArrow, MdContentCopy} from "react-icons/md";
 
 let  EmulatorToolbar = props =>{
 
@@ -102,23 +102,6 @@ let  EmulatorToolbar = props =>{
         )
     }
 
-    let render_debug= () => {
-        let handle_click = (event) =>{
-            if(props.enable.debug) {
-                props.onDebug(event);
-            }
-        };
-        let icon_color = props.enable.run ? ColorTheme.icons_color : ColorTheme.disabled_icon_color;
-        return (
-            <div key="debug" id="debug">
-                <MdBugReport onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
-                             color={icon_color}/>
-                <Tooltip anchorSelect="debug" content={"Debug"} place="top"/>
-            </div>
-        )
-    }
-
-
 
     let render_hw_sim= () => {
         let handle_click = (event) =>{
@@ -143,7 +126,6 @@ let  EmulatorToolbar = props =>{
             {render_edit()}
             {render_run()}
             {render_deploy()}
-            {render_debug()}
             {render_hw_sim()}
 
         </div>

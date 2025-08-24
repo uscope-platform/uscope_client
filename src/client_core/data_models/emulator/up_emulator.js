@@ -82,7 +82,6 @@ export class up_emulator {
     }
 
     static duplicate = async (old_emulator, new_id) => {
-        debugger;
         let new_emulator = up_emulator.deep_copy_s(old_emulator);
         new_emulator.id = new_id;
         new_emulator.name = old_emulator.name + "_copy_" + new_id;
@@ -692,7 +691,6 @@ export class up_emulator {
 
     float_to_hex = (series) =>{
         return series.map((item)=>{
-            debugger;
             const buffer = new ArrayBuffer(4);
             const view = new DataView(buffer);
             view.setFloat32(0, item, true);
