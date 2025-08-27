@@ -34,9 +34,9 @@ let  CoreInputProperties = props =>{
                 value = parseInt(value);
             }
 
-            if(field === "constant_value") {
+            if(field === "constant_value" || field === "initial_value") {
                 field = "source";
-                if(sel_in.source.type === "constant") {
+                if(sel_in.source.type === "constant" || sel_in.source.type === "external") {
                     value = value.replace(/\s/g, '');
                     let value_tokens = value.split(",")
                     value = value_tokens.map(val =>{
@@ -133,6 +133,18 @@ let  CoreInputProperties = props =>{
                     name="source_value"
                     options={files}
                 />)
+            } else if(sel_in.source.type==="external"){
+                ret.push(
+                    <InputField
+                        Inline
+                        key={"initial_value" + String(sel_in.source.value)}
+                        id="initial_value"
+                        name="initial_value"
+                        label="Initial Value"
+                        defaultValue={sel_in.source.value}
+                        onKeyDown={handle_change_iom}
+                    />
+                )
             }
         }
         return(ret);
