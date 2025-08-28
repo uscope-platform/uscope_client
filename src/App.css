@@ -19,6 +19,12 @@
   margin: 0;
   font-family: Monserrat, Helvetica,sans-serif;
   padding: 0;
+    scrollbar-width: thin;                 /* Firefox */
+    scrollbar-color: rgba(255,255,255,0.25) transparent;
+
+    /* Reserve space to avoid layout shift when bars appear/disappear */
+    scrollbar-gutter: stable;
+
 }
 
 body {

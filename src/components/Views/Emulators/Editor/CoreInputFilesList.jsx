@@ -76,7 +76,7 @@ let  CoreInputFilesList = props =>{
         set_selected(args)
     }
     return(
-        <div>
+        <div  style={{maxHeight: "13em", overflow:"auto" }} >
             <div style={{
                 display:"flex",
                 flexDirection:"row",

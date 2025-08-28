@@ -60,7 +60,7 @@ let  CoreInputsList = props =>{
 
 
     return (
-        <div>
+        <div  style={{maxHeight: "13em"}}>
             <div style={{
                 display: "flex",
                 flexDirection: "row",

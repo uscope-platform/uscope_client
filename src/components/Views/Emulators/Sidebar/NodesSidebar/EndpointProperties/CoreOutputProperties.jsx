@@ -1,21 +1,25 @@
-// Copyright 2023 Filippo Savi
-// Author: Filippo Savi <filssavi@gmail.com>
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+/*
+ * Copyright(c) 2025. Filippo Savi
+ * Author: Filippo Savi <filssavi@gmail.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
 
 import React from 'react';
 
 import {Checkbox, InputField, SelectField, SimpleContent} from "@UI";
+import TypeOptionsContainer from "./TypeOptionsContainer";
 
 let  CoreOutputProperties = props =>{
 
@@ -89,7 +93,9 @@ let  CoreOutputProperties = props =>{
             <SimpleContent name="Output Properties" content={
                 <div key="output_props" style={{maxHeight:"13em"}}>
                     <InputField inline id="name" name="name" label="Name" defaultValue={sel_out.name} onKeyDown={handle_change_iom}/>
-                    {render_type_options()}
+                    <TypeOptionsContainer label="Output data format">
+                        {render_type_options()}
+                    </TypeOptionsContainer>
                 </div> }/>
         )
     }

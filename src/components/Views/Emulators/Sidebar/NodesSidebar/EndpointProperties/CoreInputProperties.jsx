@@ -15,6 +15,8 @@
 
 import React, {useReducer} from 'react';
 import {Checkbox, InputField, SelectField, SimpleContent} from "@UI";
+import {ConstantInputProperties, SeriesInputProperties, ExternalInputProperties} from "./inputs";
+import TypeOptionsContainer from "./TypeOptionsContainer";
 
 let  CoreInputProperties = props =>{
 
@@ -32,18 +34,6 @@ let  CoreInputProperties = props =>{
 
             if(field === "width" || field === "vector_size"){
                 value = parseInt(value);
-            }
-
-            if(field === "constant_value" || field === "initial_value") {
-                field = "source";
-                if(sel_in.source.type === "constant" || sel_in.source.type === "external") {
-                    value = value.replace(/\s/g, '');
-                    let value_tokens = value.split(",")
-                    value = value_tokens.map(val =>{
-                        return parseFloat(val);
-                    })
-                }
-                value = {...sel_in.source, ...{"value":value}};
             }
 
             props.selected_emulator.edit_input(props.selected_component.obj.id,
@@ -83,73 +73,6 @@ let  CoreInputProperties = props =>{
         });
     }
 
-    let render_source_options = () => {
-        let ret = []
-        ret.push(
-            <SelectField
-                inline
-                key="source_type"
-                label="Input Type"
-                onChange={handle_select}
-                value={{value: sel_in.source.type, label: sel_in.source.type}}
-                defaultValue="Select Input Type"
-                name="source_type"
-                options={[
-                    {label: "constant", value: "constant"},
-                    {label: "series", value: "series"},
-                    {label: "random", value: "random"},
-                    {label: "external", value:"external"}
-                ]}
-            />
-        )
-        if(sel_in.source){
-            if(sel_in.source.type==="constant") {
-                ret.push(
-                    <InputField
-                        Inline
-                        key={"constant_value" + String(sel_in.source.value)}
-                        id="constant_value"
-                        name="constant_value"
-                        label="Value"
-                        defaultValue={sel_in.source.value}
-                        onKeyDown={handle_change_iom}
-                    />
-                )
-            }else if(sel_in.source.type==="series"){
-                let files = props.selected_core.input_data.map((item)=>{
-                    return Object.keys(item.data).map((name)=>{
-                        let label = name.split("[")[0];
-                        return {label:item.name + "." + label, value:item.name + "." + label};
-                    })
-                }).flat();
-
-                ret.push(<SelectField
-                    inline
-                    key="source_value"
-                    label="Data Series"
-                    onChange={handle_select}
-                    value={{value: sel_in.source.value, label: sel_in.source.value}}
-                    defaultValue="Select data series"
-                    name="source_value"
-                    options={files}
-                />)
-            } else if(sel_in.source.type==="external"){
-                ret.push(
-                    <InputField
-                        Inline
-                        key={"initial_value" + String(sel_in.source.value)}
-                        id="initial_value"
-                        name="initial_value"
-                        label="Initial Value"
-                        defaultValue={sel_in.source.value}
-                        onKeyDown={handle_change_iom}
-                    />
-                )
-            }
-        }
-        return(ret);
-    }
-
     let render_type_options = () =>{
         let ret = [
             <SelectField
@@ -179,13 +102,71 @@ let  CoreInputProperties = props =>{
         return ret;
     }
 
+    let render_source_dependent_options = () =>{
+        let ret = []
+        if(sel_in.source){
+            if(sel_in.source.type==="constant"){
+                ret.push(
+                    <ConstantInputProperties
+                        input={sel_in.source}
+                        selected_emulator={props.selected_emulator}
+                        selected_component={props.selected_component}
+                        selected_iom={props.selected_iom}
+                        on_modify={props.on_modify}
+                    />
+                )
+            } else if(sel_in.source.type==="series"){
+                ret.push(
+                    <SeriesInputProperties
+                        input={sel_in.source}
+                        selected_emulator={props.selected_emulator}
+                        selected_component={props.selected_component}
+                        selected_iom={props.selected_iom}
+                        selected_core={props.selected_core}
+                        on_modify={props.on_modify}
+                    />
+                )
+            } else if(sel_in.source.type==="external"){
+                ret.push(
+                    <ExternalInputProperties
+                        input={sel_in.source}
+                        selected_emulator={props.selected_emulator}
+                        selected_component={props.selected_component}
+                        selected_iom={props.selected_iom}
+                        on_modify={props.on_modify}
+                    />
+                )
+            }
+        }
+        return ret;
+    }
+
     if(sel_in){
         return(
             <SimpleContent  name="Input Properties" content={
                 <div key="input_props" style={{maxHeight:"13em"}}>
                     <InputField id="name" name="name" label="Name" defaultValue={sel_in.name} onKeyDown={handle_change_iom}/>
-                    {render_type_options()}
-                    {render_source_options()}
+                    <TypeOptionsContainer label="Source Properties">
+                        <SelectField
+                            inline
+                            key="source_type"
+                            label="Type"
+                            onChange={handle_select}
+                            value={{value: sel_in.source.type, label: sel_in.source.type}}
+                            defaultValue="Select Type"
+                            name="source_type"
+                            options={[
+                                {label: "constant", value: "constant"},
+                                {label: "series", value: "series"},
+                                {label: "random", value: "random"},
+                                {label: "external", value:"external"}
+                            ]}
+                        />
+                        {render_source_dependent_options()}
+                    </TypeOptionsContainer>
+                    <TypeOptionsContainer label="Input data format">
+                        {render_type_options()}
+                    </TypeOptionsContainer>
                 </div>
             }/>
         )
