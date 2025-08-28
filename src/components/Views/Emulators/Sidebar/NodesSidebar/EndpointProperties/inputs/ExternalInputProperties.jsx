@@ -13,37 +13,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useReducer} from 'react';
+import React from 'react';
 import {InputField} from "@UI";
 
 export let ExternalInputProperties = props =>{
-
-    const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     let handle_change_iom = (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab") {
             let field = event.target.name;
             let value = event.target.value;
 
-            field = "source";
-            if(props.input.type === "constant" || props.input.type === "external") {
-                value = value.replace(/\s/g, '');
-                let value_tokens = value.split(",")
-                value = value_tokens.map(val =>{
-                    return parseFloat(val);
-                })
-            }
-            value = {...props.input, ...{"value":value}};
-
-            props.selected_emulator.edit_input(props.selected_component.obj.id,
-                field, value, props.selected_iom.obj).then(()=>{
-                if(field === 'name'){
-                    props.on_modify({type:props.selected_iom.type, obj:value});
-                }
-                forceUpdate();
-            });
+            value = value.replace(/\s/g, '');
+            let value_tokens = value.split(",")
+            value = value_tokens.map(val =>{
+                return parseFloat(val);
+            })
+            props.onChange(field, value);
         }
     };
+
 
 
     return(
@@ -51,7 +39,7 @@ export let ExternalInputProperties = props =>{
             Inline
             key={"initial_value" + String(props.input.value)}
             id="initial_value"
-            name="initial_value"
+            name="value"
             label="Initial Value"
             defaultValue={props.input.value}
             onKeyDown={handle_change_iom}
@@ -60,5 +48,3 @@ export let ExternalInputProperties = props =>{
 
 
 };
-
-export default ExternalInputProperties;

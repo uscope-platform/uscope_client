@@ -116,31 +116,22 @@ let  CoreInputProperties = props =>{
                 ret.push(
                     <ConstantInputProperties
                         input={sel_in.source}
-                        selected_emulator={props.selected_emulator}
-                        selected_component={props.selected_component}
-                        selected_iom={props.selected_iom}
-                        on_modify={props.on_modify}
+                        onChange={handle_source_change}
                     />
                 )
             } else if(sel_in.source.type==="series"){
                 ret.push(
                     <SeriesInputProperties
                         input={sel_in.source}
-                        selected_emulator={props.selected_emulator}
-                        selected_component={props.selected_component}
-                        selected_iom={props.selected_iom}
                         selected_core={props.selected_core}
-                        on_modify={props.on_modify}
+                        onChange={handle_source_change}
                     />
                 )
             } else if(sel_in.source.type==="external"){
                 ret.push(
                     <ExternalInputProperties
                         input={sel_in.source}
-                        selected_emulator={props.selected_emulator}
-                        selected_component={props.selected_component}
-                        selected_iom={props.selected_iom}
-                        on_modify={props.on_modify}
+                        onChange={handle_source_change}
                     />
                 )
             } else if(sel_in.source.type==="waveform"){
