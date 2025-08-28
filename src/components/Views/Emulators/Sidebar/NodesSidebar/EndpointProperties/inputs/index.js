@@ -19,3 +19,4 @@
 export {ConstantInputProperties} from "./ConstantInputProperties.jsx"
 export {ExternalInputProperties} from "./ExternalInputProperties.jsx"
 export {SeriesInputProperties} from "./SeriesInputProperties.jsx"
+export {WaveformInputProperties} from "./WaveformInputProperties.jsx"

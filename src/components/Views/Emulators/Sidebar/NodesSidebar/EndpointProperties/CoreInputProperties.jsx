@@ -15,7 +15,7 @@
 
 import React, {useReducer} from 'react';
 import {Checkbox, InputField, SelectField, SimpleContent} from "@UI";
-import {ConstantInputProperties, SeriesInputProperties, ExternalInputProperties} from "./inputs";
+import {ConstantInputProperties, SeriesInputProperties, ExternalInputProperties, WaveformInputProperties} from "./inputs";
 import TypeOptionsContainer from "./TypeOptionsContainer";
 
 let  CoreInputProperties = props =>{
@@ -102,6 +102,13 @@ let  CoreInputProperties = props =>{
         return ret;
     }
 
+    let handle_source_change = (field, value) =>{
+        let new_source = {...sel_in.source, ...{[field]:value}};
+        props.selected_emulator.edit_input(props.selected_component.obj.id, "source", new_source, props.selected_iom.obj).then(()=>{
+            forceUpdate();
+        });
+    }
+
     let render_source_dependent_options = () =>{
         let ret = []
         if(sel_in.source){
@@ -136,6 +143,13 @@ let  CoreInputProperties = props =>{
                         on_modify={props.on_modify}
                     />
                 )
+            } else if(sel_in.source.type==="waveform"){
+                ret.push(
+                    <WaveformInputProperties
+                        input={sel_in.source}
+                        onChange={handle_source_change}
+                    />
+                )
             }
         }
         return ret;
@@ -159,7 +173,8 @@ let  CoreInputProperties = props =>{
                                 {label: "constant", value: "constant"},
                                 {label: "series", value: "series"},
                                 {label: "random", value: "random"},
-                                {label: "external", value:"external"}
+                                {label: "external", value:"external"},
+                                {label: "Waveform", value: "waveform"}
                             ]}
                         />
                         {render_source_dependent_options()}

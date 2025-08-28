@@ -264,7 +264,20 @@ export class up_emulator {
             vector_size: 1,
             source:{
                 type:"constant",
-                value:""
+                value:"",
+                waveform:{
+                    shape:"square",
+                    von:0,
+                    voff:0,
+                    tdelay:0,
+                    ton:0,
+                    period:0,
+                    dc_offset:0,
+                    amplitude:0,
+                    frequency:0,
+                    phase:0,
+                    duty:0
+                }
             },
             name: "new_input_" + progressive,
             labels:""
