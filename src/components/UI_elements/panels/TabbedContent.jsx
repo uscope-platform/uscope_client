@@ -17,7 +17,12 @@ import React from 'react';
 import {PanelTitle, ContentDiv} from "./UIPanel";
 
 export let TabbedContent = function (props) {
-    const childrenArray = React.Children.toArray(props.children);
+    const childrenArray = React.Children.map(props.children, child => {
+        if (React.isValidElement(child)) {
+            return React.cloneElement(child, {key: child.key || Math.random().toString(36)})
+        }
+        return child;
+    });
 
     let handle_select_tab = (event) => {
         props.onSelect(props.names.indexOf(event.target.textContent));
