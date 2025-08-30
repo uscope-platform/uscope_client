@@ -308,17 +308,17 @@ let FcoreEmulationEditor = function (props) {
                         minHeight:"270px"
                     }}>
                         <UIPanel style={{flexGrow:1}} key="emulator_i_props" level="level_2">
-                            <TabbedContent names={["Inputs", "Input Files"]} contents={[
+                            <TabbedContent names={["Inputs", "Input Files"]} onSelect={set_selected_inputs_tab} selected={selected_inputs_tab}>
                                 <CoreInputsList
                                     emulator={props.emulator}
                                     on_selection={handle_select_iom}
                                     selections={props.selections}
-                                />,
+                                />
                                 <CoreInputFilesList
                                     emulator={props.emulator}
                                     selections={props.selections}
                                 />
-                            ]} onSelect={set_selected_inputs_tab} selected={selected_inputs_tab}/>
+                            </TabbedContent>
                         </UIPanel>
                         <UIPanel  style={{flexGrow:1}} key="emulator_o_props" level="level_2">
                             <SimpleContent name="Outputs" height="100%" >

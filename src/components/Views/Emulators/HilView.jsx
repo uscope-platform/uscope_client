@@ -70,43 +70,43 @@ let HilView = function (props) {
             height:"100%"
         }}>
               <UIPanel style={{flexGrow:1}} key="emulator_diagram" level="level_2">
-                <TabbedContent height="100%" names={["Editor","Debugger","Hardware",  "Results", "Specs"]} contents={[
-                    <HilEditorView
-                        set_emulation_results={set_emulation_results}
-                        set_input_data={set_input_data}
-                        input_data={input_data}
-                        bump_version={()=>{versioned_handle_selection(selections)}}
-                        onDeploy={()=>{set_deployed(true)}}
-                        emulator={emulator}
-                        selections={selections}
-                        set_selections={versioned_handle_selection}
-                        on_emulator_select={handle_emulator_select}
-                        on_compile_done={()=>{}}
-                    />,
-                    <HilDebuggerView
-                        emulator={emulator}
-                        selections={selections}
-                        set_selections={versioned_handle_selection}
-                        on_select={handle_emulator_select}
-                        set_emulation_results={set_emulation_results}
-                    />,
-                    <HilControlView
-                        emulator={emulator}
-                        deployed={deployed}
-                        selections={selections}
-                        set_selections={versioned_handle_selection}
-                        on_select={handle_emulator_select}
-                    />,
-                    <HilResultsView
-                        filename={emulator.name}
-                        emulation_results={emulation_results}
-                        input_data={input_data}
-                    />,
-                    <HilSpecsView
-                        emulator={emulator}
-                        handle_select_emulator={handle_emulator_select}
-                    />
-                ]} onSelect={on_item_select} selected={selections.tab}/>
+                  <TabbedContent height="100%" names={["Editor","Debugger","Hardware",  "Results", "Specs"]} onSelect={on_item_select} selected={selections.tab}>
+                      <HilEditorView
+                          set_emulation_results={set_emulation_results}
+                          set_input_data={set_input_data}
+                          input_data={input_data}
+                          bump_version={()=>{versioned_handle_selection(selections)}}
+                          onDeploy={()=>{set_deployed(true)}}
+                          emulator={emulator}
+                          selections={selections}
+                          set_selections={versioned_handle_selection}
+                          on_emulator_select={handle_emulator_select}
+                          on_compile_done={()=>{}}
+                      />
+                      <HilDebuggerView
+                          emulator={emulator}
+                          selections={selections}
+                          set_selections={versioned_handle_selection}
+                          on_select={handle_emulator_select}
+                          set_emulation_results={set_emulation_results}
+                      />
+                      <HilControlView
+                          emulator={emulator}
+                          deployed={deployed}
+                          selections={selections}
+                          set_selections={versioned_handle_selection}
+                          on_select={handle_emulator_select}
+                      />
+                      <HilResultsView
+                          filename={emulator.name}
+                          emulation_results={emulation_results}
+                          input_data={input_data}
+                      />
+                      <HilSpecsView
+                          emulator={emulator}
+                          handle_select_emulator={handle_emulator_select}
+                      />
+                  </TabbedContent>
             </UIPanel>
         </div>
 

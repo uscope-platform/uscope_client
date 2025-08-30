@@ -234,244 +234,6 @@ let  ApplicationsManager = props =>{
 
     let misc_obj={application_name:selected_app.application_name, bitstream: selected_app.bitstream, ...selected_app.miscellaneous}
 
-    let get_tabs_content = ()=>{
-        return([
-            <div key="channels">
-                <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
-                    <MdAdd
-                        onClick={() => {handle_add_new("channel", selected_app.channels, "name");}}
-                        size={ColorTheme.icons_size}
-                        style={{marginLeft: "0.3em"}}
-                        color={ColorTheme.icons_color}
-                    />
-                </div>
-                <CardStack>
-                    {
-                        selected_app.channels.map((channel) => {
-                            return (
-                                <PlotChannelProperties
-                                    key={channel.name}
-                                    application={selected_app}
-                                    forceUpdate={forceUpdate}
-                                    channel={channel}
-                                />
-                            )
-                        })
-                    }
-                </CardStack>
-            </div>,
-            <div key="channel_groups">
-                <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
-                    <MdAdd
-                        onClick={() => {handle_add_new("channel_group", selected_app.channel_groups, "group_name");}}
-                        size={ColorTheme.icons_size}
-                        style={{marginLeft: "0.3em"}}
-                        color={ColorTheme.icons_color}
-                    />
-                </div>
-                <CardStack>
-                    {
-                        selected_app.channel_groups.map((group) => {
-                            return (
-                                <PlotChannelGroupProperties
-                                    key={group.group_name}
-                                    application={selected_app}
-                                    forceUpdate={forceUpdate}
-                                    group={group}
-                                />
-                            )
-                        })
-                    }
-                </CardStack>
-            </div>,
-            <div key="irvs">
-                <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
-                    <MdAdd
-                        onClick={() => {handle_add_new("irv", selected_app.initial_registers_values, "address");}}
-                        size={ColorTheme.icons_size}
-                        style={{marginLeft: "0.3em"}}
-                        color={ColorTheme.icons_color}
-                    />
-                </div>
-                <CardStack>
-                    {
-                        selected_app.initial_registers_values.map((irv) => {
-                            return (
-                                <InitialRegisterValue
-                                    key={irv.address}
-                                    application={selected_app}
-                                    forceUpdate={forceUpdate}
-                                    irv={irv}
-                                />
-                            )
-                        })
-                    }
-                </CardStack>
-            </div>,
-            <div key="macros">
-                <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
-                    <MdAdd
-                        onClick={() => {handle_add_new("macro", selected_app.macro, "name");}}
-                        size={ColorTheme.icons_size}
-                        style={{marginLeft: "0.3em"}}
-                        color={ColorTheme.icons_color}
-                    />
-                </div>
-                <CardStack>
-                    {
-                        selected_app.macro.map((macro) => {
-                            return (
-                                <MacroProperties
-                                    key={macro.name}
-                                    application={selected_app}
-                                    forceUpdate={forceUpdate}
-                                    macro={macro}
-                                />
-                            )
-                        })
-                    }
-                </CardStack>
-            </div>,
-            <div key="parameters">
-                <MdAdd
-                    onClick={() => {handle_add_new("parameter", selected_app.parameters, "parameter_name");}}
-                    size={ColorTheme.icons_size}
-                    style={{marginLeft: "0.3em"}}
-                    color={ColorTheme.icons_color}
-                />
-                <CardStack>
-                    {
-                        selected_app.parameters.map((parameter) => {
-                            return (
-                                <ParameterProperties
-                                    key={parameter.parameter_id}
-                                    application={selected_app}
-                                    forceUpdate={forceUpdate}
-                                    parameter={parameter}
-                                />
-                            )
-                        })
-                    }
-                </CardStack>
-            </div>,
-            <div key="peripherals">
-                <MdAdd
-                    onClick={() => {handle_add_new("peripheral", selected_app.peripherals,"name");}}
-                    size={ColorTheme.icons_size}
-                    style={{marginLeft: "0.3em"}}
-                    color={ColorTheme.icons_color}
-                />
-                <CardStack>
-                    {
-                        selected_app.peripherals.map((peripheral)=>{
-                            return(
-                                <PeripheralProperties
-                                    key={peripheral.name}
-                                    application={selected_app}
-                                    peripherals={peripherals}
-                                    forceUpdate={forceUpdate}
-                                    peripheral={peripheral}
-                                />
-                            )
-                        })
-                    }
-                </CardStack>
-            </div>,
-            <div key="soft_cores">
-                <MdAdd
-                    onClick={() => {handle_add_new("soft_core", selected_app.soft_cores, "id");}}
-                    size={ColorTheme.icons_size}
-                    style={{marginLeft: "0.3em"}}
-                    color={ColorTheme.icons_color}
-                />
-                <CardStack>
-                    {
-                        selected_app.soft_cores.map((soft_core)=>{
-                            return(
-                                <SoftCoreProperties
-                                    key={soft_core.id}
-                                    application={selected_app}
-                                    core={soft_core}
-                                    programs={programs}
-                                    forceUpdate={forceUpdate}
-                                />
-                            )
-                        })
-                    }
-                </CardStack>
-            </div>,
-            <div key="misc_fields">
-                <MdAdd
-                    onClick={() => {handle_add_new("misc", selected_app.miscellaneous, "name");}}
-                    size={ColorTheme.icons_size}
-                    style={{marginLeft: "0.3em"}}
-                    color={ColorTheme.icons_color}
-                />
-                <CardStack>
-                    {
-                        Object.keys(misc_obj).map((key)=>{
-                            return <MiscFieldProperties
-                                key={key}
-                                application={selected_app}
-                                forceUpdate={forceUpdate}
-                                name={key}
-                                value={misc_obj[key]}
-                            />
-                        })
-                    }
-                </CardStack>
-            </div>,
-            <div key="filters_card">
-                <MdAdd
-                    onClick={() => {handle_add_new("filter", selected_app.filters, "id");}}
-                    size={ColorTheme.icons_size}
-                    style={{marginLeft: "0.3em"}}
-                    color={ColorTheme.icons_color}
-                />
-                <CardStack>
-                    {
-                        selected_app.filters.map((field)=>{
-                            return <FilterProperties
-                                key={field.id}
-                                application={selected_app}
-                                forceUpdate={forceUpdate}
-                                filter={field}
-                                filter_designs={filters}
-                                peripherals={selected_app.peripherals}
-                            />
-                        })
-                    }
-                </CardStack>
-            </div>,
-            <div key="scripts_card">
-                <TwoColumnSelector
-                    itemType="Scripts"
-                    data={scripts}
-                    display_field="name"
-                    selected_items={selected_scripts}
-                    available_items={available_scripts}
-                    onSelect={handleSelectScript}
-                    onDeselect={handleDeselectScript}
-                />
-            </div>,
-            <div key="programs_card">
-                <TwoColumnSelector
-                    itemType="Programs"
-                    data={programs}
-                    display_field="name"
-                    selected_items={selected_programs}
-                    available_items={available_programs}
-                    onSelect={handleSelectPrograms}
-                    onDeselect={handleDeselectPrograms}
-                />
-            </div>
-        ])
-    }
-
-    let get_tabs_names = ()=>{
-        return ["Channels", "Channel Groups","IRV", "Macro", "Parameters", "Peripherals", "Cores", "Misc", "Filters", "Scripts", "Programs"]
-    }
-
 
     return (
         <div style={{
@@ -484,8 +246,239 @@ let  ApplicationsManager = props =>{
                 height:"100%",
                 flexGrow:1
             }} level="level_2">
-                <TabbedContent names={get_tabs_names()} contents={get_tabs_content()}
-                               selected={selectedTab} onSelect={set_selectedTab}/>
+                <TabbedContent names={["Channels", "Channel Groups","IRV", "Macro", "Parameters", "Peripherals", "Cores", "Misc", "Filters", "Scripts", "Programs"]}
+                               selected={selectedTab} onSelect={set_selectedTab}>
+
+                    <div key="channels">
+                        <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
+                            <MdAdd
+                                onClick={() => {handle_add_new("channel", selected_app.channels, "name");}}
+                                size={ColorTheme.icons_size}
+                                style={{marginLeft: "0.3em"}}
+                                color={ColorTheme.icons_color}
+                            />
+                        </div>
+                        <CardStack>
+                            {
+                                selected_app.channels.map((channel) => {
+                                    return (
+                                        <PlotChannelProperties
+                                            key={channel.name}
+                                            application={selected_app}
+                                            forceUpdate={forceUpdate}
+                                            channel={channel}
+                                        />
+                                    )
+                                })
+                            }
+                        </CardStack>
+                    </div>
+                    <div key="channel_groups">
+                        <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
+                            <MdAdd
+                                onClick={() => {handle_add_new("channel_group", selected_app.channel_groups, "group_name");}}
+                                size={ColorTheme.icons_size}
+                                style={{marginLeft: "0.3em"}}
+                                color={ColorTheme.icons_color}
+                            />
+                        </div>
+                        <CardStack>
+                            {
+                                selected_app.channel_groups.map((group) => {
+                                    return (
+                                        <PlotChannelGroupProperties
+                                            key={group.group_name}
+                                            application={selected_app}
+                                            forceUpdate={forceUpdate}
+                                            group={group}
+                                        />
+                                    )
+                                })
+                            }
+                        </CardStack>
+                    </div>
+                    <div key="irvs">
+                        <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
+                            <MdAdd
+                                onClick={() => {handle_add_new("irv", selected_app.initial_registers_values, "address");}}
+                                size={ColorTheme.icons_size}
+                                style={{marginLeft: "0.3em"}}
+                                color={ColorTheme.icons_color}
+                            />
+                        </div>
+                        <CardStack>
+                            {
+                                selected_app.initial_registers_values.map((irv) => {
+                                    return (
+                                        <InitialRegisterValue
+                                            key={irv.address}
+                                            application={selected_app}
+                                            forceUpdate={forceUpdate}
+                                            irv={irv}
+                                        />
+                                    )
+                                })
+                            }
+                        </CardStack>
+                    </div>
+                    <div key="macros">
+                        <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
+                            <MdAdd
+                                onClick={() => {handle_add_new("macro", selected_app.macro, "name");}}
+                                size={ColorTheme.icons_size}
+                                style={{marginLeft: "0.3em"}}
+                                color={ColorTheme.icons_color}
+                            />
+                        </div>
+                        <CardStack>
+                            {
+                                selected_app.macro.map((macro) => {
+                                    return (
+                                        <MacroProperties
+                                            key={macro.name}
+                                            application={selected_app}
+                                            forceUpdate={forceUpdate}
+                                            macro={macro}
+                                        />
+                                    )
+                                })
+                            }
+                        </CardStack>
+                    </div>
+                    <div key="parameters">
+                        <MdAdd
+                            onClick={() => {handle_add_new("parameter", selected_app.parameters, "parameter_name");}}
+                            size={ColorTheme.icons_size}
+                            style={{marginLeft: "0.3em"}}
+                            color={ColorTheme.icons_color}
+                        />
+                        <CardStack>
+                            {
+                                selected_app.parameters.map((parameter) => {
+                                    return (
+                                        <ParameterProperties
+                                            key={parameter.parameter_id}
+                                            application={selected_app}
+                                            forceUpdate={forceUpdate}
+                                            parameter={parameter}
+                                        />
+                                    )
+                                })
+                            }
+                        </CardStack>
+                    </div>
+                    <div key="peripherals">
+                        <MdAdd
+                            onClick={() => {handle_add_new("peripheral", selected_app.peripherals,"name");}}
+                            size={ColorTheme.icons_size}
+                            style={{marginLeft: "0.3em"}}
+                            color={ColorTheme.icons_color}
+                        />
+                        <CardStack>
+                            {
+                                selected_app.peripherals.map((peripheral)=>{
+                                    return(
+                                        <PeripheralProperties
+                                            key={peripheral.name}
+                                            application={selected_app}
+                                            peripherals={peripherals}
+                                            forceUpdate={forceUpdate}
+                                            peripheral={peripheral}
+                                        />
+                                    )
+                                })
+                            }
+                        </CardStack>
+                    </div>
+                    <div key="soft_cores">
+                        <MdAdd
+                            onClick={() => {handle_add_new("soft_core", selected_app.soft_cores, "id");}}
+                            size={ColorTheme.icons_size}
+                            style={{marginLeft: "0.3em"}}
+                            color={ColorTheme.icons_color}
+                        />
+                        <CardStack>
+                            {
+                                selected_app.soft_cores.map((soft_core)=>{
+                                    return(
+                                        <SoftCoreProperties
+                                            key={soft_core.id}
+                                            application={selected_app}
+                                            core={soft_core}
+                                            programs={programs}
+                                            forceUpdate={forceUpdate}
+                                        />
+                                    )
+                                })
+                            }
+                        </CardStack>
+                    </div>
+                    <div key="misc_fields">
+                        <MdAdd
+                            onClick={() => {handle_add_new("misc", selected_app.miscellaneous, "name");}}
+                            size={ColorTheme.icons_size}
+                            style={{marginLeft: "0.3em"}}
+                            color={ColorTheme.icons_color}
+                        />
+                        <CardStack>
+                            {
+                                Object.keys(misc_obj).map((key)=>{
+                                    return <MiscFieldProperties
+                                        key={key}
+                                        application={selected_app}
+                                        forceUpdate={forceUpdate}
+                                        name={key}
+                                        value={misc_obj[key]}
+                                    />
+                                })
+                            }
+                        </CardStack>
+                    </div>
+                    <div key="filters_card">
+                        <MdAdd
+                            onClick={() => {handle_add_new("filter", selected_app.filters, "id");}}
+                            size={ColorTheme.icons_size}
+                            style={{marginLeft: "0.3em"}}
+                            color={ColorTheme.icons_color}
+                        />
+                        <CardStack>
+                            {
+                                selected_app.filters.map((field)=>{
+                                    return <FilterProperties
+                                        key={field.id}
+                                        application={selected_app}
+                                        forceUpdate={forceUpdate}
+                                        filter={field}
+                                        filter_designs={filters}
+                                        peripherals={selected_app.peripherals}
+                                    />
+                                })
+                            }
+                        </CardStack>
+                    </div>
+                    <div key="scripts_card">
+                        <TwoColumnSelector
+                            itemType="Scripts"
+                            data={scripts}
+                            display_field="name"
+                            selected_items={selected_scripts}
+                            available_items={available_scripts}
+                            onSelect={handleSelectScript}
+                            onDeselect={handleDeselectScript}
+                        />
+                    </div>
+                    <div key="programs_card">
+                        <TwoColumnSelector
+                            itemType="Programs"
+                            data={programs}
+                            display_field="name"
+                            selected_items={selected_programs}
+                            available_items={available_programs}
+                            onSelect={handleSelectPrograms}
+                            onDeselect={handleDeselectPrograms}
+                        />
+                    </div>
+                </TabbedContent>
             </UIPanel>
             <div style={{minWidth:"300px"}}>
                 <ApplicationSidebar

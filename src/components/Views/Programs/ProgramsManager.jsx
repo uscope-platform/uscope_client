@@ -118,41 +118,6 @@ let ProgramsManager = props =>{
         selected_program.edit_field("build_settings", settings).then();
     }
 
-    let get_tabs_content = ()=>{
-        let res = [
-            <div key="program_editor">
-                <ProgramsEditor
-                    program={selected_program}
-                />
-            </div>
-        ]
-        if(selected_program.type==="C"){
-            res.push(
-                <div key="build_settings">
-                    <BuildSettings  language={selected_program.language} build_settings={selected_program.build_settings} onEdit={handle_settings_edit}/>
-                </div>
-            )
-            res.push(
-                <div key="headers_selector">
-                    <TwoColumnSelector
-                        itemType="headers"
-                        data={programs_store}
-                        display_field="name"
-                        selected_items={h.selected}
-                        available_items={h.available}
-                        onSelect={handleSelectHeader}
-                        onDeselect={handleDeselectHeader}
-                    />
-                </div>
-            )
-        }
-        return(res);
-    }
-
-    let get_tabs_names = ()=>{
-        return ["Souce Code", "Build Settings", "Headers"]
-    }
-
     return(
         <div style={{
             display:"flex",
@@ -183,7 +148,27 @@ let ProgramsManager = props =>{
                     </SimpleContent>
                 </UIPanel>
                 <UIPanel style={{flexGrow:1}} key="program_source" level="level_2">
-                    <TabbedContent names={get_tabs_names()} contents={get_tabs_content()} onSelect={set_selectedTab} selected={selectedTab}/>
+                    <TabbedContent names={["Souce Code", "Build Settings", "Headers"]} onSelect={set_selectedTab} selected={selectedTab}>
+                        <div key="program_editor">
+                            <ProgramsEditor
+                                program={selected_program}
+                            />
+                        </div>
+                        <div key="build_settings">
+                            <BuildSettings  language={selected_program.language} build_settings={selected_program.build_settings} onEdit={handle_settings_edit}/>
+                        </div>
+                        <div key="headers_selector">
+                            <TwoColumnSelector
+                                itemType="headers"
+                                data={programs_store}
+                                display_field="name"
+                                selected_items={h.selected}
+                                available_items={h.available}
+                                onSelect={handleSelectHeader}
+                                onDeselect={handleDeselectHeader}
+                            />
+                        </div>
+                    </TabbedContent>
                 </UIPanel>
             </div>
             <div style={{minWidth:"300px"}}>
