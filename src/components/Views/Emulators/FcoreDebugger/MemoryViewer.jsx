@@ -37,14 +37,14 @@ let  MemoryViewer = props =>{
 
     return (
         <UIPanel key="memory_viewer"  level="level_2">
-            <SimpleContent name={"Memory Viewer"} content={[
+            <SimpleContent name={"Memory Viewer"}>
                 <div style={{
                     display: "grid",
                     gridTemplateColumns: "1fr 1fr",
                     gridColumnGap: "0.5em",
                     height: "21em"
                 }}
-                key="mem_view_content">
+                     key="mem_view_content">
                     <SelectableList
                         style={{
                             height: "100%"
@@ -55,7 +55,7 @@ let  MemoryViewer = props =>{
                         items={data}
                     />
                 </div>
-            ]}/>
+            </SimpleContent>
         </UIPanel>
     );
 };

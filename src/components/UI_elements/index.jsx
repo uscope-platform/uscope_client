@@ -45,7 +45,7 @@ export {FormLayout} from "./Layouts/FormLayout"
 export {SidebarCollapsableNameLayout} from "./Layouts/SidebarCollapsableNameLayout"
 export {SidebarCollapsableContentLayout} from "./Layouts/SidebarCollapsableContentLayout"
 
-export {SimpleContent} from './panels/SimpleContent'
+export {SimpleContent} from './panels/SimpleContent.jsx'
 export {TabbedContent} from './panels/TabbedContent'
 export {UIPanel} from './panels/UIPanel'
 export {Card} from './panels/Card'

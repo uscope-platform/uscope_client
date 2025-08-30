@@ -148,7 +148,7 @@ let  CoreInputProperties = props =>{
 
     if(sel_in){
         return(
-            <SimpleContent  name="Input Properties" content={
+            <SimpleContent name="Input Properties">
                 <div key="input_props" style={{maxHeight:"13em"}}>
                     <InputField id="name" name="name" label="Name" defaultValue={sel_in.name} onKeyDown={handle_change_iom}/>
                     <TypeOptionsContainer label="Source Properties">
@@ -174,7 +174,7 @@ let  CoreInputProperties = props =>{
                         {render_type_options()}
                     </TypeOptionsContainer>
                 </div>
-            }/>
+            </SimpleContent>
         )
     }
 

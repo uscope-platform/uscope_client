@@ -27,7 +27,7 @@ let  BreakpointsPanel = props =>{
 
     return (
         <UIPanel key="breakpoints" style={{minHeight:"200px"}} level="level_2">
-            <SimpleContent name={"Breakpoints"} content={[
+            <SimpleContent name={"Breakpoints"}>
                 <div key="bp_view_contents">
                     <InputField inline ID="add_breakpoint" name="add_breakpoint" label="Add Breakpoint" onKeyDown={handle_add}/>
                     <SelectableList
@@ -35,7 +35,7 @@ let  BreakpointsPanel = props =>{
                         items={props.breakpoints}
                     />
                 </div>
-            ]}/>
+            </SimpleContent>
         </UIPanel>
     );
 };

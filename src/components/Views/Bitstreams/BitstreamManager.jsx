@@ -25,7 +25,6 @@ import {up_bitstream, upload_raw} from "@client_core";
 import BitstreamSidebar from "./BitstreamSidebar";
 
 
-
 let BitstreamManager = props =>{
 
     const inputFile = useRef(null)
@@ -72,13 +71,13 @@ let BitstreamManager = props =>{
             height:"100%"
         }}>
             <UIPanel key="bitstream_properties" style={{flexGrow:1}} level="level_2">
-                <SimpleContent name="Bitstream Properties" content={
+                <SimpleContent name="Bitstream Properties">
                     <FormLayout>
                         <InputField inline name='name' placeholder={sel_bit.name} onKeyDown={handle_change_name} label='name'/>
                         <Button onClick={handle_open_file_chooser}>Change Bitstream File</Button>
                         <input type='file' id='bitstream_chooser' ref={inputFile} onChange={upload_file} style={{display: 'none'}}/>
                     </FormLayout>
-                }/>
+                </SimpleContent>
             </UIPanel>
             <BitstreamSidebar  bitstream={sel_bit} on_select={handle_select}/>
         </div>

@@ -103,7 +103,7 @@ let  PlatformManager = props =>{
             height:"100%"
         }}>
             <UIPanel style={{flexGrow:1}} key="platform_management" level="level_2">
-                <SimpleContent name="Platform Management" content={
+                <SimpleContent name="Platform Management">
                     <div>
                         {constructActionsBar()}
                         <form onSubmit={handle_add_user}>
@@ -126,7 +126,7 @@ let  PlatformManager = props =>{
                             </FormLayout>
                         </form>
                     </div>
-                }/>
+                </SimpleContent>
             </UIPanel>
             <div style={{minWidth:"300px", height:"100%"}}>
                 <PlatformSidebar

@@ -280,7 +280,7 @@ let FcoreEmulationEditor = function (props) {
                     theme="dark"
                 />
                     <UIPanel key="emulator_diagram" level="level_2">
-                        <SimpleContent name="Emulation_diagram" height="100%" content={
+                        <SimpleContent name="Emulation_diagram" height="100%">
                             <EmulatorDiagram
                                 selections={props.selections}
                                 onNodeSelect={handle_node_select}
@@ -299,7 +299,7 @@ let FcoreEmulationEditor = function (props) {
                                 edges={edges}
                                 enabled_actions={enabled_actions}
                             />
-                        }/>
+                        </SimpleContent>
                     </UIPanel>
                     <div style={{
                         display:"flex",
@@ -321,22 +321,22 @@ let FcoreEmulationEditor = function (props) {
                             ]} onSelect={set_selected_inputs_tab} selected={selected_inputs_tab}/>
                         </UIPanel>
                         <UIPanel  style={{flexGrow:1}} key="emulator_o_props" level="level_2">
-                            <SimpleContent name="Outputs" height="100%" content={
+                            <SimpleContent name="Outputs" height="100%" >
                                 <CoreOutputsList
                                     emulator={props.emulator}
                                     selections={props.selections}
                                     on_selection={handle_select_iom}
                                 />
-                            }/>
+                            </SimpleContent>
                         </UIPanel>
                         <UIPanel  style={{flexGrow:1}} key="emulator_m_props"  level="level_2">
-                            <SimpleContent name="Memory" height="100%" content={
+                            <SimpleContent name="Memory" height="100%" >
                                 <CoreMemoriesList
                                     emulator={props.emulator}
                                     selections={props.selections}
                                     on_selection={handle_select_iom}
                                 />
-                            }/>
+                            </SimpleContent>
                         </UIPanel>
                     </div>
 

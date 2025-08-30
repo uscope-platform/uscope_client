@@ -73,7 +73,7 @@ let  PlatformSidebar = props =>{
 
     return (
         <UIPanel key="users_list" level="level_2">
-            <SimpleContent name="Users List" content={
+            <SimpleContent name="Users List">
                 <SelectableList
                     items={names}
                     types={types}
@@ -81,7 +81,7 @@ let  PlatformSidebar = props =>{
                     onRemove={handleRemoveUser}
                     onSelect={handleOnSelect}
                 />
-            }/>
+            </SimpleContent>
         </UIPanel>
         );
 

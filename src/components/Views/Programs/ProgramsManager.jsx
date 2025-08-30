@@ -168,7 +168,7 @@ let ProgramsManager = props =>{
                 height:"100%"
             }}>
                 <UIPanel key="program_properties" level="level_2">
-                    <SimpleContent name="Program Properties" content={
+                    <SimpleContent name="Program Properties" >
                         <FormLayout>
                             <InputField inline name='name' placeholder={selected_program.name} onKeyDown={handle_name_change} label="Name"/>
                             <SelectField
@@ -180,7 +180,7 @@ let ProgramsManager = props =>{
                                 placeholder="Program type"
                                 options={allowed_types}/>
                         </FormLayout>
-                    }/>
+                    </SimpleContent>
                 </UIPanel>
                 <UIPanel style={{flexGrow:1}} key="program_source" level="level_2">
                     <TabbedContent names={get_tabs_names()} contents={get_tabs_content()} onSelect={set_selectedTab} selected={selectedTab}/>

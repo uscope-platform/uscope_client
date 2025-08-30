@@ -145,9 +145,9 @@ export let SidebarBase = props =>{
 
     return(
         <UIPanel key={props.content_name+"_list"} level="level_2">
-            <SimpleContent name={props.content_name + " List"} content={
+            <SimpleContent name={props.content_name + " List"}>
                 <div
-                style={{height:'20em'}}>
+                    style={{height:'20em'}}>
                     <SideToolbar
                         onAdd={handleAdd}
                         onCopy={handleCopy}
@@ -164,7 +164,7 @@ export let SidebarBase = props =>{
                         onSelect={handleSelect}
                     />
                 </div>
-            }/>
+            </SimpleContent>
         </UIPanel>
     );
 

@@ -90,13 +90,14 @@ let  CoreOutputProperties = props =>{
 
     if(sel_out){
         return(
-            <SimpleContent name="Output Properties" content={
+            <SimpleContent name="Output Properties">
                 <div key="output_props" style={{maxHeight:"13em"}}>
                     <InputField inline id="name" name="name" label="Name" defaultValue={sel_out.name} onKeyDown={handle_change_iom}/>
                     <TypeOptionsContainer label="Output data format">
                         {render_type_options()}
                     </TypeOptionsContainer>
-                </div> }/>
+                </div>
+            </SimpleContent>
         )
     }
 

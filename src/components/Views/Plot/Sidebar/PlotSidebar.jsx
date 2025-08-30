@@ -39,14 +39,14 @@ let  PlotSidebar = props =>{
             gap:10
         }}>
             <UIPanel key="scope_props" data-grid={{x: 0, y: 0, w: 24, h: 2, static: true}} level="level_2">
-                <SimpleContent name="Scope Properties" content={
+                <SimpleContent name="Scope Properties">
                     <EnablesProperties
                         on_group_change={props.on_group_change}
                     />
-                }/>
+                </SimpleContent>
             </UIPanel>
             <UIPanel key="trigger" data-grid={{x: 2, y: 2, w: 24, h: 2.2, static: true}} level="level_2">
-                <SimpleContent name="Trigger and Acquisition" content={
+                <SimpleContent name="Trigger and Acquisition">
                     <TriggerControls
                         showAcquisitionStatus
                         onPlay={handle_play}
@@ -57,7 +57,7 @@ let  PlotSidebar = props =>{
                         }}
                         acquisition_status={props.acquisition_status}
                     />
-                }/>
+                </SimpleContent>
             </UIPanel>
         </div>
     );

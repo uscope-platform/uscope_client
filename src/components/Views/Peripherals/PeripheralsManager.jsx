@@ -101,7 +101,7 @@ let PeripheralsManager = (props)=>{
                 height: "100%"
             }}>
                 <UIPanel style={{minHeight:"150px"}} key="properties" level="level_2">
-                    <SimpleContent name="Peripheral Properties" content={
+                    <SimpleContent name="Peripheral Properties">
                         <div>
                             <InputField inline name="edit_name"
                                         defaultValue={selected_peripheral.name}
@@ -112,12 +112,11 @@ let PeripheralsManager = (props)=>{
                             <Checkbox name='parametric' value={selected_peripheral.parametric}
                                       onChange={handleEditParametric} label="Parametric"/>
                         </div>
-                    }/>
-
+                    </SimpleContent>
                 </UIPanel>
                 <UIPanel style={{flexGrow: 1}}
                          key="registers" level="level_2">
-                    <SimpleContent name="Registers" content={
+                    <SimpleContent name="Registers">
                         <div>
                             <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
                                 <MdAdd
@@ -143,7 +142,7 @@ let PeripheralsManager = (props)=>{
                                 }
                             </CardStack>
                         </div>
-                    }/>
+                    </SimpleContent>
                 </UIPanel>
             </div>
             <PeripheralsSidebar on_select={handle_select}/>

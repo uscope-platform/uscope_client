@@ -57,7 +57,7 @@ let ScriptManager = (props) =>{
                 gap: 10
             }}>
                 <UIPanel key="script_properties" level="level_2">
-                    <SimpleContent name="Script Properties" content={
+                    <SimpleContent name="Script Properties">
                         <FormLayout>
                             <InputField inline name='name' placeholder={selected_script.name}
                                         onKeyDown={handle_edit_field} label='name'/>
@@ -66,13 +66,13 @@ let ScriptManager = (props) =>{
                             <InputField inline name='triggers' placeholder={selected_script.triggers}
                                         onKeyDown={handle_edit_field} label='triggers'/>
                         </FormLayout>
-                    }/>
+                    </SimpleContent>
                 </UIPanel>
 
                 <UIPanel key="script_source" level="level_2">
-                    <SimpleContent name="Script Source Code" content={
+                    <SimpleContent name="Script Source Code">
                         <ScriptsEditor script={selected_script}/>
-                    }/>
+                    </SimpleContent>
                 </UIPanel>
             </div>
             <ScriptSidebar

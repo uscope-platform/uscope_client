@@ -91,7 +91,7 @@ let  EmulatorProperties = props =>{
         return(
             <UIPanel key={"Item properties"} level="level_2">
                 {
-                    <SimpleContent name={"Emulator Properties"} content={
+                    <SimpleContent name={"Emulator Properties"}>
                         <div style={{padding:10}} key="emulator_props">
                             <InputField inline id="name" name="name" label="Emulator Name" defaultValue={props.selected_emulator.name} onKeyDown={handle_change}/>
 
@@ -107,8 +107,7 @@ let  EmulatorProperties = props =>{
                             />
                             <Checkbox name='deployment_mode' value={props.selected_emulator.deployment_mode} onChange={handle_deployment_mode} label="Custom deployment mode"/>
                         </div>
-                    }
-                    />
+                    </SimpleContent>
                 }
             </UIPanel>
         );

@@ -93,7 +93,7 @@ let  CoreMemoryProperties = props =>{
 
     if(sel_mem){
         return(
-            <SimpleContent name="Memory Properties" content={
+            <SimpleContent name="Memory Properties">
                 <div key="memory_props" style={{maxHeight:"13em"}}>
                     <InputField inline id="name" name="name" label="Name" defaultValue={sel_mem.name} onKeyDown={handle_change_iom}/>
                     <TypeOptionsContainer label="Memory Properties">
@@ -105,7 +105,7 @@ let  CoreMemoryProperties = props =>{
                         {render_type_options()}
                     </TypeOptionsContainer>
                 </div>
-            }/>
+            </SimpleContent>
         )
     }
 

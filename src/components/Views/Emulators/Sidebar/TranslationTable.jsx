@@ -55,14 +55,14 @@ let  TranslationTable = props =>{
 
     return (
         <UIPanel key="translation_table" style={{minHeight:"200px"}} level="level_2">
-            <SimpleContent name={"Translation Table"} content={[
+            <SimpleContent name={"Translation Table"}>
                 <div style={{
                     display: "grid",
                     gridTemplateColumns: "1fr 1fr 1fr",
                     gridColumnGap: "1em",
                     height: "21em"
                 }}
-                key="translation_table_content"
+                     key="translation_table_content"
                 >
                     <SelectableList
                         items={channel_io_names}
@@ -83,7 +83,7 @@ let  TranslationTable = props =>{
                         items={common_core_addr}
                     />
                 </div>
-            ]}/>
+            </SimpleContent>
         </UIPanel>
     );
 };
