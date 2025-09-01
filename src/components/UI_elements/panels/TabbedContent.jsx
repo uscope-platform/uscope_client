@@ -17,9 +17,11 @@ import React from 'react';
 import {PanelTitle, ContentDiv} from "./UIPanel";
 
 export let TabbedContent = function (props) {
-    const childrenArray = React.Children.map(props.children, child => {
+    const childrenArray = React.Children.map(props.children, (child, index) => {
         if (React.isValidElement(child)) {
-            return React.cloneElement(child, {key: child.key || Math.random().toString(36)})
+            return React.cloneElement(child, {
+                key: child.key || `tab-content-${index}`
+            });
         }
         return child;
     });
