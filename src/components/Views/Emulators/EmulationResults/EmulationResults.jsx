@@ -133,32 +133,32 @@ let EmulationResults = function (props) {
                 gap:10
             }}>
                 <UIPanel style={{flexGrow:1}} key="emulation_result_core_sel" level="level_2">
-                    <SimpleContent name="Core Selector" height="100%" content={
+                    <SimpleContent name="Core Selector" height="100%">
                         <div>
-                            <SelectableList items={props.results.get_data_sources()} selected_item={selected_source} onSelect={handle_select_source} />
+                            <SelectableList style={{maxHeight:"15em"}} items={props.results.get_data_sources()} selected_item={selected_source} onSelect={handle_select_source} />
                         </div>
-                    }/>
+                    </SimpleContent>
                 </UIPanel>
                 <UIPanel style={{flexGrow:1}} key="emulation_result_data_sel" level="level_2">
-                    <SimpleContent name="Data Selector" height="100%" content={
+                    <SimpleContent name="Data Selector" height="100%" >
                         <div>
-                            <SelectableList  items={props.results.get_available_data_series(selected_source)} selected_item={selected_output} onSelect={handle_select_output} />
+                            <SelectableList style={{maxHeight:"15em"}} items={props.results.get_available_data_series(selected_source)} selected_item={selected_output} onSelect={handle_select_output} />
                         </div>
-                    }/>
+                    </SimpleContent>
                 </UIPanel>
                 <UIPanel style={{flexGrow:1}} key="emulation_channel_select" level="level_2">
-                    <SimpleContent name="Channel Selector" height="100%" content={
+                    <SimpleContent name="Channel Selector" height="100%" >
                         <div>
-                            <SelectableList multi_select items={props.results.get_series_channels(selected_source, selected_output)} selected_item={selected_channel} onSelect={handle_select_channel} />
+                            <SelectableList style={{maxHeight:"15em"}} multi_select items={props.results.get_series_channels(selected_source, selected_output)} selected_item={selected_channel} onSelect={handle_select_channel} />
                         </div>
-                    }/>
+                    </SimpleContent>
                 </UIPanel>
                 <UIPanel style={{flexGrow:1}} key="emulation_array_select" level="level_2">
-                    <SimpleContent name="Array selector" height="100%" content={
+                    <SimpleContent name="Array selector" height="100%">
                         <div>
-                            <SelectableList multi_select items={props.results.get_array_indices(selected_source,selected_output, selected_channel)} selected_item={selected_index} onSelect={handle_select_index} />
+                            <SelectableList style={{maxHeight:"15em"}} multi_select items={props.results.get_array_indices(selected_source,selected_output, selected_channel)} selected_item={selected_index} onSelect={handle_select_index} />
                         </div>
-                    }/>
+                    </SimpleContent>
                 </UIPanel>
             </div>
         </div>
