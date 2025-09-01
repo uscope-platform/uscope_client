@@ -22,6 +22,8 @@ let  CoreInputProperties = props =>{
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
+    let [selected_channel, set_selected_channel] = React.useState(0);
+
     let sel_in = props.selected_core.inputs.filter((item)=>{
         return item.name === props.selected_iom.obj
     })[0];
@@ -103,7 +105,13 @@ let  CoreInputProperties = props =>{
     }
 
     let handle_source_change = (field, value) =>{
-        let new_source = {...sel_in.source, ...{[field]:value}};
+        let new_value = value;
+        let waveform_peripherals = ["von", "voff", "tdelay", "ton", "period", "dc_offset", "amplitude", "frequency", "phase", "duty"]
+        if(waveform_peripherals.includes(field)){
+            new_value = JSON.parse(JSON.stringify(sel_in.source[field]));
+            new_value[selected_channel] = value;
+        }
+        let new_source = {...sel_in.source, ...{[field]:new_value}};
         props.selected_emulator.edit_input(props.selected_component.obj.id, "source", new_source, props.selected_iom.obj).then(()=>{
             forceUpdate();
         });
@@ -116,6 +124,7 @@ let  CoreInputProperties = props =>{
                 ret.push(
                     <ConstantInputProperties
                         input={sel_in.source}
+                        channel={selected_channel}
                         onChange={handle_source_change}
                     />
                 )
@@ -123,6 +132,7 @@ let  CoreInputProperties = props =>{
                 ret.push(
                     <SeriesInputProperties
                         input={sel_in.source}
+                        channel={selected_channel}
                         selected_core={props.selected_core}
                         onChange={handle_source_change}
                     />
@@ -131,6 +141,7 @@ let  CoreInputProperties = props =>{
                 ret.push(
                     <ExternalInputProperties
                         input={sel_in.source}
+                        channel={selected_channel}
                         onChange={handle_source_change}
                     />
                 )
@@ -138,6 +149,7 @@ let  CoreInputProperties = props =>{
                 ret.push(
                     <WaveformInputProperties
                         input={sel_in.source}
+                        channel={selected_channel}
                         onChange={handle_source_change}
                     />
                 )
@@ -146,11 +158,31 @@ let  CoreInputProperties = props =>{
         return ret;
     }
 
+    let get_channels_list = () =>{
+        let channels_idx = Array.from({ length: props.selected_core.channels }, (_, i) => i );
+        let res = channels_idx.map((index) =>{
+            return {label: index, value: index}
+        })
+        return res;
+    }
+
     if(sel_in){
         return(
             <SimpleContent name="Input Properties">
                 <div key="input_props" style={{maxHeight:"13em"}}>
                     <InputField id="name" name="name" label="Name" defaultValue={sel_in.name} onKeyDown={handle_change_iom}/>
+                    <SelectField
+                        inline
+                        key="channel_selector"
+                        label="Channel Selection"
+                        onChange={(obj, e) =>{
+                            set_selected_channel(obj.value);
+                        }}
+                        value={{value: selected_channel, label: selected_channel}}
+                        defaultValue="Channel Selection"
+                        name="channel_selector"
+                        options={get_channels_list()}
+                    />
                     <TypeOptionsContainer label="Source Properties">
                         <SelectField
                             inline

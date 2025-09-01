@@ -174,6 +174,15 @@ export class up_emulator {
 
     edit_core_props = async (core_id, field, value) =>{
         let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
+        if(field === "channels"){
+            let new_inputs = JSON.parse(JSON.stringify(core.inputs));
+            for(let i of new_inputs){
+                if(i.source.type === "waveform"){
+                    i.source = this.fix_waveform_parameters(i.source, value, core.channels);
+                }
+            }
+            core.inputs = new_inputs;
+        }
         core[field] = value;
         let edit = {id:this.id, field:"cores",  action:"edit", value:core};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
@@ -181,6 +190,35 @@ export class up_emulator {
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
+    fix_waveform_parameters = (input, new_length, old_length) =>{
+        let new_source = input;
+        if(new_length > old_length){
+            let fill_length = new_length - old_length;
+            input.von =    [...input.von, ...Array(fill_length).fill(input.von[old_length-1])];
+            input.voff =   [...input.voff, ...Array(fill_length).fill(input.voff[old_length-1])];
+            input.tdelay = [...input.tdelay, ...Array(fill_length).fill(input.tdelay[old_length-1])];
+            input.ton =    [...input.ton, ...Array(fill_length).fill(input.ton[old_length-1])];
+            input.period = [...input.period, ...Array(fill_length).fill(input.period[old_length-1])];
+            input.dc_offset = [...input.dc_offset, ...Array(fill_length).fill(input.dc_offset[old_length-1])];
+            input.amplitude = [...input.amplitude, ...Array(fill_length).fill(input.amplitude[old_length-1])];
+            input.frequency = [...input.frequency, ...Array(fill_length).fill(input.frequency[old_length-1])];
+            input.phase = [...input.phase, ...Array(fill_length).fill(input.phase[old_length-1])];
+            input.duty = [...input.duty, ...Array(fill_length).fill(input.duty[old_length-1])];
+        }
+        if(new_length < old_length){
+            input.von = input.von.slice(0, new_length);
+            input.voff = input.voff.slice(0, new_length);
+            input.tdelay = input.tdelay.slice(0, new_length);
+            input.ton = input.ton.slice(0, new_length);
+            input.period = input.period.slice(0, new_length);
+            input.dc_offset = input.dc_offset.slice(0, new_length);
+            input.amplitude = input.amplitude.slice(0, new_length);
+            input.frequency = input.frequency.slice(0, new_length);
+            input.phase = input.phase.slice(0, new_length);
+            input.duty = input.duty.slice(0, new_length);
+        }
+        return new_source;
+    }
     remove_core = async (core_id) =>{
         let edit = {id:this.id, field:"cores",  action:"remove", value:core_id};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
@@ -255,6 +293,7 @@ export class up_emulator {
     }
 
     add_input =async (core_id, progressive) => {
+        let waveform_default = Array(this.cores[core_id].channels).fill(0);
         let input = {
             type: "float",
             width: 32,
@@ -266,16 +305,16 @@ export class up_emulator {
                 type:"constant",
                 value:"",
                 shape:"square",
-                von:0,
-                voff:0,
-                tdelay:0,
-                ton:0,
-                period:0,
-                dc_offset:0,
-                amplitude:0,
-                frequency:0,
-                phase:0,
-                duty:0
+                von:waveform_default,
+                voff:waveform_default,
+                tdelay:waveform_default,
+                ton:waveform_default,
+                period:waveform_default,
+                dc_offset:waveform_default,
+                amplitude:waveform_default,
+                frequency:waveform_default,
+                phase:waveform_default,
+                duty:waveform_default
             },
             name: "new_input_" + progressive,
             labels:""

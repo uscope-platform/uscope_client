@@ -87,7 +87,7 @@ export let WaveformInputProperties = props =>{
                 id="voff"
                 name="voff"
                 label="V off"
-                defaultValue={format_value(props.input.voff)}
+                defaultValue={format_value(props.input.voff[props.channel])}
                 onKeyDown={handle_parameter_change}
             />
             <InputField
@@ -96,7 +96,7 @@ export let WaveformInputProperties = props =>{
                 id="von"
                 name="von"
                 label="V on"
-                defaultValue={format_value(props.input.von)}
+                defaultValue={format_value(props.input.von[props.channel])}
                 onKeyDown={handle_parameter_change}
             />
             <InputField
@@ -105,7 +105,7 @@ export let WaveformInputProperties = props =>{
                 id="tdelay"
                 name="tdelay"
                 label="Delay Time"
-                defaultValue={format_value(props.input.tdelay)}
+                defaultValue={format_value(props.input.tdelay[props.channel])}
                 onKeyDown={handle_parameter_change}
             />
             <InputField
@@ -114,7 +114,7 @@ export let WaveformInputProperties = props =>{
                 id="ton"
                 name="ton"
                 label="On Time"
-                defaultValue={format_value(props.input.ton)}
+                defaultValue={format_value(props.input.ton[props.channel])}
                 onKeyDown={handle_parameter_change}
             />
             <InputField
@@ -123,7 +123,7 @@ export let WaveformInputProperties = props =>{
                 id="period"
                 name="period"
                 label="Period"
-                defaultValue={format_value(props.input.period)}
+                defaultValue={format_value(props.input.period[props.channel])}
                 onKeyDown={handle_parameter_change}
             />
         </div>
@@ -137,7 +137,7 @@ export let WaveformInputProperties = props =>{
                 id="dc_offset"
                 name="dc_offset"
                 label="DC offset"
-                defaultValue={format_value(props.input.dc_offset)}
+                defaultValue={format_value(props.input.dc_offset[props.channel])}
                 onKeyDown={handle_parameter_change}
             />
             <InputField
@@ -146,7 +146,7 @@ export let WaveformInputProperties = props =>{
                 id="amplitude"
                 name="amplitude"
                 label="Amplitude"
-                defaultValue={format_value(props.input.amplitude)}
+                defaultValue={format_value(props.input.amplitude[props.channel])}
                 onKeyDown={handle_parameter_change}
             />
             <InputField
@@ -155,7 +155,7 @@ export let WaveformInputProperties = props =>{
                 id="frequency"
                 name="frequency"
                 label="Frequency"
-                defaultValue={format_value(props.input.frequency)}
+                defaultValue={format_value(props.input.frequency[props.channel])}
                 onKeyDown={handle_parameter_change}
             />
             <InputField
@@ -164,7 +164,7 @@ export let WaveformInputProperties = props =>{
                 id="phase"
                 name="phase"
                 label="phase"
-                defaultValue={format_value(props.input.phase)}
+                defaultValue={format_value(props.input.phase[props.channel])}
                 onKeyDown={handle_parameter_change}
             />
             <InputField
@@ -173,7 +173,7 @@ export let WaveformInputProperties = props =>{
                 id="duty"
                 name="duty"
                 label="Duty Cycle"
-                defaultValue={props.input.duty}
+                defaultValue={props.input.duty[props.channel]}
                 onKeyDown={handle_parameter_change}
             />
         </div>
@@ -187,7 +187,7 @@ export let WaveformInputProperties = props =>{
                 id="dc_offset"
                 name="dc_offset"
                 label="DC offset"
-                defaultValue={format_value(props.input.dc_offset)}
+                defaultValue={format_value(props.input.dc_offset[props.channel])}
                 onKeyDown={handle_parameter_change}
             />
             <InputField
@@ -196,7 +196,7 @@ export let WaveformInputProperties = props =>{
                 id="amplitude"
                 name="amplitude"
                 label="Amplitude"
-                defaultValue={format_value(props.input.amplitude)}
+                defaultValue={format_value(props.input.amplitude[props.channel])}
                 onKeyDown={handle_parameter_change}
             />
             <InputField
@@ -205,7 +205,7 @@ export let WaveformInputProperties = props =>{
                 id="frequency"
                 name="frequency"
                 label="Frequency"
-                defaultValue={format_value(props.input.frequency)}
+                defaultValue={format_value(props.input.frequency[props.channel])}
                 onKeyDown={handle_parameter_change}
             />
             <InputField
@@ -214,7 +214,7 @@ export let WaveformInputProperties = props =>{
                 id="phase"
                 name="phase"
                 label="phase"
-                defaultValue={format_value(props.input.phase)}
+                defaultValue={format_value(props.input.phase[props.channel])}
                 onKeyDown={handle_parameter_change}
             />
         </div>
