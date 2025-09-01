@@ -16,12 +16,12 @@
 
 export class up_emulator_result {
     constructor(res_obj,  inputs) {
-        if(!res_obj)
+        if(!res_obj || JSON.stringify(Object.keys(res_obj)) === JSON.stringify(["timebase"]))
             return;
         this.data = res_obj;
+        this.timebase = [...res_obj.timebase];
         delete this.data.timebase;
         this.inputs = inputs;
-        this.timebase = res_obj.timebase;
         this.selected_data_series = [];
     }
 
@@ -32,6 +32,7 @@ export class up_emulator_result {
         }
         return new up_emulator_result(obj, {});
     }
+    
     get_timebase = () =>{return this.timebase}
 
     get_data_sources = () =>{
