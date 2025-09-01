@@ -37,7 +37,7 @@ export class up_emulator_result {
     get_data_sources = () =>{
         let cores = Object.keys(this.data).filter(key=> !["timebase"].includes(key));
 
-        return [...cores, ...Object.keys(this.inputs)];
+        return {sources:[...cores, ...Object.keys(this.inputs)], n_inputs:Object.keys(this.inputs).length};
     }
 
     get_available_data_series = (series_name) =>{

@@ -1,4 +1,4 @@
-// Copyright 2021 Filippo Savi
+// Copyright 2025 Filippo Savi
 // Author: Filippo Savi <filssavi@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,21 +13,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import styled from "styled-components";
+import React from 'react';
+import {ColorTheme, Label} from "@UI";
 
+let TypeOptionsContainer = props => {
+    const {children, label} = props;
 
-export const SelectableListLayout = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 0.25em;
-    margin: 0.5em;
+    return (
+        <div style={{
+            borderTopStyle: "solid", borderTopWidth: "thin", paddingTop: "0.2em", marginTop:"0.2em",
+            borderColor: ColorTheme.disabled_icon_color, borderWidth: "2px"
+        }}>
+        <Label style={{color: ColorTheme.disabled_icon_color, marginBottom:"0.2em"}}>{label}</Label>
+            {children}
+        </div>
+    );
+};
 
-    /* Make the list track the parent height in both flex and non-flex parents */
-    max-height: 13em;
-    min-height: 0;
-    width: 100%;
-    /* The list itself becomes the scroll container */
-    overflow-y: auto;
-    
-
-`
+export default TypeOptionsContainer;

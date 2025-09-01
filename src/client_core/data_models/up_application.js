@@ -96,6 +96,34 @@ export class up_application {
         return ret;
     }
 
+    static deep_copy_s =  (old_app) => {
+        let ret = {};
+        ret.id = old_app.id;
+        ret.application_name = old_app.application_name;
+        ret.bitstream =old_app.bitstream;
+        ret.channels = JSON.parse(JSON.stringify(old_app.channels));
+        ret.channel_groups = JSON.parse(JSON.stringify(old_app.channel_groups));
+        ret.pl_clocks = JSON.parse(JSON.stringify(old_app.pl_clocks));
+        ret.initial_registers_values = JSON.parse(JSON.stringify(old_app.initial_registers_values));
+        ret.macro = JSON.parse(JSON.stringify(old_app.macro));
+        ret.parameters = JSON.parse(JSON.stringify(old_app.parameters));
+        ret.peripherals = JSON.parse(JSON.stringify(old_app.peripherals));
+        ret.soft_cores = JSON.parse(JSON.stringify(old_app.soft_cores));
+        ret.filters = JSON.parse(JSON.stringify(old_app.filters));
+        ret.programs = JSON.parse(JSON.stringify(old_app.programs));
+        ret.scripts = JSON.parse(JSON.stringify(old_app.scripts));
+        ret.miscellaneous = JSON.parse(JSON.stringify(old_app.miscellaneous));
+        return ret;
+    }
+
+    static duplicate = async (old_app, new_id) => {
+        let new_app = up_application.deep_copy_s(old_app);
+        new_app.id = new_id;
+        new_app.name = old_app.name + "_copy_" + new_id;
+        return new up_application(new_app);
+    }
+
+
     add_remote = () => {
         store.dispatch(addApplication({[this.id]:this}))
         return backend_post(api_dictionary.applications.add + '/'+ this.id, this._get_app());

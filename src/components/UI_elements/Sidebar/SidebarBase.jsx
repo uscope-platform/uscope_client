@@ -134,13 +134,23 @@ export let SidebarBase = props =>{
         }
     };
 
+    let handleCopy = async () =>{
+        let id = get_next_id(Object.values(props.objects).map(a => a[props.selection_key]).sort());
+        let copy_obj = await props.template.duplicate(selected_item, id);
+        await copy_obj.add_remote();
+        if(props.onAdd){
+            props.onAdd({id:id, object:copy_obj});
+        }
+    }
+
     return(
         <UIPanel key={props.content_name+"_list"} level="level_2">
-            <SimpleContent name={props.content_name + " List"} content={
+            <SimpleContent name={props.content_name + " List"}>
                 <div
-                style={{height:'20em'}}>
+                    style={{height:'20em'}}>
                     <SideToolbar
                         onAdd={handleAdd}
+                        onCopy={handleCopy}
                         onImport={handleImport}
                         onExport={handleExport}
                         contentName={props.content_name}
@@ -154,7 +164,7 @@ export let SidebarBase = props =>{
                         onSelect={handleSelect}
                     />
                 </div>
-            }/>
+            </SimpleContent>
         </UIPanel>
     );
 

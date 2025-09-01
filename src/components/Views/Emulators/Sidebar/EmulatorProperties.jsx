@@ -21,7 +21,7 @@ import {InputField, SimpleContent, UIPanel, RangedInputField, Checkbox} from "@U
 const ranges_map = {s:1, ms:1e-3, us:1e-6};
 
 let get_range = (time) =>{
-    if(time){
+    if(time !== 0){
         let new_range;
         let new_indicated_time;
         if(time>= 1){
@@ -35,6 +35,8 @@ let get_range = (time) =>{
             new_indicated_time = time/ranges_map.us;
         }
         return [new_range, new_indicated_time];
+    } else {
+        return ["s", 0]
     }
     return [null, null]
 }
@@ -50,7 +52,7 @@ let  EmulatorProperties = props =>{
 
 
     useEffect(() => {
-        if(emulation_time){
+        if(emulation_time || emulation_time === 0){
             let [new_range, new_indicated_time] = get_range(emulation_time)
             if(new_range){
                 set_range(new_range);
@@ -61,37 +63,35 @@ let  EmulatorProperties = props =>{
     }, [emulation_time]);
 
 
-    let handle_change = (event) =>{
+    let handle_change = async (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab") {
             if (event.target.name === "name"){
-                props.selected_emulator.edit_name(event.target.value).then(() => {
-                    forceUpdate();
-                });
+                await props.selected_emulator.edit_name(event.target.value);
+                forceUpdate();
             } else if(event.target.name === "emulation_time"){
                 set_indicated_time(event.target.value);
                 let time = parseFloat(event.target.value)*ranges_map[range];
-                props.selected_emulator.edit_emulation_time(time).then(()=>{
-                    forceUpdate();
-                });
+                await props.selected_emulator.edit_emulation_time(time);
+                forceUpdate();
             }
         }
     }
 
-    const handle_range_change = (value)=>{
+    const handle_range_change = async (value)=>{
         let time = indicated_time*ranges_map[value];
-        props.selected_emulator.edit_emulation_time(time).then(()=>{
-            forceUpdate();
-        });
+        await props.selected_emulator.edit_emulation_time(time);
+        forceUpdate();
     }
-    const handle_deployment_mode = (event) =>{
-        props.selected_emulator.edit_deployment_mode(event.target.checked);
+
+    const handle_deployment_mode = async (event) =>{
+        await props.selected_emulator.edit_deployment_mode(event.target.checked);
     }
 
     if(props.selected_emulator && props.enabled){
         return(
             <UIPanel key={"Item properties"} level="level_2">
                 {
-                    <SimpleContent name={"Emulator Properties"} content={
+                    <SimpleContent name={"Emulator Properties"}>
                         <div style={{padding:10}} key="emulator_props">
                             <InputField inline id="name" name="name" label="Emulator Name" defaultValue={props.selected_emulator.name} onKeyDown={handle_change}/>
 
@@ -107,8 +107,7 @@ let  EmulatorProperties = props =>{
                             />
                             <Checkbox name='deployment_mode' value={props.selected_emulator.deployment_mode} onChange={handle_deployment_mode} label="Custom deployment mode"/>
                         </div>
-                    }
-                    />
+                    </SimpleContent>
                 }
             </UIPanel>
         );

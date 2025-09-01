@@ -34,7 +34,7 @@ let  IoViewer = props =>{
 
     return (
         <UIPanel key="io_viewer" style={{minHeight:"200px"}} level="level_2">
-            <SimpleContent name={"IO Viewer"} content={[
+            <SimpleContent name={"IO Viewer"}>
                 <div
                     style={{
                         display: "grid",
@@ -49,7 +49,7 @@ let  IoViewer = props =>{
                         items={data}
                     />
                 </div>
-            ]}/>
+            </SimpleContent>
         </UIPanel>
     );
 };

@@ -33,14 +33,11 @@ let  CoreInputsList = props =>{
 
 
     useEffect(() => {
-        if(props.selections.iom){
-            if(props.selections.iom.type !== "inputs"){
-                set_selected(null);
-            }else{
-                set_selected(props.selections.iom.obj);
-            }
+        if(props.selections.iom && props.selections.iom.type === "inputs"){
+            set_selected(props.selections.iom.obj);
+        } else {
+            set_selected(null);
         }
-
     }, [props.selections.iom]);
 
 
@@ -63,7 +60,7 @@ let  CoreInputsList = props =>{
 
 
     return (
-        <div>
+        <div  style={{maxHeight: "13em"}}>
             <div style={{
                 display: "flex",
                 flexDirection: "row",

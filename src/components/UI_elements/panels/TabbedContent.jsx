@@ -13,19 +13,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import React from 'react';
 import {PanelTitle, ContentDiv} from "./UIPanel";
 
 export let TabbedContent = function (props) {
+    const childrenArray = React.Children.map(props.children, child => {
+        if (React.isValidElement(child)) {
+            return React.cloneElement(child, {key: child.key || Math.random().toString(36)})
+        }
+        return child;
+    });
 
-    let handle_select_tab = (event) =>{
+    let handle_select_tab = (event) => {
         props.onSelect(props.names.indexOf(event.target.textContent));
     }
 
-
-    let construct_titles = () =>{
+    let construct_titles = () => {
         let ret_val = [];
-        for(let i = 0; i<props.contents.length;i++){
-            let is_selected = {selected:i===props.selected};
+        for(let i = 0; i < props.names.length; i++){
+            let is_selected = {selected: i === props.selected};
             ret_val.push(
                 <PanelTitle key={props.names[i] + "_title"} {...is_selected}>
                     <p style={{marginLeft:"0.5em", marginRight:"0.5em", marginTop:"0.25em"}} onClick={handle_select_tab}>{props.names[i]}</p>
@@ -34,13 +40,14 @@ export let TabbedContent = function (props) {
         }
         return ret_val;
     };
+    
     return(
         <>
             <div style={{display:"flex"}}>
                 {construct_titles()}
             </div>
             <ContentDiv>
-                {props.contents[props.selected]}
+                {childrenArray[props.selected]}
             </ContentDiv>
         </>
     );

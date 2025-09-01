@@ -37,7 +37,6 @@ let HilEditorView = function (props) {
                 emulator={props.emulator}
                 selections={props.selections}
                 on_selection={props.set_selections}
-                on_debug={props.set_compiled_programs}
                 set_compiler_warnings={set_compiler_warnings}
                 on_compile_done={props.on_compile_done}
             />

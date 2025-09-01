@@ -39,7 +39,6 @@ let HilView = function (props) {
     let [input_data, set_input_data] = useState({});
     let [deployed, set_deployed] = useState(false);
 
-    let [compiled_programs, set_compiled_programs] = useState({});
 
     const emulators_store = useSelector(state => state.emulators);
 
@@ -48,11 +47,11 @@ let HilView = function (props) {
 
     let versioned_handle_selection = (value) =>{
         let new_val = {...value, obj_version: value.obj_version + 1}
-         set_selections(new_val);
+        set_selections(new_val);
     }
 
 
-    let on_select = (value) =>{
+    let on_item_select = (value) =>{
         versioned_handle_selection({...selections, tab:value});
     }
 
@@ -71,45 +70,43 @@ let HilView = function (props) {
             height:"100%"
         }}>
               <UIPanel style={{flexGrow:1}} key="emulator_diagram" level="level_2">
-                <TabbedContent height="100%" names={["Editor","Debugger","Hardware",  "Results", "Specs"]} contents={[
-                    <HilEditorView
-                        set_emulation_results={set_emulation_results}
-                        set_input_data={set_input_data}
-                        input_data={input_data}
-                        bump_version={()=>{versioned_handle_selection(selections)}}
-                        onDeploy={()=>{set_deployed(true)}}
-                        emulator={emulator}
-                        selections={selections}
-                        set_selections={versioned_handle_selection}
-                        set_compiled_programs={set_compiled_programs}
-                        on_emulator_select={handle_emulator_select}
-                        on_compile_done={()=>{}}
-                    />,
-                    <HilDebuggerView
-                        emulator={emulator}
-                        selections={selections}
-                        set_selections={versioned_handle_selection}
-                        on_select={handle_emulator_select}
-                        compiled_programs={compiled_programs}
-                        set_emulation_results={set_emulation_results}
-                    />,
-                    <HilControlView
-                        emulator={emulator}
-                        deployed={deployed}
-                        selections={selections}
-                        set_selections={versioned_handle_selection}
-                        on_select={handle_emulator_select}
-                    />,
-                    <HilResultsView
-                        filename={emulator.name}
-                        emulation_results={emulation_results}
-                        input_data={input_data}
-                    />,
-                    <HilSpecsView
-                        emulator={emulator}
-                        handle_select_emulator={handle_emulator_select}
-                    />
-                ]} onSelect={on_select} selected={selections.tab}/>
+                  <TabbedContent height="100%" names={["Editor","Debugger","Hardware",  "Results", "Specs"]} onSelect={on_item_select} selected={selections.tab}>
+                      <HilEditorView
+                          set_emulation_results={set_emulation_results}
+                          set_input_data={set_input_data}
+                          input_data={input_data}
+                          bump_version={()=>{versioned_handle_selection(selections)}}
+                          onDeploy={()=>{set_deployed(true)}}
+                          emulator={emulator}
+                          selections={selections}
+                          set_selections={versioned_handle_selection}
+                          on_emulator_select={handle_emulator_select}
+                          on_compile_done={()=>{}}
+                      />
+                      <HilDebuggerView
+                          emulator={emulator}
+                          selections={selections}
+                          set_selections={versioned_handle_selection}
+                          on_select={handle_emulator_select}
+                          set_emulation_results={set_emulation_results}
+                      />
+                      <HilControlView
+                          emulator={emulator}
+                          deployed={deployed}
+                          selections={selections}
+                          set_selections={versioned_handle_selection}
+                          on_select={handle_emulator_select}
+                      />
+                      <HilResultsView
+                          filename={emulator.name}
+                          emulation_results={emulation_results}
+                          input_data={input_data}
+                      />
+                      <HilSpecsView
+                          emulator={emulator}
+                          handle_select_emulator={handle_emulator_select}
+                      />
+                  </TabbedContent>
             </UIPanel>
         </div>
 

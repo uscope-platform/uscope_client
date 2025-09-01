@@ -32,14 +32,14 @@ let HilPlotTab = function (props) {
                margin:10
            }}>
                <UIPanel key="hil_scope" data-grid={{x: 0, y: 0, w: 24, h: 16, static: true}} level="level_2">
-                   <SimpleContent name="Scope" height="100%" content={
+                   <SimpleContent name="Scope" height="100%">
                        <HilPlot
                            hil_plot_running={props.hil_plot_running}
                            refreshRate={125}
                            download_data_request={props.download_data_request}
                            on_download_done={props.on_download_done}
                        />
-                   }/>
+                   </SimpleContent>
                </UIPanel>
                <div style={{
                    display:"flex",
@@ -47,16 +47,16 @@ let HilPlotTab = function (props) {
                    gap:10
                }}>
                    <UIPanel key="Hil_inputs"  style={{flexGrow:1}} level="level_2">
-                       <SimpleContent name="Inputs" height="100%" content={
+                       <SimpleContent name="Inputs" height="100%">
                            <HilInputsPanel emulator={props.emulator}/>
-                       }/>
+                       </SimpleContent>
                    </UIPanel>
                    <UIPanel key="hil_channel_selector" style={{flexGrow:1}}  level="level_2">
-                       <SimpleContent name="Channel Selector" height="100%" content={
+                       <SimpleContent name="Channel Selector" height="100%">
                            <HilChannelSelector
                                emulator={props.emulator}
                            />
-                       }/>
+                       </SimpleContent>
                    </UIPanel>
                </div>
            </div>

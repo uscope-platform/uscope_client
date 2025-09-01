@@ -58,6 +58,17 @@ export class up_emulator {
         return ret;
     }
 
+    static deep_copy_s(emulator_obj){
+        let ret = {};
+        ret.deployment_mode = emulator_obj.deployment_mode;
+        ret.id = emulator_obj.id;
+        ret.name = emulator_obj.name;
+        ret.cores = JSON.parse(JSON.stringify(emulator_obj.cores));
+        ret.connections = JSON.parse(JSON.stringify(emulator_obj.connections));
+        ret.emulation_time = emulator_obj.emulation_time;
+        return ret;
+    }
+
     static construct_empty(emulator_id){
         let emulator_obj = {
             id:emulator_id,
@@ -70,6 +81,13 @@ export class up_emulator {
         return new up_emulator(emulator_obj);
     }
 
+    static duplicate = async (old_emulator, new_id) => {
+        let new_emulator = up_emulator.deep_copy_s(old_emulator);
+        new_emulator.id = new_id;
+        new_emulator.name = old_emulator.name + "_copy_" + new_id;
+        return new up_emulator(new_emulator);
+    }
+
     add_remote = async () => {
         try{
             let ret = await backend_post(api_dictionary.emulators.add + '/' + this.id, this._get_emulator());
@@ -80,7 +98,8 @@ export class up_emulator {
         }
     }
 
-    add_core = async (id) => {
+    add_core = async () => {
+        let id = this.find_free_id();
         let c = {
             name: "new_core_" + id,
             id: id,
@@ -102,12 +121,32 @@ export class up_emulator {
                 has_reciprocal:false
             }
         };
+        return this.send_core(c);
+    }
 
+    send_core = async (c) => {
         let edit = {id:this.id, field:"cores",  action:"add", value:c};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
-        this.cores[id] = c;
+        this.cores[c.id] = c;
         store.dispatch(update_emulator(this.deep_copy()));
         return c;
+    }
+
+    find_free_id = () => {
+        let id = 1;
+        while(this.cores[id] !== undefined){
+            id++;
+        }
+        return id;
+    }
+
+    duplicate_core = async (core_id) => {
+        let core = JSON.parse(JSON.stringify(this.cores[core_id]));
+        let new_id = this.find_free_id();
+        core.name = core.name + "_copy_" + new_id;
+        core.id = new_id
+        core.order = new_id+1;
+        return this.send_core(core);
     }
 
     edit_name = async (new_name) =>{
@@ -146,6 +185,11 @@ export class up_emulator {
         let edit = {id:this.id, field:"cores",  action:"remove", value:core_id};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         delete this.cores[core_id];
+        for(let i of this.connections){
+            if(i.source_core === core_id || i.destination_core === core_id){
+                await this.remove_dma_connection(i.source_core, i.destination_core);
+            }
+        }
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
@@ -220,7 +264,18 @@ export class up_emulator {
             vector_size: 1,
             source:{
                 type:"constant",
-                value:""
+                value:"",
+                shape:"square",
+                von:0,
+                voff:0,
+                tdelay:0,
+                ton:0,
+                period:0,
+                dc_offset:0,
+                amplitude:0,
+                frequency:0,
+                phase:0,
+                duty:0
             },
             name: "new_input_" + progressive,
             labels:""
@@ -491,6 +546,30 @@ export class up_emulator {
         })
     }
 
+    get_series_for_input(input_data, input_obj, n_channels){
+
+        let ret = [];
+        let tok = input_obj.source.value.split(".");
+        for(let d of input_data){
+            if(d.name === tok[0]){
+                if(n_channels > 1){
+                    for(let i = 0; i < n_channels; i++){
+                        let name = tok[1] + "[" + i + "]";
+                        if(d.data[name]){
+                            ret.push(d.data[name]);
+                        } else {
+                            throw("Error: " + name + " not found in selected file")
+                        }
+                    }
+                } else {
+                    ret = d.data[tok[1]]
+                }
+
+            }
+        }
+        return ret;
+    }
+
     build = () =>{
         let connections  = [];
         this.connections.map((item) => {
@@ -514,28 +593,9 @@ export class up_emulator {
                     inputs: item.inputs.map((in_obj) => {
                         let source = in_obj.source;
                         if(in_obj.source.type === "series"){
-                            let tok = in_obj.source.value.split(".");
-                            let data = [];
-                            for(let d of item.input_data){
-                                if(d.name === tok[0]){
-                                    if(item.channels > 1){
-                                        for(let i = 0; i < item.channels; i++){
-                                            let name = tok[1] + "[" + i + "]";
-                                            if(d.data[name]){
-                                                data.push(d.data[name]);
-                                            } else {
-                                                throw("Error: " + name + " not found in selected file")
-                                            }
-                                        }
-                                    } else {
-                                        data = d.data[tok[1]]
-                                    }
-
-                                }
-                            }
                             source = {
                                 type: in_obj.source.type,
-                                value: data
+                                value: this.get_series_for_input(item.input_data, in_obj, item.channels)
                             };
                         }
                         return {
@@ -634,7 +694,75 @@ export class up_emulator {
 
     download_hardware_sim_data = async () =>{
         let specs = this.build();
-        return await backend_post(api_dictionary.operations.hil_hardware_sim, specs);
+        let bus_data = await backend_post(api_dictionary.operations.hil_hardware_sim, specs);
+        bus_data.control = bus_data.control + "--\n" + bus_data.outputs;
+        bus_data.inputs = this.prepare_input_series(bus_data.inputs);
+        return bus_data;
+    }
+
+    float_to_hex = (series) =>{
+        return series.map((item)=>{
+            const buffer = new ArrayBuffer(4);
+            const view = new DataView(buffer);
+            view.setFloat32(0, item, true);
+            return view.getUint32(0, true);
+        })
+    }
+
+    prepare_input_series = (raw_specs)=>{
+        let series_order = {};
+        let series_header = {};
+        raw_specs.split("\n").map((line, idx)=>{
+            let components = line.split(",");
+            if(components.length === 5){
+                series_header[idx] = components.slice(1, components.length).join(",");
+                series_order[components[0]] = idx;
+            }
+        })
+
+        let series_data = {};
+        for(let o in series_order){
+            Object.values(this.cores).map((core)=>{
+                core.inputs.map((in_obj)=>{
+                    if(in_obj.source.type === "series"){
+                        let series = this.get_series_for_input(
+                            core.input_data,
+                            in_obj,
+                            core.channels
+                        );
+                        if(o === core.name + "." + in_obj.name){
+                            series_data[series_order[o]] = this.float_to_hex(series);
+                        } else {
+                            for(let i = 0; i<series.length; i++){
+                                let data_name = core.name.replace(" ", "_")+ "[" + i.toString() + "]" +  "." + in_obj.name.replace(" ", "_");
+                                if(o === data_name){
+                                    series_data[series_order[o]] = this.float_to_hex(series[i]);
+                                    break;
+                                }
+                            }
+                        }
+
+
+                    }
+                });
+            })
+        }
+
+
+        let serialized_data = "";
+        for(let i in series_data){
+            serialized_data += series_header[i] + ";";
+        }
+        serialized_data = serialized_data.slice(0, -1) + "\n";
+        if(Object.keys(series_data) .length === 0) return serialized_data;
+        for(let j = 0; j<Object.values(series_data)[0].length; j++){
+            let row_data = [];
+            for(let i in series_data){
+                row_data.push(series_data[i][j]);
+            }
+            serialized_data += row_data.join(",") + "\n";
+        }
+        return serialized_data;
     }
 
     deploy = async () =>{

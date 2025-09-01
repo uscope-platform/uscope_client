@@ -1,4 +1,4 @@
-// Copyright 2021 Filippo Savi
+// Copyright 2025 Filippo Savi
 // Author: Filippo Savi <filssavi@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,7 @@ export let SimpleContent = function (props) {
                 <p style={{marginLeft:"0.5em", marginRight:"0.5em", marginTop:"0.25em", paddingBottom:"0.1m"}}>{props.name}</p>
             </PanelTitle>
             <ContentDiv height={props.height}>
-                {props.content}
+                {props.children}
             </ContentDiv>
         </div>
     );

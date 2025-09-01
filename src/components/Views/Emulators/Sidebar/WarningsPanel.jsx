@@ -43,11 +43,11 @@ let  WarningsPanel = props =>{
 
         return(
             <UIPanel key="warnings" style={{margin:10}} level="level_2">
-                <SimpleContent name={"Warnings"} content={
+                <SimpleContent name={"Warnings"}>
                     <div style={{display:"flex", flexDirection:"column", gap:"0.25em", margin:"0.5em"}}>
                         {print_warnings()}
                     </div>
-                }/>
+                </SimpleContent>
             </UIPanel>
         )
 

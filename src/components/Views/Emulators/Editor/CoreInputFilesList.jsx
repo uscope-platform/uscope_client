@@ -38,9 +38,10 @@ let  CoreInputFilesList = props =>{
 
     let selected_core = props.selections.component.obj.id;
 
-    let handle_add = () =>{
-        upload_json().then((result)=>{
-            let lines = result.data.split("\n");
+    let handle_add = async () =>{
+        try{
+            let file = await upload_json();
+            let lines = file.data.split("\n");
             let columns = lines[0].split(",");
             let data_obj = {};
             for(let c_n of columns){
@@ -48,18 +49,20 @@ let  CoreInputFilesList = props =>{
             }
             lines.shift();
             for(let l of lines){
-                let tokens = l.split(",");
-                for(let i = 0; i< tokens.length; i++){
-                   data_obj[columns[i]].push(parseFloat(tokens[i]));
+                if(l !== ""){
+                    let tokens = l.split(",");
+                    for(let i = 0; i< tokens.length; i++){
+                        data_obj[columns[i]].push(parseFloat(tokens[i]));
+                    }
                 }
             }
-            let f_n = result.name.replace(".csv","")
+            let f_n = file.name.replace(".csv","")
             props.emulator.add_input_file(selected_core, f_n, data_obj).then(()=>{
                 forceUpdate();
             })
-        }).catch((err)=>{
+        } catch (err){
             alert(err);
-        })
+        }
 
     }
 
@@ -73,7 +76,7 @@ let  CoreInputFilesList = props =>{
         set_selected(args)
     }
     return(
-        <div>
+        <div  style={{maxHeight: "13em", overflow:"auto" }} >
             <div style={{
                 display:"flex",
                 flexDirection:"row",

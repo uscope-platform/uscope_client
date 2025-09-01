@@ -78,11 +78,13 @@ let EmulationResults = function (props) {
 
     let handle_select_source = source =>{
         let srcs = props.results.get_data_sources();
-        if(source === srcs.at(-1)){
-            set_inputs_mode(true);
-        } else {
-            set_inputs_mode(false);
+        let inputs_mode = false;
+        if(srcs.n_inputs > 0){
+            if(srcs.sources.slice(srcs.sources.length-srcs.n_inputs,srcs.sources.length).includes(source)){
+                inputs_mode = true;
+            }
         }
+        set_inputs_mode(inputs_mode);
         set_selected_source(source);
         set_selected_output([]);
         set_selected_channel([]);

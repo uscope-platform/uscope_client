@@ -16,6 +16,7 @@
 import React from 'react';
 
 import {Checkbox, InputField, SelectField, SimpleContent} from "@UI";
+import TypeOptionsContainer from "./TypeOptionsContainer";
 
 let  CoreMemoryProperties = props =>{
 
@@ -58,8 +59,7 @@ let  CoreMemoryProperties = props =>{
         let field = event.target.name;
         let value = event.target.checked;
 
-        props.selected_emulator.edit_memory(props.selected_component.obj.id,
-            field, value, props.selected_iom.obj);
+        props.selected_emulator.edit_memory(props.selected_component.obj.id, field, value, props.selected_iom.obj).then();
     }
 
     let render_type_options = () =>{
@@ -93,15 +93,19 @@ let  CoreMemoryProperties = props =>{
 
     if(sel_mem){
         return(
-            <SimpleContent name="Memory Properties" content={
+            <SimpleContent name="Memory Properties">
                 <div key="memory_props" style={{maxHeight:"13em"}}>
                     <InputField inline id="name" name="name" label="Name" defaultValue={sel_mem.name} onKeyDown={handle_change_iom}/>
-                    {render_type_options()}
-                    <InputField inline id="value" name="value" label="Value" defaultValue={sel_mem.value} onKeyDown={handle_change_iom}/>
-                    <Checkbox name='is_output' value={sel_mem.is_output} onChange={handle_change_output} label="Use as Output"/>
-                    <Checkbox name='is_input' value={sel_mem.is_input} onChange={handle_change_output} label="Use as Input"/>
+                    <TypeOptionsContainer label="Memory Properties">
+                        <InputField inline id="value" name="value" label="Value" defaultValue={sel_mem.value} onKeyDown={handle_change_iom}/>
+                        <Checkbox name='is_output' value={sel_mem.is_output} onChange={handle_change_output} label="Use as Output"/>
+                        <Checkbox name='is_input' value={sel_mem.is_input} onChange={handle_change_output} label="Use as Input"/>
+                    </TypeOptionsContainer>
+                    <TypeOptionsContainer label="Memory data format">
+                        {render_type_options()}
+                    </TypeOptionsContainer>
                 </div>
-            }/>
+            </SimpleContent>
         )
     }
 

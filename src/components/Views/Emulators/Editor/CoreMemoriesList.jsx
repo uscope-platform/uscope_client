@@ -33,14 +33,11 @@ let  CoreMemoriesList = props =>{
     }, [props.selections.component, props.selections.obj_version]);
 
     useEffect(() => {
-        if(props.selections.iom){
-            if(props.selections.iom.type !== "memory_init"){
-                set_selected(null);
-            }else{
-                set_selected(props.selections.iom.obj);
-            }
+        if(props.selections.iom && props.selections.iom.type === "memory_init"){
+            set_selected(props.selections.iom.obj);
+        } else {
+            set_selected(null);
         }
-
     }, [props.selections.iom]);
 
 
@@ -62,7 +59,7 @@ let  CoreMemoriesList = props =>{
     }
 
     return (
-        <div>
+        <div style={{maxHeight: "13em"}}>
             <div style={{
                 display: "flex",
                 flexDirection: "row",

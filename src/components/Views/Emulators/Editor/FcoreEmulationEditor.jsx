@@ -40,8 +40,8 @@ let FcoreEmulationEditor = function (props) {
         build: false,
         run: false,
         deploy: false,
-        debug:false,
-        hw_sim:true
+        hw_sim:true,
+        copy:false
     })
     const navigate = useNavigate();
 
@@ -60,8 +60,8 @@ let FcoreEmulationEditor = function (props) {
                     build: enabled_actions.build,
                     run: enabled_actions.run,
                     deploy: enabled_actions.deploy,
-                    debug: enabled_actions.debug,
-                    hw_sim: enabled_actions.hw_sim
+                    hw_sim: enabled_actions.hw_sim,
+                    copy:true
                 });
                 return;
             }
@@ -72,8 +72,8 @@ let FcoreEmulationEditor = function (props) {
             build: enabled_actions.build,
             run: enabled_actions.run,
             deploy: enabled_actions.deploy,
-            debug: enabled_actions.debug,
-            hw_sim: enabled_actions.hw_sim
+            hw_sim: enabled_actions.hw_sim,
+            copy: false
         });
 
     },[props.selections.component])
@@ -87,8 +87,8 @@ let FcoreEmulationEditor = function (props) {
                 build: true,
                 run: true,
                 deploy: true,
-                debug: true,
-                hw_sim: true
+                hw_sim: true,
+                copy: false
             });
 
             let initial_nodes = [];
@@ -132,13 +132,19 @@ let FcoreEmulationEditor = function (props) {
         setNodes(new_nodes);
     }, [props.selections.obj_version])
 
-    let add_core = ()=>{
-        props.emulator.add_core(n_cores+1).then((core)=>{
-            setNodes([...nodes, {id:core.id, text:core.name}]);
-        });
+    let add_core = async ()=>{
+        let core = await props.emulator.add_core();
+        setNodes([...nodes, {id:core.id, text:core.name}]);
         set_n_cores(n_cores+1);
     };
 
+    const copy_core = async ()=>{
+        if(props.selections.component && props.selections.component.type === "node"){
+            let core = await props.emulator.duplicate_core(props.selections.component.obj.id);
+            setNodes([...nodes, {id:core.id, text:core.name}]);
+            set_n_cores(n_cores+1);
+        }
+    }
 
     let handle_node_select = (event, node) =>{
         props.on_selection({...props.selections, iom:null, component:{type:"node", obj:node}});
@@ -146,10 +152,6 @@ let FcoreEmulationEditor = function (props) {
 
     let handle_edge_select = (event, edge) =>{
         props.on_selection({...props.selections, iom:null, component:{type:"edge", obj:edge}});
-    }
-
-    let handle_build = () =>{
-        props.on_selection({...props.selections, tab:4});
     }
 
     let handle_run = async () =>{
@@ -171,18 +173,11 @@ let FcoreEmulationEditor = function (props) {
         navigate("/programs", {state: {selected_program:props.emulator.cores[props.selections.component.obj.id].program}});
     }
 
-    let handle_debug = async () =>{
-        let asm = await props.emulator.disassemble();
-        props.on_debug(asm);
-        await  props.emulator.debug_init();
-        props.on_selection({...props.selections, tab:1});
-    }
-
     let handle_hardware_sim = async () =>{
         let data = await props.emulator.download_hardware_sim_data();
-        debugger;
         download_text(data.control, "control_bus.txt");
         download_text(data.code, "code_bus.txt");
+        download_text(data.inputs, "input_bus.txt");
     }
 
     let handle_deploy = async () =>{
@@ -209,7 +204,7 @@ let FcoreEmulationEditor = function (props) {
     }
 
     let handle_canvas_click = ()=>{
-        props.on_selection({...props.selections,component:null});
+        props.on_selection({...props.selections,...{component:null, iom:null}});
     }
 
     let handle_link_nodes = (event, from, to) =>{
@@ -285,9 +280,9 @@ let FcoreEmulationEditor = function (props) {
                     theme="dark"
                 />
                     <UIPanel key="emulator_diagram" level="level_2">
-                        <SimpleContent name="Emulation_diagram" height="100%" content={
+                        <SimpleContent name="Emulation_diagram" height="100%">
                             <EmulatorDiagram
-                                selected_node={props.selected_component}
+                                selections={props.selections}
                                 onNodeSelect={handle_node_select}
                                 onNodeRemove={handle_node_remove}
                                 onEdgeSelect={handle_edge_select}
@@ -295,17 +290,16 @@ let FcoreEmulationEditor = function (props) {
                                 onCanvasClick={handle_canvas_click}
                                 onLinkNodes={handle_link_nodes}
                                 onAdd={add_core}
-                                onBuild={handle_build}
                                 onRun={handle_run}
+                                onCopy={copy_core}
                                 onDeploy={handle_deploy}
                                 onHardwareSim={handle_hardware_sim}
                                 onEdit={handle_edit}
-                                onDebug={handle_debug}
                                 nodes={nodes}
                                 edges={edges}
                                 enabled_actions={enabled_actions}
                             />
-                        }/>
+                        </SimpleContent>
                     </UIPanel>
                     <div style={{
                         display:"flex",
@@ -314,35 +308,35 @@ let FcoreEmulationEditor = function (props) {
                         minHeight:"270px"
                     }}>
                         <UIPanel style={{flexGrow:1}} key="emulator_i_props" level="level_2">
-                            <TabbedContent names={["Inputs", "Input Files"]} contents={[
+                            <TabbedContent names={["Inputs", "Input Files"]} onSelect={set_selected_inputs_tab} selected={selected_inputs_tab}>
                                 <CoreInputsList
                                     emulator={props.emulator}
                                     on_selection={handle_select_iom}
                                     selections={props.selections}
-                                />,
+                                />
                                 <CoreInputFilesList
                                     emulator={props.emulator}
                                     selections={props.selections}
                                 />
-                            ]} onSelect={set_selected_inputs_tab} selected={selected_inputs_tab}/>
+                            </TabbedContent>
                         </UIPanel>
                         <UIPanel  style={{flexGrow:1}} key="emulator_o_props" level="level_2">
-                            <SimpleContent name="Outputs" height="100%" content={
+                            <SimpleContent name="Outputs" height="100%" >
                                 <CoreOutputsList
                                     emulator={props.emulator}
                                     selections={props.selections}
                                     on_selection={handle_select_iom}
                                 />
-                            }/>
+                            </SimpleContent>
                         </UIPanel>
                         <UIPanel  style={{flexGrow:1}} key="emulator_m_props"  level="level_2">
-                            <SimpleContent name="Memory" height="100%" content={
+                            <SimpleContent name="Memory" height="100%" >
                                 <CoreMemoriesList
                                     emulator={props.emulator}
                                     selections={props.selections}
                                     on_selection={handle_select_iom}
                                 />
-                            }/>
+                            </SimpleContent>
                         </UIPanel>
                     </div>
 

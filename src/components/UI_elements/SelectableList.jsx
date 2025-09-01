@@ -43,11 +43,22 @@ export let  SelectableList = props =>{
         return ret;
     }
 
+
     if(props.items){
         return(
-            <SelectableListLayout style={props.style}>
+            <div style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.25em",
+                margin: "0.5em",
+                minHeight:"0",
+                width:"100%",
+                overflowY:"auto",
+                maxHeight:"13em",
+                ...props.style
+            }}>
                 {constructListContent(props.items, props.types)}
-            </SelectableListLayout>
+            </div>
         );
     }
 };
