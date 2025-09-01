@@ -117,14 +117,14 @@ let EmulationResults = function (props) {
             minWidth:0
         }}>
             <UIPanel key="emulation_result_plots" level="level_2">
-                <SimpleContent name="Results Plot" height="100%" content={
+                <SimpleContent name="Results Plot" height="100%">
                     <Plot
                         data={data}
                         layout={plot_layout}
                         config={plot_config}
                         revision={data_revision}
                     />
-                }/>
+                </SimpleContent>
             </UIPanel>
             <div style={{
                 display:"flex",
@@ -135,7 +135,7 @@ let EmulationResults = function (props) {
                 <UIPanel style={{flexGrow:1}} key="emulation_result_core_sel" level="level_2">
                     <SimpleContent name="Core Selector" height="100%">
                         <div>
-                            <SelectableList style={{maxHeight:"15em"}} items={props.results.get_data_sources()} selected_item={selected_source} onSelect={handle_select_source} />
+                            <SelectableList style={{maxHeight:"15em"}} items={props.results.get_data_sources().sources} selected_item={selected_source} onSelect={handle_select_source} />
                         </div>
                     </SimpleContent>
                 </UIPanel>
