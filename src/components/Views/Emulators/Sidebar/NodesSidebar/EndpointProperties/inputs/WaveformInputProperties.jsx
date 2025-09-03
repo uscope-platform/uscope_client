@@ -31,19 +31,19 @@ export let WaveformInputProperties = props =>{
         if(value === 0){
             return 0;
         }
-        if(value < 1e-9) {
+        if(Math.abs(value) < 1e-9) {
             return (value * 1e12).toFixed(2)+ "p";
-        }else if(value < 1e-6){
+        }else if(Math.abs(value) < 1e-6){
             return (value * 1e9).toFixed(2) + "n";
-        } else if(value < 1e-3){
+        } else if(Math.abs(value) < 1e-3){
             return (value * 1e6).toFixed(2) + "µ";
-        } else if(value < 1){
+        } else if(Math.abs(value) < 1){
             return (value * 1e3).toFixed(2) + "m";
-        } else if(value < 1e3){
+        } else if(Math.abs(value) < 1e3){
             return value.toFixed(2);
-        } else if(value < 1e6){
+        } else if(Math.abs(value) < 1e6){
             return (value /1e3).toFixed(2) + "k";
-        } else if(value < 1e9){
+        } else if(Math.abs(value) < 1e9){
             return (value / 1e6).toFixed(2) + "meg";
         } else {
             return (value  /1e9).toFixed(2) + "g";
