@@ -17,6 +17,7 @@ import React, { useReducer, useState} from 'react';
 import {ColorTheme, PlotConfigurations, SelectableList, SimpleContent, UIPanel} from "@UI";
 import createPlotlyComponent from "react-plotly.js/factory";
 import Plotly from "plotly.js-basic-dist";
+import ResultsPlotLegend from "@components/Views/Emulators/EmulationResults/ResultsPlotLegend.jsx";
 
 
 const Plot = createPlotlyComponent(Plotly);
@@ -32,6 +33,8 @@ let EmulationResults = function (props) {
     let [data, set_data] = useState([])
     let [inputs_mode, set_inputs_mode] = useState(false);
 
+    let [plot_legends, set_plot_legends] = useState([])
+
     const [data_revision,update_data ] = useReducer(x => x + 1, 0);
 
     let plot_layout = {...PlotConfigurations.layout,colorway:ColorTheme.plot_palette};
@@ -45,8 +48,12 @@ let EmulationResults = function (props) {
         props.results.add_data_series(selected_source, selected_output, selected_channel, index,multi_selection);
 
         let [timebase, data] = props.results.get_data_series();
-
-        set_data(data.map((item)=>{
+        let new_legend= []
+        set_data(data.map((item, index)=>{
+            new_legend.push({
+                name:item.name,
+                index: index
+            })
             return({
                 name:item.name,
                 x: timebase,
@@ -55,6 +62,7 @@ let EmulationResults = function (props) {
                 mode: 'lines'
             })
         }));
+        set_plot_legends(new_legend);
         set_selected_index(index);
         update_data();
     }
@@ -62,8 +70,12 @@ let EmulationResults = function (props) {
     let add_input_to_plot = (input_name,multi_selection) =>{
         props.results.add_input(selected_source, input_name, multi_selection);
         let [timebase, data] = props.results.get_data_series();
-
-        set_data(data.map((item)=>{
+        let new_legend= []
+        set_data(data.map((item, index)=>{
+            new_legend.push({
+                name:item.name,
+                index: index
+            })
             return({
                 name:item.name,
                 x: timebase,
@@ -72,6 +84,7 @@ let EmulationResults = function (props) {
                 mode: 'lines'
             })
         }));
+        set_plot_legends(new_legend);
         set_selected_output(input_name);
         update_data();
     }
@@ -118,12 +131,20 @@ let EmulationResults = function (props) {
         }}>
             <UIPanel key="emulation_result_plots" level="level_2">
                 <SimpleContent name="Results Plot" height="100%">
-                    <Plot
-                        data={data}
-                        layout={plot_layout}
-                        config={plot_config}
-                        revision={data_revision}
-                    />
+                    <div style={{
+                        display:"flex",
+                        flexDirection:"row",
+                        gap:10,
+                        height:"100%"
+                    }}>
+                        <Plot
+                            data={data}
+                            layout={plot_layout}
+                            config={plot_config}
+                            revision={data_revision}
+                        />
+                        <ResultsPlotLegend data={plot_legends}/>
+                    </div>
                 </SimpleContent>
             </UIPanel>
             <div style={{
