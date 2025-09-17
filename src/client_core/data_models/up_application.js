@@ -131,7 +131,11 @@ export class up_application {
 
     set_active = async () => {
         await backend_post(api_dictionary.operations.dma_disable, {status:true});
-        await backend_get(api_dictionary.operations.load_application + '/' + this.id);
+        try {
+            await backend_get(api_dictionary.operations.load_application + '/' + this.id);
+        } catch (e) {
+         throw e;
+        }
         for(let i in this.pl_clocks){
             await this.set_global_clock_frequency(parseInt(i), this.pl_clocks[i]);
         }
@@ -146,6 +150,7 @@ export class up_application {
         await this.setup_scope_mux(channels);
         await this.setup_scaling_factors(channels);
         await this.setup_scope_statuses(this.get_channel_statuses(channels));
+        await set_scope_address({address:parseInt(this.miscellaneous.scope_mux_address), dma_buffer_offset:0x208})
         await set_scope_address({address:parseInt(this.miscellaneous.scope_mux_address), dma_buffer_offset:0x208})
 
     }
