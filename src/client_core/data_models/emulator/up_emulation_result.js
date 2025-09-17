@@ -36,6 +36,7 @@ export class up_emulator_result {
     get_timebase = () =>{return this.timebase}
 
     get_data_sources = () =>{
+        if(!this.data) return {sources:[], n_inputs:0};
         let cores = Object.keys(this.data).filter(key=> !["timebase"].includes(key));
 
         return {sources:[...cores, ...Object.keys(this.inputs)], n_inputs:Object.keys(this.inputs).length};
@@ -58,7 +59,8 @@ export class up_emulator_result {
     }
 
     get_series_channels(data_source, data_series){
-        if(this.data.hasOwnProperty(data_source) && this.data[data_source].outputs){
+
+        if(this.data && this.data.hasOwnProperty(data_source) && this.data[data_source].outputs){
             if(this.data[data_source].outputs.hasOwnProperty(data_series)){
                 return Object.keys(this.data[data_source].outputs[data_series]);
             }
@@ -67,7 +69,7 @@ export class up_emulator_result {
     }
 
     get_array_indices(data_source, data_series, channel){
-        if(this.data.hasOwnProperty(data_source) && this.data[data_source].outputs){
+        if(this.data && this.data.hasOwnProperty(data_source) && this.data[data_source].outputs){
             if(this.data[data_source].outputs.hasOwnProperty(data_series)){
                 if(typeof channel === "string"){
                     let array = this.data[data_source].outputs[data_series][0];

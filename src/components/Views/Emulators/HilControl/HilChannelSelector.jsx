@@ -43,7 +43,7 @@ let HilChannelSelector = function (props) {
         }
 
         return props.emulator.get_hil_data_points().map(item=>{
-            return{label:item.name, value:item}
+            return{label:item.label, value:item}
         })
     }
 

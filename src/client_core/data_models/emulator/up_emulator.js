@@ -816,89 +816,45 @@ export class up_emulator {
 
     get_hil_data_points = () =>{
         let dp = [];
-        let processed_iom = []
         Object.values(this.connections).map((dma)=>{
-            let source_core = this.cores[dma.source].name;
-            dma.channels.map((ch)=>{
-                switch (ch.type) {
-                    case "scalar_transfer":
-                        processed_iom.push([dma.source, ch.source_output, 0, 0])
+            let source_core = this.cores[dma.source_core].name;
+            for(let p of dma.ports){
+                if(p.source_channel !== -1){
+                    dp.push({
+                        label: source_core + "." + p.source_port,
+                        core: source_core,
+                        name: p.source_port,
+                        channel: p.source_channel
+                    })
+                } else {
+                    for(let i = 0; i<this.cores[dma.source_core].channels; i++){
                         dp.push({
-                            name: source_core + "." + ch.source_output,
-                            source:source_core,
-                            output:ch.source_output,
-                            address: ch.source.register[0],
-                            channel:ch.source.channel[0]
+                            label: source_core + "." + p.source_port,
+                            core: source_core,
+                            name: p.source_port,
+                            channel: i
                         })
-                        break;
-                    case "scatter_transfer":
-                        for(let i = 0; i<ch.length; i++){
-                            processed_iom.push([dma.source, ch.source_output, i, 0])
-                            dp.push({
-                                name: source_core+ "." + ch.source_output + "(" + i + ",0)",
-                                source:source_core,
-                                output:ch.source_output,
-                                address: ch.source.register[0] + i,
-                                channel:ch.source.channel[0]
-                            })
-                        }
-                        break;
-                    case "gather_transfer":
-                        for(let i = 0; i<ch.length; i++){
-                            processed_iom.push([dma.source, ch.source_output, i, 0])
-                            dp.push({
-                                name: source_core + "." + ch.source_output + "(0," + i+ ")",
-                                source:source_core,
-                                output:ch.source_output,
-                                address: ch.source.register[0],
-                                channel:ch.source.channel[0] + i
-                            })
-                        }
-                        break;
-                    case "vector_transfer":
-                        for(let i = 0; i<ch.length; i++){
-
-                            processed_iom.push([dma.source, ch.source_output,i, i])
-                            dp.push({
-                                name: source_core + "." + ch.source_output + "("+ i+"," + i+ ")",
-                                source:source_core,
-                                output:ch.source_output,
-                                address: ch.source.register[0],
-                                channel:ch.source.channel[0] + i
-                            })
-                        }
-                        break;
-                    case "2d_vector_transfer":
-                        for(let j = 0; j<ch.stride; j++) {
-                            for (let i = 0; i < ch.length; i++) {
-                                processed_iom.push([dma.source, ch.source_output, j , i])
-                                dp.push({
-                                    name: source_core + "." + ch.source_output + "(" +j + "," + i + ")",
-                                    source: source_core,
-                                    output:ch.source_output,
-                                    address: ch.source.register[0] + j,
-                                    channel: ch.source.channel[0] + i
-                                })
-                            }
-                        }
-                        break;
+                    }
                 }
-            })
+            }
+
+
         });
 
         Object.values(this.cores).map((core)=>{
             core.outputs.map((out)=>{
                 for(let i = 0; i<core.channels; i++){
-                    for(let j = 0; j<out.reg_n.length; j++) {
-                        if (!processed_iom.some(e =>  JSON.stringify(e) === JSON.stringify([core.id, out.name, j, i]))) {
-                            dp.push({
-                                name: core.name + "." + out.name + "(" +j + "," + i + ")",
-                                source: core.name,
-                                output:out.name,
-                                address: out.reg_n[0] + j,
-                                channel: i
-                            })
+                    for(let j = 0; j<out.vector_size; j++) {
+                        let name = out.name;
+                        if(out.is_vector){
+                            name += "[" + j.toString() + "]";
                         }
+                        dp.push({
+                            label: core.name + "." + name,
+                            core: core.name,
+                            name: name,
+                            channel: i
+                        })
                     }
                 }
             })
