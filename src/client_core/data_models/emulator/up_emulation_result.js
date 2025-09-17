@@ -42,7 +42,7 @@ export class up_emulator_result {
     }
 
     get_available_data_series = (series_name) =>{
-        if(series_name){
+        if(series_name && this.data[series_name].outputs){
             if(this.data.hasOwnProperty(series_name)){
                 return Object.keys(this.data[series_name].outputs);
             } else {
@@ -58,7 +58,7 @@ export class up_emulator_result {
     }
 
     get_series_channels(data_source, data_series){
-        if(this.data.hasOwnProperty(data_source)){
+        if(this.data.hasOwnProperty(data_source) && this.data[data_source].outputs){
             if(this.data[data_source].outputs.hasOwnProperty(data_series)){
                 return Object.keys(this.data[data_source].outputs[data_series]);
             }
@@ -67,7 +67,7 @@ export class up_emulator_result {
     }
 
     get_array_indices(data_source, data_series, channel){
-        if(this.data.hasOwnProperty(data_source)){
+        if(this.data.hasOwnProperty(data_source) && this.data[data_source].outputs){
             if(this.data[data_source].outputs.hasOwnProperty(data_series)){
                 if(typeof channel === "string"){
                     let array = this.data[data_source].outputs[data_series][0];
