@@ -28,7 +28,7 @@ let HilInputsPanel = function (props) {
             let current_in = target_inputs.filter((i) =>{
                 return i.name === input;
             })[0];
-            props.emulator.set_input(current_in.core, current_in.address, value);
+            props.emulator.set_input(current_in.core, current_in.name, value);
         }
     }
 

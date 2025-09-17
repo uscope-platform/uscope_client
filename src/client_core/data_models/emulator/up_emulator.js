@@ -879,8 +879,8 @@ export class up_emulator {
         return target_inputs;
     }
 
-    set_input = (core, address, value) =>{
-        return backend_post(api_dictionary.operations.hil_set_input, {"address":address, "value":value, "core": core});
+    set_input = (core, name, value) =>{
+        return backend_post(api_dictionary.operations.hil_set_input, {"core": core, "name":name, "value":value });
     }
 
     start_hil = () =>{
