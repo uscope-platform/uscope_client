@@ -17,7 +17,7 @@ import React from 'react';
 
 import {ColorTheme} from "@UI";
 import {Tooltip} from "react-tooltip";
-import {MdAdd, MdArticle, MdConstruction, MdDownload, MdPlayArrow, MdContentCopy} from "react-icons/md";
+import {MdAdd, MdArticle, MdConstruction, MdSimCardDownload, MdPlayArrow, MdContentCopy} from "react-icons/md";
 
 let  EmulatorToolbar = props =>{
 
@@ -112,7 +112,7 @@ let  EmulatorToolbar = props =>{
         let icon_color = props.enable.run ? ColorTheme.icons_color : ColorTheme.disabled_icon_color;
         return (
             <div key="hw_sim" id="hw_sim">
-                <MdDownload onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
+                <MdSimCardDownload onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
                              color={icon_color}/>
                 <Tooltip anchorSelect="hw_sim" content={"Download HW simulation files"} place="top"/>
             </div>
