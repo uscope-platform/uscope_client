@@ -106,7 +106,7 @@ let  CoreInputProperties = props =>{
 
     let handle_source_change = (field, value) =>{
         let new_value = value;
-        let waveform_peripherals = ["von", "voff", "tdelay", "ton", "period", "dc_offset", "amplitude", "frequency", "phase", "duty"]
+        let waveform_peripherals = ["von", "voff", "tdelay", "ton", "period", "dc_offset", "amplitude", "frequency", "phase", "duty", "value"]
         if(waveform_peripherals.includes(field)){
             new_value = JSON.parse(JSON.stringify(sel_in.source[field]));
             new_value[selected_channel] = value;
