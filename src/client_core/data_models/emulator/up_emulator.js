@@ -849,9 +849,8 @@ export class up_emulator {
                         if(out.is_vector){
                             name += "[" + j.toString() + "]";
                         }
-                        name += "[" + i.toString() + "]";
                         dp.push({
-                            label: core.name + "." + name,
+                            label: core.name + "." + name +  '['+ i.toString() + ']',
                             core: core.name,
                             name: name,
                             channel: i
