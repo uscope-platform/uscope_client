@@ -24,10 +24,15 @@ export let ConstantInputProperties = props =>{
             let value = event.target.value;
 
             value = value.replace(/\s/g, '');
-            let value_tokens = value.split(",")
-            value = value_tokens.map(val =>{
-                return parseFloat(val);
-            })
+            if(value.includes(",")){
+                let value_tokens = value.split(",")
+                value = value_tokens.map(val =>{
+                    return parseFloat(val);
+                })
+            } else {
+                value = parseFloat(value);
+            }
+
             props.onChange(field, value);
         }
     };
@@ -36,14 +41,12 @@ export let ConstantInputProperties = props =>{
     return(
         <InputField
             Inline
-            key={"constant_value" + String(props.input.value)}
+            key={"constant_value" + String(props.input.value[props.channel])}
             id="constant_value"
             name="value"
             label="Value"
-            defaultValue={props.input.value}
+            defaultValue={props.input.value[props.channel]}
             onKeyDown={handle_change_iom}
         />
     )
-
-
 };

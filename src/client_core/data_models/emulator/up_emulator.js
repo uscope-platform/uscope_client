@@ -829,7 +829,7 @@ export class up_emulator {
                 } else {
                     for(let i = 0; i<this.cores[dma.source_core].channels; i++){
                         dp.push({
-                            label: source_core + "." + p.source_port,
+                            label: source_core + "." + p.source_port + '['+ i.toString() + ']',
                             core: source_core,
                             name: p.source_port,
                             channel: i
@@ -850,7 +850,7 @@ export class up_emulator {
                             name += "[" + j.toString() + "]";
                         }
                         dp.push({
-                            label: core.name + "." + name,
+                            label: core.name + "." + name +  '['+ i.toString() + ']',
                             core: core.name,
                             name: name,
                             channel: i
