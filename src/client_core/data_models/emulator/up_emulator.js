@@ -867,16 +867,18 @@ export class up_emulator {
     }
 
     get_inputs =() =>{
-        let target_inputs = [];
-
+        let target_inputs = {};
+        let cores = []
         Object.values(this.cores).map((core)=>{
+            target_inputs[core.name] = []
+            cores.push(core.name);
             core.inputs.map((i)=>{
                 if(i.source.type === "constant"){
-                    target_inputs.push({core: core.name, name:i.name, address:i.reg_n, value:i.source.value});
+                    target_inputs[core.name].push({core: core.name, name:i.name, value:i.source.value});
                 }
             })
         })
-        return target_inputs;
+        return [cores, target_inputs];
     }
 
     set_input = (core, name, value) =>{

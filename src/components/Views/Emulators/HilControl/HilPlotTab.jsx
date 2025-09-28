@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React from 'react';
-import {SimpleContent, UIPanel} from "@UI";
+import {SimpleContent, TabbedContent, UIPanel} from "@UI";
 import HilChannelSelector from "./HilChannelSelector";
 import HilInputsPanel from "./HilInputsPanel";
 import HilPlot from "./HilPlot";
@@ -23,8 +23,18 @@ import HilPlot from "./HilPlot";
 let HilPlotTab = function (props) {
 
     if(props.deployed){
-        return(
+        let [input_tab_names, inputs] =  props.emulator.get_inputs();
+        let [selected_core, set_selected_core] = React.useState(0);
 
+
+        let render_input_tabs = ()=>{
+            let ret_arr = []
+            for(let i in inputs){
+                ret_arr.push(<HilInputsPanel key={i+ "inputs_tab"} inputs={inputs[i]} set_input={props.emulator.set_input}/>);
+            }
+            return ret_arr;
+        }
+        return(
            <div style={{
                display:"flex",
                flexDirection:"column",
@@ -47,9 +57,9 @@ let HilPlotTab = function (props) {
                    gap:10
                }}>
                    <UIPanel key="Hil_inputs"  style={{flexGrow:1}} level="level_2">
-                       <SimpleContent name="Inputs" height="100%">
-                           <HilInputsPanel emulator={props.emulator}/>
-                       </SimpleContent>
+                       <TabbedContent names={input_tab_names} height="100%"  selected={selected_core} onSelect={set_selected_core}>
+                           {render_input_tabs()}
+                       </TabbedContent>
                    </UIPanel>
                    <UIPanel key="hil_channel_selector" style={{flexGrow:1}}  level="level_2">
                        <SimpleContent name="Channel Selector" height="100%">

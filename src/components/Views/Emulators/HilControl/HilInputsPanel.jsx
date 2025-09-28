@@ -19,22 +19,21 @@ import {InputField} from "@UI";
 
 let HilInputsPanel = function (props) {
 
-    let target_inputs = props.emulator ? props.emulator.get_inputs() : {};
 
     let handle_input = (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab") {
             let input = event.target.name;
             let value = parseFloat(event.target.value);
-            let current_in = target_inputs.filter((i) =>{
+            let current_in = props.inputs.filter((i) =>{
                 return i.name === input;
             })[0];
-            props.emulator.set_input(current_in.core, current_in.name, value);
+            props.set_input(current_in.core, current_in.name, value);
         }
     }
 
     let render_inputs= () =>{
         let ret =  [];
-        target_inputs.map((ti)=>{
+        props.inputs.map((ti)=>{
             ret.push(
                 <InputField
                     inline
