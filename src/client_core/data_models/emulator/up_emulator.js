@@ -303,7 +303,7 @@ export class up_emulator {
             vector_size: 1,
             source:{
                 type:"constant",
-                value:"",
+                value:[],
                 shape:"square",
                 von:waveform_default,
                 voff:waveform_default,
