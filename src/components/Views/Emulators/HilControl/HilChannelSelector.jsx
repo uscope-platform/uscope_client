@@ -32,9 +32,11 @@ let HilChannelSelector = function (props) {
                     props.emulator.select_output(i, state.channels[i].value).then();
                 }
             }
-            return state.channels;
-        } else return default_state
+            default_state = state.channels;
+        }
 
+        props.set_selected_outputs(default_state.map((ch_obj)=> ch_obj.label))
+        return default_state;
     });
 
     let produce_data_options = ()=>{
@@ -56,6 +58,7 @@ let HilChannelSelector = function (props) {
         set_selected_channels(new_ch);
         forceUpdate();
         await props.emulator.select_output(ch_n-1, value.value);
+        props.set_selected_outputs(new_ch.map((ch_obj)=> ch_obj.label))
         save_ui_state(application.application_name,'hil_selector_channels', {selected_emulator:props.emulator.name, channels:new_ch});
     }
 

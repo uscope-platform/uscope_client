@@ -25,6 +25,7 @@ let HilPlotTab = function (props) {
     if(props.deployed){
         let [input_tab_names, inputs, channels] =  props.emulator.get_inputs();
         let [selected_core, set_selected_core] = React.useState(0);
+        let [selected_outputs, set_selected_outputs] = React.useState([]);
 
 
         let render_input_tabs = ()=>{
@@ -55,6 +56,7 @@ let HilPlotTab = function (props) {
                            refreshRate={125}
                            download_data_request={props.download_data_request}
                            on_download_done={props.on_download_done}
+                           selected_outputs={selected_outputs}
                        />
                    </SimpleContent>
                </UIPanel>
@@ -72,6 +74,7 @@ let HilPlotTab = function (props) {
                        <SimpleContent name="Channel Selector" height="100%">
                            <HilChannelSelector
                                emulator={props.emulator}
+                               set_selected_outputs={set_selected_outputs}
                            />
                        </SimpleContent>
                    </UIPanel>
