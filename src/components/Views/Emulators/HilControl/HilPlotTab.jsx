@@ -23,14 +23,21 @@ import HilPlot from "./HilPlot";
 let HilPlotTab = function (props) {
 
     if(props.deployed){
-        let [input_tab_names, inputs] =  props.emulator.get_inputs();
+        let [input_tab_names, inputs, channels] =  props.emulator.get_inputs();
         let [selected_core, set_selected_core] = React.useState(0);
 
 
         let render_input_tabs = ()=>{
             let ret_arr = []
             for(let i in inputs){
-                ret_arr.push(<HilInputsPanel key={i+ "inputs_tab"} inputs={inputs[i]} set_input={props.emulator.set_input}/>);
+                ret_arr.push(
+                    <HilInputsPanel
+                        key={i+ "inputs_tab"}
+                        inputs={inputs[i]}
+                        set_input={props.emulator.set_input}
+                        n_channels={channels[selected_core]}
+                    />
+                );
             }
             return ret_arr;
         }
@@ -56,7 +63,7 @@ let HilPlotTab = function (props) {
                    flexDirection:"row",
                    gap:10
                }}>
-                   <UIPanel key="Hil_inputs"  style={{flexGrow:1}} level="level_2">
+                   <UIPanel key="Hil_inputs"  style={{flexGrow:0.5}} level="level_2">
                        <TabbedContent names={input_tab_names} height="100%"  selected={selected_core} onSelect={set_selected_core}>
                            {render_input_tabs()}
                        </TabbedContent>

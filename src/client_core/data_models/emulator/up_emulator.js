@@ -869,20 +869,27 @@ export class up_emulator {
     get_inputs =() =>{
         let target_inputs = {};
         let cores = []
+        let channels = []
         Object.values(this.cores).map((core)=>{
             target_inputs[core.name] = []
             cores.push(core.name);
+            channels.push(core.channels)
             core.inputs.map((i)=>{
                 if(i.source.type === "constant"){
                     target_inputs[core.name].push({core: core.name, name:i.name, value:i.source.value});
                 }
             })
         })
-        return [cores, target_inputs];
+        return [cores, target_inputs, channels];
     }
 
-    set_input = (core, name, value) =>{
-        return backend_post(api_dictionary.operations.hil_set_input, {"core": core, "name":name, "value":value });
+    set_input = (core, name, channel, value) =>{
+        return backend_post(api_dictionary.operations.hil_set_input, {
+            core: core,
+            name:name,
+            channel: channel,
+            value: value
+        });
     }
 
     start_hil = () =>{
