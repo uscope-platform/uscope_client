@@ -136,7 +136,7 @@ export const complete_address = () =>{
 
 export const complete_version = () =>{
 
-    let candidates = ["client", "server", "driver", "module", "hardware"];
+    let candidates = ["client", "server", "driver", "module", "hardware", "toolchain"];
     let tokens = current_line.split(" ")
 
     if(tokens.length === 2){
