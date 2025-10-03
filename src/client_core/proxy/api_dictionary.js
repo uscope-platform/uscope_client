@@ -77,7 +77,7 @@ export const api_dictionary = {
         db:{
             dump:'database/export',
             restore:'database/import',
-            versions:'database/versions'
+            versions:'platform/versions'
         }
     },
     programs:{
