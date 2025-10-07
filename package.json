@@ -76,7 +76,7 @@
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.27.1",
     "@babel/preset-react": "^7.27.1",
-    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-hooks": "^6.1.1",
     "identity-obj-proxy": "^3.0.0",
     "path": "^0.12.7",
     "source-map-explorer": "^2.5.3"
