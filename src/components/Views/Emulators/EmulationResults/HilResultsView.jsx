@@ -16,8 +16,13 @@
 import React from 'react';
 import EmulationResults from "./EmulationResults.jsx";
 import HilResultsSidebar from "../Sidebar/per_panel_sidebars/HilResultsSidebar.jsx";
+import {download_json} from "@client_core";
 
 let HilResultsView = function (props) {
+
+    let handle_download = () =>{
+        download_json(props.emulation_results, props.filename + "_results");
+    }
 
     return(
         <div style={{
@@ -31,7 +36,7 @@ let HilResultsView = function (props) {
                 results={props.emulation_results}
                 inputs={props.input_data}
             />
-            <HilResultsSidebar/>
+            <HilResultsSidebar on_download={handle_download}/>
         </div>
 
     );

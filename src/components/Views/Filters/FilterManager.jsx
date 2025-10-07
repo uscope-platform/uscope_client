@@ -126,17 +126,17 @@ let FilterManager = props =>{
                     gap: 10
                 }}>
                     <UIPanel key="filter_designer_plot" level="level_2" style={{flexGrow: 1}}>
-                        <SimpleContent name="Filter Viewer" content={
+                        <SimpleContent name="Filter Viewer">
                             <FilterPlot
                                 keepout_shapes={keepout_shapes}
                                 f_sample={selected_filter.parameters.sampling_frequency}
                                 plot_data={plot_filter}
                             />
-                        }/>
+                        </SimpleContent>
                     </UIPanel>
                     <UIPanel key="filter_designer_controls" style={{flexGrow: 1}}
                              level="level_2">
-                        <SimpleContent name="Design Parameters" content={
+                        <SimpleContent name="Design Parameters">
                             <div>
                                 <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
                                     <div id="design">
@@ -152,12 +152,12 @@ let FilterManager = props =>{
                                     on_rename={handleRename}
                                 />
                             </div>
-                        }/>
+                        </SimpleContent>
                     </UIPanel>
                 </div>
                 <UIPanel key="filter_implementation_controls" style={{flexGrow: 1}}
                          level="level_2">
-                    <SimpleContent name="Implementation Parameters" content={
+                    <SimpleContent name="Implementation Parameters">
                         <div>
                             <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
                                 <div id="implement">
@@ -171,7 +171,7 @@ let FilterManager = props =>{
                                 on_change={handleParamChanges}
                             />
                         </div>
-                    }/>
+                    </SimpleContent>
                 </UIPanel>
             </div>
             <div style={{

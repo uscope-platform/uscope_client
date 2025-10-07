@@ -52,6 +52,25 @@ export class up_filter {
         return new up_filter(filter_obj);
     }
 
+    static deep_copy_s =  (old_filter) => {
+        let ret = {};
+
+        ret.id = old_filter.id;
+        ret.name = old_filter.name;
+        ret.parameters = old_filter.parameters;
+        ret.ideal_taps = old_filter.ideal_taps;
+        ret.quantized_taps = old_filter.quantized_taps;
+        return ret;
+    }
+
+    static duplicate = async (old_filter, new_id) => {
+        let new_filter = up_filter.deep_copy_s(old_filter);
+        new_filter.id = new_id;
+        new_filter.name = old_filter.name + "_copy_" + new_id;
+        return new up_filter(new_filter);
+    }
+
+
     design = () =>{
         return backend_get(api_dictionary.operations.filter_design + '/' + this.id);
     }

@@ -16,25 +16,34 @@
 
 export class up_emulator_result {
     constructor(res_obj,  inputs) {
-        if(!res_obj)
+        if(!res_obj || JSON.stringify(Object.keys(res_obj)) === JSON.stringify(["timebase"]))
             return;
         this.data = res_obj;
+        this.timebase = [...res_obj.timebase];
         delete this.data.timebase;
         this.inputs = inputs;
-        this.timebase = res_obj.timebase;
         this.selected_data_series = [];
     }
 
+
+    static getDummy() {
+        let obj = {
+            timebase:[]
+        }
+        return new up_emulator_result(obj, {});
+    }
+    
     get_timebase = () =>{return this.timebase}
 
     get_data_sources = () =>{
+        if(!this.data) return {sources:[], n_inputs:0};
         let cores = Object.keys(this.data).filter(key=> !["timebase"].includes(key));
 
-        return [...cores, ...Object.keys(this.inputs)];
+        return {sources:[...cores, ...Object.keys(this.inputs)], n_inputs:Object.keys(this.inputs).length};
     }
 
     get_available_data_series = (series_name) =>{
-        if(series_name){
+        if(series_name && this.data[series_name].outputs){
             if(this.data.hasOwnProperty(series_name)){
                 return Object.keys(this.data[series_name].outputs);
             } else {
@@ -50,7 +59,8 @@ export class up_emulator_result {
     }
 
     get_series_channels(data_source, data_series){
-        if(this.data.hasOwnProperty(data_source)){
+
+        if(this.data && this.data.hasOwnProperty(data_source) && this.data[data_source].outputs){
             if(this.data[data_source].outputs.hasOwnProperty(data_series)){
                 return Object.keys(this.data[data_source].outputs[data_series]);
             }
@@ -59,7 +69,7 @@ export class up_emulator_result {
     }
 
     get_array_indices(data_source, data_series, channel){
-        if(this.data.hasOwnProperty(data_source)){
+        if(this.data && this.data.hasOwnProperty(data_source) && this.data[data_source].outputs){
             if(this.data[data_source].outputs.hasOwnProperty(data_series)){
                 if(typeof channel === "string"){
                     let array = this.data[data_source].outputs[data_series][0];
@@ -78,19 +88,34 @@ export class up_emulator_result {
         return [this.timebase, this.selected_data_series];
     }
 
+    add_input(data_source, input_name, is_multiselection) {
 
-    add_data_series(data_source, data_series, channel, index) {
-        this.selected_data_series.push({
-            name:data_source + "." + data_series + "." + channel + "[" + index + "]",
-            content:this.data[data_source].outputs[data_series][parseInt(channel)][index]
-        });
+        if(is_multiselection){
+            this.selected_data_series.push({
+                name:data_source + "." + input_name,
+                content:this.inputs[data_source][input_name]
+            });
+        } else {
+            this.selected_data_series =[{
+                name:data_source + "." + input_name,
+                content:this.inputs[data_source][input_name]
+            }];
+        }
     }
 
-    set_data_series(data_source, data_series, channel, index) {
-        this.selected_data_series =[{
-            name:data_source + "." + data_series + "." + channel + "[" + index + "]",
-            content:this.data[data_source].outputs[data_series][parseInt(channel)][index]
-        }];
+    add_data_series(data_source, data_series, channel, index, is_multiselection) {
+        if(is_multiselection){
+            this.selected_data_series.push({
+                name:data_source + "." + data_series + "." + channel + "[" + index + "]",
+                content:this.data[data_source].outputs[data_series][parseInt(channel)][index]
+            });
+        } else {
+            this.selected_data_series =[{
+                name:data_source + "." + data_series + "." + channel + "[" + index + "]",
+                content:this.data[data_source].outputs[data_series][parseInt(channel)][index]
+            }];
+        }
+
     }
 
 }

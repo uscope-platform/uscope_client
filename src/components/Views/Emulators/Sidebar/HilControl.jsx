@@ -14,8 +14,9 @@
 // limitations under the License.
 
 import React, {useCallback} from 'react';
-import {SimpleContent, UIPanel} from "@UI";
+import {ColorTheme, SimpleContent, UIPanel} from "@UI";
 import TriggerControls from "../../Plot/Sidebar/TriggerControls";
+import {MdSimCardDownload} from "react-icons/md";
 
 let  HilControl = props =>{
 
@@ -23,17 +24,29 @@ let  HilControl = props =>{
         props.onDownloadHilData(true);
     }, [])
 
+    const handle_get_sim_file= useCallback(()=>{
+        props.onDownlodHilSim();
+    }, [])
+
+
     return(
-        <UIPanel key="trigger" style={{padding:10}} level="level_2">
-            <SimpleContent name="Trigger and Acquisition" content={
-                <TriggerControls
-                    onPlay={props.onStart}
-                    onPause={props.onPause}
-                    onStop={props.onStop}
-                    onDownload={handle_download}
-                />
-            }/>
-        </UIPanel>
+        <div>
+            <UIPanel key="trigger" style={{padding:10}} level="level_2">
+                <SimpleContent name="Trigger and Acquisition">
+                    <TriggerControls
+                        onPlay={props.onStart}
+                        onPause={props.onPause}
+                        onStop={props.onStop}
+                        onDownload={handle_download}
+                    />
+                </SimpleContent>
+            </UIPanel>
+            <UIPanel key="controls" style={{padding:10}} level="level_2">
+                <SimpleContent name="Controls">
+                    <MdSimCardDownload  id='play' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={handle_get_sim_file}/>
+                </SimpleContent>
+            </UIPanel>
+        </div>
     );
 
 

@@ -43,31 +43,30 @@ let HilPlot = function (props) {
 
     useEffect(() => {
         if(props.download_data_request){
-            let state = store.getState();
             download_plot(data, "hil_data");
             props.on_download_done(false);
         }
     }, [props.download_data_request]);
 
-    let  handleRefresh = () =>{
+    let  handleRefresh = async () =>{
         if(props.hil_plot_running){
-           direct_fetch().then((data)=>{
+            try{
+                let data = await direct_fetch();
+                let x = [...Array(data[0].data.length).keys()];
 
-               let x = [...Array(data[0].data.length).keys()];
-
-               let selected_data = data.map((channel)=>{
-                   return {
-                       name:channel.channel,
-                       x: x,
-                       y: channel.data,
-                       type: 'scatter',
-                       mode: 'lines'
-                   };
-               })
-               set_data(selected_data);
-           }).catch((err)=>{
-
-           })
+                let selected_data = data.map((channel)=>{
+                    return {
+                        name:props.selected_outputs[channel.channel],
+                        x: x,
+                        y: channel.data,
+                        type: 'scatter',
+                        mode: 'lines'
+                    };
+                })
+                set_data(selected_data);
+            } catch(err){
+                console.error(err);
+            }
         }
     };
 

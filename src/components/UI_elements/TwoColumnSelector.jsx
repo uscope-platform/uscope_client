@@ -55,13 +55,13 @@ export let  TwoColumnSelector = props =>{
                     minHeight:InterfaceParameters.programs.editorHeight
                 }}
             >
-                <SimpleContent name={"Available " + props.itemType} content={
+                <SimpleContent name={"Available " + props.itemType} >
                     <SelectableList
                         items={props.available_items}
                         selected_item={available_highlight}
                         onSelect={set_available_highlight}
                     />
-                }/>
+                </SimpleContent>
             </UIPanel>
             <div key={props.itemType+"_selector_controls"}  style={{
                 display:"flex",
@@ -81,9 +81,9 @@ export let  TwoColumnSelector = props =>{
                     flexGrow:1
                 }}
             >
-                <SimpleContent name={"Selected " + props.itemType} content={
+                <SimpleContent name={"Selected " + props.itemType}>
                     <SelectableList items={props.selected_items} selected_item={selected_highlight} onSelect={set_selected_highlight} />
-                }/>
+                </SimpleContent>
             </UIPanel>
         </div>
     );

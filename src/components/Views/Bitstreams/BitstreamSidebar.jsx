@@ -90,7 +90,7 @@ let  BitstreamSidebar = props =>{
 
     return(
         <UIPanel key="bitstream_list" level="level_2">
-            <SimpleContent name="Bitstream List" content={
+            <SimpleContent name="Bitstream List">
                 <div>
                     <SideToolbar
                         onAdd={handleAdd}
@@ -107,7 +107,7 @@ let  BitstreamSidebar = props =>{
                         onSelect={handleOnSelect}
                     />
                 </div>
-            }/>
+            </SimpleContent>
         </UIPanel>
     );
 };

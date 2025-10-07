@@ -18,7 +18,7 @@ import React from 'react';
 
 
 import {ColorTheme, } from "../index"
-import {MdNoteAdd, MdDownload, MdUpload} from "react-icons/md";
+import {MdNoteAdd, MdDownload, MdUpload, MdContentCopy} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
 
 export let SideToolbar = (props) =>{
@@ -46,6 +46,12 @@ export let SideToolbar = (props) =>{
                 {
                     export_tooltip
                 }
+            </div>
+        )
+        ret.push(
+            <div key="copy_icon" id="copy_icon">
+                <MdContentCopy onClick={props.onCopy} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
+                <Tooltip anchorId="copy_icon" content={"Duplicate "+ props.contentName} place="top" />
             </div>
         )
         return ret;

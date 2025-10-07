@@ -97,17 +97,17 @@ let PlotTab = function (props) {
                         width: "100%"
                     }}>
                         <UIPanel key="ch_selector" style={{flexGrow: 0.5}} level="level_2">
-                            <SimpleContent name="Channel Selector" content={
+                            <SimpleContent name="Channel Selector">
                                 <ChannelSelector
                                     data={external_data}
                                     onPaletteChange={set_plot_palette}
                                     on_channel_status_change={handle_channel_status_change}
                                     channels={channels}
                                 />
-                            }/>
+                            </SimpleContent>
                         </UIPanel>
                         <UIPanel key="scope" style={{flexGrow: 1}} level="level_2">
-                            <SimpleContent name="Scope" content={
+                            <SimpleContent name="Scope">
                                 <PlotComponent
                                     plot_status={plot_status}
                                     palette={plot_palette}
@@ -118,7 +118,7 @@ let PlotTab = function (props) {
                                     on_update_acquisition_status={handle_update_acquisition_status}
                                     selected_group={selected_group}
                                 />
-                            }/>
+                            </SimpleContent>
                         </UIPanel>
                     </div>
 
@@ -129,25 +129,24 @@ let PlotTab = function (props) {
                         minHeight: "300px"
                     }}>
                         <UIPanel style={{flexGrow: 0.4}} key="parameters" level="level_2">
-                            <SimpleContent name="Parameters" content={
+                            <SimpleContent name="Parameters">
                                 <ParametersArea
                                     parameters={application.parameters}
                                 />
-                            }/>
+                            </SimpleContent>
                         </UIPanel>
                         <UIPanel style={{flexGrow: 1}} key="macro" level="level_2">
-                            <SimpleContent name="Macro" content={
+                            <SimpleContent name="Macro">
                                 <MacroActions
-                                    parameters={application.parameters}
                                     macro={application.macro}
                                 />
-                            }/>
+                            </SimpleContent>
                         </UIPanel>
                     </div>
                     <UIPanel key="terminal" level="level_2">
-                        <SimpleContent name="Terminal" content={
+                        <SimpleContent name="Terminal" height="25vh">
                             <TerminalComponent/>
-                        }/>
+                        </SimpleContent>
                     </UIPanel>
                 </div>
                 <PlotSidebar

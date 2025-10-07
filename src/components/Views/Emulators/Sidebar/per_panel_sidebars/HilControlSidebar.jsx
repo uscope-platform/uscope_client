@@ -20,6 +20,7 @@ import {useSelector} from "react-redux";
 import {set_channel_status, up_emulator} from "@client_core";
 import {SidebarBase} from "@UI";
 import HilControl from "../HilControl.jsx";
+import {download_text} from "@client_core/utilities/downloads.js";
 
 let  HilControlSidebar = props =>{
 
@@ -45,6 +46,13 @@ let  HilControlSidebar = props =>{
         props.on_plot_status_update(!props.hil_plot_running);
     }
 
+    let download_sim_data = async () =>{
+        let data = await props.emulator.download_hardware_sim_data();
+        download_text(data.control, "control_bus.txt");
+        download_text(data.code, "code_bus.txt");
+        download_text(data.inputs, "input_bus.txt");
+    }
+
 
     return(
         <div style={{
@@ -64,6 +72,7 @@ let  HilControlSidebar = props =>{
             />
             <HilControl
                 onDownloadHilData={props.onDownloadHilData}
+                onDownlodHilSim={download_sim_data}
                 onStart={on_start}
                 onStop={on_stop}
                 onPause={on_pause}

@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useReducer, useState} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 
 import {useSelector} from "react-redux"
 
@@ -34,11 +34,20 @@ let PeripheralsManager = (props)=>{
 
     const peripherals = useSelector(state => state.peripherals);
 
-    const [, forceUpdate] = useReducer(x => x + 1, 0);
+    const [data_version, forceUpdate] = useReducer(x => x + 1, 0);
 
     const [selected_peripheral, set_selected_peripheral] = useState({registers:[], parametric:false, _get_periph:()=>{return{}}});
 
+    const [periph_selector, set_periph_selector] = useState(null);
+
+    useEffect(()=>{
+        if(periph_selector){
+            set_selected_peripheral(new up_peripheral(peripherals[periph_selector]));
+        }
+    }, [data_version])
+
     let handle_select = (sel) =>{
+        set_periph_selector(sel);
         set_selected_peripheral(new up_peripheral(peripherals[sel]));
     }
 
@@ -92,7 +101,7 @@ let PeripheralsManager = (props)=>{
                 height: "100%"
             }}>
                 <UIPanel style={{minHeight:"150px"}} key="properties" level="level_2">
-                    <SimpleContent name="Peripheral Properties" content={
+                    <SimpleContent name="Peripheral Properties">
                         <div>
                             <InputField inline name="edit_name"
                                         defaultValue={selected_peripheral.name}
@@ -103,12 +112,11 @@ let PeripheralsManager = (props)=>{
                             <Checkbox name='parametric' value={selected_peripheral.parametric}
                                       onChange={handleEditParametric} label="Parametric"/>
                         </div>
-                    }/>
-
+                    </SimpleContent>
                 </UIPanel>
                 <UIPanel style={{flexGrow: 1}}
                          key="registers" level="level_2">
-                    <SimpleContent name="Registers" content={
+                    <SimpleContent name="Registers">
                         <div>
                             <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
                                 <MdAdd
@@ -134,7 +142,7 @@ let PeripheralsManager = (props)=>{
                                 }
                             </CardStack>
                         </div>
-                    }/>
+                    </SimpleContent>
                 </UIPanel>
             </div>
             <PeripheralsSidebar on_select={handle_select}/>

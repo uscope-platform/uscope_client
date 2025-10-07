@@ -15,7 +15,7 @@
 
 import {script_register_access_log, scripting_engine_peripherals} from "../scripting/script_runner";
 import {translate_registers} from "../scripting/backend";
-import {up_peripheral} from "../data_models/up_peripheral";
+import {up_peripheral} from "@client_core";
 import {__selected_application, store, up_program} from "../index";
 import {get_version} from "../proxy/platform";
 
@@ -131,11 +131,15 @@ export const terminal_backend = {
                     __USCOPE_CLIENT_VERSION__
                 ])
             })
-        } else if(["server", "driver", "module", "hardware"].includes(selected_component)) {
+        } else if(["server", "driver", "module", "hardware", "toolchain"].includes(selected_component)) {
            return get_version(selected_component).then((response)=>{
                 return [response];
             });
 
+        } else{
+            return new Promise((resolve, reject)=>{
+                reject(["ERROR: Invalid component name"]);
+            })
         }
     },
 

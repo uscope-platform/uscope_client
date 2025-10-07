@@ -34,23 +34,41 @@ let  EmulatorEdgeProperties = props =>{
     }
 
     if(props.enabled && props.selected_emulator){
-
         selected_component = props.selected_emulator.connections.filter((item) => {
-            return item.source === props.selected_component.obj.from && item.destination === props.selected_component.obj.to;
+            return item.source_core === props.selected_component.obj.from && item.destination_core === props.selected_component.obj.to;
         })[0];
 
-        connections_list = selected_component.channels.map((item) => {
-            return item.name;
+        connections_list = selected_component.ports.map((item) => {
+            if(item) return item.id;
         });
 
         const source_core = props.selected_component.obj.from;
         const target_core = props.selected_component.obj.to;
 
-        if(selected_dma_channel){
-            selected_channel = selected_component.channels.filter((item) =>{
-                return item.name === selected_dma_channel;
+        if(selected_dma_channel !== null){
+            selected_channel = selected_component.ports.filter((item) =>{
+                return item.id === selected_dma_channel;
             })[0];
-            if(!selected_channel) selected_channel = {name:"", source:{channel:"", register:""},source_output:"", destination:{channel:"", register: ""}, target_input:""};
+            if(!selected_channel) {
+                selected_channel = {name:"", source:{channel:"", register:""},source_output:"", destination:{channel:"", register: ""}, target_input:""};
+            }
+        }
+
+        let render_dma_properties = () =>{
+            if(selected_dma_channel !== null){
+                return(<UIPanel key="channel_properties_tab" style={{maxHeight:"500px"}}  level="level_2">
+                    <SimpleContent name={"DMA channel properties"}>
+                        <DmaChannelProperties
+                            selected_emulator={props.selected_emulator}
+                            selected_component={selected_component}
+                            source_core={source_core}
+                            target_core={target_core}
+                            selected_channel={selected_channel}
+                            on_channel_edit={handle_select_dma}
+                        />
+                    </SimpleContent>
+                </UIPanel>)
+            }
         }
 
         return(
@@ -61,7 +79,7 @@ let  EmulatorEdgeProperties = props =>{
                 margin:10
             }}>
                 <UIPanel key="channels_list" style={{minHeight:"200px"}} level="level_2">
-                    <SimpleContent name={"DMA channel properties"} content={
+                    <SimpleContent name={"DMA channel properties"}>
                         <DmaChannelsList
                             connections_list={connections_list}
                             selected_emulator={props.selected_emulator}
@@ -72,20 +90,9 @@ let  EmulatorEdgeProperties = props =>{
                             on_select={handle_select_dma}
                             selected_component={props.selected_component}
                         />
-                    }/>
+                    </SimpleContent>
                 </UIPanel>
-                <UIPanel key="channel_properties_tab" style={{maxHeight:"500px"}}  level="level_2">
-                    <SimpleContent name={"DMA channel properties"} content={
-                        <DmaChannelProperties
-                            selected_emulator={props.selected_emulator}
-                            selected_component={selected_component}
-                            source_core={source_core}
-                            target_core={target_core}
-                            selected_channel={selected_channel}
-                            on_channel_edit={handle_select_dma}
-                        />
-                    }/>
-                </UIPanel>
+                {render_dma_properties()}
             </div>
         )
 

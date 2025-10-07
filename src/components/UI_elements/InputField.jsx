@@ -53,7 +53,7 @@ flex-flow: wrap;
 export let  InputField = props =>{
     let key = props.name;
     if(props.defaultValue) key += props.defaultValue;
-
+    let inline_str = props.inline ? "true" : "false";
     if(props.compact){
         return (
             <InnerInput
@@ -73,7 +73,7 @@ export let  InputField = props =>{
     } else if(props.description){
         return (
             <Wrapper>
-                <Label htmlFor={props.ID} inline={props.inline}>{props.label}</Label>
+                <Label htmlFor={props.ID} inline={inline_str}>{props.label}</Label>
                 <InnerInput
                     name={props.name}
                     key={key}
@@ -92,8 +92,8 @@ export let  InputField = props =>{
         );
     } else{
         return (
-            <Wrapper inline={props.inline}>
-                <Label htmlFor={props.ID} inline={props.inline}>{props.label}</Label>
+            <Wrapper inline={inline_str}>
+                <Label htmlFor={props.ID} inline={inline_str}>{props.label}</Label>
                 <InnerInput
                     placeholder={props.placeholder}
                     name={props.name}

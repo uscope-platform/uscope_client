@@ -45,19 +45,21 @@ export class up_settings {
     static initialize_default_driver_address_map() {
        return backend_post(api_dictionary.settings.hil_address_map, {
             "bases": {
-                "controller": 18316591104,
-                "cores_control": 18316656640,
-                "cores_inputs": 8192,
-                "cores_rom": 21474836480,
-                "hil_control": 18316525568,
-                "scope_mux": 18316853248
+                "scope_mux":     0x443C00000,
+                "controller":    0x443C10000,
+                "hil_control":   0x443C20000,
+                "noise_generator":     0x443c30000,
+                "waveform_generator":     0x443c40000,
+                "cores_control": 0x443c50000,
+                "cores_inputs": 0x2000,
+                "cores_rom": 0x500000000,
             },
             "offsets": {
-                "controller": 4096,
-                "cores_control": 65536,
-                "dma": 4096,
-                "cores_inputs": 4096,
-                "cores_rom": 268435456,
+                "controller": 0x1000,
+                "cores_control": 0x10000,
+                "dma": 0x1000,
+                "cores_inputs": 0x1000,
+                "cores_rom": 0x10000000,
                 "hil_tb": 0
             }
         })

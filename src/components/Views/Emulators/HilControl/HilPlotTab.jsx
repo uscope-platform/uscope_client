@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React from 'react';
-import {SimpleContent, UIPanel} from "@UI";
+import {SimpleContent, TabbedContent, UIPanel} from "@UI";
 import HilChannelSelector from "./HilChannelSelector";
 import HilInputsPanel from "./HilInputsPanel";
 import HilPlot from "./HilPlot";
@@ -23,8 +23,26 @@ import HilPlot from "./HilPlot";
 let HilPlotTab = function (props) {
 
     if(props.deployed){
-        return(
+        let [input_tab_names, inputs, channels] =  props.emulator.get_inputs();
+        let [selected_core, set_selected_core] = React.useState(0);
+        let [selected_outputs, set_selected_outputs] = React.useState([]);
 
+
+        let render_input_tabs = ()=>{
+            let ret_arr = []
+            for(let i in inputs){
+                ret_arr.push(
+                    <HilInputsPanel
+                        key={i+ "inputs_tab"}
+                        inputs={inputs[i]}
+                        set_input={props.emulator.set_input}
+                        n_channels={channels[selected_core]}
+                    />
+                );
+            }
+            return ret_arr;
+        }
+        return(
            <div style={{
                display:"flex",
                flexDirection:"column",
@@ -32,31 +50,33 @@ let HilPlotTab = function (props) {
                margin:10
            }}>
                <UIPanel key="hil_scope" data-grid={{x: 0, y: 0, w: 24, h: 16, static: true}} level="level_2">
-                   <SimpleContent name="Scope" height="100%" content={
+                   <SimpleContent name="Scope" height="100%">
                        <HilPlot
                            hil_plot_running={props.hil_plot_running}
                            refreshRate={125}
                            download_data_request={props.download_data_request}
                            on_download_done={props.on_download_done}
+                           selected_outputs={selected_outputs}
                        />
-                   }/>
+                   </SimpleContent>
                </UIPanel>
                <div style={{
                    display:"flex",
                    flexDirection:"row",
                    gap:10
                }}>
-                   <UIPanel key="Hil_inputs"  style={{flexGrow:1}} level="level_2">
-                       <SimpleContent name="Inputs" height="100%" content={
-                           <HilInputsPanel emulator={props.emulator}/>
-                       }/>
+                   <UIPanel key="Hil_inputs"  style={{flexGrow:0.5}} level="level_2">
+                       <TabbedContent names={input_tab_names} height="100%"  selected={selected_core} onSelect={set_selected_core}>
+                           {render_input_tabs()}
+                       </TabbedContent>
                    </UIPanel>
                    <UIPanel key="hil_channel_selector" style={{flexGrow:1}}  level="level_2">
-                       <SimpleContent name="Channel Selector" height="100%" content={
+                       <SimpleContent name="Channel Selector" height="100%">
                            <HilChannelSelector
                                emulator={props.emulator}
+                               set_selected_outputs={set_selected_outputs}
                            />
-                       }/>
+                       </SimpleContent>
                    </UIPanel>
                </div>
            </div>

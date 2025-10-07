@@ -26,13 +26,13 @@ let  AsmSelector = props =>{
 
     return(
         <UIPanel key="programs_list" style={{minHeight:"200px"}} level="level_2">
-            <SimpleContent name={"Disassembled program Selector"} content={
+            <SimpleContent name={"Disassembled program Selector"}>
                 <SelectableList
                     items={Object.keys(props.programs)}
                     selected_item={props.selected_program}
                     onSelect={handle_select}
                 />
-            }/>
+            </SimpleContent>
         </UIPanel>
 
     )

@@ -99,7 +99,7 @@ let SettingsView = function (props) {
         if(hil_present){
             return(
                 <UIPanel key="hil_settings" style={{minHeight:"100px"}} level="level_2">
-                    <SimpleContent name="hil_settings" content={
+                    <SimpleContent name="HIL Settings">
                         <div>
                             <div style={div_style}>
                                 <InputField inline name="cores_rom.bases" defaultValue={'0x'+hil_address_map.bases.cores_rom.toString(16)}
@@ -145,7 +145,7 @@ let SettingsView = function (props) {
                                         defaultValue={'0x'+hil_address_map.offsets.hil_tb.toString(16)}
                                         onKeyDown={handle_edit_hil_setting} label="HIL Timebase Offset"/>
                         </div>
-                    }/>
+                    </SimpleContent>
                 </UIPanel>
             )
         } else {
@@ -161,7 +161,7 @@ let SettingsView = function (props) {
             margin: 10
         }}>
             <UIPanel key="clock_settings" style={{minHeight: "100px"}} level="level_2">
-                <SimpleContent name="PL Clocks" content={
+                <SimpleContent name="PL Clocks">
                     <div>
                         <InputField inline name="fclk_0" defaultValue={selected_app.pl_clocks["0"]}
                                     onKeyDown={handle_edit_clocks} label="PL clock frequency 0"/>
@@ -169,10 +169,10 @@ let SettingsView = function (props) {
                         <InputField inline name="fclk_2" defaultValue={selected_app.pl_clocks["2"]} onKeyDown={handle_edit_clocks} label="PL clock frequency 2"/>
                         <InputField inline name="fclk_3" defaultValue={selected_app.pl_clocks["3"]} onKeyDown={handle_edit_clocks} label="PL clock frequency 3"/>
                     </div>
-                }/>
+                </SimpleContent>
             </UIPanel>
             <UIPanel key="platform_settings" style={{minHeight:"100px"}} level="level_2">
-                <SimpleContent name="Platform settings" content={
+                <SimpleContent name="Platform settings">
                     <div>
                         <SelectField
                             inline
@@ -199,7 +199,7 @@ let SettingsView = function (props) {
                             ]}
                         />
                     </div>
-                }/>
+                </SimpleContent>
             </UIPanel>
             {render_hil_components()}
         </div>

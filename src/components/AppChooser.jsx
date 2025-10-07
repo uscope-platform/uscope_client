@@ -37,7 +37,9 @@ let ApplicationChooser = (props) =>{
                 return;
             }
         }catch (error){
-            console.log("Error: error while choosing application");
+            toast.error("Error: error while choosing application: " + error);
+            console.log(error);
+            return;
         }
         props.choice_done(e);
     };

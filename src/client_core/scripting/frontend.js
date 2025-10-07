@@ -13,19 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export const context_cleaner = (registers, parameters, current_parameter) => {
+export const context_cleaner = (parameters, current_parameter) => {
     //purge register context of unwanted and potentially dangerous fields
-    let register_context = {};
-
-    // eslint-disable-next-line
-    for (let periph in registers) {
-        let new_periph = {};
-        // eslint-disable-next-line
-        for (let element in registers[periph]) {
-            new_periph[element] = registers[periph][element];
-        }
-        register_context[periph] = new_periph;
-    }
 
     //purge parameters context of unwanted and potentially dangerous fields
     let parameters_context = {};
@@ -35,7 +24,7 @@ export const context_cleaner = (registers, parameters, current_parameter) => {
         }
         return null;
     });
-    return {registers: register_context, parameters: parameters_context};
+    return {parameters: parameters_context};
 };
 
 

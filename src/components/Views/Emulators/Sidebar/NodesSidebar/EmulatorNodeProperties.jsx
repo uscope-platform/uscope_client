@@ -16,7 +16,7 @@
 import React from 'react';
 
 import {SimpleContent, UIPanel} from "@UI";
-import NodeIomProperties from "./NodeIomProperties";
+import NodeIomProperties from "./EndpointProperties/NodeIomProperties.jsx";
 import EmulatorCoreProperties from "./EmulatorCoreProperties";
 import EmulatorCoreDeploymentProperties from "./EmulatorCoreDeploymentProperties";
 
@@ -32,13 +32,13 @@ let  EmulatorNodeProperties = props =>{
             if(props.selected_emulator.deployment_mode){
                 return(
                     <UIPanel key={"Deployment Properties"}  level="level_2">
-                        <SimpleContent name={"Deployment Properties"} content={
+                        <SimpleContent name={"Deployment Properties"}>
                             <EmulatorCoreDeploymentProperties
                                 selected_core={selected_core}
                                 deployment={selected_core.deployment}
                                 emulator={props.selected_emulator}
                             />
-                        } />
+                        </SimpleContent>
                     </UIPanel>
                 )
             }
@@ -50,13 +50,14 @@ let  EmulatorNodeProperties = props =>{
                 gap:10
             }}>
                 <UIPanel key={"Item properties"}  level="level_2">
-                    <SimpleContent name={"Node Properties"} content={
+                    <SimpleContent name={"Node Properties"}>
                         <EmulatorCoreProperties
                             selected_core={selected_core}
                             selected_emulator={props.selected_emulator}
                             selected_component={props.selected_component}
+                            bump_version={props.bump_version}
                         />
-                    } />
+                    </SimpleContent>
                 </UIPanel>
                 {render_core_deploy_properties()}
                 <UIPanel style={{minHeight:"200px"}} key={"iom properties"} level="level_2">

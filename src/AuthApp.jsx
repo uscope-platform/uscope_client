@@ -27,14 +27,12 @@ import ApplicationChooser from "./components/AppChooser";
 //////  STYLE IMPORTS
 import './App.css';
 
-import {initialize_scripting_engine, refresh_caches, setup_client_core, up_application} from "./client_core";
+import {initialize_scripting_engine, refresh_caches, setup_client_core, up_application, up_settings} from "@client_core";
 import {Routes} from "react-router";
-import {addApplication} from "./redux/Actions/applicationActions";
+import {addApplication} from "@redux";
 
-import {UIPanel} from "./components/UI_elements";
+import {UIPanel, InterfaceParameters} from "@UI";
 import PlatformManager from "./components/Views/Programs/PlatformManager";
-import {InterfaceParameters} from "./components/UI_elements/InterfaceParameters";
-import {up_settings} from "./client_core/data_models/up_settings";
 
 
 let operator_views = ["Scope"];
@@ -53,11 +51,13 @@ let AuthApp = (props) =>{
     const [views, set_views] = useState([]);
 
     const [app_stage, set_app_stage] = useState("WAITING");
-    const [application, set_application] = useState(null);
+    const [application_selector, set_application_selector] = useState(null);
+
+    const application = application_selector ? new up_application(applications[application_selector]) : null;
 
     let app_choice_done = async (application)=>{
         let app = new up_application(applications[application]);
-        set_application(app);
+        set_application_selector(application);
         setup_client_core(app);
         populate_views();
         await up_settings.initialize_default_driver_address_map();

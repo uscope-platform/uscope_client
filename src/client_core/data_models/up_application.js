@@ -96,6 +96,34 @@ export class up_application {
         return ret;
     }
 
+    static deep_copy_s =  (old_app) => {
+        let ret = {};
+        ret.id = old_app.id;
+        ret.application_name = old_app.application_name;
+        ret.bitstream =old_app.bitstream;
+        ret.channels = JSON.parse(JSON.stringify(old_app.channels));
+        ret.channel_groups = JSON.parse(JSON.stringify(old_app.channel_groups));
+        ret.pl_clocks = JSON.parse(JSON.stringify(old_app.pl_clocks));
+        ret.initial_registers_values = JSON.parse(JSON.stringify(old_app.initial_registers_values));
+        ret.macro = JSON.parse(JSON.stringify(old_app.macro));
+        ret.parameters = JSON.parse(JSON.stringify(old_app.parameters));
+        ret.peripherals = JSON.parse(JSON.stringify(old_app.peripherals));
+        ret.soft_cores = JSON.parse(JSON.stringify(old_app.soft_cores));
+        ret.filters = JSON.parse(JSON.stringify(old_app.filters));
+        ret.programs = JSON.parse(JSON.stringify(old_app.programs));
+        ret.scripts = JSON.parse(JSON.stringify(old_app.scripts));
+        ret.miscellaneous = JSON.parse(JSON.stringify(old_app.miscellaneous));
+        return ret;
+    }
+
+    static duplicate = async (old_app, new_id) => {
+        let new_app = up_application.deep_copy_s(old_app);
+        new_app.id = new_id;
+        new_app.name = old_app.name + "_copy_" + new_id;
+        return new up_application(new_app);
+    }
+
+
     add_remote = () => {
         store.dispatch(addApplication({[this.id]:this}))
         return backend_post(api_dictionary.applications.add + '/'+ this.id, this._get_app());
@@ -103,7 +131,11 @@ export class up_application {
 
     set_active = async () => {
         await backend_post(api_dictionary.operations.dma_disable, {status:true});
-        await backend_get(api_dictionary.operations.load_application + '/' + this.id);
+        try {
+            await backend_get(api_dictionary.operations.load_application + '/' + this.id);
+        } catch (e) {
+         throw e;
+        }
         for(let i in this.pl_clocks){
             await this.set_global_clock_frequency(parseInt(i), this.pl_clocks[i]);
         }
@@ -119,7 +151,16 @@ export class up_application {
         await this.setup_scaling_factors(channels);
         await this.setup_scope_statuses(this.get_channel_statuses(channels));
         await set_scope_address({address:parseInt(this.miscellaneous.scope_mux_address), dma_buffer_offset:0x208})
+        await set_scope_address({address:parseInt(this.miscellaneous.scope_mux_address), dma_buffer_offset:0x208})
 
+    }
+
+    get_parameters_map = () =>{
+        let map = {}
+        for(const p of this.parameters){
+            map[p.parameter_id] = p.value;
+        }
+        return map;
     }
 
     load_irv = () =>{

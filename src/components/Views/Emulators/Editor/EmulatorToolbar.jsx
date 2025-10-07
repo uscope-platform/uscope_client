@@ -17,7 +17,7 @@ import React from 'react';
 
 import {ColorTheme} from "@UI";
 import {Tooltip} from "react-tooltip";
-import {MdAdd, MdArticle, MdConstruction, MdDownload, MdPlayArrow, MdBugReport} from "react-icons/md";
+import {MdAdd, MdArticle, MdConstruction, MdSimCardDownload, MdPlayArrow, MdContentCopy} from "react-icons/md";
 
 let  EmulatorToolbar = props =>{
 
@@ -37,6 +37,23 @@ let  EmulatorToolbar = props =>{
         )
     }
 
+    let render_copy = () => {
+        let handle_click = (event) =>{
+            if(props.enable.copy) {
+                props.onCopy(event);
+            }
+        };
+        let icon_color = props.enable.copy ? ColorTheme.icons_color : ColorTheme.disabled_icon_color;
+        return (
+            <div key="copy_icon" id="copy_icon">
+                <MdContentCopy onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
+                       color={icon_color}/>
+                <Tooltip anchorSelect="copy_icon" content={"Copy Core"} place="top"/>
+            </div>
+        )
+
+    }
+
     let render_edit = () => {
         let handle_click = (event) =>{
             if(props.enable.edit){
@@ -49,22 +66,6 @@ let  EmulatorToolbar = props =>{
                 <MdArticle onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
                            color={icon_color}/>
                 <Tooltip anchorSelect="edit" content={"Edit Program"} place="top"/>
-            </div>
-        )
-    }
-
-    let render_build = () => {
-        let handle_click = (event) =>{
-            if(props.enable.build) {
-                props.onBuild(event);
-            }
-        };
-        let icon_color = props.enable.build ? ColorTheme.icons_color : ColorTheme.disabled_icon_color;
-        return (
-            <div key="build" id="build">
-                <MdDownload onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
-                            color={icon_color}/>
-                <Tooltip anchorSelect="build" content={"Build"} place="top"/>
             </div>
         )
     }
@@ -101,18 +102,19 @@ let  EmulatorToolbar = props =>{
         )
     }
 
-    let render_debug= () => {
+
+    let render_hw_sim= () => {
         let handle_click = (event) =>{
-            if(props.enable.debug) {
-                props.onDebug(event);
+            if(props.enable.hw_sim) {
+                props.onHardwareSim(event);
             }
         };
         let icon_color = props.enable.run ? ColorTheme.icons_color : ColorTheme.disabled_icon_color;
         return (
-            <div key="debug" id="debug">
-                <MdBugReport onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
+            <div key="hw_sim" id="hw_sim">
+                <MdSimCardDownload onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
                              color={icon_color}/>
-                <Tooltip anchorSelect="debug" content={"Debug"} place="top"/>
+                <Tooltip anchorSelect="hw_sim" content={"Download HW simulation files"} place="top"/>
             </div>
         )
     }
@@ -120,11 +122,12 @@ let  EmulatorToolbar = props =>{
     return (
         <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
             {render_add()}
+            {render_copy()}
             {render_edit()}
-            {render_build()}
             {render_run()}
             {render_deploy()}
-            {render_debug()}
+            {render_hw_sim()}
+
         </div>
     );
 };

@@ -14,24 +14,31 @@
 // limitations under the License.
 
 import React from 'react';
+import {MdDownload} from "react-icons/md";
+import {ColorTheme} from "@UI";
 
 
 let  HilResultsSidebar = props =>{
 
 
+    let handle_click = () =>{
+        if(props.on_download) props.on_download();
+    }
 
     return(
         <div
-        style={{
-            display:"flex",
-            flexDirection:"column",
-            gap:"0.5em",
-            minWidth:"25em",
-            paddingTop:"10px",
-            paddingBottom:"10px",
-            paddingRight:"10px"
-        }}>
-
+            style={{
+                display:"flex",
+                flexDirection:"column",
+                gap:"0.5em",
+                minWidth:"25em",
+                paddingTop:"10px",
+                paddingBottom:"10px",
+                paddingRight:"10px"
+            }}
+        >
+            <MdDownload onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
+                        color={ColorTheme.icons_color}/>
         </div>
 
     );

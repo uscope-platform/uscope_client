@@ -47,6 +47,25 @@ export class up_peripheral {
     }
 
 
+    static deep_copy_s =  (old_periph) => {
+        let ret = {};
+
+        ret.id = old_periph.id;
+        ret.name = old_periph.name;
+        ret.version = old_periph.version;
+        ret.parametric = old_periph.parametric;
+        ret.registers = JSON.parse(JSON.stringify(old_periph.registers));
+
+        return ret;
+    }
+
+    static duplicate = async (old_periph, new_id) => {
+        let new_periph = up_peripheral.deep_copy_s(old_periph);
+        new_periph.id = new_id;
+        new_periph.name = old_periph.name + "_copy_" + new_id;
+        return new up_peripheral(new_periph);
+    }
+
     get_register_names = (parameters) =>{
         return this.registers.map((reg) =>{
             if(this.parametric) {

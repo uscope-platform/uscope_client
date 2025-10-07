@@ -41,10 +41,10 @@ let  EmulatorCoreProperties = props =>{
         } else return {label: "", value:""};
     })
     let programs_list = Object.keys(programs).map((prog_id)=>{
-        return {label:programs[prog_id].name, value:programs[prog_id].name};
-    })
+        if(programs[prog_id].type === "C") return {label:programs[prog_id].name, value:programs[prog_id].name};
+    }).filter(item=>item)
 
-    let handle_change = (event) =>{
+    let handle_change = async (event) =>{
         if(event.key==="Enter"|| event.key ==="Tab") {
             let field = event.target.name;
             let value = event.target.value;
@@ -54,7 +54,8 @@ let  EmulatorCoreProperties = props =>{
             }
             if(field === "order" || field === "channels" || field === "sampling_frequency") value = parseInt(value);
 
-            props.selected_emulator.edit_core_props(props.selected_component.obj.id, field, value).then();
+            await props.selected_emulator.edit_core_props(props.selected_component.obj.id, field, value);
+            props.bump_version();
         }
     }
 

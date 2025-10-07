@@ -64,6 +64,7 @@ let  HilEditorSidebar = props =>{
             />
             <EmulatorNodeProperties
                 enabled={sel_component_type==="node"}
+                bump_version={props.bump_version}
                 selected_emulator={props.emulator}
                 on_iom_modify={handle_node_iom_modify}
                 selected_component={props.selections.component}

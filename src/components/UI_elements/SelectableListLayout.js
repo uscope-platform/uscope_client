@@ -21,4 +21,13 @@ export const SelectableListLayout = styled.div`
     flex-direction: column;
     gap: 0.25em;
     margin: 0.5em;
+
+    /* Make the list track the parent height in both flex and non-flex parents */
+    max-height: 13em;
+    min-height: 0;
+    width: 100%;
+    /* The list itself becomes the scroll container */
+    overflow-y: auto;
+    
+
 `

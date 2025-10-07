@@ -24,13 +24,11 @@ let  ProgressPanel = props =>{
 
     return (
         <UIPanel key="progress_panel" style={{minHeight:"200px"}} level="level_2">
-            <SimpleContent name={"Progress"} content={[
-                <div
-                    key="progress_panel_content"
-                >
+            <SimpleContent name={"Progress"}>
+                <div>
                     <progress value={progress_percentage}/>
                 </div>
-            ]}/>
+            </SimpleContent>
 
         </UIPanel>
     );
