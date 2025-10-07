@@ -42,9 +42,9 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^3.1.0",
     "styled-components": "^6.1.19",
-    "vite": "^6.2.3",
+    "vite": "^7.1.9",
     "vite-plugin-svgr": "^4.5.0",
-    "vite-tsconfig-paths": "^4.2.0",
+    "vite-tsconfig-paths": "^5.1.4",
     "xterm": "^5.3.0",
     "xterm-addon-fit": "^0.8.0"
   },
@@ -83,5 +83,6 @@
   },
   "resolutions": {
     "babel-loader": "8.1.0"
-  }
+  },
+  "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
 }
