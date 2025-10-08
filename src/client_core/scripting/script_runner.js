@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {saveParameter} from "@redux";
+import {saveParameter} from "#redux";
 import {up_peripheral} from "@client_core";
 import {parseFunction} from "./frontend";
 import {translate_legacy_registers, translate_registers} from "./backend";

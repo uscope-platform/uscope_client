@@ -1,4 +1,3 @@
-/// <reference types="vitest" />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
@@ -18,7 +17,8 @@ export default defineConfig({
             "@client_core": path.resolve(__dirname, "./src/client_core"),
             "@components": path.resolve(__dirname, "./src/components"),
             "@UI": path.resolve(__dirname, "./src/components/UI_elements"),
-            "@redux": path.resolve(__dirname, "./src/redux"),
+            "#redux": path.resolve(__dirname, "./src/redux"),
+            "#interfaces": path.resolve(__dirname, "./src/interfaces")
         }
     },
     plugins: [

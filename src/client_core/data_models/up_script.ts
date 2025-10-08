@@ -13,13 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import store from "../../store.js";
+import {backend_delete, backend_patch, backend_post} from "../proxy/backend.js";
+import {api_dictionary} from "../proxy/api_dictionary.js";
+import {AddScript,removeScript} from "#redux/index.js";
 
+import type {script} from "#interfaces/index.ts";
 
-
-import {store} from "../index";
-import {backend_delete, backend_patch, backend_post} from "../proxy/backend";
-import {api_dictionary} from "../proxy/api_dictionary";
-import {AddScript,removeScript} from "@redux";
 
 const default_script_content = `
     function script_main(parameters, context) {
@@ -32,9 +32,15 @@ const default_script_content = `
 `
 
 export class up_script {
-    constructor(script_obj) {
+    private name: string;
+    private id: number;
+    private path: string;
+    private content: string;
+    private triggers: string;
+
+    constructor(script_obj: script) {
         if(!script_obj)
-            return;
+            throw new Error("script_obj is required");
         this.id = script_obj.id;
         this.name = script_obj.name;
         this.path = script_obj.path;
@@ -42,25 +48,24 @@ export class up_script {
         this.triggers = script_obj.triggers;
     }
 
-    static deep_copy_s =  (old_script) => {
-        let ret = {};
-
-        ret.id = old_script.id;
-        ret.name = old_script.name;
-        ret.path = old_script.path;
-        ret.content = old_script.content;
-        ret.triggers = old_script.triggers;
-        return ret;
+    static deep_copy_s =  (old_script: script) => {
+        return {
+            id: old_script.id,
+            name: old_script.name,
+            content: old_script.content,
+            triggers: old_script.triggers,
+            path: old_script.path
+        };
     }
 
-    static duplicate = async (old_script, new_id) => {
+    static duplicate = async (old_script: script, new_id: number) => {
         let new_script = up_script.deep_copy_s(old_script);
         new_script.id = new_id;
         new_script.name = old_script.name + "_copy_" + new_id;
         return new up_script(new_script);
     }
 
-    static construct_empty(script_id){
+    static construct_empty(script_id: number){
         let script_obj = {id:script_id, name:'new script_'+script_id,path:`new script_${script_id}.js`, content:default_script_content, triggers:''};
         return new up_script(script_obj);
     }
@@ -70,14 +75,14 @@ export class up_script {
         return backend_post(api_dictionary.scripts.add+'/'+this.id, this._get_script());
     }
 
-    edit_field = (field, value) => {
+    edit_field =<K extends keyof this>(field: K, value: this[K]) => {
         this[field] = value;
         store.dispatch(AddScript(this));
         let edit = {script:this.id, field:field, value:value};
         return backend_patch(api_dictionary.scripts.edit+'/'+this.id,edit)
     }
 
-    static delete(script){
+    static delete(script: script){
         return backend_delete(api_dictionary.scripts.delete+'/'+script.id, script).then(()=>{
             store.dispatch(removeScript(script));
         })

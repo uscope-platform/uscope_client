@@ -15,7 +15,7 @@
 
 
 import {store} from "../index";
-import {removeField, upsertField} from "@redux";
+import {removeField, upsertField} from "#redux";
 import {backend_patch} from "../proxy/backend";
 import {api_dictionary} from "../proxy/api_dictionary";
 

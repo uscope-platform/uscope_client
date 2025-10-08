@@ -17,7 +17,7 @@
 import {store} from "../../index";
 import {backend_delete, backend_get, backend_patch, backend_post} from "../../proxy/backend";
 import {api_dictionary} from "../../proxy/api_dictionary";
-import {addEmulator, removeEmulator, update_emulator} from "@redux";
+import {addEmulator, removeEmulator, update_emulator} from "#redux";
 
 export class up_emulator {
     constructor(emulator_obj) {

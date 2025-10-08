@@ -29,7 +29,7 @@ import './App.css';
 
 import {initialize_scripting_engine, refresh_caches, setup_client_core, up_application, up_settings} from "@client_core";
 import {Routes} from "react-router";
-import {addApplication} from "@redux";
+import {addApplication} from "#redux";
 
 import {UIPanel, InterfaceParameters} from "@UI";
 import PlatformManager from "./components/Views/Programs/PlatformManager";
