@@ -13,12 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {backend_get, backend_post} from "../proxy/backend";
-import {api_dictionary} from "../proxy/api_dictionary";
+import {backend_get, backend_post} from "../proxy/backend.js";
+import {api_dictionary} from "../proxy/api_dictionary.js";
+import type {hil_address_map} from "#interfaces/client_core/data_models.js";
 
 export class up_settings {
 
-    static set_debug_level(level){
+    static set_debug_level(level:string){
         return backend_post(api_dictionary.settings.debug_level, {level:level});
     }
 
@@ -30,15 +31,15 @@ export class up_settings {
         return backend_get(api_dictionary.settings.hil_address_map);
     }
 
-    static set_hil_address_map(map) {
+    static set_hil_address_map(map: hil_address_map) {
         return backend_post(api_dictionary.settings.hil_address_map, map);
     }
 
-    static get_debugger_option(option_name){
+    static get_debugger_option(option_name :string){
         return backend_get(api_dictionary.settings.debugger_option + "/" + option_name);
     }
 
-    static set_debugger_option(option_name, value){
+    static set_debugger_option(option_name: string, value: any){
         return backend_post(api_dictionary.settings.debugger_option+ "/" + option_name, {"name": option_name, "value": value});
     }
 

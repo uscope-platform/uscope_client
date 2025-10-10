@@ -13,16 +13,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {store} from "../index";
-import {backend_delete, backend_patch, backend_post} from "../proxy/backend";
-import {api_dictionary} from "../proxy/api_dictionary";
-import {AddProgram, removeProgram} from "#redux";
+import store from "../../store.js";
+import {backend_delete, backend_patch, backend_post} from "../proxy/backend.js";
+import {api_dictionary} from "../proxy/api_dictionary.js";
+import {AddProgram, removeProgram} from "#redux/index.js";
 import objectHash from "object-hash";
 
+import type {program} from '#interfaces/index.ts'
+
+
 export class up_program {
-    constructor(program_obj) {
-        if(program_obj===undefined)
-            return;
+
+    public id: number;
+    public name: string;
+    public content: string;
+    public type : string;
+    public headers:number[];
+
+    constructor(program_obj: program) {
         this.id = program_obj.id;
         this.name = program_obj.name;
         this.content = program_obj.content;
@@ -34,37 +42,38 @@ export class up_program {
         }
     }
 
-    static construct_empty(program_id){
-        let program_obj = {
+    static construct_empty(program_id: number): up_program{
+        let program_obj: program = {
             id:program_id,
             name:'new program_'+program_id,
             content:'',
-            type:''
+            type:'',
+            headers:[]
         };
         return new up_program(program_obj);
     }
 
-    deep_copy = () =>{
-        let ret = {};
-        ret.id = this.id;
-        ret.name = this.name;
-        ret.content =this.content;
-        ret.type =this.type;
-        ret.headers = JSON.parse(JSON.stringify(this.headers));
-        return ret;
+    deep_copy = (): program =>{
+        return {
+            id: this.id,
+            name: this.name,
+            content: this.content,
+            type: this.type,
+            headers:JSON.parse(JSON.stringify(this.headers))
+        };
     }
 
-    static deep_copy_s =  (old_program) => {
-        let ret = {};
-        ret.id = old_program.id;
-        ret.name = old_program.name;
-        ret.content =old_program.content;
-        ret.type =old_program.type;
-        ret.headers = JSON.parse(JSON.stringify(old_program.headers));
-        return ret;
+    static deep_copy_s =  (old_program: program): program => {
+        return {
+            id: old_program.id,
+            name: old_program.name,
+            content: old_program.content,
+            type: old_program.type,
+            headers: JSON.parse(JSON.stringify(old_program.headers)),
+        };
     }
 
-    static duplicate = async (old_program, new_id) => {
+    static duplicate = async (old_program: program, new_id: number): Promise<program> => {
         let new_program = up_program.deep_copy_s(old_program);
         new_program.id = new_id;
         new_program.name = old_program.name + "_copy_" + new_id;
@@ -76,23 +85,23 @@ export class up_program {
         return backend_post(api_dictionary.programs.add+'/'+this.id, this._get_program());
     }
 
-    set_content = (content) => {
+    set_content = (content: string) => {
         return this.edit_field('content', content);
     }
 
-    edit_field = async (field, value) => {
-        this[field] = value;
+    edit_field = async <K extends keyof up_program>(field: K, value: up_program[K]) => {
+        (this as any)[field] = value;
         let edit = {program:this.id, field:field, value:value};
         await backend_patch(api_dictionary.programs.edit+'/'+this.id,edit)
         store.dispatch(AddProgram(this.deep_copy()));
     }
 
-    add_header = (id) =>{
+    add_header = (id: number) =>{
         let selected_headers = [...this.headers, id];
         return this.edit_field("headers", selected_headers);
     };
 
-    remove_header = (id) =>{
+    remove_header = (id: number) =>{
         let selected_headers = this.headers.filter(h=>{
             return h !== id;
         });
@@ -101,7 +110,8 @@ export class up_program {
 
      compile = async () =>{
          let headers = this.headers.map((h)=>{
-             let header = store.getState().programs[h];
+             // TODO: take the any out when store is typed
+             let header =  (store.getState() as any).programs[h];
              return {name: header.name, content: header.content};
          })
 
@@ -113,11 +123,12 @@ export class up_program {
          }
         return backend_post(api_dictionary.operations.compile_program, data_package)
     };
-
-    load = (core) => {
+    // TODO: use the correct type once application is ported over
+    load = (core: any) => {
 
         let headers = this.headers.map((h)=>{
-            let header = store.getState().programs[h];
+            // TODO: take the any out when store is typed
+            let header =  (store.getState() as any).programs[h];
             return {name: header.name, content: header.content};
         })
 
@@ -136,9 +147,9 @@ export class up_program {
         })
     }
 
-    static delete(program){
-        return backend_delete(api_dictionary.programs.delete+'/'+program.id, program).then(()=>{
-            store.dispatch(removeProgram(program));
+    static delete(p: program){
+        return backend_delete(api_dictionary.programs.delete+'/'+p.id, p).then(()=>{
+            store.dispatch(removeProgram(p));
         })
     }
 

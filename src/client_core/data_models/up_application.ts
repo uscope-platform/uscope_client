@@ -17,27 +17,45 @@ import {
     get_channels_from_group,
     set_channel_status,
     set_scaling_factors,
-    store,
     up_peripheral,
     up_program
-} from "../index";
-import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy/backend";
-import {api_dictionary} from "../proxy/api_dictionary";
-import {addApplication, removeApplication, updateApplication} from "#redux";
-import {set_scope_address} from "../proxy/plot";
-
+} from "../index.js";
+import store from "../../store.js";
+import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy/backend.js";
+import {api_dictionary} from "../proxy/api_dictionary.js";
+import {addApplication, removeApplication, updateApplication} from "#redux/index.js";
+import {set_scope_address} from "../proxy/plot.js";
+import type {
+    application, initial_register_value, clock_frequencies, channel, macro, parameter,
+    peripheral, channel_group, soft_core, filter, program
+} from "#interfaces/index.js";
 
 export class up_application {
-    constructor(app_data_obj) {
-        if(!app_data_obj){
-            return;
-        }
+    public id:number;
+    public application_name:string;
+    public bitstream: string;
+    public channels: channel[];
+    public channel_groups: channel_group[];
+    public initial_registers_values:initial_register_value[];
+    public macro: macro[];
+    public parameters: parameter[];
+    public peripherals: peripheral[];
+    public soft_cores: soft_core[];
+    public pl_clocks: clock_frequencies;
+    public filters: filter[];
+    public clock_frequency: number;
+    public programs: number[];
+    public scripts: number[];
+    public miscellaneous: any;
+    constructor(app_data_obj: application) {
+
         this.id = app_data_obj.id;
         this.application_name = app_data_obj.application_name;
         this.bitstream = app_data_obj.bitstream;
         this.channels = app_data_obj.channels;
         this.channel_groups = app_data_obj.channel_groups;
         this.pl_clocks = app_data_obj.pl_clocks;
+        this.clock_frequency = app_data_obj.clock_frequency;
         this.initial_registers_values = app_data_obj.initial_registers_values;
         this.macro = app_data_obj.macro;
         this.parameters = app_data_obj.parameters;
@@ -49,8 +67,8 @@ export class up_application {
         this.miscellaneous = app_data_obj.miscellaneous;
     }
 
-    static construct_empty(app_id){
-        let app_data_obj = {
+    static construct_empty(app_id: number): up_application{
+        let app_data_obj: application = {
             id: app_id,
             application_name:'new application_'+app_id,
             bitstream:"",
@@ -65,6 +83,7 @@ export class up_application {
             initial_registers_values:[],
             macro:[],
             parameters:[],
+            clock_frequency: 100e6,
             peripherals:[],
             soft_cores:[],
             filters:[],
@@ -75,48 +94,51 @@ export class up_application {
         return new up_application(app_data_obj);
     }
 
-    deep_copy = () =>{
-        let ret = {};
-        ret.id = this.id;
-        ret.application_name = this.application_name;
-        ret.bitstream =this.bitstream;
-        ret.channels = JSON.parse(JSON.stringify(this.channels));
-        ret.channel_groups = JSON.parse(JSON.stringify(this.channel_groups));
-        ret.pl_clocks = JSON.parse(JSON.stringify(this.pl_clocks));
-        ret.initial_registers_values = JSON.parse(JSON.stringify(this.initial_registers_values));
-        ret.macro = JSON.parse(JSON.stringify(this.macro));
-        ret.parameters = JSON.parse(JSON.stringify(this.parameters));
-        ret.peripherals = JSON.parse(JSON.stringify(this.peripherals));
-        ret.soft_cores = JSON.parse(JSON.stringify(this.soft_cores));
-        ret.filters = JSON.parse(JSON.stringify(this.filters));
-        ret.programs = JSON.parse(JSON.stringify(this.programs));
-        ret.scripts = JSON.parse(JSON.stringify(this.scripts));
-        ret.miscellaneous = JSON.parse(JSON.stringify(this.miscellaneous));
-
-        return ret;
+    deep_copy = (): application =>{
+        return{
+            id: this.id,
+            application_name:this.application_name,
+            bitstream:this.bitstream,
+            clock_frequency: this.clock_frequency,
+            channels:JSON.parse(JSON.stringify(this.channels)),
+            channel_groups:JSON.parse(JSON.stringify(this.channel_groups)),
+            pl_clocks:JSON.parse(JSON.stringify(this.pl_clocks)),
+            initial_registers_values:JSON.parse(JSON.stringify(this.initial_registers_values)),
+            macro:JSON.parse(JSON.stringify(this.macro)),
+            parameters:JSON.parse(JSON.stringify(this.parameters)),
+            peripherals: JSON.parse(JSON.stringify(this.peripherals)),
+            soft_cores: JSON.parse(JSON.stringify(this.soft_cores)),
+            filters:JSON.parse(JSON.stringify(this.filters)),
+            programs:JSON.parse(JSON.stringify(this.programs)),
+            scripts:JSON.parse(JSON.stringify(this.scripts)),
+            miscellaneous:JSON.parse(JSON.stringify(this.miscellaneous)),
+        };
     }
 
-    static deep_copy_s =  (old_app) => {
-        let ret = {};
-        ret.id = old_app.id;
-        ret.application_name = old_app.application_name;
-        ret.bitstream =old_app.bitstream;
-        ret.channels = JSON.parse(JSON.stringify(old_app.channels));
-        ret.channel_groups = JSON.parse(JSON.stringify(old_app.channel_groups));
-        ret.pl_clocks = JSON.parse(JSON.stringify(old_app.pl_clocks));
-        ret.initial_registers_values = JSON.parse(JSON.stringify(old_app.initial_registers_values));
-        ret.macro = JSON.parse(JSON.stringify(old_app.macro));
-        ret.parameters = JSON.parse(JSON.stringify(old_app.parameters));
-        ret.peripherals = JSON.parse(JSON.stringify(old_app.peripherals));
-        ret.soft_cores = JSON.parse(JSON.stringify(old_app.soft_cores));
-        ret.filters = JSON.parse(JSON.stringify(old_app.filters));
-        ret.programs = JSON.parse(JSON.stringify(old_app.programs));
-        ret.scripts = JSON.parse(JSON.stringify(old_app.scripts));
-        ret.miscellaneous = JSON.parse(JSON.stringify(old_app.miscellaneous));
-        return ret;
+    static deep_copy_s =  (old_app: application): application => {
+
+        return {
+            id: old_app.id,
+            application_name:old_app.name,
+            bitstream:old_app.bitstream,
+            clock_frequency: old_app.clock_frequency,
+            channels:JSON.parse(JSON.stringify(old_app.channels)),
+            channel_groups:JSON.parse(JSON.stringify(old_app.channel_groups)),
+            pl_clocks:JSON.parse(JSON.stringify(old_app.pl_clocks)),
+            initial_registers_values:  JSON.parse(JSON.stringify(old_app.initial_registers_values)),
+            macro:JSON.parse(JSON.stringify(old_app.macro)),
+            parameters:JSON.parse(JSON.stringify(old_app.parameters)),
+            peripherals:JSON.parse(JSON.stringify(old_app.peripherals)),
+            soft_cores:JSON.parse(JSON.stringify(old_app.soft_cores)),
+            filters:JSON.parse(JSON.stringify(old_app.filters)),
+            programs:JSON.parse(JSON.stringify(old_app.programs)),
+            scripts:JSON.parse(JSON.stringify(old_app.scripts)),
+            miscellaneous:JSON.parse(JSON.stringify(old_app.miscellaneous))
+        };
+
     }
 
-    static duplicate = async (old_app, new_id) => {
+    static duplicate = async (old_app: application, new_id: number) => {
         let new_app = up_application.deep_copy_s(old_app);
         new_app.id = new_id;
         new_app.name = old_app.name + "_copy_" + new_id;
@@ -125,7 +147,7 @@ export class up_application {
 
 
     add_remote = () => {
-        store.dispatch(addApplication({[this.id]:this}))
+        (store as any).dispatch(addApplication({[this.id]:this}))
         return backend_post(api_dictionary.applications.add + '/'+ this.id, this._get_app());
     }
 
@@ -156,7 +178,9 @@ export class up_application {
     }
 
     get_parameters_map = () =>{
-        let map = {}
+        let map:{
+            [index: string]: number | string;
+        } = {}
         for(const p of this.parameters){
             map[p.parameter_id] = p.value;
         }
@@ -175,7 +199,7 @@ export class up_application {
     load_soft_cores = async () =>{
         let error_cores = [];
         for (let core of this.soft_cores){
-            let result = await this.load_core(core);
+            let result = await this.load_core(core, {});
             if(result[0].status !=="passed"){
                 error_cores.push(core.id)
             }
@@ -183,7 +207,7 @@ export class up_application {
         return error_cores;
     }
 
-    set_global_clock_frequency = async (clock_n, frequency) =>{
+    set_global_clock_frequency = async (clock_n: number, frequency: number) =>{
         return backend_post(api_dictionary.operations.clock,
             {
                 type:"global",
@@ -194,18 +218,18 @@ export class up_application {
         )
     }
 
-    get_global_clock_frequency = async (clock_n) =>{
+    get_global_clock_frequency = async (clock_n: number) =>{
         let clocks = await backend_get(api_dictionary.operations.clock);
         return clocks[clock_n];
     }
 
-    load_core = (core, program) =>{
+    load_core = (core: any, program: any) =>{
 
         let selected_program;
         if(program){
             selected_program = new up_program(program);
         } else {
-            selected_program = new up_program(Object.values(store.getState().programs).filter((p) => {
+            selected_program = new up_program((Object.values((store.getState()as any).programs) as program[]).filter((p) => {
                 return p.name === core.default_program;
             })[0])
         }
@@ -224,8 +248,8 @@ export class up_application {
         return [channels_list, default_group]
     }
 
-    get_channel_statuses = (channels)=>{
-        let statuses = {};
+    get_channel_statuses = (channels: channel[])=>{
+        let statuses: {[key:string]:boolean} = {};
         for(let item of channels){
             statuses[item.number] = item.enabled;
         }
@@ -242,43 +266,43 @@ export class up_application {
         return default_group;
     }
 
-    setup_scope_mux = async (channels) =>{
+    setup_scope_mux = async (channels: channel[]) =>{
         if(this.miscellaneous.scope_mux_address){
             for(let item of channels){
                 if(item){
-                    let channel_address = parseInt(this.miscellaneous.scope_mux_address) + 4*(parseInt(item.number)+1);
-                    await up_peripheral.direct_register_write([[channel_address, parseInt(item.mux_setting)]]);
+                    let channel_address = parseInt(this.miscellaneous.scope_mux_address) + 4*(item.number+1);
+                    await up_peripheral.direct_register_write([[channel_address, item.mux_setting]]);
                 }
             }
         }
     }
 
 
-    change_scope_channel_group = async (group) =>{
+    change_scope_channel_group = async (group: channel_group) =>{
         let channels = get_channels_from_group(group, this.channels);
         await this.setup_scope_mux(channels);
         await this.setup_scaling_factors(channels);
         await this.setup_scope_statuses(this.get_channel_statuses(channels));
     };
 
-    setup_scaling_factors = async (channels) =>{
+    setup_scaling_factors = async (channels: channel[]) =>{
         let sfs = Array(6).fill(1);
 
         for(let item of channels){
             if(item.scaling_factor){
-                sfs[parseInt(item.number)] = parseFloat(item.scaling_factor);
+                sfs[item.number] = item.scaling_factor;
             }
         }
 
         await set_scaling_factors(sfs);
     }
 
-    setup_scope_statuses = async (statuses) =>{
+    setup_scope_statuses = async (statuses: {[id:string]: boolean}) =>{
         await set_channel_status(statuses);
     }
 
-    get_group_by_name = (group_name) =>{
-        let group = []
+    get_group_by_name = (group_name:string) =>{
+        let group;
         for(let item of this.channel_groups){
             if(item.group_name === group_name) {
                 group = item;
@@ -287,14 +311,14 @@ export class up_application {
         return group;
     }
 
-    add_channel = async (ch_name) =>{
-        let ch = {
+    add_channel = async (ch_name: string) =>{
+        let ch: channel = {
             name: ch_name,
             id: ch_name.replace(/\s/g, "_").toLowerCase(),
             number: 0,
             mux_setting: 0,
             enabled: false,
-            scaling_factor:1,
+            scaling_factor:1
         };
         this.channels.push(ch);
         let edit = {
@@ -304,11 +328,11 @@ export class up_application {
             object:"channel"
         };
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    add_channel_group = async (chg_name) =>{
-        let chg = {
+    add_channel_group = async (chg_name:string) =>{
+        let chg: channel_group = {
             group_name: chg_name,
             group_id: chg_name.replace(/\s/g, "_").toLowerCase(),
             channels:[],
@@ -317,33 +341,33 @@ export class up_application {
         this.channel_groups.push(chg);
         let edit = {application:this.id, item:chg, action:"add", object:"channel_group"};
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    add_irv = async (irv_address) =>{
-        let irv = {
+    add_irv = async (irv_address: number) =>{
+        let irv: initial_register_value = {
             address:irv_address,
             value:0
         }
         this.initial_registers_values.push(irv);
         let edit = {application:this.id, item:irv, action:"add", object:"irv"};
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    add_macro = async (macro_name) => {
-        let m =  {
+    add_macro = async (macro_name:string) => {
+        let m: macro =  {
             name: macro_name,
             trigger: ""
         };
         this.macro.push(m);
         let edit = {application:this.id, item:m, action:"add", object:"macro"};
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    add_parameter = async (parameter_name) =>{
-        let p = {
+    add_parameter = async (parameter_name:string) =>{
+        let p: parameter = {
             parameter_name: parameter_name,
             parameter_id: parameter_name.replace(/\s/g, "_").toLowerCase(),
             trigger: '',
@@ -353,28 +377,28 @@ export class up_application {
         this.parameters.push(p)
         let edit = {application:this.id, item:p, action:"add", object:"parameter"};
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    add_peripheral = async (name) => {
-        let p = {
+    add_peripheral = async (name:string) => {
+        let p: peripheral = {
             name: name,
             peripheral_id: name.replace(/\s/g, "_").toLowerCase(),
-            base_address: '0',
+            base_address: 0,
             hdl_parameters:{},
             proxied: false,
-            proxy_address:'0',
+            proxy_address: 0,
             type: 'Registers',
             spec_id: ""
         };
         let edit = {application:this.id, item:p, action:"add", object:"peripheral"};
         this.peripherals.push(p);
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    add_filter = async (filter_id) =>{
-        let f = {
+    add_filter = async (filter_id:number) =>{
+        let f: filter = {
             id:filter_id,
             filter_name:"",
             peripheral:"",
@@ -383,24 +407,24 @@ export class up_application {
         let edit = {application:this.id, item:f, action:"add", object:"filter"};
         this.filters.push(f);
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    add_selected_script = async (script_id) =>{
+    add_selected_script = async (script_id: number) =>{
         let edit = {application:this.id, item:script_id, action:"add", object:"selected_script"};
         this.scripts.push(script_id);
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    add_selected_program = async (program_id) =>{
+    add_selected_program = async (program_id: number) =>{
         let edit = {application:this.id, item:program_id, action:"add", object:"selected_program"};
         this.programs.push(program_id);
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    add_soft_core = async (core_id) => {
+    add_soft_core = async (core_id: string) => {
         let sc = {
             id: core_id,
             address: 0x0,
@@ -410,19 +434,19 @@ export class up_application {
         let edit = {application:this.id, item:sc, action:"add", object:"soft_core"};
         this.soft_cores.push(sc);
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    set_misc_param = async (param_name) =>{
+    set_misc_param = async (param_name: string) =>{
         let edit = {application:this.id, item: {name:param_name, value:"0"}, action:"add", object:"misc"};
         this.miscellaneous[param_name] = 0;
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
     ////////////////////////////////////////////////////
 
-    edit_clock_frequency = async (clock_id, frequency) =>{
+    edit_clock_frequency = async (clock_id: number, frequency: number) =>{
         this.pl_clocks[clock_id] = frequency;
         let edit = {
             application:this.id,
@@ -434,14 +458,14 @@ export class up_application {
             object:"pl_clocks"
         };
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    edit_channel = async (channel_name, field_name, field_value) =>{
+    edit_channel = async (channel_name: string, field_name:string, field_value:any) =>{
         let [channel] = this.channels.filter((ch) =>{
             return ch.name === channel_name;
-        })
-        channel[field_name] = field_value;
+        });
+        (channel as any)[field_name] = field_value;
         let edit = {
             application:this.id,
             item:{
@@ -453,14 +477,15 @@ export class up_application {
             object:"channel"
         };
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    edit_channel_group = async (chg_name, field_name,field_value) =>{
+    edit_channel_group = async (chg_name: string, field_name:string,field_value:any) =>{
         let [group] = this.channel_groups.filter((chg) =>{
             return chg.group_name === chg_name;
-        })
-        group[field_name] = field_value;
+        });
+
+        (group as any)[field_name] = field_value;
         let edit = {
             application:this.id,
             item:{
@@ -472,14 +497,14 @@ export class up_application {
             object:"channel_group"
         };
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    edit_irv = async (address,field_name, field_value) =>{
+    edit_irv = async (address: number,field_name: string, field_value:any) =>{
         let [irv] = this.initial_registers_values.filter((i) =>{
             return i.address === address;
-        })
-        irv[field_name] = field_value;
+        });
+        (irv as any)[field_name] = field_value;
         let edit = {
             application:this.id,
             item:{
@@ -491,16 +516,16 @@ export class up_application {
             object:"irv"
         };
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    edit_macro = async (macro_name, field_name, field_value) => {
+    edit_macro = async (macro_name: string, field_name:string, field_value:any) => {
 
         let [macro] = this.macro.filter((m) =>{
             return m.name === macro_name;
-        })
+        });
+        (macro as any)[field_name] = field_value;
 
-        macro[field_name] = field_value;
         let edit = {
             application:this.id,
             item:{
@@ -512,16 +537,15 @@ export class up_application {
             object:"macro"
         };
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    edit_parameters =async (param_id, field_name, field_value) =>{
+    edit_parameters =async (param_id: string, field_name:string, field_value:any) =>{
 
         let [param] = this.parameters.filter((p) =>{
             return p.parameter_id === param_id;
-        })
-
-        param[field_name] = field_value;
+        });
+        (param as any)[field_name] = field_value;
         let edit = {
             application:this.id,
             item:{
@@ -533,16 +557,15 @@ export class up_application {
             object:"parameter"
         };
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    edit_peripheral = async (periph_name, field_name, field_value) => {
+    edit_peripheral = async (periph_name: string, field_name: string, field_value: any) => {
 
         let [periph] = this.peripherals.filter((p) =>{
             return p.name === periph_name;
-        })
-
-        periph[field_name] = field_value;
+        });
+        (periph as any)[field_name] = field_value;
 
         let edit = {
             application:this.id,
@@ -555,16 +578,15 @@ export class up_application {
             object:"peripheral"
         };
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    edit_filter = async (filter_id, field_name, field_value) =>{
+    edit_filter = async (filter_id:  number, field_name:string, field_value: any) =>{
 
         let [filter] = this.filters.filter((f) =>{
             return f.id === filter_id;
-        })
-
-        filter[field_name] = field_value;
+        });
+        (filter as any)[field_name] = field_value;
         let edit = {
             application:this.id,
             item:{
@@ -576,10 +598,10 @@ export class up_application {
             object:"filter"
         };
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    edit_misc_param = async (param_name, param_value, rename_param) =>{
+    edit_misc_param = async (param_name: string, param_value: string, rename_param: boolean) =>{
 
         let edit;
         if(rename_param) {
@@ -621,15 +643,14 @@ export class up_application {
             this.miscellaneous[param_name] = param_value;
         }
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    edit_soft_core =async (core_id, field_name, field_value) =>{
+    edit_soft_core =async (core_id: string, field_name: string, field_value: any) =>{
         let [core] = this.soft_cores.filter((sc) =>{
             return sc.id === core_id;
         });
-
-        core[field_name] = field_value;
+        (core as any)[field_name] = field_value;
         let edit = {
             application:this.id,
             item:{
@@ -641,11 +662,11 @@ export class up_application {
             object:"soft_core"
         };
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
     ////////////////////////////////////////////////////
-    remove_channel = async (ch_id) =>{
+    remove_channel = async (ch_id: string) =>{
         let idx = this.channels.findIndex((ch) =>{
             return ch.id === ch_id;
         })
@@ -658,10 +679,10 @@ export class up_application {
             object:"channel"
         };
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    remove_channel_groups = async (chg_id) =>{
+    remove_channel_groups = async (chg_id: string) =>{
         let idx = this.channel_groups.findIndex((chg) =>{
             return chg.group_id === chg_id;
         })
@@ -674,11 +695,11 @@ export class up_application {
             object:"channel_group"
         };
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    remove_irv = async (address) =>{
-        let idx  = this.initial_registers_values.filter((i) =>{
+    remove_irv = async (address: number) =>{
+        let idx  = this.initial_registers_values.findIndex((i) =>{
             return i.address === address;
         })
         this.initial_registers_values.splice(idx,1);
@@ -690,13 +711,14 @@ export class up_application {
             object:"irv"
         };
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    remove_macro = async (macro_name) => {
-        this.macro = this.macro.filter(m=>{
-            return m.name !== macro_name;
+    remove_macro = async (macro_name: string) => {
+        let idx  = this.macro.findIndex(m=>{
+            return m.name === macro_name;
         })
+        this.macro.splice(idx,1);
 
         let edit = {
             application:this.id,
@@ -705,11 +727,11 @@ export class up_application {
             object:"macro"
         };
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    remove_parameter = async (param_id) =>{
-        let idx = this.parameters.filter((p) =>{
+    remove_parameter = async (param_id: string) =>{
+        let idx = this.parameters.findIndex((p) =>{
             return p.parameter_id === param_id;
         })
         this.parameters.splice(idx,1);
@@ -721,11 +743,11 @@ export class up_application {
             object:"parameter"
         };
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    remove_peripheral = async (periph_id) => {
-        let idx = this.peripherals.filter((p) =>{
+    remove_peripheral = async (periph_id: string) => {
+        let idx = this.peripherals.findIndex((p) =>{
             return p.peripheral_id === periph_id;
         })
         this.peripherals.splice(idx,1);
@@ -737,11 +759,11 @@ export class up_application {
             object:"peripheral"
         };
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    remove_soft_core = async (core_id) => {
-        let idx = this.soft_cores.filter((sc) =>{
+    remove_soft_core = async (core_id: string) => {
+        let idx = this.soft_cores.findIndex((sc) =>{
             return sc.id === core_id;
         })
         this.soft_cores.splice(idx,1);
@@ -753,11 +775,11 @@ export class up_application {
             object:"soft_core"
         };
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    remove_filter = async (filter_id) => {
-        let idx = this.filters.filter((f) =>{
+    remove_filter = async (filter_id: number) => {
+        let idx = this.filters.findIndex((f) =>{
             return f.id === filter_id;
         })
         this.filters.splice(idx,1);
@@ -769,10 +791,10 @@ export class up_application {
             object:"filter"
         };
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    remove_selected_script = async (script_id) => {
+    remove_selected_script = async (script_id: number) => {
         let idx = this.scripts.indexOf(script_id)
         this.scripts.splice(idx,1);
 
@@ -783,10 +805,10 @@ export class up_application {
             object:"selected_script"
         };
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    remove_selected_program = async (program_id) => {
+    remove_selected_program = async (program_id: number) => {
         let idx = this.programs.indexOf(program_id)
         this.programs.splice(idx,1);
 
@@ -797,10 +819,10 @@ export class up_application {
             object:"selected_program"
         };
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    remove_misc_field = async (field_name) =>{
+    remove_misc_field = async (field_name: string) =>{
         delete this.miscellaneous[field_name]
         let edit = {
             application:this.id,
@@ -809,12 +831,12 @@ export class up_application {
             object:"misc"
         };
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplicationupdateApplication(this.deep_copy()));
+        (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    static delete(app){
+    static delete(app: up_application){
         return backend_delete(api_dictionary.applications.remove+'/'+app.id).then(()=>{
-            store.dispatch(removeApplication(app.id));
+            (store as any).dispatch(removeApplication(app.id));
         })
     }
 

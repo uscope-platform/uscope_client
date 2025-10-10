@@ -18,7 +18,7 @@ import {backend_delete, backend_patch, backend_post} from "../proxy/backend.js";
 import {api_dictionary} from "../proxy/api_dictionary.js";
 import {AddScript,removeScript} from "#redux/index.js";
 
-import type {script} from "#interfaces/index.ts";
+import type {script} from "#interfaces/index.js";
 
 
 const default_script_content = `
@@ -32,11 +32,11 @@ const default_script_content = `
 `
 
 export class up_script {
-    private name: string;
-    private id: number;
-    private path: string;
-    private content: string;
-    private triggers: string;
+    public name: string;
+    public id: number;
+    public path: string;
+    public content: string;
+    public triggers: string;
 
     constructor(script_obj: script) {
         if(!script_obj)
@@ -48,7 +48,7 @@ export class up_script {
         this.triggers = script_obj.triggers;
     }
 
-    static deep_copy_s =  (old_script: script) => {
+    static deep_copy_s =  (old_script: script): script => {
         return {
             id: old_script.id,
             name: old_script.name,
@@ -58,14 +58,14 @@ export class up_script {
         };
     }
 
-    static duplicate = async (old_script: script, new_id: number) => {
+    static duplicate = async (old_script: script, new_id: number): Promise<up_script> => {
         let new_script = up_script.deep_copy_s(old_script);
         new_script.id = new_id;
         new_script.name = old_script.name + "_copy_" + new_id;
         return new up_script(new_script);
     }
 
-    static construct_empty(script_id: number){
+    static construct_empty(script_id: number): up_script {
         let script_obj = {id:script_id, name:'new script_'+script_id,path:`new script_${script_id}.js`, content:default_script_content, triggers:''};
         return new up_script(script_obj);
     }
