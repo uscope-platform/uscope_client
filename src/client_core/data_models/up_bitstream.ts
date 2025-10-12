@@ -13,23 +13,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {store} from "../index";
-import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy/backend";
-import {api_dictionary} from "../proxy/api_dictionary";
-import {AddBitstream, removeBitstream} from "#redux";
+import store from "../../store.js";
+import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy/backend.js";
+import {api_dictionary} from "../proxy/api_dictionary.js";
+import {AddBitstream, removeBitstream} from "#redux/index.js";
+import type {bitstream_model} from "#interfaces/index.ts";
 
 export class up_bitstream {
-    constructor(bitstream_obj) {
-        if(!bitstream_obj)
-            return;
+    public id: number;
+    public name: string;
+    public data: Buffer;
+    constructor(bitstream_obj: bitstream_model) {
         this.id = bitstream_obj.id;
         this.name = bitstream_obj.name;
         this.data = bitstream_obj.data;
 
     }
 
-    static construct_empty(bitstream_id){
-        let script_obj = {id:bitstream_id, name:'new_bitstream_'+bitstream_id, content:null};
+    static construct_empty(bitstream_id: number){
+        let buf = Buffer.from("");
+        let script_obj:bitstream_model = {id:bitstream_id, name:'new_bitstream_'+bitstream_id, data:buf};
         return new up_bitstream(script_obj);
     }
 
@@ -38,15 +41,15 @@ export class up_bitstream {
         return store.dispatch(AddBitstream(this));
     }
 
-    update_file = async (bitstream) =>{
-        let edit = {id:this.id , field:{name:"data", value:bitstream.content}};
-        await backend_patch(api_dictionary.bitstream.edit+'/'+this.id,edit);
-        edit.field = {name: "name", value: bitstream.name};
-        await backend_patch(api_dictionary.bitstream.edit+'/'+this.id,edit);
+    update_file = async (bitstream: {name:string, content:Buffer}) =>{
+        let data_edit = {id:this.id , field:{name:"data", value:bitstream.content}};
+        await backend_patch(api_dictionary.bitstream.edit+'/'+this.id,data_edit);
+        let name_edit = {id:this.id , field:{name: "name", value: bitstream.name}};
+        await backend_patch(api_dictionary.bitstream.edit+'/'+this.id,name_edit);
         store.dispatch(AddBitstream(this));
     }
 
-    edit_field = (field, value) => {
+    edit_field =<K extends keyof this>(field: K, value: this[K]) => {
         if(field !== "content")
             this[field] = value;
         store.dispatch(AddBitstream(this));
@@ -57,12 +60,12 @@ export class up_bitstream {
     export_bitstream = async () => {
         return backend_get(api_dictionary.bitstream.get + '/'+this.id + "?export-bitfile=true");
     }
-    static async delete_bitstream(bitstream){
+    static async delete_bitstream(bitstream:up_bitstream){
         await backend_delete(api_dictionary.bitstream.delete+'/'+bitstream.id, bitstream);
         store.dispatch(removeBitstream(bitstream));
     }
 
-    static get_file_content(input_file){
+    static get_file_content(input_file: any){
         return new Promise((resolve, reject) => {
             let file = input_file.target.files[0];
             if (file) {

@@ -18,6 +18,6 @@
 
 export type {script, script_edit} from './client_core/data_models.js'
 export type {program, program_edit} from './client_core/data_models.js'
-export type {application, initial_register_value, core_load_info, clock_frequencies, channel, macro, parameter, peripheral_istance, peripheral, channel_group, soft_core, filter, resolved_hdl_parameters, register} from './client_core/data_models.js'
+export type {application, initial_register_value, core_load_info, clock_frequencies, channel, macro, parameter, peripheral_istance, peripheral, channel_group, soft_core, filter, resolved_hdl_parameters, register, bitstream_model} from './client_core/data_models.js'
 export type {hil_address_map} from './client_core/data_models.js'
 export type {filter_specifications} from './client_core/data_models.js'

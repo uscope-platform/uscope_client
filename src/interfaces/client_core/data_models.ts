@@ -228,3 +228,9 @@ export interface peripheral {
 export interface resolved_hdl_parameters{
     [index: string]: number;
 }
+
+export interface bitstream_model {
+    id:number,
+    name:string,
+    data:Buffer
+}
