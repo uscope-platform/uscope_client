@@ -14,10 +14,9 @@
 // limitations under the License.
 
 import {saveParameter} from "#redux";
-import {up_peripheral} from "@client_core";
+import {up_peripheral,set_write_callback} from "#client_core";
 import {parseFunction} from "./frontend";
 import {translate_legacy_registers, translate_registers} from "./backend";
-import {set_write_callback} from "@client_core";
 import {__selected_application} from "../index";
 
 export let scripting_engine_peripherals = {}

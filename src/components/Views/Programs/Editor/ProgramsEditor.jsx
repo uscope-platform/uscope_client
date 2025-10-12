@@ -22,7 +22,7 @@ import {ColorTheme, TextEditor} from "@UI";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { up_program} from "@client_core";
+import { up_program} from "#client_core";
 import LoadSelector from "./LoadSelector";
 
 

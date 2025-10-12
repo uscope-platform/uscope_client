@@ -17,7 +17,7 @@ import React from 'react';
 import {ColorTheme, TextEditor} from "@UI";
 import {MdSave} from "react-icons/md";
 import {json} from "@codemirror/lang-json";
-import {download_json} from "@client_core";
+import {download_json} from "#client_core";
 
 
 

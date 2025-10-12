@@ -16,7 +16,7 @@
 import React from 'react';
 import EmulationResults from "./EmulationResults.jsx";
 import HilResultsSidebar from "../Sidebar/per_panel_sidebars/HilResultsSidebar.jsx";
-import {download_json} from "@client_core";
+import {download_json} from "#client_core";
 
 let HilResultsView = function (props) {
 

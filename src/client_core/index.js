@@ -49,7 +49,7 @@ export let __selected_application = null;
 
 export {import_application, import_peripherals} from './data_handling/import'
 export {get_next_id} from './utilities/id_management'
-export {download_json, download_plot, download_bitstream} from './utilities/downloads'
+export {download_json, download_plot, download_bitstream,download_text} from './utilities/downloads'
 export {upload_json, upload_raw} from './utilities/uploads'
 export {get_channel_number_from_id, get_channels_from_group, create_plot_channel, initialize_plot, update_plot_status, update_plot_data} from "./plot_handling";
 

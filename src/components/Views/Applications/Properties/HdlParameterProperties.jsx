@@ -25,7 +25,7 @@ import {
 
 import {MdArrowDropDown, MdArrowDropUp} from "react-icons/md";
 import styled from "styled-components";
-import {up_field} from "@client_core";
+import {up_field} from "#client_core";
 
 
 export const FieldPropsLayout = styled.div`

@@ -18,7 +18,7 @@ import React, {useContext} from 'react';
 import {Button} from "@UI"
 import styled from "styled-components";
 
-import {run_script, up_peripheral} from "@client_core";
+import {run_script, up_peripheral} from "#client_core";
 
 import store from "../../../store";
 import {ApplicationContext} from "@src/AuthApp.jsx";

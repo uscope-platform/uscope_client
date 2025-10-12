@@ -23,7 +23,7 @@ import MemoryViewer from "./MemoryViewer.jsx";
 import {EditorView} from "codemirror";
 import IoViewer from "./IoViewer.jsx";
 import {toast, ToastContainer} from "react-toastify";
-import {up_emulator_result} from "@client_core";
+import {up_emulator_result} from "#client_core";
 import TranslationTable from "../Sidebar/TranslationTable.jsx";
 
 let  FcoreDebugger = props =>{

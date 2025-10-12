@@ -20,7 +20,7 @@ import {useSelector} from "react-redux";
 import {
     import_peripherals,
     up_peripheral,
-} from "@client_core";
+} from "#client_core";
 
 import {addPeripheral} from "#redux";
 import {SidebarBase} from "@UI";

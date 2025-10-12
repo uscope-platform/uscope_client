@@ -21,7 +21,7 @@ import {
     SimpleContent,
     UIPanel
 } from "@UI";
-import {up_bitstream, upload_raw} from "@client_core";
+import {up_bitstream, upload_raw} from "#client_core";
 import BitstreamSidebar from "./BitstreamSidebar";
 
 

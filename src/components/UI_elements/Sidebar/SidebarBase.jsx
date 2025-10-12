@@ -19,7 +19,7 @@ import {SelectableList, SimpleContent, UIPanel} from "../index";
 
 import 'react-tooltip/dist/react-tooltip.css'
 import {SideToolbar} from "./SideToolbar";
-import {download_json, get_next_id, upload_json} from "@client_core";
+import {download_json, get_next_id, upload_json} from "#client_core";
 
 export let SidebarBase = props =>{
 

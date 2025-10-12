@@ -17,7 +17,7 @@ import React from 'react';
 
 import {useSelector} from "react-redux";
 
-import {up_emulator} from "@client_core";
+import {up_emulator} from "#client_core";
 import {SidebarBase} from "@UI";
 import AsmSelector from "./../AsmSelector.jsx";
 import BreakpointsPanel from "./../BreakpointsPanel.jsx";

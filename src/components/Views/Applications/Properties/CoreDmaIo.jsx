@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React, {useEffect, useState} from "react";
-import {get_next_id, up_application} from "@client_core";
+import {get_next_id, up_application} from "#client_core";
 import styled from "styled-components";
 import {useSelector} from "react-redux";
 import {

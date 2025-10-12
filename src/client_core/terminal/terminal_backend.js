@@ -15,7 +15,7 @@
 
 import {script_register_access_log, scripting_engine_peripherals} from "../scripting/script_runner";
 import {translate_registers} from "../scripting/backend";
-import {up_peripheral} from "@client_core";
+import {up_peripheral} from "#client_core";
 import {__selected_application, store, up_program} from "../index";
 import {get_version} from "../proxy/platform";
 

@@ -14,39 +14,42 @@
 // limitations under the License.
 
 
-import {store} from "../index";
-import {removeField, upsertField} from "#redux";
-import {backend_patch} from "../proxy/backend";
-import {api_dictionary} from "../proxy/api_dictionary";
+import store from "../../store.js";
+import {removeField, upsertField} from "#redux/index.js";
+import {backend_patch} from "../proxy/backend.js";
+import {api_dictionary} from "../proxy/api_dictionary.js";
+import type {field} from "#interfaces/client_core/data_models.js";
 
 export class up_field {
-    constructor(field_obj, parent_r, parent_p, parametric) {
+    public name:string;
+    public parent_register: string;
+    public parent_peripheral: number;
+    public description: string;
+    public length: number;
+    public offset: number;
+    public order: number;
+    public n_fields: string[];
+
+    constructor(field_obj: field, parent_r: string, parent_p: number) {
         this.name = field_obj.name;
         this.parent_register = parent_r;
         this.parent_peripheral = parent_p;
         this.description = field_obj.description;
         this.length = field_obj.length;
         this.offset = field_obj.offset;
-        this.parametric = parametric;
-        if(parametric){
-            this.n_fields = field_obj.n_fields;
-            this.order = field_obj.order;
-        }
+        this.n_fields = field_obj.n_fields;
+        this.order = field_obj.order;
     }
 
-    static construct_empty(field_name, parent_r, parent_p, parametric){
+    static construct_empty(field_name: string, parent_r: string, parent_p: number): up_field{
 
         let field_obj;
-        if(parametric){
-            field_obj = {name:field_name, description:"", length:1,  offset:0, order:0, n_fields:[]};
-        } else{
-            field_obj = {name:field_name, description:"", length:1,  offset:0};
-        }
+        field_obj = {name:field_name, description:"", length:1,  offset:0, order:0, n_fields:[]};
 
-        return new up_field(field_obj, parent_r, parent_p, parametric);
+        return new up_field(field_obj, parent_r, parent_p);
     }
 
-    edit_name = async (name) =>{
+    edit_name = async (name: string) =>{
         let old_name = JSON.parse(JSON.stringify(this.name));
         this.name = name;
         let edit = {peripheral:this.parent_peripheral, field:"field", action:"remove", value: {id:this.parent_register, object: old_name}};
@@ -56,27 +59,27 @@ export class up_field {
         store.dispatch(upsertField( {name: old_name, obj:this}));
     }
 
-    edit_description = async (description) =>{
+    edit_description = async (description: string) =>{
         this.description = description;
         return this.push_edit();
     };
 
-    edit_length =async (length) => {
+    edit_length =async (length: number) => {
         this.length = length;
         return this.push_edit();
     }
 
-    edit_order = async (order) => {
+    edit_order = async (order: number) => {
         this.order = order;
         return this.push_edit();
     }
 
-    edit_n_fields = async (n_fields) => {
+    edit_n_fields = async (n_fields: string) => {
         this.n_fields = [n_fields];
         return this.push_edit();
 
     }
-    edit_offset =async (offset) => {
+    edit_offset =async (offset: number) => {
         this.offset = offset;
         return this.push_edit();
     }
@@ -88,7 +91,7 @@ export class up_field {
         return store.dispatch(upsertField({name: this.name, obj:this}));
     }
 
-    static async remove_field(periph, reg, field){
+    static async remove_field(periph: number, reg: string, field: string){
 
         let edit = {peripheral:periph, field:"field", action:"remove", value: {id:reg, object: field}};
         console.log(edit);
@@ -97,15 +100,13 @@ export class up_field {
     }
 
     _get_field = () => {
-        let ret = {
-            "name": this.name,
-            "description": this.description,
-            "length": this.length,
-            "offset": this.offset
-        }
-        if(this.parametric){
-            ret["order"] = this.order;
-            ret["n_fields"] = this.n_fields;
+        let ret : field = {
+            name: this.name,
+            description: this.description,
+            length: this.length,
+            offset: this.offset,
+            order: this.order,
+            n_fields: this.n_fields,
         }
         return ret;
     }

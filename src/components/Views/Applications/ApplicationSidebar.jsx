@@ -22,7 +22,7 @@ import {
     get_next_id,
     import_application,
     up_application,
-} from "@client_core";
+} from "#client_core";
 import {SidebarBase} from "@UI";
 
 import {addApplication} from "#redux";

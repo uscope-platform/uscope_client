@@ -84,7 +84,7 @@ export interface application {
     initial_registers_values:initial_register_value[],
     macro:macro[],
     parameters:parameter[],
-    peripherals:peripheral[],
+    peripherals:peripheral_istance[],
     miscellaneous: {
         [index: string]: any;
     },
@@ -124,11 +124,13 @@ export interface parameter {
     visible: boolean
 }
 
-export interface peripheral{
+export interface peripheral_istance{
     name: string,
     peripheral_id: string,
     base_address: number,
-    hdl_parameters:object,
+    hdl_parameters: {
+        [index: string]: number | string | boolean;
+    },
     proxied: boolean
     proxy_address:number,
     type: string,
@@ -181,4 +183,48 @@ export interface application_edit {
     item:any,
     action:string,
     object:string
+}
+
+export interface filter_specifications {
+    id:number,
+    name:string,
+    parameters: {
+        [index: string]: any;
+    },
+    ideal_taps:number[],
+    quantized_taps:number[]
+}
+
+export interface field {
+    name: string,
+    description: string,
+    length:number,
+    offset:number,
+    order:number,
+    n_fields:string[]
+}
+
+
+export interface register {
+    ID:string,
+    register_name:string,
+    description:string,
+    direction:string,
+    value:number,
+    fields:field[],
+    offset?:string,
+    order:number,
+    n_registers:string[]
+}
+
+
+export interface peripheral {
+    id:number,
+    name:string,
+    version:string,
+    registers:register[]
+}
+
+export interface resolved_hdl_parameters{
+    [index: string]: number;
 }

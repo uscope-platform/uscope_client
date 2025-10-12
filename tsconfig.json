@@ -46,7 +46,9 @@
       "#redux/*": ["./src/redux/*"],
       "#redux": ["./src/redux"],
       "#interfaces/*": ["./src/interfaces/*"],
-      "#interfaces": ["./src/interfaces"]
+      "#interfaces": ["./src/interfaces"],
+      "#client_core/*": ["./src/client_core/*"],
+      "#client_core": ["./src/client_core"]
     },
   }
 }

@@ -17,10 +17,9 @@ import React from 'react';
 
 import {useSelector} from "react-redux";
 
-import {set_channel_status, up_emulator} from "@client_core";
+import {set_channel_status, up_emulator,download_text} from "#client_core";
 import {SidebarBase} from "@UI";
 import HilControl from "../HilControl.jsx";
-import {download_text} from "@client_core/utilities/downloads.js";
 
 let  HilControlSidebar = props =>{
 

@@ -71,12 +71,11 @@ let autocomplete_register_name = (path) =>{
 };
 
 let autocomplete_field_name = (path) =>{
-    let parametric = scripting_engine_peripherals[path[1]].spec_obj.parametric;
     let parameters = scripting_engine_peripherals[path[1]].periph_obj.hdl_parameters;
     let fields = [];
     scripting_engine_peripherals[path[1]].spec_obj.registers.map((reg) =>{
         if(reg.ID === path[2]){
-            let register = new up_register(reg, "", parametric);
+            let register = new up_register(reg, "");
             let field_names = register.get_field_names(parameters);
             fields = field_names.flat(1).filter((item) => {
                 return item.startsWith(path[3]);

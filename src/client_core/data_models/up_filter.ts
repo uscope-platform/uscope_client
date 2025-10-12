@@ -16,15 +16,22 @@
 
 
 
-import {store} from "../index";
-import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy/backend";
-import {api_dictionary} from "../proxy/api_dictionary";
-import {AddFilter, removeFilter} from "#redux";
+import store from "../../store.js";
+import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy/backend.js";
+import {api_dictionary} from "../proxy/api_dictionary.js";
+import {AddFilter, removeFilter} from "#redux/index.js";
+import type {filter_specifications} from "#interfaces/index.js";
 
 export class up_filter {
-    constructor(filter_obj) {
-        if(!filter_obj)
-            return;
+    public id: number;
+    public name: string;
+    public ideal_taps: number[];
+    public quantized_taps: number[];
+    public parameters:  {
+        [index: string]: any;
+    };
+
+    constructor(filter_obj: filter_specifications) {
         this.id = filter_obj.id;
         this.name = filter_obj.name;
         this.parameters = filter_obj.parameters;
@@ -32,8 +39,8 @@ export class up_filter {
         this.quantized_taps = filter_obj.quantized_taps;
     }
 
-    static construct_empty(filter_id){
-        let filter_obj = {
+    static construct_empty(filter_id: number){
+        let filter_obj: filter_specifications = {
             id:filter_id,
             name:'new filter_'+filter_id,
             parameters:{
@@ -52,18 +59,17 @@ export class up_filter {
         return new up_filter(filter_obj);
     }
 
-    static deep_copy_s =  (old_filter) => {
-        let ret = {};
-
-        ret.id = old_filter.id;
-        ret.name = old_filter.name;
-        ret.parameters = old_filter.parameters;
-        ret.ideal_taps = old_filter.ideal_taps;
-        ret.quantized_taps = old_filter.quantized_taps;
-        return ret;
+    static deep_copy_s =  (old_filter:filter_specifications): filter_specifications => {
+        return {
+            id: old_filter.id,
+            name: old_filter.name,
+            parameters: JSON.parse(JSON.stringify(old_filter.parameters)),
+            ideal_taps: old_filter.ideal_taps,
+            quantized_taps: old_filter.quantized_taps
+        };
     }
 
-    static duplicate = async (old_filter, new_id) => {
+    static duplicate = async (old_filter: filter_specifications, new_id: number) => {
         let new_filter = up_filter.deep_copy_s(old_filter);
         new_filter.id = new_id;
         new_filter.name = old_filter.name + "_copy_" + new_id;
@@ -87,7 +93,7 @@ export class up_filter {
         return backend_post(api_dictionary.filters.add+'/'+this.id, this._get_filter());
     }
 
-    edit_parameter = (field, value) => {
+    edit_parameter = (field: string, value: any) => {
         this.parameters[field] = value;
         store.dispatch(AddFilter(this));
         let edit = {filter:this.id, field:"parameters", value:this.parameters};
@@ -95,14 +101,14 @@ export class up_filter {
     }
 
 
-    edit_field = (field, value) => {
+    edit_field =<K extends keyof this>(field: K, value: this[K]) => {
         this[field] = value;
         store.dispatch(AddFilter(this));
         let edit = {filter:this.id, field:field, value:value};
         return backend_patch(api_dictionary.filters.edit+'/'+this.id,edit)
     }
 
-    static delete(filter){
+    static delete(filter: up_filter){
         return backend_delete(api_dictionary.filters.delete+'/'+filter.id, filter).then(()=>{
             store.dispatch(removeFilter(filter));
         })

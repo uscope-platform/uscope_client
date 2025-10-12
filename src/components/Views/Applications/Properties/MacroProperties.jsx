@@ -19,7 +19,7 @@ import {
     Card
 } from "@UI";
 
-import {up_application} from "@client_core";
+import {up_application} from "#client_core";
 
 
 export let  MacroProperties = props =>{

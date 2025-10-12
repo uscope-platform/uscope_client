@@ -24,7 +24,7 @@ import {
 } from "@UI";
 import {MdArrowDropDown, MdArrowDropUp} from "react-icons/md";
 import styled from "styled-components";
-import {up_field} from "@client_core";
+import {up_field} from "#client_core";
 
 
 export const FieldPropsLayout = styled.div`
@@ -41,7 +41,7 @@ export const FieldPropsLayout = styled.div`
 
 
 export let  FieldProperties = props =>{
-    const field_obj = new up_field(props.field, props.register.ID, props.peripheral.id, props.parametric);
+    const field_obj = new up_field(props.field, props.register.ID, props.peripheral.id);
 
     const [is_open, set_is_open] = useState(true);
     let handleOpen = ()=>{
@@ -106,29 +106,17 @@ export let  FieldProperties = props =>{
     let renderContent = (props) =>{
 
         if(is_open)
-            if(props.field.parametric){
-                return(
-                    <SidebarCollapsableContentLayout>
-                        <InputField inline name="name" defaultValue={props.field.name} onKeyDown={handleEditNameChange} label="Name"/>
-                        <InputField inline name='description' defaultValue={props.field.description} onKeyDown={handleonKeyDown} label="Description"/>
-                        <InputField inline name='offset' defaultValue={props.field.offset} onKeyDown={handleonKeyDown} label="Address offset"/>
-                        <InputField inline name='length' defaultValue={props.field.length} onKeyDown={handleonKeyDown} label="Field Size"/>
-                        <InputField inline name='order' defaultValue={props.field.order} onKeyDown={handleonKeyDown} label="Order"/>
-                        <InputField inline name='n_fields' defaultValue={props.field.n_fields[0]} onKeyDown={handleonKeyDown} label="Number of fields"/>
-                        <Button onClick={handleRemove} >Remove</Button>
-                    </SidebarCollapsableContentLayout>
-                )
-            } else {
-                return(
-                    <SidebarCollapsableContentLayout>
-                        <InputField inline name="name" defaultValue={props.field.name} onKeyDown={handleEditNameChange} label="Name"/>
-                        <InputField inline name='description' defaultValue={props.field.description} onKeyDown={handleonKeyDown} label="Description"/>
-                        <InputField inline name='offset' defaultValue={props.field.offset} onKeyDown={handleonKeyDown} label="Address offset"/>
-                        <InputField inline name='length' defaultValue={props.field.length} onKeyDown={handleonKeyDown} label="Field Size"/>
-                        <Button onClick={handleRemove} >Remove</Button>
-                    </SidebarCollapsableContentLayout>
-                )
-            }
+            return(
+                <SidebarCollapsableContentLayout>
+                    <InputField inline name="name" defaultValue={props.field.name} onKeyDown={handleEditNameChange} label="Name"/>
+                    <InputField inline name='description' defaultValue={props.field.description} onKeyDown={handleonKeyDown} label="Description"/>
+                    <InputField inline name='offset' defaultValue={props.field.offset} onKeyDown={handleonKeyDown} label="Address offset"/>
+                    <InputField inline name='length' defaultValue={props.field.length} onKeyDown={handleonKeyDown} label="Field Size"/>
+                    <InputField inline name='order' defaultValue={props.field.order} onKeyDown={handleonKeyDown} label="Order"/>
+                    <InputField inline name='n_fields' defaultValue={props.field.n_fields[0]} onKeyDown={handleonKeyDown} label="Number of fields"/>
+                    <Button onClick={handleRemove} >Remove</Button>
+                </SidebarCollapsableContentLayout>
+            )
         return null;
     }
 

@@ -19,12 +19,12 @@ import React, {useCallback, useEffect, useState} from 'react';
 import AuthApp from "./AuthApp";
 import LoginPage from "./components/Common_Components/LoginPage";
 import store from "./store";
-import {set_address, set_auth_config, set_redux_store, sign_in, need_onboarding} from "./client_core";
+import {set_address, set_auth_config, set_redux_store, sign_in, need_onboarding} from "#client_core";
 
 //////  STYLE IMPORTS
 import './App.css';
 import {ThemeProvider} from "styled-components";
-import {ColorTheme} from "./components/UI_elements";
+import {ColorTheme} from "@UI";
 import {auto_sign_in, manual_sign_in} from "./client_core/proxy/auth";
 
 

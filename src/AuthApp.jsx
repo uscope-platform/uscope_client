@@ -27,7 +27,7 @@ import ApplicationChooser from "./components/AppChooser";
 //////  STYLE IMPORTS
 import './App.css';
 
-import {initialize_scripting_engine, refresh_caches, setup_client_core, up_application, up_settings} from "@client_core";
+import {initialize_scripting_engine, refresh_caches, setup_client_core, up_application, up_settings} from "#client_core";
 import {Routes} from "react-router";
 import {addApplication} from "#redux";
 

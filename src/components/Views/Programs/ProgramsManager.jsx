@@ -26,7 +26,7 @@ import {
     TabbedContent, TwoColumnSelector
 } from "@UI";
 import ProgramsEditor from "./Editor/ProgramsEditor";
-import {up_program} from "@client_core";
+import {up_program} from "#client_core";
 import BuildSettings from "./Editor/BuildSettings";
 import ProgramSidebar from "./ProgramSidebar";
 

@@ -21,7 +21,7 @@ import {
     SelectableList, ColorTheme
 } from "@UI";
 
-import {get_users_list, remove_user} from "@client_core";
+import {get_users_list, remove_user} from "#client_core";
 import {MdPerson} from "react-icons/md";
 
 let  PlatformSidebar = props =>{

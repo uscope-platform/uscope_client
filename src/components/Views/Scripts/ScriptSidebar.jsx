@@ -17,7 +17,7 @@ import React, {useContext, useReducer} from 'react';
 
 import {useSelector} from "react-redux"
 
-import {up_script} from "@client_core";
+import {up_script} from "#client_core";
 import {SidebarBase} from "@UI";
 import {ApplicationContext} from "@src/AuthApp.jsx";
 

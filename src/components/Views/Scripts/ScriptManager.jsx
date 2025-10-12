@@ -23,7 +23,7 @@ import {
     SimpleContent,
     UIPanel
 } from "@UI"
-import {up_script} from "@client_core";
+import {up_script} from "#client_core";
 import ScriptsEditor from "./ScriptsEditor";
 import ScriptSidebar from "./ScriptSidebar";
 

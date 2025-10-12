@@ -20,7 +20,7 @@ import { javascript } from '@codemirror/lang-javascript';
 import { autocompletion } from '@codemirror/autocomplete';
 import {
     autocompletion_engine, up_script
-} from "@client_core";
+} from "#client_core";
 import {MdSave} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
 

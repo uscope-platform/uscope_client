@@ -24,7 +24,7 @@ import {
     SelectField, ColorTheme
 } from "@UI"
 
-import {add_user, do_onboarding, dump_database, restore_database, upload_json} from "@client_core";
+import {add_user, do_onboarding, dump_database, restore_database, upload_json} from "#client_core";
 import { MdDownload, MdUpload} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
 import PlatformSidebar from "../Platform/PlatformSidebar";

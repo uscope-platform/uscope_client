@@ -19,12 +19,12 @@ import {useSelector} from "react-redux"
 
 
 import {
-    CardStack, Checkbox, ColorTheme,
+    CardStack, ColorTheme,
     InputField,
     SimpleContent, UIPanel
 } from "@UI"
 
-import {get_next_id, up_peripheral} from "@client_core"
+import {get_next_id, up_peripheral} from "#client_core"
 import PeripheralsSidebar from "./PeripheralsSidebar";
 import {MdAdd} from "react-icons/md";
 import {RegisterProperties} from './RegisterProperties'
@@ -36,7 +36,7 @@ let PeripheralsManager = (props)=>{
 
     const [data_version, forceUpdate] = useReducer(x => x + 1, 0);
 
-    const [selected_peripheral, set_selected_peripheral] = useState({registers:[], parametric:false, _get_periph:()=>{return{}}});
+    const [selected_peripheral, set_selected_peripheral] = useState({registers:[], _get_periph:()=>{return{}}});
 
     const [periph_selector, set_periph_selector] = useState(null);
 
@@ -62,12 +62,6 @@ let PeripheralsManager = (props)=>{
             selected_peripheral.edit_name(event.target.value).then();
         }
     }
-    let handleEditParametric = (event)=>{
-        selected_peripheral.edit_parametric(event.target.checked).then(()=>{
-            forceUpdate();
-        });
-    }
-
 
     let handle_add_new = (item_type, old_items, title_prop) =>{
 
@@ -109,8 +103,6 @@ let PeripheralsManager = (props)=>{
                             <InputField inline name="edit_version"
                                         defaultValue={selected_peripheral.version}
                                         onKeyDown={handleEditVersion} label="Version"/>
-                            <Checkbox name='parametric' value={selected_peripheral.parametric}
-                                      onChange={handleEditParametric} label="Parametric"/>
                         </div>
                     </SimpleContent>
                 </UIPanel>
@@ -135,7 +127,6 @@ let PeripheralsManager = (props)=>{
                                                 peripheral={selected_peripheral}
                                                 forceUpdate={forceUpdate}
                                                 register={reg}
-                                                parametric={selected_peripheral.parametric}
                                             />
                                         )
                                     })

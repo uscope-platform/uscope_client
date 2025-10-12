@@ -13,9 +13,6 @@ export let peripheral_schema = {
           "name": {
             "type": "string"
           },
-          "parametric": {
-            "type": "boolean"
-          },
           "registers": {
             "type": "array",
             "items": {
@@ -115,7 +112,6 @@ export let peripheral_schema = {
         "required": [
           "id",
           "name",
-          "parametric",
           "registers",
           "version"
         ]

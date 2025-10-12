@@ -16,7 +16,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {InputField, SelectField, SimpleContent, UIPanel} from "@UI";
 import {ApplicationContext} from "@src/AuthApp.jsx";
-import {up_settings} from "@client_core";
+import {up_settings} from "#client_core";
 
 let SettingsView = function (props) {
 

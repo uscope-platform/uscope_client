@@ -16,7 +16,7 @@
 import React from 'react';
 
 import {useSelector} from "react-redux";
-import {download_bitstream, get_next_id, up_bitstream, upload_raw} from "@client_core";
+import {download_bitstream, get_next_id, up_bitstream, upload_raw} from "#client_core";
 import {
     SelectableList,
     SimpleContent,
