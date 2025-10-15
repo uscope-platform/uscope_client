@@ -127,4 +127,4 @@ export let application_schema = {
     "parameters",
     "peripherals"
   ]
-}
+} as const;

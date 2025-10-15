@@ -65,20 +65,18 @@ export const api_dictionary = {
         delete: 'peripheral'
     },
     platform:{
-        users:{
-            add:'platform/user',
-            delete: 'platform/user',
-            need_onboarding: 'platform/onboarding',
-            do_onboarding: 'platform/onboarding',
-            get_list: 'platform/user',
-            manual_login: 'platform/login/manual',
-            auto_login: 'platform/login/auto'
-        },
-        db:{
-            dump:'database/export',
-            restore:'database/import',
-            versions:'platform/versions'
-        }
+        add:'platform/user',
+        delete: 'platform/user',
+        need_onboarding: 'platform/onboarding',
+        do_onboarding: 'platform/onboarding',
+        get_list: 'platform/user',
+        manual_login: 'platform/login/manual',
+        auto_login: 'platform/login/auto',
+        versions:'platform/versions'
+    },
+    db:{
+        dump:'database/export',
+        restore:'database/import',
     },
     programs:{
         get_hash:'program/hash',
@@ -114,4 +112,4 @@ export const api_dictionary = {
         hil_address_map:'settings/hil_address_map',
         debugger_option:'settings/debugger_option',
     }
-}
+} as const;

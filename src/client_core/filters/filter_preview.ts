@@ -14,7 +14,7 @@
 // limitations under the License.
 
 
-export const filter_calculate_keepouts = (filter_parameters) =>{
+export const filter_calculate_keepouts = (filter_parameters: Record<string, any>) =>{
 
     let exclusion_zones = [];
     let limits = []

@@ -27,9 +27,7 @@ export class up_filter {
     public name: string;
     public ideal_taps: number[];
     public quantized_taps: number[];
-    public parameters:  {
-        [index: string]: any;
-    };
+    public parameters:  Record<string, any>;
 
     constructor(filter_obj: filter_specifications) {
         this.id = filter_obj.id;

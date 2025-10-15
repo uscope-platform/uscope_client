@@ -13,9 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {backend_get, backend_post} from "./backend";
+import {backend_get, backend_post} from "./backend.js";
 
-import {api_dictionary} from './api_dictionary'
+import {api_dictionary} from './api_dictionary.js'
+import type {scope_control, scope_settings} from "#interfaces/proxy/types.js";
 
 
 export const direct_fetch = () =>  {
@@ -30,7 +31,7 @@ export const direct_fetch = () =>  {
 
 
 
-export const set_channel_status = (channel) => {
+export const set_channel_status = (channel: number) => {
     return new Promise((resolve, reject)=>{
         backend_post(api_dictionary.operations.set_channel_status, channel).then((res) => {
             resolve(res)
@@ -42,7 +43,7 @@ export const set_channel_status = (channel) => {
 }
 
 
-export const set_scaling_factors = (scaling_factors) => {
+export const set_scaling_factors = (scaling_factors: number[]) => {
     return new Promise((resolve, reject)=>{
         backend_post(api_dictionary.operations.scaling_factors, scaling_factors).then((res) => {
             resolve(res)
@@ -63,7 +64,7 @@ export let get_acquisition_status = () =>{
     });
 }
 
-export let set_acquisition = (args) =>{
+export let set_acquisition = (args: scope_control) =>{
     return new Promise((resolve, reject)=>{
         backend_post(api_dictionary.operations.acquisition, args).then((res) => {
             resolve(res)
@@ -73,7 +74,7 @@ export let set_acquisition = (args) =>{
     });
 }
 
-export let set_scope_address  = (args) =>{
+export let set_scope_address  = (args: scope_settings) =>{
     return new Promise((resolve, reject)=>{
         backend_post(api_dictionary.operations.scope_address, args).then((res) => {
             resolve(res)

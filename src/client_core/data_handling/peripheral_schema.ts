@@ -118,4 +118,4 @@ export let peripheral_schema = {
       }
     }
   }
-}
+} as const;

@@ -22,7 +22,6 @@ export {init_terminal} from './terminal/terminal'
 // SERVER PROXY
 export {set_address, set_auth_config} from './proxy/backend'
 
-export {sign_in} from './proxy/auth'
 export {add_user, remove_user, get_users_list, dump_database, restore_database, do_onboarding, need_onboarding} from './proxy/platform'
 export { set_channel_status, set_scaling_factors, direct_fetch, set_acquisition, get_acquisition_status} from './proxy/plot'
 

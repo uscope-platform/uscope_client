@@ -13,18 +13,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import Ajv2020 from "ajv/dist/2020"
-import {up_application} from "../data_models/up_application";
-import {up_peripheral} from "../data_models/up_peripheral";
-import {application_schema} from "./application_schema";
-import {peripheral_schema} from "./peripheral_schema";
+import Ajv2020 from "ajv/dist/2020.js"
+import {up_application} from "../data_models/up_application.js";
+import {up_peripheral} from "../data_models/up_peripheral.js";
+import {application_schema} from "./application_schema.js";
+import {peripheral_schema} from "./peripheral_schema.js";
 
-let validate_json = (obj, schema) => {
-    const ajv = new Ajv2020()
+let validate_json = (obj: any, schema: object) => {
+    const ajv = new Ajv2020.default();
     const validate = ajv.compile(schema)
     const valid = validate(obj)
     let erorr_strings = [];
-    if(!valid){
+    if(!valid && validate.errors){
         for(let i of validate.errors){
             erorr_strings.push('Error at: "' +i.instancePath + '" --- ' + i.message);
         }
@@ -32,7 +32,7 @@ let validate_json = (obj, schema) => {
     return [valid, erorr_strings]
 }
 
-export const import_application = (raw_json, id) => {
+export const import_application = (raw_json: any, id: number) => {
     let imported_app = JSON.parse(raw_json);
     imported_app["id"] = id;
     let [valid, errors] = validate_json(imported_app, application_schema);
@@ -49,7 +49,7 @@ export const import_application = (raw_json, id) => {
     }
 }
 
-export const import_peripherals = (raw_json) => {
+export const import_peripherals = (raw_json: any) => {
     let imported_periph = JSON.parse(raw_json);
     let [valid, errors] = validate_json(imported_periph, peripheral_schema);
     if(valid){
