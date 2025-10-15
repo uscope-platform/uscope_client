@@ -18,7 +18,7 @@ import {up_field} from "./up_field.js";
 import {backend_patch} from "../proxy/backend.js";
 import {api_dictionary} from "../proxy/api_dictionary.js";
 import { removeRegister, upsertRegister} from "#redux/index.js";
-import type {register} from "#interfaces/client_core/data_models.js";
+import type {register} from "#interfaces/index.ts";
 
 export class up_register {
     public parent_periph: number;

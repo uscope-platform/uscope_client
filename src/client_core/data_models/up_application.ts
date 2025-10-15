@@ -219,8 +219,14 @@ export class up_application {
     }
 
     get_global_clock_frequency = async (clock_n: number) =>{
-        let clocks = await backend_get(api_dictionary.operations.clock);
-        return clocks[clock_n];
+        try{
+            let clocks = await backend_get<Record<number, number>>(api_dictionary.operations.clock);
+            return clocks[clock_n];
+        } catch (e) {
+            console.error(e);
+            return 0;
+        }
+
     }
 
     load_core = (core: any, program: any) =>{
@@ -834,10 +840,9 @@ export class up_application {
         (store as any).dispatch(updateApplication(this.deep_copy()));
     }
 
-    static delete(app: up_application){
-        return backend_delete(api_dictionary.applications.remove+'/'+app.id).then(()=>{
-            (store as any).dispatch(removeApplication(app.id));
-        })
+    static async delete(app: up_application) {
+        await backend_delete(api_dictionary.applications.remove + '/' + app.id);
+        (store as any).dispatch(removeApplication(app.id));
     }
 
     get_raw_obj = () => {

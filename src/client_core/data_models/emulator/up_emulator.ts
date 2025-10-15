@@ -14,15 +14,23 @@
 // limitations under the License.
 
 
-import {store} from "../../index";
-import {backend_delete, backend_get, backend_patch, backend_post} from "../../proxy/backend";
-import {api_dictionary} from "../../proxy/api_dictionary";
-import {addEmulator, removeEmulator, update_emulator} from "#redux";
+import store from "../../../store.js";
+import {backend_delete, backend_get, backend_patch, backend_post} from "../../proxy/backend.js";
+import {api_dictionary} from "../../proxy/api_dictionary.js";
+import {addEmulator, removeEmulator, update_emulator} from "#redux/index.js";
+import type {emulator, core, connection, server_side_port_link, hil_data_point, program, core_deployment_options, core_input, core_input_data, core_memory, core_output, emulator_hil_sim_data, port_link} from "#interfaces/index.ts";
+import axios, {type AxiosError} from "axios";
 
 export class up_emulator {
-    constructor(emulator_obj) {
-        if(!emulator_obj)
-            return;
+    public id:number;
+    public name:string;
+    public cores: Record<string, core>;
+    public connections: connection[];
+    public emulation_time:number;
+    public deployment_mode:boolean;
+
+    constructor(emulator_obj : emulator) {
+
         this.id = emulator_obj.id;
         this.name = emulator_obj.name;
         this.cores = emulator_obj.cores;
@@ -47,29 +55,29 @@ export class up_emulator {
         return new up_emulator(emulator_obj);
     }
 
-    deep_copy = ()=>{
-        let ret = {};
-        ret.deployment_mode = this.deployment_mode;
-        ret.id = this.id;
-        ret.name = this.name;
-        ret.cores = JSON.parse(JSON.stringify(this.cores));
-        ret.connections = JSON.parse(JSON.stringify(this.connections));
-        ret.emulation_time = this.emulation_time;
-        return ret;
+    deep_copy = () : emulator =>{
+        return {
+            id: this.id,
+            cores: JSON.parse(JSON.stringify(this.cores)),
+            connections: JSON.parse(JSON.stringify(this.connections)),
+            name: this.name,
+            emulation_time: this.emulation_time,
+            deployment_mode: this.deployment_mode
+        };
     }
 
-    static deep_copy_s(emulator_obj){
-        let ret = {};
-        ret.deployment_mode = emulator_obj.deployment_mode;
-        ret.id = emulator_obj.id;
-        ret.name = emulator_obj.name;
-        ret.cores = JSON.parse(JSON.stringify(emulator_obj.cores));
-        ret.connections = JSON.parse(JSON.stringify(emulator_obj.connections));
-        ret.emulation_time = emulator_obj.emulation_time;
-        return ret;
+    static deep_copy_s(emulator_obj: emulator){
+        return {
+            id: emulator_obj.id,
+            cores: JSON.parse(JSON.stringify(emulator_obj.cores)),
+            connections: JSON.parse(JSON.stringify(emulator_obj.connections)),
+            name: emulator_obj.name,
+            emulation_time: emulator_obj.emulation_time,
+            deployment_mode: emulator_obj.deployment_mode
+        };
     }
 
-    static construct_empty(emulator_id){
+    static construct_empty(emulator_id: number){
         let emulator_obj = {
             id:emulator_id,
             name:'new_emulator_'+ emulator_id,
@@ -81,7 +89,7 @@ export class up_emulator {
         return new up_emulator(emulator_obj);
     }
 
-    static duplicate = async (old_emulator, new_id) => {
+    static duplicate = async (old_emulator: up_emulator, new_id: number) => {
         let new_emulator = up_emulator.deep_copy_s(old_emulator);
         new_emulator.id = new_id;
         new_emulator.name = old_emulator.name + "_copy_" + new_id;
@@ -93,14 +101,16 @@ export class up_emulator {
             let ret = await backend_post(api_dictionary.emulators.add + '/' + this.id, this._get_emulator());
             store.dispatch(addEmulator(this));
             return ret;
-        } catch (error) {
-            alert(error.response.data.message);
+        } catch (error: any | AxiosError) {
+            if(axios.isAxiosError(error)){
+                alert(error.response?.data.message || 'An unknown error occurred');
+            }
         }
     }
 
     add_core = async () => {
         let id = this.find_free_id();
-        let c = {
+        let c: core = {
             name: "new_core_" + id,
             id: id,
             order:id,
@@ -112,7 +122,7 @@ export class up_emulator {
             memory_init:[],
             options:{
                 comparators:"reducing",
-                efi_implementation:"none"
+                efi_implementation:"efi_none"
             },
             sampling_frequency:0,
             deployment:{
@@ -124,7 +134,7 @@ export class up_emulator {
         return this.send_core(c);
     }
 
-    send_core = async (c) => {
+    send_core = async (c: core) => {
         let edit = {id:this.id, field:"cores",  action:"add", value:c};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         this.cores[c.id] = c;
@@ -140,7 +150,7 @@ export class up_emulator {
         return id;
     }
 
-    duplicate_core = async (core_id) => {
+    duplicate_core = async (core_id: number) => {
         let core = JSON.parse(JSON.stringify(this.cores[core_id]));
         let new_id = this.find_free_id();
         core.name = core.name + "_copy_" + new_id;
@@ -149,21 +159,21 @@ export class up_emulator {
         return this.send_core(core);
     }
 
-    edit_name = async (new_name) =>{
+    edit_name = async (new_name: string) =>{
         let edit = {id:this.id, field:"name",  action:"edit", value:new_name};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         this.name = new_name;
         store.dispatch(update_emulator(this.deep_copy()));
     };
 
-    edit_emulation_time =async (emu_time) =>{
+    edit_emulation_time =async (emu_time: number) =>{
         let edit = {id:this.id, field:"emulation_time",  action:"edit", value:emu_time};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         this.emulation_time = emu_time;
         store.dispatch(update_emulator(this.deep_copy()));
     };
 
-    edit_deployment_mode =async (mode) =>{
+    edit_deployment_mode =async (mode: boolean) =>{
         let edit = {id:this.id, field:"deployment_mode",  action:"edit", value:mode};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         this.deployment_mode = mode;
@@ -172,13 +182,13 @@ export class up_emulator {
     };
 
 
-    edit_core_props = async (core_id, field, value) =>{
+    edit_core_props = async (core_id: number, field: keyof core, value: core[keyof core]) =>{
         let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
         if(field === "channels"){
             let new_inputs = JSON.parse(JSON.stringify(core.inputs));
             for(let i of new_inputs){
                 if(i.source.type === "waveform"){
-                    i.source = this.fix_waveform_parameters(i.source, value, core.channels);
+                    i.source = this.fix_waveform_parameters(i.source, (value as number), core.channels);
                 }
             }
             core.inputs = new_inputs;
@@ -190,7 +200,7 @@ export class up_emulator {
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
-    fix_waveform_parameters = (input, new_length, old_length) =>{
+    fix_waveform_parameters = (input: any, new_length: number, old_length: number) =>{
         let new_source = input;
         if(new_length > old_length){
             let fill_length = new_length - old_length;
@@ -219,7 +229,7 @@ export class up_emulator {
         }
         return new_source;
     }
-    remove_core = async (core_id) =>{
+    remove_core = async (core_id: number) =>{
         let edit = {id:this.id, field:"cores",  action:"remove", value:core_id};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         delete this.cores[core_id];
@@ -231,7 +241,7 @@ export class up_emulator {
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
-    add_output = async (core_id, progressive) => {
+    add_output = async (core_id: number, progressive: number) => {
         let output = {
             width: 32,
             is_vector:false,
@@ -248,10 +258,10 @@ export class up_emulator {
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
-    edit_output = async (core_id, field, value, output_name) =>{
+    edit_output = async (core_id: number, field: keyof core_output, value: core_output[keyof core_output], output_name: string) =>{
 
         let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
-        core.outputs = core.outputs.map((item)=>{
+        core.outputs = core.outputs.map((item: core_output)=>{
             if(item.name === output_name){
                 return  {...item, ...{[field]:value}};
             } else {
@@ -264,7 +274,7 @@ export class up_emulator {
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
-    add_input_file = async (core_id, input_name,  data) =>{
+    add_input_file = async (core_id: number, input_name: string,  data: any) =>{
         let i_d = {
             name:input_name,
             data:data
@@ -279,10 +289,10 @@ export class up_emulator {
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
-    remove_input_file = async (core_id, obj_name) => {
+    remove_input_file = async (core_id: number, obj_name: string) => {
 
         let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
-        core.input_data = core.input_data.filter((item)=>{
+        core.input_data = core.input_data.filter((item: core_input)=>{
             return item.name !== obj_name;
         })
 
@@ -292,8 +302,16 @@ export class up_emulator {
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
-    add_input =async (core_id, progressive) => {
-        let waveform_default = Array(this.cores[core_id].channels).fill(0);
+    add_input =async (core_id: number, progressive: number) => {
+        let c:core;
+        if(!this.cores[core_id]){
+            console.error("Core " + core_id+ " not found.");
+            return;
+        } else{
+            c = this.cores[core_id];
+        }
+
+        let waveform_default = Array(c.channels).fill(0);
         let input = {
             type: "float",
             width: 32,
@@ -303,7 +321,7 @@ export class up_emulator {
             vector_size: 1,
             source:{
                 type:"constant",
-                value:[],
+                value:[0],
                 shape:"square",
                 von:waveform_default,
                 voff:waveform_default,
@@ -329,10 +347,10 @@ export class up_emulator {
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
-    edit_input =async (core_id, field, value, input_name) =>{
+    edit_input =async (core_id: number, field: keyof core_input, value: core_input[keyof core_input], input_name: string) =>{
 
         let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
-        core.inputs = core.inputs.map((item)=>{
+        core.inputs = core.inputs.map((item: core_input)=>{
             if(item.name === input_name){
                 return  {...item, ...{[field]:value}};
             } else {
@@ -346,7 +364,7 @@ export class up_emulator {
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
-    edit_deployment_options = async (core_id, options_obj) =>{
+    edit_deployment_options = async (core_id: number, options_obj: core_deployment_options) =>{
 
         let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
         core.deployment = options_obj;
@@ -358,7 +376,7 @@ export class up_emulator {
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
-    add_memory = async (core_id, progressive) =>{
+    add_memory = async (core_id: number, progressive: number) =>{
         let mem = {
             type: "float",
             is_vector:false,
@@ -380,10 +398,10 @@ export class up_emulator {
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
-    edit_memory = async (core_id, field, value, memory_name) =>{
+    edit_memory = async (core_id: number, field: keyof core_memory, value: core_memory[keyof core_memory], memory_name: string) =>{
 
         let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
-        core.memory_init = core.memory_init.map((item)=>{
+        core.memory_init = core.memory_init.map((item: core_memory)=>{
             if(item.name === memory_name){
                 return  {...item, ...{[field]:value}};
             } else {
@@ -397,11 +415,11 @@ export class up_emulator {
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
-    remove_output =async (core_id, obj_name) => {
+    remove_output =async (core_id: number, obj_name: string) => {
 
         let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
 
-        core.outputs = core.outputs.filter((item)=>{
+        core.outputs = core.outputs.filter((item: core_output)=>{
             return item.name !== obj_name;
         })
 
@@ -411,11 +429,11 @@ export class up_emulator {
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
-    remove_input = async (core_id, obj_name) => {
+    remove_input = async (core_id: number, obj_name: string) => {
 
         let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
 
-        core.inputs = core.inputs.filter((item)=>{
+        core.inputs = core.inputs.filter((item: core_input)=>{
             return item.name !== obj_name;
         })
 
@@ -425,11 +443,11 @@ export class up_emulator {
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
-    remove_memory =async (core_id, obj_name) =>{
+    remove_memory =async (core_id: number, obj_name: string) =>{
 
         let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
 
-        core.memory_init = core.memory_init.filter((item)=>{
+        core.memory_init = core.memory_init.filter((item: core_memory)=>{
             return item.name !== obj_name;
         })
 
@@ -439,8 +457,8 @@ export class up_emulator {
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
-    add_dma_connection = async (source_id, destination_id) =>{
-        let c = {
+    add_dma_connection = async (source_id: number, destination_id: number) =>{
+        let c: connection = {
             source_core:source_id,
             destination_core:destination_id,
             ports:[]
@@ -452,52 +470,61 @@ export class up_emulator {
         return c;
     }
 
-    remove_dma_connection = async (source_id, destination_id) =>{
+    remove_dma_connection = async (source_id: number, destination_id: number) =>{
 
         let edit = {id:this.id, field:"connections",  action:"remove", value:{source:source_id, destination:destination_id}};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         this.connections = this.connections.filter((item)=>{
-            return item.source !== source_id && item.destination !== destination_id;
+            return item.source_core !== source_id && item.destination_core !== destination_id;
         });
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
-    add_port_link = async (source, destination, progressive) =>{
+    add_port_link = async (source: number, destination: number, progressive: number) =>{
        let link= {
             id: progressive,
                 source_port:"",
                 source_channel:-1,
                 destination_port:"",
                 destination_channel:-1
-        };
-        let edit = {
-            id:this.id,
-            field:"port_link",
-            action:"add",
-            value:{
-                core:{source:source, destination:destination},
-                link:link
-            }};
-        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+       };
+       let edit = {
+           id:this.id,
+           field:"port_link",
+           action:"add",
+           value:{
+               core:{source:source, destination:destination},
+               link:link
+           }
+       };
+       await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
 
-        let dma_obj = this.connections.filter((item)=>{
-            return item.source_core === source && item.destination_core === destination;
-        })[0];
-        dma_obj.ports.push(link);
+       let dma_obj = this.connections.filter((item)=>{
+           return item.source_core === source && item.destination_core === destination;
+       })[0];
+       if(!dma_obj){
+           console.error("Error: DMA connection not found.");
+           return;
+       }
+       dma_obj.ports.push(link);
 
-        store.dispatch(update_emulator(this.deep_copy()));
+       store.dispatch(update_emulator(this.deep_copy()));
     }
 
     edit_port_link = async (
-            source,
-            destination,
-            field,
-            value,
-            link_id
+            source: number,
+            destination: number,
+            field: keyof port_link,
+            value: port_link[keyof port_link],
+            link_id: number
         ) =>{
             let dma_obj = this.connections.filter((item)=>{
                 return item.source_core === source && item.destination_core === destination;
             })[0];
+            if(!dma_obj){
+                console.error("Error: DMA connection not found.");
+                return;
+            }
             let edited_channel = null;
             let next_channels = dma_obj.ports.map((item)=>{
                 if(item.id === link_id){
@@ -524,7 +551,7 @@ export class up_emulator {
         }
 
 
-    remove_link_id =  async (source, destination, link_id) =>{
+    remove_link_id =  async (source: number, destination: number, link_id: number) =>{
         let edit = {
             id:this.id,
             field:"port_link",
@@ -550,11 +577,11 @@ export class up_emulator {
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
-    remove_node_connections =async (node_id) =>{
+    remove_node_connections =async (node_id: number) =>{
 
         for(let c of this.connections){
-            if(c.source === node_id || c.destination === node_id) {
-                await this.remove_dma_connection(c.source, c.destination);
+            if(c.source_core === node_id || c.destination_core === node_id) {
+                await this.remove_dma_connection(c.source_core, c.destination_core);
             }
         }
 
@@ -562,33 +589,47 @@ export class up_emulator {
     }
 
 
-    static async delete(emulator) {
+    static async delete(emulator: up_emulator) {
         await backend_delete(api_dictionary.emulators.delete+'/'+emulator.id, emulator);
         store.dispatch(removeEmulator(emulator.id));
     }
 
-    get_output_names = (core_id) =>{
-        return this.cores[core_id].outputs.map((item)=>{
-            return item.name;
-        })
+    get_output_names = (core_id: number):string[] =>{
+        if(!this.cores[core_id]){
+            console.error("Core " + core_id+ " not found.");
+            return [];
+        } else{
+            return this.cores[core_id].outputs.map((item)=>{
+                return item.name;
+            })
+        }
+
     }
 
-    get_memory_names = (core_id) =>{
+    get_memory_names = (core_id: number): string[] =>{
+        if(!this.cores[core_id]) {
+            console.error("Core " + core_id+ " not found.");
+            return [];
+        }
         return this.cores[core_id].memory_init.map((item)=>{
-            return item.name;
+                return item.name;
         })
     }
 
-    get_input_names = (core_id) =>{
+    get_input_names = (core_id: number): string[] =>{
+        if(!this.cores[core_id]) {
+            console.error("Core " + core_id+ " not found.");
+            return [];
+        }
         return this.cores[core_id].inputs.map((item)=>{
             return item.name;
         })
     }
 
-    get_series_for_input(input_data, input_obj, n_channels){
+    get_series_for_input(input_data: core_input_data[], input_obj: core_input, n_channels: number){
 
         let ret = [];
-        let tok = input_obj.source.value.split(".");
+        let tok = input_obj.source.value[0].split(".");
         for(let d of input_data){
             if(d.name === tok[0]){
                 if(n_channels > 1){
@@ -610,15 +651,19 @@ export class up_emulator {
     }
 
     build = () =>{
-        let connections  = [];
+        let connections:server_side_port_link[]  = [];
         this.connections.map((item) => {
-            let source_core = this.cores[item.source_core].name;
-            let dest_core = this.cores[item.destination_core].name;
+            let source_core = this.cores[item.source_core];
+            let dest_core = this.cores[item.destination_core];
+            if(!source_core || !dest_core){
+                console.error("Error: Found connection with non-existing core.");
+                return;
+            }
             connections = [...connections, ...item.ports.map((item) => {
                 return {
-                    source: source_core + "." + item.source_port,
+                    source: source_core.name + "." + item.source_port,
                     source_channel:item.source_channel,
-                    destination: dest_core + "." +  item.destination_port,
+                    destination: dest_core.name + "." +  item.destination_port,
                     destination_channel:item.destination_channel
                 };
             })];
@@ -630,7 +675,7 @@ export class up_emulator {
                     id: item.name,
                     order: item.order,
                     inputs: item.inputs.map((in_obj) => {
-                        let source = in_obj.source;
+                        let source: any = in_obj.source;
                         if(in_obj.source.type === "series"){
                             source = {
                                 type: in_obj.source.type,
@@ -703,11 +748,18 @@ export class up_emulator {
                     deployment:item.deployment,
                     channels: item.channels,
                     program: (() => {
-                        let prog = Object.values(store.getState().programs).filter((p) => {
+                        let programs = ((store.getState()as any).programs as program[]);
+                        let prog = Object.values(programs).filter((p) => {
                             return p.name === item.program;
                         })[0]
+                        if(!prog){
+                            throw("Error: Program " + item.program + " not found.");
+                        }
                         let headers = prog.headers.map((h)=>{
-                            return store.getState().programs[h].content;
+                            if(!programs[h]){
+                                throw("Error: Header " + h + " not found.");
+                            }
+                            return programs[h].content;
                         })
                         return {content: prog.content, headers:headers};
                     })(),
@@ -733,13 +785,18 @@ export class up_emulator {
 
     download_hardware_sim_data = async () =>{
         let specs = this.build();
-        let bus_data = await backend_post(api_dictionary.operations.hil_hardware_sim, specs);
+        let bus_data = await backend_post<emulator_hil_sim_data>(api_dictionary.operations.hil_hardware_sim, specs);
         bus_data.control = bus_data.control + "--\n" + bus_data.outputs;
-        bus_data.inputs = this.prepare_input_series(bus_data.inputs);
+        try{
+            bus_data.inputs = this.prepare_input_series(bus_data.inputs);
+        } catch (e){
+            console.error(e);
+            return;
+        }
         return bus_data;
     }
 
-    float_to_hex = (series) =>{
+    float_to_hex = (series: number[]) =>{
         return series.map((item)=>{
             const buffer = new ArrayBuffer(4);
             const view = new DataView(buffer);
@@ -748,18 +805,21 @@ export class up_emulator {
         })
     }
 
-    prepare_input_series = (raw_specs)=>{
-        let series_order = {};
-        let series_header = {};
-        raw_specs.split("\n").map((line, idx)=>{
+    prepare_input_series = (raw_specs: string)=>{
+        let series_order: Record<string, number> = {};
+        let series_header : Record<number, string>= {};
+        raw_specs.split("\n").map((line:string, idx: number)=>{
             let components = line.split(",");
             if(components.length === 5){
                 series_header[idx] = components.slice(1, components.length).join(",");
+                if(!components[0]){
+                    throw("Error: Malformed input file");
+                }
                 series_order[components[0]] = idx;
             }
         })
 
-        let series_data = {};
+        let series_data : Record<number, number[]> = {};
         for(let o in series_order){
             Object.values(this.cores).map((core)=>{
                 core.inputs.map((in_obj)=>{
@@ -770,18 +830,22 @@ export class up_emulator {
                             core.channels
                         );
                         if(o === core.name + "." + in_obj.name){
+                            if(series_order[o] === undefined){
+                                throw("Error: Malformed input file");
+                            }
                             series_data[series_order[o]] = this.float_to_hex(series);
                         } else {
                             for(let i = 0; i<series.length; i++){
                                 let data_name = core.name.replace(" ", "_")+ "[" + i.toString() + "]" +  "." + in_obj.name.replace(" ", "_");
                                 if(o === data_name){
+                                    if(series_order[o] === undefined){
+                                        throw("Error: Malformed input file");
+                                    }
                                     series_data[series_order[o]] = this.float_to_hex(series[i]);
                                     break;
                                 }
                             }
                         }
-
-
                     }
                 });
             })
@@ -793,10 +857,17 @@ export class up_emulator {
             serialized_data += series_header[i] + ";";
         }
         serialized_data = serialized_data.slice(0, -1) + "\n";
-        if(Object.keys(series_data) .length === 0) return serialized_data;
-        for(let j = 0; j<Object.values(series_data)[0].length; j++){
+        if(Object.keys(series_data).length === 0) return serialized_data;
+        let data_values = Object.values(series_data)[0];
+        if(!data_values){
+            throw("Error: Malformed input file");
+        }
+        for(let j = 0; j<data_values.length; j++){
             let row_data = [];
             for(let i in series_data){
+                if(!series_data[i]){
+                    throw("Error: Malformed input file");
+                }
                 row_data.push(series_data[i][j]);
             }
             serialized_data += row_data.join(",") + "\n";
@@ -815,9 +886,14 @@ export class up_emulator {
     }
 
     get_hil_data_points = () =>{
-        let dp = [];
+        let dp: hil_data_point[] = [];
         Object.values(this.connections).map((dma)=>{
-            let source_core = this.cores[dma.source_core].name;
+            let core = this.cores[dma.source_core];
+            if(!core){
+                console.error("Error: Core " + dma.source_core + " not found.");
+                return [];
+            }
+            let source_core = core.name;
             for(let p of dma.ports){
                 if(p.source_channel !== -1){
                     dp.push({
@@ -827,7 +903,7 @@ export class up_emulator {
                         channel: p.source_channel
                     })
                 } else {
-                    for(let i = 0; i<this.cores[dma.source_core].channels; i++){
+                    for(let i = 0; i<core.channels; i++){
                         dp.push({
                             label: source_core + "." + p.source_port + '['+ i.toString() + ']',
                             core: source_core,
@@ -862,14 +938,14 @@ export class up_emulator {
         return dp;
     }
 
-    select_output = (channel, output) =>{
+    select_output = (channel: number, output: string) =>{
         return backend_post(api_dictionary.operations.hil_select_output, {channel:channel, output:output});
     }
 
     get_inputs =() =>{
-        let target_inputs = {};
-        let cores = []
-        let channels = []
+        let target_inputs: Record<string, any> = {};
+        let cores: string[]  = []
+        let channels: number[]  = []
         Object.values(this.cores).map((core)=>{
             target_inputs[core.name] = []
             cores.push(core.name);
@@ -883,7 +959,7 @@ export class up_emulator {
         return [cores, target_inputs, channels];
     }
 
-    set_input = (core, name, channel, value) =>{
+    set_input = (core: number, name: string, channel: number, value: number) =>{
         return backend_post(api_dictionary.operations.hil_set_input, {
             core: core,
             name:name,
@@ -906,35 +982,35 @@ export class up_emulator {
         });
     }
 
-    add_breakpoint = async (core_id, line_n) =>{
+    add_breakpoint = async (core_id: number, line_n: number) =>{
         return await backend_post(api_dictionary.operations.hil_debug, {
             command: "add_breakpoint",
             arguments: {id:core_id, line:line_n},
         });
     }
 
-    get_breakpoints = async (core_id) =>{
+    get_breakpoints = async (core_id: number) =>{
         return await backend_post(api_dictionary.operations.hil_debug, {
             command: "get_breakpoints",
             arguments: {id:core_id},
         });
     }
 
-    remove_breakpoint = async (core_id, line_n) =>{
+    remove_breakpoint = async (core_id: number, line_n: number) =>{
         return await backend_post(api_dictionary.operations.hil_debug, {
             command: "remove_breakpoint",
             arguments: {id:core_id, line:line_n},
         });
     }
 
-    step_over = async (core_id) =>{
+    step_over = async (core_id: number) =>{
         return await backend_post(api_dictionary.operations.hil_debug, {
             command: "step",
             arguments: core_id
         });
     }
 
-    resume = async (core_id) =>{
+    resume = async (core_id: number) =>{
         return await backend_post(api_dictionary.operations.hil_debug, {
             command: "resume",
             arguments: core_id

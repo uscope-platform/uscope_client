@@ -18,7 +18,7 @@ import store from "../../store.js";
 import {removeField, upsertField} from "#redux/index.js";
 import {backend_patch} from "../proxy/backend.js";
 import {api_dictionary} from "../proxy/api_dictionary.js";
-import type {field} from "#interfaces/client_core/data_models.js";
+import type {field} from "#interfaces/index.ts";
 
 export class up_field {
     public name:string;

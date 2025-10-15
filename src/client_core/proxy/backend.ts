@@ -14,24 +14,23 @@
 // limitations under the License.
 
 
-import axios from "axios";
-import {store} from "../index"
+import axios, {type AxiosResponse} from "axios";
 
-let server_address = null;
-let auth_config = null;
+let server_address: string = "";
+let auth_config: any = null;
 
-export const set_address = (address) =>{
+export const set_address = (address: string) =>{
     server_address = address;
 };
 
-export const set_auth_config = (config) => {
+export const set_auth_config = (config: any) => {
     auth_config = config;
 };
 
 
-export const backend_get = (endpoint) => {
+export const backend_get =<T = any> (endpoint: string): Promise<T> => {
     return new Promise( (resolve, reject) => {
-        axios.get(server_address+endpoint, auth_config)
+        axios.get<T>(server_address+endpoint, auth_config)
             .then(res => {
                 resolve(res.data);
             }).catch(error => {
@@ -40,7 +39,7 @@ export const backend_get = (endpoint) => {
     });
 }
 
-export const backend_post = (endpoint, data) => {
+export const backend_post = <T = any> (endpoint: string, data: any): Promise<T> => {
     return new Promise( (resolve, reject) => {
         axios.post(server_address + endpoint, data, auth_config)
             .then(res => {
@@ -51,7 +50,7 @@ export const backend_post = (endpoint, data) => {
     });
 }
 
-export const backend_delete = (endpoint, data) => {
+export const backend_delete = (endpoint: string, data?: any): Promise<AxiosResponse> => {
     return new Promise( (resolve, reject) => {
         axios.delete(server_address + endpoint, {...auth_config, data:data})
             .then(res => {
@@ -62,7 +61,7 @@ export const backend_delete = (endpoint, data) => {
     });
 }
 
-export const backend_patch = (endpoint, data) => {
+export const backend_patch = (endpoint: string, data: any): Promise<AxiosResponse> => {
     return new Promise( (resolve, reject) => {
         axios.patch(server_address + endpoint, data, auth_config)
             .then(res => {
@@ -71,17 +70,4 @@ export const backend_patch = (endpoint, data) => {
             reject(error);
         });
     });
-}
-
-
-
-
-
-export const dispatch_redux_thunk = (action, endpoint, data) => {
-    if(data) {
-        return store.dispatch(action(server_address + endpoint, data, auth_config))
-    } else {
-        return store.dispatch(action(server_address + endpoint, auth_config));
-    }
-
 }

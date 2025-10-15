@@ -15,7 +15,7 @@
 
 import {backend_get, backend_post} from "../proxy/backend.js";
 import {api_dictionary} from "../proxy/api_dictionary.js";
-import type {hil_address_map} from "#interfaces/client_core/data_models.js";
+import type {hil_address_map} from "#interfaces/index.ts";
 
 export class up_settings {
 

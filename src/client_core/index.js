@@ -37,7 +37,7 @@ export {up_program} from './data_models/up_program'
 export {up_bitstream} from './data_models/up_bitstream'
 export {up_register} from  './data_models/up_register'
 export {up_emulator} from './data_models/emulator/up_emulator'
-export {up_emulator_result} from './data_models/emulator/up_emulation_result.js'
+export {up_emulator_result} from './data_models/emulator/up_emulation_result.ts'
 export {application_diff_engine} from './data_models/diff_engine'
 export {up_settings} from './data_models/up_settings'
 

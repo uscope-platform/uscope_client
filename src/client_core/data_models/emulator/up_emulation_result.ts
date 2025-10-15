@@ -15,9 +15,17 @@
 
 
 export class up_emulator_result {
-    constructor(res_obj,  inputs) {
-        if(!res_obj || JSON.stringify(Object.keys(res_obj)) === JSON.stringify(["timebase"]))
+    public timebase:number[];
+    public data:any;
+    public inputs:any;
+    public selected_data_series:any;
+
+    constructor(res_obj: any,  inputs: any) {
+        if(!res_obj || JSON.stringify(Object.keys(res_obj)) === JSON.stringify(["timebase"])) {
+            console.error("Invalid emulation result");
+            this.timebase= [];
             return;
+        }
         this.data = res_obj;
         this.timebase = [...res_obj.timebase];
         delete this.data.timebase;
@@ -28,7 +36,8 @@ export class up_emulator_result {
 
     static getDummy() {
         let obj = {
-            timebase:[]
+            timebase:[],
+            data:{}
         }
         return new up_emulator_result(obj, {});
     }
@@ -42,7 +51,7 @@ export class up_emulator_result {
         return {sources:[...cores, ...Object.keys(this.inputs)], n_inputs:Object.keys(this.inputs).length};
     }
 
-    get_available_data_series = (series_name) =>{
+    get_available_data_series = (series_name: string) =>{
         if(series_name && this.data[series_name].outputs){
             if(this.data.hasOwnProperty(series_name)){
                 return Object.keys(this.data[series_name].outputs);
@@ -54,13 +63,10 @@ export class up_emulator_result {
         }
     }
 
-    is_multichannel(data_source, data_series){
-        return Object.keys(this.data[data_source][data_series]).length >1;
-    }
 
-    get_series_channels(data_source, data_series){
+    get_series_channels(data_source: string | undefined, data_series: string | undefined){
 
-        if(this.data && this.data.hasOwnProperty(data_source) && this.data[data_source].outputs){
+        if(data_series && data_source && this.data && this.data.hasOwnProperty(data_source) && this.data[data_source].outputs){
             if(this.data[data_source].outputs.hasOwnProperty(data_series)){
                 return Object.keys(this.data[data_source].outputs[data_series]);
             }
@@ -68,8 +74,8 @@ export class up_emulator_result {
         return [];
     }
 
-    get_array_indices(data_source, data_series, channel){
-        if(this.data && this.data.hasOwnProperty(data_source) && this.data[data_source].outputs){
+    get_array_indices(data_source?:string, data_series?: string , channel?: number){
+        if(data_series && data_source && this.data && this.data.hasOwnProperty(data_source) && this.data[data_source].outputs){
             if(this.data[data_source].outputs.hasOwnProperty(data_series)){
                 if(typeof channel === "string"){
                     let array = this.data[data_source].outputs[data_series][0];
@@ -88,32 +94,38 @@ export class up_emulator_result {
         return [this.timebase, this.selected_data_series];
     }
 
-    add_input(data_source, input_name, is_multiselection) {
-
-        if(is_multiselection){
-            this.selected_data_series.push({
-                name:data_source + "." + input_name,
-                content:this.inputs[data_source][input_name]
-            });
-        } else {
-            this.selected_data_series =[{
-                name:data_source + "." + input_name,
-                content:this.inputs[data_source][input_name]
-            }];
+    add_input(data_source?:string, input_name?:string, is_multiselection?:boolean) {
+        if(data_source && input_name){
+            if(is_multiselection){
+                this.selected_data_series.push({
+                    name:data_source + "." + input_name,
+                    content:this.inputs[data_source][input_name]
+                });
+            } else {
+                this.selected_data_series =[{
+                    name:data_source + "." + input_name,
+                    content:this.inputs[data_source][input_name]
+                }];
+            }
         }
+        return [];
     }
 
-    add_data_series(data_source, data_series, channel, index, is_multiselection) {
-        if(is_multiselection){
-            this.selected_data_series.push({
-                name:data_source + "." + data_series + "." + channel + "[" + index + "]",
-                content:this.data[data_source].outputs[data_series][parseInt(channel)][index]
-            });
-        } else {
-            this.selected_data_series =[{
-                name:data_source + "." + data_series + "." + channel + "[" + index + "]",
-                content:this.data[data_source].outputs[data_series][parseInt(channel)][index]
-            }];
+    add_data_series(data_source?: string, data_series?: string, channel?: number, index?: string, is_multiselection?:boolean) {
+        if(data_source && data_series && channel &&index){
+            let int_channel: number = channel;
+            if(typeof channel === "string") int_channel = parseInt((channel as string));
+            if(is_multiselection){
+                this.selected_data_series.push({
+                    name:data_source + "." + data_series + "." + channel + "[" + index + "]",
+                    content:this.data[data_source].outputs[data_series][int_channel][index]
+                });
+            } else {
+                this.selected_data_series =[{
+                    name:data_source + "." + data_series + "." + channel + "[" + index + "]",
+                    content:this.data[data_source].outputs[data_series][int_channel][index]
+                }];
+            }
         }
 
     }
