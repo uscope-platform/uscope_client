@@ -25,7 +25,7 @@ let HilChannelSelector = function (props) {
 
     let [selected_channels, set_selected_channels]  = useState( ()=>{
         let default_state = [{},{},{},{},{},{}];
-        let state = get_ui_state(application.application_name,'hil_selector_channels',  default_state);
+        let state = get_ui_state(application,'hil_selector_channels',  default_state);
         if(state.selected_emulator === props.emulator.name){
             if(state.channels !== default_state){
                 for(let i = 0; i< 6; i++) {
@@ -59,7 +59,7 @@ let HilChannelSelector = function (props) {
         forceUpdate();
         await props.emulator.select_output(ch_n-1, value.value);
         props.set_selected_outputs(new_ch.map((ch_obj)=> ch_obj.label))
-        save_ui_state(application.application_name,'hil_selector_channels', {selected_emulator:props.emulator.name, channels:new_ch});
+        save_ui_state(application,'hil_selector_channels', {selected_emulator:props.emulator.name, channels:new_ch});
     }
 
     let render_selectors = () =>{

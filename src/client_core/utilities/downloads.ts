@@ -14,7 +14,7 @@
 // limitations under the License.
 
 
-export let download_json = (content, filename) =>{
+export let download_json = (content: any, filename: string) =>{
 
     let blob = new Blob([JSON.stringify(content, null, 4)], {type: "application/json"});
     let url  = URL.createObjectURL(blob);
@@ -27,11 +27,11 @@ export let download_json = (content, filename) =>{
     document.body.removeChild(link);
 }
 
-export let download_plot = (channels, file_name) => {
-    let data = channels.map((ch)=>{
+export let download_plot = (channels: any, file_name: string) => {
+    let data = channels.map((ch : any)=>{
         return ch.y;
     });
-    let csv_content = "";
+    let csv_content;
 
     csv_content = `${channels[0].name},${channels[1].name},${channels[2].name},${channels[3].name},${channels[4].name},${channels[5].name}\n`
     for(let i = 0; i<data[0].length; i++){
@@ -56,7 +56,7 @@ export let download_plot = (channels, file_name) => {
 }
 
 
-export let download_bitstream = (content, filename) =>{
+export let download_bitstream = (content: any, filename: string) =>{
 
     let link = document.createElement('a');
     link.href =  "data:image/png;base64," + content;
@@ -66,7 +66,7 @@ export let download_bitstream = (content, filename) =>{
     document.body.removeChild(link);
 }
 
-export let download_text = (content, filename) => {
+export let download_text = (content: string, filename: string) => {
     let blob = new Blob([content], {type: "text/plain;charset=utf-8"});
     let url = URL.createObjectURL(blob);
 

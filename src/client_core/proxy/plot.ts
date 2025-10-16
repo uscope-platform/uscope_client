@@ -16,10 +16,10 @@
 import {backend_get, backend_post} from "./backend.js";
 
 import {api_dictionary} from './api_dictionary.js'
-import type {scope_control, scope_settings} from "#interfaces/proxy/types.js";
+import type {scope_control, scope_data_object, scope_settings} from "#interfaces/proxy/types.js";
 
 
-export const direct_fetch = () =>  {
+export const direct_fetch = (): Promise<scope_data_object[]> =>  {
     return new Promise((resolve, reject)=>{
         backend_get(api_dictionary.operations.fetch_data).then((res) => {
             resolve(res)

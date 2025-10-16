@@ -14,10 +14,10 @@
 // limitations under the License.
 
 
-import {direct_fetch} from "./proxy/plot";
-import {up_peripheral} from "./data_models/up_peripheral";
+import {direct_fetch} from "./proxy/plot.js";
+import type {application, channel, channel_group} from "#interfaces/index.js";
 
-export let create_plot_channel = (ch) => {
+export let create_plot_channel = (ch: channel) => {
     return ({
         x: Array.from(Array(1024).keys()),
         y: Array(1024).fill(0),
@@ -28,23 +28,23 @@ export let create_plot_channel = (ch) => {
         spec: ch
     })
 }
-export let get_channels_from_group = (group, channels) => {
+export let get_channels_from_group = (group: channel_group, channels: channel[]) => {
     let channels_list = []
     for (let ch of group.channels) {
         let selected_ch = channels.filter((item) => {
-            return item.id === ch.value;
+            return item.id === ch;
         })
         channels_list.push(selected_ch[0])
     }
     return channels_list;
 }
-export let get_channel_number_from_id = (id, channels) => {
+export let get_channel_number_from_id = (id: string, channels: any[]) => {
     for (let item of channels) {
         if (item.spec.id === id) return item.spec.number
     }
 }
 
-export const initialize_plot = (app) =>{
+export const initialize_plot = (app: application) =>{
 
     let [channels_list, group ] = app.get_scope_setup_info();
     let ch_obj = [];
@@ -54,7 +54,7 @@ export const initialize_plot = (app) =>{
     return ch_obj
 };
 
-export const update_plot_data =async (old_data)=>{
+export const update_plot_data =async (old_data: any[])=>{
     let raw_data = await direct_fetch();
     return  old_data.map((item)=>{
         let new_item = item;
@@ -67,7 +67,7 @@ export const update_plot_data =async (old_data)=>{
     });
 }
 
-export const update_plot_status = (old_data, status)=>{
+export const update_plot_status = (old_data:any[], status: Record<number, boolean>)=>{
     return old_data.filter(item=>{
         if(item.spec.number in status){
             let new_item = item;
@@ -77,15 +77,4 @@ export const update_plot_status = (old_data, status)=>{
             return item
         }
     });
-}
-
-export const setup_scope_mux = (channels, base_addr) =>{
-    if(base_addr){
-        for(let item of channels){
-            if(item){
-                let channel_address = base_addr + 4*(parseInt(item.number)+1);
-                up_peripheral.direct_register_write([[channel_address, parseInt(item.mux_setting)]]).then();
-            }
-        }
-    }
 }

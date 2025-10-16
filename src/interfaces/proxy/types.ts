@@ -43,3 +43,8 @@ export interface scope_settings{
     address:number,
     dma_buffer_offset: number
 }
+
+export interface scope_data_object{
+    channel:number,
+    data:number[]
+}
