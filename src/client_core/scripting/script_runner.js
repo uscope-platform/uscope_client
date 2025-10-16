@@ -16,7 +16,7 @@
 import {saveParameter} from "#redux";
 import {up_peripheral,set_write_callback} from "#client_core";
 import {parseFunction} from "./frontend";
-import {translate_legacy_registers, translate_registers} from "./backend";
+import {translate_registers} from "./backend";
 import {__selected_application} from "../index";
 
 export let scripting_engine_peripherals = {}
@@ -47,7 +47,7 @@ export const run_script = (store, trigger_string, parameters, current_parameter,
 
 
     let trigger = Object.values(scripts).filter((script)=>{
-        return script.triggers.includes(trigger_string);
+        return script.triggers === trigger_string;
     });
     let content = trigger[0].content;
 
@@ -63,11 +63,6 @@ export const run_script = (store, trigger_string, parameters, current_parameter,
     let peripherals = purge_peripherals(scripting_engine_peripherals);
     let {workspace, registers} = script_content.call(peripherals, first_arg, context);
 
-    let bulk_registers = [];
-    if(registers!== null) {
-        let regs = translate_legacy_registers(store, registers);
-        bulk_registers.push(...regs);
-    }
 
     if(script_register_access_log.length !== 0) {
         bulk_registers.push(...translate_registers(script_register_access_log, scripting_engine_peripherals));

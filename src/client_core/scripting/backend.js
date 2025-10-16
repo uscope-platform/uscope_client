@@ -13,49 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {up_peripheral} from "../data_models/up_peripheral";
-import {__selected_application} from "../index";
-
-export const translate_legacy_registers = (store, registers) => {
-    const state = store.getState();
-
-    const app_peripherals = __selected_application.peripherals;
-    const peripherals_specs = state.peripherals;
-
-
-    let bulk_registers = [];
-    for (let reg in registers) {
-        let [periph_id, reg_id] = reg.split('.');
-        let periph_arr = app_peripherals.filter((periph) => {
-            return periph.peripheral_id === periph_id;
-        });
-        if(periph_arr.length === 0){
-            throw new RangeError("The peripheral " + periph_id + " does not exist in this application");
-        }
-        let periph = periph_arr[0];
-
-        let reg_obj = peripherals_specs[periph.spec_id].registers.filter((reg) => {
-            return reg.ID === reg_id;
-        });
-        if(reg_obj.length === 0){
-            throw new RangeError("The register " + reg_id + " not found in peripheral " + periph_id + " of spec " + periph.spec_id);
-        }
-
-        let reg_offset = reg_obj[0].offset;
-        let address = parseInt(periph.base_address) + parseInt(reg_offset);
-        if (periph.proxied) {
-            bulk_registers.push({type:"proxied", proxy_type:periph.proxy_type, proxy_address:parseInt(periph.proxy_address), address:address, value:registers[reg]})
-        } else {
-            bulk_registers.push({type:"direct", proxy_type:"", proxy_address:0, address:address, value:registers[reg]})
-        }
-
-    }
-
-
-
-    return bulk_registers;
-};
-
+import {up_peripheral} from "#client_core";
 
 export const translate_registers = (write_log, peripherals) =>{
     let writes = []

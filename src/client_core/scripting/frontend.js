@@ -13,26 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export const context_cleaner = (parameters, current_parameter) => {
-    //purge register context of unwanted and potentially dangerous fields
-
-    //purge parameters context of unwanted and potentially dangerous fields
-    let parameters_context = {};
-    parameters.map((param) => {
-        if (current_parameter !== param.parameter_id) {
-            parameters_context[param.parameter_id] = param.value;
-        }
-        return null;
-    });
-    return {parameters: parameters_context};
-};
-
 
 export const parseFunction = function (string) {
     let funcReg = /function (\S*) *\(([^()]*)\)[ \n\t]*{(.*)}/gmi;
     let match = funcReg.exec(string.replace(/(\r\n|\n|\r)/gm, ""));
     if (match) {
-        // eslint-disable-next-line
+
         return new Function(match[2].split(','), match[3]);
     }
     return null;
