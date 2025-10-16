@@ -49,6 +49,7 @@ export const run_script = (store, trigger_string, parameters, current_parameter,
     let trigger = Object.values(scripts).filter((script)=>{
         return script.triggers === trigger_string;
     });
+    if(trigger.length === 0)return {};
     let content = trigger[0].content;
 
     let context =  {registers: {}, parameters: parameters};
