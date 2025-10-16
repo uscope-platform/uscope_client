@@ -18,7 +18,7 @@
 
 export type {script, script_edit} from './client_core/script.ts'
 export type {program, program_edit} from './client_core/program.ts'
-export type {application, initial_register_value, core_load_info, clock_frequencies, channel, macro, parameter, peripheral_istance, filter, channel_group, soft_core} from './client_core/application.ts'
+export type {application, initial_register_value, core_load_info, clock_frequencies, channel, macro, parameter, peripheral_instance, filter, channel_group, soft_core} from './client_core/application.ts'
 export type {hil_address_map, emulator, core, connection, server_side_port_link, hil_data_point, core_deployment_options, core_input, core_input_data, core_memory, core_output, emulator_hil_sim_data, port_link} from './client_core/emulator.ts'
 export type {filter_specifications} from './client_core/filter.ts'
 export type {bitstream_model} from './client_core/bitstream.ts'

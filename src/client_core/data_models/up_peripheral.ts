@@ -134,8 +134,8 @@ export class up_peripheral {
     }
 
 
-    get_proxied_registers = (periph_id: number, parameters: resolved_hdl_parameters) =>{
-        let registers:{[key: string]: any} = {}
+    get_proxied_registers = (periph_id: number, parameters: resolved_hdl_parameters): Record<string, any> =>{
+        let registers:Record<string, any> = {}
 
         let current_address_offset = 0;
         for (const r of this.registers) {

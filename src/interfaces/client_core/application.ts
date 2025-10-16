@@ -28,7 +28,7 @@ export interface application {
     initial_registers_values:initial_register_value[],
     macro:macro[],
     parameters:parameter[],
-    peripherals:peripheral_istance[],
+    peripherals:peripheral_instance[],
     miscellaneous: {
         [index: string]: any;
     },
@@ -68,7 +68,7 @@ export interface parameter {
     visible: boolean
 }
 
-export interface peripheral_istance{
+export interface peripheral_instance {
     name: string,
     peripheral_id: string,
     base_address: number,

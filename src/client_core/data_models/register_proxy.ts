@@ -54,7 +54,7 @@ const register_proxy: ProxyHandler<fields_object>  = {
     }
 }
 
-class fields_object {
+export class fields_object {
     public register_id: string;
     public peripheral_spec_id: number;
     public peripheral_id: number;

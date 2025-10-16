@@ -27,7 +27,7 @@ import {addApplication, removeApplication, updateApplication} from "#redux/index
 import {set_scope_address} from "../proxy/plot.js";
 import type {
     application, initial_register_value, clock_frequencies, channel, macro, parameter,
-    channel_group, soft_core, filter, program, peripheral_istance
+    channel_group, soft_core, filter, program, peripheral_instance
 } from "#interfaces/index.js";
 
 export class up_application {
@@ -39,7 +39,7 @@ export class up_application {
     public initial_registers_values:initial_register_value[];
     public macro: macro[];
     public parameters: parameter[];
-    public peripherals: peripheral_istance[];
+    public peripherals: peripheral_instance[];
     public soft_cores: soft_core[];
     public pl_clocks: clock_frequencies;
     public filters: filter[];
@@ -387,7 +387,7 @@ export class up_application {
     }
 
     add_peripheral = async (name:string) => {
-        let p: peripheral_istance = {
+        let p: peripheral_instance = {
             name: name,
             peripheral_id: name.replace(/\s/g, "_").toLowerCase(),
             base_address: 0,
