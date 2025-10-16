@@ -77,10 +77,11 @@ export interface parameter {
 export interface peripheral_instance {
     name: string,
     peripheral_id: string,
-    base_address: number,
+    base_address: string,
     hdl_parameters: Record<string, number>,
     proxied: boolean,
-    proxy_address:number,
+    proxy_type: string,
+    proxy_address:string,
     type: string,
     spec_id: string
 }

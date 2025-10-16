@@ -116,11 +116,11 @@ export class up_peripheral {
         return  store.dispatch(addPeripheral({payload:{[this.id]:this}}))
     };
 
-    get_register_offset = (name: string, parameters: Record<string, number>) =>{
+    get_register_offset = (name: string, parameters: Record<string, number>): number | null =>{
         let current_address_offset = 0;
         for (const r of this.registers) {
             let n_registers: number = 0;
-            if(r.n_registers.length === 0 || r.n_registers[0] === undefined) return [];
+            if(r.n_registers.length === 0 || r.n_registers[0] === undefined) return null;
             let param_value = parameters[r.n_registers[0]];
             if(param_value){
                 n_registers = param_value;
@@ -133,7 +133,7 @@ export class up_peripheral {
                 current_address_offset +=4;
             }
         }
-
+        return null;
     }
 
 

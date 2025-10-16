@@ -13,15 +13,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {up_peripheral} from "#client_core";
+import {up_peripheral} from "#client_core/index.js";
+import type {autocomplete_periph_object, register_write_object} from "#interfaces/scripting/types.js";
 
-export const translate_registers = (write_log, peripherals) =>{
+
+export const translate_registers = (write_log: register_write_object[], peripherals: Record<string, autocomplete_periph_object>) =>{
     let writes = []
 
     //The first step is the consolidation of informations scattered here and there
     for(let item of write_log){
-        let periph = peripherals[item.periph_id].periph_obj
-        let periph_spec = new up_peripheral(peripherals[item.periph_id].spec_obj);
+        let raw_peripheral = peripherals[item.periph_id];
+        if(raw_peripheral === undefined) {
+            console.error("Peripheral not found" + item.periph_id);
+            continue;
+        }
+        let periph = raw_peripheral.periph_obj
+        let periph_spec = new up_peripheral(raw_peripheral.spec_obj);
         let base_addr = parseInt(periph.base_address)
 
         let register_offset = periph_spec.get_register_offset(item.reg_id, periph.hdl_parameters);
