@@ -28,13 +28,13 @@ export let create_plot_channel = (ch: channel) => {
         spec: ch
     })
 }
-export let get_channels_from_group = (group: channel_group, channels: channel[]) => {
-    let channels_list = []
+export let get_channels_from_group = (group: channel_group, channels: channel[]): channel[] => {
+    let channels_list: channel[] = []
     for (let ch of group.channels) {
         let selected_ch = channels.filter((item) => {
-            return item.id === ch;
+            return item.id === ch.value;
         })
-        channels_list.push(selected_ch[0])
+        if(selected_ch[0] !== undefined) channels_list.push(selected_ch[0])
     }
     return channels_list;
 }

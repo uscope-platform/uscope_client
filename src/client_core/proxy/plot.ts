@@ -31,7 +31,7 @@ export const direct_fetch = (): Promise<scope_data_object[]> =>  {
 
 
 
-export const set_channel_status = (channel: number) => {
+export const set_channel_status = (channel: Record<number, boolean>) => {
     return new Promise((resolve, reject)=>{
         backend_post(api_dictionary.operations.set_channel_status, channel).then((res) => {
             resolve(res)

@@ -168,7 +168,7 @@ export class up_application {
 
     setup_scope = async () =>{
 
-        let [channels, ] = this.get_scope_setup_info();
+        let [channels, group] = this.get_scope_setup_info();
         await this.setup_scope_mux(channels);
         await this.setup_scaling_factors(channels);
         await this.setup_scope_statuses(this.get_channel_statuses(channels));
@@ -235,16 +235,20 @@ export class up_application {
         if(program){
             selected_program = new up_program(program);
         } else {
-            selected_program = new up_program((Object.values((store.getState()as any).programs) as program[]).filter((p) => {
+            let programs = (store.getState() as any).programs as program[];
+            let program_obj = Object.values(programs).filter((p) => {
                 return p.name === core.default_program;
-            })[0])
+            })[0];
+            if(!program_obj)return [{status:"failed", message:"Program not found"}];
+            selected_program = new up_program(program_obj)
+
         }
         return selected_program.load(core);
     }
 
-    get_scope_setup_info = () =>{
-        let channels_list = [];
-        let default_group = {}
+    get_scope_setup_info = ():[channel[], channel_group | undefined] =>{
+        let channels_list: channel[] = [];
+        let default_group: channel_group | undefined = undefined;
         for(let group of this.channel_groups){
             if(group.default){
                 default_group = group;
@@ -303,7 +307,7 @@ export class up_application {
         await set_scaling_factors(sfs);
     }
 
-    setup_scope_statuses = async (statuses: {[id:string]: boolean}) =>{
+    setup_scope_statuses = async (statuses: Record<number, boolean>) =>{
         await set_channel_status(statuses);
     }
 

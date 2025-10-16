@@ -66,6 +66,7 @@ export class up_peripheral {
     get_register_names = (parameters: resolved_hdl_parameters) =>{
         return this.registers.map((reg) =>{
             let n_regs;
+            if(reg.n_registers.length === 0 || reg.n_registers[0] === undefined) return [];
             let param_value = parameters[reg.n_registers[0]]
             if(param_value){
                 n_regs = param_value;
@@ -74,7 +75,7 @@ export class up_peripheral {
             }
             let ret = [];
             for(let i = 0; i<n_regs; i++){
-                ret.push(reg.register_name.replace("$", i));
+                ret.push(reg.register_name.replace("$", i.toString()));
             }
             return ret;
         })
@@ -118,6 +119,7 @@ export class up_peripheral {
         let current_address_offset = 0;
         for (const r of this.registers) {
             let n_registers: number = 0;
+            if(r.n_registers.length === 0 || r.n_registers[0] === undefined) return [];
             let param_value = parameters[r.n_registers[0]];
             if(param_value){
                 n_registers = param_value;
@@ -125,7 +127,7 @@ export class up_peripheral {
                 n_registers = parseInt(r.n_registers[0]);
             }
             for(let i = 0; i<n_registers;i++){
-                let current_name = r.register_name.replace("$", i);
+                let current_name = r.register_name.replace("$", i.toString());
                 if(name === current_name) return current_address_offset
                 current_address_offset +=4;
             }
@@ -140,6 +142,7 @@ export class up_peripheral {
         let current_address_offset = 0;
         for (const r of this.registers) {
             let n_registers = 0;
+            if(r.n_registers.length === 0 || r.n_registers[0] === undefined) return [];
             let param_value = parameters[r.n_registers[0]];
             if(param_value){
                 n_registers = param_value;

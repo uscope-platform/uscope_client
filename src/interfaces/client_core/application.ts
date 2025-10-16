@@ -48,10 +48,15 @@ export interface channel {
     scaling_factor: number
 }
 
+export interface group_channel_token{
+    label:string,
+    value:string
+}
+
 export interface channel_group{
     group_name: string,
     group_id: string,
-    channels:string[],
+    channels:group_channel_token[],
     default:boolean
 }
 
