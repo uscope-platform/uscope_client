@@ -17,11 +17,11 @@
 import type {up_register} from "#client_core/data_models/up_register.js";
 
 type WriteCallback = (
-    peripheral_id: number,
+    peripheral_id: string,
     peripheral_spec_id: number,
     register_id: string,
     field_spec: { length: number; offset: number } | undefined,
-    prop: string | symbol,
+    prop: string,
     access_type: string
 ) => void;
 
@@ -47,7 +47,7 @@ const register_proxy: ProxyHandler<fields_object>  = {
                 obj["peripheral_spec_id"],
                 obj["register_id"],
                 obj["field_specs"][String(prop)],
-                prop,
+                String(prop),
                 access_type
             );
         return true;
@@ -57,13 +57,13 @@ const register_proxy: ProxyHandler<fields_object>  = {
 export class fields_object {
     public register_id: string;
     public peripheral_spec_id: number;
-    public peripheral_id: number;
+    public peripheral_id: string;
     public field_specs: Record<string, { length: number; offset: number }>;
     public value?: number;
 
     [key: string]: number | string | Record<string, { length: number; offset: number }> | undefined;
 
-    constructor(register: up_register, periph_id: number) {
+    constructor(register: up_register, periph_id: string) {
         this.register_id = register.ID;
         this.peripheral_spec_id = register.parent_periph;
         this.peripheral_id = periph_id;
@@ -76,7 +76,7 @@ export class fields_object {
 }
 
 
-export const construct_proxied_register = (reg:up_register, periph_id:number) : fields_object =>{
+export const construct_proxied_register = (reg:up_register, periph_id:string) : fields_object =>{
     let fields = new fields_object(reg, periph_id);
     return new Proxy(fields, register_proxy);
 }

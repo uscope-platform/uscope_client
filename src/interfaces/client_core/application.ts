@@ -73,14 +73,13 @@ export interface parameter {
     visible: boolean
 }
 
+
 export interface peripheral_instance {
     name: string,
     peripheral_id: string,
     base_address: number,
-    hdl_parameters: {
-        [index: string]: number | string | boolean;
-    },
-    proxied: boolean
+    hdl_parameters: Record<string, number>,
+    proxied: boolean,
     proxy_address:number,
     type: string,
     spec_id: string

@@ -20,7 +20,6 @@ import styled from "styled-components";
 
 import {run_script, up_peripheral} from "#client_core";
 
-import store from "../../../store";
 import {ApplicationContext} from "@src/AuthApp.jsx";
 
 
@@ -38,7 +37,7 @@ let  MacroActions = props =>{
     let onClick = async (event) => {
         let trigger_str = event.target.name;
         let params = application.get_parameters_map();
-        let bulk_registers = run_script(store, trigger_str, params, "", null);
+        let bulk_registers = run_script(trigger_str, params, "", null);
         if(bulk_registers !== null){
             await up_peripheral.bulk_register_write(bulk_registers);
         }

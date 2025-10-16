@@ -18,7 +18,6 @@ import React, {useEffect} from 'react';
 import {Button, FormLayout} from "@UI"
 import SingleValueField from "../../Common_Components/SingleValueField";
 import {run_parameter_script} from "#client_core";
-import store from "../../../store";
 
 let  ParametersArea = props =>{
 
@@ -27,7 +26,7 @@ let  ParametersArea = props =>{
         for(let elem of props.parameters){
             let local_elem = elem;
             local_elem.name = elem.parameter_id;
-            run_parameter_script(store, local_elem);
+            run_parameter_script( local_elem.name, local_elem.value).then();
         }
     }, []);
 
@@ -37,7 +36,7 @@ let  ParametersArea = props =>{
         for(let parameter of event.target){
             //Parse parameter value and find out if it has changed
             if(parameter.value !== ""){
-                run_parameter_script(store, parameter).then();
+                run_parameter_script( parameter.name, parameter.value).then();
             }
         }
     };

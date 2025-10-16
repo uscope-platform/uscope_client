@@ -16,30 +16,20 @@
  *
  */
 
+import type {fields_object} from "#client_core/data_models/register_proxy.js";
+import type {peripheral, peripheral_instance} from "#interfaces/index.js";
 
-export interface peripheral {
-    id:number,
-    name:string,
-    version:string,
-    registers:register[]
-}
-export interface field {
-    name: string,
-    description: string,
-    length:number,
-    offset:number,
-    order:number,
-    n_fields:string[]
+export interface autocomplete_periph_object {
+    regs:Record<string, fields_object>,
+    periph_obj:peripheral_instance,
+    spec_obj:peripheral
 }
 
-export interface register {
-    ID:string,
-    register_name:string,
-    description:string,
-    direction:string,
-    value:number,
-    fields:field[],
-    offset?:string,
-    order:number,
-    n_registers:string[]
+export interface register_write_object {
+    periph_id:string,
+    spec_id:number,
+    reg_id:string,
+    access_type:string,
+    field_spec:any,
+    field_name:string
 }

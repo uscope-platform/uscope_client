@@ -19,7 +19,8 @@ import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy
 import {api_dictionary} from "../proxy/api_dictionary.js";
 import {addPeripheral, removePeripheral} from "#redux/index.js";
 import {up_register} from "#client_core/index.js";
-import type {peripheral, resolved_hdl_parameters} from "#interfaces/index.js";
+import type {peripheral} from "#interfaces/index.js";
+import {fields_object} from "#client_core/data_models/register_proxy.js";
 
 export class up_peripheral {
     public id:number;
@@ -63,7 +64,7 @@ export class up_peripheral {
         return new up_peripheral(new_periph);
     }
 
-    get_register_names = (parameters: resolved_hdl_parameters) =>{
+    get_register_names = (parameters: Record<string, number>) =>{
         return this.registers.map((reg) =>{
             let n_regs;
             if(reg.n_registers.length === 0 || reg.n_registers[0] === undefined) return [];
@@ -115,7 +116,7 @@ export class up_peripheral {
         return  store.dispatch(addPeripheral({payload:{[this.id]:this}}))
     };
 
-    get_register_offset = (name: string, parameters: resolved_hdl_parameters) =>{
+    get_register_offset = (name: string, parameters: Record<string, number>) =>{
         let current_address_offset = 0;
         for (const r of this.registers) {
             let n_registers: number = 0;
@@ -136,13 +137,13 @@ export class up_peripheral {
     }
 
 
-    get_proxied_registers = (periph_id: number, parameters: resolved_hdl_parameters): Record<string, any> =>{
+    get_proxied_registers = (periph_id: string, parameters: Record<string, number>): Record<string, fields_object> =>{
         let registers:Record<string, any> = {}
 
         let current_address_offset = 0;
         for (const r of this.registers) {
             let n_registers = 0;
-            if(r.n_registers.length === 0 || r.n_registers[0] === undefined) return [];
+            if(r.n_registers.length === 0 || r.n_registers[0] === undefined) return {};
             let param_value = parameters[r.n_registers[0]];
             if(param_value){
                 n_registers = param_value;
@@ -212,7 +213,7 @@ export class up_peripheral {
         return this._get_periph();
     }
 
-    _get_periph = () =>{
+    _get_periph = (): Record<string, peripheral> =>{
         let cleaned_registers = [];
         for(let i of this.registers){
             cleaned_registers.push(i._get_register());
