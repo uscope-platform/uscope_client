@@ -64,7 +64,7 @@ export const run_script = (store, trigger_string, parameters, current_parameter,
     let peripherals = purge_peripherals(scripting_engine_peripherals);
     let {workspace, registers} = script_content.call(peripherals, first_arg, context);
 
-
+    let bulk_registers = [];
     if(script_register_access_log.length !== 0) {
         bulk_registers.push(...translate_registers(script_register_access_log, scripting_engine_peripherals));
     }

@@ -14,12 +14,12 @@
 // limitations under the License.
 
 
-export const parseFunction = function (string) {
+export const parseFunction = function (string: string) {
     let funcReg = /function (\S*) *\(([^()]*)\)[ \n\t]*{(.*)}/gmi;
     let match = funcReg.exec(string.replace(/(\r\n|\n|\r)/gm, ""));
-    if (match) {
-
-        return new Function(match[2].split(','), match[3]);
+    if (match && match[2] && match[3]) {
+        let args = match[2].split(',');
+        return new Function(...args, match[3]);
     }
     return null;
 };
