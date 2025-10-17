@@ -17,28 +17,30 @@
  */
 
 
-import { createSlice } from '@reduxjs/toolkit'
+import {createSlice, type PayloadAction} from '@reduxjs/toolkit'
+import type {ScriptState} from "#interfaces/redux.js";
+import {up_script} from "#client_core/index.js";
 
-const initialState = {}
+const initialState : ScriptState= {}
 
 const scriptSlice = createSlice({
     name: 'scripts',
     initialState,
     reducers: {
-        AddScript(state, action) {
+        AddScript(state: ScriptState, action: PayloadAction<up_script>) {
             return {...state, ...{[action.payload.id]:action.payload}}
         },
-        removeScript(state, action) {
+        removeScript(state: ScriptState, action: PayloadAction<up_script>) {
             return  Object.keys(state)
                 .filter(key => {
                     return key !== action.payload.id.toString();
                 })
-                .reduce((obj, key) => {
-                    obj[key] = state[key];
+                .reduce((obj:ScriptState, key) => {
+                    obj[parseInt(key)] = state[parseInt(key)]!;
                     return obj;
                 }, {});
         },
-        loadAllScripts(state, action) {
+        loadAllScripts(state: ScriptState, action: PayloadAction<ScriptState>) {
             return  action.payload;
         }
     },

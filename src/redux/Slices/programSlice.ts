@@ -16,28 +16,30 @@
  *
  */
 
-import { createSlice } from '@reduxjs/toolkit'
+import {createSlice, type PayloadAction} from '@reduxjs/toolkit'
+import type {ProgramState} from "#interfaces/redux.js";
+import {up_program} from "#client_core/index.js";
 
-const initialState = {}
+const initialState: ProgramState = {}
 
 const programSlice = createSlice({
     name: 'programs',
     initialState,
     reducers: {
-        AddProgram(state, action) {
+        AddProgram(state: ProgramState, action: PayloadAction<up_program>) {
             return {...state, ...{[action.payload.id]:action.payload}}
         },
-        removeProgram(state, action) {
+        removeProgram(state: ProgramState, action: PayloadAction<up_program>) {
             return  Object.keys(state)
                 .filter(key => {
                     return key !== action.payload.id.toString();
                 })
-                .reduce((obj, key) => {
-                    obj[key] = state[key];
+                .reduce((obj:ProgramState, key) => {
+                    obj[parseInt(key)] = state[parseInt(key)]!;
                     return obj;
                 }, {});
         },
-        loadAllPrograms(state, action) {
+        loadAllPrograms(state: ProgramState, action: PayloadAction<ProgramState>) {
             return action.payload
         }
     },

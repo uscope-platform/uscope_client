@@ -16,7 +16,7 @@
  *
  */
 
-import {up_application, up_bitstream, up_filter} from "#client_core/index.js";
+import {up_application, up_bitstream, up_filter, up_program, up_script} from "#client_core/index.js";
 
 export interface ApplicationsState {
     [key: number]: up_application
@@ -34,4 +34,13 @@ export interface BitstreamState{
 
 export interface FilterState{
     [key:number]: up_filter
+}
+
+export interface ScriptState{
+    [key:number]: up_script
+}
+
+
+export interface ProgramState{
+    [key:number]: up_program
 }
