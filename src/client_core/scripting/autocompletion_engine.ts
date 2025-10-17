@@ -16,7 +16,7 @@
 import {scripting_engine_peripherals} from "./script_runner.js";
 import {up_peripheral} from "../data_models/up_peripheral.js";
 import {up_register} from "../data_models/up_register.js";
-import type {autocomplete_suggestion, autocompletion_context} from "#interfaces/scripting/types.js";
+import type {autocomplete_suggestion, autocompletion_context} from "#interfaces/index.js";
 
 export const autocompletion_engine = (line: autocompletion_context, explicit: boolean) : autocomplete_suggestion[] => {
 

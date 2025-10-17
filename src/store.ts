@@ -13,10 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {persistReducer, persistStore} from 'redux-persist';
+import {persistReducer} from 'redux-persist';
 import storage from 'redux-persist/lib/storage'
 import hardSet from "redux-persist/lib/stateReconciler/hardSet";
-import rootReducer from './redux/Slices';
+import rootReducer from './redux/Slices/index.js';
 
 // TODO: immer AutoFreeze breaks plotly because plotly modifies his inputs!!! that are passes through redux
 import { setAutoFreeze } from 'immer';
@@ -44,9 +44,11 @@ const store = configureStore({
             serializableCheck: false,
         }),
     devTools: {
-        stateSanitizer: (state) => state.data ? { ...state, data: '<<DATA_BLOB>>' } : state
+        stateSanitizer: (state) => (state as any).data ? { ...state, data: '<<DATA_BLOB>>' } : state
     },
 });
 
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch
 
 export default store;

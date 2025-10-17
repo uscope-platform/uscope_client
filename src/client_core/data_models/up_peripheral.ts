@@ -21,7 +21,7 @@ import {addPeripheral, removePeripheral} from "#redux/index.js";
 import {up_register} from "#client_core/index.js";
 import type {peripheral} from "#interfaces/index.js";
 import {fields_object} from "#client_core/data_models/register_proxy.js";
-import type {register_write} from "#interfaces/proxy/types.js";
+import type {register_write} from "#interfaces/index.js";
 
 export class up_peripheral {
     public id:number;

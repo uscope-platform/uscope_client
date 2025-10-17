@@ -14,8 +14,7 @@
 // limitations under the License.
 
 import {up_peripheral} from "#client_core/index.js";
-import type {autocomplete_periph_object, register_write_object} from "#interfaces/scripting/types.js";
-import type {register_write} from "#interfaces/proxy/types.js";
+import type {register_write, autocomplete_periph_object, register_write_object} from "#interfaces/index.js";
 
 export const translate_registers = (
     write_log: register_write_object[], peripherals: Record<string, autocomplete_periph_object>

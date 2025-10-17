@@ -12,36 +12,39 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { createSlice } from '@reduxjs/toolkit'
+import {createSlice, type PayloadAction} from '@reduxjs/toolkit'
+import type {ApplicationsState, parameter_save_action} from "#interfaces/redux.js";
+import {up_application} from "#client_core/index.js";
 
-const initialState = {}
+const initialState: ApplicationsState = {}
 
 const applicationsSlice = createSlice({
     name: 'applications',
     initialState,
     reducers: {
-        saveParameter(state, action) {
-            let target = state[action.payload.app]["parameters"].filter((item)=>{
+        saveParameter(state: ApplicationsState, action: PayloadAction<parameter_save_action>) {
+
+            let target = state[action.payload.app]!["parameters"].filter((item)=>{
                 return item['parameter_id'] === action.payload.name;
             })[0];
-            target.value = action.payload.value;
+            target!.value = action.payload.value;
         },
-        loadApplications(state, action) {
+        loadApplications(state: ApplicationsState, action:  PayloadAction<ApplicationsState>) {
             return action.payload;
         },
-        addApplication(state, action) {
+        addApplication(state: ApplicationsState, action: PayloadAction<ApplicationsState>) {
             return  {...state, ...action.payload}
         },
-        removeApplication(state, action) {
+        removeApplication(state: ApplicationsState, action: PayloadAction<number>) {
             return  Object.keys(state)
                 .filter(key => {
                     return parseInt(key) !== action.payload;
-                }).reduce((obj, key) => {
-                    obj[key] = state[key];
+                }).reduce((obj: ApplicationsState, key) => {
+                    obj[parseInt(key)] = state[parseInt(key)]!;
                     return obj;
                 }, {});
         },
-        updateApplication(state, action) {
+        updateApplication(state: ApplicationsState, action: PayloadAction<up_application>) {
             state[action.payload.id] = action.payload;
         },
     },

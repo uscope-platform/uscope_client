@@ -23,3 +23,5 @@ export type {hil_address_map, emulator, core, connection, server_side_port_link,
 export type {filter_specifications} from './client_core/filter.ts'
 export type {bitstream_model} from './client_core/bitstream.ts'
 export type {register, peripheral, field} from './client_core/peripherals.ts'
+export type {autocomplete_periph_object, register_write_object, autocomplete_suggestion, autocompletion_context} from './client_core/scripting/types.js'
+export type {register_write, scope_control, scope_data_object, scope_settings,user_create_request,auth_request} from './client_core/proxy/types.js'

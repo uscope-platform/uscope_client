@@ -15,7 +15,7 @@
 
 import {backend_post} from "./backend.js";
 import {api_dictionary} from "./api_dictionary.js";
-import type {auth_request} from "#interfaces/proxy/types.js";
+import type {auth_request} from "#interfaces/index.js";
 
 
 export const manual_sign_in = (credentials: auth_request) => {

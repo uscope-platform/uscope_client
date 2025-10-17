@@ -19,10 +19,8 @@ import {up_peripheral, set_write_callback, up_application} from "#client_core/in
 import {parseFunction} from "./frontend.js";
 import {translate_registers} from "./backend.js";
 import {__selected_application} from "../index.js";
-import type {peripheral, script} from "#interfaces/index.js";
-import type {autocomplete_periph_object, register_write_object} from "#interfaces/scripting/types.js";
+import type {peripheral, script, autocomplete_periph_object, register_write_object, register_write} from "#interfaces/index.js";
 import type {fields_object} from "#client_core/data_models/register_proxy.js";
-import type {register_write} from "#interfaces/proxy/types.js";
 
 export let scripting_engine_peripherals : Record<string, autocomplete_periph_object> = {}
 export let script_register_access_log: register_write_object[] = [];

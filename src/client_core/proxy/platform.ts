@@ -16,7 +16,7 @@
 import {backend_delete, backend_get, backend_post} from "./backend.js";
 
 import {api_dictionary} from './api_dictionary.js'
-import type {user_create_request} from "#interfaces/proxy/types.js";
+import type {user_create_request} from "#interfaces/index.js";
 
 export const add_user = (user: user_create_request) =>{
     return backend_post(api_dictionary.platform.add, user);
