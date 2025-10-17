@@ -21,6 +21,7 @@ import {addPeripheral, removePeripheral} from "#redux/index.js";
 import {up_register} from "#client_core/index.js";
 import type {peripheral} from "#interfaces/index.js";
 import {fields_object} from "#client_core/data_models/register_proxy.js";
+import type {register_write} from "#interfaces/proxy/types.js";
 
 export class up_peripheral {
     public id:number;
@@ -193,12 +194,12 @@ export class up_peripheral {
         })
     }
 
-    static bulk_register_write(data: any){
+    static bulk_register_write(data: register_write[]){
         return backend_post(api_dictionary.operations.write_registers, data);
     }
 
     static direct_register_write(writes: any){
-        let payload = []
+        let payload: register_write[] = []
         for (const item of writes) {
            payload.push({type:"direct", proxy_type:"", proxy_address:0, address:item[0], value:item[1]})
         }

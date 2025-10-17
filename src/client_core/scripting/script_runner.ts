@@ -22,6 +22,7 @@ import {__selected_application} from "../index.js";
 import type {peripheral, script} from "#interfaces/index.js";
 import type {autocomplete_periph_object, register_write_object} from "#interfaces/scripting/types.js";
 import type {fields_object} from "#client_core/data_models/register_proxy.js";
+import type {register_write} from "#interfaces/proxy/types.js";
 
 export let scripting_engine_peripherals : Record<string, autocomplete_periph_object> = {}
 export let script_register_access_log: register_write_object[] = [];
@@ -49,7 +50,7 @@ export const initialize_scripting_engine = (application: up_application | null ,
 
 export const run_script = (
     trigger_string: string, parameters: Record<string, number>, current_parameter: string, argument: number
-) : any[] =>{
+) : register_write[]  =>{
     const state = store.getState() as any;
     const scripts = state.scripts as script;
 
@@ -72,7 +73,7 @@ export const run_script = (
     let peripherals = purge_peripherals();
     let {workspace, registers} = script_content.call(peripherals, first_arg, context);
 
-    let bulk_registers = [];
+    let bulk_registers: register_write[]  = [];
     if(script_register_access_log.length !== 0) {
         bulk_registers.push(...translate_registers(script_register_access_log, scripting_engine_peripherals));
     }

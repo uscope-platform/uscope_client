@@ -48,3 +48,12 @@ export interface scope_data_object{
     channel:number,
     data:number[]
 }
+
+export interface register_write{
+    type:"direct" | "proxied"
+    access_type?:"field" | "full_reg",
+    proxy_type:string,
+    proxy_address:number,
+    address:number,
+    value:number
+}
