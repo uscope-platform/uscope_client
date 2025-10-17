@@ -16,7 +16,7 @@
 import React, {useEffect, useState} from 'react';
 import FcoreDebugger from "./FcoreDebugger.jsx";
 import HilDebuggerSidebar from "../Sidebar/per_panel_sidebars/HilDebuggerSidebar.jsx";
-import {useSelector} from "react-redux";
+import {useAppSelector} from "#redux/hooks.js";
 
 let HilDebuggerView = function (props) {
 
@@ -49,7 +49,7 @@ let HilDebuggerView = function (props) {
 
     let [compiled_programs, set_compiled_programs] = useState({});
 
-    const programs_store = useSelector(state => state.programs);
+    const programs_store = useAppSelector(state => state.programs);
 
 
     let handle_add_breakpoint = async (value) =>{

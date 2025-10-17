@@ -16,8 +16,6 @@
 //       REACT IMPORTS
 import React, {useEffect, useState} from 'react';
 import {Route} from 'react-router-dom'
-//       REDUX IMPORTS
-import {useSelector} from "react-redux";
 
 //      APP RELATED IMPORTS
 import TabContent from "./components/TabContent";
@@ -33,6 +31,7 @@ import {addApplication} from "#redux";
 
 import {UIPanel, InterfaceParameters} from "@UI";
 import PlatformManager from "./components/Views/Programs/PlatformManager";
+import {useAppSelector} from "#redux/hooks.js";
 
 
 let operator_views = ["Scope"];
@@ -45,8 +44,8 @@ export const ApplicationContext = React.createContext(null);
 
 let AuthApp = (props) =>{
 
-    const peripherals = useSelector(state => state.peripherals);
-    const applications = useSelector(state => state.applications);
+    const peripherals = useAppSelector(state => state.peripherals);
+    const applications = useAppSelector(state => state.applications);
 
     const [views, set_views] = useState([]);
 

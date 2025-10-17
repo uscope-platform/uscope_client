@@ -15,7 +15,6 @@
 
 import React from 'react';
 
-import {useSelector} from "react-redux";
 import {download_bitstream, get_next_id, up_bitstream, upload_raw} from "#client_core";
 import {
     SelectableList,
@@ -23,11 +22,12 @@ import {
     UIPanel,
     SideToolbar
 } from "@UI";
+import {useAppSelector} from "#redux/hooks.js";
 
 
 let  BitstreamSidebar = props =>{
 
-    const bitstreams_store = useSelector(state => state.bitstreams);
+    const bitstreams_store = useAppSelector(state => state.bitstreams);
 
     let handleOnSelect = (selection) => {
         if(props.bitstream.name !==selection){

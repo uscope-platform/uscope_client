@@ -14,7 +14,6 @@
 // limitations under the License.
 
 import React, {useEffect, useState} from "react";
-import {useSelector} from "react-redux";
 import {useLocation} from "react-router-dom";
 
 import {
@@ -29,12 +28,13 @@ import ProgramsEditor from "./Editor/ProgramsEditor";
 import {up_program} from "#client_core";
 import BuildSettings from "./Editor/BuildSettings";
 import ProgramSidebar from "./ProgramSidebar";
+import {useAppSelector} from "#redux/hooks.js";
 
 let ProgramsManager = props =>{
 
     const location = useLocation();
 
-    const programs_store = useSelector(state => state.programs);
+    const programs_store = useAppSelector(state => state.programs);
 
 
     let [selected_program, set_selected_program] = useState({});

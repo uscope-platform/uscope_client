@@ -16,7 +16,7 @@
 import React, { useState} from 'react';
 
 import {InputField, SelectField} from "@UI";
-import {useSelector} from "react-redux";
+import {useAppSelector} from "#redux/hooks.js";
 
 const efi_names = {
     efi_trig: "Trigonometry",
@@ -26,7 +26,7 @@ const efi_names = {
 
 let  EmulatorCoreProperties = props =>{
 
-    const programs = useSelector(state => state.programs);
+    const programs = useAppSelector(state => state.programs);
 
     const [selected_program, set_selected_program] = useState({label:props.selected_core.program, value:props.selected_core.program});
 

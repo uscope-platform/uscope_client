@@ -15,7 +15,6 @@
 
 import React from 'react';
 
-import {useSelector} from "react-redux";
 
 import {up_emulator} from "#client_core";
 import {SidebarBase} from "@UI";
@@ -23,10 +22,11 @@ import EmulatorNodeProperties from "../NodesSidebar/EmulatorNodeProperties";
 import EmulatorEdgeProperties from "../EdgesSidebar/EmulatorEdgeProperties";
 import EmulatorProperties from "../EmulatorProperties";
 import WarningsPanel from "../WarningsPanel";
+import {useAppSelector} from "#redux/hooks.js";
 
 let  HilEditorSidebar = props =>{
 
-    const emulators_store = useSelector(state => state.emulators);
+    const emulators_store = useAppSelector(state => state.emulators);
 
 
     const sel_component_type = props.selections.component ? props.selections.component.type : null;

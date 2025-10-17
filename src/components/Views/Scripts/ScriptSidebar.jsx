@@ -15,17 +15,16 @@
 
 import React, {useContext, useReducer} from 'react';
 
-import {useSelector} from "react-redux"
-
 import {up_script} from "#client_core";
 import {SidebarBase} from "@UI";
 import {ApplicationContext} from "@src/AuthApp.jsx";
+import {useAppSelector} from "#redux/hooks.js";
 
 let ScriptSidebar = (props) =>{
 
     const application = useContext(ApplicationContext);
 
-    const scripts_store = useSelector(state => state.scripts);
+    const scripts_store = useAppSelector(state => state.scripts);
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 

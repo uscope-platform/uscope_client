@@ -15,17 +15,17 @@
 
 import React from 'react';
 
-import {useSelector} from "react-redux";
 
 import {up_emulator} from "#client_core";
 import {SidebarBase} from "@UI";
 import AsmSelector from "./../AsmSelector.jsx";
 import BreakpointsPanel from "./../BreakpointsPanel.jsx";
 import ProgressPanel from "../../FcoreDebugger/ProgressPanel.jsx";
+import {useAppSelector} from "#redux/hooks.js";
 
 let  HilDebuggerSidebar = props =>{
 
-    const emulators_store = useSelector(state => state.emulators);
+    const emulators_store = useAppSelector(state => state.emulators);
 
     let handle_select_emulator = (sel) =>{
         props.on_select(sel);

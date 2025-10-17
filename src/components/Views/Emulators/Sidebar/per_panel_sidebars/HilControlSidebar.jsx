@@ -15,15 +15,15 @@
 
 import React from 'react';
 
-import {useSelector} from "react-redux";
 
 import {set_channel_status, up_emulator,download_text} from "#client_core";
 import {SidebarBase} from "@UI";
 import HilControl from "../HilControl.jsx";
+import {useAppSelector} from "#redux/hooks.js";
 
 let  HilControlSidebar = props =>{
 
-    const emulators_store = useSelector(state => state.emulators);
+    const emulators_store = useAppSelector(state => state.emulators);
 
     let handle_select_emulator = (sel) =>{
         props.on_select(sel);

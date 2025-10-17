@@ -15,14 +15,14 @@
 
 import React from 'react';
 
-import {useSelector} from "react-redux";
 
 import {up_emulator} from "#client_core";
 import {SidebarBase} from "@UI";
+import {useAppSelector} from "#redux/hooks.js";
 
 let  HilSpecsSidebar = props =>{
 
-    const emulators_store = useSelector(state => state.emulators);
+    const emulators_store = useAppSelector(state => state.emulators);
 
 
 

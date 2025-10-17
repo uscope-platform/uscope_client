@@ -15,7 +15,6 @@
 
 import React, {useEffect, useReducer, useState} from 'react';
 
-import {useSelector} from "react-redux"
 
 import {
     PlotChannelProperties,
@@ -40,6 +39,7 @@ import {
 import {get_next_id, up_application} from "#client_core";
 import ApplicationSidebar from "./ApplicationSidebar";
 import {MdAdd} from "react-icons/md";
+import {useAppSelector} from "#redux/hooks.js";
 
 const empty_app = {
     channels:[],
@@ -56,11 +56,11 @@ const empty_app = {
 
 let  ApplicationsManager = props =>{
 
-    const applications = useSelector(state => state.applications);
-    const peripherals = useSelector(state => state.peripherals);
-    const filters = useSelector(state => state.filters);
-    const programs = useSelector(state => state.programs);
-    const scripts = useSelector(state => state.scripts);
+    const applications = useAppSelector(state => state.applications);
+    const peripherals = useAppSelector(state => state.peripherals);
+    const filters = useAppSelector(state => state.filters);
+    const programs = useAppSelector(state => state.programs);
+    const scripts = useAppSelector(state => state.scripts);
 
     const [selected_app, set_selected_app] = useState(empty_app);
 

@@ -14,7 +14,6 @@
 // limitations under the License.
 
 import React, {useContext, useReducer, useState} from 'react';
-import {useSelector} from "react-redux";
 
 import ChannelSelector from "./ChannelSelector";
 import PlotComponent from "./PlotComponent";
@@ -26,9 +25,10 @@ import PlotSidebar from "./Sidebar/PlotSidebar";
 import {create_plot_channel, get_channels_from_group, update_plot_status, get_acquisition_status} from "#client_core";
 import useInterval from "../../Common_Components/useInterval";
 import {ApplicationContext} from "@src/AuthApp.jsx";
+import {useAppSelector} from "#redux/hooks.js";
 
 let PlotTab = function (props) {
-    const channels = useSelector(state => state.channels);
+    const channels = useAppSelector(state => state.channels);
     const application = useContext(ApplicationContext);
 
     const [plot_status, set_plot_status] = useState(false);

@@ -15,7 +15,6 @@
 
 import React from 'react';
 
-import {useSelector} from "react-redux";
 
 import {
     import_peripherals,
@@ -23,10 +22,11 @@ import {
 } from "#client_core";
 
 import {SidebarBase} from "@UI";
+import {useAppSelector} from "#redux/hooks.js";
 
 let  PeripheralsSidebar = props =>{
 
-    const peripherals_redux = useSelector(state => state.peripherals);
+    const peripherals_redux = useAppSelector(state => state.peripherals);
 
     let handleImport = async (content) =>{
         try{

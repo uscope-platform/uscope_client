@@ -15,8 +15,6 @@
 
 import React from 'react';
 
-import {useSelector} from "react-redux";
-
 
 import {
     get_next_id,
@@ -26,11 +24,12 @@ import {
 import {SidebarBase} from "@UI";
 
 import {addApplication} from "#redux";
+import {useAppSelector} from "#redux/hooks.js";
 
 
 let  ApplicationSidebar = props =>{
 
-    const applications_redux = useSelector(state => state.applications);
+    const applications_redux = useAppSelector(state => state.applications);
 
     let handleImport = (app) =>{
         let id = get_next_id(Object.values(applications_redux).map(a => a['id']).sort());

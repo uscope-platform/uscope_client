@@ -15,8 +15,6 @@
 
 import React, {useEffect, useReducer, useState} from 'react';
 
-import {useSelector} from "react-redux"
-
 
 import {
     CardStack, ColorTheme,
@@ -28,11 +26,12 @@ import {get_next_id, up_peripheral} from "#client_core"
 import PeripheralsSidebar from "./PeripheralsSidebar";
 import {MdAdd} from "react-icons/md";
 import {RegisterProperties} from './RegisterProperties'
+import {useAppSelector} from "#redux/hooks.js";
 
 
 let PeripheralsManager = (props)=>{
 
-    const peripherals = useSelector(state => state.peripherals);
+    const peripherals = useAppSelector(state => state.peripherals);
 
     const [data_version, forceUpdate] = useReducer(x => x + 1, 0);
 

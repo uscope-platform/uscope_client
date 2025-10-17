@@ -17,12 +17,12 @@ import React, {useState} from 'react';
 
 import {TabbedContent, UIPanel} from "@UI"
 import {up_emulator, up_emulator_result} from "#client_core";
-import {useSelector} from "react-redux";
 import HilEditorView from "./Editor/HilEditorView.jsx";
 import HilDebuggerView from "./FcoreDebugger/HilDebuggerView.jsx";
 import HilControlView from "./HilControl/HilControlView.jsx";
 import HilResultsView from "./EmulationResults/HilResultsView.jsx";
 import HilSpecsView from "./Specs/HilSpecsView.jsx";
+import {useAppSelector} from "#redux/hooks.js";
 
 let HilView = function (props) {
 
@@ -40,7 +40,7 @@ let HilView = function (props) {
     let [deployed, set_deployed] = useState(false);
 
 
-    const emulators_store = useSelector(state => state.emulators);
+    const emulators_store = useAppSelector(state => state.emulators);
 
     let [emulator, set_emulator] = useState(up_emulator.get_dummy());
 

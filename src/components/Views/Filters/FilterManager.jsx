@@ -26,7 +26,6 @@ import {
     filter_calculate_keepouts,
     up_filter
 } from "#client_core";
-import {useSelector} from "react-redux";
 import {MdBuild, MdConstruction} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
 
@@ -34,12 +33,13 @@ import {ToastContainer, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import FilterImplementationControls from "./FilterImplementationControls";
 import FilterSidebar from "./FilterSidebar";
+import {useAppSelector} from "#redux/hooks.js";
 
 let FilterManager = props =>{
 
     const [filter_revision, set_filter_revision] = useState( 0);
 
-    const filters_store = useSelector(state => state.filters);
+    const filters_store = useAppSelector(state => state.filters);
 
     const [selected_filter, set_selected_filter] = useState(up_filter.construct_empty(0));
 

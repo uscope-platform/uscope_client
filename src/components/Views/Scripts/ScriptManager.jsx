@@ -15,7 +15,6 @@
 
 import React, {useState} from 'react';
 
-import {useSelector} from "react-redux"
 
 import {
     FormLayout,
@@ -26,12 +25,13 @@ import {
 import {up_script} from "#client_core";
 import ScriptsEditor from "./ScriptsEditor";
 import ScriptSidebar from "./ScriptSidebar";
+import {useAppSelector} from "#redux/hooks.js";
 
 let ScriptManager = (props) =>{
 
     const [selected_script, set_selected_script] = useState({});
 
-    const scripts =  useSelector(state => state.scripts);
+    const scripts =  useAppSelector(state => state.scripts);
 
     let handle_edit_field = (event) => {
         if(event.key==="Enter"|| event.key ==="Tab"){

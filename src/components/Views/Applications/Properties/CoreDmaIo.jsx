@@ -16,13 +16,13 @@
 import React, {useEffect, useState} from "react";
 import {get_next_id, up_application} from "#client_core";
 import styled from "styled-components";
-import {useSelector} from "react-redux";
 import {
     SelectableListItem,
     InputField,
     SelectField
 } from "@UI";
 import {MdAdd} from "react-icons/md";
+import {useAppSelector} from "#redux/hooks.js";
 
 
 const List = styled.div`
@@ -44,7 +44,7 @@ const Separator = styled.div`
 
 export let  CoreDmaIo = props =>{
 
-    const programs = useSelector(state => state.programs);
+    const programs = useAppSelector(state => state.programs);
     const selected_program = Object.values(programs).filter((program)=>{
         return program.name === props.core.default_program;
     })[0];
