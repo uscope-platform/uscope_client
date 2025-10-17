@@ -19,7 +19,7 @@ import {api_dictionary} from "../proxy/api_dictionary.js";
 import {AddProgram, removeProgram} from "#redux/index.js";
 import objectHash from "object-hash";
 
-import type {program} from '#interfaces/index.ts'
+import type {program, soft_core} from '#interfaces/index.ts'
 
 
 export class up_program {
@@ -124,7 +124,7 @@ export class up_program {
         return backend_post(api_dictionary.operations.compile_program, data_package)
     };
     // TODO: use the correct type once application is ported over
-    load = (core: any) => {
+    load = (core: soft_core) => {
 
         let headers = this.headers.map((h)=>{
             // TODO: take the any out when store is typed

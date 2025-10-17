@@ -15,17 +15,19 @@
 
 import { Terminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
+
+// @ts-ignore
 import 'xterm/css/xterm.css';
 
-import {terminal_backend} from './terminal_backend'
-import {xterm_colors} from "./terminal_colors";
-import {autocompletion_engine, prefix_extractor} from "../scripting/autocompletion_engine";
+import {terminal_backend} from './terminal_backend.js'
+import {xterm_colors} from "./terminal_colors.js";
+import {autocompletion_engine, prefix, prefix_extractor} from "../scripting/autocompletion_engine.js";
 
 const recognised_commands = Object.keys(terminal_backend);
 
-export let current_line = "";
+export let current_line: string = "";
 
-export let terminal = null;
+export let terminal: Terminal;
 
 const fitAddon = new FitAddon();
 
@@ -46,7 +48,12 @@ export const init_terminal = () => {
     // Load Fit Addon
     terminal.loadAddon(fitAddon);
     // Open the terminal in #terminal-container
-    terminal.open(document.getElementById("xterm"));
+    let term_element = document.getElementById("xterm");
+    if(!term_element) {
+        console.error("Error: #xterm not found");
+        return
+    }
+    terminal.open(term_element);
     // Make the terminal's size and geometry fit the size of #terminal-container
     fitAddon.fit();
     terminal.onData((domEvent) => {
@@ -57,17 +64,6 @@ export const init_terminal = () => {
     return terminal;
 };
 
-export const prefix = (words) => {
-
-    if (!words[0] || words.length ===  1) return words[0] || "";
-    let i = 0;
-    while(words[0][i] && words.every(w => w[i] === words[0][i]))
-        i++;
-
-    return words[0].substring(0, i);
-}
-
-
 
 export const complete_command = () =>{
     let complete_command = recognised_commands.includes(current_line);
@@ -77,8 +73,10 @@ export const complete_command = () =>{
     })
     if(candidates.length === 1){
         display_prompt();
-        current_line = candidates[0];
-        terminal.write(candidates[0]);
+        let candidate = candidates[0];
+        if(candidate === undefined)return;
+        current_line = candidate;
+        terminal.write(candidate);
     } else if(candidates.length >1){
         if(!complete_command){
             current_line = prefix(candidates);
@@ -91,6 +89,9 @@ export const complete_command = () =>{
 
 export const complete_address = () =>{
     let tokens = current_line.split(" ")
+    if(tokens.length === 1) return;
+    let argument = tokens[1];
+    if(argument === undefined) return;
     switch (tokens[0]){
         case 'write':
         case 'write_direct':
@@ -99,7 +100,7 @@ export const complete_address = () =>{
             let line = {
                 from:0,
                 to:1,
-                text:"this."+tokens[1]
+                text:"this."+argument
             }
             let options = autocompletion_engine( line,true);
             let pref = prefix_extractor(options);
@@ -107,12 +108,16 @@ export const complete_address = () =>{
                 return item.label;
             });
             if(candidates.length === 1) {
-                let present_substr = tokens[1].split(".").pop()
-                let missing = candidates[0].replace(present_substr, "");
+                let candidate = candidates[0];
+                if(candidate === undefined)return;
+                let present_substr = argument.split(".").pop()
+                if(present_substr === undefined) return;
+                let missing = candidate.replace(present_substr, "");
                 current_line = current_line + missing;
                 terminal.write(missing);
             } else if(pref){
-                let present_substr = tokens[1].split(".").pop()
+                let present_substr = argument.split(".").pop()
+                if(present_substr === undefined) return;
                 let missing = pref.replace(present_substr, "");
                 for (let i = 0; i < candidates.length; i += 5) {
                     terminal.write("\r\n" + xterm_colors.blue + candidates.slice(i, i + 5).join("         ")  +  xterm_colors.white);
@@ -138,24 +143,18 @@ export const complete_version = () =>{
 
     let candidates = ["client", "server", "driver", "module", "hardware", "toolchain"];
     let tokens = current_line.split(" ")
-
+    let component = tokens[1];
+    if(component === undefined) return;
     if(tokens.length === 2){
         candidates = candidates.filter((item)=>{
-            return item.startsWith(tokens[1]);
+            return item.startsWith(component);
         })
     }
-    if(candidates.length === 1){
-        let present_substr = tokens[1].split(".").pop()
-        let missing = candidates[0].replace(present_substr, "");
-        current_line = current_line + missing;
-        terminal.write(missing);
-    } else {
-        for (let i = 0; i < candidates.length; i += 5) {
-            terminal.write("\r\n" + xterm_colors.blue + candidates.slice(i, i + 5).join("         ")  +  xterm_colors.white);
-        }
-        display_prompt();
-        terminal.write(current_line);
+    for (let i = 0; i < candidates.length; i += 5) {
+        terminal.write("\r\n" + xterm_colors.blue + candidates.slice(i, i + 5).join("         ")  +  xterm_colors.white);
     }
+    display_prompt();
+    terminal.write(current_line);
 
 }
 
@@ -177,21 +176,31 @@ export const handle_tab = () =>{
     }
 }
 
-export const execute_command = (command_line) => {
+export const execute_command = (command_line: string): Promise<void> => {
     let tokens = command_line.split(" ");
     let command =  tokens.shift();
+    if(command === undefined) return new Promise((resolve, reject)=>{
+        reject("Error: command not found");
+    })
     if(!recognised_commands.includes(command)){
         terminal.write("\r\n" + xterm_colors.brightRed + "Unrecognized command: " + command + xterm_colors.white);
         return new Promise((resolve)=>{
-            resolve([]);
+            resolve();
         });
     }
+    let selected_function = terminal_backend[command];
+    if(selected_function === undefined){
 
-    return terminal_backend[command](tokens).then((response)=>{
+        terminal.write("\r\n" + xterm_colors.brightRed + "Error: command not found" + xterm_colors.white);
+        return new Promise((resolve)=>{
+            resolve();
+        });
+    }
+    return selected_function(tokens).then((response: any)=>{
         for (const line of response) {
             terminal.write("\r\n" + xterm_colors.green + line + xterm_colors.white);
         }
-    }).catch((response) =>{
+    }).catch((response: any) =>{
         for (const line of response) {
             terminal.write("\r\n" + xterm_colors.brightRed + line + xterm_colors.white);
         }
@@ -210,7 +219,7 @@ export const handle_return = ()=>{
     } else {
         return new Promise((resolve)=>{
             display_prompt();
-            resolve();
+            resolve("");
         })
     }
 
@@ -222,12 +231,12 @@ export const handle_delete = () =>{
     current_line = current_line.slice(0, -1);
 }
 
-export const handle_letter = (key) => {
+export const handle_letter = (key:string) => {
     current_line =  current_line + key;
     terminal.write(key);
 }
 
-export const handle_keypress = (key) => {
+export const handle_keypress = (key: string) => {
     if (key === "\r") {
         return handle_return();
     } else if (key === "") {
@@ -243,28 +252,3 @@ export const display_prompt = () => {
     let shellprompt = "$ ";
     terminal.write("\r\n" + shellprompt);
 };
-
-
-////////////////////////////MOCKED TERMINAL FOR TESTING/////////////
-
-let _term_content = [];
-
-let terminal_mock = {
-    _test_get_content:()=>{
-        return _term_content;
-    },
-    _test_clear_buffer:()=>{
-        _term_content = [];
-    },
-    write:(line)=>{
-        _term_content.push(line);
-    }
-}
-
-export const  init_test_terminal = () =>{
-    terminal = terminal_mock;
-}
-
-export const set_current_line = (line) =>{
-    current_line = line;
-}

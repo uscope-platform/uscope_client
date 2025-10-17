@@ -114,7 +114,7 @@ let autocomplete_field_name = (path: string[]): autocomplete_suggestion[]  =>{
     });
 };
 
-let prefix = (words:string[]) => {
+export const prefix = (words:string[]) => {
     let first_word = words[0];
     if (!first_word || words.length ===  1) return first_word || "";
     let i = 0;

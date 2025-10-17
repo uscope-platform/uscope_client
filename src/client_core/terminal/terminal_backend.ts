@@ -13,15 +13,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {script_register_access_log, scripting_engine_peripherals} from "../scripting/script_runner";
-import {translate_registers} from "../scripting/backend";
-import {up_peripheral} from "#client_core";
-import {__selected_application, store, up_program} from "../index";
-import {get_version} from "../proxy/platform";
+import {script_register_access_log, scripting_engine_peripherals} from "../scripting/script_runner.js";
+import {translate_registers} from "../scripting/backend.js";
+import {up_peripheral} from "#client_core/index.js";
+import {__selected_application, up_program} from "../index.js";
+import {get_version} from "../proxy/platform.js";
 
+import store from "../../store.js";
+import type {program} from "#interfaces/index.js";
 
-export const terminal_backend = {
-    write: (args) =>{
+declare const __USCOPE_CLIENT_VERSION__: string;
+type TerminalCommand = (args: string[]) => Promise<string[]>;
+
+export const terminal_backend : Record<string, TerminalCommand> = {
+    write: (args: string[]): Promise<string[]> =>{
         if(args[0] === "--help"){
             return new Promise((resolve)=>{
                 resolve([
@@ -35,12 +40,15 @@ export const terminal_backend = {
         }
         let register = args[0];
         let value = args[1];
+        if(!register || !value) return new Promise((resolve, reject)=>{
+            reject(["ERROR: Missing register or value"]);
+        })
         translate_specifier(register,value);
         return new Promise((resolve)=>{
           resolve([])
         })
     },
-    write_direct:(args) =>{
+    write_direct:(args: string[]): Promise<string[]> =>{
         if(args[0] === "--help"){
             return new Promise((resolve)=>{
                 resolve([
@@ -53,6 +61,9 @@ export const terminal_backend = {
         }
         let register = args[0];
         let value = args[1];
+        if(!register || !value) return new Promise((resolve, reject)=>{
+            reject(["ERROR: Missing register or value"]);
+        })
         translate_specifier(register,value);
         let writes = translate_registers(script_register_access_log, scripting_engine_peripherals);
         script_register_access_log.length = 0;
@@ -61,7 +72,7 @@ export const terminal_backend = {
             resolve([])
         })
     },
-    clear_queue:(args) =>{
+    clear_queue:(args: string[]): Promise<string[]> =>{
         if(args[0] === "--help"){
             return new Promise((resolve)=>{
                 resolve([
@@ -76,7 +87,7 @@ export const terminal_backend = {
             resolve([])
         })
     },
-    execute_queue:(args) =>{
+    execute_queue:(args: string[]): Promise<string[]> =>{
         if(args[0] === "--help"){
             return new Promise((resolve)=>{
                 resolve([
@@ -94,7 +105,7 @@ export const terminal_backend = {
             resolve([])
         })
     },
-    read:(args) =>{
+    read:(args: string[]): Promise<string[]> =>{
         if(args[0] === "--help"){
             return new Promise((resolve)=>{
                 resolve([
@@ -104,17 +115,24 @@ export const terminal_backend = {
                 ]);
             })
         }
-
+        let specifier = args[0];
+        if(!specifier) return new Promise((resolve, reject)=>{
+            reject(["ERROR: Missing register specifier"]);
+        })
         // PERFORM A DUMMY WRITE TO OBTAIN THE CORRECT ADDRESS
-        translate_specifier(args[0],"0");
-        let access = translate_registers(script_register_access_log, scripting_engine_peripherals);
+        translate_specifier(specifier,"0");
+        let access = translate_registers(script_register_access_log, scripting_engine_peripherals)[0];
+        if(!access)
+            return new Promise((resolve, reject)=>{
+                reject(["ERROR: Invalid register"]);
+            })
         script_register_access_log.length = 0;
-        return up_peripheral.direct_register_read(access[0].address).then((response)=>{
+        return up_peripheral.direct_register_read(access.address).then((response)=>{
             return [response.response];
         });
     },
 
-    version:(args)=>{
+    version:(args: string[]): Promise<string[]>=>{
         if(args[0] === "--help"){
             return new Promise((resolve)=>{
                 resolve([
@@ -125,10 +143,15 @@ export const terminal_backend = {
             })
         }
         let selected_component = args[0];
+        if(selected_component === undefined){
+            return new Promise((resolve, reject)=>{
+                reject("ERROR: Missing component name");
+            })
+        }
         if(selected_component==="client"){
             return new Promise((resolve, reject)=>{
                 resolve([
-                    __USCOPE_CLIENT_VERSION__
+                    (__USCOPE_CLIENT_VERSION__ as string)
                 ])
             })
         } else if(["server", "driver", "module", "hardware", "toolchain"].includes(selected_component)) {
@@ -143,7 +166,7 @@ export const terminal_backend = {
         }
     },
 
-    load_program:async (args) =>{
+    load_program:async (args:string[]): Promise<string[]> =>{
         if(args[0] === "--help"){
             return new Promise((resolve)=>{
                 resolve([
@@ -153,12 +176,12 @@ export const terminal_backend = {
                 ]);
             })
         }
-        let state = store.getState();
-
+        let state = store.getState() as any;
+        let programs = state.programs as program[];
         let selected_program = undefined;
-        for(let p in state.programs){
-            if(state.programs[p].name === args[0]){
-                selected_program = state.programs[p];
+        for(let p of programs){
+            if(p.name === args[0]){
+                selected_program = p;
             }
         }
         if(selected_program === undefined){
@@ -172,7 +195,7 @@ export const terminal_backend = {
 
         let core = __selected_application.soft_cores.filter((core)=>{
             return core.id === args[1];
-        })[0];
+        });
         if(core.length === 0){
             return new Promise((resolve, reject)=>{
                 reject([
@@ -186,17 +209,32 @@ export const terminal_backend = {
                 ])
             })
         }
-        let resp = await selected_program.load(core);
+        let c = core[0];
+        if(!c){
+            return new Promise((resolve, reject)=>{
+                reject([
+                    "ERROR: Core not found"
+                ])
+            })
+        }
+        let resp = await selected_program.load(c);
         return resp.response;
     }
 }
 
-const translate_specifier = (spec, value) =>{
+const translate_specifier = (spec: string, value: string) =>{
     let tokens = spec.split(".");
     if(tokens.length===2)
         tokens.push("value");
-    let reg = scripting_engine_peripherals[tokens[0]].regs[tokens[1]]
-    reg[tokens[2]] = parseInt(value);
+    let periph_name = tokens[0];
+    let reg_name = tokens[1];
+    let field_name = tokens[2];
+    if(!periph_name || !reg_name || !field_name) return;
+    let periph_obj = scripting_engine_peripherals[periph_name];
+    if(!periph_obj) return;
+    let reg = periph_obj.regs[reg_name]
+    if(!reg) return;
+    reg[field_name] = parseInt(value);
 }
 
 //   write adc_test.cmp_high_f.value 6
