@@ -18,32 +18,37 @@
 
 
 
-import { createSlice } from '@reduxjs/toolkit'
+import {createSlice, type PayloadAction} from '@reduxjs/toolkit'
+import type {
+    PeripheralsState,
+    register_field_upsert_action,
+    register_register_upsert_action, remove_field_action, remove_register_action
+} from "#interfaces/redux.js";
 
-const initialState = {}
+const initialState: PeripheralsState= {}
 
 const PeripheralSlice = createSlice({
     name: 'peripheral',
     initialState,
     reducers: {
-        loadPeripherals(state, action) {
+        loadPeripherals(state: PeripheralsState, action: PayloadAction<PeripheralsState>) {
             return action.payload
         },
-        addPeripheral(state, action) {
-            return {...state, ...action.payload.payload}
+        addPeripheral(state: PeripheralsState, action: PayloadAction<PeripheralsState>) {
+            return {...state, ...action.payload}
         },
-        removePeripheral(state, action) {
+        removePeripheral(state: PeripheralsState, action: PayloadAction<number>) {
             return Object.keys(state)
             .filter(key => {
                 return parseInt(key) !== action.payload;
             })
-            .reduce((obj, key) => {
-                obj[key] = state[key];
+            .reduce((obj: PeripheralsState, key) => {
+                obj[parseInt(key)] = state[parseInt(key)]!;
                 return obj;
             }, {});
         },
-        upsertField(state, action) {
-            state[action.payload.obj.parent_peripheral].registers = state[action.payload.obj.parent_peripheral].registers.map((reg) =>{
+        upsertField(state: PeripheralsState, action: PayloadAction<register_field_upsert_action>) {
+            state[action.payload.obj.parent_peripheral]!.registers = state[action.payload.obj.parent_peripheral]!.registers.map((reg) =>{
                 if(reg.register_name === action.payload.obj.parent_register) {
                     reg.fields = reg.fields.map((f) => {
                         if (f.name === action.payload.name) {
@@ -55,9 +60,9 @@ const PeripheralSlice = createSlice({
                 return reg;
             });
         },
-        upsertRegister(state, action) {
+        upsertRegister(state: PeripheralsState, action: PayloadAction<register_register_upsert_action>) {
             Object.keys(state).map((key=>{
-                state[action.payload.obj.parent_periph].registers = state[action.payload.obj.parent_periph].registers.map((reg) =>{
+                state[action.payload.obj.parent_periph]!.registers = state[action.payload.obj.parent_periph]!.registers.map((reg) =>{
                     if(reg.ID === action.payload.id)
                         return action.payload.obj;
                     else
@@ -66,8 +71,8 @@ const PeripheralSlice = createSlice({
                 return [];
             }))
         },
-        removeField(state, action) {
-            state[action.payload.periph].registers = state[action.payload.periph].registers.map((reg) =>{
+        removeField(state:PeripheralsState, action: PayloadAction<remove_field_action>) {
+            state[action.payload.periph]!.registers = state[action.payload.periph]!.registers.map((reg) =>{
                 if(reg.ID === action.payload.reg) {
                     reg.fields = reg.fields.filter((f) => {
                         return f.name !== action.payload.field
@@ -76,8 +81,8 @@ const PeripheralSlice = createSlice({
                 return reg;
             });
         },
-        removeRegister(state, action) {
-            state[action.payload.periph].registers = state[action.payload.periph].registers.filter((reg) =>{
+        removeRegister(state:PeripheralsState, action: PayloadAction<remove_register_action>) {
+            state[action.payload.periph]!.registers = state[action.payload.periph]!.registers.filter((reg) =>{
                 return reg.ID !== action.payload.reg;
             });
         }

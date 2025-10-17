@@ -16,7 +16,15 @@
  *
  */
 
-import {up_application, up_bitstream, up_filter, up_program, up_script} from "#client_core/index.js";
+import {
+    up_application,
+    up_bitstream,
+    up_emulator,
+    up_filter,
+    up_peripheral,
+    up_program,
+    up_script
+} from "#client_core/index.js";
 
 export interface ApplicationsState {
     [key: number]: up_application
@@ -40,7 +48,34 @@ export interface ScriptState{
     [key:number]: up_script
 }
 
-
 export interface ProgramState{
     [key:number]: up_program
+}
+
+export interface EmulatorState{
+    [key:number]: up_emulator
+}
+
+export interface PeripheralsState{
+    [key:number]: up_peripheral
+}
+
+export type register_field_upsert_action = {
+    name: string,
+    obj: any
+}
+
+export type register_register_upsert_action = {
+    id: string,
+    obj: any
+}
+
+export type remove_register_action = {
+    periph: number,
+    reg: string
+}
+export type remove_field_action = {
+    periph: number,
+    reg: string,
+    field: string
 }

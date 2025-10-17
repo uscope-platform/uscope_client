@@ -22,21 +22,18 @@ import {
     up_peripheral,
 } from "#client_core";
 
-import {addPeripheral} from "#redux";
 import {SidebarBase} from "@UI";
 
 let  PeripheralsSidebar = props =>{
 
     const peripherals_redux = useSelector(state => state.peripherals);
 
-    let handleImport = (content) =>{
-        import_peripherals(content).then((periphs)=>{
-            for(let p of periphs){
-                addPeripheral(p);
-            }
-        }).catch((err)=>{
+    let handleImport = async (content) =>{
+        try{
+            await import_peripherals(content);
+        } catch (err){
             alert(err);
-        });
+        }
     };
 
 

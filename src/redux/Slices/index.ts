@@ -16,12 +16,12 @@
 import {combineReducers} from "redux"
 
 import PeripheralSlice from './peripheralSlice.js'
-import ApplicationSlice from './applicationSlice'
+import ApplicationSlice from './applicationSlice.js'
 import ProgramSlice from "./programSlice.js"
-import BitstreamSlice from "./bitstreamSlice"
-import FilterSlice from "./filterSlice"
-import EmulatorSlice from "./emulatorSlice"
-import scriptSlice from "./scriptSlice"
+import BitstreamSlice from "./bitstreamSlice.js"
+import FilterSlice from "./filterSlice.js"
+import EmulatorSlice from "./emulatorSlice.js"
+import scriptSlice from "./scriptSlice.js"
 
 export default combineReducers({
     bitstreams: BitstreamSlice,

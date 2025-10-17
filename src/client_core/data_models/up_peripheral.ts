@@ -89,7 +89,7 @@ export class up_peripheral {
 
     add_remote = async () => {
         let resp = await backend_post(api_dictionary.peripherals.add, this._get_periph()[this.name]);
-        store.dispatch(addPeripheral({payload:{[this.id]:this}}));
+        store.dispatch(addPeripheral({[this.id]:this}));
         return resp;
     }
 
@@ -98,14 +98,14 @@ export class up_peripheral {
         let edit = {peripheral:this.id, field:"register", action:"add", value:reg._get_register()};
         await backend_patch(api_dictionary.peripherals.edit + '/' + this.id, edit);
         this.registers.push(reg);
-        return store.dispatch(addPeripheral({payload:{[this.id]:this}}));
+        return store.dispatch(addPeripheral({[this.id]:this}));
     }
 
     set_version = async (ver: string) =>{
         this.version = ver;
         let edit ={peripheral:this.id, field:"version", action:"edit", value:parseFloat(ver)};
         await backend_patch(api_dictionary.peripherals.edit+ '/' + this.id, edit);
-        return store.dispatch(addPeripheral({payload:{[this.id]:this}}))
+        return store.dispatch(addPeripheral({[this.id]:this}))
 
     };
 
@@ -114,7 +114,7 @@ export class up_peripheral {
         let edit ={peripheral:this.id, field:"name", action:"edit", value:name};
         await backend_patch(api_dictionary.peripherals.edit+ '/' + this.id, edit);
         await store.dispatch(removePeripheral(this.id))
-        return  store.dispatch(addPeripheral({payload:{[this.id]:this}}))
+        return  store.dispatch(addPeripheral({[this.id]:this}))
     };
 
     get_register_offset = (name: string, parameters: Record<string, number>): number | null =>{

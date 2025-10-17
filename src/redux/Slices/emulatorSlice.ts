@@ -17,32 +17,34 @@
  */
 
 
-import { createSlice } from '@reduxjs/toolkit'
+import {createSlice, type PayloadAction} from '@reduxjs/toolkit'
+import type {EmulatorState} from "#interfaces/redux.js";
+import {up_emulator} from "#client_core/index.js";
 
-const initialState = {}
+const initialState: EmulatorState = {}
 
 const EmulatorSlice = createSlice({
     name: 'emulators',
     initialState,
     reducers: {
-        addEmulator(state, action) {
+        addEmulator(state: EmulatorState, action: PayloadAction<up_emulator>) {
             return {...state, ...{[action.payload.id]:action.payload}}
         },
-        removeEmulator(state, action) {
+        removeEmulator(state: EmulatorState, action: PayloadAction<number>) {
             return  Object.keys(state)
                 .filter(key => {
                     return key !== action.payload.toString();
                 })
-                .reduce((obj, key) => {
-                    obj[key] = state[key];
+                .reduce((obj: EmulatorState, key) => {
+                    obj[parseInt(key)] = state[parseInt(key)]!;
                     return obj;
                 }, {});
         },
-        loadAllEmulators(state, action) {
+        loadAllEmulators(state: EmulatorState, action: PayloadAction<EmulatorState>) {
             return action.payload;
         },
-        update_emulator(state, action) {
-            state[parseInt(action.payload.id)] = action.payload
+        update_emulator(state: EmulatorState, action: PayloadAction<up_emulator>) {
+            state[action.payload.id] = action.payload
         },
     },
 })
