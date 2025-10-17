@@ -13,13 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import styled from 'styled-components';
+import { styled } from 'goober';
 
-export const FormLayout = styled.div`
-    display: grid;
-    margin: 1em;
-    grid-template-rows: auto;
-    grid-auto-columns: auto;
-    grid-gap: 0.4rem;
-    align-items: start;
+interface ImgProps{}
+
+export const Image = styled('img')<ImgProps>`
+    max-width: 100%;
+    max-height: 100%;
 `

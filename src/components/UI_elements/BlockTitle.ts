@@ -13,8 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import styled from "styled-components";
 
-export const SidebarCollapsableContentLayout = styled.div`
-margin-right: 0.5rem;
+import { styled } from 'goober';
+
+
+interface TitleProps {
+
+}
+export const BlockTitle = styled('h1')<TitleProps>`
+font-size: 24px;
+text-align: center;
 `

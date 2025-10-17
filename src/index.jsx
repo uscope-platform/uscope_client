@@ -20,6 +20,7 @@ import {Provider} from "react-redux";
 import store from "./store";
 import {PersistGate} from "redux-persist/lib/integration/react";
 import {BrowserRouter} from "react-router-dom";
+import {setup} from "goober";
 
 import './fonts/montserrat-v14-latin-ext_latin-100.woff2'
 import './fonts/montserrat-v14-latin-ext_latin-200.woff2'
@@ -33,6 +34,12 @@ import {persistStore} from "redux-persist";
 const container = document.getElementById("root");
 const root = createRoot(container);
 const persistor = persistStore(store);
+
+setup(React.createElement);
+
+if (import.meta.hot) {
+    import.meta.hot.accept();
+}
 
 root.render(
     <Provider store={store}>

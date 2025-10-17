@@ -54,13 +54,13 @@ export const ColorTheme = {
         "rgb(185, 242,240)",
     ],
     scope_status:{
-        unknown:"rgb(255,0,0)",
-        run:"rgb(122, 255, 160)",
+        "unknown":"rgb(255,0,0)",
+        "run":"rgb(122, 255, 160)",
         "free run":"rgb(122, 255, 160)",
-        wait:"rgb(255, 234, 122)",
-        stop:"rgb(255, 130, 122)"
+        "wait":"rgb(255, 234, 122)",
+        "stop":"rgb(255, 130, 122)"
     },
     emulator:{
       selected_node_border:"rgb(90, 90,244)"
     }
-};
+}as const;

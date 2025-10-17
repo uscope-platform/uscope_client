@@ -50,4 +50,4 @@ export const PlotConfigurations = {
         displaylogo: false
     },
     refresh_rate:150
-};
+} as const;

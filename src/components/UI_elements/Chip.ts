@@ -13,11 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import styled from 'styled-components';
+import { styled } from 'goober';
+import {ColorTheme} from "./ColorTheme.js";
 
-export const Chip = styled.label`
-  background: ${props=> props.theme.scope_status[props.status]};
-  border-color: ${props => props.theme.scope_status[props.status]};
+interface ChipProps {
+    status: keyof typeof ColorTheme.scope_status;
+}
+
+export const Chip = styled('label')<ChipProps>`
+  background: ${props=> ColorTheme.scope_status[props.status] ?? ColorTheme.scope_status["unknown"]};
+  border-color: ${props => ColorTheme.scope_status[props.status] ?? ColorTheme.scope_status["unknown"]};
     display: ${props => props.status ? "block": "none"};
   font-weight: bold;
   border-radius: 9999999px;

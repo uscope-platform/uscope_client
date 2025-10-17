@@ -1,4 +1,4 @@
-// Copyright 2021 University of Nottingham Ningbo China
+// Copyright 2021 Filippo Savi
 // Author: Filippo Savi <filssavi@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,11 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import styled from 'styled-components';
 
-export const Label = styled.label`
-width: fit-content;
-font-family: Roboto,Helvetica,Arial,sans-serif;
-margin: 0;
-padding-right: 0.5rem;
+
+import { styled } from 'goober';
+
+interface CardStackProps {}
+
+export const CardStack = styled('div')<CardStackProps>`
+    display: flex;
+    flex-direction: row;  
+    flex-wrap: wrap;
+    gap: 1.2em;
+  justify-content: center;
 `

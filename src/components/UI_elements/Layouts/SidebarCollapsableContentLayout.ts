@@ -13,17 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import styled from 'styled-components';
+import { styled } from 'goober';
 
-export const Button = styled.button`
-  background: ${props => props.theme.background.accents};
-  border-color: ${props => props.theme.background.accents};
-  font-weight: bold;
-  border-radius: 3px;
-  border-style: solid;
-  font-size: 16px;
-  color: black;
-  width: fit-content;
-  height: fit-content;
-  padding: 0.5em 1em;
+interface SidebarCollapsableContentLayoutProps {}
+
+export const SidebarCollapsableContentLayout = styled('div')<SidebarCollapsableContentLayoutProps>`
+margin-right: 0.5rem;
 `

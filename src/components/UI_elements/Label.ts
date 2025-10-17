@@ -1,4 +1,4 @@
-// Copyright 2024 Filippo Savi
+// Copyright 2021 University of Nottingham Ningbo China
 // Author: Filippo Savi <filssavi@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,16 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export const InterfaceParameters = {
-    main_window: {
-        columns_gap:10,
-        columns_min_widths:[230, 300, 300],
-        padding:10
-    },
-    scripts: {
-        editorHeight:"800px"
-    },
-    programs:{
-        editorHeight: "780px"
-    }
-};
+import {styled} from 'goober';
+interface LabelProps {}
+
+export const Label = styled('label')<LabelProps>`
+    width: fit-content;
+    font-family: Roboto,Helvetica,Arial,sans-serif;
+    margin: 0;
+    padding-right: 0.5rem;
+`

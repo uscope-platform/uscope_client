@@ -13,9 +13,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import styled from "styled-components";
+import { styled } from 'goober';
+import {ColorTheme} from "./ColorTheme.js";
 
-export const BlockTitle = styled.h1`
-font-size: 24px;
-text-align: center;
+interface ButtonProps {}
+
+export const Button = styled('button')<ButtonProps>`
+  background: ${() => ColorTheme.background.accents};
+  border-color: ${() => ColorTheme.background.accents};
+  font-weight: bold;
+  border-radius: 3px;
+  border-style: solid;
+  font-size: 16px;
+  color: black;
+  width: fit-content;
+  height: fit-content;
+  padding: 0.5em 1em;
 `
