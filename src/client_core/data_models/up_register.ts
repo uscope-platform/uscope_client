@@ -47,7 +47,7 @@ export class up_register {
         }
     }
 
-    get_field_names = (parameters: { [index: string]:  string; })=>{
+    get_field_names = (parameters: Record<string, number>)=>{
         return this.fields.map((field)=>{
             let n_fields;
             if(field.n_fields.length > 0){

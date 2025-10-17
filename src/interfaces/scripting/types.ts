@@ -34,3 +34,13 @@ export interface register_write_object {
     field_name:string
 }
 
+export interface autocompletion_context{
+    from: number,
+    to:number,
+    text:string
+}
+
+export interface autocomplete_suggestion{
+    label:string,
+    type:string
+}
