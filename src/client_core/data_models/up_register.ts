@@ -55,7 +55,7 @@ export class up_register {
                 if(!n_f_expr){
                     n_fields = 0;
                 } else if(parameters[n_f_expr]){
-                    n_fields = parseInt(parameters[n_f_expr]);
+                    n_fields = parameters[n_f_expr];
                 } else {
                     n_fields = parseInt(n_f_expr);
                 }
