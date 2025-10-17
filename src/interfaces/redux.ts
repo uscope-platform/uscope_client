@@ -16,7 +16,7 @@
  *
  */
 
-import {up_application} from "#client_core/index.js";
+import {up_application, up_bitstream, up_filter} from "#client_core/index.js";
 
 export interface ApplicationsState {
     [key: number]: up_application
@@ -26,4 +26,12 @@ export type parameter_save_action = {
     name: string,
     value: number,
     app: number
+}
+
+export interface BitstreamState{
+    [key:number]: up_bitstream
+}
+
+export interface FilterState{
+    [key:number]: up_filter
 }

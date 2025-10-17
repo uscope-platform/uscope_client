@@ -16,28 +16,30 @@
  *
  */
 
-import { createSlice } from '@reduxjs/toolkit'
+import {createSlice, type PayloadAction} from '@reduxjs/toolkit'
+import type {FilterState} from "#interfaces/redux.js";
+import {up_filter} from "#client_core/index.js";
 
-const initialState = {}
+const initialState: FilterState = {}
 
 const FilterSlice = createSlice({
     name: 'filters',
     initialState,
     reducers: {
-        AddFilter(state, action) {
+        AddFilter(state: FilterState, action: PayloadAction<up_filter>) {
             return {...state, ...{[action.payload.id]:action.payload}}
         },
-        removeFilter(state, action) {
+        removeFilter(state: FilterState, action: PayloadAction<up_filter>) {
             return  Object.keys(state)
                 .filter(key => {
                     return key !== action.payload.id.toString();
                 })
-                .reduce((obj, key) => {
-                    obj[key] = state[key];
+                .reduce((obj: FilterState, key) => {
+                    obj[parseInt(key)] = state[parseInt(key)]!;
                     return obj;
                 }, {});
         },
-        loadAllFilters(state, action) {
+        loadAllFilters(state: FilterState, action: PayloadAction<FilterState>) {
             return action.payload;
         }
     },

@@ -17,27 +17,29 @@
  */
 
 
-import { createSlice } from '@reduxjs/toolkit'
+import {createSlice, type PayloadAction} from '@reduxjs/toolkit'
+import type {BitstreamState} from "#interfaces/redux.js";
+import {up_bitstream} from "#client_core/index.js";
 
-const initialState = {}
+const initialState : BitstreamState= {}
 
 const bitstreamSlice = createSlice({
     name: 'bitstreams',
     initialState,
     reducers: {
-        loadAllBitstreams(state, action) {
+        loadAllBitstreams(state: BitstreamState, action: PayloadAction<BitstreamState>) {
             return action.payload;
         },
-        AddBitstream(state, action) {
+        AddBitstream(state: BitstreamState, action: PayloadAction<up_bitstream>) {
             return {...state, ...{[action.payload.id]:action.payload}}
         },
-        removeBitstream(state, action) {
+        removeBitstream(state: BitstreamState, action: PayloadAction<up_bitstream>) {
             return Object.keys(state)
                 .filter(key => {
                     return key !== action.payload.id.toString();
                 })
-                .reduce((obj, key) => {
-                    obj[key] = state[key];
+                .reduce((obj: BitstreamState, key) => {
+                    obj[parseInt(key)] = state[parseInt(key)]!;
                     return obj;
                 }, {});
         },
