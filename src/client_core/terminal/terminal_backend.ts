@@ -20,7 +20,6 @@ import {__selected_application, up_program} from "../index.js";
 import {get_version} from "../proxy/platform.js";
 
 import store from "../../store.js";
-import type {program} from "#interfaces/index.js";
 
 declare const __USCOPE_CLIENT_VERSION__: string;
 type TerminalCommand = (args: string[]) => Promise<string[]>;
@@ -176,12 +175,11 @@ export const terminal_backend : Record<string, TerminalCommand> = {
                 ]);
             })
         }
-        let state = store.getState() as any;
-        let programs = state.programs as program[];
+        let programs = store.getState().programs;
         let selected_program = undefined;
-        for(let p of programs){
-            if(p.name === args[0]){
-                selected_program = p;
+        for(let p in programs){
+            if(programs[p]!.name === args[0]){
+                selected_program = programs[p];
             }
         }
         if(selected_program === undefined){

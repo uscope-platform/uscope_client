@@ -21,10 +21,11 @@ import rootReducer from './redux/Slices/index.js';
 // TODO: immer AutoFreeze breaks plotly because plotly modifies his inputs!!! that are passes through redux
 import { setAutoFreeze } from 'immer';
 import {configureStore} from "@reduxjs/toolkit";
+import type {PersistConfig} from "redux-persist/es/types";
 setAutoFreeze(false);
 
 
-const persistConfig = {
+const persistConfig: PersistConfig<RootState> = {
     key: 'root',
     storage: storage,
     stateReconciler: hardSet,
@@ -48,7 +49,7 @@ const store = configureStore({
     },
 });
 
-export type RootState = ReturnType<typeof store.getState>
+export type RootState = ReturnType<typeof rootReducer>
 export type AppDispatch = typeof store.dispatch
 
 export default store;

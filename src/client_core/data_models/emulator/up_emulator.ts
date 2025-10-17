@@ -18,7 +18,7 @@ import store from "../../../store.js";
 import {backend_delete, backend_get, backend_patch, backend_post} from "../../proxy/backend.js";
 import {api_dictionary} from "../../proxy/api_dictionary.js";
 import {addEmulator, removeEmulator, update_emulator} from "#redux/index.js";
-import type {emulator, core, connection, server_side_port_link, hil_data_point, program, core_deployment_options, core_input, core_input_data, core_memory, core_output, emulator_hil_sim_data, port_link} from "#interfaces/index.ts";
+import type {emulator, core, connection, server_side_port_link, hil_data_point, core_deployment_options, core_input, core_input_data, core_memory, core_output, emulator_hil_sim_data, port_link} from "#interfaces/index.ts";
 import axios, {type AxiosError} from "axios";
 
 export class up_emulator {
@@ -748,14 +748,14 @@ export class up_emulator {
                     deployment:item.deployment,
                     channels: item.channels,
                     program: (() => {
-                        let programs = ((store.getState()as any).programs as program[]);
+                        let programs = store.getState().programs;
                         let prog = Object.values(programs).filter((p) => {
                             return p.name === item.program;
                         })[0]
                         if(!prog){
                             throw("Error: Program " + item.program + " not found.");
                         }
-                        let headers = prog.headers.map((h)=>{
+                        let headers = prog.headers.map((h: number)=>{
                             if(!programs[h]){
                                 throw("Error: Header " + h + " not found.");
                             }

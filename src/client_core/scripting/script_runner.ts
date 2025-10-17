@@ -19,7 +19,7 @@ import {up_peripheral, set_write_callback, up_application} from "#client_core/in
 import {parseFunction} from "./frontend.js";
 import {translate_registers} from "./backend.js";
 import {__selected_application} from "../index.js";
-import type {peripheral, script, autocomplete_periph_object, register_write_object, register_write} from "#interfaces/index.js";
+import type {peripheral, autocomplete_periph_object, register_write_object, register_write} from "#interfaces/index.js";
 import type {fields_object} from "#client_core/data_models/register_proxy.js";
 
 export let scripting_engine_peripherals : Record<string, autocomplete_periph_object> = {}
@@ -49,8 +49,7 @@ export const initialize_scripting_engine = (application: up_application | null ,
 export const run_script = (
     trigger_string: string, parameters: Record<string, number>, current_parameter: string, argument: number
 ) : register_write[]  =>{
-    const state = store.getState() as any;
-    const scripts = state.scripts as script;
+    const scripts = store.getState().scripts;
 
 
     let trigger = Object.values(scripts).filter((script)=>{

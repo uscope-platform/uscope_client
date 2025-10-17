@@ -110,8 +110,12 @@ export class up_program {
 
      compile = async () =>{
          let headers = this.headers.map((h)=>{
-             // TODO: take the any out when store is typed
-             let header =  (store.getState() as any).programs[h];
+
+             let header =  store.getState().programs[h];
+             if(!header){
+                 console.error("Header not found: ", h, "while loading program: ", this.id);
+                 return;
+             }
              return {name: header.name, content: header.content};
          })
 
@@ -123,12 +127,15 @@ export class up_program {
          }
         return backend_post(api_dictionary.operations.compile_program, data_package)
     };
-    // TODO: use the correct type once application is ported over
+
     load = (core: soft_core) => {
 
         let headers = this.headers.map((h)=>{
-            // TODO: take the any out when store is typed
-            let header =  (store.getState() as any).programs[h];
+            let header =   store.getState().programs[h];
+            if(!header){
+                console.error("Header not found: ", h, "while loading program: ", this.id);
+                return;
+            }
             return {name: header.name, content: header.content};
         })
 

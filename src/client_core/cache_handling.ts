@@ -119,13 +119,13 @@ export const refresh_caches = () =>{
     let state = store.getState();
     let refresh_ops = [];
 
-    refresh_ops.push(refresh_resource_cache("application_cache", (state as any).applications, load_all_applications ,()=>{return backend_get(api_dictionary.applications.get_hash)}));
-    refresh_ops.push(refresh_resource_cache("peripheral_cache", (state as any).peripherals, load_all_peripherals,()=>{return backend_get(api_dictionary.peripherals.get_hash)}));
-    refresh_ops.push(refresh_resource_cache("scripts_cache", (state as any).scripts, load_all_scripts , ()=>{return backend_get(api_dictionary.scripts.get_hash)}));
-    refresh_ops.push(refresh_resource_cache("programs_cache",(state as any).programs, load_all_programs , ()=>{return backend_get(api_dictionary.programs.get_hash)}));
-    refresh_ops.push(refresh_resource_cache("bitstreams_cache",(state as any).bitstreams, load_all_bitstreams , ()=>{return backend_get(api_dictionary.bitstream.get_hash)}));
-    refresh_ops.push(refresh_resource_cache("filters_cache",(state as any).filters, load_all_filters , ()=>{return backend_get(api_dictionary.filters.get_hash)}));
-    refresh_ops.push(refresh_resource_cache("emulators_cache",(state as any).emulators, load_all_emulators , ()=>{return backend_get(api_dictionary.emulators.get_hash)}));
+    refresh_ops.push(refresh_resource_cache("application_cache", state.applications, load_all_applications ,()=>{return backend_get(api_dictionary.applications.get_hash)}));
+    refresh_ops.push(refresh_resource_cache("peripheral_cache", state.peripherals, load_all_peripherals,()=>{return backend_get(api_dictionary.peripherals.get_hash)}));
+    refresh_ops.push(refresh_resource_cache("scripts_cache", state.scripts, load_all_scripts , ()=>{return backend_get(api_dictionary.scripts.get_hash)}));
+    refresh_ops.push(refresh_resource_cache("programs_cache",state.programs, load_all_programs , ()=>{return backend_get(api_dictionary.programs.get_hash)}));
+    refresh_ops.push(refresh_resource_cache("bitstreams_cache",state.bitstreams, load_all_bitstreams , ()=>{return backend_get(api_dictionary.bitstream.get_hash)}));
+    refresh_ops.push(refresh_resource_cache("filters_cache",state.filters, load_all_filters , ()=>{return backend_get(api_dictionary.filters.get_hash)}));
+    refresh_ops.push(refresh_resource_cache("emulators_cache",state.emulators, load_all_emulators , ()=>{return backend_get(api_dictionary.emulators.get_hash)}));
     return Promise.all(refresh_ops);
 };
 
