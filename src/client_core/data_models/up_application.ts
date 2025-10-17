@@ -394,10 +394,11 @@ export class up_application {
         let p: peripheral_instance = {
             name: name,
             peripheral_id: name.replace(/\s/g, "_").toLowerCase(),
-            base_address: 0,
+            base_address: "0",
             hdl_parameters:{},
             proxied: false,
-            proxy_address: 0,
+            proxy_address: "0",
+            proxy_type: "",
             type: 'Registers',
             spec_id: ""
         };
