@@ -14,10 +14,16 @@
 // limitations under the License.
 
 import React from "react";
-import {Label} from "../Label";
-import {DeleteIcon} from "../DeleteIcon";
+import {Label} from "../Label.js";
+import {DeleteIcon} from "../DeleteIcon.jsx";
 
-export let CardTitle = function (props) {
+interface CardTitleProps {
+    name: string;
+    onRemove: () => void;
+    additionalItems?: React.ReactNode;
+}
+
+export let CardTitle = function (props: CardTitleProps) {
 
     return(
         <div style={{

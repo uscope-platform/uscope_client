@@ -15,8 +15,9 @@
 
 import { styled } from 'goober';
 import {ColorTheme} from "./ColorTheme.js";
+import type {ButtonHTMLAttributes} from "react";
 
-interface ButtonProps {}
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>{}
 
 export const Button = styled('button')<ButtonProps>`
   background: ${() => ColorTheme.background.accents};

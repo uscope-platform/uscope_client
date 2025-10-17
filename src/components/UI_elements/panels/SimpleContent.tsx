@@ -13,9 +13,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {PanelTitle, ContentDiv} from "./UIPanel";
+import {PanelTitle, ContentDiv} from "./UIPanel.js";
+import type {CSSProperties, ReactNode} from "react";
 
-export let SimpleContent = function (props) {
+interface SimpleContentProps {
+    name: string;
+    height: string | number | undefined;
+    style: CSSProperties | undefined;
+    children: ReactNode;
+}
+
+export let SimpleContent = function (props: SimpleContentProps) {
 
     return(
         <div style={props.style}>

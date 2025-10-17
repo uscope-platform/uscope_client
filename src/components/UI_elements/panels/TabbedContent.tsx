@@ -14,20 +14,28 @@
 // limitations under the License.
 
 import React from 'react';
-import {PanelTitle, ContentDiv} from "./UIPanel";
+import type {ReactNode, MouseEvent} from 'react';
+import {PanelTitle, ContentDiv} from "./UIPanel.js";
 
-export let TabbedContent = function (props) {
-    const childrenArray = React.Children.map(props.children, (child, index) => {
+interface TabbedContentProps {
+    names: string[];
+    selected: number;
+    onSelect: (index: number) => void;
+    children: ReactNode;
+}
+
+export let TabbedContent = function (props: TabbedContentProps) {
+    const childrenArray: ReactNode[] = React.Children.map(props.children, (child: ReactNode, index) => {
         if (React.isValidElement(child)) {
             return React.cloneElement(child, {
                 key: child.key || `tab-content-${index}`
             });
         }
         return child;
-    });
+    }) || [];
 
-    let handle_select_tab = (event) => {
-        props.onSelect(props.names.indexOf(event.target.textContent));
+    let handle_select_tab = (event: MouseEvent<HTMLParagraphElement>) => {
+        props.onSelect(props.names.indexOf(event.currentTarget.textContent));
     }
 
     let construct_titles = () => {

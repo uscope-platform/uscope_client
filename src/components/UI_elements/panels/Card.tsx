@@ -14,21 +14,38 @@
 // limitations under the License.
 
 
-import styled from "styled-components";
-import {CardTitle} from "./CardTitle";
-import {ChipSelector} from "../ChipSelector";
+import {styled} from "goober";
+import {CardTitle} from "./CardTitle.jsx";
+import {ChipSelector} from "../ChipSelector.jsx";
+import {ColorTheme} from "../ColorTheme.js";
+import type {ReactNode} from "react";
 
-export const CardContainer = styled.div`
+
+
+interface CardContainerProps {}
+export const CardContainer = styled('div')<CardContainerProps>`
     display: flex;
     flex-direction: column;  
-    border-color: ${props => props.theme.background.borders};
-    background-color: ${props => props.theme.background.level_3};
+    border-color: ${() => ColorTheme.background.borders};
+    background-color: ${() => ColorTheme.background.level_3};
     border-width: 2px;
     padding-left: 0.3em;
     border-style: solid;
 `
 
-export let Card = function (props) {
+interface CardProps {
+    selector?: {
+        name: string,
+        label: string,
+        value: string,
+        click: () => void
+    }
+    name: string,
+    onRemove: () => void,
+    children?: ReactNode;
+}
+
+export let Card = function (props: CardProps) {
     let title_items = props.selector ? <ChipSelector name={props.selector.name} onClick={props.selector.click} value={props.selector.value} label={props.selector.label}/> :null
     return(
         <CardContainer>

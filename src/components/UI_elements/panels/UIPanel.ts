@@ -50,7 +50,7 @@ export const PanelTitle = styled('div')<PanelTitleProps>`
 `
 
 interface ContentDivProps {
-    height: number | string;
+    height?: number | string| undefined;
 }
 
 export const ContentDiv = styled('div')<ContentDivProps>`
