@@ -17,13 +17,25 @@
 import React from 'react';
 
 
-import {ColorTheme, } from "../index"
+import {ColorTheme} from "../index.jsx"
 import {MdNoteAdd, MdDownload, MdUpload, MdContentCopy} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
 
-export let SideToolbar = (props) =>{
+
+interface SideToolbarProps {
+    onAdd: () => void;
+    onImport: () => void;
+    onExport: () => void;
+    onCopy: () => void;
+    exportEnabled: boolean;
+    contentName: string;
+}
+
+export let SideToolbar = (props: SideToolbarProps) =>{
     let io_color = props.exportEnabled ? ColorTheme.icons_color:"gray";
-    let click_handler = props.exportEnabled ? props.onExport:null;
+
+    let click_handler = props.exportEnabled ? props.onExport:undefined;
+
     let export_tooltip = props.exportEnabled ? <Tooltip anchorId="export_icon" content={"Export "+ props.contentName} place="top" />:null;
 
     let render_icons = () =>{

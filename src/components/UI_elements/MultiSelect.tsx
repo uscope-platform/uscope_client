@@ -15,13 +15,16 @@
 
 import ReactSelect from 'react-select';
 import React from 'react';
-import {ColorTheme} from "./ColorTheme";
-import styled from "styled-components";
-import {Label} from "./Label";
+import {ColorTheme} from "./ColorTheme.js";
+import {styled} from "goober";
+import {Label} from "./Label.js";
 
 
+interface WrapperProps {
+    inline?: string;
+}
 
-const Wrapper = styled.div`
+const  Wrapper = styled('div')<WrapperProps>`
 margin: 0 0.2rem;
 display: grid;
 grid-template-columns: 1fr;
@@ -31,34 +34,43 @@ align-items: center;
 flex-flow: wrap;
 `
 
+interface MultiSelectProps {
+    ID: string;
+    name: string;
+    label: string;
+    value: any;
+    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    options: any;
+    color?: string;
+    inline: string;
+}
 
-
-export let  MultiSelect = props =>{
+export let  MultiSelect = (props: MultiSelectProps) =>{
 
         const color= props.color ? props.color : ColorTheme.background.select_background ;
 
         const Style = {
-            control:(provided,  { data, isDisabled, isFocused, isSelected }) => ({
+            control:(provided: any,  { data, isDisabled, isFocused, isSelected }: any) => ({
                 ...provided,
                 backgroundColor: color,
             }),
 
-            menu: (provided,  { data, isDisabled, isFocused, isSelected }) => ({
+            menu: (provided: any,  { data, isDisabled, isFocused, isSelected }: any) => ({
                 ...provided,
                 backgroundColor: color,
             }),
 
-            menuPortal: (provided,  { data, isDisabled, isFocused, isSelected }) => ({
+            menuPortal: (provided: any,  { data, isDisabled, isFocused, isSelected }: any) => ({
                 ...provided,
                 backgroundColor: color,
             }),
 
-            option: (provided,  { data, isDisabled, isFocused, isSelected }) => ({
+            option: (provided: any,  { data, isDisabled, isFocused, isSelected }: any) => ({
                 ...provided,
                 backgroundColor: isFocused?ColorTheme.background.transparent_accents:undefined
             }),
 
-            multiValue: (provided,  { data }) => ({
+            multiValue: (provided: any,  { data }: any) => ({
                 ...provided,
                 backgroundColor: "#0000",
                 borderColor:ColorTheme.background.borders,
@@ -66,11 +78,11 @@ export let  MultiSelect = props =>{
                 borderStyle:"solid"
             }),
 
-            multiValueLabel: (styles, { data }) => ({
+            multiValueLabel: (styles: any, { data }: any) => ({
                 ...styles,
                 color: data.color
             }),
-            multiValueRemove: (styles, { data }) => ({
+            multiValueRemove: (styles: any, { data }: any) => ({
                 ...styles,
                 color: data.color,
                 ':hover': {
@@ -83,7 +95,7 @@ export let  MultiSelect = props =>{
 
         return (
             <Wrapper inline={props.inline}>
-                    <Label htmlFor={props.ID} inline={props.inline}>{props.label}</Label>
+                    <Label htmlFor={props.ID}>{props.label}</Label>
                     <ReactSelect
                         name={props.ID}
                         isMulti={true}
@@ -91,7 +103,7 @@ export let  MultiSelect = props =>{
                         options={props.options}
                         menuPortalTarget={document.body}
                         value={props.value}
-                        onChange={e => {if(props.onChange) props.onChange(e)}}
+                        onChange={(e: any) => {if(props.onChange) props.onChange(e)}}
                     />
             </Wrapper>
 

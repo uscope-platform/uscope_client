@@ -14,7 +14,9 @@
 // limitations under the License.
 
 import {styled} from 'goober';
-interface LabelProps {}
+import type {LabelHTMLAttributes} from "react";
+
+interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement>{}
 
 export const Label = styled('label')<LabelProps>`
     width: fit-content;

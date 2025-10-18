@@ -31,14 +31,6 @@ const InnerInput = styled.input`
   color: ${props => props.theme.text};
 `
 
-const InputDescription = styled.label`
-width: fit-content;
-font-family: Roboto,Helvetica,Arial,sans-serif;
-font-size: 0.7rem;
-margin-top: 0.15rem;
-margin-left: 0.15rem;
-`
-
 const Wrapper = styled.div`
 margin: 0 0.2rem;
 display: grid;

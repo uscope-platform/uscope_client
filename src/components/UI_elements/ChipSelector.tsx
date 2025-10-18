@@ -14,10 +14,16 @@
 // limitations under the License.
 
 import React, {useState} from "react";
-import {ColorTheme} from "./ColorTheme";
+import {ColorTheme} from "./ColorTheme.js";
 
+interface ChipSelectorProps {
+    value: boolean;
+    label: string;
+    name: string;
+    onClick: (value: {name: string, checked: boolean}) => void;
+}
 
-export let  ChipSelector = props =>{
+export let  ChipSelector = (props: ChipSelectorProps ) =>{
 
 
     let [checked, set_checked] = useState(props.value);

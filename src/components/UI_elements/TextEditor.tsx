@@ -22,7 +22,15 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import {InterfaceParameters} from "./InterfaceParameters.js";
 
-export let TextEditor = props => {
+interface TextEditorProps {
+    tab_name: string;
+    content: string;
+    height?: string;
+    extensions: any[];
+    onChange: (value: string) => void;
+}
+
+export let TextEditor = (props : TextEditorProps) => {
 
     return (
         <div style={{

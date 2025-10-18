@@ -14,13 +14,15 @@
 // limitations under the License.
 
 import React, {useState} from "react";
-import {ColorTheme} from "./ColorTheme";
+import {ColorTheme} from "./ColorTheme.js";
 import {MdDelete} from "react-icons/md";
 
 
+interface DeleteIconProps {
+    onRemove: () => void;
+}
 
-
-export let  DeleteIcon = props =>{
+export let  DeleteIcon = (props: DeleteIconProps) =>{
 
     let [color, set_color] = useState("white");
     let [confirm_needed, set_confirm_needed] = useState(false);

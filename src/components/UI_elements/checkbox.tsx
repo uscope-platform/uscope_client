@@ -13,31 +13,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import styled from 'styled-components';
+import {styled} from 'goober';
 import React from "react";
-import {Label} from "./Label";
+import {Label} from "./Label.js";
 
 
-const InputCheckbox = styled.input`
+const InputCheckbox = styled('input')`
 border-width: 0;
 `
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
 display: flex;
 align-items: center;
 flex-flow: wrap;
 `
+interface CheckboxProps {
+    name: string;
+    label: string;
+    value: boolean;
+    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    style?: React.CSSProperties;
+}
 
-
-export let  Checkbox = props =>{
+export let  Checkbox = (props: CheckboxProps) =>{
 
     return(
         <Wrapper>
-            <Label htmlFor={props.name} inline={props.inline}>{props.label}</Label>
+            <Label htmlFor={props.name}>{props.label}</Label>
             <InputCheckbox
                 id={props.name}
                 name={props.name}
-                checked={!!props.value}
+                checked={props.value}
                 type="checkbox"
                 onChange={e => props.onChange(e)}
                 style={props.style}
