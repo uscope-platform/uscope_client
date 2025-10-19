@@ -39,7 +39,7 @@ export class up_settings {
         return backend_get(api_dictionary.settings.debugger_option + "/" + option_name);
     }
 
-    static set_debugger_option(option_name: string, value: any){
+    static set_debugger_option(option_name: string, value: boolean){
         return backend_post(api_dictionary.settings.debugger_option+ "/" + option_name, {"name": option_name, "value": value});
     }
 

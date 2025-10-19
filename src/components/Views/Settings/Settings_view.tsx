@@ -13,21 +13,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useContext, useEffect, useState} from 'react';
-import {InputField, SelectField, SimpleContent, UIPanel} from "#UI";
+import React, {type CSSProperties, useContext, useEffect, useState} from 'react';
+import {InputField, SelectField, SimpleContent, UIPanel} from "#UI/index.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
-import {up_settings} from "#client_core";
+import {up_application, up_settings} from "#client_core/index.js";
+import type {ActionMeta} from "react-select";
 
-let SettingsView = function (props) {
+interface SettingsViewProps {
+}
 
-    const application = useContext(ApplicationContext);
+interface DebuggerOption {
+    label: string;
+    value: string;
+}
 
+let SettingsView = function (props: SettingsViewProps) {
 
-    const selected_app = application ? application: {};
+    const application: up_application = useContext(ApplicationContext);
 
-    const hil_present = selected_app.application_name === "HIL_base";
+    const hil_present = application.application_name === "HIL_base";
 
-    const [multichannel_debug, set_multichannel_debug] = useState({label:"false", value:false});
+    const [multichannel_debug, set_multichannel_debug] = useState({label:"false", value:"false"});
     const [debug_level, set_debug_level] = useState({label:"", value:""});
     const [hil_address_map, set_hil_address_map] = useState({
         "bases": {
@@ -61,28 +67,30 @@ let SettingsView = function (props) {
 
     },[])
 
-    let handle_edit_clocks = async (event) =>{
+    let handle_edit_clocks = async (event: React.KeyboardEvent<HTMLInputElement>) =>{
 
         if(event.key==="Enter"|| event.key ==="Tab"){
-            await application.edit_clock_frequency(event.target.name.replace("fclk_", ""), parseFloat(event.target.value))
-            props.forceUpdate();
+            let selected_clock = parseInt(event.currentTarget.name.replace("fclk_", ""));
+            await application.edit_clock_frequency(selected_clock, parseFloat(event.currentTarget.value))
         }
     }
 
-    let handle_set_debug_level =async (value, event) =>{
+    let handle_set_debug_level =async (value:  DebuggerOption | null, event: ActionMeta<DebuggerOption>) =>{
+        if(value===null) return;
         await up_settings.set_debug_level(value.value);
         set_debug_level(value);
     }
 
-    let handle_multichannel_debug =async (value, event) =>{
-        await up_settings.set_debugger_option("multichannel_debug", value.value);
+    let handle_multichannel_debug =async (value: DebuggerOption | null, event: ActionMeta<DebuggerOption>) =>{
+        if(value===null) return;
+        await up_settings.set_debugger_option("multichannel_debug", value.value=== "true");
         set_multichannel_debug(value);
     }
 
-    let handle_edit_hil_setting = async (event) =>{
+    let handle_edit_hil_setting = async (event: any) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
             let tok = event.target.name.split(".");
-            let new_map = hil_address_map;
+            let new_map: any = hil_address_map;
             new_map[tok[1]][tok[0]]= parseInt(event.target.value, 0);
             set_hil_address_map(new_map);
             await up_settings.set_hil_address_map(new_map);
@@ -90,7 +98,7 @@ let SettingsView = function (props) {
     }
 
     let render_hil_components = () =>{
-        const div_style = {
+        const div_style : CSSProperties = {
             display:"flex",
             flexDirection:"row",
             gap:10
@@ -163,23 +171,24 @@ let SettingsView = function (props) {
             <UIPanel key="clock_settings" style={{minHeight: "100px"}} level="level_2">
                 <SimpleContent name="PL Clocks">
                     <div>
-                        <InputField inline name="fclk_0" defaultValue={selected_app.pl_clocks["0"]}
+                        <InputField inline name="fclk_0" defaultValue={application.pl_clocks["0"].toString()}
                                     onKeyDown={handle_edit_clocks} label="PL clock frequency 0"/>
-                        <InputField inline name="fclk_1" defaultValue={selected_app.pl_clocks["1"]} onKeyDown={handle_edit_clocks} label="PL clock frequency 1"/>
-                        <InputField inline name="fclk_2" defaultValue={selected_app.pl_clocks["2"]} onKeyDown={handle_edit_clocks} label="PL clock frequency 2"/>
-                        <InputField inline name="fclk_3" defaultValue={selected_app.pl_clocks["3"]} onKeyDown={handle_edit_clocks} label="PL clock frequency 3"/>
+                        <InputField inline name="fclk_1" defaultValue={application.pl_clocks["1"].toString()}
+                                    onKeyDown={handle_edit_clocks} label="PL clock frequency 1"/>
+                        <InputField inline name="fclk_2" defaultValue={application.pl_clocks["2"].toString()}
+                                    onKeyDown={handle_edit_clocks} label="PL clock frequency 2"/>
+                        <InputField inline name="fclk_3" defaultValue={application.pl_clocks["3"].toString()}
+                                    onKeyDown={handle_edit_clocks} label="PL clock frequency 3"/>
                     </div>
                 </SimpleContent>
             </UIPanel>
             <UIPanel key="platform_settings" style={{minHeight:"100px"}} level="level_2">
                 <SimpleContent name="Platform settings">
                     <div>
-                        <SelectField
-                            inline
+                        <SelectField<DebuggerOption>
                             label="Driver Log Level"
                             onChange={handle_set_debug_level}
                             value={debug_level}
-                            defaultValue="Select Datapoint"
                             name="driver_log_level"
                             options={[
                                 {label:"minimal", value:"minimal"},
@@ -187,15 +196,14 @@ let SettingsView = function (props) {
                                 {label:"trace", value:"trace"}
                             ]}
                         />
-                        <SelectField
-                            inline
+                        <SelectField<DebuggerOption>
                             label="Multichannel debug"
                             onChange={handle_multichannel_debug}
                             value={multichannel_debug}
                             name="driver_log_level"
                             options={[
-                                {label:"true", value:true},
-                                {label:"false", value:false}
+                                {label:"true", value:"true"},
+                                {label:"false", value:"false"}
                             ]}
                         />
                     </div>

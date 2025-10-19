@@ -15,12 +15,12 @@
 
 import React, {useState} from 'react';
 
-import {Button, Checkbox, InputField} from "#UI"
+import {Button, Checkbox, InputField} from "#UI/index.js"
 
-import styled from "styled-components";
+import {styled} from "goober";
 
 
-const ComponentStyle = styled.div`
+const ComponentStyle = styled('div')`
   display: grid;
   grid-template-columns: auto;
   grid-auto-rows: auto;
@@ -31,7 +31,7 @@ const ComponentStyle = styled.div`
 `
 
 
-const LoginFormLayout = styled.div`
+const LoginFormLayout = styled('div')`
   display: grid;
   grid-template-columns: auto;
   grid-auto-rows: auto;
@@ -42,19 +42,22 @@ const LoginFormLayout = styled.div`
   margin-right: auto;  
 `
 
-const Centering = styled.div`
+const Centering = styled('div')`
   margin-left: auto;
   margin-right: auto;  
 `
 
-let  LoginPage = props =>{
+interface LoginPageProps {
+    done: (credentials: any) => void;
+}
+
+let  LoginPage = (props: LoginPageProps) =>{
 
     const [username, set_username] = useState("");
     const [password, set_password] = useState("");
     const [remember_me, set_remember_me] = useState(false);
 
-
-    let handleChange = (event) => {
+    let handleChange = (event:  React.ChangeEvent<HTMLInputElement>) => {
         switch (event.target.name) {
             case "username":
                 set_username(event.target.value);

@@ -19,7 +19,7 @@ import createPlotlyComponent from 'react-plotly.js/factory';
 
 import {PlotConfigurations} from "#UI";
 import {download_plot, initialize_plot, update_plot_data} from "#client_core";
-import useInterval from "../../Common_Components/useInterval";
+import useInterval from "../../Common_Components/useInterval.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
 
 const Plot = createPlotlyComponent(Plotly);

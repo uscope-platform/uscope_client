@@ -15,21 +15,26 @@
 
 import React, {Suspense} from 'react';
 
-import PlotTab from "./Views/Plot/PlotTab";
+import PlotTab from "./Views/Plot/PlotTab.jsx";
 
-const FilterManager = React.lazy(() => import('./Views/Filters/FilterManager'));
-const ScriptManager = React.lazy(() => import('./Views/Scripts/ScriptManager'));
-const PeripheralsManager = React.lazy(() => import('./Views/Peripherals/PeripheralsManager'));
-const ApplicationsManager = React.lazy(() => import('./Views/Applications/ApplicationsManager'));
-const ProgramsManager = React.lazy(()=> import('./Views/Programs/ProgramsManager'));
-const PlatformManager = React.lazy(()=> import('./Views/Programs/PlatformManager'));
-const BitstreamManager = React.lazy(()=> import('./Views/Bitstreams/BitstreamManager'));
-const HilView = React.lazy(() => import('./Views/Emulators/HilView'));
-const SettingsView = React.lazy(() => import('./Views/Settings/Settings_view'));
+const FilterManager = React.lazy(() => import('./Views/Filters/FilterManager.jsx'));
+const ScriptManager = React.lazy(() => import('./Views/Scripts/ScriptManager.jsx'));
+const PeripheralsManager = React.lazy(() => import('./Views/Peripherals/PeripheralsManager.jsx'));
+const ApplicationsManager = React.lazy(() => import('./Views/Applications/ApplicationsManager.jsx'));
+const ProgramsManager = React.lazy(()=> import('./Views/Programs/ProgramsManager.jsx'));
+const PlatformManager = React.lazy(()=> import('./Views/Programs/PlatformManager.jsx'));
+const BitstreamManager = React.lazy(()=> import('./Views/Bitstreams/BitstreamManager.jsx'));
+const HilView = React.lazy(() => import('./Views/Emulators/HilView.jsx'));
+const SettingsView = React.lazy(() => import('./Views/Settings/Settings_view.jsx'));
 
-let TabContent = props => {
+interface TabContentProps {
+    tab: any;
+    selected_item: any;
+}
 
-    let components_associations = {
+let TabContent = (props: TabContentProps) => {
+
+    let components_associations : any = {
         scope:<PlotTab
             content={props.tab}
         />,

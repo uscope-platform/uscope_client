@@ -21,27 +21,31 @@ import {
     InputField,
     SimpleContent,
     UIPanel
-} from "#UI"
-import {up_script} from "#client_core";
-import ScriptsEditor from "./ScriptsEditor";
-import ScriptSidebar from "./ScriptSidebar";
+} from "#UI/index.js"
+import {up_script} from "#client_core/index.js";
+import ScriptsEditor from "./ScriptsEditor.js";
+import ScriptSidebar from "./ScriptSidebar.js";
 import {useAppSelector} from "#redux/hooks.js";
 
-let ScriptManager = (props) =>{
+interface ScriptManagerProps {}
 
-    const [selected_script, set_selected_script] = useState({});
+let ScriptManager = (props: ScriptManagerProps) =>{
+
+    const [selected_script, set_selected_script] = useState(up_script.get_empty_script());
 
     const scripts =  useAppSelector(state => state.scripts);
 
-    let handle_edit_field = (event) => {
+    let handle_edit_field = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if(event.key==="Enter"|| event.key ==="Tab"){
-            selected_script.edit_field(event.target.name, event.target.value);
+            selected_script.edit_field(event.currentTarget.name as keyof up_script, event.currentTarget.value);
         }
     }
 
 
-    let handle_select = (selection) =>{
-        set_selected_script( new up_script(scripts[selection]) );
+    let handle_select = (selection: number) =>{
+        let new_sel = scripts[selection]
+        if(new_sel===undefined) return;
+        set_selected_script( new up_script(new_sel) );
     }
 
     return(

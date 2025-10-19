@@ -26,12 +26,12 @@ interface SidebarBaseProps {
     display_key: string;
     selection_key: string;
     type_prop?: string;
-    initial_value: any;
+    initial_value?: any;
     objects: any;
     template: any;
     items_filter?: string[];
     onSelect?: (id: number) => void;
-    onAdd?: (item: any) => void;
+    onAdd?: (item: {id: any, object:any}) => void;
     onDelete?: (item: any) => void;
     onImport?: (item: any) => void;
     omImportDone?: (item: any) => void;

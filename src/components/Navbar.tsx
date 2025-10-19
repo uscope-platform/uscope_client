@@ -14,20 +14,24 @@
 // limitations under the License.
 
 import React from 'react';
-import {ColorTheme, Image} from "./UI_elements";
+import {ColorTheme, Image} from "#UI/index.js";
 import {NavLink} from "react-router-dom";
-import styled from "styled-components";
+import  {styled} from "goober";
 
 
-const ComponentLayout = styled.div`
+const ComponentLayout = styled('div')`
     display: flex;   
     flex-direction: column;
     
 `
 
-let  Navbar = props =>{
+interface NavbarProps {
+    views: any;
+}
 
-    let link_stile = ({isActive}) =>{
+let  Navbar = (props: NavbarProps) =>{
+
+    let link_stile = ({isActive}: any) =>{
         if(isActive){
             return  {
                 display:"block",

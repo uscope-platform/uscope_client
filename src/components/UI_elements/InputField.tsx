@@ -65,7 +65,7 @@ interface InputFieldProps {
     compact?: boolean;
     inline?: boolean;
     description?:string;
-    id: string;
+    id?: string;
     type?:string;
     label:string;
     color?: string;

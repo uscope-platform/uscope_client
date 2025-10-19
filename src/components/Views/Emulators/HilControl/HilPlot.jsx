@@ -17,7 +17,7 @@ import React, {useEffect, useReducer, useState} from 'react';
 import createPlotlyComponent from "react-plotly.js/factory";
 import Plotly from "plotly.js-basic-dist";
 import {download_plot, direct_fetch} from "#client_core";
-import useInterval from "../../../Common_Components/useInterval";
+import useInterval from "../../../Common_Components/useInterval.js";
 import {ColorTheme, PlotConfigurations} from "#UI";
 
 

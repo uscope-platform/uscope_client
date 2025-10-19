@@ -15,47 +15,56 @@
 
 import React, {useEffect, useState} from 'react';
 
-import {Button, SelectField} from "#UI"
-import styled from "styled-components";
+import {Button, SelectField} from "#UI/index.js"
+import {styled} from "goober";
+import type {application} from "#interfaces/index.js";
 
 
-const ComponentLayout = styled.div`
+const ComponentLayout = styled('div')`
 display: flex;
 flex-direction: column;
 
 `
-const Centering = styled.div`
+const Centering = styled('div')`
   margin-left: auto;
   margin-right: auto;  
 `
 
-let ApplicationChooserView = props =>{
+interface ApplicationChooserViewProps {
+    applications: Record<number, application>;
+    done: (application_id: number) => void;
+}
+
+let ApplicationChooserView = (props: ApplicationChooserViewProps) =>{
 
     let apps_list = Object.entries(props.applications).map((application,i) => ({
         value:parseInt(application[0]),
         label:application[1].application_name
     }))
 
-    const [selected, set_selected] = useState(null);
+    const [selected, set_selected] = useState({value:0, label:"Select an application"});
 
     useEffect(()=>{
         let last_app = localStorage.getItem("last_selected_application");
-        if(last_app && props.applications.hasOwnProperty(parseInt(last_app))){
-            set_selected({
-                value:parseInt(last_app),
-                label:props.applications[parseInt(last_app)].application_name
-            })
+        if(last_app){
+            let selected_app = props.applications[parseInt(last_app)];
+            if(selected_app){
+                set_selected({
+                    value:parseInt(last_app),
+                    label:selected_app.application_name
+                })
+            }
         } else {
-            set_selected(apps_list[0]);
+            let def = apps_list[0];
+            if(def) set_selected(def);
         }
     },[])
 
 
 
 
-    let handle_close = (event) =>{
-        event.preventDefault();
-        localStorage.setItem("last_selected_application",selected.value);
+    let handle_close = (event:React.MouseEvent<HTMLButtonElement>) =>{
+        localStorage.setItem("last_selected_application",selected.value.toString());
         props.done(selected.value);
     };
 

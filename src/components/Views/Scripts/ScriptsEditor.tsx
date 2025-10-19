@@ -14,17 +14,22 @@
 // limitations under the License.
 
 import React, {useState, useEffect} from "react";
-import {ColorTheme, TextEditor} from "#UI"
+import {ColorTheme, TextEditor} from "#UI/index.js"
 
 import { javascript } from '@codemirror/lang-javascript';
-import { autocompletion } from '@codemirror/autocomplete';
+import {autocompletion, type CompletionContext} from '@codemirror/autocomplete';
 import {
     autocompletion_engine, up_script
-} from "#client_core";
+} from "#client_core/index.js";
 import {MdSave} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
+import type {script} from "#interfaces/index.js";
 
-let ScriptsEditor = props =>{
+interface ScriptEditorProps {
+    script: script
+}
+
+let ScriptsEditor = (props: ScriptEditorProps) =>{
     const [editor_content, set_editor_content] = useState("");
 
     const [dirty, set_dirty] = useState(false);
@@ -35,14 +40,15 @@ let ScriptsEditor = props =>{
         }
     },[props.script])
 
-    let handle_change = (newValue) => {
+    let handle_change = (newValue: string) => {
         set_dirty(true);
         set_editor_content(newValue);
     };
 
-    function registers_completion(context) {
+    function registers_completion(context: CompletionContext) {
         let line = context.matchBefore(/[a-zA-Z0-9_.]+/)
         let word = context.matchBefore(/\w*/)
+        if(!line || !word) return null;
         let options = autocompletion_engine(line, context.explicit);
         return {
             from: word.from,
@@ -57,9 +63,8 @@ let ScriptsEditor = props =>{
         });
     }
 
-    let handle_shortcuts = (event) =>{
-        let charCode = String.fromCharCode(event.which).toLowerCase();
-        if((event.ctrlKey || event.metaKey) && charCode === 's') {
+    let handle_shortcuts = (event: React.KeyboardEvent<HTMLDivElement>) =>{
+        if((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
             event.preventDefault();
             handle_save()
         }

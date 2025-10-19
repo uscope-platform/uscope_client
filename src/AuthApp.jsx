@@ -39,7 +39,7 @@ let user_views = ["Scripts", "Applications", "Programs", "Bitstreams", "Filters"
 let admin_views =["Peripherals", "Platform", "Settings"];
 
 
-export const ApplicationContext = React.createContext(null);
+export const ApplicationContext = React.createContext(up_application.construct_empty(9999));
 
 
 let AuthApp = (props) =>{

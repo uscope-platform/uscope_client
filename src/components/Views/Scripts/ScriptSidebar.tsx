@@ -15,12 +15,16 @@
 
 import React, {useContext, useReducer} from 'react';
 
-import {up_script} from "#client_core";
-import {SidebarBase} from "#UI";
+import {up_script} from "#client_core/index.js";
+import {SidebarBase} from "#UI/index.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
 import {useAppSelector} from "#redux/hooks.js";
 
-let ScriptSidebar = (props) =>{
+interface ScriptSidebarProps {
+    on_select: (id: number) => void;
+}
+
+let ScriptSidebar = (props: ScriptSidebarProps) =>{
 
     const application = useContext(ApplicationContext);
 
@@ -28,13 +32,13 @@ let ScriptSidebar = (props) =>{
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
-    let handleAdd = (added_obj) =>{
+    let handleAdd = (added_obj: any) =>{
         application.add_selected_script(added_obj.id.toString()).then(()=>{
             forceUpdate();
         });
     };
 
-    let handleRemove = (deleted) =>{
+    let handleRemove = (deleted: any) =>{
         application.remove_selected_script(deleted.id.toString()).then();
     };
 
@@ -46,7 +50,6 @@ let ScriptSidebar = (props) =>{
             items_filter={application.scripts}
             display_key="name"
             content_name="Script"
-            selector="selected_script"
             onDelete={handleRemove}
             onSelect={props.on_select}
             onAdd={handleAdd}

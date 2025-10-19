@@ -15,8 +15,8 @@
 
 import {styled} from 'goober';
 import {Label} from "./Label.js";
-import React, {useCallback, useMemo} from "react";
-import Select from "react-select";
+import React, {type JSX, useCallback, useMemo} from "react";
+import Select, {type ActionMeta} from "react-select";
 import {ColorTheme} from "./ColorTheme.js";
 
 
@@ -28,17 +28,26 @@ const SelectWrapper = styled('div')`
     align-items: start;
 `
 
-interface SelectFieldProps {
-    onChange: (value: any, event: any) => void;
+export interface DefaultOption {
+    label: string;
+    value: string | number;
+}
+
+
+interface SelectFieldProps<Option extends DefaultOption=DefaultOption> {
+    onChange: (value: Option | null, event: ActionMeta<Option>) => void;
     name: string;
     label: string;
     style?: React.CSSProperties;
-    defaultValue?: any;
-    value: any;
-    options: any;
+    defaultValue?: Option;
+    value: Option | null;
+    options: readonly Option[];
 }
 
-export let  SelectField = (props: SelectFieldProps) =>{
+
+export let  SelectField = <Option extends DefaultOption = DefaultOption>(
+    props: SelectFieldProps<Option>
+): JSX.Element => {
 
 
     const style = useMemo(()=>{
@@ -71,7 +80,7 @@ export let  SelectField = (props: SelectFieldProps) =>{
         };
     }, [ColorTheme])
 
-    const onSelectChange = useCallback((value: any, event: any) => props.onChange(value, event), [props.onChange]);
+    const onSelectChange = useCallback((value: any, event: ActionMeta<any>) => props.onChange(value, event), [props.onChange]);
 
     return(
         <SelectWrapper>

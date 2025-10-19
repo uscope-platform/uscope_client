@@ -48,6 +48,16 @@ export class up_script {
         this.triggers = script_obj.triggers;
     }
 
+    static get_empty_script = () :up_script => {
+        return new up_script({
+            name: "",
+            id: 9999,
+            path: "",
+            content: "",
+            triggers: ""
+        })
+    }
+
     static deep_copy_s =  (old_script: script): script => {
         return {
             id: old_script.id,
@@ -75,7 +85,7 @@ export class up_script {
         return backend_post(api_dictionary.scripts.add+'/'+this.id, this._get_script());
     }
 
-    edit_field =<K extends keyof this>(field: K, value: this[K]) => {
+    edit_field =<K extends keyof up_script>(field: K, value: this[K]) => {
         this[field] = value;
         store.dispatch(AddScript(this));
         let edit = {script:this.id, field:field, value:value};

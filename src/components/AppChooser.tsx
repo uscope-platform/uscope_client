@@ -16,20 +16,31 @@
 //       REACT IMPORTS
 import React from 'react';
 
-import ApplicationChooserView from "./Common_Components/ApplicationChooserView";
+import ApplicationChooserView from "./Common_Components/ApplicationChooserView.js";
 
 import {
     up_application,
-} from "#client_core"
+} from "#client_core/index.js"
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import type {application} from "#interfaces/index.js";
 
-let ApplicationChooser = (props) =>{
+interface AppChooserProps {
+    applications: application[]
+    choice_done: (app_id: number) => void;
+}
+
+let ApplicationChooser = (props: AppChooserProps) =>{
 
 
-    let handleApplicationChosen = async e =>{
-        let app = new up_application(props.applications[e]);
+    let handleApplicationChosen = async (e:any) =>{
+        let chosen_app = props.applications[e];
+        if(chosen_app === undefined){
+            toast.error("Application " + e + " not found");
+            return;
+        }
+        let app = new up_application(chosen_app);
         try {
             let failures = await app.set_active();
             if(failures.length !== 0){
