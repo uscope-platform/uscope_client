@@ -18,6 +18,7 @@ import React, {useEffect, useState} from 'react';
 import {Button, SelectField} from "#UI/index.js"
 import {styled} from "goober";
 import type {application} from "#interfaces/index.js";
+import type {ActionMeta} from "react-select";
 
 
 const ComponentLayout = styled('div')`
@@ -33,6 +34,11 @@ const Centering = styled('div')`
 interface ApplicationChooserViewProps {
     applications: Record<number, application>;
     done: (application_id: number) => void;
+}
+
+interface AppChooserOption {
+    label: string;
+    value: number;
 }
 
 let ApplicationChooserView = (props: ApplicationChooserViewProps) =>{
@@ -62,6 +68,10 @@ let ApplicationChooserView = (props: ApplicationChooserViewProps) =>{
 
 
 
+    let handle_select = (value: AppChooserOption | null, event: ActionMeta<AppChooserOption>) =>{
+        if(!value) return;
+        set_selected(value);
+    }
 
     let handle_close = (event:React.MouseEvent<HTMLButtonElement>) =>{
         localStorage.setItem("last_selected_application",selected.value.toString());
@@ -71,10 +81,10 @@ let ApplicationChooserView = (props: ApplicationChooserViewProps) =>{
     return(
         <ComponentLayout>
             <Centering>
-                <SelectField
+                <SelectField<AppChooserOption>
                     name="application_selector"
                     label="Chose An Application"
-                    onChange={set_selected}
+                    onChange={handle_select}
                     value={selected}
                     options={apps_list}
                 />
