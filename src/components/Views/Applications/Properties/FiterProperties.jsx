@@ -19,7 +19,7 @@ import {
     Card,
     Checkbox,
     SelectField
-} from "@UI";
+} from "#UI";
 
 import {up_application, up_peripheral} from "#client_core";
 

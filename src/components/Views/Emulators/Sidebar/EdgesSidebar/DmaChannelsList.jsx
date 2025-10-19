@@ -15,7 +15,7 @@
 
 import React from 'react';
 
-import {SelectableList} from "@UI";
+import {SelectableList} from "#UI";
 import {MdAdd} from "react-icons/md";
 
 let  DmaChannelsList = props =>{

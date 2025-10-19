@@ -15,8 +15,7 @@
 
 import React, {useEffect} from 'react';
 
-import {Button, FormLayout} from "@UI"
-import SingleValueField from "../../Common_Components/SingleValueField";
+import {Button, FormLayout, InputField} from "#UI"
 import {run_parameter_script} from "#client_core";
 
 let  ParametersArea = props =>{
@@ -48,7 +47,12 @@ let  ParametersArea = props =>{
                         props.parameters.map((param, i) => {
                             if(param.visible){
                                 return(
-                                    <SingleValueField key={i} name={param.parameter_id} placeholder={param.value} description={param.description}/>
+                                    <InputField
+                                        description={param.description}
+                                        placeholder={param.value}
+                                        name={param.parameter_id}
+                                        label={param.parameter_id}
+                                    />
                                 );
                             } else{
                                 return null;

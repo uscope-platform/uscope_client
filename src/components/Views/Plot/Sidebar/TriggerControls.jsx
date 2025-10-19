@@ -16,10 +16,10 @@
 
 import React, {useContext, useEffect, useState} from 'react';
 
-import {Chip, InputField, SelectField} from "@UI";
+import {Chip, InputField, SelectField} from "#UI";
 import PlotControls from "../PlotControls";
 import {get_ui_state, save_ui_state, set_acquisition} from "#client_core";
-import {ApplicationContext} from "@src/AuthApp.jsx";
+import {ApplicationContext} from "#src/AuthApp.jsx";
 
 let  TriggerControls = props =>{
 

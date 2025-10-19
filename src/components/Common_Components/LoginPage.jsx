@@ -15,7 +15,7 @@
 
 import React, {useState} from 'react';
 
-import {Button, Checkbox, InputField} from "@UI"
+import {Button, Checkbox, InputField} from "#UI"
 
 import styled from "styled-components";
 

@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React, {useReducer} from 'react';
-import {Checkbox, InputField, SelectField, SimpleContent} from "@UI";
+import {Checkbox, InputField, SelectField, SimpleContent} from "#UI";
 import {ConstantInputProperties, SeriesInputProperties, ExternalInputProperties, WaveformInputProperties} from "./inputs";
 import TypeOptionsContainer from "./TypeOptionsContainer";
 

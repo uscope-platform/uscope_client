@@ -21,7 +21,7 @@ import {
     SidebarCollapsableContentLayout,
     SidebarCollapsableNameLayout,
     ColorTheme
-} from "@UI";
+} from "#UI";
 import {MdArrowDropDown, MdArrowDropUp} from "react-icons/md";
 import styled from "styled-components";
 import {up_field} from "#client_core";

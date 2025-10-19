@@ -17,7 +17,7 @@ import React from 'react';
 
 
 import {up_emulator} from "#client_core";
-import {SidebarBase} from "@UI";
+import {SidebarBase} from "#UI";
 import {useAppSelector} from "#redux/hooks.js";
 
 let  HilSpecsSidebar = props =>{

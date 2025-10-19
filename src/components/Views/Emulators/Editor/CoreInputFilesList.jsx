@@ -15,7 +15,7 @@
 
 import React, {useReducer, useState} from 'react';
 import {MdAdd} from "react-icons/md";
-import {SelectableList} from "@UI";
+import {SelectableList} from "#UI";
 import {upload_json} from "#client_core";
 
 let  CoreInputFilesList = props =>{

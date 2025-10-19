@@ -19,12 +19,12 @@ import ChannelSelector from "./ChannelSelector";
 import PlotComponent from "./PlotComponent";
 import ParametersArea from "./ParametersArea";
 import MacroActions from "./MacroActions";
-import {ColorTheme, UIPanel, SimpleContent} from "@UI";
+import {ColorTheme, UIPanel, SimpleContent} from "#UI";
 import TerminalComponent from "./Terminal";
 import PlotSidebar from "./Sidebar/PlotSidebar";
 import {create_plot_channel, get_channels_from_group, update_plot_status, get_acquisition_status} from "#client_core";
 import useInterval from "../../Common_Components/useInterval";
-import {ApplicationContext} from "@src/AuthApp.jsx";
+import {ApplicationContext} from "#src/AuthApp.jsx";
 import {useAppSelector} from "#redux/hooks.js";
 
 let PlotTab = function (props) {

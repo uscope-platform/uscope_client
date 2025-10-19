@@ -20,7 +20,7 @@ import {
     SelectableListItem,
     InputField,
     SelectField
-} from "@UI";
+} from "#UI";
 import {MdAdd} from "react-icons/md";
 import {useAppSelector} from "#redux/hooks.js";
 

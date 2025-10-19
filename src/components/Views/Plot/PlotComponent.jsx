@@ -17,10 +17,10 @@ import React, {useContext, useEffect, useReducer, useState} from 'react';
 import Plotly from 'plotly.js-basic-dist';
 import createPlotlyComponent from 'react-plotly.js/factory';
 
-import {PlotConfigurations} from "@UI";
+import {PlotConfigurations} from "#UI";
 import {download_plot, initialize_plot, update_plot_data} from "#client_core";
 import useInterval from "../../Common_Components/useInterval";
-import {ApplicationContext} from "@src/AuthApp.jsx";
+import {ApplicationContext} from "#src/AuthApp.jsx";
 
 const Plot = createPlotlyComponent(Plotly);
 

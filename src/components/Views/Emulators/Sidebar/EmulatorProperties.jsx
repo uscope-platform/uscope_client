@@ -15,7 +15,7 @@
 
 import React, {useEffect, useReducer, useState} from 'react';
 
-import {InputField, SimpleContent, UIPanel, RangedInputField, Checkbox} from "@UI";
+import {InputField, SimpleContent, UIPanel, RangedInputField, Checkbox} from "#UI";
 
 
 const ranges_map = {s:1, ms:1e-3, us:1e-6};

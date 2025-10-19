@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React from 'react';
-import {InputField, SelectField} from "@UI";
+import {InputField, SelectField} from "#UI";
 
 export let WaveformInputProperties = props =>{
 

@@ -21,7 +21,7 @@ import {
     up_peripheral,
 } from "#client_core";
 
-import {SidebarBase} from "@UI";
+import {SidebarBase} from "#UI";
 import {useAppSelector} from "#redux/hooks.js";
 
 let  PeripheralsSidebar = props =>{

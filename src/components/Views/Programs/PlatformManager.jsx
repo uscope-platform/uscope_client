@@ -22,7 +22,7 @@ import {
     FormLayout,
     InputField,
     SelectField, ColorTheme
-} from "@UI"
+} from "#UI"
 
 import {add_user, do_onboarding, dump_database, restore_database, upload_json} from "#client_core";
 import { MdDownload, MdUpload} from "react-icons/md";

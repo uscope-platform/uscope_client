@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React from 'react';
-import {SimpleContent, UIPanel} from "@UI";
+import {SimpleContent, UIPanel} from "#UI";
 
 let  WarningsPanel = props =>{
 

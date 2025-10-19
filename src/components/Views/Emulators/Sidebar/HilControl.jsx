@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React, {useCallback} from 'react';
-import {ColorTheme, SimpleContent, UIPanel} from "@UI";
+import {ColorTheme, SimpleContent, UIPanel} from "#UI";
 import TriggerControls from "../../Plot/Sidebar/TriggerControls";
 import {MdSimCardDownload} from "react-icons/md";
 

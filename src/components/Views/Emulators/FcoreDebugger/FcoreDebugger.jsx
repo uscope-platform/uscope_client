@@ -16,7 +16,7 @@
 
 import React, {useState} from 'react';
 import {Fcore} from "./FcoreLanguage.js";
-import {TextEditor} from "@UI";
+import {TextEditor} from "#UI";
 import DebuggerControls from "./DebuggerControls";
 import {cpp} from "@codemirror/lang-cpp";
 import MemoryViewer from "./MemoryViewer.jsx";

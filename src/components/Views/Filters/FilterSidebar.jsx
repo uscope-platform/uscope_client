@@ -16,7 +16,7 @@
 import React from 'react';
 
 import {up_filter} from "#client_core";
-import {SidebarBase} from "@UI";
+import {SidebarBase} from "#UI";
 import {useAppSelector} from "#redux/hooks.js";
 
 

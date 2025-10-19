@@ -20,7 +20,7 @@ import {
     CardStack, ColorTheme,
     InputField,
     SimpleContent, UIPanel
-} from "@UI"
+} from "#UI"
 
 import {get_next_id, up_peripheral} from "#client_core"
 import PeripheralsSidebar from "./PeripheralsSidebar";

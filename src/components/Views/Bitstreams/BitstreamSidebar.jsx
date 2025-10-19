@@ -21,7 +21,7 @@ import {
     SimpleContent,
     UIPanel,
     SideToolbar
-} from "@UI";
+} from "#UI";
 import {useAppSelector} from "#redux/hooks.js";
 
 

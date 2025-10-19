@@ -17,7 +17,7 @@ import React from 'react';
 
 
 import {set_channel_status, up_emulator,download_text} from "#client_core";
-import {SidebarBase} from "@UI";
+import {SidebarBase} from "#UI";
 import HilControl from "../HilControl.jsx";
 import {useAppSelector} from "#redux/hooks.js";
 

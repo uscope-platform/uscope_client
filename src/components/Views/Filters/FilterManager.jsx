@@ -18,7 +18,7 @@ import {
     ColorTheme,
     SimpleContent,
     UIPanel
-} from "@UI";
+} from "#UI";
 
 import FilterPlot from "./FilterPlot";
 import FilterDesignerControls from "./FilterDesignerControls";

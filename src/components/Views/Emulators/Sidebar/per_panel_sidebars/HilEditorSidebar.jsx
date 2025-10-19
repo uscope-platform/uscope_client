@@ -17,7 +17,7 @@ import React from 'react';
 
 
 import {up_emulator} from "#client_core";
-import {SidebarBase} from "@UI";
+import {SidebarBase} from "#UI";
 import EmulatorNodeProperties from "../NodesSidebar/EmulatorNodeProperties";
 import EmulatorEdgeProperties from "../EdgesSidebar/EmulatorEdgeProperties";
 import EmulatorProperties from "../EmulatorProperties";

@@ -16,11 +16,11 @@
 import React, {useContext, useState} from "react";
 
 import {MdCable, MdMemory} from 'react-icons/md'
-import {ColorTheme, SelectableListItem} from "@UI";
+import {ColorTheme, SelectableListItem} from "#UI";
 
 import 'react-toastify/dist/ReactToastify.css';
 import Popup from "reactjs-popup";
-import {ApplicationContext} from "@src/AuthApp.jsx";
+import {ApplicationContext} from "#src/AuthApp.jsx";
 
 
 let LoadSelector = props =>{

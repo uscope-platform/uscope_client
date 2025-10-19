@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React from 'react';
-import {SelectField} from "@UI";
+import {SelectField} from "#UI";
 
 export let SeriesInputProperties = props =>{
 

@@ -15,7 +15,7 @@
 
 import React from 'react';
 
-import {InputField} from "@UI";
+import {InputField} from "#UI";
 
 let  FilterImplementationControls = props =>{
 

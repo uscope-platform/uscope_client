@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React from 'react';
-import {ColorTheme} from "@UI";
+import {ColorTheme} from "#UI";
 
 
 

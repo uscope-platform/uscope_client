@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React from 'react';
-import {InputField} from "@UI";
+import {InputField} from "#UI";
 
 export let ConstantInputProperties = props =>{
 

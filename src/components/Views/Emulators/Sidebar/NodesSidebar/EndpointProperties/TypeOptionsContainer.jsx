@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React from 'react';
-import {ColorTheme, Label} from "@UI";
+import {ColorTheme, Label} from "#UI";
 
 let TypeOptionsContainer = props => {
     const {children, label} = props;

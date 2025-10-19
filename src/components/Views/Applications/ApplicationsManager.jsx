@@ -34,7 +34,7 @@ import {
     TabbedContent,
     ColorTheme,
     UIPanel
-} from "@UI";
+} from "#UI";
 
 import {get_next_id, up_application} from "#client_core";
 import ApplicationSidebar from "./ApplicationSidebar";

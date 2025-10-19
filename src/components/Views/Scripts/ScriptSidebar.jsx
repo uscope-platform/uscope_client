@@ -16,8 +16,8 @@
 import React, {useContext, useReducer} from 'react';
 
 import {up_script} from "#client_core";
-import {SidebarBase} from "@UI";
-import {ApplicationContext} from "@src/AuthApp.jsx";
+import {SidebarBase} from "#UI";
+import {ApplicationContext} from "#src/AuthApp.jsx";
 import {useAppSelector} from "#redux/hooks.js";
 
 let ScriptSidebar = (props) =>{

@@ -15,12 +15,12 @@
 
 import React, {useContext} from 'react';
 
-import {Button} from "@UI"
+import {Button} from "#UI"
 import styled from "styled-components";
 
 import {run_script, up_peripheral} from "#client_core";
 
-import {ApplicationContext} from "@src/AuthApp.jsx";
+import {ApplicationContext} from "#src/AuthApp.jsx";
 
 
 const ButtonGrid = styled.div`

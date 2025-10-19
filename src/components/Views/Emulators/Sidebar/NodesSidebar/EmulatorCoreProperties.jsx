@@ -15,7 +15,7 @@
 
 import React, { useState} from 'react';
 
-import {InputField, SelectField} from "@UI";
+import {InputField, SelectField} from "#UI";
 import {useAppSelector} from "#redux/hooks.js";
 
 const efi_names = {

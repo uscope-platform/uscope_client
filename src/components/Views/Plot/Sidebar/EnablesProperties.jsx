@@ -15,8 +15,8 @@
 
 import React, {useCallback, useContext, useState} from 'react';
 
-import {FormLayout,SelectField} from "@UI";
-import {ApplicationContext} from "@src/AuthApp.jsx";
+import {FormLayout,SelectField} from "#UI";
+import {ApplicationContext} from "#src/AuthApp.jsx";
 
 
 let  EnablesProperties = props =>{

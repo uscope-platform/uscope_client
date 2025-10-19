@@ -48,7 +48,13 @@
       "#interfaces/*": ["./src/interfaces/*"],
       "#interfaces": ["./src/interfaces"],
       "#client_core/*": ["./src/client_core/*"],
-      "#client_core": ["./src/client_core"]
+      "#client_core": ["./src/client_core"],
+      "#UI/*": ["./src/components/UI_elements/*"],
+      "#UI": ["./src/components/UI_elements"],
+      "#components/*": ["./src/components/*"],
+      "#components": ["./src/components"],
+      "#src/*": ["./src/*"],
+      "#src": ["./src"]
     },
   }
 }

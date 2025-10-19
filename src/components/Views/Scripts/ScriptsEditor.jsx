@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React, {useState, useEffect} from "react";
-import {ColorTheme, TextEditor} from "@UI"
+import {ColorTheme, TextEditor} from "#UI"
 
 import { javascript } from '@codemirror/lang-javascript';
 import { autocompletion } from '@codemirror/autocomplete';

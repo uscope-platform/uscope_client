@@ -15,7 +15,7 @@
 
 import React, {useState} from 'react';
 
-import {TabbedContent, UIPanel} from "@UI"
+import {TabbedContent, UIPanel} from "#UI"
 import {up_emulator, up_emulator_result} from "#client_core";
 import HilEditorView from "./Editor/HilEditorView.jsx";
 import HilDebuggerView from "./FcoreDebugger/HilDebuggerView.jsx";

@@ -24,7 +24,7 @@ import {set_address, set_auth_config, set_redux_store, need_onboarding} from "#c
 //////  STYLE IMPORTS
 import './App.css';
 import {ThemeProvider} from "styled-components";
-import {ColorTheme} from "@UI";
+import {ColorTheme} from "#UI";
 import {auto_sign_in, manual_sign_in} from "./client_core/proxy/auth";
 
 

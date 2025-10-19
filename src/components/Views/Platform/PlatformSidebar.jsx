@@ -19,7 +19,7 @@ import {
     UIPanel,
     SimpleContent,
     SelectableList, ColorTheme
-} from "@UI";
+} from "#UI";
 
 import {get_users_list, remove_user} from "#client_core";
 import {MdPerson} from "react-icons/md";

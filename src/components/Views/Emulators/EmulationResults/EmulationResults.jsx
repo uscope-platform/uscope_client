@@ -14,10 +14,10 @@
 // limitations under the License.
 
 import React, { useReducer, useState} from 'react';
-import {ColorTheme, PlotConfigurations, SelectableList, SimpleContent, UIPanel} from "@UI";
+import {ColorTheme, PlotConfigurations, SelectableList, SimpleContent, UIPanel} from "#UI";
 import createPlotlyComponent from "react-plotly.js/factory";
 import Plotly from "plotly.js-basic-dist";
-import ResultsPlotLegend from "@components/Views/Emulators/EmulationResults/ResultsPlotLegend.jsx";
+import ResultsPlotLegend from "#components/Views/Emulators/EmulationResults/ResultsPlotLegend.jsx";
 
 
 const Plot = createPlotlyComponent(Plotly);

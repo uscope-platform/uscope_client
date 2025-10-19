@@ -14,8 +14,8 @@
 // limitations under the License.
 
 import React from 'react';
-import LegendItem from "@components/Views/Emulators/EmulationResults/LegendItem.jsx";
-import {ColorTheme} from "@UI";
+import LegendItem from "#components/Views/Emulators/EmulationResults/LegendItem.jsx";
+import {ColorTheme} from "#UI";
 
 
 

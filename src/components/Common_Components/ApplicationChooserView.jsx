@@ -15,7 +15,7 @@
 
 import React, {useEffect, useState} from 'react';
 
-import {Button, SelectField} from "@UI"
+import {Button, SelectField} from "#UI"
 import styled from "styled-components";
 
 

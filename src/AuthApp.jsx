@@ -29,7 +29,7 @@ import {initialize_scripting_engine, refresh_caches, setup_client_core, up_appli
 import {Routes} from "react-router";
 import {addApplication} from "#redux";
 
-import {UIPanel, InterfaceParameters} from "@UI";
+import {UIPanel, InterfaceParameters} from "#UI";
 import PlatformManager from "./components/Views/Programs/PlatformManager";
 import {useAppSelector} from "#redux/hooks.js";
 

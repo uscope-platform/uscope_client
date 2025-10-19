@@ -15,7 +15,7 @@
 
 import React from 'react';
 import {MdDownload} from "react-icons/md";
-import {ColorTheme} from "@UI";
+import {ColorTheme} from "#UI";
 
 
 let  HilResultsSidebar = props =>{

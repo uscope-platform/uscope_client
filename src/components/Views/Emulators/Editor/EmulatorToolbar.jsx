@@ -15,7 +15,7 @@
 
 import React from 'react';
 
-import {ColorTheme} from "@UI";
+import {ColorTheme} from "#UI";
 import {Tooltip} from "react-tooltip";
 import {MdAdd, MdArticle, MdConstruction, MdSimCardDownload, MdPlayArrow, MdContentCopy} from "react-icons/md";
 

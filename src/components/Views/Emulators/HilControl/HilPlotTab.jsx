@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React from 'react';
-import {SimpleContent, TabbedContent, UIPanel} from "@UI";
+import {SimpleContent, TabbedContent, UIPanel} from "#UI";
 import HilChannelSelector from "./HilChannelSelector";
 import HilInputsPanel from "./HilInputsPanel";
 import HilPlot from "./HilPlot";

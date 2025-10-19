@@ -18,7 +18,7 @@ import React, {useState, useEffect} from "react";
 import {cpp} from '@codemirror/lang-cpp'
 import {Tooltip} from "react-tooltip";
 import {MdSave, MdBuild} from 'react-icons/md'
-import {ColorTheme, TextEditor} from "@UI";
+import {ColorTheme, TextEditor} from "#UI";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

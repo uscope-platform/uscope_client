@@ -15,7 +15,7 @@
 
 import React, {useReducer} from 'react';
 
-import {InputField, SelectField} from "@UI";
+import {InputField, SelectField} from "#UI";
 
 
 let  DmaChannelProperties = props =>{

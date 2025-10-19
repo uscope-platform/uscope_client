@@ -20,7 +20,7 @@ import {
     InputField,
     SimpleContent,
     UIPanel
-} from "@UI";
+} from "#UI";
 import {up_bitstream, upload_raw} from "#client_core";
 import BitstreamSidebar from "./BitstreamSidebar";
 

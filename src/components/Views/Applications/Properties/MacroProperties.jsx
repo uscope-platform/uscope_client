@@ -17,7 +17,7 @@ import React from "react";
 import {
     InputField,
     Card
-} from "@UI";
+} from "#UI";
 
 import {up_application} from "#client_core";
 

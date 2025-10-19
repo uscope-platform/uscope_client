@@ -17,7 +17,7 @@ import React, {useReducer} from 'react';
 
 
 import EnablesProperties from "./EnablesProperties";
-import {SimpleContent, UIPanel} from "@UI";
+import {SimpleContent, UIPanel} from "#UI";
 import TriggerControls from "./TriggerControls";
 
 let  PlotSidebar = props =>{

@@ -17,7 +17,7 @@ import React from 'react';
 
 
 import {up_emulator} from "#client_core";
-import {SidebarBase} from "@UI";
+import {SidebarBase} from "#UI";
 import AsmSelector from "./../AsmSelector.jsx";
 import BreakpointsPanel from "./../BreakpointsPanel.jsx";
 import ProgressPanel from "../../FcoreDebugger/ProgressPanel.jsx";

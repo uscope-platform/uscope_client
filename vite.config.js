@@ -13,10 +13,10 @@ export default defineConfig({
     },
     resolve:{
         alias:{
-            "@src": path.resolve(__dirname, "./src"),
+            "#src": path.resolve(__dirname, "./src"),
             "#client_core": path.resolve(__dirname, "./src/client_core"),
-            "@components": path.resolve(__dirname, "./src/components"),
-            "@UI": path.resolve(__dirname, "./src/components/UI_elements"),
+            "#components": path.resolve(__dirname, "./src/components"),
+            "#UI": path.resolve(__dirname, "./src/components/UI_elements"),
             "#redux": path.resolve(__dirname, "./src/redux"),
             "#interfaces": path.resolve(__dirname, "./src/interfaces")
         }

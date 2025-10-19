@@ -15,7 +15,7 @@
 
 
 import React, {useEffect, useState} from 'react';
-import {SelectableList, SimpleContent, UIPanel} from "@UI";
+import {SelectableList, SimpleContent, UIPanel} from "#UI";
 
 let  MemoryViewer = props =>{
 

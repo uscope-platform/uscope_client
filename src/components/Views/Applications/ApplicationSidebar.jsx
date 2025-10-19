@@ -21,7 +21,7 @@ import {
     import_application,
     up_application,
 } from "#client_core";
-import {SidebarBase} from "@UI";
+import {SidebarBase} from "#UI";
 
 import {addApplication} from "#redux";
 import {useAppSelector} from "#redux/hooks.js";
