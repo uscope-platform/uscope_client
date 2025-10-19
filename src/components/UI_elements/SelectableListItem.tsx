@@ -13,29 +13,43 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import styled from 'styled-components';
-import React, {useState} from "react";
-import {Image} from "./Image";
+import {styled} from 'goober';
+import React, {type ReactNode, useState} from "react";
+import {Image} from "./Image.js";
 import {MdDelete} from "react-icons/md";
-import {ColorTheme} from "./ColorTheme";
+import {ColorTheme} from "./ColorTheme.js";
+
+interface ItemLayoutProps {
+    selected: boolean;
+}
 
 
+const ItemLayout = styled<'div', ItemLayoutProps>('div')(({ selected }) => `
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  background: ${selected ? ColorTheme.background.transparent_accents : '#0000'};
+`);
 
-const ItemLayout = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-    background: ${props => props.selected ?props.theme.background.transparent_accents:"#0000"}
-`
-export let  SelectableListItem = props =>{
+interface SelectableListItemProps {
+    icon:string| ReactNode;
+    selected: boolean;
+    multi_select?: boolean | undefined;
+    name: string;
+    onRemove?: ((name: string) => void )| undefined;
+    onSelect: (name: string, multi?: boolean) => void;
+    onMouseEnter?: (name: string) => void;
+    iconSize?: number;
+}
+
+export let  SelectableListItem = (props: SelectableListItemProps) =>{
     const image_src = "assets/selector_icons/" + props.icon+".svg";
-    let selected = {selected:props.selected};
     const alt = props.icon + "language icon";
 
     let [color, set_color] = useState("white");
     let [confirm_needed, set_confirm_needed] = useState(false);
 
-    let handle_click = (event) =>{
+    let handle_click = (event: any) =>{
         if(props.multi_select){
             if(event.ctrlKey) props.onSelect(props.name, true);
             else props.onSelect(props.name, false);
@@ -54,12 +68,12 @@ export let  SelectableListItem = props =>{
                 set_color("white");
             }, 1500);
         } else{
-            props.onRemove(props.name);
+            if(props.onRemove) props.onRemove(props.name);
         }
     };
 
 
-    let get_icon_image = (icon) =>{
+    let get_icon_image = (icon: string | ReactNode) =>{
         if(props.icon){
             if(typeof icon === "string"){
                 return <Image style={{width:"2em"}} src={image_src} alt={alt}/>
@@ -81,7 +95,7 @@ export let  SelectableListItem = props =>{
     }
 
     return(
-        <ItemLayout {...selected}>
+        <ItemLayout selected={props.selected}>
             <div></div>
             <div onMouseEnter={handleMouseEnter} onClick={handle_click} style={{display:"flex", flexGrow:1}}>
                 {get_icon_image(props.icon)}

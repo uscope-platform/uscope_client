@@ -81,8 +81,8 @@ let PeripheralsManager = (props)=>{
 
     return (
         <div style={{
-            display: "flex",
-            flexDirection: "row",
+            display: "grid",
+            gridTemplateColumns: "5fr 1.5fr",
             gap: 10,
             height: "100%"
         }}>

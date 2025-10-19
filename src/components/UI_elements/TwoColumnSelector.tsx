@@ -14,14 +14,23 @@
 // limitations under the License.
 
 import React, {useState} from "react";
-import {UIPanel} from "./panels/UIPanel";
-import {SimpleContent} from "./panels/SimpleContent";
+import {UIPanel} from "./panels/UIPanel.js";
+import {SimpleContent} from "./panels/SimpleContent.js";
 import {MdArrowBack, MdArrowForward} from "react-icons/md";
-import {SelectableList} from "./SelectableList";
-import {InterfaceParameters} from "./InterfaceParameters";
+import {SelectableList} from "./SelectableList.jsx";
+import {InterfaceParameters} from "./InterfaceParameters.js";
 
+interface TwoColumnSelectorProps {
+    itemType: string;
+    available_items: string[];
+    selected_items: string[];
+    onSelect: (item: any) => void;
+    onDeselect: (item: any) => void;
+    data: any;
+    display_field: string;
+}
 
-export let  TwoColumnSelector = props =>{
+export let  TwoColumnSelector = (props: TwoColumnSelectorProps) =>{
 
 
     let [available_highlight, set_available_highlight] = useState("");

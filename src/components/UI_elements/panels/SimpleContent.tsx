@@ -18,8 +18,8 @@ import type {CSSProperties, ReactNode} from "react";
 
 interface SimpleContentProps {
     name: string;
-    height: string | number | undefined;
-    style: CSSProperties | undefined;
+    height?: string | number | undefined;
+    style?: CSSProperties | undefined;
     children: ReactNode;
 }
 

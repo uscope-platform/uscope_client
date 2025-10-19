@@ -14,24 +14,35 @@
 // limitations under the License.
 
 import React, {useEffect, useState} from 'react';
-import styled from 'styled-components';
-import {Label} from "./Label";
-import {ColorTheme} from "./ColorTheme";
+import {styled} from 'goober';
+import {Label} from "./Label.js";
+import {ColorTheme} from "./ColorTheme.js";
 import Select from "react-select";
 
-const InnerInput = styled.input`
+import type {HTMLAttributes} from "react";
+
+interface InnerInputProps {
+    color:string
+}
+
+
+export const InnerInput = styled<'input', InnerInputProps>('input')(({ color }) => `
   height: 2rem;
   border-radius: 5px;
   border-width: 2px;
   border-style: solid;
   margin-top: 0.25em;
   width: auto;
-  background-color: ${props => props.color};
-  border-color: ${props => props.theme.background.border};
-  color: ${props => props.theme.text};
-`
+  background-color: ${color};
+  border-color: ${ColorTheme.background.borders};
+  color: ${ColorTheme.text};
+`);
 
-const Wrapper = styled.div`
+
+interface InnerInputProps extends HTMLAttributes<HTMLDivElement>{}
+
+
+const Wrapper = styled('div')`
 margin: 0 0.2rem;
 display: grid;
 grid-template-columns: 1fr 0.8fr 0.8fr;
@@ -41,34 +52,45 @@ align-items: center;
 flex-flow: wrap;
 `
 
+interface RangedInputFieldProps {
+    id: string;
+    name: string;
+    label: string;
+    rangeOptions: string[];
+    onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+    onRangeChange: (value: string) => void;
+    value: any;
+    range: string;
 
-export let  RangedInputField = props =>{
-    let [range, set_range] = useState();
-    const color= props.color ? props.color : ColorTheme.background.select_background ;
+}
+
+export let  RangedInputField = (props: RangedInputFieldProps) =>{
+    let [range, set_range] = useState({label: "", value: "0"});
+    const color= ColorTheme.background.select_background ;
 
     const SelectStyle = {
-        control:(provided,  { data, isDisabled, isFocused, isSelected }) => ({
+        control:(provided: any,  { data, isDisabled, isFocused, isSelected }: any) => ({
             ...provided,
             minWidth:"7em",
             backgroundColor: color,
         }),
 
-        menu: (provided,  { data, isDisabled, isFocused, isSelected }) => ({
+        menu: (provided: any,  { data, isDisabled, isFocused, isSelected }: any) => ({
             ...provided,
             width: "max-content",
             backgroundColor: color
         }),
 
-        menuPortal: (provided,  { data, isDisabled, isFocused, isSelected }) => ({
+        menuPortal: (provided: any,  { data, isDisabled, isFocused, isSelected }: any) => ({
             ...provided,
         }),
 
-        option: (provided,  { data, isDisabled, isFocused, isSelected }) => ({
+        option: (provided: any,  { data, isDisabled, isFocused, isSelected }: any) => ({
             ...provided,
             backgroundColor: isFocused?ColorTheme.background.transparent_accents:undefined
         }),
 
-        singleValue:(provided,  { data, isDisabled, isFocused, isSelected }) => ({
+        singleValue:(provided: any,  { data, isDisabled, isFocused, isSelected }: any) => ({
             ...provided,
             color: ColorTheme.text
         })
@@ -83,29 +105,25 @@ export let  RangedInputField = props =>{
         return {label: val, value: val};
     })
 
-    const handle_range_change = (value)=>{
+    const handle_range_change = (value: any)=>{
         props.onRangeChange(value.value);
     }
 
     return (
-        <Wrapper inline={props.inline}>
-            <Label htmlFor={props.ID} inline={props.inline}>{props.label}</Label>
+        <Wrapper>
+            <Label htmlFor={props.id}>{props.label}</Label>
             <InnerInput
                 name={props.name}
                 key={props.value}
-                color={props.color ? props.color : ColorTheme.background.level_3}
-                id={props.ID}
-                type={(props.type)?props.type:"text"}
-                disabled = {(props.disabled)? "disabled" : ""}
-                onChange={e => {if(props.onChange) props.onChange(e)}}
-                onKeyDown={e => {if(props.onKeyDown) props.onKeyDown(e)}}
+                color={ColorTheme.background.level_3}
+                id={props.id}
+                onKeyDown={(e: any) => {if(props.onKeyDown) props.onKeyDown(e)}}
                 defaultValue={props.value}
             />
             <Select
                 styles={SelectStyle}
                 menuPortalTarget={document.body}
                 onChange={handle_range_change}
-                color={props.color ? props.color : ColorTheme.background.level_3}
                 options={options}
                 value={range}
             />

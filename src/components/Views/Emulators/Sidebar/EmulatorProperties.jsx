@@ -38,7 +38,6 @@ let get_range = (time) =>{
     } else {
         return ["s", 0]
     }
-    return [null, null]
 }
 
 
@@ -96,7 +95,7 @@ let  EmulatorProperties = props =>{
                             <InputField inline id="name" name="name" label="Emulator Name" defaultValue={props.selected_emulator.name} onKeyDown={handle_change}/>
 
                             <RangedInputField
-                                ID="emulation_time"
+                                id="emulation_time"
                                 name="emulation_time"
                                 label="Emulation Time"
                                 rangeOptions={["us", "ms", "s"]}

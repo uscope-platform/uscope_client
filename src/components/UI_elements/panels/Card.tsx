@@ -37,7 +37,7 @@ interface CardProps {
     selector?: {
         name: string,
         label: string,
-        value: string,
+        value: boolean,
         click: () => void
     }
     name: string,

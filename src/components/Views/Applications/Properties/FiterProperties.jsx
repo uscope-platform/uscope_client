@@ -104,7 +104,7 @@ export let  FilterProperties = props =>{
                 name="filter_name"
                 placeholder="Filter Design"
                 options={filter_designs}/>
-            <Checkbox ID="enabled" name='enabled' value={props.filter.enabled} onChange={handleEnable} label="Enabled"/>
+            <Checkbox id="enabled" name='enabled' value={props.filter.enabled} onChange={handleEnable} label="Enabled"/>
         </Card>
     );
 };

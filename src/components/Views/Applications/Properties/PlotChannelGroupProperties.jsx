@@ -81,7 +81,7 @@ export let  PlotChannelGroupProperties = props =>{
             <InputField inline id="group_id" name='group_id' defaultValue={props.group.group_id} onKeyDown={handleonKeyDown} label="ID"/>
             <MultiSelect
                 inline
-                ID="content"
+                id="content"
                 onChange={handleChange}
                 value={channels_list}
                 options={options}

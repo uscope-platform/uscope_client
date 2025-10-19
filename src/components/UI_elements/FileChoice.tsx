@@ -13,27 +13,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import styled from 'styled-components';
+import {styled} from 'goober';
 import React from "react";
 
-import {Label} from "./Label";
+import {Label} from "./Label.js";
 
-const InputChoice = styled.input`
-`
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
  display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
 `
 
+interface FileChoiceProps {
+    name: string;
+    label: string;
+    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
 
-export let  FileChoice = props =>{
+export let  FileChoice = (props: FileChoiceProps) =>{
 
     return(
         <Wrapper>
-            <Label inline={props.inline}>{props.label}</Label>
-            <InputChoice
+            <Label>{props.label}</Label>
+            <input
                 name={props.name}
                 type="file"
                 onChange={e => props.onChange(e)}

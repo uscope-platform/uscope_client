@@ -20,10 +20,11 @@ interface ChipProps {
     status: keyof typeof ColorTheme.scope_status;
 }
 
-export const Chip = styled('label')<ChipProps>`
-  background: ${props=> ColorTheme.scope_status[props.status] ?? ColorTheme.scope_status["unknown"]};
-  border-color: ${props => ColorTheme.scope_status[props.status] ?? ColorTheme.scope_status["unknown"]};
-    display: ${props => props.status ? "block": "none"};
+
+export const Chip = styled<'label', ChipProps>('label')(({ status }) => `
+  background: ${ColorTheme.scope_status[status] ?? ColorTheme.scope_status["unknown"]};
+  border-color: ${ColorTheme.scope_status[status] ?? ColorTheme.scope_status["unknown"]};
+    display: ${status ? "block": "none"};
   font-weight: bold;
   border-radius: 9999999px;
   border-style: solid;
@@ -32,4 +33,4 @@ export const Chip = styled('label')<ChipProps>`
   width: fit-content;
   height: fit-content;
   padding: 0.5em 1em;
-`
+`);

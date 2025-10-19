@@ -35,7 +35,7 @@ flex-flow: wrap;
 `
 
 interface MultiSelectProps {
-    ID: string;
+    id: string;
     name: string;
     label: string;
     value: any;
@@ -95,9 +95,9 @@ export let  MultiSelect = (props: MultiSelectProps) =>{
 
         return (
             <Wrapper inline={props.inline}>
-                    <Label htmlFor={props.ID}>{props.label}</Label>
+                    <Label htmlFor={props.id}>{props.label}</Label>
                     <ReactSelect
-                        name={props.ID}
+                        name={props.id}
                         isMulti={true}
                         styles={Style}
                         options={props.options}

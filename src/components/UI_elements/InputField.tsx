@@ -14,23 +14,29 @@
 // limitations under the License.
 
 import React from 'react';
-import styled from 'styled-components';
-import {Label} from "./Label";
-import {ColorTheme} from "./ColorTheme";
+import {styled} from 'goober';
+import {Label} from "./Label.js";
+import {ColorTheme} from "./ColorTheme.js";
 
-const InnerInput = styled.input`
+interface InnerInputProps {
+    color:string
+}
+
+export const InnerInput = styled<'input', InnerInputProps>('input')(({ color }) => `
   height: 2rem;
   border-radius: 5px;
   border-width: 2px;
   border-style: solid;
   margin-top: 0.25em;
   width: auto;
-  background-color: ${props => props.color};
-  border-color: ${props => props.theme.background.border};
-  color: ${props => props.theme.text};
-`
+  background-color: ${color};
+  border-color: ${ColorTheme.background.borders};
+  color: ${ColorTheme.text};
+`);
 
-const InputDescription = styled.label`
+
+
+const InputDescription = styled('label')`
 width: fit-content;
 font-family: Roboto,Helvetica,Arial,sans-serif;
 font-size: 0.7rem;
@@ -38,22 +44,42 @@ margin-top: 0.15rem;
 margin-left: 0.15rem;
 `
 
-const Wrapper = styled.div`
+interface WrapperProps {
+    inline?: boolean | undefined;
+}
+
+export const Wrapper = styled<'div', WrapperProps>('div')(({ inline }) => `
 margin: 0 0.2rem;
 display: grid;
-grid-template-columns:  ${props => props.inline ? "1fr 1fr" : "1fr"};
+grid-template-columns:  ${inline ? "1fr 1fr" : "1fr"};
 grid-auto-rows: auto;
-justify-content: ${props => props.inline ? "space-between" : "start"};
+justify-content: ${inline ? "space-between" : "start"};
 align-items: center;
 flex-flow: wrap;
-`
+`);
 
 
+interface InputFieldProps {
+    defaultValue?: string;
+    name: string;
+    compact?: boolean;
+    inline?: boolean;
+    description?:string;
+    id: string;
+    type?:string;
+    label:string;
+    color?: string;
+    disabled?:boolean;
+    onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    value?:string;
+    placeholder?:string;
+}
 
-export let  InputField = props =>{
+
+export let  InputField = (props: InputFieldProps) =>{
     let key = props.name;
     if(props.defaultValue) key += props.defaultValue;
-    let inline_str = props.inline ? "true" : "false";
     if(props.compact){
         return (
             <InnerInput
@@ -63,7 +89,7 @@ export let  InputField = props =>{
                 type={(props.type)?props.type:"text"}
                 placeholder={props.label}
                 color={props.color ? props.color : ColorTheme.background.level_3}
-                disabled = {(props.disabled)? "disabled" : ""}
+                disabled = {props.disabled}
                 onChange={e => {if(props.onChange) props.onChange(e)}}
                 onKeyDown={e => {if(props.onKeyDown) props.onKeyDown(e)}}
                 defaultValue={props.defaultValue}
@@ -72,16 +98,16 @@ export let  InputField = props =>{
         );
     } else if(props.description){
         return (
-            <Wrapper>
-                <Label htmlFor={props.ID} inline={inline_str}>{props.label}</Label>
+            <Wrapper inline={ props.inline}>
+                <Label htmlFor={props.id}>{props.label}</Label>
                 <InnerInput
                     name={props.name}
                     key={key}
                     placeholder={props.placeholder}
-                    id={props.ID}
+                    id={props.id}
                     color={props.color ? props.color : ColorTheme.background.level_3}
                     type={(props.type)?props.type:"text"}
-                    disabled = {(props.disabled)? "disabled" : ""}
+                    disabled = {props.disabled}
                     onChange={e => {if(props.onChange) props.onChange(e)}}
                     onKeyDown={e => {if(props.onKeyDown) props.onKeyDown(e)}}
                     defaultValue={props.defaultValue}
@@ -92,16 +118,16 @@ export let  InputField = props =>{
         );
     } else{
         return (
-            <Wrapper inline={inline_str}>
-                <Label htmlFor={props.ID} inline={inline_str}>{props.label}</Label>
+            <Wrapper inline={ props.inline}>
+                <Label htmlFor={props.id}>{props.label}</Label>
                 <InnerInput
                     placeholder={props.placeholder}
                     name={props.name}
                     key={key}
                     color={props.color ? props.color : ColorTheme.background.level_3}
-                    id={props.ID}
+                    id={props.id}
                     type={(props.type)?props.type:"text"}
-                    disabled = {(props.disabled)? "disabled" : ""}
+                    disabled = {props.disabled}
                     onChange={e => {if(props.onChange) props.onChange(e)}}
                     onKeyDown={e => {if(props.onKeyDown) props.onKeyDown(e)}}
                     defaultValue={props.defaultValue}

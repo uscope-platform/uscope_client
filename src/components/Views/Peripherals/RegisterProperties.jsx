@@ -107,7 +107,7 @@ export let  RegisterProperties = props =>{
                 <InputField inline name='order' defaultValue={props.register.order} onKeyDown={handleonKeyDown} label="Order"/>
                 <InputField inline name='n_registers' defaultValue={props.register.n_registers[0]} onKeyDown={handleonKeyDown} label="Number of Registers"/>
             </div>
-            <InputField inline ID="description" name='description' defaultValue={props.register.description} onKeyDown={handleonKeyDown} label="Description"/>
+            <InputField inline id="description" name='description' defaultValue={props.register.description} onKeyDown={handleonKeyDown} label="Description"/>
             <ChoicesWrapper>
                 <Label>Register access capabilities</Label>
                 <div>

@@ -13,18 +13,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import styled from 'styled-components';
+import {styled} from 'goober';
 import React, {useState} from "react";
 import {MdDelete} from "react-icons/md";
 
 
 
-const ItemLayout = styled.div`
+const ItemLayout = styled('div')`
     display: flex;
     align-items: center;
     gap: 0.5em;
 `
-export let  ListItem = props =>{
+
+interface ListItemProps {
+    name: string;
+    type: string;
+    delete?: boolean;
+    onRemove: (item: {type: string, name: string}) => void;
+}
+
+export let  ListItem = (props: ListItemProps) =>{
 
     let [color, set_color] = useState("white");
     let [confirm_needed, set_confirm_needed] = useState(false);

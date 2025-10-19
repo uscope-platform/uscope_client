@@ -14,13 +14,22 @@
 // limitations under the License.
 
 import React from "react";
-import {SelectableListLayout} from "./SelectableListLayout";
-import {SelectableListItem} from './SelectableListItem';
+import {SelectableListItem} from './SelectableListItem.js';
+
+interface SelectableListProps {
+    multi_select?: boolean;
+    selected_item: string | string[];
+    onSelect: (name: string) => void;
+    onRemove?: (name: string) => void;
+    style?: React.CSSProperties;
+    items: string[] | undefined;
+    types?: any[]| undefined;
+}
 
 
-export let  SelectableList = props =>{
+export let  SelectableList = (props: SelectableListProps) =>{
 
-    let constructListContent = (names, icons) =>{
+    let constructListContent = (names: any, icons: any) =>{
         let ret = []
         for(let i = 0; i< names.length; i++){
             let selected;

@@ -13,14 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import styled from 'styled-components';
-import {Label} from "./Label";
+import {styled} from 'goober';
+import {Label} from "./Label.js";
 import React, {useCallback, useMemo} from "react";
 import Select from "react-select";
-import {ColorTheme} from "./ColorTheme";
+import {ColorTheme} from "./ColorTheme.js";
 
 
-const SelectWrapper = styled.div`
+const SelectWrapper = styled('div')`
     display: grid;
     grid-template-columns: repeat(2, auto);
     grid-gap: 0.3rem;
@@ -28,42 +28,50 @@ const SelectWrapper = styled.div`
     align-items: start;
 `
 
+interface SelectFieldProps {
+    onChange: (value: any, event: any) => void;
+    name: string;
+    label: string;
+    style?: React.CSSProperties;
+    defaultValue?: any;
+    value: any;
+    options: any;
+}
 
-export let  SelectField = props =>{
+export let  SelectField = (props: SelectFieldProps) =>{
 
-    const color= props.color ? props.color : ColorTheme.background.select_background ;
 
     const style = useMemo(()=>{
         return {
-            control:(provided,  { data, isDisabled, isFocused, isSelected }) => ({
+            control:(provided: any,  { data, isDisabled, isFocused, isSelected }: any) => ({
                 ...provided,
                 minWidth:"7em",
-                backgroundColor: color,
+                backgroundColor: ColorTheme.background.select_background,
             }),
 
-            menu: (provided,  { data, isDisabled, isFocused, isSelected }) => ({
+            menu: (provided: any,  { data, isDisabled, isFocused, isSelected }: any) => ({
                 ...provided,
                 width: "max-content",
-                backgroundColor: color
+                backgroundColor: ColorTheme.background.select_background
             }),
 
-            menuPortal: (provided,  { data, isDisabled, isFocused, isSelected }) => ({
+            menuPortal: (provided: any,  { data, isDisabled, isFocused, isSelected }: any) => ({
                 ...provided,
             }),
 
-            option: (provided,  { data, isDisabled, isFocused, isSelected }) => ({
+            option: (provided: any,  { data, isDisabled, isFocused, isSelected }: any) => ({
                 ...provided,
                 backgroundColor: isFocused?ColorTheme.background.transparent_accents:undefined
             }),
 
-            singleValue:(provided,  { data, isDisabled, isFocused, isSelected }) => ({
+            singleValue:(provided: any,  { data, isDisabled, isFocused, isSelected }: any) => ({
                 ...provided,
                 color: ColorTheme.text
             })
         };
     }, [ColorTheme])
 
-    const onSelectChange = useCallback((value, event) => props.onChange(value, event), [props.onChange]);
+    const onSelectChange = useCallback((value: any, event: any) => props.onChange(value, event), [props.onChange]);
 
     return(
         <SelectWrapper>
@@ -71,13 +79,11 @@ export let  SelectField = props =>{
             <Select
                 name={props.name}
                 id={props.name}
-                style={props.style}
                 styles={style}
                 defaultValue={props.defaultValue}
                 value={props.value ? props.value: undefined}
                 menuPortalTarget={document.body}
                 onChange={onSelectChange}
-                color={props.color ? props.color : ColorTheme.background.level_3}
                 options={props.options}
             />
         </SelectWrapper>

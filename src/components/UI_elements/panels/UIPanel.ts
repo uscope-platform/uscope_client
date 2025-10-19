@@ -20,50 +20,54 @@ import {ColorTheme} from "../ColorTheme.js";
 
 interface UIPanelProps {
     level: keyof typeof ColorTheme.background;
+    width?: number | string | undefined;
 }
 
-export const UIPanel = styled("div")<UIPanelProps>`
+export const UIPanel = styled<"div", UIPanelProps>("div")(({ level}) => `
   border-radius: 5px;
   overflow:hidden;
   display: flex;
   flex-direction: column;
-  background: ${props => ColorTheme.background[props.level]};
+  background: ${ColorTheme.background[level]};
   border-color: #434343;
   border-width: 2px;
   border-style:solid;
-`
+`);
+
+
+
+
 
 interface PanelTitleProps {
     selected: boolean;
 }
 
-export const PanelTitle = styled('div')<PanelTitleProps>`
+export const PanelTitle = styled<'div', PanelTitleProps>('div')(({ selected }) => `
   overflow:hidden;
   width: fit-content;
   cursor: default;
-  border-color: ${props =>  props.selected ? ColorTheme.background.accents : "#43434300"};
+  border-color: ${selected ? ColorTheme.background.accents : "#43434300"};
   border-bottom-width: 3px;
   border-top-width: 0;
   border-left-width: 0;
   border-right-width: 0;
   border-style:solid;
-`
+`);
+
+
 
 interface ContentDivProps {
     height?: number | string| undefined;
 }
 
-export const ContentDiv = styled('div')<ContentDivProps>`
+export const ContentDiv = styled<'div', ContentDivProps>('div')(({ height }) => `
   overflow-y:auto;
   overflow-x: hidden;
   border-style:solid;
-  border-color: ${() => ColorTheme.background.borders};
+  border-color: ${ ColorTheme.background.borders};
   border-bottom-width: 0;
   border-top-width: 3px;
   border-left-width: 0;
   border-right-width: 0;
-  height: ${props => props.height ? props.height : "100%"};
-`
-
-
-
+  height: ${height ? height : "100%"};
+`);

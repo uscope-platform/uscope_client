@@ -105,12 +105,13 @@ export let  PeripheralProperties = props =>{
         >
             <InputField inline id="name" name="name" defaultValue={props.peripheral.name} onKeyDown={handleonKeyDown} label="Name"/>
             <InputField inline id="peripheral_id" name='peripheral_id' defaultValue={props.peripheral.peripheral_id} onKeyDown={handleonKeyDown} label="Peripheral id"/>
-            <SelectField label="IP type"
-                         onChange={handleIDChange}
-                         value={selected}
-                         name="spec_id"
-                         placeholder="Peripheral type"
-                         options={peripherals_list}
+            <SelectField
+                label="IP type"
+                onChange={handleIDChange}
+                value={selected}
+                name="spec_id"
+                placeholder="Peripheral type"
+                options={peripherals_list}
             />
             <InputField inline id="base_address" name='base_address' defaultValue={props.peripheral.base_address} onKeyDown={handleonKeyDown} label="Base Address"/>
             <InputField inline id="type" name='type' defaultValue={props.peripheral.type} onKeyDown={handleonKeyDown} label="Type"/>
