@@ -14,11 +14,17 @@
 // limitations under the License.
 
 import React from 'react';
-import {ColorTheme} from "#UI";
+import {ColorTheme} from "#UI/index.js";
 
 
 
-let  LowPass = props =>{
+interface LowPassProps {
+    active: boolean,
+        onClick: (e: React.MouseEvent<SVGSVGElement>) => void
+}
+
+
+let  LowPass = (props: LowPassProps) =>{
     return (
         <svg
             height="24"

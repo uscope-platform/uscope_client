@@ -14,11 +14,15 @@
 // limitations under the License.
 
 import React from 'react';
-import {ColorTheme} from "#UI";
+import {ColorTheme} from "#UI/index.js";
 
 
+interface BandPassProps {
+    active: boolean,
+    onClick: (e: React.MouseEvent<SVGSVGElement>) => void
+}
 
-let  BandPass = props =>{
+let  BandPass = (props:BandPassProps) =>{
     return (
         <svg
             height="24"

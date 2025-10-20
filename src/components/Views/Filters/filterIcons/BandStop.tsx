@@ -14,11 +14,15 @@
 // limitations under the License.
 
 import React from 'react';
-import {ColorTheme} from "#UI";
+import {ColorTheme} from "#UI/index.js";
 
 
+interface BandStopProps {
+    active: boolean,
+    onClick: (e: React.MouseEvent<SVGSVGElement>) => void
+}
 
-let  BandStop = props =>{
+let  BandStop = (props:BandStopProps) =>{
     return (
         <svg
             height="24"

@@ -15,12 +15,15 @@
 
 import React from 'react';
 
-import {up_filter} from "#client_core";
-import {SidebarBase} from "#UI";
+import {up_filter} from "#client_core/index.js";
+import {SidebarBase} from "#UI/index.js";
 import {useAppSelector} from "#redux/hooks.js";
 
+interface FilterSidebarProps {
+    on_select: (id: number) => void;
+}
 
-let  FilterSidebar = props =>{
+let  FilterSidebar = (props: FilterSidebarProps) =>{
 
     const filters_store = useAppSelector(state => state.filters);
 
@@ -31,7 +34,6 @@ let  FilterSidebar = props =>{
             template={up_filter}
             display_key="name"
             content_name="Filter"
-            selector="selected_filter"
             onSelect={props.on_select}
         />
     );

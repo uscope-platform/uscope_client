@@ -18,37 +18,43 @@ import {
     ColorTheme,
     SimpleContent,
     UIPanel
-} from "#UI";
+} from "#UI/index.js";
 
-import FilterPlot from "./FilterPlot";
-import FilterDesignerControls from "./FilterDesignerControls";
+import FilterPlot from "./FilterPlot.jsx";
+import FilterDesignerControls from "./FilterDesignerControls.js";
 import {
     filter_calculate_keepouts,
     up_filter
-} from "#client_core";
+} from "#client_core/index.js";
 import {MdBuild, MdConstruction} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
 
 import {ToastContainer, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import FilterImplementationControls from "./FilterImplementationControls";
-import FilterSidebar from "./FilterSidebar";
+import FilterImplementationControls from "./FilterImplementationControls.js";
+import FilterSidebar from "./FilterSidebar.jsx";
 import {useAppSelector} from "#redux/hooks.js";
 
-let FilterManager = props =>{
+interface FilterManagerProps {
+
+}
+
+let FilterManager = (props: FilterManagerProps) =>{
 
     const [filter_revision, set_filter_revision] = useState( 0);
 
     const filters_store = useAppSelector(state => state.filters);
 
-    const [selected_filter, set_selected_filter] = useState(up_filter.construct_empty(0));
+    const [selected_filter, set_selected_filter] = useState(up_filter.construct_empty(9999));
 
-    const [keepout_shapes, set_keepout_shapes] = useState([]);
+    const [keepout_shapes, set_keepout_shapes] = useState([] as any[]);
 
-    const [plot_filter, set_plot_filter] = useState({ideal:{x:0, y:0}, quantized:{x:0, y:0}})
+    const [plot_filter, set_plot_filter] = useState({ideal:{x:[], y:[]}, quantized:{x:[], y:[]}})
 
-    let handle_select = (flt) =>{
-        set_selected_filter( new up_filter(filters_store[flt]))
+    let handle_select = (flt: number) =>{
+        let flt_obj = filters_store[flt];
+        if(flt_obj === undefined) return;
+        set_selected_filter( new up_filter(flt_obj) );
     }
 
     useEffect(() => {
@@ -71,8 +77,8 @@ let FilterManager = props =>{
         let filter = await selected_filter.design();
         try {
             set_plot_filter({ideal: {x:filter["frequency"], y:filter["response"]}, quantized: plot_filter.quantized});
-        } catch (e) {
-            toast.error(e);
+        } catch (err: any) {
+            toast.error(err);
         }
     }
     let handleImplement = () =>{
@@ -84,14 +90,14 @@ let FilterManager = props =>{
     }
 
 
-    let handleParamChanges = (param_name, value) =>{
+    let handleParamChanges = (param_name: string, value: any) =>{
         set_filter_revision(filter_revision+1)
         selected_filter.edit_parameter(param_name, value).then();
     }
 
-    let handleRename = (param_name, value) =>{
+    let handleRename = (param_name: string, value: any) =>{
         set_filter_revision(filter_revision+1)
-        selected_filter.edit_field(param_name, value).then();
+        selected_filter.edit_field(param_name as keyof up_filter, value).then();
     }
 
     return (

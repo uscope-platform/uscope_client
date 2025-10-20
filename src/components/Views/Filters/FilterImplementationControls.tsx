@@ -15,13 +15,18 @@
 
 import React from 'react';
 
-import {InputField} from "#UI";
+import {InputField} from "#UI/index.js";
 
-let  FilterImplementationControls = props =>{
+interface FilterImplementationControls{
+    filter_parameters: Record<string, any>,
+    on_change: (name: string, value: number) => void,
+}
 
-    let handle_edit_field = (event) => {
+let  FilterImplementationControls = (props: FilterImplementationControls) =>{
+
+    let handle_edit_field = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if(event.key==="Enter"|| event.key ==="Tab"){
-            props.on_change(event.target.name, parseFloat(event.target.value));
+            props.on_change(event.currentTarget.name, parseFloat(event.currentTarget.value));
         }
     }
 

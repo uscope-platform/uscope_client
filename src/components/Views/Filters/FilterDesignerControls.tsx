@@ -15,41 +15,46 @@
 
 import React from 'react';
 
-import styled from "styled-components";
-import {InputField} from "#UI";
-import LowPass from "./filterIcons/LowPass"
-import HighPass from "./filterIcons/HighPass"
-import BandPass from "./filterIcons/BandPass"
-import BandStop from "./filterIcons/BandStop"
+import {styled} from "goober";
+import {InputField} from "#UI/index.js";
+import LowPass from "./filterIcons/LowPass.js"
+import HighPass from "./filterIcons/HighPass.js"
+import BandPass from "./filterIcons/BandPass.js"
+import BandStop from "./filterIcons/BandStop.js"
 
-const ComponentStyle = styled.div`
+const ComponentStyle = styled('div')`
   display: flex;
   justify-content: center;
   flex-direction: row;
 `
 
-let  FilterDesignerControls = props =>{
+interface FilterDesignerControls{
+    name: string,
+    on_change: (key: string, value: any) => void,
+    on_rename: (key: string, value: any) => void,
+    filter_parameters: Record<string, any>
+}
 
-    let handleFilterChange = (event) => {
-        let type = event.target.id;
+let  FilterDesignerControls = (props: FilterDesignerControls) =>{
+
+    let handleFilterChange = (event: React.MouseEvent<SVGSVGElement>) => {
+        let type = event.currentTarget.id;
         props.on_change("type", type);
     };
 
-    let handle_edit_field = (event) => {
+    let handle_edit_field = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if(event.key==="Enter"|| event.key ==="Tab"){
-            props.on_change(event.target.name, parseFloat(event.target.value));
+            props.on_change(event.currentTarget.name, parseFloat(event.currentTarget.value));
         }
     }
 
-    let handle_rename = (event) => {
+    let handle_rename = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if(event.key==="Enter"|| event.key ==="Tab"){
-            props.on_rename(event.target.name, event.target.value);
+            props.on_rename(event.currentTarget.name, event.currentTarget.value);
         }
     }
 
     let render_filter_parameters = () =>{
-        let ret = [];
-        ret.push();
         if(["lp", "hp"].includes(props.filter_parameters.type)){
             return(
                 <div>
@@ -91,7 +96,7 @@ let  FilterDesignerControls = props =>{
             );
         }
 
-        return ret;
+        return;
     }
 
     let render_controls = () => {

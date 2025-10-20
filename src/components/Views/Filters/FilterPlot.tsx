@@ -17,17 +17,24 @@ import React, {useEffect, useState} from 'react';
 
 
 import Plotly from 'plotly.js-basic-dist';
-import createPlotlyComponent from 'react-plotly.js/factory';
-import {ColorTheme} from "#UI";
+import createPlotlyComponent from 'react-plotly.js/factory.js';
+import {ColorTheme} from "#UI/index.js";
 
+//@ts-ignore  //Plotly is only typed for CommonJS, not for ES6 modules.
 const Plot = createPlotlyComponent(Plotly);
 
+interface FilterPlotProps {
+    plot_data: any,
+    f_sample: number,
+    keepout_shapes: any,
+}
 
-let  FilterPlot = props =>{
+
+
+let  FilterPlot = (props: FilterPlotProps) =>{
 
     const [data_rev, set_data_rev] = useState(1);
-
-    const [plot_layout, set_plot_layout] = useState({
+    const initial_plot_state : Record<string, any>= {
         margin: {
             l: 25,
             r: 25,
@@ -61,7 +68,9 @@ let  FilterPlot = props =>{
             range:[-90,10]
         },
         shapes: []
-    });
+    }
+
+    const [plot_layout, set_plot_layout] = useState(initial_plot_state);
 
     const [plot_data, set_plot_data] = useState(
         [
@@ -90,7 +99,7 @@ let  FilterPlot = props =>{
                 ]
     );
 
-    let update_layout = (prop, value)=>{
+    let update_layout = (prop: string, value: any)=>{
         let new_layout= plot_layout;
         new_layout[prop] = value;
         set_plot_layout(new_layout);
@@ -107,7 +116,7 @@ let  FilterPlot = props =>{
         update_layout("xaxis", x_axis);
     }, [props.f_sample])
 
-    let calculate_y_range = (data) =>{
+    let calculate_y_range = (data: any) =>{
         if(data.quantized.y || data.ideal.y){
             let y_base = [...data.ideal.y];
             if(data.quantized.y) y_base = [...y_base, ...data.quantized.y];
@@ -121,7 +130,7 @@ let  FilterPlot = props =>{
     }
 
     useEffect(() => {
-        let new_data= plot_data;
+        let new_data: any = plot_data;
         new_data[0].x = props.plot_data.ideal.x;
         new_data[0].y = props.plot_data.ideal.y;
         set_plot_data(new_data)
@@ -131,7 +140,7 @@ let  FilterPlot = props =>{
     }, [props.plot_data.ideal.x, props.plot_data.ideal.y]);
 
     useEffect(() => {
-        let new_data= plot_data;
+        let new_data: any= plot_data;
         new_data[1].x = props.plot_data.quantized.x;
         new_data[1].y = props.plot_data.quantized.y;
         set_plot_data(new_data)
