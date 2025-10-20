@@ -27,7 +27,7 @@ export class up_register {
     public description: string;
     public direction: string;
     public value: number;
-    public order: number;
+    public order?: number | undefined;
     public n_registers: string[];
     public fields: up_field[];
 

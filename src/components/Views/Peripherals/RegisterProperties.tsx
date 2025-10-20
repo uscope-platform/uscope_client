@@ -14,13 +14,13 @@
 // limitations under the License.
 
 import React from "react";
-import {Label, InputField, Checkbox, Card} from "#UI";
-import styled from "styled-components";
+import {Label, InputField, Checkbox, Card} from "#UI/index.js";
+import {styled} from "goober";
 
-import {FieldProperties} from "./FieldProperties";
-import {up_register} from "#client_core";
+import {FieldProperties} from "./FieldProperties.js";
+import {up_register, up_peripheral} from "#client_core/index.js";
 
-const ChoicesWrapper = styled.div`
+const ChoicesWrapper = styled('div')`
     display: grid;
     grid-template-columns: repeat(2, auto);
     grid-gap: 0.3rem;
@@ -28,55 +28,56 @@ const ChoicesWrapper = styled.div`
     align-items: start;
 `
 
-export let  RegisterProperties = props =>{
+interface RegisterPropertyProps {
+    register: up_register,
+    peripheral: up_peripheral,
+    forceUpdate: ()=>void
+}
+
+export let  RegisterProperties = (props: RegisterPropertyProps) =>{
     const register_obj = new up_register(props.register, props.peripheral.id);
 
 
 
-    let handleEditNameChange = (event) => {
+    let handleEditNameChange = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if(event.key==="Enter"){
-            register_obj.edit_name(event.target.value).then(()=>{
+            register_obj.edit_name(event.currentTarget.value).then(()=>{
                 props.forceUpdate();
             });
         }
     }
 
-    let handleChange = (event)=>{
+    let handleChange = (event: React.ChangeEvent<HTMLInputElement>)=>{
         register_obj.edit_direction(event.target).then(()=>{
             props.forceUpdate();
         });
     }
 
-    let handleonKeyDown = (event) =>{
+    let handleonKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
-            switch (event.target.name) {
+            switch (event.currentTarget.name) {
                 case "n_registers":
-                    register_obj.edit_n_registers(event.target.value).then(()=>{
+                    register_obj.edit_n_registers(event.currentTarget.value).then(()=>{
                         props.forceUpdate();
                     })
                     break;
                 case "order":
-                    register_obj.edit_order(event.target.value).then(()=>{
+                    register_obj.edit_order(parseInt(event.currentTarget.value)).then(()=>{
                         props.forceUpdate();
                     })
                     break;
                 case "ID":
-                    register_obj.edit_id(event.target.value).then(()=>{
-                        props.forceUpdate();
-                    })
-                    break;
-                case "offset":
-                    register_obj.edit_offset(event.target.value).then(()=>{
+                    register_obj.edit_id(event.currentTarget.value).then(()=>{
                         props.forceUpdate();
                     })
                     break;
                 case "description":
-                    register_obj.edit_description(event.target.value).then(()=>{
+                    register_obj.edit_description(event.currentTarget.value).then(()=>{
                         props.forceUpdate();
                     })
                     break;
                 case "register_name":
-                    register_obj.edit_name(event.target.value).then(()=>{
+                    register_obj.edit_name(event.currentTarget.value).then(()=>{
                         props.forceUpdate();
                     })
                     break;
@@ -87,7 +88,7 @@ export let  RegisterProperties = props =>{
 
     }
 
-    let handleRemove= (event) =>{
+    let handleRemove= () =>{
         up_register.remove_register(props.peripheral.id, props.register.ID).then(()=>{
             props.forceUpdate();
         });
@@ -104,8 +105,8 @@ export let  RegisterProperties = props =>{
             <InputField inline name='ID' defaultValue={props.register.ID} onKeyDown={handleonKeyDown} label="Register ID"/>
 
             <div style={{display: "flex", flexDirection: "column"}}>
-                <InputField inline name='order' defaultValue={props.register.order} onKeyDown={handleonKeyDown} label="Order"/>
-                <InputField inline name='n_registers' defaultValue={props.register.n_registers[0]} onKeyDown={handleonKeyDown} label="Number of Registers"/>
+                <InputField inline name='order' defaultValue={props.register.order !==undefined ? props.register.order.toString(): ""} onKeyDown={handleonKeyDown} label="Order"/>
+                <InputField inline name='n_registers' defaultValue={props.register.n_registers[0] ? props.register.n_registers[0]: ""} onKeyDown={handleonKeyDown} label="Number of Registers"/>
             </div>
             <InputField inline id="description" name='description' defaultValue={props.register.description} onKeyDown={handleonKeyDown} label="Description"/>
             <ChoicesWrapper>

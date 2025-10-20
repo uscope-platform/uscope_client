@@ -22,7 +22,7 @@ import type {bitstream_model} from "#interfaces/index.ts";
 export class up_bitstream {
     public id: number;
     public name: string;
-    public data: Buffer;
+    public data: string;
     constructor(bitstream_obj: bitstream_model) {
         this.id = bitstream_obj.id;
         this.name = bitstream_obj.name;
@@ -31,8 +31,7 @@ export class up_bitstream {
     }
 
     static construct_empty(bitstream_id: number){
-        let buf = Buffer.from("");
-        let script_obj:bitstream_model = {id:bitstream_id, name:'new_bitstream_'+bitstream_id, data:buf};
+        let script_obj:bitstream_model = {id:bitstream_id, name:'new_bitstream_'+bitstream_id, data:""};
         return new up_bitstream(script_obj);
     }
 
@@ -41,7 +40,7 @@ export class up_bitstream {
         return store.dispatch(AddBitstream(this));
     }
 
-    update_file = async (bitstream: {name:string, content:Buffer}) =>{
+    update_file = async (bitstream: {name:string, content:string}) =>{
         let data_edit = {id:this.id , field:{name:"data", value:bitstream.content}};
         await backend_patch(api_dictionary.bitstream.edit+'/'+this.id,data_edit);
         let name_edit = {id:this.id , field:{name: "name", value: bitstream.name}};
@@ -65,13 +64,13 @@ export class up_bitstream {
         store.dispatch(removeBitstream(bitstream));
     }
 
-    static get_file_content(input_file: any){
+    static get_file_content(input_file: any): Promise<{content: string, name: string}>{
         return new Promise((resolve, reject) => {
             let file = input_file.target.files[0];
             if (file) {
                 let reader = new FileReader();
                 reader.onload = function (evt) {
-                    let result = {'content':reader.result, name:file.name}
+                    let result = {content:reader.result as string, name:file.name}
                     resolve(result)
                 }
                 reader.readAsDataURL(file);

@@ -33,7 +33,7 @@ interface SidebarBaseProps {
     onSelect?: (id: number) => void;
     onAdd?: (item: {id: any, object:any}) => void;
     onDelete?: (item: any) => void;
-    onImport?: (item: any) => void;
+    onImport?: (item: string) => void;
     omImportDone?: (item: any) => void;
     export_array?: boolean;
 }
@@ -81,7 +81,7 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
     };
 
     let handleImport = () =>{
-        upload_json().then((item: any)=>{
+        upload_json().then((item: { name: string; data: string })=>{
             if(props.onImport){
                 props.onImport(item.data);
             } else {

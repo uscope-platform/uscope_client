@@ -19,16 +19,20 @@ import React from 'react';
 import {
     import_peripherals,
     up_peripheral,
-} from "#client_core";
+} from "#client_core/index.js";
 
-import {SidebarBase} from "#UI";
+import {SidebarBase} from "#UI/index.js";
 import {useAppSelector} from "#redux/hooks.js";
 
-let  PeripheralsSidebar = props =>{
+interface PeripheralsSidebarProps {
+    on_select: (id: number) => void;
+}
+
+let  PeripheralsSidebar = (props: PeripheralsSidebarProps) =>{
 
     const peripherals_redux = useAppSelector(state => state.peripherals);
 
-    let handleImport = async (content) =>{
+    let handleImport = async (content: string) =>{
         try{
             await import_peripherals(content);
         } catch (err){
@@ -44,7 +48,6 @@ let  PeripheralsSidebar = props =>{
             template={up_peripheral}
             display_key="name"
             content_name="Peripherals"
-            selector="current_peripheral"
             onImport={handleImport}
             export_array={true}
             onSelect={props.on_select}

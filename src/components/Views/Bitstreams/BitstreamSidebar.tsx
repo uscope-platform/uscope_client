@@ -15,21 +15,26 @@
 
 import React from 'react';
 
-import {download_bitstream, get_next_id, up_bitstream, upload_raw} from "#client_core";
+import {download_bitstream, get_next_id, up_bitstream, upload_raw} from "#client_core/index.js";
 import {
     SelectableList,
     SimpleContent,
     UIPanel,
     SideToolbar
-} from "#UI";
+} from "#UI/index.js";
 import {useAppSelector} from "#redux/hooks.js";
+import type {bitstream_model} from "#interfaces/index.js";
 
+interface BitstreamSidebarProps {
+    on_select: (bitstream: bitstream_model) => void;
+    bitstream: up_bitstream;
+}
 
-let  BitstreamSidebar = props =>{
+let  BitstreamSidebar = (props: BitstreamSidebarProps) =>{
 
     const bitstreams_store = useAppSelector(state => state.bitstreams);
 
-    let handleOnSelect = (selection) => {
+    let handleOnSelect = (selection: string) => {
         if(props.bitstream.name !==selection){
             let bit = Object.values(bitstreams_store).filter((bitstream)=>{
                 return bitstream.name === selection;
@@ -45,27 +50,31 @@ let  BitstreamSidebar = props =>{
         let event = await upload_raw();
         let file = await  up_bitstream.get_file_content( event);
 
-        let bitstream = new up_bitstream({
+        let bit : bitstream_model= {
             id:id,
             name:file.name,
-            data:file.content,
-            path:file.name
-        });
+            data:file.content
+        }
+        let bitstream = new up_bitstream(bit);
         bitstream.add_remote().then();
 
     };
 
-    let handleRemove = (bitstream) =>{
+    let handleRemove = (bitstream: string) =>{
         let deleted = Object.values(bitstreams_store).filter((bit)=>{
             return bit.name === bitstream;
         })[0];
-        props.on_select({name:""})
+        props.on_select({
+            id:9999,
+            name:"",
+            data:""
+        })
         up_bitstream.delete_bitstream(deleted).then();
 
     };
 
     let get_content = () =>{
-        let types = [];
+        let types: string[] = [];
         let items = Object.values(bitstreams_store).map((scr)=>{
             types.push("generic");
             return scr.name;
@@ -97,7 +106,7 @@ let  BitstreamSidebar = props =>{
                         onImport={handleImport}
                         onExport={handleExport}
                         contentName="Bitstream"
-                        exportEnabled={props.bitstream}
+                        exportEnabled={props.bitstream.id !== 9999}
                     />
                     <SelectableList
                         items={names}

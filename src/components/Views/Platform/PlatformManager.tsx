@@ -31,8 +31,8 @@ import PlatformSidebar from "../Platform/PlatformSidebar.js";
 import {toast} from "react-toastify";
 
 interface PlatformManagerProps {
-    onboarding: boolean,
-    onboarding_done: () => void
+    onboarding?: boolean,
+    onboarding_done?: () => void
 }
 
 let  PlatformManager = (props: PlatformManagerProps) =>{
@@ -59,7 +59,7 @@ let  PlatformManager = (props: PlatformManagerProps) =>{
         if(props.onboarding){
             await do_onboarding({user:username,password:pass, role:role});
             bump_user_version();
-            props.onboarding_done();
+            if(props.onboarding_done) props.onboarding_done();
         } else{
             await add_user({user:username,password:pass, role:role});
             bump_user_version();

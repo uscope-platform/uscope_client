@@ -20,32 +20,34 @@ import {
     InputField,
     SimpleContent,
     UIPanel
-} from "#UI";
-import {up_bitstream, upload_raw} from "#client_core";
-import BitstreamSidebar from "./BitstreamSidebar";
+} from "#UI/index.js";
+import {up_bitstream, upload_raw} from "#client_core/index.js";
+import BitstreamSidebar from "./BitstreamSidebar.js";
+import type {bitstream_model} from "#interfaces/index.js";
 
+interface BitstreamManagerProps {}
 
-let BitstreamManager = props =>{
+let BitstreamManager = (props: BitstreamManagerProps) =>{
 
     const inputFile = useRef(null)
 
-    const [sel_bit, set_sel_bit] = useState({name:""});
+    const [sel_bit, set_sel_bit] = useState(up_bitstream.construct_empty(9999));
 
 
-    let handle_select = (bit)=>{
+    let handle_select = (bit: bitstream_model)=>{
         set_sel_bit(new up_bitstream(bit));
     };
 
-    let upload_file = (event) => {
+    let upload_file = (event: React.ChangeEvent<HTMLInputElement>) => {
 
-        sel_bit.get_file_content( inputFile).then((file_content =>{
-            sel_bit.edit_field("file_content", file_content.content)
+        up_bitstream.get_file_content( inputFile).then((file_content =>{
+            sel_bit.edit_field("content" as keyof bitstream_model, file_content.content)
         }));
     }
 
-    let handle_change_name = (event) =>{
+    let handle_change_name = (event: React.KeyboardEvent<HTMLInputElement>) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
-            sel_bit.edit_field(event.target.name, event.target.value);
+            sel_bit.edit_field(event.currentTarget.name as keyof bitstream_model, event.currentTarget.value);
         }
     }
 
@@ -53,10 +55,10 @@ let BitstreamManager = props =>{
     let handle_open_file_chooser = async () =>{
 
         let event = await upload_raw();
-        let file = await  up_bitstream.get_file_content( event);
+        let file: {content: string, name: string} = await  up_bitstream.get_file_content( event);
 
         const decoder = new TextDecoder('utf-8');
-        let edit_obj = {name:file.name, content:decoder.decode(file.content)};
+        let edit_obj = {name:file.name, content:file.content};
         sel_bit.update_file(edit_obj);
 
     }

@@ -26,7 +26,7 @@ interface SideToolbarProps {
     onAdd: () => void;
     onImport: () => void;
     onExport: () => void;
-    onCopy: () => void;
+    onCopy?: () => void;
     exportEnabled: boolean;
     contentName: string;
 }

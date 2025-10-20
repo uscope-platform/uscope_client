@@ -20,61 +20,66 @@ import {
     CardStack, ColorTheme,
     InputField,
     SimpleContent, UIPanel
-} from "#UI"
+} from "#UI/index.js"
 
-import {get_next_id, up_peripheral} from "#client_core"
-import PeripheralsSidebar from "./PeripheralsSidebar";
+import {get_next_id, up_peripheral} from "#client_core/index.js"
+import PeripheralsSidebar from "./PeripheralsSidebar.jsx";
 import {MdAdd} from "react-icons/md";
-import {RegisterProperties} from './RegisterProperties'
+import {RegisterProperties} from './RegisterProperties.js'
 import {useAppSelector} from "#redux/hooks.js";
 
+interface PeripheralsManagerProps {}
 
-let PeripheralsManager = (props)=>{
+let PeripheralsManager = (props: PeripheralsManagerProps)=>{
 
     const peripherals = useAppSelector(state => state.peripherals);
 
     const [data_version, forceUpdate] = useReducer(x => x + 1, 0);
 
-    const [selected_peripheral, set_selected_peripheral] = useState({registers:[], _get_periph:()=>{return{}}});
+    const [selected_peripheral, set_selected_peripheral] = useState(up_peripheral.construct_empty(9999));
 
-    const [periph_selector, set_periph_selector] = useState(null);
+    const [periph_selector, set_periph_selector] = useState(0);
 
     useEffect(()=>{
-        if(periph_selector){
-            set_selected_peripheral(new up_peripheral(peripherals[periph_selector]));
+        let periph = peripherals[periph_selector];
+        if(periph){
+            set_selected_peripheral(periph);
         }
     }, [data_version])
 
-    let handle_select = (sel) =>{
-        set_periph_selector(sel);
-        set_selected_peripheral(new up_peripheral(peripherals[sel]));
-    }
-
-    let handleEditVersion = (event) =>{
-        if (event.key ==="Enter"){
-            selected_peripheral.set_version(event.target.value).then();
+    let handle_select = (sel: number) =>{
+        let periph = peripherals[sel];
+        if(periph){
+            set_periph_selector(sel);
+            set_selected_peripheral(periph);
         }
     }
 
-    let handleEditName = (event) =>{
+    let handleEditVersion = (event: React.KeyboardEvent<HTMLInputElement>) =>{
         if (event.key ==="Enter"){
-            selected_peripheral.edit_name(event.target.value).then();
+            selected_peripheral.set_version(event.currentTarget.value).then();
         }
     }
 
-    let handle_add_new = (item_type, old_items, title_prop) =>{
+    let handleEditName = (event: React.KeyboardEvent<HTMLInputElement>) =>{
+        if (event.key ==="Enter"){
+            selected_peripheral.edit_name(event.currentTarget.value).then();
+        }
+    }
 
-        let ids = Object.values(old_items).map((item)=>{
-            const regex = new RegExp("new_"+item_type+"_(\\d+)", 'g');
-            let match = Array.from(item[title_prop].matchAll(regex), m => m[1]);
-            if(match.length>0){
-                return match;
+    let handle_add_new = () =>{
+
+        let ids = Object.values(selected_peripheral.registers).map((item)=>{
+            const regex = new RegExp("new_register_(\\d+)", 'g');
+            let match = Array.from(item["register_name"].matchAll(regex), m => m[1]);
+            if(match.length>0 && match[0] !== undefined){
+                return  parseInt(match[0]);
             } else{
-                return null;
+                return;
             }
-        });
-        ids = ids.filter(Boolean);
-        let name ="new_" + item_type + "_" + get_next_id(ids.sort());
+        }).flat().filter((id): id is number=> id !== undefined);
+
+        let name ="new_register_" + get_next_id(ids.sort());
         selected_peripheral.add_register(name).then();
     }
 
@@ -111,7 +116,7 @@ let PeripheralsManager = (props)=>{
                         <div>
                             <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
                                 <MdAdd
-                                    onClick={() => {handle_add_new("register", selected_peripheral.registers, "register_name");}}
+                                    onClick={() => {handle_add_new();}}
                                     size={ColorTheme.icons_size}
                                     style={{marginLeft: "0.3em"}}
                                     color={ColorTheme.icons_color}

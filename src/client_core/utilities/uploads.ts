@@ -14,7 +14,7 @@
 // limitations under the License.
 
 
-export let upload_json = () =>{
+export let upload_json = (): Promise<{ name: string; data: string }> =>{
     return new Promise((resolve, reject)=>{
         let input = document.createElement('input');
         input.type = 'file';
@@ -28,7 +28,7 @@ export let upload_json = () =>{
 
             reader.onload = readerEvent => {
                 let content = readerEvent.target?.result; // this is the content!
-                resolve({name:filename, data:content});
+                resolve({name:filename, data:content as string});
             }
         };
         document.body.appendChild(input);

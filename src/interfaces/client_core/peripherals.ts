@@ -28,7 +28,7 @@ export interface field {
     description: string,
     length:number,
     offset:number,
-    order:number,
+    order?:number | undefined,
     n_fields:string[]
 }
 
@@ -40,6 +40,6 @@ export interface register {
     value:number,
     fields:field[],
     offset?:string,
-    order:number,
+    order?:number | undefined,
     n_registers:string[]
 }

@@ -20,5 +20,5 @@
 export interface bitstream_model {
     id:number,
     name:string,
-    data:Buffer
+    data:string
 }

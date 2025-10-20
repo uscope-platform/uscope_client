@@ -27,7 +27,7 @@ export class up_field {
     public description: string;
     public length: number;
     public offset: number;
-    public order: number;
+    public order?: number | undefined;
     public n_fields: string[];
 
     constructor(field_obj: field, parent_r: string, parent_p: number) {
