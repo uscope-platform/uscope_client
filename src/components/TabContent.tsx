@@ -22,7 +22,7 @@ const ScriptManager = React.lazy(() => import('./Views/Scripts/ScriptManager.jsx
 const PeripheralsManager = React.lazy(() => import('./Views/Peripherals/PeripheralsManager.jsx'));
 const ApplicationsManager = React.lazy(() => import('./Views/Applications/ApplicationsManager.jsx'));
 const ProgramsManager = React.lazy(()=> import('./Views/Programs/ProgramsManager.jsx'));
-const PlatformManager = React.lazy(()=> import('./Views/Programs/PlatformManager.jsx'));
+const PlatformManager = React.lazy(()=> import('./Views/Platform/PlatformManager.jsx'));
 const BitstreamManager = React.lazy(()=> import('./Views/Bitstreams/BitstreamManager.jsx'));
 const HilView = React.lazy(() => import('./Views/Emulators/HilView.jsx'));
 const SettingsView = React.lazy(() => import('./Views/Settings/Settings_view.jsx'));

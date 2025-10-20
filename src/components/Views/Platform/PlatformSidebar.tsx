@@ -19,12 +19,19 @@ import {
     UIPanel,
     SimpleContent,
     SelectableList, ColorTheme
-} from "#UI";
+} from "#UI/index.js";
 
-import {get_users_list, remove_user} from "#client_core";
+import {get_users_list, remove_user} from "#client_core/index.js";
 import {MdPerson} from "react-icons/md";
+import type {user_model} from "#interfaces/client_core/proxy/types.js";
 
-let  PlatformSidebar = props =>{
+interface PlatformSidebarProps {
+    on_select: (username: string) => void;
+    view_version: number;
+    user: string;
+}
+
+let  PlatformSidebar = (props: PlatformSidebarProps) =>{
 
     const [users, setUsers] = useState([])
     const [refreshList, setRefreshList] = useState(false)
@@ -35,16 +42,16 @@ let  PlatformSidebar = props =>{
         })
     },[props.view_version, refreshList])
 
-    let handleRemoveUser = (username) =>{
+    let handleRemoveUser = (username: string) =>{
         remove_user(username).then((response)=>{
             setRefreshList(!refreshList);
         })
     }
 
 
-    let get_content = () =>{
-        let types = [];
-        let items = Object.values(users).map((user)=>{
+    let get_content = (): [string[], React.ReactNode[]] =>{
+        let types: React.ReactNode[] = [];
+        let items = Object.values(users).map((user: user_model)=>{
             let color="";
             if(user.role ==="admin"){
                 color = "green";
@@ -63,7 +70,7 @@ let  PlatformSidebar = props =>{
 
     const [names, types] = get_content();
 
-    let handleOnSelect = (selection) => {
+    let handleOnSelect = (selection: string) => {
         if(props.user !==selection){
             props.on_select(selection);
         }

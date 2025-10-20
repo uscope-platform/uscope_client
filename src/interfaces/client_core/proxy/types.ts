@@ -23,6 +23,10 @@ export interface auth_request{
     login_type: "user"| "automated"
 }
 
+export interface user_model{
+    username:string,
+    role:string
+}
 export interface user_create_request{
     user:string,
     password:string,

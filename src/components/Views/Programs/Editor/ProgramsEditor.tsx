@@ -18,15 +18,18 @@ import React, {useState, useEffect} from "react";
 import {cpp} from '@codemirror/lang-cpp'
 import {Tooltip} from "react-tooltip";
 import {MdSave, MdBuild} from 'react-icons/md'
-import {ColorTheme, TextEditor} from "#UI";
+import {ColorTheme, TextEditor} from "#UI/index.js";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { up_program} from "#client_core";
-import LoadSelector from "./LoadSelector";
+import { up_program} from "#client_core/index.js";
 
 
-let ProgramsEditor = props =>{
+interface ProgramsEditorProps {
+    program: up_program
+}
+
+let ProgramsEditor = (props: ProgramsEditorProps) =>{
     const [editor_content, set_editor_content] = useState('');
     const [dirty, set_dirty] = useState(false);
 
@@ -38,7 +41,7 @@ let ProgramsEditor = props =>{
         }
     },[props.program])
 
-    let handle_change = (newValue) => {
+    let handle_change = (newValue: string) => {
         set_dirty(true);
         set_editor_content(newValue);
     };
@@ -62,15 +65,6 @@ let ProgramsEditor = props =>{
         }
     };
 
-    let handle_load =async (core, application) => {
-        let prog = new up_program(props.program);
-        let result = await prog.load(core);
-        if(result[0].status==="passed"){
-            toast.success('✅ Program Loaded');
-        } else if (result[0].status==="failed") {
-            toast.error(result[0].error);
-        }
-    };
 
 
 
@@ -87,18 +81,12 @@ let ProgramsEditor = props =>{
                     <Tooltip anchorSelect="build_icon" content="Compile Program" place="top" />
                 </div>
 
-                <div id="load_icon">
-                    <LoadSelector
-                        onLoad={handle_load}
-                    />
-                </div>
             </div>
         )
     }
 
-    let handle_shortcuts = (event) =>{
-        let charCode = String.fromCharCode(event.which).toLowerCase();
-        if((event.ctrlKey || event.metaKey) && charCode === 's') {
+    let handle_shortcuts = (event: React.KeyboardEvent<HTMLDivElement>) =>{
+        if((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
             event.preventDefault();
             handle_save()
         }

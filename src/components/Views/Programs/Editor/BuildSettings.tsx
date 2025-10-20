@@ -14,10 +14,10 @@
 // limitations under the License.
 
 import React from "react";
-import {InputField, ListItem, InterfaceParameters} from "#UI";
-import styled from "styled-components";
+import {InputField, ListItem, InterfaceParameters, ColorTheme} from "#UI/index.js";
+import {styled} from "goober";
 
-const VariablesList = styled.div`
+const VariablesList = styled('div')`
   margin-top:0.5em;
   display: flex;
   flex-direction: column;
@@ -25,39 +25,43 @@ const VariablesList = styled.div`
   
 `
 
-const VariablesInputArea = styled.div`
+const VariablesInputArea = styled('div')`
   margin-top:0.75em;
   padding: 0;
-  background-color: ${props => props.theme.background.level_3};
+  background-color: ${() => ColorTheme.background.level_3};
   border-style: solid;
-  border-color: ${props => props.theme.background.bordersLight};
+  border-color: ${() => ColorTheme.background.bordersLight};
   border-width: 2px;
   text-align: center;
 `
 
+interface BuildSettingsProps {
+    build_settings: any,
+    onEdit: (settings: any) => void
+}
 
-let BuildSettings = props =>{
+let BuildSettings = (props: BuildSettingsProps) =>{
 
     let inputs = props.build_settings && props.build_settings.io.inputs ? props.build_settings.io.inputs:[];
     let outputs = props.build_settings && props.build_settings.io.outputs ? props.build_settings.io.outputs:[];
     let memories = props.build_settings && props.build_settings.io.memories ? props.build_settings.io.memories:[];
 
 
-    let remove_item = (item) =>{
+    let remove_item = (item : any) =>{
         let next_settings = {io:{inputs:inputs, outputs:outputs, memories:memories}};
         switch (item.type){
             case "input":
-                next_settings.io.inputs = inputs.filter((in_item=>{
+                next_settings.io.inputs = inputs.filter(((in_item: string)=>{
                     return in_item !== item.name;
                 }))
                 break;
             case "output":
-                next_settings.io.outputs = outputs.filter((out_item=>{
+                next_settings.io.outputs = outputs.filter(((out_item: string)=>{
                     return out_item !== item.name;
                 }))
                 break;
             case "memory":
-                next_settings.io.memories = memories.filter((mem_item=>{
+                next_settings.io.memories = memories.filter(((mem_item: string)=>{
                     return mem_item !== item.name;
                 }))
                 break;
@@ -67,7 +71,7 @@ let BuildSettings = props =>{
         props.onEdit(next_settings);
     }
 
-    let handle_edit = (event) =>{
+    let handle_edit = (event: any) =>{
         if(event.key==="Enter"){
             let next_settings = {io:{inputs:inputs, outputs:outputs, memories:memories}};
             switch (event.target.name){
@@ -105,7 +109,7 @@ let BuildSettings = props =>{
                     <InputField name="input" onKeyDown={handle_edit} />
                     <VariablesList>
                         {[
-                            inputs.map((item)=>{
+                            inputs.map((item: any)=>{
                                 return <ListItem delete onRemove={remove_item} type="input" name={item}/>
                             })
                         ]}
@@ -120,7 +124,7 @@ let BuildSettings = props =>{
                     <InputField name="output" onKeyDown={handle_edit} />
                     <VariablesList>
                         {[
-                            outputs.map((item)=>{
+                            outputs.map((item: any)=>{
                                 return <ListItem delete onRemove={remove_item} type="output" name={item}/>
                             })
                         ]}
@@ -135,7 +139,7 @@ let BuildSettings = props =>{
                     <InputField name="memory" onKeyDown={handle_edit} />
                     <VariablesList>
                         {[
-                            memories.map((item)=>{
+                            memories.map((item: any)=>{
                                 return <ListItem delete onRemove={remove_item} type="memory" name={item}/>
                             })
                         ]}

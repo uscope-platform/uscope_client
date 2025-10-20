@@ -67,7 +67,7 @@ interface InputFieldProps {
     description?:string;
     id?: string;
     type?:string;
-    label:string;
+    label?:string;
     color?: string;
     disabled?:boolean;
     onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;

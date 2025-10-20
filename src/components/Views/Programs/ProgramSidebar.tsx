@@ -15,30 +15,34 @@
 
 import React, {useContext, useReducer} from 'react';
 
-import {up_program} from "#client_core";
+import {up_program} from "#client_core/index.js";
 
-import {SidebarBase} from "#UI";
+import {SidebarBase} from "#UI/index.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
 import {useAppSelector} from "#redux/hooks.js";
 
 
-let  ProgramSidebar = props =>{
+interface ProgramSidebarProps {
+    on_select: (id: number) => void;
+}
+
+let  ProgramSidebar = (props: ProgramSidebarProps) =>{
 
     const programs_store = useAppSelector(state => state.programs);
     const application = useContext(ApplicationContext);
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
-    let handleAdd = (added_obj) =>{
+    let handleAdd = (added_obj: {id: any, object:any}) =>{
         application.add_selected_program(added_obj.id.toString()).then(()=>{
             forceUpdate();
         });
     };
 
-    let handleRemove = (deleted) =>{
+    let handleRemove = (deleted: any) =>{
         application.remove_selected_program(deleted.id.toString()).then();
     };
-    let handle_import_done = (obj) =>{
+    let handle_import_done = (obj: any) =>{
         application.add_selected_program(obj.id.toString()).then();
         forceUpdate();
     }
@@ -51,7 +55,6 @@ let  ProgramSidebar = props =>{
             items_filter={application.programs}
             display_key="name"
             content_name="Program"
-            selector="selected_program"
             type_prop="type"
             onDelete={handleRemove}
             onAdd={handleAdd}

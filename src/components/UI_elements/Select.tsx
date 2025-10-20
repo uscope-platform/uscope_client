@@ -40,7 +40,7 @@ interface SelectFieldProps<Option extends DefaultOption=DefaultOption> {
     label: string;
     style?: React.CSSProperties;
     defaultValue?: Option;
-    value: Option | null;
+    value?: Option | null;
     options: readonly Option[];
 }
 

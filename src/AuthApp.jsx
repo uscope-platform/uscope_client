@@ -30,7 +30,7 @@ import {Routes} from "react-router";
 import {addApplication} from "#redux";
 
 import {UIPanel, InterfaceParameters} from "#UI";
-import PlatformManager from "./components/Views/Programs/PlatformManager";
+import PlatformManager from "./components/Views/Platform/PlatformManager.jsx";
 import {useAppSelector} from "#redux/hooks.js";
 
 

@@ -22,29 +22,40 @@ import {
     FormLayout,
     InputField,
     SelectField, ColorTheme
-} from "#UI"
+} from "#UI/index.js"
 
-import {add_user, do_onboarding, dump_database, restore_database, upload_json} from "#client_core";
+import {add_user, do_onboarding, dump_database, restore_database, upload_json} from "#client_core/index.js";
 import { MdDownload, MdUpload} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
-import PlatformSidebar from "../Platform/PlatformSidebar";
+import PlatformSidebar from "../Platform/PlatformSidebar.js";
+import {toast} from "react-toastify";
 
+interface PlatformManagerProps {
+    onboarding: boolean,
+    onboarding_done: () => void
+}
 
-let  PlatformManager = props =>{
+let  PlatformManager = (props: PlatformManagerProps) =>{
 
-    const [selected_user, set_selected_user] = useState();
+    const [selected_user, set_selected_user] = useState("");
     const [view_version, bump_user_version] = useReducer(x=>x+1, 0);
     
-    let handle_select = (user) =>{
+    let handle_select = (user: string) =>{
         set_selected_user(user);
     }
     
-    let handle_add_user = async (event) =>{
+    let handle_add_user = async (event: React.FormEvent<HTMLFormElement>) =>{
 
         event.preventDefault();
-        let username = event.target.user.value;
-        let pass = event.target.pass.value;
-        let role = event.target.role.value;
+        let username = event.currentTarget.user.value;
+        let pass = event.currentTarget.pass.value;
+
+        let role = event.currentTarget.role as any;
+        if(role === null || role.value === ""){
+            console.error("Role is null or empty");
+            toast.error("Role is nullor empty");
+            return;
+        }
         if(props.onboarding){
             await do_onboarding({user:username,password:pass, role:role});
             bump_user_version();
@@ -72,7 +83,7 @@ let  PlatformManager = props =>{
     };
 
     let handle_restore_db = ()=>{
-        upload_json().then((raw_json)=>{
+        upload_json().then((raw_json: any)=>{
             let content = JSON.parse(raw_json.data);
             restore_database(content).then();
         }).catch((err)=>{
@@ -112,9 +123,8 @@ let  PlatformManager = props =>{
                                 <InputField inline name="pass" label="Password"/>
                                 <SelectField
                                     label="Role"
-                                    defaultValue="role"
+                                    defaultValue={{value:"operator",label:"operator"}}
                                     name="role"
-                                    placeholder="Role"
                                     onChange={()=>{}}
                                     options={[
                                         {value:"admin",label:"admin"},

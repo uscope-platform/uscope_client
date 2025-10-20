@@ -23,21 +23,25 @@ import {
     InputField,
     SelectField,
     TabbedContent, TwoColumnSelector
-} from "#UI";
-import ProgramsEditor from "./Editor/ProgramsEditor";
-import {up_program} from "#client_core";
-import BuildSettings from "./Editor/BuildSettings";
-import ProgramSidebar from "./ProgramSidebar";
+} from "#UI/index.js";
+import ProgramsEditor from "./Editor/ProgramsEditor.js";
+import {up_program} from "#client_core/index.js";
+import BuildSettings from "./Editor/BuildSettings.js";
+import ProgramSidebar from "./ProgramSidebar.js";
 import {useAppSelector} from "#redux/hooks.js";
 
-let ProgramsManager = props =>{
+interface ProgramsManagerProps {
+
+}
+
+let ProgramsManager = (props: ProgramsManagerProps) =>{
 
     const location = useLocation();
 
     const programs_store = useAppSelector(state => state.programs);
 
 
-    let [selected_program, set_selected_program] = useState({});
+    let [selected_program, set_selected_program] = useState(up_program.construct_empty(9999));
     let [selectedTab, set_selectedTab] = useState(0);
 
     let allowed_types = [
@@ -60,13 +64,15 @@ let ProgramsManager = props =>{
         }
     }, []);
 
-    let handle_select = (sel) =>{
-        set_selected_program(new up_program(programs_store[sel]));
+    let handle_select = (sel: number) =>{
+        let program = programs_store[sel];
+        if(program===undefined) return;
+        set_selected_program(new up_program(program));
     }
 
-    const calculate_headers = () =>{
+    const calculate_headers = (): {selected:string[], available:string[]} =>{
         if(!selected_program.headers){
-            return [];
+            return {selected:[], available:[]};
         }
         for(let i of selected_program.headers){
 
@@ -91,31 +97,31 @@ let ProgramsManager = props =>{
 
     let h = calculate_headers();
 
-    let handleDeselectHeader =  (id) =>{
+    let handleDeselectHeader =  (id: string) =>{
         selected_program.remove_header(parseInt(id)).then(()=>{
             h = calculate_headers();
         });
     }
 
-    let handleSelectHeader = (id) =>{
+    let handleSelectHeader = (id: string) =>{
         selected_program.add_header(parseInt(id)).then(()=>{
             h = calculate_headers();
         });
     }
 
 
-    let handleTypeChange = (event) =>{
+    let handleTypeChange = (event : any) =>{
         selected_program.edit_field("type", event.value).then();
     }
 
-    let handle_name_change = (event) => {
+    let handle_name_change = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Enter" || event.key === "Tab") {
-            selected_program.edit_field(event.target.name, event.target.value).then();
+            selected_program.edit_field(event.currentTarget.name as keyof up_program, event.currentTarget.value).then();
         }
     }
 
-    let handle_settings_edit = (settings) => {
-        selected_program.edit_field("build_settings", settings).then();
+    let handle_settings_edit = (settings: any) => {
+        //TODO: REMOVE WHEN THE PROGRAMMING OF CORES IS REWORKED
     }
 
     return(
@@ -142,7 +148,6 @@ let ProgramsManager = props =>{
                                 value={{label:selected_program.type, value:selected_program.type}}
                                 defaultValue="Select Type"
                                 name="type"
-                                placeholder="Program type"
                                 options={allowed_types}/>
                         </FormLayout>
                     </SimpleContent>
@@ -155,7 +160,7 @@ let ProgramsManager = props =>{
                             />
                         </div>
                         <div key="build_settings">
-                            <BuildSettings  language={selected_program.language} build_settings={selected_program.build_settings} onEdit={handle_settings_edit}/>
+                            <BuildSettings  build_settings={{}} onEdit={handle_settings_edit}/>
                         </div>
                         <div key="headers_selector">
                             <TwoColumnSelector
