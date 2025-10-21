@@ -21,14 +21,13 @@ import {
     SidebarCollapsableContentLayout,
     SidebarCollapsableNameLayout,
     ColorTheme
-} from "#UI";
+} from "#UI/index.js";
 
 import {MdArrowDropDown, MdArrowDropUp} from "react-icons/md";
-import styled from "styled-components";
-import {up_field} from "#client_core";
+import {styled} from "goober";
 
 
-export const FieldPropsLayout = styled.div`
+export const FieldPropsLayout = styled('div')`
   border-radius: 1rem;
   height: fit-content;
   padding: 0.2rem 0 0.4rem 0.6rem;
@@ -36,21 +35,25 @@ export const FieldPropsLayout = styled.div`
   width: auto;
   display: flex;
   flex-direction: column;
-  background-color: ${props => props.theme.background.level_4};
+  background-color: ${() => ColorTheme.background.level_4};
 `
 
+interface HdlParameterProps {
+    name:string
+    onChange: (change: {type:string, name:string, new_value:number})=>void
+    value:number
+}
 
-
-export let  HdlParameterProperties = props =>{
+export let  HdlParameterProperties = (props:HdlParameterProps) =>{
 
     const [is_open, set_is_open] = useState(true);
     let handleOpen = ()=>{
         set_is_open(true);
     }
 
-    let handleEditNameChange = (event) => {
+    let handleEditNameChange = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if(event.key==="Enter"){
-            props.onChange({type:"name", name:props.name, new_value:event.target.value});
+            props.onChange({type:"name", name:props.name, new_value:parseInt(event.currentTarget.value)});
         }
     }
 
@@ -58,11 +61,11 @@ export let  HdlParameterProperties = props =>{
         set_is_open(false);
     }
 
-    let handleonKeyDown = (event) =>{
+    let handleonKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
-            switch (event.target.name) {
+            switch (event.currentTarget.name) {
                 case "value":
-                    props.onChange({type:"value", name:props.name, new_value:parseInt(event.target.value)});
+                    props.onChange({type:"value", name:props.name, new_value:parseInt(event.currentTarget.value)});
                     break;
                 default:
                     return;
@@ -72,20 +75,18 @@ export let  HdlParameterProperties = props =>{
     }
 
 
-    let handleRemove= (event) =>{
-        up_field.remove_field(props.peripheral.id, props.register.ID, props.field.field_name).then(()=>{
-            props.forceUpdate();
-        });
+    let handleRemove= () =>{
+
     }
 
 
-    let renderContent = (props) =>{
+    let renderContent = (props: HdlParameterProps) =>{
 
         if(is_open)
             return(
                 <SidebarCollapsableContentLayout>
                     <InputField inline id="name" name="name" defaultValue={props.name} onKeyDown={handleEditNameChange} label="Name"/>
-                    <InputField inline id="value" name='value' defaultValue={props.value} onKeyDown={handleonKeyDown} label="Value"/>
+                    <InputField inline id="value" name='value' defaultValue={props.value.toString()} onKeyDown={handleonKeyDown} label="Value"/>
                     <Button onClick={handleRemove} >Remove</Button>
                 </SidebarCollapsableContentLayout>
             )

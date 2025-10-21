@@ -20,18 +20,23 @@ import {
     get_next_id,
     import_application,
     up_application,
-} from "#client_core";
-import {SidebarBase} from "#UI";
+} from "#client_core/index.js";
+import {SidebarBase} from "#UI/index.js";
 
-import {addApplication} from "#redux";
+import {addApplication} from "#redux/index.js";
 import {useAppSelector} from "#redux/hooks.js";
 
 
-let  ApplicationSidebar = props =>{
+interface ApplicationSidebarProps {
+ application: up_application;
+  on_select: (id: number) => void;
+}
+
+let  ApplicationSidebar = (props: ApplicationSidebarProps) =>{
 
     const applications_redux = useAppSelector(state => state.applications);
 
-    let handleImport = (app) =>{
+    let handleImport = (app: string) =>{
         let id = get_next_id(Object.values(applications_redux).map(a => a['id']).sort());
         import_application(app, id).then(()=>{
             addApplication(app);
@@ -46,7 +51,6 @@ let  ApplicationSidebar = props =>{
             template={up_application}
             display_key="application_name"
             content_name="Applications"
-            selector="selected_application"
             onImport={handleImport}
             initial_value={props.application}
             onSelect={props.on_select}

@@ -17,28 +17,30 @@ import React from "react";
 import {
     InputField,
     Card
-} from "#UI";
+} from "#UI/index.js";
 
-import {up_application} from "#client_core";
+import {up_application} from "#client_core/index.js";
 
-export let  MiscFieldProperties = props =>{
+interface MiscFieldProperties {
+    application: up_application,
+    forceUpdate: ()=>void,
+    name: string,
+    value: string,
+}
+
+export let  MiscFieldProperties = (props: MiscFieldProperties) =>{
 
 
 
-    let handleonKeyDown = (event) =>{
+    let handleonKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
-            let app = new up_application(props.application);
-            app.edit_misc_param(props.name,event.target.value, event.target.name==="name").then(()=>{
-                props.forceUpdate();
-            });
+            await props.application.edit_misc_param(props.name,event.currentTarget.value, event.currentTarget.name==="name");
+            props.forceUpdate();
         }
     }
 
-    let handleRemove = (event) =>{
-        let app = new up_application(props.application);
-        app.remove_misc_field(props.name).then(()=>{
-            props.forceUpdate();
-        });
+    let handleRemove = async () =>{
+        await props.application.remove_misc_field(props.name);
         props.forceUpdate();
     }
 

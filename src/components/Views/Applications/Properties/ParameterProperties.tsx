@@ -17,33 +17,34 @@ import React from "react";
 import {
     InputField,
     Card
-} from "#UI";
+} from "#UI/index.js";
 
-import {up_application} from "#client_core";
+import {up_application} from "#client_core/index.js";
+import type {parameter} from "#interfaces/index.js";
 
-export let  ParameterProperties = props =>{
+interface ParameterPropertiesProps{
+    application: up_application,
+    parameter: parameter,
+    forceUpdate: ()=>void,
+}
 
-    let handleChange = (target)=>{
-        let app = new up_application(props.application);
-        app.edit_parameters(props.parameter.parameter_id, target.name, target.checked).then(()=>{
-            props.forceUpdate();
-        });
+export let  ParameterProperties = (props: ParameterPropertiesProps) =>{
+
+    let handleChange = async (target: {name: string, checked: boolean})=>{
+        await props.application.edit_parameters(props.parameter.parameter_id, target.name, target.checked);
+        props.forceUpdate();
     }
 
-    let handleonKeyDown = (event) =>{
+    let handleonKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
-            let app = new up_application(props.application);
-            app.edit_parameters(props.parameter.parameter_id, event.target.name, event.target.value).then(()=>{
-                props.forceUpdate();
-            });
+            await props.application.edit_parameters(props.parameter.parameter_id, event.currentTarget.name, event.currentTarget.value);
+            props.forceUpdate();
         }
     }
 
-    let handleRemove= (event) =>{
-        let app = new up_application(props.application);
-        app.remove_parameter(props.parameter.parameter_id).then(()=>{
-            props.forceUpdate();
-        });
+    let handleRemove= async () =>{
+        await props.application.remove_parameter(props.parameter.parameter_id);
+        props.forceUpdate();
     }
 
     return(
@@ -60,7 +61,7 @@ export let  ParameterProperties = props =>{
             <InputField inline id="parameter_name" name="parameter_name" defaultValue={props.parameter.parameter_name} onKeyDown={handleonKeyDown} label="Name"/>
             <InputField inline id="parameter_id" name='parameter_id' defaultValue={props.parameter.parameter_id} onKeyDown={handleonKeyDown} label="Parameter ID"/>
             <InputField inline id="trigger" name='trigger' defaultValue={props.parameter.trigger} onKeyDown={handleonKeyDown} label="Trigger"/>
-            <InputField inline id="value" name='value' defaultValue={props.parameter.value} onKeyDown={handleonKeyDown} label="Value"/>
+            <InputField inline id="value" name='value' defaultValue={props.parameter.value.toString()} onKeyDown={handleonKeyDown} label="Value"/>
         </Card>
     );
 };

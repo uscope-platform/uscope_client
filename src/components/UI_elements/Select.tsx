@@ -30,7 +30,7 @@ const SelectWrapper = styled('div')`
 
 export interface DefaultOption {
     label: string;
-    value: string | number;
+    value: string | number | unknown;
 }
 
 

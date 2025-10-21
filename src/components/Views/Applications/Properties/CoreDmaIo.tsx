@@ -14,18 +14,20 @@
 // limitations under the License.
 
 import React, {useEffect, useState} from "react";
-import {get_next_id, up_application} from "#client_core";
-import styled from "styled-components";
+import {get_next_id, up_application} from "#client_core/index.js";
+import {styled} from "goober";
 import {
     SelectableListItem,
     InputField,
-    SelectField
-} from "#UI";
-import {MdAdd} from "react-icons/md";
+    SelectField, ColorTheme
+} from "#UI/index.js";
+import {MdAdd, MdDelete} from "react-icons/md";
 import {useAppSelector} from "#redux/hooks.js";
+import type {soft_core} from "#interfaces/index.js";
+import type {ActionMeta} from "react-select";
 
 
-const List = styled.div`
+const List = styled('div')`
   display: flex;
   flex-direction: column;
   text-align: center;
@@ -33,16 +35,27 @@ const List = styled.div`
   margin-right: auto;
 `
 
-const Separator = styled.div`
+const Separator = styled('div')`
   margin-top: 1em;
   margin-left: auto;
   margin-right: auto;
   width:15em;
   height: 2px;
-  background-color: ${props => props.theme.background.bordersLight};
+  background-color: ${() => ColorTheme.background.bordersLight};
 `
 
-export let  CoreDmaIo = props =>{
+interface  CoreDmaIoProps {
+    application: up_application,
+    core: soft_core,
+    forceUpdate: ()=>void,
+}
+
+interface CoreIoOptions {
+    label: string,
+    value: string
+}
+
+export let  CoreDmaIo = (props: CoreDmaIoProps) =>{
 
     const programs = useAppSelector(state => state.programs);
     const selected_program = Object.values(programs).filter((program)=>{
@@ -51,7 +64,13 @@ export let  CoreDmaIo = props =>{
 
     const [sel_logic_io, set_sel_logic_io] = useState("");
 
-    const [selected_io, set_selected_io] = useState(null);
+    const [selected_io, set_selected_io] = useState({
+        name:"",
+        type:"input",
+        associated_io:"",
+        address:0,
+        common_io:false,
+    });
 
     useEffect(() => {
         if(sel_logic_io){
@@ -62,14 +81,13 @@ export let  CoreDmaIo = props =>{
         }
     }, [sel_logic_io])
 
-    let remove_item = (item) =>{
-        let app = new up_application(props.application);
+    let remove_item = async (item: string) =>{
+
         let new_io = props.core.io.filter((io)=>{
             return item !== io.name;
         })
-        app.edit_soft_core(props.core.id,"io", new_io).then(()=>{
-            props.forceUpdate();
-        });
+        await props.application.edit_soft_core(props.core.id,"io", new_io);
+        props.forceUpdate();
     }
 
     let generate_logic_io_map = () =>{
@@ -77,9 +95,9 @@ export let  CoreDmaIo = props =>{
             return [
                 props.core.io.map((item)=>{
 
-                    return <SelectableListItem key={item.name} delete onRemove={remove_item} type={item.type}
+                    return <SelectableListItem key={item.name} onRemove={remove_item}
                                                name={item.name} onSelect={set_sel_logic_io}
-                                               selected={sel_logic_io===item.name} iconSize="1em"/>
+                                               selected={sel_logic_io===item.name} iconSize="1em" icon={<MdDelete/>}/>
                 })
             ]
         }
@@ -87,57 +105,57 @@ export let  CoreDmaIo = props =>{
     }
 
 
-    let handle_edit_logic_io = (event) =>{
+    let handle_edit_logic_io =async (event: React.KeyboardEvent<HTMLInputElement>) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
-            let field = event.target.name;
-            let value = event.target.value;
-            if(field === "address" ) value = parseInt(value);
-            let app = new up_application(props.application);
+            let field = event.currentTarget.name;
+
             let new_io = props.core.io.map((io)=>{
                 if(sel_logic_io === io.name){
                     let new_item = io;
-                    new_item[field] = value;
+                    if(field === "address" ){
+                        new_item[field] = parseInt(event.currentTarget.value);
+                    } else {
+                        new_item[field] = event.currentTarget.value
+                    }
                     return new_item
                 }
                 return io;
             })
 
-            app.edit_soft_core(props.core.id,"io", new_io).then(()=>{
-                props.forceUpdate();
-            });
+            await props.application.edit_soft_core(props.core.id,"io", new_io);
+            props.forceUpdate();
         }
 
     }
 
-    let handle_change_type = (event) =>{
-
-        let app = new up_application(props.application);
+    let handle_change_type = async (change:CoreIoOptions | null, event:ActionMeta<CoreIoOptions>) =>{
+        if(change === null) return;
         let new_io = props.core.io.map((io)=>{
             if(sel_logic_io === io.name){
                 let new_item = io;
-                new_item.type = event.value;
+                new_item.type = change.value;
                 return new_item
             }
             return io;
         })
-        app.edit_soft_core(props.core.id,"io", new_io).then(()=>{
-            props.forceUpdate();
-        });
+
+        await props.application.edit_soft_core(props.core.id,"io", new_io);
+        props.forceUpdate();
     }
 
-    let handle_change_core_io = (event) =>{
-        let app = new up_application(props.application);
+    let handle_change_core_io =async (change:CoreIoOptions | null, event:ActionMeta<CoreIoOptions>) =>{
+        if(change === null) return;
         let new_io = props.core.io.map((io)=>{
             if(sel_logic_io === io.name){
                 let new_item = io;
-                new_item.associated_io = event.value;
+                new_item.associated_io = change.value;
                 return new_item
             }
             return io;
         })
-        app.edit_soft_core(props.core.id,"io", new_io).then(()=>{
-            props.forceUpdate();
-        });
+
+        await props.application.edit_soft_core(props.core.id,"io", new_io);
+        props.forceUpdate();
     }
 
 
@@ -145,17 +163,17 @@ export let  CoreDmaIo = props =>{
         if(selected_program && selected_program.build_settings){
             let core_io = [];
             if(selected_program.build_settings.io.inputs){
-                core_io = selected_program.build_settings.io.inputs.map((item)=>{
+                core_io = selected_program.build_settings.io.inputs.map((item: string)=>{
                     return {label:item, value:item}
                 })
             }
             if(selected_program.build_settings.io.outputs){
-                core_io = [ ...core_io, ...selected_program.build_settings.io.outputs.map((item)=>{
+                core_io = [ ...core_io, ...selected_program.build_settings.io.outputs.map((item: string)=>{
                     return {label:item, value:item}
                 })]
             }
             if(selected_program.build_settings.io.memories){
-                core_io = [ ...core_io, ...selected_program.build_settings.io.memories.map((item)=>{
+                core_io = [ ...core_io, ...selected_program.build_settings.io.memories.map((item: string)=>{
                     return {label:item, value:item}
                 })]
             }
@@ -164,19 +182,15 @@ export let  CoreDmaIo = props =>{
     }
 
 
-    let handle_add_io = () =>{
-        let app = new up_application(props.application);
+    let handle_add_io = async () =>{
 
         let ids = props.core.io.map((io)=>{
             const regex = /new_io_(\d+)/g;
-            let match = Array.from(io.name.matchAll(regex), m => m[1]);
-            if(match.length>0){
-                return match;
-            } else {
-                return undefined;
+            let match = io.name.match(regex);
+            if (match) {
+                return match[1];
             }
-        });
-        ids = ids.filter(Boolean);
+        }).filter((item)=>{return item !== undefined}).flat();
         let id = get_next_id(ids.sort());
 
 
@@ -188,9 +202,8 @@ export let  CoreDmaIo = props =>{
             common_io:false
         };
 
-        app.edit_soft_core(props.core.id,"io", [...props.core.io, new_io]).then(()=>{
-            props.forceUpdate();
-        });
+        await props.application.edit_soft_core(props.core.id,"io", [...props.core.io, new_io]);
+        props.forceUpdate();
     }
 
     let render_io_properties = () =>{
@@ -198,12 +211,11 @@ export let  CoreDmaIo = props =>{
            return <div style={{display: "flex", flexDirection: "column"}}>
                <InputField inline id={selected_io.name} name='name' defaultValue={selected_io.name}
                            onKeyDown={handle_edit_logic_io} label="Name"/>
-               <SelectField
-                   inline
+               <SelectField<CoreIoOptions>
                    label="Type"
                    onChange={handle_change_type}
                    value={{value: selected_io.type, label: selected_io.type}}
-                   defaultValue="Select Type"
+                   defaultValue={{label: "Select type", value: ""}}
                    name="type"
                    options={[
                        {label: "input", value: "input"},
@@ -211,16 +223,15 @@ export let  CoreDmaIo = props =>{
                        {label: "memory", value: "memory"}
                    ]}
                />
-               <SelectField
-                   inline
+               <SelectField<CoreIoOptions>
                    label="Associated Core IO"
                    onChange={handle_change_core_io}
                    value={{value:selected_io.associated_io, label:selected_io.associated_io}}
-                   defaultValue="select associated IO"
+                   defaultValue={{label: "select associated IO", value: ""}}
                    name="assoc_core_io"
                    options={get_core_io()}
                />
-               <InputField inline id={selected_io.address} name='address' defaultValue={selected_io.address}
+               <InputField inline id={selected_io.address.toString()} name='address' defaultValue={selected_io.address.toString()}
                            onKeyDown={handle_edit_logic_io} label="Address"/>
            </div>
         }

@@ -13,15 +13,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import ReactSelect from 'react-select';
-import React from 'react';
+import ReactSelect, {type ActionMeta, type MultiValue} from 'react-select';
+import React, {type JSX} from 'react';
 import {ColorTheme} from "./ColorTheme.js";
 import {styled} from "goober";
 import {Label} from "./Label.js";
 
 
 interface WrapperProps {
-    inline?: string;
+    inline?: boolean;
 }
 
 const  Wrapper = styled('div')<WrapperProps>`
@@ -33,19 +33,27 @@ justify-content:start;
 align-items: center;
 flex-flow: wrap;
 `
-
-interface MultiSelectProps {
-    id: string;
-    name: string;
+interface DefaultOption {
     label: string;
-    value: any;
-    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    options: any;
-    color?: string;
-    inline: string;
+    value: string;
 }
 
-export let  MultiSelect = (props: MultiSelectProps) =>{
+interface MultiSelectProps<Option extends DefaultOption=DefaultOption> {
+    id: string;
+    name?: string;
+    label: string;
+    value: any;
+    onChange: (newValue:MultiValue<Option>, action: ActionMeta<Option> ) => void;
+    options: any;
+    color?: string;
+    inline: boolean;
+}
+
+
+
+export let  MultiSelect = <Option extends DefaultOption = DefaultOption>(
+    props: MultiSelectProps<Option>
+): JSX.Element =>{
 
         const color= props.color ? props.color : ColorTheme.background.select_background ;
 
@@ -103,7 +111,7 @@ export let  MultiSelect = (props: MultiSelectProps) =>{
                         options={props.options}
                         menuPortalTarget={document.body}
                         value={props.value}
-                        onChange={(e: any) => {if(props.onChange) props.onChange(e)}}
+                        onChange={(newValue:MultiValue<Option>, action: ActionMeta<Option> ) => {if(props.onChange) props.onChange(newValue, action)}}
                     />
             </Wrapper>
 

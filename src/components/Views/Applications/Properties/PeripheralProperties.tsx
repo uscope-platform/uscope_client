@@ -19,82 +19,93 @@ import {
     Checkbox,
     SelectField,
     Card
-} from "#UI";
+} from "#UI/index.js";
 
-import {up_application} from "#client_core";
-import {HdlParameterProperties} from "./HdlParameterProperties";
+import {up_application, up_peripheral} from "#client_core/index.js";
+import {HdlParameterProperties} from "./HdlParameterProperties.jsx";
+import type {peripheral_instance} from "#interfaces/index.js";
+import type {ActionMeta} from "react-select";
 
+interface PeripheralPropertiesProps{
+    application: up_application,
+    peripheral: peripheral_instance,
+    peripherals: Record<number, up_peripheral>,
+    forceUpdate: ()=>void,
+}
 
+export interface PeriphIdOption {
+    label: string;
+    value: string;
+}
 
-export let  PeripheralProperties = props =>{
+export let  PeripheralProperties = (props: PeripheralPropertiesProps) =>{
 
     let peripherals_list = Object.entries(props.peripherals).map((periph)=>{
         return {label:periph[1].name, value:periph[0]}
     })
 
-    let [selected, set_selected] = useState((()=>{
+    let initial_value: PeriphIdOption = (()=>{
         let p =  Object.values(props.peripherals).filter((p)=>{
             return p.id === parseInt(props.peripheral.spec_id);
         })[0];
+        if(p === undefined)return {label: "", value: ""}
         if(props.peripheral.spec_id !== ""){
-            return {label:p.name, value:parseInt(props.peripheral.spec_id)}
+            return {label:p.name, value:props.peripheral.spec_id}
         } else {
-            return {label: "", value: null}
+            return {label: "", value: ""}
         }
-    })());
+    })();
 
-    let handleChange = (event)=>{
-        let app = new up_application(props.application);
-        app.edit_peripheral(props.peripheral.name,event.target.name, event.target.checked).then(()=>{
-            props.forceUpdate();
-        });
+    let [selected, set_selected] = useState(initial_value);
+
+    let handleChange =async (event:  React.ChangeEvent<HTMLInputElement>)=>{
+        await props.application.edit_peripheral(props.peripheral.name,event.target.name, event.target.checked);
+        props.forceUpdate();
     }
 
-    let handleIDChange = (event)=>{
-        set_selected(event)
-        let app = new up_application(props.application);
-        app.edit_peripheral(props.peripheral.name,"spec_id", event.value).then(()=>{
-            props.forceUpdate();
-        });
+    let handleIDChange = async (value: PeriphIdOption | null, event: ActionMeta<PeriphIdOption>) =>{
+        if(value === null)return;
+        set_selected(value)
+        await props.application.edit_peripheral(props.peripheral.name,"spec_id", value.value);
+        props.forceUpdate();
     }
 
-    let handleonKeyDown = (event) =>{
+    let handleonKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
-            let app = new up_application(props.application);
-            app.edit_peripheral(props.peripheral.name,event.target.name, event.target.value).then(()=>{
-                props.forceUpdate();
-            });
+            await props.application.edit_peripheral(props.peripheral.name,event.currentTarget.name, event.currentTarget.value);
+            props.forceUpdate();
         }
     }
 
-    let handleRemove= (event) =>{
-        let app = new up_application(props.application);
-            app.remove_peripheral(props.peripheral.name).then(()=>{
-            props.forceUpdate();
-        });
+    let handleRemove=async () =>{
+        await props.application.remove_peripheral(props.peripheral.name);
+        props.forceUpdate();
     }
 
-    let handle_parameter_change = (change) =>{
+    let handle_parameter_change = async (change: {type:string, name:string, new_value:number}) =>{
 
-        let app = new up_application(props.application);
-        let parameters = app.peripherals.filter((p) =>{
+        let peripheral = props.application.peripherals.filter((p) =>{
             return p.peripheral_id === props.peripheral.peripheral_id;
-        })[0].hdl_parameters;
+        });
+        if(peripheral.length === 0 || peripheral[0]=== undefined)return;
+        let parameters = peripheral[0].hdl_parameters;
         if(change.type ==="name"){
             let value = parameters[change.name];
+            if(value === undefined)return;
             delete parameters[change.name];
             parameters[change.new_value] = value;
         } else {
             parameters[change.name] = change.new_value;
         }
-        app.edit_peripheral(props.peripheral.name,"hdl_parameters", parameters).then(()=>{
-            props.forceUpdate();
-        });
+        await props.application.edit_peripheral(props.peripheral.name,"hdl_parameters", parameters);
+        props.forceUpdate();
     }
 
     let render_hdl_parameters = ()=>{
-      return Object.keys(props.peripheral.hdl_parameters).map((item) =>{
-          return(<HdlParameterProperties key={name} name={item} value={props.peripheral.hdl_parameters[item]} onChange={handle_parameter_change}/>)
+      return Object.keys(props.peripheral.hdl_parameters).map((item: string) =>{
+          let parameter = props.peripheral.hdl_parameters[item];
+          if(parameter === undefined)return;
+          return(<HdlParameterProperties name={item} value={parameter} onChange={handle_parameter_change}/>)
       })
     };
 
@@ -105,12 +116,11 @@ export let  PeripheralProperties = props =>{
         >
             <InputField inline id="name" name="name" defaultValue={props.peripheral.name} onKeyDown={handleonKeyDown} label="Name"/>
             <InputField inline id="peripheral_id" name='peripheral_id' defaultValue={props.peripheral.peripheral_id} onKeyDown={handleonKeyDown} label="Peripheral id"/>
-            <SelectField
+            <SelectField<PeriphIdOption>
                 label="IP type"
                 onChange={handleIDChange}
                 value={selected}
                 name="spec_id"
-                placeholder="Peripheral type"
                 options={peripherals_list}
             />
             <InputField inline id="base_address" name='base_address' defaultValue={props.peripheral.base_address} onKeyDown={handleonKeyDown} label="Base Address"/>

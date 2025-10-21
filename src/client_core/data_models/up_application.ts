@@ -321,7 +321,8 @@ export class up_application {
         return group;
     }
 
-    add_channel = async (ch_name: string) =>{
+    add_channel = async (id: number) =>{
+        let ch_name = "new_channel_" + id.toString();
         let ch: channel = {
             name: ch_name,
             id: ch_name.replace(/\s/g, "_").toLowerCase(),
@@ -341,7 +342,8 @@ export class up_application {
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
-    add_channel_group = async (chg_name:string) =>{
+    add_channel_group = async (id:number) =>{
+        let chg_name = "new_group_" + id.toString();
         let chg: channel_group = {
             group_name: chg_name,
             group_id: chg_name.replace(/\s/g, "_").toLowerCase(),
@@ -365,7 +367,8 @@ export class up_application {
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
-    add_macro = async (macro_name:string) => {
+    add_macro = async (id:number) => {
+        let macro_name = "new_macro_" + id.toString();
         let m: macro =  {
             name: macro_name,
             trigger: ""
@@ -376,7 +379,8 @@ export class up_application {
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
-    add_parameter = async (parameter_name:string) =>{
+    add_parameter = async (id:number) =>{
+        let parameter_name = "new_parameter_" + id.toString();
         let p: parameter = {
             parameter_name: parameter_name,
             parameter_id: parameter_name.replace(/\s/g, "_").toLowerCase(),
@@ -390,7 +394,8 @@ export class up_application {
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
-    add_peripheral = async (name:string) => {
+    add_peripheral = async (id:number) => {
+        let name = "new_peripheral_" + id.toString();
         let p: peripheral_instance = {
             name: name,
             peripheral_id: name.replace(/\s/g, "_").toLowerCase(),
@@ -435,7 +440,8 @@ export class up_application {
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
-    add_soft_core = async (core_id: string) => {
+    add_soft_core = async (id: number) => {
+        let core_id = "new_core_" + id.toString();
         let sc = {
             id: core_id,
             address: 0x0,
@@ -448,7 +454,8 @@ export class up_application {
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
-    set_misc_param = async (param_name: string) =>{
+    set_misc_param = async (id: number) =>{
+        let param_name = "new_parameter_" + id.toString();
         let edit = {application:this.id, item: {name:param_name, value:"0"}, action:"add", object:"misc"};
         this.miscellaneous[param_name] = 0;
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);

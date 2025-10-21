@@ -17,27 +17,29 @@ import React from "react";
 import {
     InputField,
     Card
-} from "#UI";
+} from "#UI/index.js";
 
-import {up_application} from "#client_core";
+import {up_application} from "#client_core/index.js";
+import type {macro} from "#interfaces/index.js";
 
+interface MacroPropertiesProps{
+    application: up_application,
+    forceUpdate: ()=>void,
+    macro: macro
+}
 
-export let  MacroProperties = props =>{
+export let  MacroProperties = (props: MacroPropertiesProps) =>{
 
-    let handleonKeyDown = (event) =>{
+    let handleonKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
-            let app = new up_application(props.application);
-            app.edit_macro(props.macro.name, event.target.name, event.target.value).then(()=>{
-                props.forceUpdate();
-            });
+            await props.application.edit_macro(props.macro.name, event.currentTarget.name, event.currentTarget.value);
+            props.forceUpdate();
         }
     }
 
-    let handleRemove= (event) =>{
-        let app = new up_application(props.application);
-        app.remove_macro(props.macro.name).then(()=>{
-            props.forceUpdate();
-        });
+    let handleRemove= async () =>{
+        await props.application.remove_macro(props.macro.name);
+        props.forceUpdate();
     }
 
 

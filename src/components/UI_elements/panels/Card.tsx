@@ -38,7 +38,7 @@ interface CardProps {
         name: string,
         label: string,
         value: boolean,
-        click: () => void
+        click: (value: {name: string, checked: boolean}) => void;
     }
     name: string,
     onRemove: () => void,

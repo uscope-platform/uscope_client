@@ -18,11 +18,19 @@ import {
     InputField,
     MultiSelect,
     Card
-} from "#UI";
+} from "#UI/index.js";
 
-import {up_application} from "#client_core";
+import {up_application} from "#client_core/index.js";
+import type {channel_group} from "#interfaces/index.js";
+import type {MultiValue} from "react-select";
+import type {group_channel_token} from "#interfaces/client_core/application.js";
 
-export let  PlotChannelGroupProperties = props =>{
+interface PlotChannelGroupPropertiesProps{
+    application: up_application,
+    group: channel_group,
+    forceUpdate: ()=>void,
+}
+export let  PlotChannelGroupProperties = (props:PlotChannelGroupPropertiesProps) =>{
 
     const [channels_list, set_channels_list] = useState(props.group.channels);
 
@@ -30,39 +38,31 @@ export let  PlotChannelGroupProperties = props =>{
         return {label:ch.name, value:ch.id}
     });
 
-    let handleChangeDefault = (target)=>{
-        let app = new up_application(props.application);
-        app.edit_channel_group(props.group.group_name, target.name, target.checked).then(()=>{
-            props.forceUpdate();
-        });
+    let handleChangeDefault = async (target:  {name: string, checked: boolean})=>{
+        await props.application.edit_channel_group(props.group.group_name, target.name, target.checked);
+        props.forceUpdate();
     }
 
 
-    let handleChange = (event)=>{
-        if(event.length<=6){
-            set_channels_list(event);
-            let app = new up_application(props.application);
-            app.edit_channel_group(props.group.group_name, "channels", event).then(()=>{
-                props.forceUpdate();
-            });
+    let handleChange = async (group: MultiValue<group_channel_token>)=>{
+        if(group.length<=6){
+            set_channels_list([...group]);
+            await props.application.edit_channel_group(props.group.group_name, "channels", group);
+            props.forceUpdate();
         }
 
     }
 
-    let handleonKeyDown = (event) =>{
+    let handleonKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
-            let app = new up_application(props.application);
-            app.edit_channel_group(props.group.group_name, event.target.name, event.target.value).then(()=>{
-                props.forceUpdate();
-            });
+            await props.application.edit_channel_group(props.group.group_name, event.currentTarget.name, event.currentTarget.value);
+            props.forceUpdate();
         }
     }
 
-    let handleRemove= () =>{
-        let app = new up_application(props.application);
-        app.remove_channel_groups(props.group.group_name).then(()=>{
-            props.forceUpdate();
-        });
+    let handleRemove= async () =>{
+        await props.application.remove_channel_groups(props.group.group_name)
+        props.forceUpdate();
     }
 
 
@@ -79,7 +79,7 @@ export let  PlotChannelGroupProperties = props =>{
         >
             <InputField inline id="group_name" name="group_name" defaultValue={props.group.group_name} onKeyDown={handleonKeyDown} label="Name"/>
             <InputField inline id="group_id" name='group_id' defaultValue={props.group.group_id} onKeyDown={handleonKeyDown} label="ID"/>
-            <MultiSelect
+            <MultiSelect<group_channel_token>
                 inline
                 id="content"
                 onChange={handleChange}

@@ -90,7 +90,7 @@ export interface soft_core {
     id: string,
     address: number,
     default_program: string,
-    io:object
+    io: any[]
 }
 
 export interface filter {

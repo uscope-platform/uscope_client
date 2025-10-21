@@ -39,7 +39,7 @@ interface SelectableListItemProps {
     onRemove?: ((name: string) => void )| undefined;
     onSelect: (name: string, multi?: boolean) => void;
     onMouseEnter?: (name: string) => void;
-    iconSize?: number;
+    iconSize?: number | string;
 }
 
 export let  SelectableListItem = (props: SelectableListItemProps) =>{

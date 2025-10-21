@@ -26,7 +26,7 @@ import {
     SoftCoreProperties,
     MiscFieldProperties,
     FilterProperties,
-} from "../Applications/Properties/index"
+} from "../Applications/Properties/index.js"
 
 import {
     TwoColumnSelector,
@@ -34,27 +34,17 @@ import {
     TabbedContent,
     ColorTheme,
     UIPanel
-} from "#UI";
+} from "#UI/index.js";
 
-import {get_next_id, up_application} from "#client_core";
-import ApplicationSidebar from "./ApplicationSidebar";
+import {get_next_id, up_application} from "#client_core/index.js";
+import ApplicationSidebar from "./ApplicationSidebar.js";
 import {MdAdd} from "react-icons/md";
 import {useAppSelector} from "#redux/hooks.js";
 
-const empty_app = {
-    channels:[],
-    channel_groups:[],
-    initial_registers_values:[],
-    macro:[],
-    parameters:[],
-    peripherals:[],
-    soft_cores:[],
-    filters:[],
-    scripts:[],
-    programs:[]
-};
 
-let  ApplicationsManager = props =>{
+interface ApplicationsManagerProps {}
+
+let  ApplicationsManager = (props: ApplicationsManagerProps) =>{
 
     const applications = useAppSelector(state => state.applications);
     const peripherals = useAppSelector(state => state.peripherals);
@@ -62,25 +52,26 @@ let  ApplicationsManager = props =>{
     const programs = useAppSelector(state => state.programs);
     const scripts = useAppSelector(state => state.scripts);
 
-    const [selected_app, set_selected_app] = useState(empty_app);
+    const [selected_app, set_selected_app] = useState(up_application.construct_empty(9999));
 
     let [selectedTab, set_selectedTab] = useState(0);
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
-    let handle_select = (app) =>{
+    let handle_select = (app: number) =>{
+        if(applications[app] === undefined) return;
         set_selected_app(new up_application(applications[app]));
     }
 
     const calculate_selected_scripts = () =>{
         return  selected_app.scripts.map((scr)=>{
-            if(scripts.hasOwnProperty(scr)){
-                return scripts[scr].name;
-            }
-        });
+            let script = scripts[scr];
+            if(script === undefined) return;
+            return script.name;
+        }).filter((val)=>{return val !== undefined;})
     }
 
-    const calculate_available_scripts = (sel_s)=>{
+    const calculate_available_scripts = (sel_s: string[])=>{
         return Object.values(scripts).filter((val)=>{
             return !sel_s.includes(val.name);
         }).map((scr)=>{
@@ -93,14 +84,14 @@ let  ApplicationsManager = props =>{
 
     const calculate_selected_programs = () =>{
         return selected_app.programs.map((prg)=>{
-            if(programs.hasOwnProperty(prg)){
-                return programs[prg].name;
-            }
-        });
+            let program = programs[prg];
+            if(program === undefined) return;
+            return program.name;
+        }).filter((val)=>{return val !== undefined;});
     }
 
 
-    const calculate_available_programs = (sel_p)=>{
+    const calculate_available_programs = (sel_p : string[])=>{
         return Object.values(programs).filter((val)=>{
             return !sel_p.includes(val.name);
         }).map((prg)=>{
@@ -124,34 +115,34 @@ let  ApplicationsManager = props =>{
         set_available_programs(new_available_programs);
     }, [selected_app]);
 
-    let add_content = (name, type) =>{
+    let add_content = async (id: number, type: string) =>{
         switch (type) {
             case "channel_group":
-                selected_app.add_channel_group(name).then();
+                await selected_app.add_channel_group(id);
                 break;
             case "channel":
-                selected_app.add_channel(name).then();
+                await selected_app.add_channel(id);
                 break;
             case "irv":
-                selected_app.add_irv(name).then();
+                await selected_app.add_irv(id);
                 break;
             case"macro":
-                selected_app.add_macro(name).then();
+                await selected_app.add_macro(id);
                 break;
             case"parameter":
-                selected_app.add_parameter(name).then();
+                await selected_app.add_parameter(id);
                 break;
             case"peripheral":
-                selected_app.add_peripheral(name).then();
+                await selected_app.add_peripheral(id);
                 break;
             case"soft_core":
-                selected_app.add_soft_core(name).then();
+                await selected_app.add_soft_core(id);
                 break;
             case "misc":
-                selected_app.set_misc_param(name).then();
+                await selected_app.set_misc_param(id);
                 break;
             case "filter":
-                selected_app.add_filter(name).then();
+                await selected_app.add_filter(id);
                 break;
             default:
                 return;
@@ -160,42 +151,42 @@ let  ApplicationsManager = props =>{
     }
 
 
-    let handle_add_new = (item_type, old_items, title_prop) =>{
-        let ids = 3;
+    let handle_add_new = (item_type: string, old_items: any, title_prop: string) =>{
+        let ids: number[] =[];
         if(item_type=== "irv"){
             add_content(0, item_type);
             return;
-        } else if(item_type === "misc"){
+        }else if(item_type === "misc"){
             ids = Object.keys(old_items).map((item)=>{
-                const regex = new RegExp("new_"+item_type+"_(\\d+)", 'g');
+                const regex = new RegExp("new_parameter_(\\d+)", 'g');
                 let match = Array.from(item.matchAll(regex), m => m[1]);
-                if(match.length>0){
-                    return match;
+                if(match.length>0 && match[0] !== undefined){
+                    return  parseInt(match[0]);
                 } else{
-                    return null;
+                    return;
                 }
-            });
+            }).filter((id)=>{return id !== undefined;});
         } else {
-             ids = Object.values(old_items).map((item)=>{
+             ids = Object.values(old_items).map((item: any)=>{
                 const regex = new RegExp("new_"+item_type+"_(\\d+)", 'g');
-                let match = Array.from(item[title_prop].matchAll(regex), m => m[1]);
-                if(match.length>0){
-                    return match;
-                } else{
-                    return null;
-                }
-            });
+                 let match = Array.from((item[title_prop] as string).matchAll(regex), m => m[1]);
+                 if(match.length>0 && match[0] !== undefined){
+                     return  parseInt(match[0]);
+                 } else{
+                     return;
+                 }
+            }).filter((id)=>{return id !== undefined;});
         }
 
         ids = ids.filter(Boolean);
-        let name ="new_" + item_type + "_" + get_next_id(ids.sort());
-        add_content(name, item_type);
+        let selected_id = get_next_id(ids.sort())
+        add_content(selected_id, item_type);
     }
 
 
 
-    let handleDeselectScript = (id) =>{
-        selected_app.remove_selected_script(id).then(()=>{
+    let handleDeselectScript = (id: string) =>{
+        selected_app.remove_selected_script(parseInt(id)).then(()=>{
             let sel_s = calculate_selected_scripts();
             let av_s = calculate_available_scripts(sel_s);
             set_selected_scripts(sel_s);
@@ -203,8 +194,8 @@ let  ApplicationsManager = props =>{
         });
     }
 
-    let handleSelectScript = (id) =>{
-        selected_app.add_selected_script(id).then(()=>{
+    let handleSelectScript = (id: string) =>{
+        selected_app.add_selected_script(parseInt(id)).then(()=>{
             let sel_s = calculate_selected_scripts();
             let av_s = calculate_available_scripts(sel_s);
             set_selected_scripts(sel_s);
@@ -213,8 +204,8 @@ let  ApplicationsManager = props =>{
     }
 
 
-    let handleDeselectPrograms = (id) =>{
-        selected_app.remove_selected_program(id).then(()=>{
+    let handleDeselectPrograms = (id: string) =>{
+        selected_app.remove_selected_program(parseInt(id)).then(()=>{
             let sel_p = calculate_selected_programs();
             let av_p = calculate_available_programs(sel_p);
             set_selected_programs(sel_p);
@@ -222,8 +213,8 @@ let  ApplicationsManager = props =>{
         });
     }
 
-    let handleSelectPrograms = (id) =>{
-        selected_app.add_selected_program(id).then(()=>{
+    let handleSelectPrograms = (id: string) =>{
+        selected_app.add_selected_program(parseInt(id)).then(()=>{
             let sel_p = calculate_selected_programs();
             let av_p = calculate_available_programs(sel_p);
             set_selected_programs(sel_p);
