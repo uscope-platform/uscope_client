@@ -17,14 +17,9 @@ import React, {type CSSProperties, useContext, useEffect, useState} from 'react'
 import {InputField, SelectField, SimpleContent, UIPanel} from "#UI/index.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
 import {up_application, up_settings} from "#client_core/index.js";
-import type {ActionMeta} from "react-select";
+import type {SimpleStringOption} from "#UI/Select.js";
 
 interface SettingsViewProps {
-}
-
-interface DebuggerOption {
-    label: string;
-    value: string;
 }
 
 let SettingsView = function (props: SettingsViewProps) {
@@ -75,13 +70,13 @@ let SettingsView = function (props: SettingsViewProps) {
         }
     }
 
-    let handle_set_debug_level =async (value:  DebuggerOption | null, event: ActionMeta<DebuggerOption>) =>{
+    let handle_set_debug_level =async (value:  SimpleStringOption | null) =>{
         if(value===null) return;
         await up_settings.set_debug_level(value.value);
         set_debug_level(value);
     }
 
-    let handle_multichannel_debug =async (value: DebuggerOption | null, event: ActionMeta<DebuggerOption>) =>{
+    let handle_multichannel_debug =async (value: SimpleStringOption | null) =>{
         if(value===null) return;
         await up_settings.set_debugger_option("multichannel_debug", value.value=== "true");
         set_multichannel_debug(value);
@@ -185,7 +180,7 @@ let SettingsView = function (props: SettingsViewProps) {
             <UIPanel key="platform_settings" style={{minHeight:"100px"}} level="level_2">
                 <SimpleContent name="Platform settings">
                     <div>
-                        <SelectField<DebuggerOption>
+                        <SelectField<SimpleStringOption>
                             label="Driver Log Level"
                             onChange={handle_set_debug_level}
                             value={debug_level}
@@ -196,7 +191,7 @@ let SettingsView = function (props: SettingsViewProps) {
                                 {label:"trace", value:"trace"}
                             ]}
                         />
-                        <SelectField<DebuggerOption>
+                        <SelectField<SimpleStringOption>
                             label="Multichannel debug"
                             onChange={handle_multichannel_debug}
                             value={multichannel_debug}

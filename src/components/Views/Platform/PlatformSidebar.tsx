@@ -23,7 +23,7 @@ import {
 
 import {get_users_list, remove_user} from "#client_core/index.js";
 import {MdPerson} from "react-icons/md";
-import type {user_model} from "#interfaces/client_core/proxy/types.js";
+import type {user_model} from "#interfaces/index.js";
 
 interface PlatformSidebarProps {
     on_select: (username: string) => void;

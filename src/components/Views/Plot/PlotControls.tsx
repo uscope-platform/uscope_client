@@ -16,30 +16,37 @@
 import React from 'react';
 
 import {MdDownload, MdPause, MdPlayArrow, MdStop} from 'react-icons/md'
-import styled from "styled-components";
-import {ColorTheme} from "#UI";
+import {styled} from "goober";
+import {ColorTheme} from "#UI/index.js";
 
-const ComponentStyle = styled.div`
+const ComponentStyle = styled('div')`
   display: flex;
   justify-content: center;
   flex-direction: row;
 `
 
-let  PlotControls = props =>{
+interface PlotControlsProps {
+    onPlay?: () => void,
+    onPause?: () => void,
+    onStop?: () => void,
+    onDownload?: () => void,
+}
 
-    let onClick = (event) => {
-        switch (event.target.id) {
+let  PlotControls = (props: PlotControlsProps) =>{
+
+    let onClick = (event: React.MouseEvent<SVGElement, MouseEvent>) => {
+        switch (event.currentTarget.id) {
             case "play":
-                props.onPlay();
+                if(props.onPlay) props.onPlay();
                 break;
             case "pause":
-                props.onPause();
+                if(props.onPause) props.onPause();
                 break;
             case "stop":
-                props.onStop();
+                if(props.onStop) props.onStop();
                 break;
             case "download":
-                props.onDownload();
+                if(props.onDownload) props.onDownload();
                 break;
             default:
                 break;

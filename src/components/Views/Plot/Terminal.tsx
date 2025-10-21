@@ -14,17 +14,23 @@
 // limitations under the License.
 
 import React, {useEffect, useRef} from "react";
-import {init_terminal} from "#client_core";
+import {init_terminal} from "#client_core/index.js";
 import 'xterm/css/xterm.css';
 
-let TerminalComponent = props =>{
+interface TerminalProps {
 
-    const term = useRef(null);
+}
+
+let TerminalComponent = (props: TerminalProps) =>{
+
+    const term = useRef<ReturnType<typeof init_terminal> | null>(null);
     const hasInitialized = useRef(false);
 
     useEffect(()=>{
         if(!hasInitialized.current){
-            term.current = init_terminal();
+            let terminal = init_terminal();
+            if(terminal === undefined) return;
+            term.current = terminal;
             hasInitialized.current = true;
         }
 

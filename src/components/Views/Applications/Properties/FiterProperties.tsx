@@ -23,7 +23,7 @@ import {
 
 import {up_application, up_filter, up_peripheral} from "#client_core/index.js";
 import type {filter, peripheral_instance} from "#interfaces/index.js";
-import type {ActionMeta} from "react-select";
+import type {SimpleStringOption} from "#UI/Select.js";
 
 interface FilterPropertiesProps{
     application: up_application,
@@ -31,11 +31,6 @@ interface FilterPropertiesProps{
     forceUpdate: ()=>void,
     peripherals: peripheral_instance[],
     filter_designs: Record<number, up_filter>
-}
-
-interface FilterSelectOption {
-    label: string;
-    value: string;
 }
 
 export let  FilterProperties = (props: FilterPropertiesProps) =>{
@@ -54,10 +49,10 @@ export let  FilterProperties = (props: FilterPropertiesProps) =>{
     });
 
 
-    let init_peripheral_value: FilterSelectOption = props.filter.peripheral ? {label:props.filter.peripheral, value:props.filter.peripheral} : {label:"", value:""};
+    let init_peripheral_value: SimpleStringOption = props.filter.peripheral ? {label:props.filter.peripheral, value:props.filter.peripheral} : {label:"", value:""};
     const [selected_periph, set_selected_periph] = useState(init_peripheral_value);
 
-    let init_design_value: FilterSelectOption = props.filter.filter_name ? {label:props.filter.filter_name, value:props.filter.filter_name} : {label:"", value:""};
+    let init_design_value: SimpleStringOption = props.filter.filter_name ? {label:props.filter.filter_name, value:props.filter.filter_name} : {label:"", value:""};
     const [selected_design, set_selected_design] = useState(init_design_value);
 
 
@@ -78,13 +73,13 @@ export let  FilterProperties = (props: FilterPropertiesProps) =>{
         props.forceUpdate();
     }
 
-    let handleHardwareChange = async (change: FilterSelectOption | null, event: ActionMeta<FilterSelectOption>)=>{
+    let handleHardwareChange = async (change: SimpleStringOption | null)=>{
         if(change=== null) return;
         set_selected_periph(change);
         await props.application.edit_filter(props.filter.id,"peripheral", change.value);
         props.forceUpdate();
     }
-    let handleTapsChange = async (change: FilterSelectOption | null, event: ActionMeta<FilterSelectOption>)=>{
+    let handleTapsChange = async (change: SimpleStringOption | null)=>{
         if(change=== null) return;
         set_selected_design(change);
         await props.application.edit_filter(props.filter.id,"filter_name", change.value);
@@ -98,13 +93,13 @@ export let  FilterProperties = (props: FilterPropertiesProps) =>{
         >
             <InputField inline id='id' name='id' onKeyDown={handleonKeyDown} label="ID"/>
 
-            <SelectField<FilterSelectOption>
+            <SelectField<SimpleStringOption>
                 label="Filter Hardware"
                 onChange={handleHardwareChange}
                 value={selected_periph}
                 name="peripheral"
                 options={peripherals}/>
-            <SelectField<FilterSelectOption>
+            <SelectField<SimpleStringOption>
                 label="Filter Design"
                 onChange={handleTapsChange}
                 value={selected_design}

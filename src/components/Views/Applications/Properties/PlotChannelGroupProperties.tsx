@@ -23,7 +23,7 @@ import {
 import {up_application} from "#client_core/index.js";
 import type {channel_group} from "#interfaces/index.js";
 import type {MultiValue} from "react-select";
-import type {group_channel_token} from "#interfaces/client_core/application.js";
+import type {group_channel_token} from "#interfaces/index.js";
 
 interface PlotChannelGroupPropertiesProps{
     application: up_application,

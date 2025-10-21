@@ -17,7 +17,7 @@
  */
 
 import {createSlice, type PayloadAction} from '@reduxjs/toolkit'
-import type {ProgramState} from "#interfaces/redux.js";
+import type {ProgramState} from "#interfaces/index.js";
 import {up_program} from "#client_core/index.js";
 
 const initialState: ProgramState = {}

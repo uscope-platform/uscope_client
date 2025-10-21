@@ -47,7 +47,10 @@ export const initialize_scripting_engine = (application: up_application | null ,
 
 
 export const run_script = (
-    trigger_string: string, parameters: Record<string, number>, current_parameter: string, argument: number
+    trigger_string: string,
+    parameters: Record<string, number>,
+    current_parameter: string,
+    argument: number | null
 ) : register_write[]  =>{
     const scripts = store.getState().scripts;
 

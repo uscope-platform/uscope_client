@@ -18,7 +18,7 @@
 
 
 import {createSlice, type PayloadAction} from '@reduxjs/toolkit'
-import type {EmulatorState} from "#interfaces/redux.js";
+import type {EmulatorState} from "#interfaces/index.js";
 import {up_emulator} from "#client_core/index.js";
 
 const initialState: EmulatorState = {}

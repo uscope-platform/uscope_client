@@ -18,7 +18,7 @@
 
 
 import {createSlice, type PayloadAction} from '@reduxjs/toolkit'
-import type {BitstreamState} from "#interfaces/redux.js";
+import type {BitstreamState} from "#interfaces/index.js";
 import {up_bitstream} from "#client_core/index.js";
 
 const initialState : BitstreamState = {}

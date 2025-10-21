@@ -15,35 +15,36 @@
 
 import React, {useContext, useReducer, useState} from 'react';
 
-import ChannelSelector from "./ChannelSelector";
-import PlotComponent from "./PlotComponent";
-import ParametersArea from "./ParametersArea";
-import MacroActions from "./MacroActions";
-import {ColorTheme, UIPanel, SimpleContent} from "#UI";
-import TerminalComponent from "./Terminal";
-import PlotSidebar from "./Sidebar/PlotSidebar";
-import {create_plot_channel, get_channels_from_group, update_plot_status, get_acquisition_status} from "#client_core";
-import useInterval from "../../Common_Components/useInterval";
+import ChannelSelector from "./ChannelSelector.js";
+import PlotComponent from "./PlotComponent.js";
+import ParametersArea from "./ParametersArea.js";
+import MacroActions from "./MacroActions.js";
+import {ColorTheme, UIPanel, SimpleContent} from "#UI/index.js";
+import TerminalComponent from "./Terminal.js";
+import PlotSidebar from "./Sidebar/PlotSidebar.js";
+import {create_plot_channel, get_channels_from_group, update_plot_status, get_acquisition_status} from "#client_core/index.js";
+import useInterval from "../../Common_Components/useInterval.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
-import {useAppSelector} from "#redux/hooks.js";
+import type {channel_group, plot_channel, ScopeStatus} from "#interfaces/index.js";
 
-let PlotTab = function (props) {
-    const channels = useAppSelector(state => state.channels);
+interface PlotTabProps {}
+
+let PlotTab = function (props: PlotTabProps) {
     const application = useContext(ApplicationContext);
 
     const [plot_status, set_plot_status] = useState(false);
-    const [plot_palette, set_plot_palette] = useState({colorway:ColorTheme.plot_palette})
-    const [external_data, set_external_data] = useState([]);
+    const [plot_palette, set_plot_palette] = useState<{ colorway: string[] }>({colorway:[...ColorTheme.plot_palette]})
+    const [external_data, set_external_data] = useState<plot_channel[]>([]);
     const [external_revision, bump_ext_revision] = useReducer(x => x+1, 0);
-    const [request_download, set_request_download] = useState(false);
+    const [request_download, set_request_download] = useState(0);
     const [selected_group, set_selected_group] = useState(application.get_default_channel_group().group_name);
-    let [acquisition_status, set_acquisition_status] = useState("wait");
+    let [acquisition_status, set_acquisition_status] = useState<ScopeStatus>("wait");
 
 
-    const handle_group_change = async (group) =>{
+    const handle_group_change = async (group: channel_group) =>{
         let channels = get_channels_from_group(group, application.channels);
 
-        let ch_obj = [];
+        let ch_obj: plot_channel[] = [];
         for(let item of channels){
             ch_obj.push(create_plot_channel(item))
         }
@@ -54,12 +55,13 @@ let PlotTab = function (props) {
 
     }
 
-    let handle_channel_status_change = async (new_state) => {
+    let handle_channel_status_change = async (new_state: Record<number, boolean>) => {
         set_external_data(update_plot_status(external_data, new_state));
         let palette = [];
         for(let item in new_state){
             if(new_state[item]){
-                palette.push(ColorTheme.plot_palette[parseInt(item)]);
+                let color = ColorTheme.plot_palette[parseInt(item)];
+                if(color) palette.push(color);
             }
         }
         set_plot_palette({colorway: palette});
@@ -100,9 +102,7 @@ let PlotTab = function (props) {
                             <SimpleContent name="Channel Selector">
                                 <ChannelSelector
                                     data={external_data}
-                                    onPaletteChange={set_plot_palette}
                                     on_channel_status_change={handle_channel_status_change}
-                                    channels={channels}
                                 />
                             </SimpleContent>
                         </UIPanel>

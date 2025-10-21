@@ -15,23 +15,29 @@
 
 import React, {useCallback, useContext, useState} from 'react';
 
-import {FormLayout,SelectField} from "#UI";
+import {FormLayout,SelectField} from "#UI/index.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
+import type {channel_group} from "#interfaces/index.js";
+import type {SimpleStringOption} from "#UI/Select.js";
+
+interface ScopePropertiesProps {
+    on_group_change: (group: channel_group) => void;
+}
 
 
-let  EnablesProperties = props =>{
+let  ScopeProperties = (props: ScopePropertiesProps) =>{
 
     const application = useContext(ApplicationContext);
 
     let default_group = application.get_default_channel_group().group_name;
     const [selected, set_selected] = useState({label:default_group, value:default_group});
 
-    const group_options = application.channel_groups.map((group,i) => (
+    const group_options = application.channel_groups.map((group: channel_group,i: number) => (
         {label:group.group_name, value:group.group_name}
     ));
 
-    let handleChGroupChange = useCallback((object) => {
-
+    let handleChGroupChange = useCallback((object: SimpleStringOption | null) => {
+        if(object === null)return;
         set_selected(object);
         let group = application.get_group_by_name(object.value)
         props.on_group_change(group)
@@ -41,7 +47,7 @@ let  EnablesProperties = props =>{
     return (
         <div style={{padding:"1rem"}}>
             <FormLayout>
-                <SelectField
+                <SelectField<SimpleStringOption>
                     label="Channel Group"
                     name="channel_group"
                     onChange={handleChGroupChange}
@@ -53,4 +59,4 @@ let  EnablesProperties = props =>{
     );
 };
 
-export default EnablesProperties;
+export default ScopeProperties;

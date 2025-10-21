@@ -23,7 +23,7 @@ import type {
     PeripheralsState,
     register_field_upsert_action,
     register_register_upsert_action, remove_field_action, remove_register_action
-} from "#interfaces/redux.js";
+} from "#interfaces/index.js";
 
 const initialState: PeripheralsState= {}
 

@@ -19,7 +19,8 @@ import {Card, InputField, SelectField} from "#UI/index.js";
 import {up_application} from "#client_core/index.js";
 import {CoreDmaIo} from "./CoreDmaIo.jsx";
 import type {soft_core} from "#interfaces/index.js";
-import type {ProgramState} from "#interfaces/redux.js";
+import type {ProgramState} from "#interfaces/index.js";
+import type {SimpleStringOption} from "#UI/Select.js";
 
 interface SoftCorePropertiesProps {
     application: up_application,
@@ -28,19 +29,15 @@ interface SoftCorePropertiesProps {
     forceUpdate: ()=>void,
 }
 
-interface ProgramSelectOption{
-    label: string,
-    value: string
-}
 
 export let  SoftCoreProperties = (props: SoftCorePropertiesProps) =>{
 
 
-    let programs_list = (): ProgramSelectOption[] =>{
+    let programs_list = (): SimpleStringOption[] =>{
         return Object.keys(props.programs).map((prog_id: string) => {
             let program = props.programs[parseInt(prog_id)];
             if (program !== undefined) return {label: program.name, value: program.name};
-        }).flat().filter((opt: ProgramSelectOption | undefined) => {
+        }).flat().filter((opt: SimpleStringOption | undefined) => {
             return opt !== undefined;
         });
     };
@@ -52,7 +49,7 @@ export let  SoftCoreProperties = (props: SoftCorePropertiesProps) =>{
 
 
 
-    let handleProgramChange = (option: ProgramSelectOption| null)=>{
+    let handleProgramChange = (option: SimpleStringOption| null)=>{
         if(option === null) return;
         set_selected(option);
         props.application.edit_soft_core(props.core.id,"default_program", option.value).then(()=>{
@@ -87,7 +84,7 @@ export let  SoftCoreProperties = (props: SoftCorePropertiesProps) =>{
         >
             <InputField inline id="id" name="id" defaultValue={props.core.id} onKeyDown={handleonKeyDown} label="Core ID"/>
             <InputField inline id="address" name='address' defaultValue={props.core.address.toString()} onKeyDown={handleonKeyDown} label="Address"/>
-            <SelectField<ProgramSelectOption>
+            <SelectField<SimpleStringOption>
                 label="Default Program"
                 onChange={handleProgramChange}
                 value={selected}

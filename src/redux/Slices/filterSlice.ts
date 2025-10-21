@@ -17,7 +17,7 @@
  */
 
 import {createSlice, type PayloadAction} from '@reduxjs/toolkit'
-import type {FilterState} from "#interfaces/redux.js";
+import type {FilterState} from "#interfaces/index.js";
 import {up_filter} from "#client_core/index.js";
 
 const initialState: FilterState = {}

@@ -15,27 +15,32 @@
 
 import React, {useContext} from 'react';
 
-import {Button} from "#UI"
-import styled from "styled-components";
+import {Button} from "#UI/index.js"
+import {styled} from "goober";
 
-import {run_script, up_peripheral} from "#client_core";
+import {run_script, up_peripheral} from "#client_core/index.js";
 
 import {ApplicationContext} from "#src/AuthApp.jsx";
+import type {macro} from "#interfaces/index.js";
 
 
-const ButtonGrid = styled.div`
+const ButtonGrid = styled('div')`
     display: flex;
     flex-wrap: wrap;
     justify-items: center;
     gap: 1em;
 `
 
-let  MacroActions = props =>{
+interface MacroActionProps {
+    macro: macro[]
+}
+
+let  MacroActions = (props: MacroActionProps) =>{
 
     const application = useContext(ApplicationContext);
 
-    let onClick = async (event) => {
-        let trigger_str = event.target.name;
+    let onClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+        let trigger_str = event.currentTarget.name;
         let params = application.get_parameters_map();
         let bulk_registers = run_script(trigger_str, params, "", null);
         if(bulk_registers !== null){

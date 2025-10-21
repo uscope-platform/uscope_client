@@ -18,7 +18,7 @@ import React, {useEffect, useState} from 'react';
 import {Button, SelectField} from "#UI/index.js"
 import {styled} from "goober";
 import type {application} from "#interfaces/index.js";
-import type {ActionMeta} from "react-select";
+import type {SimpleNumberOption} from "#UI/Select.js";
 
 
 const ComponentLayout = styled('div')`
@@ -36,10 +36,6 @@ interface ApplicationChooserViewProps {
     done: (application_id: number) => void;
 }
 
-interface AppChooserOption {
-    label: string;
-    value: number;
-}
 
 let ApplicationChooserView = (props: ApplicationChooserViewProps) =>{
 
@@ -68,7 +64,7 @@ let ApplicationChooserView = (props: ApplicationChooserViewProps) =>{
 
 
 
-    let handle_select = (value: AppChooserOption | null, event: ActionMeta<AppChooserOption>) =>{
+    let handle_select = (value: SimpleNumberOption | null) =>{
         if(!value) return;
         set_selected(value);
     }
@@ -81,7 +77,7 @@ let ApplicationChooserView = (props: ApplicationChooserViewProps) =>{
     return(
         <ComponentLayout>
             <Centering>
-                <SelectField<AppChooserOption>
+                <SelectField<SimpleNumberOption>
                     name="application_selector"
                     label="Chose An Application"
                     onChange={handle_select}

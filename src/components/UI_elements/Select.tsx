@@ -33,6 +33,15 @@ export interface DefaultOption {
     value: string | number | unknown;
 }
 
+export interface SimpleStringOption  {
+    label: string;
+    value: string;
+}
+
+export interface SimpleNumberOption  {
+    label: string;
+    value: number;
+}
 
 interface SelectFieldProps<Option extends DefaultOption=DefaultOption> {
     onChange: (value: Option | null, event: ActionMeta<Option>) => void;

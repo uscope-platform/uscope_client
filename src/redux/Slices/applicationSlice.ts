@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import {createSlice, type PayloadAction} from '@reduxjs/toolkit'
-import type {ApplicationsState, parameter_save_action} from "#interfaces/redux.js";
+import type {ApplicationsState, parameter_save_action} from "#interfaces/index.js";
 import {up_application} from "#client_core/index.js";
 
 const initialState: ApplicationsState = {}

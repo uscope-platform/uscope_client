@@ -24,7 +24,7 @@ import {
 import {MdAdd, MdDelete} from "react-icons/md";
 import {useAppSelector} from "#redux/hooks.js";
 import type {soft_core} from "#interfaces/index.js";
-import type {ActionMeta} from "react-select";
+import type {SimpleStringOption} from "#UI/Select.js";
 
 
 const List = styled('div')`
@@ -50,10 +50,6 @@ interface  CoreDmaIoProps {
     forceUpdate: ()=>void,
 }
 
-interface CoreIoOptions {
-    label: string,
-    value: string
-}
 
 export let  CoreDmaIo = (props: CoreDmaIoProps) =>{
 
@@ -128,7 +124,7 @@ export let  CoreDmaIo = (props: CoreDmaIoProps) =>{
 
     }
 
-    let handle_change_type = async (change:CoreIoOptions | null, event:ActionMeta<CoreIoOptions>) =>{
+    let handle_change_type = async (change:SimpleStringOption | null) =>{
         if(change === null) return;
         let new_io = props.core.io.map((io)=>{
             if(sel_logic_io === io.name){
@@ -143,7 +139,7 @@ export let  CoreDmaIo = (props: CoreDmaIoProps) =>{
         props.forceUpdate();
     }
 
-    let handle_change_core_io =async (change:CoreIoOptions | null, event:ActionMeta<CoreIoOptions>) =>{
+    let handle_change_core_io =async (change:SimpleStringOption | null) =>{
         if(change === null) return;
         let new_io = props.core.io.map((io)=>{
             if(sel_logic_io === io.name){
@@ -211,7 +207,7 @@ export let  CoreDmaIo = (props: CoreDmaIoProps) =>{
            return <div style={{display: "flex", flexDirection: "column"}}>
                <InputField inline id={selected_io.name} name='name' defaultValue={selected_io.name}
                            onKeyDown={handle_edit_logic_io} label="Name"/>
-               <SelectField<CoreIoOptions>
+               <SelectField<SimpleStringOption>
                    label="Type"
                    onChange={handle_change_type}
                    value={{value: selected_io.type, label: selected_io.type}}
@@ -223,7 +219,7 @@ export let  CoreDmaIo = (props: CoreDmaIoProps) =>{
                        {label: "memory", value: "memory"}
                    ]}
                />
-               <SelectField<CoreIoOptions>
+               <SelectField<SimpleStringOption>
                    label="Associated Core IO"
                    onChange={handle_change_core_io}
                    value={{value:selected_io.associated_io, label:selected_io.associated_io}}

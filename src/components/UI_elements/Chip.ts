@@ -15,9 +15,10 @@
 
 import { styled } from 'goober';
 import {ColorTheme} from "./ColorTheme.js";
+import type {ScopeStatus} from "#interfaces/index.js";
 
 interface ChipProps {
-    status: keyof typeof ColorTheme.scope_status;
+    status: ScopeStatus;
 }
 
 

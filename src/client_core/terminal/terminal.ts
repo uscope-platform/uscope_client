@@ -31,7 +31,7 @@ export let terminal: Terminal;
 
 const fitAddon = new FitAddon();
 
-export const init_terminal = () => {
+export const init_terminal = (): Terminal | undefined => {
     terminal = new Terminal({
         convertEol: true,
         fontFamily: `'Fira Mono', monospace`,

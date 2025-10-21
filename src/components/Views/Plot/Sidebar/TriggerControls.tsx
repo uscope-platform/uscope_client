@@ -16,12 +16,25 @@
 
 import React, {useContext, useEffect, useState} from 'react';
 
-import {Chip, InputField, SelectField} from "#UI";
-import PlotControls from "../PlotControls";
-import {get_ui_state, save_ui_state, set_acquisition} from "#client_core";
+import {Chip, InputField, SelectField} from "#UI/index.js";
+import PlotControls from "../PlotControls.jsx";
+import {get_ui_state, save_ui_state, set_acquisition} from "#client_core/index.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
+import type {ActionMeta} from "react-select";
+import type {SimpleStringOption} from "#UI/Select.js";
+import type {scope_control, ScopeStatus} from "#interfaces/index.js";
 
-let  TriggerControls = props =>{
+interface TriggerControlsProps {
+    showAcquisitionStatus: boolean;
+    onPlay: () => void;
+    onPause: () => void;
+    onDownload: () => void;
+    onStop?: () => void;
+    acquisition_status: ScopeStatus;
+}
+
+
+let  TriggerControls = (props: TriggerControlsProps) =>{
 
     const application = useContext(ApplicationContext);
 
@@ -34,7 +47,7 @@ let  TriggerControls = props =>{
         tb_prescaler:0,
     }))
 
-    let update_control_state = (state) =>{
+    let update_control_state = (state: scope_control) =>{
         set_controls_state(state);
         save_ui_state(application,'trigger_and_acquisition', state);
     }
@@ -43,7 +56,7 @@ let  TriggerControls = props =>{
 
     let [past_acq_state, set_past_acq_state] = useState({});
 
-    let handle_select = (value, event) =>{
+    let handle_select = (value: SimpleStringOption | null, event: ActionMeta<SimpleStringOption>) =>{
         switch (event.name) {
             case "trigger_mode":
                 update_control_state({...controls_state, trigger_mode: value});
@@ -59,7 +72,7 @@ let  TriggerControls = props =>{
     }
 
     useEffect(() => {
-        let next_acq = {
+        let next_acq: scope_control = {
             level: controls_state.trigger_level,
             level_type: "int",
             mode: controls_state.acquisition_mode.value,
@@ -78,24 +91,24 @@ let  TriggerControls = props =>{
 
 
 
-    let handle_set_value = (event) =>{
+    let handle_set_value = (event: React.KeyboardEvent<HTMLInputElement>) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
-            switch (event.target.name) {
+            switch (event.currentTarget.name) {
                 case "trigger_level":
-                    if(event.target.value.match("^\\d+(\\.\\d+)?")) {
-                        update_control_state({...controls_state, trigger_level: parseFloat(event.target.value)});
+                    if(event.currentTarget.value.match("^\\d+(\\.\\d+)?")) {
+                        update_control_state({...controls_state, trigger_level: parseFloat(event.currentTarget.value)});
                         set_remote_version(remote_version + 1);
                     }
                     break;
                 case "trigger_point":
-                    if(event.target.value.match("^\\d+")) {
-                        update_control_state({...controls_state, trigger_point: parseInt(event.target.value)});
+                    if(event.currentTarget.value.match("^\\d+")) {
+                        update_control_state({...controls_state, trigger_point: parseInt(event.currentTarget.value)});
                         set_remote_version(remote_version + 1);
                     }
                     break;
                 case  "tb_prescaler":
-                    if(event.target.value.match("^\\d+")) {
-                        update_control_state({...controls_state, tb_prescaler: parseInt(event.target.value)});
+                    if(event.currentTarget.value.match("^\\d+")) {
+                        update_control_state({...controls_state, tb_prescaler: parseInt(event.currentTarget.value)});
                         set_remote_version(remote_version + 1);
                     }
                     break;
@@ -129,8 +142,7 @@ let  TriggerControls = props =>{
                 onKeyDown={handle_set_value}
                 label="Trigger point"
             />
-            <SelectField
-                inline
+            <SelectField<SimpleStringOption>
                 label="Acquisition mode"
                 onChange={handle_select}
                 value={controls_state.acquisition_mode}
@@ -141,8 +153,7 @@ let  TriggerControls = props =>{
                     {label:"free_running", value:"free_running"}
                 ]}
             />
-            <SelectField
-                inline
+            <SelectField<SimpleStringOption>
                 label="Trigger Source"
                 onChange={handle_select}
                 value={controls_state.trigger_source}
@@ -156,8 +167,7 @@ let  TriggerControls = props =>{
                     {label:"6", value:"6"},
                 ]}
             />
-            <SelectField
-                inline
+            <SelectField<SimpleStringOption>
                 label="Trigger mode"
                 onChange={handle_select}
                 value={controls_state.trigger_mode}

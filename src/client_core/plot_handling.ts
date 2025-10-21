@@ -15,9 +15,9 @@
 
 
 import {direct_fetch} from "./proxy/plot.js";
-import type {application, channel, channel_group} from "#interfaces/index.js";
+import type {application, channel, channel_group, plot_channel} from "#interfaces/index.js";
 
-export let create_plot_channel = (ch: channel) => {
+export let create_plot_channel = (ch: channel): plot_channel => {
     return ({
         x: Array.from(Array(1024).keys()),
         y: Array(1024).fill(0),

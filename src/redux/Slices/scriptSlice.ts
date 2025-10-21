@@ -18,7 +18,7 @@
 
 
 import {createSlice, type PayloadAction} from '@reduxjs/toolkit'
-import type {ScriptState} from "#interfaces/redux.js";
+import type {ScriptState} from "#interfaces/index.js";
 import {up_script} from "#client_core/index.js";
 
 const initialState : ScriptState= {}

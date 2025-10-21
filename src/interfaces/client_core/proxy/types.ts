@@ -43,6 +43,9 @@ export interface scope_control {
     trigger_point:number
 }
 
+export type ScopeStatus = "unknown" | "run" | "free run" | "wait" | "stop";
+
+
 export interface scope_settings{
     address:number,
     dma_buffer_offset: number

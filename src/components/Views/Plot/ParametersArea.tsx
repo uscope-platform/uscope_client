@@ -15,29 +15,41 @@
 
 import React, {useEffect} from 'react';
 
-import {Button, FormLayout, InputField} from "#UI"
-import {run_parameter_script} from "#client_core";
+import {Button, FormLayout, InputField} from "#UI/index.js"
+import {run_parameter_script} from "#client_core/index.js";
+import type {parameter} from "#interfaces/index.js";
 
-let  ParametersArea = props =>{
+interface ParametersAreaProps {
+    parameters: parameter[]
+}
+
+let  ParametersArea = (props: ParametersAreaProps) =>{
 
     //This effect hook initializes the parameters values
     useEffect(() => {
         for(let elem of props.parameters){
             let local_elem = elem;
-            local_elem.name = elem.parameter_id;
-            run_parameter_script( local_elem.name, local_elem.value).then();
+            local_elem.parameter_name = elem.parameter_id;
+            let value = "";
+            if(typeof local_elem.value === "number" ){
+                value = local_elem.value.toString();
+            } else{
+                value = local_elem.value;
+            }
+            run_parameter_script( local_elem.parameter_name, value);
         }
     }, []);
 
 
-    let handleSubmit = event => {
+    let handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        for(let parameter of event.target){
+        Array.from(event.currentTarget.elements).map((e) => {
             //Parse parameter value and find out if it has changed
+            let parameter= e as HTMLInputElement;
             if(parameter.value !== ""){
-                run_parameter_script( parameter.name, parameter.value).then();
+                run_parameter_script( parameter.name, parameter.value);
             }
-        }
+        });
     };
 
     return(
@@ -48,8 +60,8 @@ let  ParametersArea = props =>{
                             if(param.visible){
                                 return(
                                     <InputField
-                                        description={param.description}
-                                        placeholder={param.value}
+                                        description=""
+                                        placeholder={param.value.toString()}
                                         name={param.parameter_id}
                                         label={param.parameter_id}
                                     />

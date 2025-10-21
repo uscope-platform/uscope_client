@@ -15,27 +15,36 @@
 
 import React from 'react';
 
-import {Checkbox, ColorTheme} from "#UI";
-import styled from "styled-components";
+import {Checkbox, ColorTheme} from "#UI/index.js";
+import {styled} from "goober";
 import {MdRemove} from "react-icons/md";
 
-const Centering = styled.div`
+const Centering = styled('div')`
   margin: 0 auto;  
   display: flex;
   flex-direction: row;
   width: fit-content;
 `
 
-let  ChannelSelectorItem = props => {
+interface ChannelSelectorItemProps {
+    idx:number,
+    id: string,
+    name: string,
+    value: boolean,
+    onStatusChange: (channel_status: {id: string, status: boolean}) => void;
+}
 
-    function handleChannelStateChange(event){
+let  ChannelSelectorItem = (props: ChannelSelectorItemProps) => {
+
+    function handleChannelStateChange(event: React.ChangeEvent<HTMLInputElement>){
         let channel_status = {id:event.target.name, status:event.target.checked}
         props.onStatusChange(channel_status);
     }
-
+    const selected_color = ColorTheme.plot_palette[props.idx];
+    const channel_color: string = selected_color !== undefined ? selected_color : "rgb(255,0,0)";
     return(
         <Centering>
-            <MdRemove style={{marginTop:"3px"}} color={ColorTheme.plot_palette[props.idx]}/>
+            <MdRemove style={{marginTop:"3px"}} color={channel_color}/>
             <Checkbox style={{marginRight:'0.5rem'}} name={props.id} onChange={handleChannelStateChange} value={props.value} label={props.name}/>
         </Centering>
     );

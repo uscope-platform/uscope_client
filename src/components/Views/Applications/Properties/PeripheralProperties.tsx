@@ -24,7 +24,7 @@ import {
 import {up_application, up_peripheral} from "#client_core/index.js";
 import {HdlParameterProperties} from "./HdlParameterProperties.jsx";
 import type {peripheral_instance} from "#interfaces/index.js";
-import type {ActionMeta} from "react-select";
+import type {SimpleStringOption} from "#UI/Select.js";
 
 interface PeripheralPropertiesProps{
     application: up_application,
@@ -33,18 +33,13 @@ interface PeripheralPropertiesProps{
     forceUpdate: ()=>void,
 }
 
-export interface PeriphIdOption {
-    label: string;
-    value: string;
-}
-
 export let  PeripheralProperties = (props: PeripheralPropertiesProps) =>{
 
     let peripherals_list = Object.entries(props.peripherals).map((periph)=>{
         return {label:periph[1].name, value:periph[0]}
     })
 
-    let initial_value: PeriphIdOption = (()=>{
+    let initial_value: SimpleStringOption = (()=>{
         let p =  Object.values(props.peripherals).filter((p)=>{
             return p.id === parseInt(props.peripheral.spec_id);
         })[0];
@@ -63,7 +58,7 @@ export let  PeripheralProperties = (props: PeripheralPropertiesProps) =>{
         props.forceUpdate();
     }
 
-    let handleIDChange = async (value: PeriphIdOption | null, event: ActionMeta<PeriphIdOption>) =>{
+    let handleIDChange = async (value: SimpleStringOption | null) =>{
         if(value === null)return;
         set_selected(value)
         await props.application.edit_peripheral(props.peripheral.name,"spec_id", value.value);
@@ -116,7 +111,7 @@ export let  PeripheralProperties = (props: PeripheralPropertiesProps) =>{
         >
             <InputField inline id="name" name="name" defaultValue={props.peripheral.name} onKeyDown={handleonKeyDown} label="Name"/>
             <InputField inline id="peripheral_id" name='peripheral_id' defaultValue={props.peripheral.peripheral_id} onKeyDown={handleonKeyDown} label="Peripheral id"/>
-            <SelectField<PeriphIdOption>
+            <SelectField<SimpleStringOption>
                 label="IP type"
                 onChange={handleIDChange}
                 value={selected}

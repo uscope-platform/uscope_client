@@ -16,11 +16,19 @@
 import React, {useReducer} from 'react';
 
 
-import EnablesProperties from "./EnablesProperties";
-import {SimpleContent, UIPanel} from "#UI";
-import TriggerControls from "./TriggerControls";
+import ScopeProperties from "./ScopeProperties.js";
+import {SimpleContent, UIPanel} from "#UI/index.js";
+import TriggerControls from "./TriggerControls.js";
+import type {channel_group, ScopeStatus} from "#interfaces/index.js";
 
-let  PlotSidebar = props =>{
+interface PlotSidebarProps {
+    acquisition_status: ScopeStatus
+    on_plot_status_change: (status: boolean) => void;
+    on_group_change: (group: channel_group) => void;
+    on_download: (req: number) => void;
+}
+
+let  PlotSidebar = (props:PlotSidebarProps) =>{
 
     const [download_req, bump_download_req] = useReducer(x => x + 1, 0);
 
@@ -40,7 +48,7 @@ let  PlotSidebar = props =>{
         }}>
             <UIPanel key="scope_props" data-grid={{x: 0, y: 0, w: 24, h: 2, static: true}} level="level_2">
                 <SimpleContent name="Scope Properties">
-                    <EnablesProperties
+                    <ScopeProperties
                         on_group_change={props.on_group_change}
                     />
                 </SimpleContent>

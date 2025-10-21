@@ -29,7 +29,6 @@ const SettingsView = React.lazy(() => import('./Views/Settings/Settings_view.jsx
 
 interface TabContentProps {
     tab: any;
-    selected_item: any;
 }
 
 let TabContent = (props: TabContentProps) => {
@@ -41,7 +40,7 @@ let TabContent = (props: TabContentProps) => {
         bitstreams: <BitstreamManager />,
         scripts: <ScriptManager/>,
         peripherals:<PeripheralsManager />,
-        applications: <ApplicationsManager selected_item={props.selected_item}/>,
+        applications: <ApplicationsManager/>,
         programs: <ProgramsManager/>,
         platform: <PlatformManager />,
         filters: <FilterManager />,

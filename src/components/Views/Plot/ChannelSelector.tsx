@@ -15,14 +15,20 @@
 
 import React from 'react';
 
-import ChannelSelectorItem from "./ChannelSelectorItem";
+import ChannelSelectorItem from "./ChannelSelectorItem.jsx";
 
-import {get_channel_number_from_id} from "#client_core";
+import {get_channel_number_from_id} from "#client_core/index.js";
+import type {plot_channel} from "#interfaces/index.js";
 
-let ChannelSelector = function(props) {
+interface ChannelSelectorProps {
+    data: plot_channel[],
+    on_channel_status_change: (status: Record<number, boolean>) => void;
+}
+
+let ChannelSelector = function(props: ChannelSelectorProps) {
 
     let get_state = ()=>{
-        let new_ch_state = {}
+        let new_ch_state: Record<number, boolean> = {}
         props.data.map(chan => {
             new_ch_state[chan.spec.number] = chan.visible;
             return 0;
@@ -30,10 +36,10 @@ let ChannelSelector = function(props) {
         return new_ch_state;
     }
 
-    let handle_status_change = status =>{
-        let new_state = get_state();
-        let channel_number = get_channel_number_from_id(status.id, props.data);
-        new_state[parseInt(channel_number)] = status.status;
+    let handle_status_change = (channel_status: {id: string, status: boolean}) =>{
+        let new_state: Record<number, boolean> = get_state();
+        let channel_number = get_channel_number_from_id(channel_status.id, props.data);
+        new_state[parseInt(channel_number)] = channel_status.status;
         props.on_channel_status_change(new_state);
 
     }

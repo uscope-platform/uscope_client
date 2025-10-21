@@ -16,7 +16,7 @@
 import {backend_get, backend_post} from "./backend.js";
 
 import {api_dictionary} from './api_dictionary.js'
-import type {scope_control, scope_data_object, scope_settings} from "#interfaces/index.js";
+import type {scope_control, scope_data_object, scope_settings, ScopeStatus} from "#interfaces/index.js";
 
 
 export const direct_fetch = (): Promise<scope_data_object[]> =>  {
@@ -54,7 +54,7 @@ export const set_scaling_factors = (scaling_factors: number[]) => {
     })
 }
 
-export let get_acquisition_status = () =>{
+export let get_acquisition_status = (): Promise<ScopeStatus> =>{
     return new Promise((resolve, reject)=>{
         backend_get(api_dictionary.operations.acquisition).then((res) => {
             resolve(res)

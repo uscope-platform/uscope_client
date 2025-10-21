@@ -15,22 +15,34 @@
 
 import React, {useContext, useEffect, useReducer, useState} from 'react';
 import Plotly from 'plotly.js-basic-dist';
+//@ts-ignore
 import createPlotlyComponent from 'react-plotly.js/factory';
 
-import {PlotConfigurations} from "#UI";
-import {download_plot, initialize_plot, update_plot_data} from "#client_core";
+import {PlotConfigurations} from "#UI/index.js";
+import {download_plot, initialize_plot, update_plot_data} from "#client_core/index.js";
 import useInterval from "../../Common_Components/useInterval.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
+import type {plot_channel} from "#interfaces/index.js";
 
 const Plot = createPlotlyComponent(Plotly);
 
 
+interface PlotComponentProps {
+    on_data_init: (data: plot_channel[]) => void;
+    selected_group: string;
+    request_download: number;
+    external_data : plot_channel[];
+    plot_status: boolean;
+    on_update_acquisition_status: () => void;
+    external_revision: number;
+    palette: { colorway: string[] }
+}
 
-let  PlotComponent = props =>{
+let  PlotComponent = (props: PlotComponentProps) =>{
 
     const application = useContext(ApplicationContext);
-
-    const [plot_data, set_plot_data] = useState([]);
+    let init_data:plot_channel[] =[]
+    const [plot_data, set_plot_data] = useState(init_data);
     const [data_revision, bump_revision] = useReducer(x => x + 1, 1);
 
     const [acquisition_counter, set_acquisition_counter] = useState(0);
