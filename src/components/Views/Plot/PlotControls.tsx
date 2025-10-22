@@ -28,7 +28,7 @@ const ComponentStyle = styled('div')`
 interface PlotControlsProps {
     onPlay?: () => void,
     onPause?: () => void,
-    onStop?: () => void,
+    onStop?: (() => void) | undefined,
     onDownload?: () => void,
 }
 

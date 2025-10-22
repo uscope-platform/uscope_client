@@ -279,7 +279,7 @@ export class up_emulator {
             name:input_name,
             data:data
         }
-
+        debugger;
         let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
         core.input_data.push(i_d);
 
@@ -364,10 +364,10 @@ export class up_emulator {
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
-    edit_deployment_options = async (core_id: number, options_obj: core_deployment_options) =>{
+    edit_deployment_options = async <K extends keyof core_deployment_options>(core_id: number, field: K, value: core_deployment_options[K]) =>{
 
         let core  = JSON.parse(JSON.stringify(this.cores[core_id]));
-        core.deployment = options_obj;
+        core.deployment[field] = value;
 
 
         let edit = {id:this.id, field:"cores",  action:"edit", value:core};
@@ -627,8 +627,8 @@ export class up_emulator {
     }
 
     get_series_for_input(input_data: core_input_data[], input_obj: core_input, n_channels: number){
-
-        let ret = [];
+        // TODO: This function needs to be checked as the multichannel handling is a bit flaky
+        let ret: any = [];
         let tok = input_obj.source.value[0].split(".");
         for(let d of input_data){
             if(d.name === tok[0]){
@@ -642,7 +642,8 @@ export class up_emulator {
                         }
                     }
                 } else {
-                    ret = d.data[tok[1]]
+                    let sel_data = d.data[tok[1]];
+                    if(sel_data !== undefined) ret = sel_data;
                 }
 
             }

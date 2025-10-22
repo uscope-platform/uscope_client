@@ -45,11 +45,22 @@ export interface core_deployment_options{
 
 export interface core_options {
     comparators: "none" | "reducing" | "full"
-    efi_implementation: "efi_none" | "efi_trig" | "efi_sort"
+    efi_implementation: "efi_none" | "efi_trig" | "efi_sort" | "efi_rec"
 }
 
 
 export interface core_input_source{
+    voff: number[],
+    von:number[],
+    tdelay: number[],
+    ton:number[],
+    period:number[],
+    dc_offset:number[],
+    amplitude:number[],
+    frequency:number[],
+    duty:number[],
+    shape:string,
+    phase:number[],
     type:string,
     value:any,
     file:any,
@@ -91,7 +102,7 @@ export interface core_memory{
 
 export interface core_input_data{
     name:string,
-    data:any
+    data:Record<string, number[]>
 }
 
 export interface core {
@@ -140,7 +151,8 @@ export interface emulator{
 export interface emulator_hil_sim_data{
     control: string,
     outputs: string,
-    inputs:string
+    inputs:string,
+    code: string
 }
 
 export interface hil_data_point{

@@ -18,7 +18,7 @@ import {Label} from "./Label.js";
 import React, {type JSX, useCallback, useMemo} from "react";
 import Select, {type ActionMeta} from "react-select";
 import {ColorTheme} from "./ColorTheme.js";
-
+import type {DefaultOption} from "#interfaces/index.js";
 
 const SelectWrapper = styled('div')`
     display: grid;
@@ -28,20 +28,6 @@ const SelectWrapper = styled('div')`
     align-items: start;
 `
 
-export interface DefaultOption {
-    label: string;
-    value: string | number | unknown;
-}
-
-export interface SimpleStringOption  {
-    label: string;
-    value: string;
-}
-
-export interface SimpleNumberOption  {
-    label: string;
-    value: number;
-}
 
 interface SelectFieldProps<Option extends DefaultOption=DefaultOption> {
     onChange: (value: Option | null, event: ActionMeta<Option>) => void;
@@ -49,6 +35,7 @@ interface SelectFieldProps<Option extends DefaultOption=DefaultOption> {
     label: string;
     style?: React.CSSProperties;
     defaultValue?: Option;
+    placeholder?: Option;
     value?: Option | null;
     options: readonly Option[];
 }
@@ -90,6 +77,8 @@ export let  SelectField = <Option extends DefaultOption = DefaultOption>(
     }, [ColorTheme])
 
     const onSelectChange = useCallback((value: any, event: ActionMeta<any>) => props.onChange(value, event), [props.onChange]);
+    let selected_value = props.value ? props.value: null
+    selected_value = selected_value ? selected_value : null;
 
     return(
         <SelectWrapper>
@@ -99,7 +88,7 @@ export let  SelectField = <Option extends DefaultOption = DefaultOption>(
                 id={props.name}
                 styles={style}
                 defaultValue={props.defaultValue}
-                value={props.value ? props.value: undefined}
+                value={selected_value}
                 menuPortalTarget={document.body}
                 onChange={onSelectChange}
                 options={props.options}

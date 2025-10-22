@@ -17,7 +17,7 @@ import React, {type CSSProperties, useContext, useEffect, useState} from 'react'
 import {InputField, SelectField, SimpleContent, UIPanel} from "#UI/index.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
 import {up_application, up_settings} from "#client_core/index.js";
-import type {SimpleStringOption} from "#UI/Select.js";
+import type {SimpleStringOption} from "#interfaces/index.js";
 
 interface SettingsViewProps {
 }

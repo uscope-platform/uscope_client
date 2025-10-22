@@ -19,8 +19,8 @@ import {Card, InputField, SelectField} from "#UI/index.js";
 import {up_application} from "#client_core/index.js";
 import {CoreDmaIo} from "./CoreDmaIo.jsx";
 import type {soft_core} from "#interfaces/index.js";
-import type {ProgramState} from "#interfaces/index.js";
-import type {SimpleStringOption} from "#UI/Select.js";
+import type {ProgramState, SimpleStringOption} from "#interfaces/index.js";
+
 
 interface SoftCorePropertiesProps {
     application: up_application,

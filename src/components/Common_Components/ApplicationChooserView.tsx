@@ -17,8 +17,7 @@ import React, {useEffect, useState} from 'react';
 
 import {Button, SelectField} from "#UI/index.js"
 import {styled} from "goober";
-import type {application} from "#interfaces/index.js";
-import type {SimpleNumberOption} from "#UI/Select.js";
+import type {application, SimpleNumberOption} from "#interfaces/index.js";
 
 
 const ComponentLayout = styled('div')`

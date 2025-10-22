@@ -19,7 +19,7 @@ import {SelectableListItem} from './SelectableListItem.js';
 interface SelectableListProps {
     multi_select?: boolean;
     selected_item: string | string[];
-    onSelect: (name: string) => void;
+    onSelect: (name: string, multi?: boolean) => void;
     onRemove?: (name: string) => void;
     style?: React.CSSProperties;
     items: string[] | undefined;

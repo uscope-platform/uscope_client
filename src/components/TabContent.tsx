@@ -34,9 +34,7 @@ interface TabContentProps {
 let TabContent = (props: TabContentProps) => {
 
     let components_associations : any = {
-        scope:<PlotTab
-            content={props.tab}
-        />,
+        scope:<PlotTab/>,
         bitstreams: <BitstreamManager />,
         scripts: <ScriptManager/>,
         peripherals:<PeripheralsManager />,

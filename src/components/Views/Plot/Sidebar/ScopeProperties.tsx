@@ -17,8 +17,8 @@ import React, {useCallback, useContext, useState} from 'react';
 
 import {FormLayout,SelectField} from "#UI/index.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
-import type {channel_group} from "#interfaces/index.js";
-import type {SimpleStringOption} from "#UI/Select.js";
+import type {channel_group, SimpleStringOption} from "#interfaces/index.js";
+
 
 interface ScopePropertiesProps {
     on_group_change: (group: channel_group) => void;

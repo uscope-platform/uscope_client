@@ -21,8 +21,7 @@ import PlotControls from "../PlotControls.jsx";
 import {get_ui_state, save_ui_state, set_acquisition} from "#client_core/index.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
 import type {ActionMeta} from "react-select";
-import type {SimpleStringOption} from "#UI/Select.js";
-import type {scope_control, ScopeStatus} from "#interfaces/index.js";
+import type {scope_control, ScopeStatus, SimpleStringOption} from "#interfaces/index.js";
 
 interface TriggerControlsProps {
     showAcquisitionStatus: boolean;

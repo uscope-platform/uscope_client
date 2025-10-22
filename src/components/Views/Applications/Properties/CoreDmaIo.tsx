@@ -23,8 +23,7 @@ import {
 } from "#UI/index.js";
 import {MdAdd, MdDelete} from "react-icons/md";
 import {useAppSelector} from "#redux/hooks.js";
-import type {soft_core} from "#interfaces/index.js";
-import type {SimpleStringOption} from "#UI/Select.js";
+import type {soft_core, SimpleStringOption} from "#interfaces/index.js";
 
 
 const List = styled('div')`

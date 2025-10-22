@@ -74,17 +74,15 @@ export class up_emulator_result {
         return [];
     }
 
-    get_array_indices(data_source?:string, data_series?: string , channel?: number){
+    get_array_indices(data_source:string, data_series: string){
         if(data_series && data_source && this.data && this.data.hasOwnProperty(data_source) && this.data[data_source].outputs){
             if(this.data[data_source].outputs.hasOwnProperty(data_series)){
-                if(typeof channel === "string"){
-                    let array = this.data[data_source].outputs[data_series][0];
-                    let res = []
-                    for(let i = 0; i<array.length; i++){
-                        res.push(String(i));
-                    }
-                    return res
+                let array = this.data[data_source].outputs[data_series][0];
+                let res = []
+                for(let i = 0; i<array.length; i++){
+                    res.push(String(i));
                 }
+                return res
             }
         }
         return [];
@@ -111,10 +109,9 @@ export class up_emulator_result {
         return [];
     }
 
-    add_data_series(data_source?: string, data_series?: string, channel?: number, index?: string, is_multiselection?:boolean) {
+    add_data_series(data_source: string, data_series: string, channel: string, index: string, is_multiselection:boolean) {
         if(data_source && data_series && channel &&index){
-            let int_channel: number = channel;
-            if(typeof channel === "string") int_channel = parseInt((channel as string));
+            let int_channel: number = parseInt((channel as string));
             if(is_multiselection){
                 this.selected_data_series.push({
                     name:data_source + "." + data_series + "." + channel + "[" + index + "]",

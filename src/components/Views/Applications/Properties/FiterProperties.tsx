@@ -22,8 +22,7 @@ import {
 } from "#UI/index.js";
 
 import {up_application, up_filter, up_peripheral} from "#client_core/index.js";
-import type {filter, peripheral_instance} from "#interfaces/index.js";
-import type {SimpleStringOption} from "#UI/Select.js";
+import type {filter, peripheral_instance, SimpleStringOption} from "#interfaces/index.js";
 
 interface FilterPropertiesProps{
     application: up_application,

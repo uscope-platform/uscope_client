@@ -23,8 +23,8 @@ import {
 
 import {up_application, up_peripheral} from "#client_core/index.js";
 import {HdlParameterProperties} from "./HdlParameterProperties.jsx";
-import type {peripheral_instance} from "#interfaces/index.js";
-import type {SimpleStringOption} from "#UI/Select.js";
+import type {peripheral_instance, SimpleStringOption} from "#interfaces/index.js";
+
 
 interface PeripheralPropertiesProps{
     application: up_application,

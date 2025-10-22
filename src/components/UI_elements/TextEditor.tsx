@@ -27,7 +27,7 @@ interface TextEditorProps {
     content: string;
     height?: string;
     extensions: any[];
-    onChange: (value: string) => void;
+    onChange?: (value: string) => void;
 }
 
 export let TextEditor = (props : TextEditorProps) => {
@@ -50,7 +50,7 @@ export let TextEditor = (props : TextEditorProps) => {
                     syntaxHighlighting: true
                 }}
                 extensions={props.extensions}
-                onChange={props.onChange}
+                onChange={props.onChange ? props.onChange: ()=>{}}
             />
         </div>
 
