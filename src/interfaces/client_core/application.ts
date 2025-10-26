@@ -29,9 +29,7 @@ export interface application {
     macro:macro[],
     parameters:parameter[],
     peripherals:peripheral_instance[],
-    miscellaneous: {
-        [index: string]: any;
-    },
+    miscellaneous: Record<string, any>,
     soft_cores:core_load_info[],
     filters:filter[],
     programs: number[],

@@ -14,4 +14,4 @@
 // limitations under the License.
 
 
-export {application_diff_engine} from './application_diff_engine'
+export {application_diff_engine} from './application_diff_engine.js'
