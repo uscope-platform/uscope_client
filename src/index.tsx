@@ -15,9 +15,9 @@
 
 import React from 'react';
 import {createRoot} from "react-dom/client";
-import App from './App';
+import App from './App.js';
 import {Provider} from "react-redux";
-import store from "./store";
+import store from "./store.js";
 import {PersistGate} from "redux-persist/lib/integration/react";
 import {BrowserRouter} from "react-router-dom";
 import {setup} from "goober";
@@ -32,21 +32,26 @@ import {persistStore} from "redux-persist";
 
 
 const container = document.getElementById("root");
-const root = createRoot(container);
-const persistor = persistStore(store);
+if(container === null) {
+    console.error("Could not find the root element for the application.");
+} else {
 
-setup(React.createElement);
+    const root = createRoot(container);
+    const persistor = persistStore(store);
 
-if (import.meta.hot) {
-    import.meta.hot.accept();
+    setup(React.createElement);
+
+    if (import.meta.hot) {
+        import.meta.hot.accept();
+    }
+
+    root.render(
+        <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+                <BrowserRouter>
+                    <App />
+                </BrowserRouter>
+            </PersistGate>
+        </Provider>,
+    );
 }
-
-root.render(
-    <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-            <BrowserRouter>
-                <App />
-            </BrowserRouter>
-        </PersistGate>
-    </Provider>,
-);
