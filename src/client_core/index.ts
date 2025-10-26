@@ -29,7 +29,7 @@ export { set_channel_status, set_scaling_factors, direct_fetch, set_acquisition,
 
 
 // DATA MODEL
-export {up_application} from './data_models/up_application.js'
+export {up_application, empty_channel_group} from './data_models/up_application.js'
 export {up_peripheral} from './data_models/up_peripheral.js'
 export {up_field} from './data_models/up_field.js'
 export {up_script} from './data_models/up_script.js'

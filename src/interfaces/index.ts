@@ -25,10 +25,12 @@ export type {filter_specifications} from './client_core/filter.ts'
 export type {bitstream_model} from './client_core/bitstream.ts'
 export type {register, peripheral, field} from './client_core/peripherals.ts'
 export type {autocomplete_periph_object, register_write_object, autocomplete_suggestion, autocompletion_context} from './client_core/scripting/types.js'
-export type {register_write, scope_control, scope_data_object, scope_settings,user_create_request,auth_request, user_model, ScopeStatus} from './client_core/proxy/types.js'
+export type {register_write, scope_control, scope_data_object, scope_settings,user_create_request, AutoAuthRequest, ManualAuthRequest, UserRole, login_token, user_model, ScopeStatus} from './client_core/proxy/types.js'
 export type {plot_channel} from './plot_view.js'
 export type {ApplicationsState, ScriptState,parameter_save_action, BitstreamState, FilterState,ProgramState,EmulatorState,
             PeripheralsState,register_field_upsert_action, register_register_upsert_action, remove_register_action, remove_field_action} from './redux.js'
 export type {EmulatorSelections, EmulatorIomSelector, EmulatorGraphEdge, EmulatorComponentSelector, EmulatorGraphNode, EmulatorResultLegendItem, EmulatorHilChannelIdentifier, DebuggerDataPackage, TranslationTableEntry, DebuggerCheckpoint, SingleProgramDataPackage} from './emulator_view.js'
+
+export type {cache_result} from './app.js'
 
 export type {DefaultOption, SimpleStringOption, SimpleNumberOption} from './UI/select.js'

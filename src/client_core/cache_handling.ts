@@ -31,6 +31,7 @@ import {up_script} from "./data_models/up_script.js";
 import {up_program} from "./data_models/up_program.js";
 import {up_bitstream} from "./data_models/up_bitstream.js";
 import {up_filter} from "./data_models/up_filter.js";
+import type {cache_result} from "#interfaces/index.js";
 
 let load_all_applications = async () => {
 
@@ -115,9 +116,9 @@ let load_all_emulators = async () =>{
 
 
 
-export const refresh_caches = () =>{
+export const refresh_caches = (): Promise<cache_result[]> =>{
     let state = store.getState();
-    let refresh_ops = [];
+    const refresh_ops: Promise<cache_result>[] = [];
 
     refresh_ops.push(refresh_resource_cache("application_cache", state.applications, load_all_applications ,()=>{return backend_get(api_dictionary.applications.get_hash)}));
     refresh_ops.push(refresh_resource_cache("peripheral_cache", state.peripherals, load_all_peripherals,()=>{return backend_get(api_dictionary.peripherals.get_hash)}));
@@ -130,7 +131,7 @@ export const refresh_caches = () =>{
 };
 
 
-let refresh_resource_cache = (key: string,resource: any, load_fcn: any, hash_fcn: any) => {
+let refresh_resource_cache = (key: string,resource: any, load_fcn: any, hash_fcn: any):  Promise<cache_result> => {
     return new Promise((resolve, reject) =>{
         let digest = localStorage.getItem(key);
         if(resource === undefined || digest === null){

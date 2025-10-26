@@ -47,7 +47,7 @@ let ScriptSidebar = (props: ScriptSidebarProps) =>{
             objects={scripts_store}
             selection_key="id"
             template={up_script}
-            items_filter={application.scripts}
+            items_filter={application.scripts.map(s => s.toString())}
             display_key="name"
             content_name="Script"
             onDelete={handleRemove}

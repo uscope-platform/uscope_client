@@ -69,7 +69,7 @@ export interface parameter {
     parameter_name: string,
     parameter_id: string,
     trigger: string,
-    value: string | number,
+    value: number,
     visible: boolean
 }
 

@@ -36,11 +36,9 @@ let  ApplicationSidebar = (props: ApplicationSidebarProps) =>{
 
     const applications_redux = useAppSelector(state => state.applications);
 
-    let handleImport = (app: string) =>{
+    let handleImport = async (app: string) =>{
         let id = get_next_id(Object.values(applications_redux).map(a => a['id']).sort());
-        import_application(app, id).then(()=>{
-            addApplication(app);
-        })
+        await import_application(app, id);
     };
 
 

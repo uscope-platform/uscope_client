@@ -16,11 +16,36 @@
  *
  */
 
-export interface auth_request{
+export type UserRole = 'admin' | 'user' | 'operator'
+
+export interface login_token {
+    access_token: string;
+    login_token?: string;
+    role: UserRole;
+}
+
+interface AuthRequestBase {
+    login_type: string;
+    selector?: string,
+    expiry?: string,
+    validator?: string,
+    user?:string,
+    password?:string,
+    remember_me?: boolean
+}
+
+export interface ManualAuthRequest extends AuthRequestBase {
+    login_type: "user";
     user:string,
     password:string,
     remember_me: boolean,
-    login_type: "user"| "automated"
+}
+
+export interface AutoAuthRequest extends AuthRequestBase {
+    login_type: "automated";
+    selector: string,
+    expiry: string,
+    validator: string,
 }
 
 export interface user_model{

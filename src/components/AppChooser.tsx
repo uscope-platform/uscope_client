@@ -24,10 +24,10 @@ import {
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import type {application} from "#interfaces/index.js";
+import type {ApplicationsState} from "#interfaces/index.js";
 
 interface AppChooserProps {
-    applications: application[]
+    applications: ApplicationsState
     choice_done: (app_id: number) => void;
 }
 

@@ -19,7 +19,13 @@ import {up_peripheral, set_write_callback, up_application} from "#client_core/in
 import {parseFunction} from "./frontend.js";
 import {translate_registers} from "./backend.js";
 import {__selected_application} from "../index.js";
-import type {peripheral, autocomplete_periph_object, register_write_object, register_write} from "#interfaces/index.js";
+import type {
+    peripheral,
+    autocomplete_periph_object,
+    register_write_object,
+    register_write,
+    PeripheralsState
+} from "#interfaces/index.js";
 import type {fields_object} from "#client_core/data_models/register_proxy.js";
 
 export let scripting_engine_peripherals : Record<string, autocomplete_periph_object> = {}
@@ -28,7 +34,7 @@ export let script_register_access_log: register_write_object[] = [];
 
 let script_workspace = {};
 
-export const initialize_scripting_engine = (application: up_application | null , peripherals: peripheral[]) =>{
+export const initialize_scripting_engine = (application: up_application | null , peripherals: PeripheralsState) =>{
     //TODO: This call is kind of redundant, this work should be done in the data_model
     if(application === null) return;
     let applications_peripherals = application.peripherals;

@@ -22,7 +22,13 @@ import MacroActions from "./MacroActions.js";
 import {ColorTheme, UIPanel, SimpleContent} from "#UI/index.js";
 import TerminalComponent from "./Terminal.js";
 import PlotSidebar from "./Sidebar/PlotSidebar.js";
-import {create_plot_channel, get_channels_from_group, update_plot_status, get_acquisition_status} from "#client_core/index.js";
+import {
+    create_plot_channel,
+    get_channels_from_group,
+    update_plot_status,
+    get_acquisition_status,
+    empty_channel_group
+} from "#client_core/index.js";
 import useInterval from "../../Common_Components/useInterval.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
 import type {channel_group, plot_channel, ScopeStatus} from "#interfaces/index.js";
@@ -37,7 +43,8 @@ let PlotTab = function (props: PlotTabProps) {
     const [external_data, set_external_data] = useState<plot_channel[]>([]);
     const [external_revision, bump_ext_revision] = useReducer(x => x+1, 0);
     const [request_download, set_request_download] = useState(0);
-    const [selected_group, set_selected_group] = useState(application.get_default_channel_group().group_name);
+    const ch_group = application.get_default_channel_group();
+    const [selected_group, set_selected_group] = useState(ch_group===undefined ? empty_channel_group.group_name : ch_group.group_name);
     let [acquisition_status, set_acquisition_status] = useState<ScopeStatus>("wait");
 
 

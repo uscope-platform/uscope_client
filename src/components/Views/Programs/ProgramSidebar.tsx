@@ -52,7 +52,7 @@ let  ProgramSidebar = (props: ProgramSidebarProps) =>{
             objects={programs_store}
             selection_key="id"
             template={up_program}
-            items_filter={application.programs}
+            items_filter={application.programs.map(s=>s.toString())}
             display_key="name"
             content_name="Program"
             type_prop="type"

@@ -27,8 +27,17 @@ import {addApplication, removeApplication, updateApplication} from "#redux/index
 import {set_scope_address} from "../proxy/plot.js";
 import type {
     application, initial_register_value, clock_frequencies, channel, macro, parameter,
-    channel_group, soft_core, filter, peripheral_instance
+    channel_group, soft_core, filter, peripheral_instance, group_channel_token
 } from "#interfaces/index.js";
+
+export const empty_channel_group: channel_group = {
+    group_name: "",
+    group_id: "",
+    channels:[],
+    default:false
+}
+
+
 
 export class up_application {
     public id:number;
@@ -94,8 +103,8 @@ export class up_application {
         return new up_application(app_data_obj);
     }
 
-    deep_copy = (): application =>{
-        return{
+    deep_copy = (): up_application =>{
+        return new up_application({
             id: this.id,
             application_name:this.application_name,
             bitstream:this.bitstream,
@@ -112,7 +121,7 @@ export class up_application {
             programs:JSON.parse(JSON.stringify(this.programs)),
             scripts:JSON.parse(JSON.stringify(this.scripts)),
             miscellaneous:JSON.parse(JSON.stringify(this.miscellaneous)),
-        };
+        });
     }
 
     static deep_copy_s =  (old_app: application): application => {
@@ -179,7 +188,7 @@ export class up_application {
 
     get_parameters_map = () =>{
         let map:{
-            [index: string]: number | string;
+            [index: string]: number;
         } = {}
         for(const p of this.parameters){
             map[p.parameter_id] = p.value;
@@ -266,14 +275,14 @@ export class up_application {
         return statuses;
     }
 
-    get_default_channel_group = () =>{
-        let default_group = {}
+    get_default_channel_group = () : channel_group | undefined =>{
+
         for(let group of this.channel_groups){
             if(group.default){
-                default_group = group;
+                return group;
             }
         }
-        return default_group;
+        return undefined;
     }
 
     setup_scope_mux = async (channels: channel[]) =>{
@@ -385,7 +394,7 @@ export class up_application {
             parameter_name: parameter_name,
             parameter_id: parameter_name.replace(/\s/g, "_").toLowerCase(),
             trigger: '',
-            value: '0',
+            value: 0,
             visible: false
         };
         this.parameters.push(p)

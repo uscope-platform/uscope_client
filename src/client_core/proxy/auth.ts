@@ -15,10 +15,10 @@
 
 import {backend_post} from "./backend.js";
 import {api_dictionary} from "./api_dictionary.js";
-import type {auth_request} from "#interfaces/index.js";
+import type {AutoAuthRequest, ManualAuthRequest, login_token} from "#interfaces/index.js";
 
 
-export const manual_sign_in = (credentials: auth_request) => {
+export const manual_sign_in = (credentials: ManualAuthRequest): Promise<login_token> => {
     return new Promise((resolve, reject) => {
         backend_post(api_dictionary.platform.manual_login, credentials).then((res)=>{
             resolve(res);
@@ -31,7 +31,7 @@ export const manual_sign_in = (credentials: auth_request) => {
 
 
 
-export const auto_sign_in = (credentials: auth_request) => {
+export const auto_sign_in = (credentials: AutoAuthRequest):Promise<login_token> => {
     return new Promise((resolve, reject) => {
         backend_post(api_dictionary.platform.auto_login, credentials).then((res)=>{
             resolve(res);

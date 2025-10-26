@@ -70,15 +70,15 @@ export class up_emulator {
         return new up_emulator(emulator_obj);
     }
 
-    deep_copy = () : emulator =>{
-        return {
+    deep_copy = () : up_emulator =>{
+        return new up_emulator({
             id: this.id,
             cores: JSON.parse(JSON.stringify(this.cores)),
             connections: JSON.parse(JSON.stringify(this.connections)),
             name: this.name,
             emulation_time: this.emulation_time,
             deployment_mode: this.deployment_mode
-        };
+        });
     }
 
     static deep_copy_s(emulator_obj: emulator){

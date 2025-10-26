@@ -18,6 +18,7 @@ import React, {useCallback, useContext, useState} from 'react';
 import {FormLayout,SelectField} from "#UI/index.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
 import type {channel_group, SimpleStringOption} from "#interfaces/index.js";
+import {empty_channel_group} from "#client_core/index.js";
 
 
 interface ScopePropertiesProps {
@@ -29,7 +30,9 @@ let  ScopeProperties = (props: ScopePropertiesProps) =>{
 
     const application = useContext(ApplicationContext);
 
-    let default_group = application.get_default_channel_group().group_name;
+    let d_g = application.get_default_channel_group();
+
+    let default_group = d_g=== undefined ? empty_channel_group.group_name : d_g.group_name;
     const [selected, set_selected] = useState({label:default_group, value:default_group});
 
     const group_options = application.channel_groups.map((group: channel_group,i: number) => (
@@ -40,6 +43,7 @@ let  ScopeProperties = (props: ScopePropertiesProps) =>{
         if(object === null)return;
         set_selected(object);
         let group = application.get_group_by_name(object.value)
+        if(group === undefined)return;
         props.on_group_change(group)
 
     }, [application.channel_groups]);

@@ -53,14 +53,14 @@ export class up_program {
         return new up_program(program_obj);
     }
 
-    deep_copy = (): program =>{
-        return {
+    deep_copy = (): up_program =>{
+        return new up_program({
             id: this.id,
             name: this.name,
             content: this.content,
             type: this.type,
             headers:JSON.parse(JSON.stringify(this.headers))
-        };
+        });
     }
 
     static deep_copy_s =  (old_program: program): program => {
@@ -154,15 +154,6 @@ export class up_program {
         })
     }
 
-    static delete(p: program){
-        return backend_delete(api_dictionary.programs.delete+'/'+p.id, p).then(()=>{
-            store.dispatch(removeProgram(p));
-        })
-    }
-
-    get_raw_obj = () => {
-        return this._get_program();
-    }
 
     _get_program = () =>{
         return {

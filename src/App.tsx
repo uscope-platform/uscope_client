@@ -16,28 +16,32 @@
 //       REACT IMPORTS
 import React, {useCallback, useEffect, useState} from 'react';
 //      APP RELATED IMPORTS
-import AuthApp from "./AuthApp";
-import LoginPage from "./components/Common_Components/LoginPage";
-import store from "./store";
-import {set_address, set_auth_config, set_redux_store, need_onboarding} from "#client_core";
+import AuthApp from "./AuthApp.js";
+import LoginPage from "./components/Common_Components/LoginPage.js";
+import store from "./store.js";
+import {set_address, set_auth_config, set_redux_store, need_onboarding} from "#client_core/index.js";
 
 //////  STYLE IMPORTS
 import './App.css';
 import {ThemeProvider} from "styled-components";
-import {ColorTheme} from "#UI";
-import {auto_sign_in, manual_sign_in} from "./client_core/proxy/auth";
+import {ColorTheme} from "#UI/index.js";
+import {auto_sign_in, manual_sign_in} from "./client_core/proxy/auth.js";
+import type {AutoAuthRequest, login_token, ManualAuthRequest, UserRole} from "#interfaces/index.js";
 
+interface AppProps {
 
-let App = (props) =>{
+}
+
+let App = (props: AppProps) =>{
 
 
     const [logged, set_logged] = useState(false);
     const [onboarding_needed, set_onboarding_needed] = useState(true);
-    const [user_role, set_user_role] = useState("operator");
+    const [user_role, set_user_role] = useState<UserRole>("operator");
 
-    const done = useCallback(async (login_credentials)=>{
+    const done = useCallback(async (login_credentials: ManualAuthRequest | AutoAuthRequest)=>{
         try {
-            let token = null;
+            let token: login_token;
             if(login_credentials.login_type === "user"){
                 token = await manual_sign_in(login_credentials);
             } else {
@@ -73,7 +77,9 @@ let App = (props) =>{
     },[])
     
     let try_automated_login = () =>{
-        let token = JSON.parse(localStorage.getItem('login_token'));
+        let raw_token = localStorage.getItem('login_token');
+        if(raw_token ===null)return;
+        let token = JSON.parse(raw_token);
         if(token){
             if (Date.now() < Date.parse(token.expiry)){
                 token.login_type = 'automated';

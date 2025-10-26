@@ -92,16 +92,6 @@ export class up_script {
         return backend_patch(api_dictionary.scripts.edit+'/'+this.id,edit)
     }
 
-    static delete(script: script){
-        return backend_delete(api_dictionary.scripts.delete+'/'+script.id, script).then(()=>{
-            store.dispatch(removeScript(script));
-        })
-    }
-
-    get_raw_obj = () => {
-        return this._get_script();
-    }
-
     _get_script = () =>{
         return {
                 id: this.id,

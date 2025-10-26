@@ -15,49 +15,60 @@
 
 //       REACT IMPORTS
 import React, {useEffect, useState} from 'react';
+import {Routes} from "react-router";
 import {Route} from 'react-router-dom'
 
 //      APP RELATED IMPORTS
-import TabContent from "./components/TabContent";
-import Navbar from "./components/Navbar";
-import ApplicationChooser from "./components/AppChooser";
+import TabContent from "./components/TabContent.js";
+import Navbar from "./components/Navbar.js";
+import ApplicationChooser from "./components/AppChooser.js";
+import {initialize_scripting_engine, refresh_caches, setup_client_core, up_application, up_settings} from "#client_core/index.js";
+import {UIPanel, InterfaceParameters} from "#UI/index.js";
+import PlatformManager from "./components/Views/Platform/PlatformManager.jsx";
+import {useAppSelector} from "#redux/hooks.js";
 
 //////  STYLE IMPORTS
 import './App.css';
 
-import {initialize_scripting_engine, refresh_caches, setup_client_core, up_application, up_settings} from "#client_core";
-import {Routes} from "react-router";
-import {addApplication} from "#redux";
-
-import {UIPanel, InterfaceParameters} from "#UI";
-import PlatformManager from "./components/Views/Platform/PlatformManager.jsx";
-import {useAppSelector} from "#redux/hooks.js";
 
 
 let operator_views = ["Scope"];
 let user_views = ["Scripts", "Applications", "Programs", "Bitstreams", "Filters", "Emulator"];
 let admin_views =["Peripherals", "Platform", "Settings"];
 
+interface view {
+    name: string;
+    type: string;
+}
+
 
 export const ApplicationContext = React.createContext(up_application.construct_empty(9999));
 
+interface AuthAppProps {
+    needs_onboarding?: boolean;
+    user_role: 'admin' | 'user' | 'operator';
+    onboarding_done?: () => void
+}
 
-let AuthApp = (props) =>{
+
+let AuthApp = (props: AuthAppProps) =>{
 
     const peripherals = useAppSelector(state => state.peripherals);
     const applications = useAppSelector(state => state.applications);
 
-    const [views, set_views] = useState([]);
+    const [views, set_views] = useState<Record<string, view>>({});
 
     const [app_stage, set_app_stage] = useState("WAITING");
-    const [application_selector, set_application_selector] = useState(null);
+    const [application_selector, set_application_selector] = useState(9999);
 
-    const application = application_selector ? new up_application(applications[application_selector]) : null;
+    const sel_app = applications[application_selector];
+    const application = sel_app !== undefined ? new up_application(sel_app) : up_application.construct_empty(9999);
 
-    let app_choice_done = async (application)=>{
-        let app = new up_application(applications[application]);
+    let app_choice_done = async (application: number)=>{
+        let app = applications[application];
+        if(app === undefined) return;
         set_application_selector(application);
-        setup_client_core(app);
+        setup_client_core(new up_application(app));
         populate_views();
         await up_settings.initialize_default_driver_address_map();
         set_app_stage("NORMAL");
@@ -68,17 +79,26 @@ let AuthApp = (props) =>{
             set_app_stage("ONBOARDING");
         } else{
             refresh_caches().then((res) =>{
-                if(res[0].status ==="valid"){
-                    set_app_stage("APP_CHOICE");
-                } else if(Object.keys(res[0].data).length !== 0) {
-                    set_app_stage("APP_CHOICE");
+                let r = res[0];
+
+                if(r !== undefined) {
+                    if(r.status ==="valid"){
+                        set_app_stage("APP_CHOICE");
+                    } else if(Object.keys(r.data).length !== 0) {
+                        set_app_stage("APP_CHOICE");
+                    } else {
+                        let app = up_application.construct_empty(1);
+                        app.add_remote().then(()=>{
+                            set_app_stage("APP_CHOICE");
+                        })
+                    }
                 } else {
                     let app = up_application.construct_empty(1);
                     app.add_remote().then(()=>{
-                        addApplication(app);
                         set_app_stage("APP_CHOICE");
                     })
                 }
+
 
             });
             set_app_stage("RESOURCE_LOADING");
@@ -93,23 +113,27 @@ let AuthApp = (props) =>{
 
     let construct_routes = () =>{
         let routes = [];
-        for(const v in views){
+        for(const view_name in views){
             let route = "/";
-            if(v!=='scope'){
-                route += views[v].type;
+            let v = views[view_name]
+            if(v !== undefined){
+                if( view_name !=='scope'){
+                    route += v.type;
+                }
+                routes.push(<Route key={v.type} path={route} element={<TabContent tab={v}/>}/>)
             }
-            routes.push(<Route key={views[v].type} path={route} element={<TabContent className="main_content_tab" tab={views[v]}/>}/>,)
+
         }
 
         return(routes);
     }
 
     let populate_views = () => {
-        let local_views = {};
-        let role_mapping = {admin:1, user:2, operator:3};
-        let role = role_mapping[props.user_role]
+        let local_views: Record<string, view> = {};
+        const role_mapping = {admin:1, user:2, operator:3};
+        let role = role_mapping[props.user_role];
 
-        let selected_views;
+        let selected_views: string[] = [];
         if(role<=3){
             selected_views = operator_views;
         }

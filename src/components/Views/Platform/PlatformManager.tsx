@@ -32,7 +32,7 @@ import {toast} from "react-toastify";
 
 interface PlatformManagerProps {
     onboarding?: boolean,
-    onboarding_done?: () => void
+    onboarding_done?: (() => void) | undefined
 }
 
 let  PlatformManager = (props: PlatformManagerProps) =>{
