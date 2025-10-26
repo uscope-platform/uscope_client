@@ -14,11 +14,19 @@
 // limitations under the License.
 
 import React, {useCallback} from 'react';
-import {ColorTheme, SimpleContent, UIPanel} from "#UI";
-import TriggerControls from "../../Plot/Sidebar/TriggerControls";
+import {ColorTheme, SimpleContent, UIPanel} from "#UI/index.js";
+import TriggerControls from "../../Plot/Sidebar/TriggerControls.js";
 import {MdSimCardDownload} from "react-icons/md";
 
-let  HilControl = props =>{
+interface HilControlProps {
+    onDownloadHilData: (req: boolean)=> void,
+    onDownlodHilSim: () =>{},
+    onStart: () => void;
+    onPause: () => void;
+    onStop: () => void;
+}
+
+let  HilControl = (props: HilControlProps) =>{
 
     const handle_download = useCallback(()=>{
         props.onDownloadHilData(true);
@@ -34,6 +42,8 @@ let  HilControl = props =>{
             <UIPanel key="trigger" style={{padding:10}} level="level_2">
                 <SimpleContent name="Trigger and Acquisition">
                     <TriggerControls
+                        acquisition_status={"unknown"}
+                        showAcquisitionStatus={false}
                         onPlay={props.onStart}
                         onPause={props.onPause}
                         onStop={props.onStop}

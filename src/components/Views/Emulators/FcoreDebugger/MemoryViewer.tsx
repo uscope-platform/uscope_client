@@ -15,22 +15,27 @@
 
 
 import React, {useEffect, useState} from 'react';
-import {SelectableList, SimpleContent, UIPanel} from "#UI";
+import {SelectableList, SimpleContent, UIPanel} from "#UI/index.js";
 
-let  MemoryViewer = props =>{
+interface MemoryViewerProps {
+    memory: number[],
+    vis_type: string,
+}
 
-    const addresses = Array.from(Array(64).keys());
+let  MemoryViewer = (props : MemoryViewerProps) =>{
 
-    let [data, set_data] = useState([]);
+    const addresses = Array.from(Array(64).keys()).map(val=>val.toString());
+
+    let [data, set_data] = useState<string[]>([]);
 
     useEffect(()=>{
         set_data( props.memory.map(val=>{
             if(props.vis_type === "float"){
                 let v = new DataView(new ArrayBuffer(4));
                 v.setUint32(0, val);
-                return v.getFloat32(0);
+                return v.getFloat32(0).toString();
             } else {
-                return val;
+                return val.toString();
             }
         }));
     }, [props.memory, props.vis_type]);

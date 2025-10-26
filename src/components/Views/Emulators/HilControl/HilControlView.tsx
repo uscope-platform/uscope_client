@@ -16,11 +16,21 @@
 import React, {useState} from 'react';
 import HilPlotTab from "./HilPlotTab.jsx";
 import HilControlSidebar from "../Sidebar/per_panel_sidebars/HilControlSidebar.jsx";
+import {up_emulator} from "#client_core/index.js";
+import type {EmulatorSelections} from "#interfaces/index.js";
 
-let HilControlView = function (props) {
+interface HilControlViewProps {
+    emulator: up_emulator,
+    selections: EmulatorSelections,
+    on_select: (sel: number) => void,
+    set_selections: (selection: EmulatorSelections) => void,
+    deployed: boolean
+}
+
+let HilControlView = function (props: HilControlViewProps) {
 
     let [hil_plot_running, set_hil_plot_running] = useState(false);
-    let [download_data_request, set_download_data_request] = useState(null);
+    let [download_data_request, set_download_data_request] = useState(false);
 
     return(
         <div style={{
@@ -40,9 +50,9 @@ let HilControlView = function (props) {
             <HilControlSidebar
                 emulator={props.emulator}
                 selections={props.selections}
-                on_selection={props.set_selections}
+                set_selections={props.set_selections}
                 on_select={props.on_select}
-                hil_plot_running={props.hil_plot_running}
+                hil_plot_running={hil_plot_running}
                 on_plot_status_update={set_hil_plot_running}
                 onDownloadHilData={set_download_data_request}
             />

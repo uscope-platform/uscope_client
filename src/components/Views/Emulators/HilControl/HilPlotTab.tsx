@@ -14,29 +14,41 @@
 // limitations under the License.
 
 import React from 'react';
-import {SimpleContent, TabbedContent, UIPanel} from "#UI";
-import HilChannelSelector from "./HilChannelSelector";
-import HilInputsPanel from "./HilInputsPanel";
-import HilPlot from "./HilPlot";
+import {SimpleContent, TabbedContent, UIPanel} from "#UI/index.js";
+import HilChannelSelector from "./HilChannelSelector.jsx";
+import HilInputsPanel from "./HilInputsPanel.jsx";
+import HilPlot from "./HilPlot.jsx";
+import {up_emulator} from "#client_core/index.js";
 
 
-let HilPlotTab = function (props) {
+interface HilPlotTabProps {
+    emulator: up_emulator,
+    deployed: boolean,
+    download_data_request: boolean,
+    on_download_done: (request: boolean) => void,
+    hil_plot_running: boolean
+}
+
+let HilPlotTab = function (props: HilPlotTabProps) {
 
     if(props.deployed){
         let [input_tab_names, inputs, channels] =  props.emulator.get_inputs();
         let [selected_core, set_selected_core] = React.useState(0);
-        let [selected_outputs, set_selected_outputs] = React.useState([]);
+        let [selected_outputs, set_selected_outputs] = React.useState<string[]>([]);
 
 
         let render_input_tabs = ()=>{
             let ret_arr = []
             for(let i in inputs){
+                let in_arr = inputs[i];
+                let n_c = channels[selected_core];
+                if(n_c === undefined || in_arr ===undefined) continue;
                 ret_arr.push(
                     <HilInputsPanel
                         key={i+ "inputs_tab"}
-                        inputs={inputs[i]}
-                        set_input={props.emulator.set_input}
-                        n_channels={channels[selected_core]}
+                        inputs={in_arr}
+                        emulator={props.emulator}
+                        n_channels={n_c}
                     />
                 );
             }
@@ -53,7 +65,7 @@ let HilPlotTab = function (props) {
                    <SimpleContent name="Scope" height="100%">
                        <HilPlot
                            hil_plot_running={props.hil_plot_running}
-                           refreshRate={125}
+                           refreshPeriod={125}
                            download_data_request={props.download_data_request}
                            on_download_done={props.on_download_done}
                            selected_outputs={selected_outputs}
@@ -66,7 +78,7 @@ let HilPlotTab = function (props) {
                    gap:10
                }}>
                    <UIPanel key="Hil_inputs"  style={{flexGrow:0.5}} level="level_2">
-                       <TabbedContent names={input_tab_names} height="100%"  selected={selected_core} onSelect={set_selected_core}>
+                       <TabbedContent names={input_tab_names}  selected={selected_core} onSelect={set_selected_core}>
                            {render_input_tabs()}
                        </TabbedContent>
                    </UIPanel>

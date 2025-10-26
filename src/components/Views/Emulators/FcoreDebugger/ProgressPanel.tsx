@@ -15,9 +15,16 @@
 
 
 import React from 'react';
-import {SimpleContent, UIPanel} from "#UI";
+import {SimpleContent, UIPanel} from "#UI/index.js";
 
-let  ProgressPanel = props =>{
+interface ProgressPanelProps {
+    progress: {
+        current: number,
+        total_steps: number,
+    }
+}
+
+let  ProgressPanel = (props: ProgressPanelProps) =>{
 
 
     const progress_percentage = props.progress.current/props.progress.total_steps;

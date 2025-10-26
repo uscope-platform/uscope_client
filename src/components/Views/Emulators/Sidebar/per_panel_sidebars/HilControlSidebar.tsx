@@ -16,22 +16,34 @@
 import React from 'react';
 
 
-import {set_channel_status, up_emulator,download_text} from "#client_core";
-import {SidebarBase} from "#UI";
+import {set_channel_status, up_emulator,download_text} from "#client_core/index.js";
+import {SidebarBase} from "#UI/index.js";
 import HilControl from "../HilControl.jsx";
 import {useAppSelector} from "#redux/hooks.js";
+import type {EmulatorSelections} from "#interfaces/index.js";
 
-let  HilControlSidebar = props =>{
+interface HilControlSidebarProps {
+    emulator: up_emulator,
+    selections: EmulatorSelections,
+    on_plot_status_update: (status: boolean) => void,
+    hil_plot_running: boolean,
+    onDownloadHilData: (req: boolean) => void,
+    on_select: (sel: number) => void,
+    set_selections: (selection: EmulatorSelections) => void
+}
+
+let  HilControlSidebar = (props:HilControlSidebarProps) =>{
 
     const emulators_store = useAppSelector(state => state.emulators);
 
-    let handle_select_emulator = (sel) =>{
+    let handle_select_emulator = (sel: number) =>{
         props.on_select(sel);
-        props.on_selection({...props.selections, iom:null})
+        props.set_selections({...props.selections, iom:null})
     }
 
     let on_start = async () =>{
-        set_channel_status({0:true, 1:true, 2:true, 3:true, 4:true, 5:true});
+        // TODO: Check if all the channels need to be enabled
+        await set_channel_status({0:true, 1:true, 2:true, 3:true, 4:true, 5:true});
         await props.emulator.start_hil();
         props.on_plot_status_update(true);
     };
@@ -47,6 +59,7 @@ let  HilControlSidebar = props =>{
 
     let download_sim_data = async () =>{
         let data = await props.emulator.download_hardware_sim_data();
+        if(data === undefined) return;
         download_text(data.control, "control_bus.txt");
         download_text(data.code, "code_bus.txt");
         download_text(data.inputs, "input_bus.txt");
@@ -65,8 +78,6 @@ let  HilControlSidebar = props =>{
                 template={up_emulator}
                 display_key="name"
                 content_name="Emulator"
-                selector="selected_emulator"
-                height={2}
                 onSelect={handle_select_emulator}
             />
             <HilControl

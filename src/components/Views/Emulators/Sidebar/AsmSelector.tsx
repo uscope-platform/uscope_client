@@ -15,12 +15,19 @@
 
 import React from 'react';
 
-import {SelectableList, SimpleContent, UIPanel} from "#UI";
+import {SelectableList, SimpleContent, UIPanel} from "#UI/index.js";
+import type {DecompiledPrograms} from "#interfaces/emulator_view.js";
 
-let  AsmSelector = props =>{
+interface AsmSelectorProps {
+    on_select: (value: string)=>void;
+    selected_program: string,
+    programs: Record<string, DecompiledPrograms>
+}
+
+let  AsmSelector = (props: AsmSelectorProps) =>{
 
 
-    let handle_select = (item) =>{
+    let handle_select = (item: string) =>{
         props.on_select(item);
     }
 

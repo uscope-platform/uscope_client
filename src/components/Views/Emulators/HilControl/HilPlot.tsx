@@ -14,26 +14,34 @@
 // limitations under the License.
 
 import React, {useEffect, useReducer, useState} from 'react';
+//@ts-ignore
 import createPlotlyComponent from "react-plotly.js/factory";
 import Plotly from "plotly.js-basic-dist";
-import {download_plot, direct_fetch} from "#client_core";
+import {download_plot, direct_fetch} from "#client_core/index.js";
 import useInterval from "../../../Common_Components/useInterval.js";
-import {ColorTheme, PlotConfigurations} from "#UI";
+import {ColorTheme, PlotConfigurations} from "#UI/index.js";
+import type {plot_channel} from "#interfaces/index.js";
 
 
 const Plot = createPlotlyComponent(Plotly);
 
+interface HilPlotProps {
+    download_data_request: boolean,
+    on_download_done: (done: boolean) => void
+    hil_plot_running: boolean,
+    refreshPeriod: number,
+    selected_outputs: string[]
+}
 
-let HilPlot = function (props) {
+let HilPlot = function (props: HilPlotProps) {
 
-    let [data, set_data] = useState([
-    ])
+    let [data, set_data] = useState<plot_channel[]>([])
 
     const [data_revision,update_data ] = useReducer(x => x + 1, 0);
     // TODO: implement adaptive plot palette?
     let plot_layout = {...PlotConfigurations.layout,colorway:ColorTheme.plot_palette};
-    plot_layout.width = 1100;
-    plot_layout.height = 550;
+    plot_layout.width = 1100 as any;
+    plot_layout.height = 550 as any;
 
     let plot_config = {...PlotConfigurations.configs, response:true};
 
@@ -49,15 +57,18 @@ let HilPlot = function (props) {
         if(props.hil_plot_running){
             try{
                 let data = await direct_fetch();
+                if(data.length === 0 || data[0] === undefined) return;
                 let x = [...Array(data[0].data.length).keys()];
 
-                let selected_data = data.map((channel)=>{
+                let selected_data = data.map((channel): plot_channel=>{
+                    let n =props.selected_outputs[channel.channel];
                     return {
-                        name:props.selected_outputs[channel.channel],
+                        name: n !== undefined? n:   "",
                         x: x,
                         y: channel.data,
                         type: 'scatter',
-                        mode: 'lines'
+                        mode: 'lines',
+                        visible: true
                     };
                 })
                 set_data(selected_data);
@@ -69,7 +80,7 @@ let HilPlot = function (props) {
 
     useInterval(() => {
         handleRefresh();
-    },  props.refreshRate);
+    },  props.refreshPeriod);
 
 
     return(

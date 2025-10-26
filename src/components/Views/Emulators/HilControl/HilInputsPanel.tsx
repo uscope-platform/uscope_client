@@ -15,36 +15,59 @@
 // limitations under the License.
 
 import React from 'react';
-import {InputField, SelectField} from "#UI";
+import {InputField, SelectField} from "#UI/index.js";
+import type {EmulatorHilInput} from "#interfaces/emulator_view.js";
+import {up_emulator} from "#client_core/index.js";
+import type {SimpleNumberOption} from "#interfaces/index.js";
 
-let HilInputsPanel = function (props) {
+interface HilInputsPanelProps {
+    inputs: EmulatorHilInput[];
+    n_channels: number;
+    emulator: up_emulator;
+}
+
+let HilInputsPanel = function (props: HilInputsPanelProps) {
 
     let [selected_channel, set_selected_channel] = React.useState(Array(props.inputs.length).fill(0));
     
-    let get_channels_list = () =>{
+    let get_channels_list = (): SimpleNumberOption[] =>{
         let channels_idx = Array.from({ length: props.n_channels }, (_, i) => i );
         return channels_idx.map((index) =>{
-            return {label: index, value: index}
-        });
+            return {label: index.toString(), value: index}
+        }).filter((item)=> item !== undefined);
     }
 
-    let handle_input = (event, selected_channel) =>{
+    let handle_input =async (event: React.KeyboardEvent<HTMLInputElement>, selected_channel: number) =>{
         if(event.key==="Enter"|| event.key ==="Tab") {
-            let input = event.target.name;
-            let value = parseFloat(event.target.value);
+            let input = event.currentTarget.name;
+            let value = parseFloat(event.currentTarget.value);
             let current_in = props.inputs.filter((i) =>{
                 return i.name === input;
             })[0];
-            props.set_input(current_in.core, current_in.name, selected_channel, value);
+            if(current_in === undefined) return;
+            await props.emulator.set_input(current_in.core, current_in.name, selected_channel, value);
         }
     }
 
+
     let render_inputs= () =>{
-        let ret =  [];
+        let ret: React.ReactNode[] =  [];
         props.inputs.map((ti, idx)=>{
-            let selected_value = ti.value[0]
+            let selected_value: number = 0
+            let v =  ti.value[0];
+            if(v !== undefined) selected_value = v;
             if(ti.value.length > 1){
-                selected_value = ti.value[selected_channel[idx]]
+                let v = ti.value[selected_channel[idx]];
+                if(v !== undefined) selected_value = v;
+            }
+
+            let handle_select_channel = async (value: SimpleNumberOption | null) =>{
+                if(value === null) return;
+                let c = selected_channel.map((val,map_idx)=>{
+                    if(map_idx === idx) return value.value;
+                    else return val;
+                });
+                set_selected_channel(c);
             }
 
             ret.push(
@@ -57,21 +80,15 @@ let HilInputsPanel = function (props) {
                         name={ti.name}
                         id={ti.name}
                         label={ti.name}
-                        defaultValue={selected_value}
-                        onKeyDown={(e)=>{
-                            handle_input(e, selected_channel[idx])
+                        defaultValue={selected_value.toString()}
+                        onKeyDown={async (e: React.KeyboardEvent<HTMLInputElement>)=>{
+                            await handle_input(e, selected_channel[idx])
                         }
                     }
                     />
-                    <SelectField
-                        inline
-                        onChange={(obj, e) =>{
-                            let c = selected_channel.map((val,map_idx)=>{
-                                if(map_idx === idx) return obj.value;
-                                else return val;
-                            });
-                            set_selected_channel(c);
-                        }}
+                    <SelectField<SimpleNumberOption>
+                        label={""}
+                        onChange={handle_select_channel}
                         value={{value: selected_channel[idx], label: selected_channel[idx]}}
                         name="channel_selector"
                         options={get_channels_list()}

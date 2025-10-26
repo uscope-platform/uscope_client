@@ -29,6 +29,6 @@ export type {register_write, scope_control, scope_data_object, scope_settings,us
 export type {plot_channel} from './plot_view.js'
 export type {ApplicationsState, ScriptState,parameter_save_action, BitstreamState, FilterState,ProgramState,EmulatorState,
             PeripheralsState,register_field_upsert_action, register_register_upsert_action, remove_register_action, remove_field_action} from './redux.js'
-export type {EmulatorSelections, EmulatorIomSelector, EmulatorGraphEdge, EmulatorComponentSelector, EmulatorGraphNode, EmulatorResultLegendItem} from './emulator_view.js'
+export type {EmulatorSelections, EmulatorIomSelector, EmulatorGraphEdge, EmulatorComponentSelector, EmulatorGraphNode, EmulatorResultLegendItem, EmulatorHilChannelIdentifier, DebuggerDataPackage, TranslationTableEntry, DebuggerCheckpoint, SingleProgramDataPackage} from './emulator_view.js'
 
 export type {DefaultOption, SimpleStringOption, SimpleNumberOption} from './UI/select.js'

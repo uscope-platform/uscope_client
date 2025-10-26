@@ -17,11 +17,22 @@ import React, {useEffect, useState} from 'react';
 import FcoreDebugger from "./FcoreDebugger.jsx";
 import HilDebuggerSidebar from "../Sidebar/per_panel_sidebars/HilDebuggerSidebar.jsx";
 import {useAppSelector} from "#redux/hooks.js";
+import type {DebuggerCheckpoint, EmulatorSelections, SingleProgramDataPackage} from "#interfaces/index.js";
+import {up_emulator, up_emulator_result} from "#client_core/index.js";
+import type {DecompiledPrograms} from "#interfaces/emulator_view.js";
 
-let HilDebuggerView = function (props) {
+interface HilDebuggerViewProps {
+    emulator:up_emulator,
+    on_select: (sel: number) => void,
+    set_selections: (sel:EmulatorSelections)=>void,
+    set_emulation_results: (res: up_emulator_result) => void
+    selections: EmulatorSelections
+}
+
+let HilDebuggerView = function (props: HilDebuggerViewProps) {
 
 
-    let[ debugger_data, set_debugger_data] = useState({
+    let[ debugger_data, set_debugger_data] = useState<SingleProgramDataPackage>({
         asm:{
             translation_table:[],
             common_io_translation_table:[],
@@ -30,7 +41,7 @@ let HilDebuggerView = function (props) {
         source:""
     });
 
-    let [checkpoint, set_checkpoint] = useState({
+    let [checkpoint, set_checkpoint] = useState<DebuggerCheckpoint>({
         breakpoint:1,
         memory_view:[],
         inputs:{},
@@ -45,22 +56,21 @@ let HilDebuggerView = function (props) {
         completed_round:false
     });
 
-    let [breakpoints, set_breakpoints] = useState([]);
+    let [breakpoints, set_breakpoints] = useState<number[]>([]);
 
-    let [compiled_programs, set_compiled_programs] = useState({});
+    let [compiled_programs, set_compiled_programs] = useState<Record<string, DecompiledPrograms>>({});
 
     const programs_store = useAppSelector(state => state.programs);
 
 
-    let handle_add_breakpoint = async (value) =>{
-        let vv = parseInt(value);
-        if(vv>0){
-            await props.emulator.add_breakpoint(props.selections.program, (vv-1));
-            set_breakpoints([...breakpoints, (vv)]);
+    let handle_add_breakpoint = async (value: number) =>{
+        if(value>0){
+            await props.emulator.add_breakpoint(props.selections.program, (value-1));
+            set_breakpoints([...breakpoints, (value)]);
         }
     }
 
-    let handle_remove_breakpoint = async (raw_val) =>{
+    let handle_remove_breakpoint = async (raw_val: number) =>{
         await props.emulator.remove_breakpoint(props.selections.program, raw_val-1);
         let new_breakpoints = breakpoints.filter(b =>{
             return b !== raw_val;
@@ -69,21 +79,26 @@ let HilDebuggerView = function (props) {
     }
 
 
-    let handle_select_program = async (value)=>{
+    let handle_select_program = async (value: string)=>{
         props.set_selections({...props.selections, program: value});
 
         let program = Object.values(props.emulator.cores).filter(c =>{
             return c.name === value;
-        })[0].program;
+        })[0];
+        if(program === undefined) return;
+
         let src = Object.values(programs_store).filter(p =>{
-            return p.name === program;
+            return p.name === program.program;
         })[0].content;
 
-        set_debugger_data({asm:compiled_programs[value], source:src});
+        let cp = compiled_programs[value];
+        if(cp === undefined) return;
+
+        set_debugger_data({asm:cp, source:src});
 
         let bps= await props.emulator.get_breakpoints(value);
 
-        set_breakpoints(bps.map(b=>b+1));
+        set_breakpoints(bps.map((b: number)=>b+1));
     }
 
 
@@ -116,7 +131,7 @@ let HilDebuggerView = function (props) {
             <HilDebuggerSidebar
                 emulator={props.emulator}
                 selections={props.selections}
-                on_selection={props.set_selections}
+                set_selections={props.set_selections}
                 on_select={props.on_select}
                 on_program_select={handle_select_program}
                 compiled_programs={compiled_programs}

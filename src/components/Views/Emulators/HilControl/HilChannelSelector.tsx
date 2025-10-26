@@ -15,16 +15,37 @@
 // limitations under the License.
 
 import React, {useContext, useReducer, useState} from 'react';
-import {SelectField} from "#UI";
-import {get_ui_state, save_ui_state} from "#client_core";
+import {SelectField} from "#UI/index.js";
+import {get_ui_state, save_ui_state, up_emulator} from "#client_core/index.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
+import type {EmulatorHilChannelIdentifier} from "#interfaces/index.js";
+import type {ActionMeta} from "react-select";
 
-let HilChannelSelector = function (props) {
+interface HilChannelSelector{
+    emulator: up_emulator,
+    set_selected_outputs: (outputs: string[]) => void,
+}
+
+interface ChannelSelectorOptions{
+    label: string,
+    value:EmulatorHilChannelIdentifier
+}
+
+
+let HilChannelSelector = function (props:HilChannelSelector) {
+
 
     const application = useContext(ApplicationContext);
 
-    let [selected_channels, set_selected_channels]  = useState( ()=>{
-        let default_state = [{},{},{},{},{},{}];
+    let [selected_channels, set_selected_channels]  = useState<ChannelSelectorOptions[]>( ()=>{
+        let default_state: ChannelSelectorOptions[] = Array(6).map(()=>{
+            return {label: "", value: {
+                    label: "",
+                    core: "",
+                    channel: 0,
+                    name: ""
+                }}
+        })
         let state = get_ui_state(application,'hil_selector_channels',  default_state);
         if(state.selected_emulator === props.emulator.name){
             if(state.channels !== default_state){
@@ -39,20 +60,23 @@ let HilChannelSelector = function (props) {
         return default_state;
     });
 
-    let produce_data_options = ()=>{
+    let produce_data_options = (): ChannelSelectorOptions[]=>{
         if(!props.emulator){
-            return {}
+            return []
         }
 
         return props.emulator.get_hil_data_points().map(item=>{
             return{label:item.label, value:item}
-        })
+        }).filter((item) => item !== undefined);
     }
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
-    let handle_select_channel = async (value, test) =>{
-        let ch_n = parseInt(test.name.split("_")[1]);
+    let handle_select_channel = async (value: ChannelSelectorOptions | null, event: ActionMeta<ChannelSelectorOptions>) =>{
+        if(value === null || event.name === undefined) return;
+        let ch_s = event.name.split("_")[1];
+        if(ch_s === undefined) return;
+        let ch_n = parseInt(ch_s);
         let new_ch = selected_channels;
         new_ch[ch_n-1] = value;
         set_selected_channels(new_ch);
@@ -65,14 +89,13 @@ let HilChannelSelector = function (props) {
     let render_selectors = () =>{
         let ret =  [];
         for(let i = 0; i< 6; i++){
+            let value = selected_channels[i];
             ret.push(
-                <SelectField
-                    inline
+                <SelectField<ChannelSelectorOptions>
                     label={"Channel " + (i+1)}
                     key={"channel_" + (i+1)}
                     onChange={handle_select_channel}
-                    value={selected_channels[i]}
-                    defaultValue="Select Datapoint"
+                    value={value===undefined? null: value}
                     name={"channel_" + (i+1)}
                     options={produce_data_options()}
                 />

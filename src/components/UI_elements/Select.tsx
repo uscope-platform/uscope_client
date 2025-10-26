@@ -32,7 +32,7 @@ const SelectWrapper = styled('div')`
 interface SelectFieldProps<Option extends DefaultOption=DefaultOption> {
     onChange: (value: Option | null, event: ActionMeta<Option>) => void;
     name: string;
-    label: string;
+    label?: string;
     style?: React.CSSProperties;
     defaultValue?: Option;
     placeholder?: Option;

@@ -30,7 +30,7 @@ let ChannelSelector = function(props: ChannelSelectorProps) {
     let get_state = ()=>{
         let new_ch_state: Record<number, boolean> = {}
         props.data.map(chan => {
-            new_ch_state[chan.spec.number] = chan.visible;
+            if(chan.spec) new_ch_state[chan.spec.number] = chan.visible;
             return 0;
         })
         return new_ch_state;
@@ -48,17 +48,17 @@ let ChannelSelector = function(props: ChannelSelectorProps) {
             <div>
                     {   props.data?
                         props.data.map((chan,i) => {
-                        return(
-                            <ChannelSelectorItem
-                                onStatusChange={handle_status_change}
-                                key={chan.spec.id}
-                                id={chan.spec.id}
-                                idx={i}
-                                name={chan.spec.name}
-                                value={chan.visible}
-                            />
-                        );
-                    }):<></>
+                            if(chan.spec) return(
+                                <ChannelSelectorItem
+                                    onStatusChange={handle_status_change}
+                                    key={chan.spec.id}
+                                    id={chan.spec.id}
+                                    idx={i}
+                                    name={chan.spec.name}
+                                    value={chan.visible}
+                                    />
+                                );
+                        }):<></>
                     }
             </div>
         );

@@ -15,10 +15,13 @@
 
 import React from 'react';
 import {MdDownload} from "react-icons/md";
-import {ColorTheme} from "#UI";
+import {ColorTheme} from "#UI/index.js";
 
+interface HilResultsSidebarProps {
+    on_download?: () => void,
+}
 
-let  HilResultsSidebar = props =>{
+let  HilResultsSidebar = (props: HilResultsSidebarProps) =>{
 
 
     let handle_click = () =>{

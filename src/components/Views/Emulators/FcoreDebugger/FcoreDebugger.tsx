@@ -16,20 +16,31 @@
 
 import React, {useState} from 'react';
 import {Fcore} from "./FcoreLanguage.js";
-import {TextEditor} from "#UI";
-import DebuggerControls from "./DebuggerControls";
+import {TextEditor} from "#UI/index.js";
+import DebuggerControls from "./DebuggerControls.js";
 import {cpp} from "@codemirror/lang-cpp";
 import MemoryViewer from "./MemoryViewer.jsx";
 import {EditorView} from "codemirror";
 import IoViewer from "./IoViewer.jsx";
 import {toast, ToastContainer} from "react-toastify";
-import {up_emulator_result} from "#client_core";
+import {up_emulator_result, up_emulator} from "#client_core/index.js";
 import TranslationTable from "../Sidebar/TranslationTable.jsx";
+import type {DebuggerCheckpoint, SingleProgramDataPackage} from "#interfaces/index.js";
 
-let  FcoreDebugger = props =>{
+interface FcoreDebuggerProps {
+    emulator: up_emulator
+    set_checkpoint: (channel_io_names: DebuggerCheckpoint) => void
+    on_emulation_end: (res: up_emulator_result) => void
+    selected_program: string,
+    on_program_select: (program: string) => void,
+    checkpoint: DebuggerCheckpoint,
+    content: SingleProgramDataPackage
+}
+
+let  FcoreDebugger = (props: FcoreDebuggerProps) =>{
 
     let [visualization_type, set_visualization_type] = useState("float");
-    let [current_inputs, set_current_inputs] = useState({names:[], values:[]});
+    let [current_inputs, set_current_inputs] = useState<{names:string[], values:number[]}>({names:[], values:[]});
 
 
     let handle_run = async ()=>{
@@ -70,7 +81,7 @@ let  FcoreDebugger = props =>{
     };
 
     let produce_theme = () =>{
-        let base_theme = {}
+        let base_theme: Record<string, any> = {}
         if(props.checkpoint.breakpoint>=0){
             base_theme['.cm-line:nth-of-type(' + String(props.checkpoint.breakpoint+1) + ')'] = {
                 backgroundColor: 'rgb(139, 233, 253)'

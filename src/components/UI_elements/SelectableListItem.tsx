@@ -37,7 +37,7 @@ interface SelectableListItemProps {
     multi_select?: boolean | undefined;
     name: string;
     onRemove?: ((name: string) => void )| undefined;
-    onSelect: (name: string, multi?: boolean) => void;
+    onSelect?: ((name: string, multi?: boolean) => void )| undefined;
     onMouseEnter?: (name: string) => void;
     iconSize?: number | string;
 }
@@ -50,11 +50,11 @@ export let  SelectableListItem = (props: SelectableListItemProps) =>{
     let [confirm_needed, set_confirm_needed] = useState(false);
 
     let handle_click = (event: any) =>{
-        if(props.multi_select){
+        if(props.multi_select && props.onSelect){
             if(event.ctrlKey) props.onSelect(props.name, true);
             else props.onSelect(props.name, false);
         } else{
-            props.onSelect(props.name)
+            if(props.onSelect) props.onSelect(props.name)
         }
 
     };

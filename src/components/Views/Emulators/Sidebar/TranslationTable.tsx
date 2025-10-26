@@ -15,26 +15,32 @@
 
 
 import React, {useEffect, useState} from 'react';
-import {SelectableList, SimpleContent, UIPanel} from "#UI";
+import {SelectableList, SimpleContent, UIPanel} from "#UI/index.js";
+import type {TranslationTableEntry} from "#interfaces/index.js";
 
-let  TranslationTable = props =>{
+interface TranslationTableProps {
+    channel_io: TranslationTableEntry[]
+    common_io: TranslationTableEntry[]
+}
 
-    let [channel_io_names, set_channel_io_names] = useState(null)
-    let [channel_io_addr, set_channel_io_addr] = useState(null);
-    let [channel_core_addr, set_channel_core_addr] = useState(null);
+let  TranslationTable = (props: TranslationTableProps) =>{
 
-    let [common_io_names, set_common_io_names] = useState(null)
-    let [common_io_addr, set_common_io_addr] = useState(null);
-    let [common_core_addr, set_common_core_addr] = useState(null);
+    let [channel_io_names, set_channel_io_names] = useState<string[]>([])
+    let [channel_io_addr, set_channel_io_addr] = useState<string[]>([]);
+    let [channel_core_addr, set_channel_core_addr] = useState<string[]>([]);
+
+    let [common_io_names, set_common_io_names] = useState<string[]>([])
+    let [common_io_addr, set_common_io_addr] = useState<string[]>([]);
+    let [common_core_addr, set_common_core_addr] = useState<string[]>([]);
 
 
     useEffect(() => {
         if(props.channel_io){
-            set_channel_io_addr(["IO Side", ...props.channel_io.map((line)=>{
-                return line[0]
+            set_channel_io_addr(["IO Side", ...props.channel_io.map((entry,)=>{
+                return entry[0].toString()
             })]);
             set_channel_core_addr(["Core Side", ...props.channel_io.map((line)=>{
-                return line[1].address
+                return line[1].address.toString()
             })]);
             set_channel_io_names(["I/O name", ...props.channel_io.map((line)=>{
                 return line[1].name
@@ -42,10 +48,10 @@ let  TranslationTable = props =>{
         }
         if(props.common_io){
             set_common_io_addr(["IO Side", ...props.common_io.map((line)=>{
-                return line[0]
+                return line[0].toString()
             })]);
             set_common_core_addr(["Core Side", ...props.common_io.map((line)=>{
-                return line[1].address
+                return line[1].address.toString()
             })]);
             set_common_io_names(["I/O name", ...props.common_io.map((line)=>{
                 return line[1].name

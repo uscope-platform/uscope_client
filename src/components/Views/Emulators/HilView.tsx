@@ -15,22 +15,25 @@
 
 import React, {useState} from 'react';
 
-import {TabbedContent, UIPanel} from "#UI"
-import {up_emulator, up_emulator_result} from "#client_core";
+import {TabbedContent, UIPanel} from "#UI/index.js"
+import {up_emulator, up_emulator_result} from "#client_core/index.js";
 import HilEditorView from "./Editor/HilEditorView.jsx";
 import HilDebuggerView from "./FcoreDebugger/HilDebuggerView.jsx";
 import HilControlView from "./HilControl/HilControlView.jsx";
 import HilResultsView from "./EmulationResults/HilResultsView.jsx";
 import HilSpecsView from "./Specs/HilSpecsView.jsx";
 import {useAppSelector} from "#redux/hooks.js";
+import type {EmulatorSelections} from "#interfaces/index.js";
 
-let HilView = function (props) {
+interface HilViewProps {}
 
-    let [selections, set_selections] = useState({
+let HilView = function (props: HilViewProps) {
+
+    let [selections, set_selections] = useState<EmulatorSelections>({
         component:null,
         iom:null,
         tab:0,
-        program:null,
+        program:"",
         obj_version:0
     })
 
@@ -45,19 +48,21 @@ let HilView = function (props) {
     let [emulator, set_emulator] = useState(up_emulator.get_dummy());
 
 
-    let versioned_handle_selection = (value) =>{
+    let versioned_handle_selection = (value: EmulatorSelections) =>{
         let new_val = {...value, obj_version: value.obj_version + 1}
         set_selections(new_val);
     }
 
 
-    let on_item_select = (value) =>{
+    let on_item_select = (value: number) =>{
         versioned_handle_selection({...selections, tab:value});
     }
 
 
-    let handle_emulator_select = (emu)=>{
-        set_emulator(new up_emulator(emulators_store[emu]));
+    let handle_emulator_select = (emu: number)=>{
+        let e = emulators_store[emu];
+        if(e === undefined) return;
+        set_emulator(new up_emulator(e));
         versioned_handle_selection({...selections, component: null});
     }
 
@@ -70,7 +75,7 @@ let HilView = function (props) {
             height:"100%"
         }}>
               <UIPanel style={{flexGrow:1}} key="emulator_diagram" level="level_2">
-                  <TabbedContent height="100%" names={["Editor","Debugger","Hardware",  "Results", "Specs"]} onSelect={on_item_select} selected={selections.tab}>
+                  <TabbedContent names={["Editor","Debugger","Hardware",  "Results", "Specs"]} onSelect={on_item_select} selected={selections.tab}>
                       <HilEditorView
                           set_emulation_results={set_emulation_results}
                           set_input_data={set_input_data}
@@ -99,7 +104,6 @@ let HilView = function (props) {
                       <HilResultsView
                           filename={emulator.name}
                           emulation_results={emulation_results}
-                          input_data={input_data}
                       />
                       <HilSpecsView
                           emulator={emulator}

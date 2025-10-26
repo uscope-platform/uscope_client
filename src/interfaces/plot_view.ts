@@ -25,5 +25,5 @@ export interface plot_channel{
     mode: string,
     name: string,
     visible: boolean,
-    spec: channel
+    spec?: channel
 }

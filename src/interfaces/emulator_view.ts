@@ -21,6 +21,19 @@ export interface EmulatorResultLegendItem{
     index: number
 }
 
+export interface EmulatorHilInput{
+    core:string,
+    name:string,
+    value:number[]
+}
+
+export interface EmulatorHilChannelIdentifier{
+    label:string,
+    core:string,
+    name:string,
+    channel:number
+}
+
 
 export interface EmulatorIomSelector{
     type: "inputs" | "outputs" | "memory_init",
@@ -60,6 +73,46 @@ export interface EmulatorSelections{
     component: EmulatorComponentSelector | null,
     iom:EmulatorIomSelector | null,
     tab:number,
-    program:null,
+    program:string,
     obj_version:number
+}
+
+export interface IoAddressMapping{
+    name:string,
+    address:number
+}
+
+
+export type TranslationTableEntry = [number, IoAddressMapping]
+
+
+export interface DecompiledPrograms {
+    translation_table: TranslationTableEntry[],
+    common_io_translation_table:  TranslationTableEntry[],
+    program:string
+}
+
+export interface SingleProgramDataPackage{
+    asm: DecompiledPrograms,
+    source: string
+}
+
+export interface DebuggerDataPackage {
+    asm: Record<string, DecompiledPrograms>,
+    source:string
+}
+
+export interface DebuggerCheckpoint {
+    breakpoint:number
+    memory_view:number[],
+    inputs:Record<string, number>,
+    status:string,
+    core_name:string,
+    next_program:string,
+    progress:{
+        current:number,
+        total_steps:number,
+        period:number
+    },
+    completed_round:boolean
 }

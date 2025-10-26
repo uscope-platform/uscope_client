@@ -15,19 +15,26 @@
 
 
 import React from 'react';
-import {SelectableList, SimpleContent, UIPanel} from "#UI";
+import {SelectableList, SimpleContent, UIPanel} from "#UI/index.js";
 
-let  IoViewer = props =>{
+interface IoViewerProps {
+    vis_type: string,
+    io:{
+        names: string[],
+        values: number[],
+    }
+}
 
+let  IoViewer = (props: IoViewerProps) =>{
 
 
     const data = props.io.values.map(val=>{
         if(props.vis_type === "float"){
             let v = new DataView(new ArrayBuffer(4));
             v.setUint32(0, val);
-            return v.getFloat32(0);
+            return v.getFloat32(0).toString();
         } else {
-            return val;
+            return val.toString();
         }
     })
 
@@ -44,7 +51,9 @@ let  IoViewer = props =>{
                     }}
                     key="io_view_content"
                 >
-                    <SelectableList/>
+                    <SelectableList
+                        items={props.io.names}
+                    />
                     <SelectableList
                         items={data}
                     />

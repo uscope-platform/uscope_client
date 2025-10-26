@@ -15,14 +15,26 @@
 
 
 import React from 'react';
-import { InputField, SelectableList, SimpleContent, UIPanel} from "#UI";
+import { InputField, SelectableList, SimpleContent, UIPanel} from "#UI/index.js";
 
-let  BreakpointsPanel = props =>{
+interface BreakpointsPanelProps {
+    breakpoints: number[],
+    on_remove: (value: number) => void,
+    on_add: (value: number) => void,
+}
 
-    let handle_add = async (event)=>{
+let  BreakpointsPanel = (props: BreakpointsPanelProps) =>{
+
+    let handle_add = async (event: React.KeyboardEvent<HTMLInputElement>)=>{
         if(event.key==="Enter"|| event.key ==="Tab") {
-            props.on_add(event.target.value);
+            props.on_add(parseInt(event.currentTarget.value));
         }
+    }
+
+    let bp = props.breakpoints.map(breakpoint => breakpoint.toString());
+
+    let handle_remove = (r: string) =>{
+        props.on_remove(parseInt(r));
     }
 
     return (
@@ -31,8 +43,8 @@ let  BreakpointsPanel = props =>{
                 <div key="bp_view_contents">
                     <InputField inline id="add_breakpoint" name="add_breakpoint" label="Add Breakpoint" onKeyDown={handle_add}/>
                     <SelectableList
-                        onRemove={props.on_remove}
-                        items={props.breakpoints}
+                        onRemove={handle_remove}
+                        items={bp}
                     />
                 </div>
             </SimpleContent>

@@ -120,7 +120,6 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
             setEdges(edges =>(initial_edges));
             let inputs_obj: Record<string, Record<string, number[]>> ={};
 
-            debugger;
             Object.values(props.emulator.cores).map((core)=>{
                 return core.input_data
             }).filter((item)=>{

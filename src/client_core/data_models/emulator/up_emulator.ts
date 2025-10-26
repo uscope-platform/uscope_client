@@ -18,8 +18,23 @@ import store from "../../../store.js";
 import {backend_delete, backend_get, backend_patch, backend_post} from "../../proxy/backend.js";
 import {api_dictionary} from "../../proxy/api_dictionary.js";
 import {addEmulator, removeEmulator, update_emulator} from "#redux/index.js";
-import type {emulator, core, connection, server_side_port_link, hil_data_point, core_deployment_options, core_input, core_input_data, core_memory, core_output, emulator_hil_sim_data, port_link} from "#interfaces/index.ts";
+import type {
+    emulator,
+    core,
+    connection,
+    server_side_port_link,
+    hil_data_point,
+    core_deployment_options,
+    core_input,
+    core_input_data,
+    core_memory,
+    core_output,
+    emulator_hil_sim_data,
+    port_link,
+    EmulatorHilChannelIdentifier
+} from "#interfaces/index.ts";
 import axios, {type AxiosError} from "axios";
+import type {EmulatorHilInput} from "#interfaces/emulator_view.js";
 
 export class up_emulator {
     public id:number;
@@ -939,12 +954,12 @@ export class up_emulator {
         return dp;
     }
 
-    select_output = (channel: number, output: string) =>{
+    select_output = (channel: number, output: EmulatorHilChannelIdentifier) =>{
         return backend_post(api_dictionary.operations.hil_select_output, {channel:channel, output:output});
     }
 
-    get_inputs =() =>{
-        let target_inputs: Record<string, any> = {};
+    get_inputs =():[string[],  Record<string, EmulatorHilInput[]>, number[]] =>{
+        let target_inputs: Record<string, EmulatorHilInput[]> = {};
         let cores: string[]  = []
         let channels: number[]  = []
         Object.values(this.cores).map((core)=>{
@@ -953,16 +968,18 @@ export class up_emulator {
             channels.push(core.channels)
             core.inputs.map((i)=>{
                 if(i.source.type === "constant"){
-                    target_inputs[core.name].push({core: core.name, name:i.name, value:i.source.value});
+                    let t= target_inputs[core.name];
+                    if(t===undefined) return;
+                    t.push({core: core.name, name:i.name, value:i.source.value});
                 }
             })
         })
         return [cores, target_inputs, channels];
     }
 
-    set_input = (core: number, name: string, channel: number, value: number) =>{
+    set_input = (core_name: string, name: string, channel: number, value: number) =>{
         return backend_post(api_dictionary.operations.hil_set_input, {
-            core: core,
+            core: core_name,
             name:name,
             channel: channel,
             value: value
@@ -983,35 +1000,35 @@ export class up_emulator {
         });
     }
 
-    add_breakpoint = async (core_id: number, line_n: number) =>{
+    add_breakpoint = async (core_id: string, line_n: number) =>{
         return await backend_post(api_dictionary.operations.hil_debug, {
             command: "add_breakpoint",
             arguments: {id:core_id, line:line_n},
         });
     }
 
-    get_breakpoints = async (core_id: number) =>{
+    get_breakpoints = async (core_id: string) =>{
         return await backend_post(api_dictionary.operations.hil_debug, {
             command: "get_breakpoints",
             arguments: {id:core_id},
         });
     }
 
-    remove_breakpoint = async (core_id: number, line_n: number) =>{
+    remove_breakpoint = async (core_id: string, line_n: number) =>{
         return await backend_post(api_dictionary.operations.hil_debug, {
             command: "remove_breakpoint",
             arguments: {id:core_id, line:line_n},
         });
     }
 
-    step_over = async (core_id: number) =>{
+    step_over = async (core_id: string) =>{
         return await backend_post(api_dictionary.operations.hil_debug, {
             command: "step",
             arguments: core_id
         });
     }
 
-    resume = async (core_id: number) =>{
+    resume = async (core_id: string) =>{
         return await backend_post(api_dictionary.operations.hil_debug, {
             command: "resume",
             arguments: core_id

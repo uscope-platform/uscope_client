@@ -15,19 +15,28 @@
 
 
 import React from 'react';
-import {ColorTheme, SelectField} from "#UI";
+import {ColorTheme, SelectField} from "#UI/index.js";
 import { MdPlayArrow, MdWrapText, MdStart} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
+import type {SimpleStringOption} from "#interfaces/index.js";
 
-let  DebuggerControls = props =>{
+interface DebuggerControlsProps {
+    run: () => void,
+    step: () => void,
+    resume: () => void,
+    select_types: (type: string) => void,
+}
 
-    let handle_types_select = (val)=>{
+let  DebuggerControls = (props: DebuggerControlsProps) =>{
+
+    let handle_types_select = (val: SimpleStringOption | null)=>{
+        if(val === null) return;
         props.select_types(val.value)
     }
 
     return (
         <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
-            <SelectField
+            <SelectField<SimpleStringOption>
                 defaultValue={{value: "float", label: "float"}}
                 name="type_selector"
                 onChange={handle_types_select}

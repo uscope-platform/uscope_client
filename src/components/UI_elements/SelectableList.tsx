@@ -18,8 +18,8 @@ import {SelectableListItem} from './SelectableListItem.js';
 
 interface SelectableListProps {
     multi_select?: boolean;
-    selected_item: string | string[];
-    onSelect: (name: string, multi?: boolean) => void;
+    selected_item?: string | string[];
+    onSelect?: ((name: string, multi?: boolean) => void);
     onRemove?: (name: string) => void;
     style?: React.CSSProperties;
     items: string[] | undefined;
@@ -33,7 +33,9 @@ export let  SelectableList = (props: SelectableListProps) =>{
         let ret = []
         for(let i = 0; i< names.length; i++){
             let selected;
-            if(props.multi_select){
+            if(props.selected_item === undefined){
+                selected = false;
+            } else if(props.multi_select){
                 selected = props.selected_item.includes(names[i]);
             } else{
                 selected = props.selected_item===names[i];

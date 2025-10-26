@@ -16,20 +16,35 @@
 import React from 'react';
 
 
-import {up_emulator} from "#client_core";
-import {SidebarBase} from "#UI";
+import {up_emulator} from "#client_core/index.js";
+import {SidebarBase} from "#UI/index.js";
 import AsmSelector from "./../AsmSelector.jsx";
 import BreakpointsPanel from "./../BreakpointsPanel.jsx";
 import ProgressPanel from "../../FcoreDebugger/ProgressPanel.jsx";
 import {useAppSelector} from "#redux/hooks.js";
+import type {EmulatorSelections} from "#interfaces/index.js";
+import type {DebuggerCheckpoint, DecompiledPrograms} from "#interfaces/emulator_view.js";
 
-let  HilDebuggerSidebar = props =>{
+interface HilDebuggerSidebarProps {
+    emulator: up_emulator;
+    on_select: (sel: number) => void,
+    set_selections: (sel:EmulatorSelections)=>void,
+    selections: EmulatorSelections,
+    on_program_select: (program:string)=>void,
+    compiled_programs: Record<string, DecompiledPrograms>
+    on_add_breakpoint: (value: number) => void,
+    on_remove_breakpoint: (value: number) => void,
+    breakpoints: number[],
+    checkpoint: DebuggerCheckpoint
+}
+
+let  HilDebuggerSidebar = (props: HilDebuggerSidebarProps) =>{
 
     const emulators_store = useAppSelector(state => state.emulators);
 
-    let handle_select_emulator = (sel) =>{
+    let handle_select_emulator = (sel: number) =>{
         props.on_select(sel);
-        props.on_selection({...props.selections, iom:null})
+        props.set_selections({...props.selections, iom:null})
     }
 
     return(
@@ -45,8 +60,6 @@ let  HilDebuggerSidebar = props =>{
                 template={up_emulator}
                 display_key="name"
                 content_name="Emulator"
-                selector="selected_emulator"
-                height={2}
                 onSelect={handle_select_emulator}
             />
             <AsmSelector
@@ -55,11 +68,9 @@ let  HilDebuggerSidebar = props =>{
                 on_select={props.on_program_select}
             />
             <BreakpointsPanel
-                emulator={props.emulator}
                 breakpoints={props.breakpoints}
                 on_add={props.on_add_breakpoint}
                 on_remove={props.on_remove_breakpoint}
-                selected_program={props.selections.program}
             />
             <ProgressPanel
                 progress={props.checkpoint.progress}
