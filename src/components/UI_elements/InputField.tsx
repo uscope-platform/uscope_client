@@ -44,19 +44,25 @@ margin-top: 0.15rem;
 margin-left: 0.15rem;
 `
 
-interface WrapperProps {
+interface WrapperProps extends React.HTMLAttributes<HTMLDivElement> {
     inline?: boolean | undefined;
+    children?: React.ReactNode;
 }
 
-export const Wrapper = styled<'div', WrapperProps>('div')(({ inline }) => `
-margin: 0 0.2rem;
-display: grid;
-grid-template-columns:  ${inline ? "1fr 1fr" : "1fr"};
-grid-auto-rows: auto;
-justify-content: ${inline ? "space-between" : "start"};
-align-items: center;
-flex-flow: wrap;
+const WrapperBase = ({ inline, children, ...rest }: WrapperProps) => (
+    <div {...rest}>{children}</div>
+);
+
+export const Wrapper = styled(WrapperBase)<WrapperProps>(({ inline }) => `
+  margin: 0 0.2rem;
+  display: grid;
+  grid-template-columns: ${inline ? "1fr 1fr" : "1fr"};
+  grid-auto-rows: auto;
+  justify-content: ${inline ? "space-between" : "start"};
+  align-items: center;
+  flex-flow: wrap;
 `);
+
 
 
 interface InputFieldProps {
@@ -79,7 +85,10 @@ interface InputFieldProps {
 
 export let  InputField = (props: InputFieldProps) =>{
     let key = props.name;
-    if(props.defaultValue) key += props.defaultValue;
+    if(props.defaultValue)
+        key += props.defaultValue;
+    else if(props.value)
+        key += props.value;
     if(props.compact){
         return (
             <InnerInput
@@ -98,11 +107,10 @@ export let  InputField = (props: InputFieldProps) =>{
         );
     } else if(props.description){
         return (
-            <Wrapper inline={ props.inline}>
+            <Wrapper key={key} inline={ props.inline}>
                 <Label htmlFor={props.id}>{props.label}</Label>
                 <InnerInput
                     name={props.name}
-                    key={key}
                     placeholder={props.placeholder}
                     id={props.id}
                     color={props.color ? props.color : ColorTheme.background.level_3}
@@ -118,12 +126,11 @@ export let  InputField = (props: InputFieldProps) =>{
         );
     } else{
         return (
-            <Wrapper inline={ props.inline}>
+            <Wrapper key={key} inline={ props.inline}>
                 <Label htmlFor={props.id}>{props.label}</Label>
                 <InnerInput
                     placeholder={props.placeholder}
                     name={props.name}
-                    key={key}
                     color={props.color ? props.color : ColorTheme.background.level_3}
                     id={props.id}
                     type={(props.type)?props.type:"text"}

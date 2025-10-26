@@ -59,12 +59,14 @@ let  ParametersArea = (props: ParametersAreaProps) =>{
                         props.parameters.map((param, i) => {
                             if(param.visible){
                                 return(
-                                    <InputField
-                                        description=""
-                                        placeholder={param.value.toString()}
-                                        name={param.parameter_id}
-                                        label={param.parameter_id}
-                                    />
+                                    <div key={param.parameter_id + "_input_area"}>
+                                        <InputField
+                                            placeholder={param.value.toString()}
+                                            name={param.parameter_id}
+                                            label={param.parameter_id}
+                                        />
+                                    </div>
+
                                 );
                             } else{
                                 return null;
