@@ -23,8 +23,6 @@ import {set_address, set_auth_config, set_redux_store, need_onboarding} from "#c
 
 //////  STYLE IMPORTS
 import './App.css';
-import {ThemeProvider} from "styled-components";
-import {ColorTheme} from "#UI/index.js";
 import {auto_sign_in, manual_sign_in} from "./client_core/proxy/auth.js";
 import type {AutoAuthRequest, login_token, ManualAuthRequest, UserRole} from "#interfaces/index.js";
 
@@ -96,20 +94,18 @@ let App = (props: AppProps) =>{
     }
 
     return(
-        <ThemeProvider theme={ColorTheme}>
-            <div className="App">
-                <React.StrictMode>
-                    {logged?
-                        <AuthApp
-                            onboarding_done={onboarding_done}
-                            needs_onboarding={onboarding_needed}
-                            user_role={user_role}
-                        /> :
-                        <LoginPage done={done}/>
-                    }
-                </React.StrictMode>
-            </div>
-        </ThemeProvider>
+        <div className="App">
+            <React.StrictMode>
+                {logged?
+                    <AuthApp
+                        onboarding_done={onboarding_done}
+                        needs_onboarding={onboarding_needed}
+                        user_role={user_role}
+                    /> :
+                    <LoginPage done={done}/>
+                }
+            </React.StrictMode>
+        </div>
     )
 
 }
