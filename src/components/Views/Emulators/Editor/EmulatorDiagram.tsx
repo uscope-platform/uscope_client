@@ -17,7 +17,7 @@ import React from 'react';
 
 import EmulatorToolbar from "./EmulatorToolbar.jsx";
 //@ts-ignore
-import {Canvas, Edge, hasLink, Node, useSelection} from "reaflow";
+import {Canvas, Edge, hasLink, MarkerArrow, Node, useSelection} from "reaflow";
 import type {EmulatorGraphNode,EmulatorGraphEdge} from "#interfaces/index.js";
 
 interface EmulatorDiagramProps {
@@ -102,7 +102,6 @@ let EmulatorDiagram = function (props: EmulatorDiagramProps) {
             display:"flex",
             flexDirection:"column"
         }}>
-
             <EmulatorToolbar
                 onAdd={props.onAdd}
                 onRun={props.onRun}
@@ -119,7 +118,7 @@ let EmulatorDiagram = function (props: EmulatorDiagramProps) {
                 selections={selections}
                 height="550px"
                 node={<Node onClick={handle_node_click} removable={false}/>}
-                edge={ <Edge onClick={handle_edge_click} removable={false}/> }
+                edge={ <Edge onClick={handle_edge_click}/> }
                 onCanvasClick={handle_canvas_click}
                 onLayoutChange={handle_layout_change}
                 onNodeLinkCheck={handle_link_check}
