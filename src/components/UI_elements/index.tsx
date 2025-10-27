@@ -23,10 +23,10 @@ export {PlotConfigurations} from "./PlotConfigurations.js"
 export {Checkbox} from "./checkbox.js"
 export {BlockTitle} from "./BlockTitle.js"
 export {Button} from "./Button.js"
+export {DeleteButton} from "./DeleteButton.js"
 export {MultiSelect} from "./MultiSelect.js"
 export {SelectableListItem} from './SelectableListItem.js'
 export {SelectableList} from './SelectableList.js'
-export {DeleteIcon} from './DeleteIcon.js'
 export {ChipSelector} from './ChipSelector.js'
 export {ListItem} from './ListItem.js'
 export {TwoColumnSelector} from "./TwoColumnSelector.js"

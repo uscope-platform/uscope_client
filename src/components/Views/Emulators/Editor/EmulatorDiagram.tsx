@@ -17,7 +17,7 @@ import React from 'react';
 
 import EmulatorToolbar from "./EmulatorToolbar.jsx";
 //@ts-ignore
-import {Canvas, Edge, hasLink, Node, removeAndUpsertNodes, useSelection} from "reaflow";
+import {Canvas, Edge, hasLink, Node, useSelection} from "reaflow";
 import type {EmulatorGraphNode,EmulatorGraphEdge} from "#interfaces/index.js";
 
 interface EmulatorDiagramProps {
@@ -29,12 +29,11 @@ interface EmulatorDiagramProps {
     onAdd: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
     onRun: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
     onDeploy: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
+    onDelete: () => void;
     onHardwareSim: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
     onEdit: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
     onCopy: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
     onLinkNodes: (event: any, from: EmulatorGraphNode, to:EmulatorGraphNode) => void;
-    onNodeRemove: (result:{nodes:EmulatorGraphNode[],edges:EmulatorGraphEdge[]},node: EmulatorGraphNode) => void;
-    onEdgeRemove: (edge:EmulatorGraphEdge) => void;
     enabled_actions: {
         add: boolean,
         copy: boolean,
@@ -42,6 +41,7 @@ interface EmulatorDiagramProps {
         run: boolean,
         hw_sim: boolean,
         deploy: boolean,
+        delete: boolean
     };
 }
 
@@ -96,26 +96,20 @@ let EmulatorDiagram = function (props: EmulatorDiagramProps) {
        props.onLinkNodes(event, from,to);
     };
 
-    let handle_node_remove = (event: any, node:EmulatorGraphNode) =>{
-        props.onNodeRemove(removeAndUpsertNodes(props.nodes, props.edges, node), node);
-    }
-
-    let handle_edge_remove = (event: any, edge: EmulatorGraphEdge) =>{
-        props.onEdgeRemove(edge);
-    }
-
     return(
         <div style={{
             height:"100%",
             display:"flex",
             flexDirection:"column"
         }}>
+
             <EmulatorToolbar
                 onAdd={props.onAdd}
                 onRun={props.onRun}
                 onDeploy={props.onDeploy}
                 onHardwareSim={props.onHardwareSim}
                 onEdit={props.onEdit}
+                onDelete={props.onDelete}
                 enable={props.enabled_actions}
                 onCopy={props.onCopy}
             />
@@ -124,8 +118,8 @@ let EmulatorDiagram = function (props: EmulatorDiagramProps) {
                 edges={inner_edges}
                 selections={selections}
                 height="550px"
-                node={<Node onClick={handle_node_click} onRemove={handle_node_remove}/>}
-                edge={ <Edge onClick={handle_edge_click} onRemove={handle_edge_remove}/> }
+                node={<Node onClick={handle_node_click} removable={false}/>}
+                edge={ <Edge onClick={handle_edge_click} removable={false}/> }
                 onCanvasClick={handle_canvas_click}
                 onLayoutChange={handle_layout_change}
                 onNodeLinkCheck={handle_link_check}

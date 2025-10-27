@@ -50,7 +50,8 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
         run: false,
         deploy: false,
         hw_sim:true,
-        copy:false
+        copy:false,
+        delete: false
     })
     const navigate = useNavigate();
 
@@ -61,6 +62,8 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
     let [selected_inputs_tab, set_selected_inputs_tab] = useState(0);
 
     useEffect(() =>{
+        let allow_delete = props.selections.component !== null &&
+            (props.selections.component.type === "node" || props.selections.component.type === "edge");
         if(props.selections.component){
             if(props.selections.component.type === "node"){
                 set_enabled_actions({
@@ -70,7 +73,8 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
                     run: enabled_actions.run,
                     deploy: enabled_actions.deploy,
                     hw_sim: enabled_actions.hw_sim,
-                    copy:true
+                    copy:true,
+                    delete: allow_delete
                 });
                 return;
             }
@@ -82,7 +86,8 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
             run: enabled_actions.run,
             deploy: enabled_actions.deploy,
             hw_sim: enabled_actions.hw_sim,
-            copy: false
+            copy: false,
+            delete: allow_delete
         });
 
     },[props.selections.component])
@@ -97,7 +102,8 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
                 run: true,
                 deploy: true,
                 hw_sim: true,
-                copy: false
+                copy: false,
+                delete: false
             });
 
             let initial_nodes: EmulatorGraphNode[] = [];
@@ -181,6 +187,36 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
         navigate("/programs", {state: {selected_program:core.program}});
     }
 
+    let delete_selection = ()=>{
+
+        let selection = props.selections.component;
+        if(selection==null)return;
+        if(selection.type === "node"){
+            let selected_node = selection.obj.id
+            props.on_selection({...props.selections,component:null});
+            let new_edges: EmulatorGraphEdge[] = [];
+            edges.map((item)=> {
+                if (item.from !== selected_node && item.to !== selected_node) {
+                    new_edges.push(item);
+                }
+            });
+            props.emulator.remove_node_connections(selected_node).then(()=>{
+                props.emulator.remove_core(selected_node).then();
+                setNodes(nodes.filter((item)=> item.id !== selected_node));
+                setEdges(new_edges);
+            });
+        } else if (selection.type === "edge"){
+            let edge = edges.filter((item)=> item.id === selection.obj.id)[0];
+            if(edge == undefined)return;
+            props.on_selection({...props.selections,component:null});
+            props.emulator.remove_dma_connection(edge.from, edge.to).then(()=>{
+                let n_e = edges.filter((item) =>{ return item.id !== edge.id});
+                setEdges(n_e);
+            });
+        }
+
+    }
+
     let handle_hardware_sim = async () =>{
         let data = await props.emulator.download_hardware_sim_data();
         if(data === undefined) return;
@@ -236,29 +272,6 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
 
     }
 
-    let handle_node_remove = (result:{nodes:EmulatorGraphNode[],edges:EmulatorGraphEdge[]},node: EmulatorGraphNode)=>{
-        props.on_selection({...props.selections,component:null});
-        let new_edges: EmulatorGraphEdge[] = [];
-        edges.map((item)=> {
-            if (item.from !== node.id && item.to !== node.id) {
-                new_edges.push(item);
-            }
-        });
-        props.emulator.remove_node_connections(node.id).then(()=>{
-            props.emulator.remove_core(node.id).then();
-            setNodes(result.nodes);
-            setEdges(new_edges);
-        });
-    }
-
-    let handle_edge_remove = (edge: EmulatorGraphEdge) =>{
-        props.on_selection({...props.selections,component:null});
-        props.emulator.remove_dma_connection(edge.from, edge.to).then(()=>{
-            let n_e = edges.filter((item) =>{ return item.id !== edge.id});
-            setEdges(n_e);
-        });
-    }
-
     const handle_select_iom = (selection: EmulatorIomSelector)=>{
         let sel = {...props.selections, iom:selection};
         props.on_selection(sel);
@@ -290,12 +303,11 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
                         <SimpleContent name="Emulation_diagram" height="100%">
                             <EmulatorDiagram
                                 onNodeSelect={handle_node_select}
-                                onNodeRemove={handle_node_remove}
                                 onEdgeSelect={handle_edge_select}
-                                onEdgeRemove={handle_edge_remove}
                                 onCanvasClick={handle_canvas_click}
                                 onLinkNodes={handle_link_nodes}
                                 onAdd={add_core}
+                                onDelete={delete_selection}
                                 onRun={handle_run}
                                 onCopy={copy_core}
                                 onDeploy={handle_deploy}

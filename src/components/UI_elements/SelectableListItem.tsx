@@ -14,10 +14,10 @@
 // limitations under the License.
 
 import {styled} from 'goober';
-import React, {type ReactNode, useState} from "react";
+import React, {type ReactNode} from "react";
 import {Image} from "./Image.js";
-import {MdDelete} from "react-icons/md";
 import {ColorTheme} from "./ColorTheme.js";
+import {DeleteButton} from "#UI/DeleteButton.js";
 
 interface ItemLayoutProps {
     selected: boolean;
@@ -46,8 +46,6 @@ export let  SelectableListItem = (props: SelectableListItemProps) =>{
     const image_src = "assets/selector_icons/" + props.icon+".svg";
     const alt = props.icon + "language icon";
 
-    let [color, set_color] = useState("white");
-    let [confirm_needed, set_confirm_needed] = useState(false);
 
     let handle_click = (event: any) =>{
         if(props.multi_select && props.onSelect){
@@ -59,18 +57,6 @@ export let  SelectableListItem = (props: SelectableListItemProps) =>{
 
     };
 
-    let handle_remove = () =>{
-        set_color("red");
-        if(!confirm_needed){
-            set_confirm_needed(true);
-            setTimeout(() => {
-                set_confirm_needed(false);
-                set_color("white");
-            }, 1500);
-        } else{
-            if(props.onRemove) props.onRemove(props.name);
-        }
-    };
 
 
     let get_icon_image = (icon: string | ReactNode) =>{
@@ -85,7 +71,7 @@ export let  SelectableListItem = (props: SelectableListItemProps) =>{
 
     let render_delete = () =>{
         if(props.onRemove){
-            return(<MdDelete size={props.iconSize?props.iconSize:ColorTheme.icons_size} onClick={handle_remove} color={color}/>);
+            return(<DeleteButton onRemove={props.onRemove} name={props.name}/>);
         }
     }
 

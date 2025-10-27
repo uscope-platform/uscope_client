@@ -15,9 +15,16 @@
 
 import React from 'react';
 
-import {ColorTheme} from "#UI/index.js";
+import {ColorTheme, DeleteButton} from "#UI/index.js";
 import {Tooltip} from "react-tooltip";
-import {MdAdd, MdArticle, MdConstruction, MdSimCardDownload, MdPlayArrow, MdContentCopy} from "react-icons/md";
+import {
+    MdAdd,
+    MdArticle,
+    MdConstruction,
+    MdSimCardDownload,
+    MdPlayArrow,
+    MdContentCopy
+} from "react-icons/md";
 
 interface EmulatorToolbarProps {
     onAdd: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
@@ -26,6 +33,7 @@ interface EmulatorToolbarProps {
     onRun: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
     onDeploy: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
     onHardwareSim: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
+    onDelete: () => void;
     enable: {
         add: boolean,
         copy: boolean,
@@ -33,6 +41,7 @@ interface EmulatorToolbarProps {
         run: boolean,
         hw_sim: boolean,
         deploy: boolean,
+        delete: boolean,
     }
 }
 
@@ -126,7 +135,7 @@ let  EmulatorToolbar = (props: EmulatorToolbarProps) =>{
                 props.onHardwareSim(event);
             }
         };
-        let icon_color = props.enable.run ? ColorTheme.icons_color : ColorTheme.disabled_icon_color;
+        let icon_color = props.enable.hw_sim ? ColorTheme.icons_color : ColorTheme.disabled_icon_color;
         return (
             <div key="hw_sim" id="hw_sim">
                 <MdSimCardDownload onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
@@ -136,6 +145,11 @@ let  EmulatorToolbar = (props: EmulatorToolbarProps) =>{
         )
     }
 
+    let render_delete= () => {
+        return (<DeleteButton enable={props.enable.delete} onRemove={props.onDelete}/>)
+    }
+
+
     return (
         <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
             {render_add()}
@@ -144,6 +158,7 @@ let  EmulatorToolbar = (props: EmulatorToolbarProps) =>{
             {render_run()}
             {render_deploy()}
             {render_hw_sim()}
+            {render_delete()}
 
         </div>
     );

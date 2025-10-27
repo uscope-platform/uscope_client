@@ -15,7 +15,7 @@
 
 import React from "react";
 import {Label} from "../Label.js";
-import {DeleteIcon} from "../DeleteIcon.jsx";
+import {DeleteButton} from "#UI/DeleteButton.js";
 
 interface CardTitleProps {
     name: string;
@@ -32,7 +32,7 @@ export let CardTitle = function (props: CardTitleProps) {
         }}>
             <Label>{props.name}</Label>
             {props.additionalItems}
-            <DeleteIcon onRemove={props.onRemove}/>
+            <DeleteButton onRemove={props.onRemove}/>
         </div>
     );
 };
