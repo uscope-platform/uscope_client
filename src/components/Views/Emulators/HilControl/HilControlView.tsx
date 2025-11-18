@@ -31,7 +31,7 @@ let HilControlView = function (props: HilControlViewProps) {
 
     let [hil_plot_running, set_hil_plot_running] = useState(false);
     let [download_data_request, set_download_data_request] = useState(false);
-
+    let [plot_prescaler, set_plot_prescaler] = useState<number>(0);
     return(
         <div style={{
             display:"flex",
@@ -44,6 +44,7 @@ let HilControlView = function (props: HilControlViewProps) {
                 emulator={props.emulator}
                 deployed={props.deployed}
                 hil_plot_running={hil_plot_running}
+                plot_prescaler={plot_prescaler}
                 download_data_request={download_data_request}
                 on_download_done={set_download_data_request}
             />
@@ -53,6 +54,7 @@ let HilControlView = function (props: HilControlViewProps) {
                 set_selections={props.set_selections}
                 on_select={props.on_select}
                 hil_plot_running={hil_plot_running}
+                set_prescaler={set_plot_prescaler}
                 on_plot_status_update={set_hil_plot_running}
                 onDownloadHilData={set_download_data_request}
             />

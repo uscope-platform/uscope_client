@@ -80,6 +80,12 @@ export class up_program {
         return new up_program(new_program);
     }
 
+    static delete(p: up_program){
+        return backend_delete(api_dictionary.programs.delete+'/'+p.id, p).then(()=>{
+            store.dispatch(removeProgram(p));
+        })
+    }
+
     add_remote = () => {
         store.dispatch(AddProgram(this));
         return backend_post(api_dictionary.programs.add+'/'+this.id, this._get_program());

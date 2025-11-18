@@ -30,6 +30,7 @@ interface TriggerControlsProps {
     onDownload: () => void;
     onStop?: () => void;
     acquisition_status: ScopeStatus;
+    set_prescaler?: (value: number) => void;
 }
 
 
@@ -80,6 +81,7 @@ let  TriggerControls = (props: TriggerControlsProps) =>{
             source:parseInt(controls_state.trigger_source.value),
             trigger_point:controls_state.trigger_point
         };
+        if(props.set_prescaler) props.set_prescaler(controls_state.tb_prescaler);
         if(past_acq_state !== next_acq){
             set_acquisition(next_acq).then(()=>{
                 set_past_acq_state(next_acq);

@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import {SimpleContent, TabbedContent, UIPanel} from "#UI/index.js";
 import HilChannelSelector from "./HilChannelSelector.jsx";
 import HilInputsPanel from "./HilInputsPanel.jsx";
@@ -26,7 +26,8 @@ interface HilPlotTabProps {
     deployed: boolean,
     download_data_request: boolean,
     on_download_done: (request: boolean) => void,
-    hil_plot_running: boolean
+    hil_plot_running: boolean,
+    plot_prescaler: number
 }
 
 let HilPlotTab = function (props: HilPlotTabProps) {
@@ -36,6 +37,14 @@ let HilPlotTab = function (props: HilPlotTabProps) {
         let [selected_core, set_selected_core] = React.useState(0);
         let [selected_outputs, set_selected_outputs] = React.useState<string[]>([]);
 
+        let [sampling_freq, set_sampling_freq] = React.useState(1e3);
+
+        useEffect(() => {
+            props.emulator.get_sampling_frequency().then(res => {
+                if(props.plot_prescaler>0) set_sampling_freq(res/props.plot_prescaler)
+                else set_sampling_freq(res);
+            });
+        }, [props.emulator, props.plot_prescaler]);
 
         let render_input_tabs = ()=>{
             let ret_arr = []
@@ -66,6 +75,7 @@ let HilPlotTab = function (props: HilPlotTabProps) {
                        <HilPlot
                            hil_plot_running={props.hil_plot_running}
                            refreshPeriod={125}
+                           sampling_frequency={sampling_freq}
                            download_data_request={props.download_data_request}
                            on_download_done={props.on_download_done}
                            selected_outputs={selected_outputs}

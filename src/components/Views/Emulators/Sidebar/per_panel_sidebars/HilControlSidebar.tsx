@@ -30,6 +30,7 @@ interface HilControlSidebarProps {
     onDownloadHilData: (req: boolean) => void,
     on_select: (sel: number) => void,
     set_selections: (selection: EmulatorSelections) => void
+    set_prescaler: (prescaler: number) => void
 }
 
 let  HilControlSidebar = (props:HilControlSidebarProps) =>{
@@ -84,6 +85,7 @@ let  HilControlSidebar = (props:HilControlSidebarProps) =>{
                 onDownloadHilData={props.onDownloadHilData}
                 onDownlodHilSim={download_sim_data}
                 onStart={on_start}
+                set_prescaler={props.set_prescaler}
                 onStop={on_stop}
                 onPause={on_pause}
             />

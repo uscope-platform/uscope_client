@@ -896,6 +896,9 @@ export class up_emulator {
         return await backend_post(api_dictionary.operations.hil_deploy, specs);
     }
 
+    get_sampling_frequency = async (): Promise<number> =>{
+        return await backend_get(api_dictionary.operations.sampling_frequency);
+    }
 
     get_raw_obj = () => {
         return this._get_emulator();

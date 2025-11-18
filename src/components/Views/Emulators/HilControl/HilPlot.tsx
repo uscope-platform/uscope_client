@@ -30,6 +30,7 @@ interface HilPlotProps {
     on_download_done: (done: boolean) => void
     hil_plot_running: boolean,
     refreshPeriod: number,
+    sampling_frequency: number,
     selected_outputs: string[]
 }
 
@@ -58,7 +59,7 @@ let HilPlot = function (props: HilPlotProps) {
             try{
                 let data = await direct_fetch();
                 if(data.length === 0 || data[0] === undefined) return;
-                let x = [...Array(data[0].data.length).keys()];
+                let x = [...Array(data[0].data.length).keys()].map(x=> x/props.sampling_frequency);
 
                 let selected_data = data.map((channel): plot_channel=>{
                     let n =props.selected_outputs[channel.channel];

@@ -24,6 +24,7 @@ interface HilControlProps {
     onStart: () => void;
     onPause: () => void;
     onStop: () => void;
+    set_prescaler: (value: number)=> void;
 }
 
 let  HilControl = (props: HilControlProps) =>{
@@ -47,6 +48,7 @@ let  HilControl = (props: HilControlProps) =>{
                         onPlay={props.onStart}
                         onPause={props.onPause}
                         onStop={props.onStop}
+                        set_prescaler={props.set_prescaler}
                         onDownload={handle_download}
                     />
                 </SimpleContent>
