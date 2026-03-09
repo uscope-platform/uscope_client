@@ -198,10 +198,10 @@ export class up_peripheral {
         return backend_post(api_dictionary.operations.write_registers, data);
     }
 
-    static direct_register_write(writes: any){
+    static direct_register_write(writes: [number, number][]){
         let payload: register_write[] = []
         for (const item of writes) {
-           payload.push({type:"direct", proxy_type:"", proxy_address:0, address:item[0], value:item[1]})
+           payload.push({type:"direct", proxy_type:"", proxy_address:0, address:item[0]|0, value:item[1]})
         }
         return up_peripheral.bulk_register_write(payload);
     }

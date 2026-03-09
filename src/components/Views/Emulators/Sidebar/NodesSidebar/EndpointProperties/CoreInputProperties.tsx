@@ -76,6 +76,11 @@ let  CoreInputProperties = (props: CoreInputPropertiesProps) =>{
 
     let handle_select =async (obj: SimpleStringOption | null, e: ActionMeta<SimpleStringOption>) =>{
         if(obj === null) return;
+        if(e.name === "source_type"){
+            let new_source = {...sel_in.source, ...{"type":obj.value}};
+            await props.selected_emulator.edit_input(props.selected_component.obj.id, "source", new_source, props.selected_iom.obj)
+            return;
+        }
         await props.selected_emulator.edit_input(props.selected_component.obj.id, e.name as keyof core_input, obj.value, props.selected_iom.obj);
         forceUpdate();
     }

@@ -289,8 +289,13 @@ export class up_application {
         if(this.miscellaneous.scope_mux_address){
             for(let item of channels){
                 if(item){
-                    let channel_address = parseInt(this.miscellaneous.scope_mux_address) + 4*(item.number+1);
-                    await up_peripheral.direct_register_write([[channel_address, item.mux_setting]]);
+                    let channel_address = Math.round(parseInt(this.miscellaneous.scope_mux_address) + 4*(item.number+1));
+                    try {
+                        await up_peripheral.direct_register_write([[channel_address, parseInt(item.mux_setting)]]);
+                    } catch (e) {
+                        let i = 0;
+                    }
+
                 }
             }
         }
@@ -309,7 +314,7 @@ export class up_application {
 
         for(let item of channels){
             if(item.scaling_factor){
-                sfs[item.number] = item.scaling_factor;
+                sfs[item.number] = parseFloat(item.scaling_factor);
             }
         }
 
