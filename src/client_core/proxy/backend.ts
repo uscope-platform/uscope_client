@@ -23,6 +23,8 @@ export const set_address = (address: string) =>{
     server_address = address;
 };
 
+export const get_address = () => server_address;
+
 export const set_auth_config = (config: any) => {
     auth_config = config;
 };

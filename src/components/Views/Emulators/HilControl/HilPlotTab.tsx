@@ -74,7 +74,7 @@ let HilPlotTab = function (props: HilPlotTabProps) {
                    <SimpleContent name="Scope" height="100%">
                        <HilPlot
                            hil_plot_running={props.hil_plot_running}
-                           refreshPeriod={125}
+                           refreshPeriod={30}
                            sampling_frequency={sampling_freq}
                            download_data_request={props.download_data_request}
                            on_download_done={props.on_download_done}

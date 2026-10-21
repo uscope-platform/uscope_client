@@ -16,17 +16,12 @@
 import {backend_get, backend_post} from "./backend.js";
 
 import {api_dictionary} from './api_dictionary.js'
+import {latest_scope_data} from "./scope_stream.js";
 import type {scope_control, scope_data_object, scope_settings, ScopeStatus} from "#interfaces/index.js";
 
 
 export const direct_fetch = (): Promise<scope_data_object[]> =>  {
-    return new Promise((resolve, reject)=>{
-        backend_get(api_dictionary.operations.fetch_data).then((res) => {
-            resolve(res)
-        }).catch((err) =>{
-            reject(err);
-        });
-    });
+    return Promise.resolve(latest_scope_data());
 };
 
 
