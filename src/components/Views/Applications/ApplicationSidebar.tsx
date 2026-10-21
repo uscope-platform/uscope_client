@@ -13,18 +13,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
-
+import React, {useContext} from 'react';
+import {toast, ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 import {
-    get_next_id,
     import_application,
     up_application,
 } from "#client_core/index.js";
+import type {application_conflict, application_import_result} from "#client_core/index.js";
 import {SidebarBase} from "#UI/index.js";
 
-import {addApplication} from "#redux/index.js";
 import {useAppSelector} from "#redux/hooks.js";
+import {ApplicationContext} from "#src/AuthApp.jsx";
+import {ImportConflictDialog} from "../../Common_Components/ImportConflictDialog.jsx";
+import {useConflictResolver} from "../../Common_Components/useConflictResolver.js";
 
 
 interface ApplicationSidebarProps {
@@ -32,27 +35,64 @@ interface ApplicationSidebarProps {
   on_select: (id: number) => void;
 }
 
+const summarize_import = (r: application_import_result): string => {
+    switch (r.outcome) {
+        case "added": return `Imported "${r.name}"`;
+        case "replaced": return `"${r.name}" replaced by the imported one`;
+        case "kept_both": return `Imported as "${r.name}", next to the stored one`;
+        case "kept_old": return `"${r.name}" left as stored`;
+        case "unchanged": return `"${r.name}" is already up to date`;
+    }
+};
+
 let  ApplicationSidebar = (props: ApplicationSidebarProps) =>{
 
     const applications_redux = useAppSelector(state => state.applications);
+    // the application the hardware was set up with, which is not the one selected in the editor
+    const active_application = useContext(ApplicationContext);
+    const conflicts = useConflictResolver<application_conflict>();
 
     let handleImport = async (app: string) =>{
-        let id = get_next_id(Object.values(applications_redux).map(a => a['id']).sort());
-        await import_application(app, id);
+        conflicts.reset();
+        try{
+            toast.success(summarize_import(await import_application(app, conflicts.ask)));
+        } catch (err){
+            const lines = Array.isArray(err) ? err.slice(0, 5).join("\n") : String(err);
+            toast.error("Import failed:\n" + lines);
+        }
     };
 
+    const pending = conflicts.pending;
 
     return(
-        <SidebarBase
-            objects={applications_redux}
-            selection_key="id"
-            template={up_application}
-            display_key="application_name"
-            content_name="Applications"
-            onImport={handleImport}
-            initial_value={props.application}
-            onSelect={props.on_select}
-        />
+        <>
+            <SidebarBase
+                objects={applications_redux}
+                selection_key="id"
+                template={up_application}
+                display_key="application_name"
+                content_name="Applications"
+                onImport={handleImport}
+                initial_value={props.application}
+                onSelect={props.on_select}
+            />
+            {pending !== null &&
+                <ImportConflictDialog
+                    item_type="application"
+                    existing={{id: pending.existing.id, name: pending.existing.application_name}}
+                    incoming={{id: pending.incoming.id, name: pending.incoming.application_name}}
+                    report={pending.report}
+                    keep_both_name={pending.keep_both_name}
+                    index={pending.index}
+                    total={pending.total}
+                    {...(pending.existing.id === active_application.id ? {
+                        warning: "This is the application currently in use. Its setup is only loaded on the hardware when the application is chosen, so the changes do not reach the hardware until it is chosen again."
+                    } : {})}
+                    onResolve={conflicts.resolve}
+                />
+            }
+            <ToastContainer theme="dark" position="bottom-right" style={{whiteSpace: "pre-line"}}/>
+        </>
     );
 
 };

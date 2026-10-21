@@ -19,9 +19,18 @@ import {up_peripheral} from "../data_models/up_peripheral.js";
 import {application_schema} from "./application_schema.js";
 import {peripheral_schema} from "./peripheral_schema.js";
 import store from "../../store.js";
+import {addApplication} from "#redux/index.js";
 import {get_next_id} from "../utilities/id_management.js";
-import {diff_is_empty, diff_peripherals, type peripheral_diff} from "../data_models/diff_engine/index.js";
-import type {peripheral} from "#interfaces/index.js";
+import {
+    diff_applications,
+    diff_is_empty,
+    diff_peripherals,
+    peripheral_diff_report,
+    report_is_empty,
+    type application_diff_context,
+    type diff_report
+} from "../data_models/diff_engine/index.js";
+import type {application, peripheral} from "#interfaces/index.js";
 
 let validate_json = (obj: any, schema: object) => {
     const ajv = new Ajv2020.default();
@@ -36,33 +45,126 @@ let validate_json = (obj: any, schema: object) => {
     return [valid, erorr_strings]
 }
 
-export const import_application = (raw_json: any, id: number) => {
+export type conflict_resolution = "keep_old" | "use_new" | "keep_both";
+
+/// The name an imported item gets next to the stored one it clashes with: the suffix tells the two apart
+const IMPORTED_SUFFIX = "_imported";
+
+const unique_name = (taken: string[], name: string): string => {
+    if(!taken.includes(name)) return name;
+    let candidate = name + IMPORTED_SUFFIX;
+    for(let n = 2; taken.includes(candidate); n++){
+        candidate = name + IMPORTED_SUFFIX + "_" + n;
+    }
+    return candidate;
+};
+
+const free_id = (taken: number[]): number => get_next_id([...taken].sort((a, b) => a - b));
+
+////////////////////////////////////////////////     APPLICATIONS
+
+export interface application_conflict {
+    existing: application;
+    incoming: application;
+    report: diff_report;
+    // the name the imported application gets if both are kept
+    keep_both_name: string;
+    index: number;
+    total: number;
+}
+
+export type application_import_outcome = "added" | "replaced" | "kept_both" | "kept_old" | "unchanged";
+
+export interface application_import_result {
+    outcome: application_import_outcome;
+    // the name the application has in the end
+    name: string;
+}
+
+const normalize_application = (app: application): application => {
+    return new up_application(app).get_raw_obj() as unknown as application;
+};
+
+const stored_applications = (): application[] => {
+    return Object.values(store.getState().applications).map(a => normalize_application(a as unknown as application));
+};
+
+// the programs and the scripts of an application are only ids, the diff shows their names
+const application_diff_context_from_store = (): application_diff_context => {
+    const state = store.getState();
+    return {
+        program_name: (id) => state.programs[id]?.name,
+        script_name: (id) => state.scripts[id]?.name
+    };
+};
+
+export const parse_application = (raw_json: string, id: number): application => {
     let imported_app = JSON.parse(raw_json);
     imported_app["id"] = id;
     let [valid, errors] = validate_json(imported_app, application_schema);
     if(imported_app.miscellaneous === undefined){
         imported_app.miscellaneous =  {}
     }
-    if(valid){
-        // the client handles the id of the specification as a string, the older files have an integer
-        for(const p of imported_app.peripherals){
-            p.spec_id = String(p.spec_id);
-        }
-        let app = new up_application(imported_app);
-        return app.add_remote().then(()=>{
-            return app
-        })
-    } else{
-        return Promise.reject(errors);
+    if(!valid){
+        throw errors;
+    }
+    // the client handles the id of the specification as a string, the older files have an integer
+    for(const p of imported_app.peripherals){
+        p.spec_id = String(p.spec_id);
+    }
+    return imported_app;
+}
+
+/// Imports an application. The name is what identifies an application for the user (the id of the file is
+/// meaningless on another installation, so it is never used), when a stored application has the same name and is
+/// different resolve_conflict decides what to do, nothing is written before it answers. Importing the same
+/// application that is already stored does nothing.
+export const import_application = async (
+    raw_json: string,
+    resolve_conflict: (conflict: application_conflict) => Promise<conflict_resolution>
+): Promise<application_import_result> => {
+    const stored = stored_applications();
+    const new_id = free_id(stored.map(a => a.id));
+    const incoming = normalize_application(parse_application(raw_json, new_id));
+    const existing = stored.find(a => a.application_name === incoming.application_name);
+
+    if(existing === undefined){
+        await new up_application(incoming).add_remote();
+        return {outcome: "added", name: incoming.application_name};
+    }
+
+    const report = diff_applications(existing, incoming, application_diff_context_from_store());
+    if(report_is_empty(report)){
+        return {outcome: "unchanged", name: existing.application_name};
+    }
+
+    const keep_both_name = unique_name(stored.map(a => a.application_name), incoming.application_name);
+    const resolution = await resolve_conflict({existing, incoming, report, keep_both_name, index: 0, total: 1});
+    switch (resolution) {
+        case "keep_old":
+            return {outcome: "kept_old", name: existing.application_name};
+        case "use_new":
+            try {
+                // the id of the stored one is kept
+                await new up_application({...incoming, id: existing.id}).add_remote();
+            } catch (err) {
+                // add_remote updates the store before the server answers
+                store.dispatch(addApplication({[existing.id]: new up_application(existing)}));
+                throw err;
+            }
+            return {outcome: "replaced", name: existing.application_name};
+        case "keep_both":
+            await new up_application({...incoming, application_name: keep_both_name}).add_remote();
+            return {outcome: "kept_both", name: keep_both_name};
     }
 }
 
-export type conflict_resolution = "keep_old" | "use_new" | "keep_both";
+////////////////////////////////////////////////     PERIPHERALS
 
 export interface peripheral_conflict {
     existing: peripheral;
     incoming: peripheral;
-    diff: peripheral_diff;
+    report: diff_report;
     // the name the imported peripheral gets if both are kept
     keep_both_name: string;
     // position of this conflict among the ones found in the imported file, to tell the user how many are left
@@ -92,25 +194,17 @@ const find_peripheral_conflict = (stored: peripheral[], incoming: peripheral): p
     return stored.find(p => p.name === incoming.name) ?? stored.find(p => p.id === incoming.id);
 };
 
-/// The name an imported peripheral gets next to the stored one it clashes with: the suffix tells the two apart
-const IMPORTED_SUFFIX = "_imported";
-
-const free_name = (stored: peripheral[], name: string): string => {
-    if(!stored.some(p => p.name === name)) return name;
-    let candidate = name + IMPORTED_SUFFIX;
-    for(let n = 2; stored.some(p => p.name === candidate); n++){
-        candidate = name + IMPORTED_SUFFIX + "_" + n;
-    }
-    return candidate;
-};
-
 const replace_peripheral = async (existing: peripheral, replacement: peripheral) => {
     await up_peripheral.delete(new up_peripheral(existing));
     try {
         await new up_peripheral(replacement).add_remote();
     } catch (err) {
         // do not lose the peripheral that was there
-        await new up_peripheral(existing).add_remote();
+        try {
+            await new up_peripheral(existing).add_remote();
+        } catch (restore_err) {
+            throw new Error(`"${existing.name}" could not be replaced and its previous version could not be restored, it is no longer stored`);
+        }
         throw err;
     }
 };
@@ -157,7 +251,10 @@ export const import_peripherals = async (
             continue;
         }
 
-        const resolution = await resolve_conflict({existing, incoming, diff, keep_both_name: free_name(stored, incoming.name), index: index++, total});
+        const keep_both_name = unique_name(stored.map(p => p.name), incoming.name);
+        const resolution = await resolve_conflict({
+            existing, incoming, report: peripheral_diff_report(diff), keep_both_name, index: index++, total
+        });
         switch (resolution) {
             case "keep_old":
                 summary.kept_old.push(existing.name);
@@ -172,8 +269,8 @@ export const import_peripherals = async (
             }
             case "keep_both": {
                 const taken_ids = stored.map(p => p.id);
-                const id = taken_ids.includes(incoming.id) ? get_next_id([...taken_ids].sort((a, b) => a - b)) : incoming.id;
-                const copy = {...incoming, id, name: free_name(stored, incoming.name)};
+                const id = taken_ids.includes(incoming.id) ? free_id(taken_ids) : incoming.id;
+                const copy = {...incoming, id, name: keep_both_name};
                 await new up_peripheral(copy).add_remote();
                 stored.push(normalize_peripheral(copy));
                 summary.kept_both.push(copy.name);

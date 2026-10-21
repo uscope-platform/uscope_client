@@ -21,7 +21,8 @@ import {Button, ColorTheme} from "#UI/index.js";
 import type {
     change_kind,
     conflict_resolution,
-    peripheral_conflict,
+    diff_entry,
+    diff_report,
     property_change
 } from "#client_core/index.js";
 
@@ -107,6 +108,14 @@ const Muted = styled('span')`
   color: ${ColorTheme.inactive_icons_color};
 `;
 
+const SectionTitle = styled('div')`
+  color: ${ColorTheme.inactive_icons_color};
+  text-transform: uppercase;
+  font-size: 0.8em;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+`;
+
 const Note = styled('div')`
   background: rgba(255, 181, 69, 0.12);
   border-left: 4px solid ${ColorTheme.background.accents};
@@ -124,7 +133,7 @@ const PropertyTable = (props: { properties: property_change[], old_label: string
     if (props.properties.length === 0) return null;
     return (
         <Table>
-            <colgroup><col style={{width: "24%"}}/><col style={{width: "38%"}}/><col style={{width: "38%"}}/></colgroup>
+            <colgroup><col style={{width: "32%"}}/><col style={{width: "34%"}}/><col style={{width: "34%"}}/></colgroup>
             <thead><tr><th/><th>{props.old_label}</th><th>{props.new_label}</th></tr></thead>
             <tbody>
             {props.properties.map(p => (
@@ -149,20 +158,65 @@ const KindBadge = (props: { kind: change_kind }) => (
     </span>
 );
 
-const pluralize = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
+const properties_text = (n: number) => `${n} ${n === 1 ? "property" : "properties"}`;
+
+interface ImportedItem {
+    id: number;
+    name: string;
+}
 
 interface ImportConflictDialogProps {
-    conflict: peripheral_conflict;
+    // what is being imported, as it is called in the interface ("peripheral")
+    item_type: string;
+    existing: ImportedItem;
+    incoming: ImportedItem;
+    report: diff_report;
+    // the name the imported item gets if both are kept
+    keep_both_name: string;
+    // position of this conflict among the ones of the same file
+    index: number;
+    total: number;
+    // something to know before replacing the stored item
+    warning?: string;
     // called with the choice, and true when it has to be used for all the remaining conflicts of the same file too
     onResolve: (resolution: conflict_resolution, apply_to_all: boolean) => void;
 }
 
-/// Shows what an imported peripheral would change in the stored one it clashes with, and lets the user choose which
-/// one to use. Closing it (Escape) keeps the stored one, which is the choice that can not lose anything
+const count_text = (entries: diff_entry[]): string => {
+    const kinds: change_kind[] = ["modified", "added", "removed"];
+    return kinds
+        .map(kind => [kind, entries.filter(e => e.kind === kind).length] as const)
+        .filter(([, n]) => n > 0)
+        .map(([kind, n]) => `${n} ${kind}`)
+        .join(", ");
+};
+
+const EntryBlock = (props: { entry: diff_entry, nested?: boolean }) => {
+    const {entry} = props;
+    return (
+        <ChangeBlock
+            style={{
+                borderLeftColor: KIND_COLORS[entry.kind],
+                ...(props.nested ? {marginTop: "0.4rem"} : {})
+            }}>
+            <div>
+                <KindBadge kind={entry.kind}/>
+                {entry.label}
+                {entry.detail !== undefined && <Muted> ({entry.detail})</Muted>}
+                {entry.note !== undefined && <Muted> - {entry.note}</Muted>}
+            </div>
+            <PropertyTable properties={entry.properties} old_label="Stored" new_label="Imported"/>
+            {entry.children.map(child => <EntryBlock key={child.label} entry={child} nested/>)}
+        </ChangeBlock>
+    );
+};
+
+/// Shows what an imported item would change in the stored one it clashes with, and lets the user choose which one to
+/// use. Closing it (Escape) keeps the stored one, which is the choice that can not lose anything
 export const ImportConflictDialog = (props: ImportConflictDialogProps) => {
-    const {existing, incoming, diff} = props.conflict;
+    const {existing, incoming, report} = props;
     const [apply_to_all, set_apply_to_all] = useState(false);
-    const remaining = props.conflict.total - props.conflict.index - 1;
+    const remaining = props.total - props.index - 1;
 
     useEffect(() => {
         const on_key = (e: KeyboardEvent) => {
@@ -175,12 +229,9 @@ export const ImportConflictDialog = (props: ImportConflictDialogProps) => {
     const matched_by = existing.name === incoming.name
         ? (existing.id === incoming.id ? "name and id" : "name")
         : "id";
-    const counts = (kind: change_kind) => diff.registers.filter(r => r.kind === kind).length;
     const summary_parts = [
-        counts("modified") > 0 ? `${pluralize(counts("modified"), "register")} modified` : null,
-        counts("added") > 0 ? `${counts("added")} added` : null,
-        counts("removed") > 0 ? `${counts("removed")} removed` : null,
-        diff.properties.length > 0 ? `${pluralize(diff.properties.length, "property")} changed` : null
+        report.properties.length > 0 ? `${properties_text(report.properties.length)} changed` : null,
+        ...report.sections.map(s => `${s.title.toLowerCase()}: ${count_text(s.entries)}`)
     ].filter(p => p !== null);
 
     return createPortal(
@@ -188,53 +239,41 @@ export const ImportConflictDialog = (props: ImportConflictDialogProps) => {
             <Dialog role="dialog" aria-modal="true" aria-labelledby="import_conflict_title">
                 <Header>
                     <h3 id="import_conflict_title" style={{fontSize: "1.2em"}}>
-                        "{incoming.name}" is already in the peripherals
-                        {props.conflict.total > 1 && <Muted> ({props.conflict.index + 1} of {props.conflict.total})</Muted>}
+                        "{incoming.name}" is already in the {props.item_type}s
+                        {props.total > 1 && <Muted> ({props.index + 1} of {props.total})</Muted>}
                     </h3>
                     <div style={{marginTop: "0.25rem"}}>
-                        The imported peripheral (id {incoming.id}) has the same {matched_by} as the stored one
-                        (id {existing.id}). {summary_parts.length > 0 ? summary_parts.join(", ") + "." : ""}
+                        The imported {props.item_type} (id {incoming.id}) has the same {matched_by} as the stored one
+                        (id {existing.id}). {summary_parts.length > 0 ? "Changes: " + summary_parts.join("; ") + "." : ""}
                     </div>
-                    {props.conflict.keep_both_name !== incoming.name &&
+                    {props.keep_both_name !== incoming.name &&
                         <div style={{marginTop: "0.25rem"}}>
-                            <Muted>Keep both imports it as "{props.conflict.keep_both_name}".</Muted>
+                            <Muted>Keep both imports it as "{props.keep_both_name}".</Muted>
                         </div>
                     }
                 </Header>
 
                 <Body>
-                    {(diff.registers_reordered || diff.registers.some(r => r.fields_reordered)) &&
-                        <Note>
-                            The order of the registers or fields differs. The addresses and offsets follow the order,
-                            so they would change even where the values are the same.
-                        </Note>
-                    }
+                    {props.warning !== undefined && <Note>{props.warning}</Note>}
+                    {report.notes.map(note => <Note key={note}>{note}</Note>)}
 
-                    {diff.properties.length > 0 &&
+                    {report.properties.length > 0 &&
                         <ChangeBlock style={{borderLeftColor: KIND_COLORS.modified}}>
-                            <div style={{marginBottom: "0.25rem"}}><KindBadge kind="modified"/>Peripheral</div>
-                            <PropertyTable properties={diff.properties} old_label="Stored" new_label="Imported"/>
+                            <div style={{marginBottom: "0.25rem"}}>
+                                <KindBadge kind="modified"/>
+                                {props.item_type.charAt(0).toUpperCase() + props.item_type.slice(1)} properties
+                            </div>
+                            <PropertyTable properties={report.properties} old_label="Stored" new_label="Imported"/>
                         </ChangeBlock>
                     }
 
-                    {diff.registers.map(register => (
-                        <ChangeBlock key={register.id} style={{borderLeftColor: KIND_COLORS[register.kind]}}>
-                            <div style={{marginBottom: "0.25rem"}}>
-                                <KindBadge kind={register.kind}/>
-                                Register {register.name}
-                                {register.name !== register.id && <Muted> ({register.id})</Muted>}
-                                {register.fields_reordered && <Muted> - field order changed</Muted>}
+                    {report.sections.map(section => (
+                        <div key={section.title}>
+                            <SectionTitle>{section.title}</SectionTitle>
+                            <div style={{display: "flex", flexDirection: "column", gap: "0.5rem"}}>
+                                {section.entries.map(entry => <EntryBlock key={entry.kind + entry.label} entry={entry}/>)}
                             </div>
-                            <PropertyTable properties={register.properties} old_label="Stored" new_label="Imported"/>
-                            {register.fields.map(f => (
-                                <div key={f.name} style={{marginTop: "0.4rem", paddingLeft: "0.75rem"}}>
-                                    <KindBadge kind={f.kind}/>Field {f.name}
-                                    {/* the values of a whole added or removed field are not a change worth listing */}
-                                    {f.kind === "modified" &&
-                                        <PropertyTable properties={f.properties} old_label="Stored" new_label="Imported"/>}
-                                </div>
-                            ))}
-                        </ChangeBlock>
+                        </div>
                     ))}
                 </Body>
 
@@ -254,12 +293,12 @@ export const ImportConflictDialog = (props: ImportConflictDialogProps) => {
                             Keep stored
                         </SecondaryButton>
                         <SecondaryButton
-                            title={`Import it as a new peripheral named "${props.conflict.keep_both_name}"`}
+                            title={`Import it as a new ${props.item_type} named "${props.keep_both_name}"`}
                             onClick={() => props.onResolve("keep_both", apply_to_all)}>
                             Keep both
                         </SecondaryButton>
                         <Button
-                            title="Replace the stored peripheral, keeping its id"
+                            title={`Replace the stored ${props.item_type}, keeping its id`}
                             onClick={() => props.onResolve("use_new", apply_to_all)}>
                             Use imported
                         </Button>
