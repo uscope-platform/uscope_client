@@ -74,6 +74,8 @@ const help_overview = async (): Promise<string[]> =>{
 }
 
 export let current_line: string = "";
+// where the cursor is in the line
+let cursor = 0;
 
 export let terminal: Terminal;
 
@@ -126,6 +128,7 @@ export const dispose_terminal = () => {
     resize_observer?.disconnect();
     terminal?.dispose();
     current_line = "";
+    cursor = 0;
     // a command still running must not hold the input of the next terminal
     input_chain = Promise.resolve();
 };
@@ -236,6 +239,8 @@ export const complete_version = () =>{
 
 
 export const handle_tab = () =>{
+    // the completion works on the whole line, from its end
+    finish_line();
     switch(current_line.split(/ +/).length-1){
         case 0:
             complete_command();
@@ -250,6 +255,8 @@ export const handle_tab = () =>{
         default:
             break;
     }
+    // what the completion added went to the end of the line
+    cursor = current_line.length;
 }
 
 /// Splits a command line in words: the text between quotes is kept together, a name can have spaces, and several
@@ -326,13 +333,56 @@ const as_lines = (response: unknown): string[] => {
     return [String(response)];
 }
 
-/// Replaces the line being edited with another one, on the screen too. The cursor is always at the end of the line
+/// Draws the prompt and the line again, with the cursor at its place. It starts from the first row of the line, which
+/// can wrap on several
+const render = () => {
+    let cols = terminal.cols;
+    // the rows of the line above the one of the cursor, as the terminal has them (a calculation would be wrong after
+    // the terminal changed size, and the line wrapped differently)
+    let buffer = terminal.buffer.active;
+    let rows_up = 0;
+    for(let y = buffer.baseY + buffer.cursorY; buffer.getLine(y)?.isWrapped; y--) rows_up++;
+    let end = prompt_width + current_line.length;
+    let out = (rows_up > 0 ? `\x1b[${rows_up}A` : "") + "\r\x1b[J" + prompt + current_line;
+    // a line filling its last row leaves the cursor waiting before the wrap, which would make its row ambiguous: force it
+    if(end % cols === 0) out += " \r";
+    let wanted = prompt_width + cursor;
+    if(wanted !== end){
+        let rows_back = Math.floor(end / cols) - Math.floor(wanted / cols);
+        out += (rows_back > 0 ? `\x1b[${rows_back}A` : "") + "\r" + (wanted % cols > 0 ? `\x1b[${wanted % cols}C` : "");
+    }
+    terminal.write(out);
+}
+
+/// Replaces the line being edited with another one, with the cursor at its end
 export const replace_line = (line: string) => {
-    // go back up to the first row of the line, it can wrap on several (a line filling its last row leaves the cursor
-    // there, waiting for the next character to wrap)
-    let rows_up = Math.floor((prompt_width + current_line.length - 1) / terminal.cols);
-    terminal.write((rows_up > 0 ? `\x1b[${rows_up}A` : "") + "\r\x1b[J" + prompt + line);
     current_line = line;
+    cursor = line.length;
+    render();
+}
+
+const move_cursor = (position: number) => {
+    cursor = Math.min(Math.max(position, 0), current_line.length);
+    render();
+}
+
+/// Puts the cursor at the end of the line, to write below it
+const finish_line = () => {
+    if(cursor !== current_line.length) move_cursor(current_line.length);
+}
+
+const word_start = (from: number) => {
+    let i = from;
+    while(i > 0 && current_line[i - 1] === " ") i--;
+    while(i > 0 && current_line[i - 1] !== " ") i--;
+    return i;
+}
+
+const word_end = (from: number) => {
+    let i = from;
+    while(i < current_line.length && current_line[i] === " ") i++;
+    while(i < current_line.length && current_line[i] !== " ") i++;
+    return i;
 }
 
 export const handle_history = (older: boolean) => {
@@ -343,9 +393,12 @@ export const handle_history = (older: boolean) => {
 export const handle_return = ()=>{
     history.add(current_line);
     history.reset_navigation();
+    // the output goes below the line, not in the middle of it
+    finish_line();
     if(current_line.length>0){
         return execute_command(current_line).finally(()=>{
                 current_line = "";
+                cursor = 0;
                 display_prompt();
             }
         );
@@ -359,14 +412,68 @@ export const handle_return = ()=>{
 };
 
 export const handle_delete = () =>{
-    if(current_line.length === 0) return;
-    terminal.write("\b \b");
-    current_line = current_line.slice(0, -1);
+    if(cursor === 0) return;
+    current_line = current_line.slice(0, cursor - 1) + current_line.slice(cursor);
+    cursor--;
+    render();
 }
 
 export const handle_letter = (key:string) => {
-    current_line =  current_line + key;
-    terminal.write(key);
+    current_line = current_line.slice(0, cursor) + key + current_line.slice(cursor);
+    cursor += key.length;
+    render();
+}
+
+/// The keys moving the cursor and deleting in the line. Returns false for the other ones
+const handle_edit_key = (key: string): boolean => {
+    switch(key){
+        case "\x1b[D":
+        case "\x1bOD":
+            move_cursor(cursor - 1);
+            return true;
+        case "\x1b[C":
+        case "\x1bOC":
+            move_cursor(cursor + 1);
+            return true;
+        case "\x1b[H":
+        case "\x1bOH":
+        case "\x1b[1~":
+        case "\x01":
+            move_cursor(0);
+            return true;
+        case "\x1b[F":
+        case "\x1bOF":
+        case "\x1b[4~":
+        case "\x05":
+            move_cursor(current_line.length);
+            return true;
+        // word by word, with alt or ctrl (alt+b and alt+f where alt is the meta key)
+        case "\x1b[1;3D":
+        case "\x1b[1;5D":
+        case "\x1bb":
+            move_cursor(word_start(cursor));
+            return true;
+        case "\x1b[1;3C":
+        case "\x1b[1;5C":
+        case "\x1bf":
+            move_cursor(word_end(cursor));
+            return true;
+        case "\x1b[3~":
+            current_line = current_line.slice(0, cursor) + current_line.slice(cursor + 1);
+            render();
+            return true;
+        // ctrl+u and ctrl+k: delete up to the start, and to the end of the line
+        case "\x15":
+            current_line = current_line.slice(cursor);
+            cursor = 0;
+            render();
+            return true;
+        case "\x0b":
+            current_line = current_line.slice(0, cursor);
+            render();
+            return true;
+    }
+    return false;
 }
 
 let input_chain: Promise<unknown> = Promise.resolve();
@@ -397,6 +504,8 @@ export const handle_keypress = (key: string) => {
         terminal.scrollPages(-1);
     } else if (key === "\x1b[6~") {
         terminal.scrollPages(1);
+    } else if (handle_edit_key(key)) {
+        return;
     } else if (key.startsWith("\x1b") || key < " ") {
         // the other escape sequences and control characters are not handled, they would end up as text in the line
         return;
