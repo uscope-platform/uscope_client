@@ -15,3 +15,11 @@
 
 
 export {application_diff_engine} from './application_diff_engine.js'
+export {diff_peripherals, diff_is_empty} from './peripheral_diff_engine.js'
+export type {
+    change_kind,
+    property_change,
+    field_change,
+    register_change,
+    peripheral_diff
+} from './peripheral_diff_engine.js'

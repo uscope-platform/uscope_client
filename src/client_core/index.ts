@@ -48,6 +48,9 @@ export let store = null;
 export let __selected_application: up_application;
 
 export {import_application, import_peripherals} from './data_handling/import.js'
+export type {conflict_resolution, peripheral_conflict, peripherals_import_summary} from './data_handling/import.js'
+export {diff_peripherals, diff_is_empty} from './data_models/diff_engine/index.js'
+export type {change_kind, property_change, field_change, register_change, peripheral_diff} from './data_models/diff_engine/index.js'
 export {get_next_id} from './utilities/id_management.js'
 export {download_json, download_plot, download_bitstream,download_text} from './utilities/downloads.js'
 export {upload_json, upload_raw} from './utilities/uploads.js'
