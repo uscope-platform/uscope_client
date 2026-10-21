@@ -63,13 +63,13 @@ export const terminal_backend : Record<string, TerminalCommand> = {
         if(!register || !value) return new Promise((resolve, reject)=>{
             reject(["ERROR: Missing register or value"]);
         })
-        translate_specifier(register,value);
-        let writes = translate_registers(script_register_access_log, scripting_engine_peripherals);
-        script_register_access_log.length = 0;
-        up_peripheral.bulk_register_write(writes).then();
-        return new Promise((resolve)=>{
-            resolve([])
-        })
+        // the write queue shares the access log, it must not be sent along with this write
+        let writes = with_isolated_log(()=>{
+            translate_specifier(register,value);
+            return translate_registers(script_register_access_log, scripting_engine_peripherals);
+        });
+        // a failure of the write is reported, it used to be lost
+        return up_peripheral.bulk_register_write(writes).then(()=>[]);
     },
     clear_queue:(args: string[]): Promise<string[]> =>{
         if(args[0] === "--help"){
@@ -99,10 +99,7 @@ export const terminal_backend : Record<string, TerminalCommand> = {
 
         let writes = translate_registers(script_register_access_log, scripting_engine_peripherals);
         script_register_access_log.length = 0;
-        up_peripheral.bulk_register_write(writes).then();
-        return new Promise((resolve)=>{
-            resolve([])
-        })
+        return up_peripheral.bulk_register_write(writes).then(()=>[]);
     },
     read:(args: string[]): Promise<string[]> =>{
         if(args[0] === "--help"){
@@ -118,14 +115,15 @@ export const terminal_backend : Record<string, TerminalCommand> = {
         if(!specifier) return new Promise((resolve, reject)=>{
             reject(["ERROR: Missing register specifier"]);
         })
-        // PERFORM A DUMMY WRITE TO OBTAIN THE CORRECT ADDRESS
-        translate_specifier(specifier,"0");
-        let access = translate_registers(script_register_access_log, scripting_engine_peripherals)[0];
+        // PERFORM A DUMMY WRITE TO OBTAIN THE CORRECT ADDRESS, WITHOUT TOUCHING THE WRITE QUEUE
+        let access = with_isolated_log(()=>{
+            translate_specifier(specifier,"0");
+            return translate_registers(script_register_access_log, scripting_engine_peripherals)[0];
+        });
         if(!access)
             return new Promise((resolve, reject)=>{
                 reject(["ERROR: Invalid register"]);
             })
-        script_register_access_log.length = 0;
         return up_peripheral.direct_register_read(access.address).then((response)=>{
             return [response.response];
         });
@@ -144,7 +142,7 @@ export const terminal_backend : Record<string, TerminalCommand> = {
         let selected_component = args[0];
         if(selected_component === undefined){
             return new Promise((resolve, reject)=>{
-                reject("ERROR: Missing component name");
+                reject(["ERROR: Missing component name"]);
             })
         }
         if(selected_component==="client"){
@@ -169,8 +167,8 @@ export const terminal_backend : Record<string, TerminalCommand> = {
         if(args[0] === "--help"){
             return new Promise((resolve)=>{
                 resolve([
-                    "LOAD CORE:",
-                    "This command reads the value of the specified register",
+                    "LOAD PROGRAM:",
+                    "This command loads a program on a core of the application",
                     "format: load_program [PROGRAM NAME] [CORE ID]"
                 ]);
             })
@@ -220,6 +218,19 @@ export const terminal_backend : Record<string, TerminalCommand> = {
     }
 }
 
+/// The access log doubles as the queue of the write command: runs the action with an empty log, and puts the queued
+/// writes back afterwards
+const with_isolated_log = <T>(action: () => T): T =>{
+    let queued = script_register_access_log.splice(0);
+    try {
+        return action();
+    } finally {
+        script_register_access_log.length = 0;
+        script_register_access_log.push(...queued);
+    }
+}
+
+// The errors are thrown as the lines to print, as the commands reject: the terminal reports them
 const translate_specifier = (spec: string, value: string) =>{
     let tokens = spec.split(".");
     if(tokens.length===2)
@@ -227,12 +238,20 @@ const translate_specifier = (spec: string, value: string) =>{
     let periph_name = tokens[0];
     let reg_name = tokens[1];
     let field_name = tokens[2];
-    if(!periph_name || !reg_name || !field_name) return;
+    if(!periph_name || !reg_name || !field_name)
+        throw ["ERROR: Invalid specifier '" + spec + "', the format is PERIPHERAL.REGISTER[.FIELD]"];
     let periph_obj = scripting_engine_peripherals[periph_name];
-    if(!periph_obj) return;
+    if(!periph_obj) throw ["ERROR: Unknown peripheral '" + periph_name + "'"];
     let reg = periph_obj.regs[reg_name]
-    if(!reg) return;
-    reg[field_name] = parseInt(value);
+    if(!reg) throw ["ERROR: Unknown register '" + reg_name + "' in peripheral '" + periph_name + "'"];
+    let parsed_value = parseInt(value);
+    if(Number.isNaN(parsed_value)) throw ["ERROR: Invalid value '" + value + "'"];
+    try {
+        reg[field_name] = parsed_value;
+    } catch (error) {
+        // the register proxy refuses the fields it does not have
+        throw ["ERROR: Unknown field '" + field_name + "' in register '" + reg_name + "'"];
+    }
 }
 
 //   write adc_test.cmp_high_f.value 6
