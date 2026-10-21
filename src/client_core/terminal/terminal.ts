@@ -112,7 +112,8 @@ export const init_terminal = (): Terminal | undefined => {
     resize_observer = new ResizeObserver(() => fitAddon.fit());
     resize_observer.observe(term_element);
     terminal.onData((domEvent) => {
-        handle_keypress(domEvent);
+        // in order: what is typed while a command runs waits for it
+        input_chain = input_chain.then(() => handle_input(domEvent)).catch(console.error);
     })
     terminal.write(banner);
     display_prompt()
@@ -125,6 +126,8 @@ export const dispose_terminal = () => {
     resize_observer?.disconnect();
     terminal?.dispose();
     current_line = "";
+    // a command still running must not hold the input of the next terminal
+    input_chain = Promise.resolve();
 };
 
 
@@ -337,6 +340,19 @@ export const handle_delete = () =>{
 export const handle_letter = (key:string) => {
     current_line =  current_line + key;
     terminal.write(key);
+}
+
+let input_chain: Promise<unknown> = Promise.resolve();
+
+// a key, an escape sequence, a run of printable text, or any other single character
+const INPUT_TOKEN = /\x1b\[[0-9;]*[A-Za-z~]|\x1bO[A-Za-z]|\x1b[A-Za-z]|\x1b|[^\x00-\x1f\x7f\x1b]+|[\s\S]/gu;
+
+/// What the terminal sends is one key, but a pasted text arrives in one piece with its line breaks: it is handled as
+/// the keys it is made of, one after the other (a command has to be over before the next key)
+export const handle_input = async (data: string) => {
+    for(let key of data.replace(/\r?\n/g, "\r").match(INPUT_TOKEN) ?? []){
+        await handle_keypress(key);
+    }
 }
 
 export const handle_keypress = (key: string) => {
