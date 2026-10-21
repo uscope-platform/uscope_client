@@ -16,6 +16,7 @@
 import React, {useEffect, useRef} from "react";
 import {init_terminal} from "#client_core/index.js";
 import 'xterm/css/xterm.css';
+import './terminal.css';
 
 interface TerminalProps {
 

@@ -1,0 +1,17 @@
+/* The app sets its font on every element (`*`), which stops an element from inheriting the font of its parent. xterm
+   relies on inheritance in two places, and its letters, laid out on a grid of cells measured for the monospace font,
+   end up spaced for the font of the app (proportional) and do not line up */
+.xterm * {
+    font-family: inherit;
+}
+
+/* xterm 5.3 measures the width of the glyphs in a bare div added to the body (absolutely positioned far away, the
+   font set inline), outside of .xterm */
+body > div[style*="-50000px"] span {
+    font-family: inherit;
+}
+
+/* the global rule reserving space for the scrollbar would leave a gap, xterm sizes the terminal around its own */
+.xterm .xterm-viewport {
+    scrollbar-gutter: auto;
+}
