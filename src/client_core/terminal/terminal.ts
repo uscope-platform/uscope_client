@@ -23,7 +23,7 @@ import {terminal_backend, type TerminalCommand} from './terminal_backend.js'
 import {xterm_colors} from "./terminal_colors.js";
 import {history} from "./terminal_history.js";
 import {terminal_options, prompt, prompt_width, banner} from "./terminal_theme.js";
-import {autocompletion_engine, prefix, prefix_extractor} from "../scripting/autocompletion_engine.js";
+import {autocompletion_engine, prefix} from "../scripting/autocompletion_engine.js";
 
 // set by the clear command, the prompt that follows is on the first row already
 let screen_cleared = false;
@@ -134,129 +134,90 @@ export const dispose_terminal = () => {
 };
 
 
-export const complete_command = () =>{
-    let complete_command = recognised_commands.includes(current_line);
+const VERSION_COMPONENTS = ["client", "server", "driver", "module", "hardware", "toolchain"];
+// the commands taking a peripheral, register or field
+const ADDRESS_COMMANDS = ["write", "write_direct", "read"];
 
-    let candidates = recognised_commands.filter((command)=>{
-        return command.startsWith(current_line);
-    })
-    if(candidates.length === 1){
-        let candidate = candidates[0];
-        if(candidate === undefined)return;
-        // the prompt and the typed part are on the screen already, only the rest is written, and a space follows, so
-        // that the next tab completes the arguments
-        terminal.write(candidate.slice(current_line.length) + " ");
-        current_line = candidate + " ";
-    } else if(candidates.length >1){
-        if(!complete_command){
-            current_line = prefix(candidates);
-        }
-        terminal.write("\r\n" + xterm_colors.blue + candidates.join("   ")  +  xterm_colors.white);
-        display_prompt();
-        terminal.write(current_line);
-    }
+interface completion {
+    // the text replacing the word before the cursor
+    word: string;
+    // the candidates to list, when the word can not be extended
+    suggestions: string[];
+    // whether the word is complete, so that a space can follow
+    done: boolean;
 }
 
-export const complete_address = () =>{
-    let tokens = current_line.split(/ +/)
-    if(tokens.length === 1) return;
-    let argument = tokens[1];
-    if(argument === undefined) return;
-    switch (tokens[0]){
-        case 'write':
-        case 'write_direct':
-        case 'read':
-            // THIS OBJECT IS UNECESSARY, HOWEVER IT ALLOWS THE USE OF THE SAME INTERFACE AS IN JS SCRIPTS
-            let line = {
-                from:0,
-                to:1,
-                text:"this."+argument
-            }
-            let options = autocompletion_engine( line,true);
-            let pref = prefix_extractor(options);
-            let candidates = options.map((item)=>{
-                return item.label;
-            });
-            if(candidates.length === 1) {
-                let candidate = candidates[0];
-                if(candidate === undefined)return;
-                let present_substr = argument.split(".").pop()
-                if(present_substr === undefined) return;
-                let missing = candidate.slice(present_substr.length);
-                current_line = current_line + missing;
-                terminal.write(missing);
-            } else if(pref){
-                let present_substr = argument.split(".").pop()
-                if(present_substr === undefined) return;
-                let missing = pref.slice(present_substr.length);
-                for (let i = 0; i < candidates.length; i += 5) {
-                    terminal.write("\r\n" + xterm_colors.blue + candidates.slice(i, i + 5).join("         ")  +  xterm_colors.white);
-                }
-                current_line = current_line + missing;
-                display_prompt();
-                terminal.write(current_line);
-            } else {
-                for (let i = 0; i < candidates.length; i += 5) {
-                    terminal.write("\r\n" + xterm_colors.blue + candidates.slice(i, i + 5).join("         ")  +  xterm_colors.white);
-                }
-                display_prompt();
-                terminal.write(current_line);
-            }
-            break
-        default:
-            break;
+/// What completes the word that ends at the cursor
+const complete = (before_cursor: string): completion | null =>{
+    let words = before_cursor.trimStart().split(/ +/);
+    let index = words.length - 1;
+    let current = words[index] ?? "";
+    let command = words[0] ?? "";
+
+    let candidates: string[];
+    // the names before the one being completed, in peripheral.register.field
+    let stem = "";
+    let whole_names = true;
+    if(index === 0 || (index === 1 && command === "help")){
+        candidates = recognised_commands.filter((item)=> item.startsWith(current));
+    } else if(index === 1 && command === "version"){
+        candidates = VERSION_COMPONENTS.filter((item)=> item.startsWith(current));
+    } else if(index === 1 && ADDRESS_COMMANDS.includes(command)){
+        stem = current.slice(0, current.lastIndexOf(".") + 1);
+        // THE OBJECT IS UNECESSARY, HOWEVER IT ALLOWS THE USE OF THE SAME INTERFACE AS IN JS SCRIPTS
+        let options = autocompletion_engine({from:0, to:1, text:"this." + current}, true);
+        candidates = options.map((item)=> item.label).filter((item)=> item.startsWith(current.slice(stem.length)));
+        // a name is followed by a dot or a space, the user knows which
+        whole_names = false;
+    } else {
+        return null;
     }
-}
 
-
-export const complete_version = () =>{
-
-    let candidates = ["client", "server", "driver", "module", "hardware", "toolchain"];
-    let tokens = current_line.split(/ +/)
-    let component = tokens[1];
-    if(component === undefined) return;
-    if(tokens.length === 2){
-        candidates = candidates.filter((item)=>{
-            return item.startsWith(component);
-        })
-    }
-    if(candidates.length === 0) return;
-    // the candidates were only listed, never completed: complete as far as they agree (the whole name when there is one)
+    candidates = [...new Set(candidates)].sort();
+    if(candidates.length === 0) return null;
     let common = prefix(candidates);
-    if(common.length > component.length){
-        let missing = common.slice(component.length);
-        current_line = current_line + missing;
-        terminal.write(missing);
-        return;
-    }
-    for (let i = 0; i < candidates.length; i += 5) {
-        terminal.write("\r\n" + xterm_colors.blue + candidates.slice(i, i + 5).join("         ")  +  xterm_colors.white);
-    }
-    display_prompt();
-    terminal.write(current_line);
-
+    return {
+        word: stem + common,
+        suggestions: candidates.length > 1 && common.length <= current.length - stem.length ? candidates : [],
+        done: candidates.length === 1 && whole_names
+    };
 }
 
+/// Lays the items out in columns, as many as the width of the terminal allows
+const format_columns = (items: string[]): string[] =>{
+    let width = Math.max(...items.map((item)=> item.length)) + 2;
+    let per_row = Math.max(1, Math.floor(terminal.cols / width));
+    let rows: string[] = [];
+    for(let i = 0; i < items.length; i += per_row){
+        rows.push(items.slice(i, i + per_row).map((item)=> item.padEnd(width)).join("").trimEnd());
+    }
+    return rows;
+}
 
 export const handle_tab = () =>{
-    // the completion works on the whole line, from its end
-    finish_line();
-    switch(current_line.split(/ +/).length-1){
-        case 0:
-            complete_command();
-            break;
-        case 1:
-            if(current_line.split(/ +/)[0] === "version"){
-                complete_version();
-            } else {
-                complete_address();
-            }
-            break;
-        default:
-            break;
+    let before = current_line.slice(0, cursor);
+    let result = complete(before);
+    if(result === null) return;
+
+    if(result.suggestions.length > 0){
+        // listed below the line, which is then drawn again where it was
+        let position = cursor;
+        finish_line();
+        terminal.write("\r\n");
+        for(let row of format_columns(result.suggestions)){
+            terminal.write(xterm_colors.blue + row + xterm_colors.white + "\r\n");
+        }
+        cursor = position;
+        render();
+    } else {
+        let word = before.split(/ +/).pop() ?? "";
+        // a complete word gets a space, unless one follows already
+        let space = result.done && !current_line.startsWith(" ", cursor) ? " " : "";
+        let completed = before.slice(0, before.length - word.length) + result.word + space;
+        current_line = completed + current_line.slice(cursor);
+        cursor = completed.length;
+        render();
     }
-    // what the completion added went to the end of the line
-    cursor = current_line.length;
 }
 
 /// Splits a command line in words: the text between quotes is kept together, a name can have spaces, and several
