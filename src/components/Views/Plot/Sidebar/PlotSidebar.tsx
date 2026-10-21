@@ -44,7 +44,9 @@ let  PlotSidebar = (props:PlotSidebarProps) =>{
         <div style={{
             display:"flex",
             flexDirection:"column",
-            gap:10
+            gap:10,
+            // keeps its natural width, the plot area gives way instead
+            flex:"0 0 auto"
         }}>
             <UIPanel key="scope_props" data-grid={{x: 0, y: 0, w: 24, h: 2, static: true}} level="level_2">
                 <SimpleContent name="Scope Properties">

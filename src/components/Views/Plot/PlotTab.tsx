@@ -96,7 +96,11 @@ let PlotTab = function (props: PlotTabProps) {
                     display: "flex",
                     flexDirection: "column",
                     gap: 10,
-                    height: "100%"
+                    height: "100%",
+                    // takes the width left by the sidebar and shrinks below its content, instead of pushing the
+                    // sidebar out of the window
+                    flex: "1 1 0",
+                    minWidth: 0
                 }}>
                     <div style={{
                         display: "flex",
@@ -104,7 +108,7 @@ let PlotTab = function (props: PlotTabProps) {
                         gap: 10,
                         width: "100%"
                     }}>
-                        <UIPanel key="ch_selector" style={{flexGrow: 0.5}} level="level_2">
+                        <UIPanel key="ch_selector" style={{flex: "0 0 auto"}} level="level_2">
                             <SimpleContent name="Channel Selector">
                                 <ChannelSelector
                                     data={external_data}

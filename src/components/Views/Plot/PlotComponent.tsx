@@ -25,6 +25,9 @@ import {ScopePlot, ScopePlotly} from "./ScopePlotly.js";
 
 // the plot configuration is static
 const PLOT_CONFIG = {...PlotConfigurations.configs, response: true};
+// the plot fills the width of its panel (the panel adapts to the window), only the height is fixed
+const {width: _fixed_width, ...FLUID_LAYOUT} = PlotConfigurations.layout;
+const PLOT_STYLE = {width: "100%", height: PlotConfigurations.layout.height};
 // how often the acquisition status is refreshed while the scope is running
 const ACQUISITION_STATUS_PERIOD_MS = 1500;
 
@@ -53,7 +56,7 @@ let  PlotComponent = (props: PlotComponentProps) =>{
     plot_status_ref.current = props.plot_status;
     const graph_div = useRef<HTMLElement | null>(null);
 
-    const layout = useMemo(() => ({...PlotConfigurations.layout, ...props.palette}), [props.palette]);
+    const layout = useMemo(() => ({...FLUID_LAYOUT, autosize: true, ...props.palette}), [props.palette]);
 
     useEffect(()=>{
         let data = initialize_plot(application);
@@ -109,6 +112,8 @@ let  PlotComponent = (props: PlotComponentProps) =>{
             data={plot_data}
             layout={layout}
             config={PLOT_CONFIG}
+            style={PLOT_STYLE}
+            useResizeHandler
             datarevision={props.external_revision}
             onInitialized={(_: unknown, div: HTMLElement) => { graph_div.current = div; }}
             onUpdate={(_: unknown, div: HTMLElement) => { graph_div.current = div; }}
