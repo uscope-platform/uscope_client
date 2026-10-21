@@ -35,7 +35,8 @@ interface SidebarBaseProps {
     onDelete?: (item: any) => void;
     onImport?: (item: string) => void;
     omImportDone?: (item: any) => void;
-    export_array?: boolean;
+    // the content of the exported file, when it is not the item itself
+    export_format?: (item: any) => unknown;
 }
 
 export let SidebarBase = (props: SidebarBaseProps) =>{
@@ -72,11 +73,8 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
     };
 
     let handleExport = () =>{
-        if(props.export_array){
-            download_json([selected_item], selected_item[props.display_key]);
-        } else {
-            download_json(selected_item, selected_item[props.display_key]);
-        }
+        const content = props.export_format ? props.export_format(selected_item) : selected_item;
+        download_json(content, selected_item[props.display_key]);
 
     };
 

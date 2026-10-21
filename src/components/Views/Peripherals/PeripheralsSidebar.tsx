@@ -28,6 +28,11 @@ interface PeripheralsSidebarProps {
     on_select: (id: number) => void;
 }
 
+// the format the import reads: what the peripheral stores, no more, in a list of peripherals
+const export_peripheral = (periph: up_peripheral) => {
+    return {peripherals: Object.values(new up_peripheral(periph).get_raw_obj())};
+};
+
 let  PeripheralsSidebar = (props: PeripheralsSidebarProps) =>{
 
     const peripherals_redux = useAppSelector(state => state.peripherals);
@@ -49,7 +54,7 @@ let  PeripheralsSidebar = (props: PeripheralsSidebarProps) =>{
             display_key="name"
             content_name="Peripherals"
             onImport={handleImport}
-            export_array={true}
+            export_format={export_peripheral}
             onSelect={props.on_select}
         />
     );
