@@ -23,7 +23,7 @@ import {history} from "./terminal_history.js";
 import store from "../../store.js";
 
 declare const __USCOPE_CLIENT_VERSION__: string;
-type TerminalCommand = (args: string[]) => Promise<string[]>;
+export type TerminalCommand = (args: string[]) => Promise<string[]>;
 
 export const terminal_backend : Record<string, TerminalCommand> = {
     write: (args: string[]): Promise<string[]> =>{

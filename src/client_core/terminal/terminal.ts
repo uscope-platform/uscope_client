@@ -19,12 +19,58 @@ import { FitAddon } from "xterm-addon-fit";
 // @ts-ignore
 import 'xterm/css/xterm.css';
 
-import {terminal_backend} from './terminal_backend.js'
+import {terminal_backend, type TerminalCommand} from './terminal_backend.js'
 import {xterm_colors} from "./terminal_colors.js";
 import {history} from "./terminal_history.js";
 import {autocompletion_engine, prefix, prefix_extractor} from "../scripting/autocompletion_engine.js";
 
-const recognised_commands = Object.keys(terminal_backend);
+// set by the clear command, the prompt that follows is on the first row already
+let screen_cleared = false;
+
+/// The commands of the terminal itself, the ones acting on the registers are in terminal_backend
+const builtins: Record<string, TerminalCommand> = {
+    help: (args: string[]): Promise<string[]> =>{
+        if(args[0] === "--help"){
+            return Promise.resolve([
+                "HELP:",
+                "This command lists the commands, or describes one of them",
+                "format: help [COMMAND]"
+            ]);
+        }
+        if(args[0] === undefined) return help_overview();
+        let command = commands[args[0]];
+        if(command === undefined) return Promise.reject(["ERROR: Unrecognized command: " + args[0]]);
+        return command(["--help"]);
+    },
+    clear: (args: string[]): Promise<string[]> =>{
+        if(args[0] === "--help"){
+            return Promise.resolve([
+                "CLEAR:",
+                "This command clears the screen",
+                "format: clear"
+            ]);
+        }
+        // the screen and the scrollback
+        terminal.write("\x1b[3J\x1b[2J\x1b[H");
+        screen_cleared = true;
+        return Promise.resolve([]);
+    }
+}
+
+const commands: Record<string, TerminalCommand> = {...terminal_backend, ...builtins};
+const recognised_commands = Object.keys(commands);
+
+/// One line for each command, from the description in its help
+const help_overview = async (): Promise<string[]> =>{
+    let lines: string[] = [];
+    for(let [name, command] of Object.entries(commands).sort(([a], [b]) => a.localeCompare(b))){
+        let description = await command(["--help"]);
+        // "This command reads the register" is listed as "reads the register"
+        lines.push(name.padEnd(14) + (description[1] ?? "").replace(/^This command /, ""));
+    }
+    lines.push("", "help [COMMAND] shows the details of a command");
+    return lines;
+}
 
 const shellprompt = "$ ";
 
@@ -213,7 +259,7 @@ export const execute_command = (command_line: string): Promise<void> => {
             resolve();
         });
     }
-    let selected_function = terminal_backend[command];
+    let selected_function = commands[command];
     if(selected_function === undefined){
 
         terminal.write("\r\n" + xterm_colors.brightRed + "Error: command not found" + xterm_colors.white);
@@ -311,5 +357,6 @@ export const handle_keypress = (key: string) => {
 }
 
 export const display_prompt = () => {
-    terminal.write("\r\n" + shellprompt);
+    terminal.write((screen_cleared ? "\r" : "\r\n") + shellprompt);
+    screen_cleared = false;
 };
