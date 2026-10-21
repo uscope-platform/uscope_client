@@ -46,11 +46,34 @@ const pending_commands = new Map<number, pending_command>();
 const open_waiters: Array<() => void> = [];
 let reconnect_delay = RECONNECT_DELAY_MIN_MS;
 
-/// Behind a reverse proxy the data plane is published on a path of the same origin (VITE_APP_SCOPE_URL, absolute
-/// or relative to the page, e.g. /uscope-scope/), otherwise it is reached directly on its own port of the control
-/// plane host
+const SCOPE_URL_OVERRIDE_KEY = "uscope_scope_url";
+
+/// Run time override of the data plane address, to point any build (production included) to a driver that is not
+/// where the build expects it, without rebuilding. Open the page with ?scope_url=ws://host:8990/ to set it, it is
+/// remembered by the browser; ?scope_url= (empty) removes it. Accepts the same values as VITE_APP_SCOPE_URL
+const scope_url_override = (): string | null => {
+    try {
+        const requested = new URLSearchParams(window.location.search).get("scope_url");
+        if (requested !== null) {
+            if (requested) localStorage.setItem(SCOPE_URL_OVERRIDE_KEY, requested);
+            else localStorage.removeItem(SCOPE_URL_OVERRIDE_KEY);
+        }
+        return localStorage.getItem(SCOPE_URL_OVERRIDE_KEY) || null;
+    } catch (e) {
+        // storage can be unavailable (private windows, blocked site data)
+        return null;
+    }
+};
+
+// read at load, so that the parameter is stored even if the page is left before the first connection
+scope_url_override();
+
+/// The address is, in order of precedence: the run time override, VITE_APP_SCOPE_URL (build time, absolute or
+/// relative to the page, e.g. /uscope-scope/, for the data plane published behind a reverse proxy on the same
+/// origin), the host of the control plane on its own port. Personal build time values can go in the untracked
+/// .env.development.local
 const scope_url = () => {
-    const configured = import.meta.env.VITE_APP_SCOPE_URL;
+    const configured = scope_url_override() ?? import.meta.env.VITE_APP_SCOPE_URL;
     let url: URL;
     if (configured) {
         url = new URL(configured, window.location.href);

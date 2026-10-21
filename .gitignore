@@ -10,3 +10,7 @@ build/
 certs/
 
 coverage/
+
+# personal overrides of the .env files (e.g. the address of the server or of the scope on another machine)
+.env.local
+.env.*.local
