@@ -22,6 +22,7 @@ import 'xterm/css/xterm.css';
 import {terminal_backend, type TerminalCommand} from './terminal_backend.js'
 import {xterm_colors} from "./terminal_colors.js";
 import {history} from "./terminal_history.js";
+import {terminal_options, prompt, prompt_width, banner} from "./terminal_theme.js";
 import {autocompletion_engine, prefix, prefix_extractor} from "../scripting/autocompletion_engine.js";
 
 // set by the clear command, the prompt that follows is on the first row already
@@ -72,8 +73,6 @@ const help_overview = async (): Promise<string[]> =>{
     return lines;
 }
 
-const shellprompt = "$ ";
-
 export let current_line: string = "";
 
 export let terminal: Terminal;
@@ -84,16 +83,18 @@ let resize_observer: ResizeObserver | undefined;
 export const init_terminal = (): Terminal | undefined => {
     terminal = new Terminal({
         convertEol: true,
-        fontFamily: `'Fira Mono', monospace`,
-        fontSize: 15,
-        fontWeight: 900
+        ...terminal_options
         // rendererType: "dom" // default is canvas
     });
-    //Styling
-    terminal.options.theme = {
-        background: "black",
-        foreground: "white"
-    };
+
+    // ctrl+c copies the selection, it would be sent to the terminal otherwise
+    terminal.attachCustomKeyEventHandler((event) => {
+        if(event.type === "keydown" && event.ctrlKey && !event.shiftKey && event.key.toLowerCase() === "c" && terminal.hasSelection()){
+            void navigator.clipboard?.writeText(terminal.getSelection());
+            return false;
+        }
+        return true;
+    });
 
     // Load Fit Addon
     fitAddon = new FitAddon();
@@ -113,6 +114,7 @@ export const init_terminal = (): Terminal | undefined => {
     terminal.onData((domEvent) => {
         handle_keypress(domEvent);
     })
+    terminal.write(banner);
     display_prompt()
 
     return terminal;
@@ -298,8 +300,8 @@ const as_lines = (response: unknown): string[] => {
 export const replace_line = (line: string) => {
     // go back up to the first row of the line, it can wrap on several (a line filling its last row leaves the cursor
     // there, waiting for the next character to wrap)
-    let rows_up = Math.floor((shellprompt.length + current_line.length - 1) / terminal.cols);
-    terminal.write((rows_up > 0 ? `\x1b[${rows_up}A` : "") + "\r\x1b[J" + shellprompt + line);
+    let rows_up = Math.floor((prompt_width + current_line.length - 1) / terminal.cols);
+    terminal.write((rows_up > 0 ? `\x1b[${rows_up}A` : "") + "\r\x1b[J" + prompt + line);
     current_line = line;
 }
 
@@ -348,8 +350,12 @@ export const handle_keypress = (key: string) => {
         handle_history(true);
     } else if (key === "\x1b[B" || key === "\x1bOB") {
         handle_history(false);
-    } else if (key.startsWith("\x1b")) {
-        // the other escape sequences are not handled, they would end up as text in the line
+    } else if (key === "\x1b[5~") {
+        terminal.scrollPages(-1);
+    } else if (key === "\x1b[6~") {
+        terminal.scrollPages(1);
+    } else if (key.startsWith("\x1b") || key < " ") {
+        // the other escape sequences and control characters are not handled, they would end up as text in the line
         return;
     } else {
         handle_letter(key);
@@ -357,6 +363,6 @@ export const handle_keypress = (key: string) => {
 }
 
 export const display_prompt = () => {
-    terminal.write((screen_cleared ? "\r" : "\r\n") + shellprompt);
+    terminal.write((screen_cleared ? "\r" : "\r\n") + prompt);
     screen_cleared = false;
 };

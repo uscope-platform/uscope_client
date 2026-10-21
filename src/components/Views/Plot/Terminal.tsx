@@ -15,6 +15,7 @@
 
 import React, {useEffect} from "react";
 import {init_terminal, dispose_terminal} from "#client_core/index.js";
+import {terminal_options} from "#client_core/terminal/terminal_theme.js";
 import 'xterm/css/xterm.css';
 import './terminal.css';
 
@@ -31,8 +32,15 @@ let TerminalComponent = (props: TerminalProps) =>{
     },[])
 
     // fills the container of the panel (the terminal follows its size), a fixed height made it scroll in the panel
+    // the padding is outside of the terminal, which is fitted in what is left
     return(
-        <div id="xterm" style={{ height: "100%", width: "100%" }} />
+        <div id="xterm" style={{
+            height: "100%",
+            width: "100%",
+            boxSizing: "border-box",
+            padding: "6px 8px",
+            background: terminal_options.theme?.background
+        }} />
     )
 };
 

@@ -14,6 +14,9 @@
 // limitations under the License.
 
 export const xterm_colors = {
+    reset: '\x1b[0m',
+    dim: '\x1b[2m',
+    bold: '\x1b[1m',
     black: '\x1b[30m',
     red: '\x1b[31m',
     green: '\x1b[32m',
