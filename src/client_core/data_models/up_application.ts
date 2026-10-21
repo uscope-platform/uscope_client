@@ -15,7 +15,6 @@
 
 import {
     get_channels_from_group,
-    set_channel_status,
     set_scaling_factors,
     up_peripheral,
     up_program
@@ -24,7 +23,7 @@ import store from "../../store.js";
 import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy/backend.js";
 import {api_dictionary} from "../proxy/api_dictionary.js";
 import {addApplication, removeApplication, updateApplication} from "#redux/index.js";
-import {set_scope_address} from "../proxy/plot.js";
+import {set_scope_address, set_scope_dma_disable} from "../proxy/plot.js";
 import type {
     application, initial_register_value, clock_frequencies, channel, macro, parameter,
     channel_group, soft_core, filter, peripheral_instance, group_channel_token
@@ -161,7 +160,7 @@ export class up_application {
     }
 
     set_active = async () => {
-        await backend_post(api_dictionary.operations.dma_disable, {status:true});
+        await set_scope_dma_disable(true);
         try {
             await backend_get(api_dictionary.operations.load_application + '/' + this.id);
         } catch (e) {
@@ -180,7 +179,6 @@ export class up_application {
         let [channels, group] = this.get_scope_setup_info();
         await this.setup_scope_mux(channels);
         await this.setup_scaling_factors(channels);
-        await this.setup_scope_statuses(this.get_channel_statuses(channels));
         await set_scope_address({address:parseInt(this.miscellaneous.scope_mux_address), dma_buffer_offset:0x208})
         await set_scope_address({address:parseInt(this.miscellaneous.scope_mux_address), dma_buffer_offset:0x208})
 
@@ -267,14 +265,6 @@ export class up_application {
         return [channels_list, default_group]
     }
 
-    get_channel_statuses = (channels: channel[])=>{
-        let statuses: {[key:string]:boolean} = {};
-        for(let item of channels){
-            statuses[item.number] = item.enabled;
-        }
-        return statuses;
-    }
-
     get_default_channel_group = () : channel_group | undefined =>{
 
         for(let group of this.channel_groups){
@@ -291,7 +281,7 @@ export class up_application {
                 if(item){
                     let channel_address = Math.round(parseInt(this.miscellaneous.scope_mux_address) + 4*(item.number+1));
                     try {
-                        await up_peripheral.direct_register_write([[channel_address, parseInt(item.mux_setting)]]);
+                        await up_peripheral.direct_register_write([[channel_address, Number(item.mux_setting)]]);
                     } catch (e) {
                         let i = 0;
                     }
@@ -306,7 +296,6 @@ export class up_application {
         let channels = get_channels_from_group(group, this.channels);
         await this.setup_scope_mux(channels);
         await this.setup_scaling_factors(channels);
-        await this.setup_scope_statuses(this.get_channel_statuses(channels));
     };
 
     setup_scaling_factors = async (channels: channel[]) =>{
@@ -314,15 +303,11 @@ export class up_application {
 
         for(let item of channels){
             if(item.scaling_factor){
-                sfs[item.number] = parseFloat(item.scaling_factor);
+                sfs[item.number] = Number(item.scaling_factor);
             }
         }
 
         await set_scaling_factors(sfs);
-    }
-
-    setup_scope_statuses = async (statuses: Record<number, boolean>) =>{
-        await set_channel_status(statuses);
     }
 
     get_group_by_name = (group_name:string) =>{

@@ -73,7 +73,6 @@ let PlotTab = function (props: PlotTabProps) {
         }
         set_plot_palette({colorway: palette});
         bump_ext_revision();
-        await application.setup_scope_statuses(new_state);
     }
 
     useInterval(async () => {

@@ -17,19 +17,31 @@ import {backend_post, get_address} from "./backend.js";
 import {api_dictionary} from "./api_dictionary.js";
 import type {scope_data_object} from "#interfaces/index.js";
 
-// Layout of the frames pushed by the driver scope server (see scope_frame.hpp), little endian:
+// The scope websocket of the driver carries both the data (binary messages) and the scope commands: the commands
+// are text messages {id, cmd, args} answered by {id, ok, data | error}.
+//
+// Layout of the data frames pushed by the driver scope server (see scope_frame.hpp), little endian:
 // sequence u64, timestamp_ns u64, n_channels u32, n_samples u32, followed by n_channels*n_samples float32,
 // grouped by channel and already scaled by the driver
 const HEADER_SIZE = 24;
 const RECONNECT_DELAY_MIN_MS = 1000;
 const RECONNECT_DELAY_MAX_MS = 15000;
 const DEFAULT_SCOPE_PORT = "8990";
+const COMMAND_TIMEOUT_MS = 10000;
 
 let socket: WebSocket | null = null;
 let reconnect_timer: ReturnType<typeof setTimeout> | undefined;
 let latest_frame: ArrayBuffer | null = null;
 let connecting = false;
 let disposed = false;
+let next_command_id = 0;
+
+interface pending_command {
+    resolve: (data: any) => void;
+    reject: (reason: Error) => void;
+}
+const pending_commands = new Map<number, pending_command>();
+const open_waiters: Array<() => void> = [];
 let reconnect_delay = RECONNECT_DELAY_MIN_MS;
 
 /// Behind a reverse proxy the data plane is published on a path of the same origin (VITE_APP_SCOPE_URL, absolute
@@ -49,6 +61,21 @@ const scope_url = () => {
     }
     url.protocol = url.protocol === "https:" || url.protocol === "wss:" ? "wss:" : "ws:";
     return url.toString();
+};
+
+const handle_reply = (message: string) => {
+    let reply: {id?: number, ok?: boolean, data?: any, error?: string};
+    try {
+        reply = JSON.parse(message);
+    } catch (e) {
+        return;
+    }
+    if (reply.id === undefined) return;
+    const command = pending_commands.get(reply.id);
+    if (command === undefined) return;
+    pending_commands.delete(reply.id);
+    if (reply.ok) command.resolve(reply.data);
+    else command.reject(new Error(reply.error ?? "Scope command failed"));
 };
 
 const schedule_reconnect = () => {
@@ -78,13 +105,21 @@ const connect = async () => {
     ws.binaryType = "arraybuffer";
     ws.onopen = () => {
         reconnect_delay = RECONNECT_DELAY_MIN_MS;
+        open_waiters.splice(0).forEach(notify => notify());
     };
     ws.onmessage = (event) => {
-        // only the newest frame is of interest, older ones are simply overwritten
-        if (event.data instanceof ArrayBuffer) latest_frame = event.data;
+        if (typeof event.data === "string") {
+            handle_reply(event.data);
+        } else if (event.data instanceof ArrayBuffer) {
+            // only the newest frame is of interest, older ones are simply overwritten
+            latest_frame = event.data;
+        }
     };
     ws.onclose = () => {
         if (socket === ws) socket = null;
+        // the replies of the commands in flight can not arrive anymore
+        pending_commands.forEach(command => command.reject(new Error("The scope connection was lost")));
+        pending_commands.clear();
         if (!disposed) schedule_reconnect();
     };
     ws.onerror = () => ws.close();
@@ -103,6 +138,46 @@ const decode_frame = (frame: ArrayBuffer): scope_data_object[] => {
         channel,
         data: Array.from(values.subarray(channel * n_samples, (channel + 1) * n_samples))
     }));
+};
+
+/// Resolves with the open socket, connecting (and waiting for the connection) if necessary
+const open_socket = (): Promise<WebSocket> => {
+    if (socket !== null && socket.readyState === WebSocket.OPEN) return Promise.resolve(socket);
+
+    return new Promise((resolve, reject) => {
+        const timer = setTimeout(() => {
+            open_waiters.splice(open_waiters.indexOf(notify), 1);
+            reject(new Error("Unable to connect to the scope"));
+        }, COMMAND_TIMEOUT_MS);
+        const notify = () => {
+            clearTimeout(timer);
+            resolve(socket!);
+        };
+        open_waiters.push(notify);
+
+        // do not wait for the next scheduled retry
+        if (socket === null && !connecting) {
+            clearTimeout(reconnect_timer);
+            void connect();
+        }
+    });
+};
+
+/// Executes a scope command on the driver, sharing the connection of the data stream
+export const scope_command = async <T = any>(cmd: string, args: unknown = {}): Promise<T> => {
+    const ws = await open_socket();
+    return new Promise<T>((resolve, reject) => {
+        const id = ++next_command_id;
+        const timer = setTimeout(() => {
+            pending_commands.delete(id);
+            reject(new Error(`Scope command ${cmd} timed out`));
+        }, COMMAND_TIMEOUT_MS);
+        pending_commands.set(id, {
+            resolve: (data) => { clearTimeout(timer); resolve(data); },
+            reject: (reason) => { clearTimeout(timer); reject(reason); }
+        });
+        ws.send(JSON.stringify({id, cmd, args}));
+    });
 };
 
 /// Newest scope data received from the data plane, empty until the first frame arrives

@@ -16,7 +16,7 @@
 import React from 'react';
 
 
-import {set_channel_status, up_emulator,download_text} from "#client_core/index.js";
+import {up_emulator,download_text} from "#client_core/index.js";
 import {SidebarBase} from "#UI/index.js";
 import HilControl from "../HilControl.jsx";
 import {useAppSelector} from "#redux/hooks.js";
@@ -43,8 +43,6 @@ let  HilControlSidebar = (props:HilControlSidebarProps) =>{
     }
 
     let on_start = async () =>{
-        // TODO: Check if all the channels need to be enabled
-        await set_channel_status({0:true, 1:true, 2:true, 3:true, 4:true, 5:true});
         await props.emulator.start_hil();
         props.on_plot_status_update(true);
     };

@@ -25,7 +25,7 @@ export {init_terminal} from './terminal/terminal.js'
 export {set_address, set_auth_config} from './proxy/backend.js'
 
 export {add_user, remove_user, get_users_list, dump_database, restore_database, do_onboarding, need_onboarding} from './proxy/platform.js'
-export { set_channel_status, set_scaling_factors, direct_fetch, set_acquisition, get_acquisition_status} from './proxy/plot.js'
+export { set_scaling_factors, direct_fetch, set_acquisition, get_acquisition_status} from './proxy/plot.js'
 
 
 // DATA MODEL

@@ -22,12 +22,6 @@ export const api_dictionary = {
         apply_program:"operations/apply_program",
         clock: "operations/clock",
 
-        fetch_data:'operations/plot/data',
-        set_channel_status: 'operations/plot/channel_status',
-        scaling_factors: 'operations/plot/channel_scaling',
-        acquisition: 'operations/plot/acquisition',
-        scope_address:'operations/plot/address',
-        dma_disable:'operations/plot/dma_disable',
         scope_ticket:'operations/plot/ticket',
         sampling_frequency:'operations/hil/sampling_frequency',
         hil_debug: 'operations/hil/debug',
