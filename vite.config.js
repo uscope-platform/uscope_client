@@ -31,6 +31,16 @@ export default defineConfig({
     },
     define: {
         __USCOPE_CLIENT_VERSION__: JSON.stringify(commitHash),
+        // plotly.js's has-hover dependency references the Node-only `global`
+        global: 'globalThis',
+    },
+    optimizeDeps: {
+        esbuildOptions: {
+            // the dev server pre-bundles dependencies separately from `define` above
+            define: {
+                global: 'globalThis',
+            },
+        },
     },
     test: {
         globals: true,
