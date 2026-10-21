@@ -1,4 +1,4 @@
-// Copyright 2023 Filippo Savi
+// Copyright 2026 Filippo Savi
 // Author: Filippo Savi <filssavi@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,116 +13,136 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import type {application} from "#interfaces/index.js";
+import {
+    diff_properties,
+    index_by,
+    type diff_entry,
+    type diff_report,
+    type diff_section,
+    type property_change
+} from "./diff_common.js";
 
-
-
-import type {
-    application,
-    channel,
-    channel_group, filter,
-    initial_register_value,
-    macro,
-    parameter, peripheral_instance, soft_core
-} from "#interfaces/index.js";
-
-export class application_diff_engine {
-
-
-    static diff_application(application_a: application, application_b: application){
-        let inner_app_a = JSON.parse(JSON.stringify(application_a));
-        let inner_app_b = JSON.parse(JSON.stringify(application_b));
-
-        let ret: any = [];
-
-        ret = [...ret, application_diff_engine.diff_channels(inner_app_a.channels, inner_app_b.channels)];
-        delete inner_app_a.channels;
-        delete inner_app_b.channels;
-
-        ret = [...ret, application_diff_engine.diff_channel_groups(inner_app_a.channel_groups, inner_app_b.channel_groups)];
-        delete inner_app_a.channel_groups;
-        delete inner_app_b.channel_groups;
-
-        ret = [...ret, application_diff_engine.diff_irv(inner_app_a.initial_registers_values, inner_app_b.initial_registers_values)];
-        delete inner_app_a.initial_registers_values;
-        delete inner_app_b.initial_registers_values;
-
-        ret = [...ret, application_diff_engine.diff_macros(inner_app_a.macro, inner_app_b.macro)];
-        delete inner_app_a.macro;
-        delete inner_app_b.macro;
-
-        ret = [...ret, application_diff_engine.diff_parameters(inner_app_a.parameters, inner_app_b.paraneters)];
-        delete inner_app_a.parameters;
-        delete inner_app_b.parameters;
-
-
-        ret = [...ret, application_diff_engine.diff_peripherals(inner_app_a.peripherals, inner_app_b.peripherals)];
-        delete inner_app_a.peripherals;
-        delete inner_app_b.peripherals;
-
-
-        ret = [...ret, application_diff_engine.diff_softcores(inner_app_a.soft_cores, inner_app_b.soft_cores)];
-        delete inner_app_a.soft_cores;
-        delete inner_app_b.soft_cores;
-
-        ret = [...ret, application_diff_engine.diff_programs(inner_app_a.programs, inner_app_b.programs)];
-        delete inner_app_a.programs;
-        delete inner_app_b.programs;
-
-        ret = [...ret, application_diff_engine.diff_filters(inner_app_a.filters, inner_app_b.filters)];
-        delete inner_app_a.filters;
-        delete inner_app_b.filters;
-
-        ret = [...ret, application_diff_engine.diff_scripts(inner_app_a.scripts, inner_app_b.scripts)];
-        delete inner_app_a.scripts;
-        delete inner_app_b.scripts;
-
-        ret = [...ret, application_diff_engine.diff_misc_fields(inner_app_a, inner_app_b)];
-
-        return ret;
-    }
-
-    static diff_channels = (a_side: channel, b_side: channel) => {
-        return []
-    }
-
-    static diff_channel_groups = (a_side: channel_group, b_side: channel_group) => {
-        return []
-    }
-
-    static diff_irv = (a_side: initial_register_value, b_side: initial_register_value) => {
-        return []
-    }
-
-    static diff_macros = (a_side: macro, b_side: macro)=> {
-        return []
-    }
-
-    static diff_parameters= (a_side: parameter, b_side: parameter) => {
-        return []
-    }
-
-    static diff_peripherals = (a_side: peripheral_instance, b_side: peripheral_instance) => {
-        return []
-    }
-
-    static diff_softcores = (a_side: soft_core, b_side: soft_core) => {
-        return []
-    }
-
-    static diff_filters = (a_side: filter, b_side: filter) => {
-        return []
-    }
-
-    static diff_programs = (a_side: number[], b_side: number[]) => {
-        return []
-    }
-
-    static diff_scripts = (a_side: number[], b_side: number[]) => {
-        return []
-    }
-
-    static diff_misc_fields = (a_side: Record<string, any>, b_side: Record<string, any>) => {
-        return []
-    }
-
+/// What is needed to show the programs and the scripts, which an application only refers to by id, by their name
+export interface application_diff_context {
+    program_name?: (id: number) => string | undefined;
+    script_name?: (id: number) => string | undefined;
 }
+
+/// The entries for the items of a list that are matched by a key: added, removed, or modified when a property changed.
+/// The order of the list is not a change worth reporting for any of the lists of an application
+const diff_keyed_list = <T extends Record<string, any>>(
+    old_items: T[] | undefined,
+    new_items: T[] | undefined,
+    key: (item: T) => string,
+    label: (item: T) => string,
+    ignored: string[] = []
+): diff_entry[] => {
+    const old_by_key = index_by(old_items ?? [], key);
+    const new_by_key = index_by(new_items ?? [], key);
+    const entries: diff_entry[] = [];
+
+    for (const [k, new_item] of new_by_key) {
+        const old_item = old_by_key.get(k);
+        if (old_item === undefined) {
+            entries.push({kind: "added", label: label(new_item), properties: [], children: []});
+            continue;
+        }
+        const properties = diff_properties(old_item, new_item, ignored);
+        if (properties.length > 0) {
+            entries.push({kind: "modified", label: label(new_item), properties, children: []});
+        }
+    }
+    for (const [k, old_item] of old_by_key) {
+        if (!new_by_key.has(k)) {
+            entries.push({kind: "removed", label: label(old_item), properties: [], children: []});
+        }
+    }
+    return entries;
+};
+
+/// The same for a list of ids of other resources (programs, scripts)
+const diff_id_list = (
+    old_ids: number[] | undefined,
+    new_ids: number[] | undefined,
+    label: (id: number) => string
+): diff_entry[] => {
+    const old_set = new Set(old_ids ?? []);
+    const new_set = new Set(new_ids ?? []);
+    return [
+        ...[...new_set].filter(id => !old_set.has(id)).map((id): diff_entry => ({kind: "added", label: label(id), properties: [], children: []})),
+        ...[...old_set].filter(id => !new_set.has(id)).map((id): diff_entry => ({kind: "removed", label: label(id), properties: [], children: []}))
+    ];
+};
+
+/// A record (the clocks, the miscellaneous settings) as one property per key
+const diff_record = (name: string, old_rec: Record<string, any> | undefined, new_rec: Record<string, any> | undefined): property_change[] => {
+    const prefix = (changes: property_change[]) => changes.map(c => ({...c, property: name + "." + c.property}));
+    return prefix(diff_properties(old_rec ?? {}, new_rec ?? {}, []));
+};
+
+const hex = (n: number) => "0x" + n.toString(16).toUpperCase();
+
+/// What changes in an application when old_app is replaced by new_app. The id is not compared, as the replacement
+/// takes the id of the old one
+export const diff_applications = (old_app: application, new_app: application, context: application_diff_context = {}): diff_report => {
+    const properties = [
+        ...diff_properties(old_app, new_app, [
+            "id", "channels", "channel_groups", "initial_registers_values", "macro", "parameters", "peripherals",
+            "soft_cores", "filters", "programs", "scripts", "miscellaneous", "pl_clocks",
+            // not stored, the clocks are in pl_clocks
+            "clock_frequency"
+        ]),
+        ...diff_record("pl_clocks", old_app.pl_clocks, new_app.pl_clocks),
+        ...diff_record("miscellaneous", old_app.miscellaneous, new_app.miscellaneous)
+    ];
+
+    const sections: diff_section[] = [
+        {
+            title: "Channels",
+            entries: diff_keyed_list(old_app.channels, new_app.channels, c => c.id, c => c.name || c.id, ["id"])
+        },
+        {
+            title: "Channel groups",
+            entries: diff_keyed_list(old_app.channel_groups, new_app.channel_groups, g => g.group_id, g => g.group_name || g.group_id, ["group_id"])
+        },
+        {
+            title: "Peripherals",
+            entries: diff_keyed_list(old_app.peripherals, new_app.peripherals, p => p.peripheral_id, p => p.name || p.peripheral_id, ["peripheral_id"])
+        },
+        {
+            title: "Parameters",
+            entries: diff_keyed_list(old_app.parameters, new_app.parameters, p => p.parameter_id, p => p.parameter_name || p.parameter_id, ["parameter_id"])
+        },
+        {
+            title: "Initial register values",
+            entries: diff_keyed_list(old_app.initial_registers_values, new_app.initial_registers_values, v => String(v.address), v => "Register " + hex(v.address), ["address"])
+        },
+        {
+            title: "Macros",
+            entries: diff_keyed_list(old_app.macro, new_app.macro, m => m.name, m => m.name, ["name"])
+        },
+        {
+            title: "Soft cores",
+            entries: diff_keyed_list(old_app.soft_cores, new_app.soft_cores, c => c.id, c => "Core " + c.id, ["id"])
+        },
+        {
+            title: "Filters",
+            entries: diff_keyed_list(old_app.filters, new_app.filters, f => String(f.id), f => f.filter_name || String(f.id), ["id"])
+        },
+        {
+            title: "Programs",
+            entries: diff_id_list(old_app.programs, new_app.programs, id => context.program_name?.(id) ?? "Program " + id)
+        },
+        {
+            title: "Scripts",
+            entries: diff_id_list(old_app.scripts, new_app.scripts, id => context.script_name?.(id) ?? "Script " + id)
+        }
+    ];
+
+    return {
+        properties,
+        sections: sections.filter(s => s.entries.length > 0),
+        notes: []
+    };
+};

@@ -14,15 +14,15 @@
 // limitations under the License.
 
 import type {field, peripheral, register} from "#interfaces/index.js";
-
-export type change_kind = "added" | "removed" | "modified";
-
-export interface property_change {
-    property: string;
-    // undefined when the property does not exist on that side
-    old_value: string | undefined;
-    new_value: string | undefined;
-}
+import {
+    diff_properties,
+    index_by,
+    order_changed,
+    type change_kind,
+    type diff_entry,
+    type diff_report,
+    type property_change
+} from "./diff_common.js";
 
 export interface field_change {
     kind: change_kind;
@@ -49,36 +49,6 @@ export interface peripheral_diff {
 
 export const diff_is_empty = (diff: peripheral_diff): boolean => {
     return diff.properties.length === 0 && diff.registers.length === 0 && !diff.registers_reordered;
-};
-
-const format_value = (value: unknown): string | undefined => {
-    if (value === undefined) return undefined;
-    if (typeof value === "string") return value;
-    if (Array.isArray(value)) return value.length === 0 ? "[ ]" : value.join(", ");
-    return JSON.stringify(value);
-};
-
-const diff_properties = (old_obj: Record<string, any>, new_obj: Record<string, any>, ignored: string[]): property_change[] => {
-    const keys = [...new Set([...Object.keys(old_obj), ...Object.keys(new_obj)])].filter(k => !ignored.includes(k));
-    const changes: property_change[] = [];
-    for (const key of keys) {
-        if (JSON.stringify(old_obj[key]) !== JSON.stringify(new_obj[key])) {
-            changes.push({property: key, old_value: format_value(old_obj[key]), new_value: format_value(new_obj[key])});
-        }
-    }
-    return changes;
-};
-
-const order_changed = (old_keys: string[], new_keys: string[]): boolean => {
-    const in_new = new Set(new_keys);
-    const in_old = new Set(old_keys);
-    const common_old = old_keys.filter(k => in_new.has(k));
-    const common_new = new_keys.filter(k => in_old.has(k));
-    return common_old.some((k, i) => k !== common_new[i]);
-};
-
-const index_by = <T>(items: T[], key: (item: T) => string): Map<string, T> => {
-    return new Map(items.map(item => [key(item), item]));
 };
 
 const diff_fields = (old_fields: field[], new_fields: field[]): field_change[] => {
@@ -151,5 +121,32 @@ export const diff_peripherals = (old_periph: peripheral, new_periph: peripheral)
         properties: diff_properties(old_periph, new_periph, ["id", "registers"]),
         registers: diff_registers(old_periph.registers, new_periph.registers),
         registers_reordered: order_changed(old_periph.registers.map(r => r.ID), new_periph.registers.map(r => r.ID))
+    };
+};
+
+/// The diff as it is shown to the user
+export const peripheral_diff_report = (diff: peripheral_diff): diff_report => {
+    const field_entry = (f: field_change): diff_entry => ({
+        kind: f.kind,
+        label: "Field " + f.name,
+        // the values of a whole added or removed field are not a change worth listing
+        properties: f.kind === "modified" ? f.properties : [],
+        children: []
+    });
+    const register_entry = (r: register_change): diff_entry => ({
+        kind: r.kind,
+        label: "Register " + r.name,
+        ...(r.name !== r.id ? {detail: r.id} : {}),
+        properties: r.properties,
+        children: r.fields.map(field_entry),
+        ...(r.fields_reordered ? {note: "field order changed"} : {})
+    });
+    const notes = diff.registers_reordered || diff.registers.some(r => r.fields_reordered)
+        ? ["The order of the registers or fields differs. The addresses and offsets follow the order, so they would change even where the values are the same."]
+        : [];
+    return {
+        properties: diff.properties,
+        sections: [{title: "Registers", entries: diff.registers.map(register_entry)}],
+        notes
     };
 };

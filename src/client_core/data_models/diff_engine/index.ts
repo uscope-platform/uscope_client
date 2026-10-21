@@ -14,12 +14,19 @@
 // limitations under the License.
 
 
-export {application_diff_engine} from './application_diff_engine.js'
-export {diff_peripherals, diff_is_empty} from './peripheral_diff_engine.js'
+export {diff_applications} from './application_diff_engine.js'
+export type {application_diff_context} from './application_diff_engine.js'
+export {diff_peripherals, diff_is_empty, peripheral_diff_report} from './peripheral_diff_engine.js'
 export type {
-    change_kind,
-    property_change,
     field_change,
     register_change,
     peripheral_diff
 } from './peripheral_diff_engine.js'
+export {report_is_empty} from './diff_common.js'
+export type {
+    change_kind,
+    property_change,
+    diff_entry,
+    diff_section,
+    diff_report
+} from './diff_common.js'
