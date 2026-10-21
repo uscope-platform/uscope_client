@@ -50,8 +50,8 @@ let  PlatformManager = (props: PlatformManagerProps) =>{
         let username = event.currentTarget.user.value;
         let pass = event.currentTarget.pass.value;
 
-        let role = event.currentTarget.role as any;
-        if(role === null || role.value === ""){
+        let role = (event.currentTarget.role as any)?.value;
+        if(!role){
             console.error("Role is null or empty");
             toast.error("Role is nullor empty");
             return;

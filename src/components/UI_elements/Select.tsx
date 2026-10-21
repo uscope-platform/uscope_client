@@ -77,8 +77,8 @@ export let  SelectField = <Option extends DefaultOption = DefaultOption>(
     }, [ColorTheme])
 
     const onSelectChange = useCallback((value: any, event: ActionMeta<any>) => props.onChange(value, event), [props.onChange]);
-    let selected_value = props.value ? props.value: null
-    selected_value = selected_value ? selected_value : null;
+    // Only control the select when a value prop is supplied, otherwise it can never change selection
+    const controlled_props = props.value !== undefined ? {value: props.value} : {};
 
     return(
         <SelectWrapper>
@@ -88,7 +88,7 @@ export let  SelectField = <Option extends DefaultOption = DefaultOption>(
                 id={props.name}
                 styles={style}
                 defaultValue={props.defaultValue}
-                value={selected_value}
+                {...controlled_props}
                 menuPortalTarget={document.body}
                 onChange={onSelectChange}
                 options={props.options}
