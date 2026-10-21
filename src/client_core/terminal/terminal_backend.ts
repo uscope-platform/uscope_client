@@ -34,6 +34,7 @@ export const terminal_backend : Record<string, TerminalCommand> = {
                     "This command adds a write request to the queue for batch execution",
                     "NOTE: When accessing single fields the whole register gets written anyway",
                     "the default value for non accessed fields is 0",
+                    "The value is an integer: decimal, 0x hexadecimal or 0b binary",
                     "format: write [REGISTER/FIELD] [VALUE]"
                 ]);
             })
@@ -44,8 +45,9 @@ export const terminal_backend : Record<string, TerminalCommand> = {
             reject(["ERROR: Missing register or value"]);
         })
         translate_specifier(register,value);
+        let n_writes = script_register_access_log.length;
         return new Promise((resolve)=>{
-          resolve([])
+          resolve([n_writes + (n_writes === 1 ? " write" : " writes") + " queued"])
         })
     },
     write_direct:(args: string[]): Promise<string[]> =>{
@@ -55,6 +57,7 @@ export const terminal_backend : Record<string, TerminalCommand> = {
                     "WRITE DIRECT:",
                     "This command immediately writes to the specified register",
                     "NOTE: This command can only write full registers",
+                    "The value is an integer: decimal, 0x hexadecimal or 0b binary",
                     "format: write_direct [REGISTER] [VALUE]"
                 ]);
             })
@@ -100,6 +103,9 @@ export const terminal_backend : Record<string, TerminalCommand> = {
 
         let writes = translate_registers(script_register_access_log, scripting_engine_peripherals);
         script_register_access_log.length = 0;
+        if(writes.length === 0) return new Promise((resolve)=>{
+            resolve(["The write queue is empty"])
+        })
         return up_peripheral.bulk_register_write(writes).then(()=>[]);
     },
     read:(args: string[]): Promise<string[]> =>{
@@ -253,6 +259,14 @@ const with_isolated_log = <T>(action: () => T): T =>{
     }
 }
 
+/// Decimal, hexadecimal (0x) and binary (0b) integers. parseInt does not know the binary ones, and reads "0b101" as 0
+/// and "12abc" as 12
+const parse_value = (text: string): number | null =>{
+    if(!/^[-+]?(0x[0-9a-f]+|0b[01]+|\d+)$/i.test(text)) return null;
+    let magnitude = Number(text.replace(/^[-+]/, ""));
+    return text.startsWith("-") ? -magnitude : magnitude;
+}
+
 // The errors are thrown as the lines to print, as the commands reject: the terminal reports them
 const translate_specifier = (spec: string, value: string) =>{
     let tokens = spec.split(".");
@@ -267,8 +281,8 @@ const translate_specifier = (spec: string, value: string) =>{
     if(!periph_obj) throw ["ERROR: Unknown peripheral '" + periph_name + "'"];
     let reg = periph_obj.regs[reg_name]
     if(!reg) throw ["ERROR: Unknown register '" + reg_name + "' in peripheral '" + periph_name + "'"];
-    let parsed_value = parseInt(value);
-    if(Number.isNaN(parsed_value)) throw ["ERROR: Invalid value '" + value + "'"];
+    let parsed_value = parse_value(value);
+    if(parsed_value === null) throw ["ERROR: Invalid value '" + value + "', it must be an integer (decimal, 0x hexadecimal or 0b binary)"];
     try {
         reg[field_name] = parsed_value;
     } catch (error) {
