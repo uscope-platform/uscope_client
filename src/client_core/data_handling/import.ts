@@ -44,6 +44,10 @@ export const import_application = (raw_json: any, id: number) => {
         imported_app.miscellaneous =  {}
     }
     if(valid){
+        // the client handles the id of the specification as a string, the older files have an integer
+        for(const p of imported_app.peripherals){
+            p.spec_id = String(p.spec_id);
+        }
         let app = new up_application(imported_app);
         return app.add_remote().then(()=>{
             return app

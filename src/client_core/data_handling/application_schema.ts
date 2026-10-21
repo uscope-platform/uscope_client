@@ -88,8 +88,8 @@ export let application_schema = {
             "type": "string"
           },
           "spec_id": {
-            "description": "ID that links this peripheral to the relative specification",
-            "type": "integer"
+            "description": "ID that links this peripheral to the relative specification, empty when it is not set. The client stores it as a string, the older files have it as an integer",
+            "anyOf": [{"type": "integer"}, {"type": "string"}]
           }
         },
         "required": [
