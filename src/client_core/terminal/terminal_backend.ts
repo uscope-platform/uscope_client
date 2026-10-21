@@ -18,6 +18,7 @@ import {translate_registers} from "../scripting/backend.js";
 import {up_peripheral} from "#client_core/index.js";
 import {__selected_application, up_program} from "../index.js";
 import {get_version} from "../proxy/platform.js";
+import {history} from "./terminal_history.js";
 
 import store from "../../store.js";
 
@@ -161,6 +162,28 @@ export const terminal_backend : Record<string, TerminalCommand> = {
                 reject(["ERROR: Invalid component name"]);
             })
         }
+    },
+
+    history:(args: string[]): Promise<string[]>=>{
+        if(args[0] === "--help"){
+            return new Promise((resolve)=>{
+                resolve([
+                    "HISTORY:",
+                    "This command lists the commands entered in the terminal",
+                    "the arrow keys up and down recall them, -c forgets them all",
+                    "format: history [-c]"
+                ]);
+            })
+        }
+        if(args[0] === "-c"){
+            history.clear();
+            return new Promise((resolve)=>{
+                resolve([])
+            })
+        }
+        return new Promise((resolve)=>{
+            resolve(history.list().map((line, i)=> String(i + 1).padStart(4) + "  " + line))
+        })
     },
 
     load_program:async (args:string[]): Promise<string[]> =>{

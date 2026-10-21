@@ -21,9 +21,12 @@ import 'xterm/css/xterm.css';
 
 import {terminal_backend} from './terminal_backend.js'
 import {xterm_colors} from "./terminal_colors.js";
+import {history} from "./terminal_history.js";
 import {autocompletion_engine, prefix, prefix_extractor} from "../scripting/autocompletion_engine.js";
 
 const recognised_commands = Object.keys(terminal_backend);
+
+const shellprompt = "$ ";
 
 export let current_line: string = "";
 
@@ -245,7 +248,23 @@ const as_lines = (response: unknown): string[] => {
     return [String(response)];
 }
 
+/// Replaces the line being edited with another one, on the screen too. The cursor is always at the end of the line
+export const replace_line = (line: string) => {
+    // go back up to the first row of the line, it can wrap on several (a line filling its last row leaves the cursor
+    // there, waiting for the next character to wrap)
+    let rows_up = Math.floor((shellprompt.length + current_line.length - 1) / terminal.cols);
+    terminal.write((rows_up > 0 ? `\x1b[${rows_up}A` : "") + "\r\x1b[J" + shellprompt + line);
+    current_line = line;
+}
+
+export const handle_history = (older: boolean) => {
+    let line = older ? history.previous(current_line) : history.next();
+    if(line !== null) replace_line(line);
+}
+
 export const handle_return = ()=>{
+    history.add(current_line);
+    history.reset_navigation();
     if(current_line.length>0){
         return execute_command(current_line).finally(()=>{
                 current_line = "";
@@ -279,8 +298,12 @@ export const handle_keypress = (key: string) => {
         handle_delete();
     } else if (key === "\t") {
         handle_tab();
+    } else if (key === "\x1b[A" || key === "\x1bOA") {
+        handle_history(true);
+    } else if (key === "\x1b[B" || key === "\x1bOB") {
+        handle_history(false);
     } else if (key.startsWith("\x1b")) {
-        // arrows and the other escape sequences are not handled, they would end up as text in the line
+        // the other escape sequences are not handled, they would end up as text in the line
         return;
     } else {
         handle_letter(key);
@@ -288,6 +311,5 @@ export const handle_keypress = (key: string) => {
 }
 
 export const display_prompt = () => {
-    let shellprompt = "$ ";
     terminal.write("\r\n" + shellprompt);
 };
