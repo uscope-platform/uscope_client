@@ -252,12 +252,39 @@ export const handle_tab = () =>{
     }
 }
 
+/// Splits a command line in words: the text between quotes is kept together, a name can have spaces, and several
+/// spaces count as one
+export const tokenize = (line: string): string[] => {
+    let tokens: string[] = [];
+    let current = "";
+    // true in a word, also when it is empty ("")
+    let in_word = false;
+    let quote: string | null = null;
+    for(let character of line){
+        if(quote !== null){
+            if(character === quote) quote = null;
+            else current += character;
+        } else if(character === '"' || character === "'"){
+            quote = character;
+            in_word = true;
+        } else if(character === " "){
+            if(in_word) tokens.push(current);
+            current = "";
+            in_word = false;
+        } else {
+            current += character;
+            in_word = true;
+        }
+    }
+    if(in_word) tokens.push(current);
+    return tokens;
+}
+
 export const execute_command = (command_line: string): Promise<void> => {
-    let tokens = command_line.split(" ");
+    let tokens = tokenize(command_line);
     let command =  tokens.shift();
-    if(command === undefined) return new Promise((resolve, reject)=>{
-        reject("Error: command not found");
-    })
+    // a line of spaces
+    if(command === undefined) return Promise.resolve();
     if(!recognised_commands.includes(command)){
         terminal.write("\r\n" + xterm_colors.brightRed + "Unrecognized command: " + command + xterm_colors.white);
         return new Promise((resolve)=>{
