@@ -155,7 +155,7 @@ export const complete_command = () =>{
 }
 
 export const complete_address = () =>{
-    let tokens = current_line.split(" ")
+    let tokens = current_line.split(/ +/)
     if(tokens.length === 1) return;
     let argument = tokens[1];
     if(argument === undefined) return;
@@ -209,7 +209,7 @@ export const complete_address = () =>{
 export const complete_version = () =>{
 
     let candidates = ["client", "server", "driver", "module", "hardware", "toolchain"];
-    let tokens = current_line.split(" ")
+    let tokens = current_line.split(/ +/)
     let component = tokens[1];
     if(component === undefined) return;
     if(tokens.length === 2){
@@ -236,12 +236,12 @@ export const complete_version = () =>{
 
 
 export const handle_tab = () =>{
-    switch(current_line.split(" ").length-1){
+    switch(current_line.split(/ +/).length-1){
         case 0:
             complete_command();
             break;
         case 1:
-            if(current_line.split(" ")[0] === "version"){
+            if(current_line.split(/ +/)[0] === "version"){
                 complete_version();
             } else {
                 complete_address();
@@ -267,7 +267,7 @@ export const tokenize = (line: string): string[] => {
         } else if(character === '"' || character === "'"){
             quote = character;
             in_word = true;
-        } else if(character === " "){
+        } else if(/\s/.test(character)){
             if(in_word) tokens.push(current);
             current = "";
             in_word = false;
