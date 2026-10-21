@@ -29,7 +29,8 @@ export let current_line: string = "";
 
 export let terminal: Terminal;
 
-const fitAddon = new FitAddon();
+let fitAddon: FitAddon;
+let resize_observer: ResizeObserver | undefined;
 
 export const init_terminal = (): Terminal | undefined => {
     terminal = new Terminal({
@@ -46,6 +47,7 @@ export const init_terminal = (): Terminal | undefined => {
     };
 
     // Load Fit Addon
+    fitAddon = new FitAddon();
     terminal.loadAddon(fitAddon);
     // Open the terminal in #terminal-container
     let term_element = document.getElementById("xterm");
@@ -56,12 +58,22 @@ export const init_terminal = (): Terminal | undefined => {
     terminal.open(term_element);
     // Make the terminal's size and geometry fit the size of #terminal-container
     fitAddon.fit();
+    // ... and keep it so, it was fitted only once, whatever the container became afterwards
+    resize_observer = new ResizeObserver(() => fitAddon.fit());
+    resize_observer.observe(term_element);
     terminal.onData((domEvent) => {
         handle_keypress(domEvent);
     })
     display_prompt()
 
     return terminal;
+};
+
+/// Releases the terminal, to be called when it goes away from the page: a new one is created next time
+export const dispose_terminal = () => {
+    resize_observer?.disconnect();
+    terminal?.dispose();
+    current_line = "";
 };
 
 

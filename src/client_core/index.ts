@@ -20,7 +20,7 @@ export {run_script, run_parameter_script, initialize_scripting_engine} from './s
 export {construct_proxied_register, set_write_callback} from './data_models/register_proxy.js'
 export {autocompletion_engine} from './scripting/autocompletion_engine.js'
 export {refresh_caches, get_ui_state, save_ui_state} from './cache_handling.js'
-export {init_terminal} from './terminal/terminal.js'
+export {init_terminal, dispose_terminal} from './terminal/terminal.js'
 // SERVER PROXY
 export {set_address, set_auth_config} from './proxy/backend.js'
 

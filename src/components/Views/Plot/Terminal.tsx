@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect, useRef} from "react";
-import {init_terminal} from "#client_core/index.js";
+import React, {useEffect} from "react";
+import {init_terminal, dispose_terminal} from "#client_core/index.js";
 import 'xterm/css/xterm.css';
 import './terminal.css';
 
@@ -24,21 +24,15 @@ interface TerminalProps {
 
 let TerminalComponent = (props: TerminalProps) =>{
 
-    const term = useRef<ReturnType<typeof init_terminal> | null>(null);
-    const hasInitialized = useRef(false);
-
     useEffect(()=>{
-        if(!hasInitialized.current){
-            let terminal = init_terminal();
-            if(terminal === undefined) return;
-            term.current = terminal;
-            hasInitialized.current = true;
-        }
-
+        if(init_terminal() === undefined) return;
+        // each mount makes its own terminal, the one of a previous mount must not linger
+        return dispose_terminal;
     },[])
 
+    // fills the container of the panel (the terminal follows its size), a fixed height made it scroll in the panel
     return(
-        <div id="xterm" style={{ height: "15em", width: "100%" }} />
+        <div id="xterm" style={{ height: "100%", width: "100%" }} />
     )
 };
 

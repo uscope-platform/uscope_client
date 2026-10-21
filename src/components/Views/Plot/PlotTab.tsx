@@ -154,7 +154,7 @@ let PlotTab = function (props: PlotTabProps) {
                         </UIPanel>
                     </div>
                     <UIPanel key="terminal" level="level_2">
-                        <SimpleContent name="Terminal" height="25vh">
+                        <SimpleContent name="Terminal" height="max(25vh, 14rem)">
                             <TerminalComponent/>
                         </SimpleContent>
                     </UIPanel>
