@@ -21,7 +21,8 @@ export const xterm_colors = {
     blue:'\x1b[34m',
     magenta:'\x1b[35m',
     cyan:'\x1b[36m',
-    white:'\x1b[37m',
+    // also resets the attributes, the bright colors switch bold on and nothing else would switch it off
+    white:'\x1b[0;37m',
     brightBlack:'\x1b[1;30m',
     brightRed:'\x1b[1;31m',
     brightGreen:'\x1b[1;32m',

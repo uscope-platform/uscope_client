@@ -208,12 +208,19 @@ export const execute_command = (command_line: string): Promise<void> => {
             resolve();
         });
     }
-    return selected_function(tokens).then((response: any)=>{
+    let result: Promise<string[]>;
+    try {
+        result = selected_function(tokens);
+    } catch (error) {
+        // a command failing before returning its promise would leave the terminal without a prompt
+        result = Promise.reject(error);
+    }
+    return result.then((response: any)=>{
         for (const line of response) {
             terminal.write("\r\n" + xterm_colors.green + line + xterm_colors.white);
         }
     }).catch((response: any) =>{
-        for (const line of response) {
+        for (const line of as_lines(response)) {
             terminal.write("\r\n" + xterm_colors.brightRed + line + xterm_colors.white);
         }
     });
@@ -221,9 +228,16 @@ export const execute_command = (command_line: string): Promise<void> => {
 
 }
 
+// the commands reject with the lines to print, an error or a string must not be printed one character per line
+const as_lines = (response: unknown): string[] => {
+    if(Array.isArray(response)) return response;
+    if(response instanceof Error) return [response.message];
+    return [String(response)];
+}
+
 export const handle_return = ()=>{
     if(current_line.length>0){
-        return execute_command(current_line).then(()=>{
+        return execute_command(current_line).finally(()=>{
                 current_line = "";
                 display_prompt();
             }
@@ -255,6 +269,9 @@ export const handle_keypress = (key: string) => {
         handle_delete();
     } else if (key === "\t") {
         handle_tab();
+    } else if (key.startsWith("\x1b")) {
+        // arrows and the other escape sequences are not handled, they would end up as text in the line
+        return;
     } else {
         handle_letter(key);
     }
