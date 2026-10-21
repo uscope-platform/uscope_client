@@ -32,6 +32,8 @@ const COMMAND_TIMEOUT_MS = 10000;
 let socket: WebSocket | null = null;
 let reconnect_timer: ReturnType<typeof setTimeout> | undefined;
 let latest_frame: ArrayBuffer | null = null;
+let decoded_frame: {frame: ArrayBuffer, data: scope_data_object[]} | null = null;
+const frame_listeners = new Set<() => void>();
 let connecting = false;
 let disposed = false;
 let next_command_id = 0;
@@ -113,6 +115,7 @@ const connect = async () => {
         } else if (event.data instanceof ArrayBuffer) {
             // only the newest frame is of interest, older ones are simply overwritten
             latest_frame = event.data;
+            frame_listeners.forEach(listener => listener());
         }
     };
     ws.onclose = () => {
@@ -131,12 +134,14 @@ const decode_frame = (frame: ArrayBuffer): scope_data_object[] => {
     const view = new DataView(frame);
     const n_channels = view.getUint32(16, true);
     const n_samples = view.getUint32(20, true);
-    // the payload is not guaranteed to be aligned for a Float32Array view, and has to be little endian anyway
-    const values = new Float32Array(frame.slice(HEADER_SIZE, HEADER_SIZE + 4 * n_channels * n_samples));
+    // zero copy views on the received frame: the header is a multiple of 4 bytes and a websocket message always
+    // starts at offset 0 of its own buffer, so the payload is aligned. The platforms running a browser are all little
+    // endian, as the driver. The buffer is never written after reception, so a view stays valid when newer frames arrive
+    const values = new Float32Array(frame, HEADER_SIZE, n_channels * n_samples);
 
     return Array.from({length: n_channels}, (_, channel) => ({
         channel,
-        data: Array.from(values.subarray(channel * n_samples, (channel + 1) * n_samples))
+        data: values.subarray(channel * n_samples, (channel + 1) * n_samples)
     }));
 };
 
@@ -180,11 +185,24 @@ export const scope_command = async <T = any>(cmd: string, args: unknown = {}): P
     });
 };
 
-/// Newest scope data received from the data plane, empty until the first frame arrives
+/// Newest scope data received from the data plane, empty until the first frame arrives. The decoding is done once
+/// per frame, whoever asks for it
 export const latest_scope_data = (): scope_data_object[] => {
     // while a reconnection is scheduled the retries are left to the timer
     if (socket === null && !connecting && reconnect_timer === undefined) void connect();
-    return latest_frame === null ? [] : decode_frame(latest_frame);
+    if (latest_frame === null) return [];
+    if (decoded_frame === null || decoded_frame.frame !== latest_frame) {
+        decoded_frame = {frame: latest_frame, data: decode_frame(latest_frame)};
+    }
+    return decoded_frame.data;
+};
+
+/// Calls the listener whenever a new data frame is received, returns the function removing the subscription.
+/// Also makes sure the connection is being established
+export const subscribe_scope_frames = (listener: () => void): (() => void) => {
+    frame_listeners.add(listener);
+    if (socket === null && !connecting && reconnect_timer === undefined) void connect();
+    return () => { frame_listeners.delete(listener); };
 };
 
 // a hot reload replaces the module but would leave the old socket and its reconnect timer running

@@ -25,7 +25,7 @@ export {init_terminal} from './terminal/terminal.js'
 export {set_address, set_auth_config} from './proxy/backend.js'
 
 export {add_user, remove_user, get_users_list, dump_database, restore_database, do_onboarding, need_onboarding} from './proxy/platform.js'
-export { set_scaling_factors, direct_fetch, set_acquisition, get_acquisition_status} from './proxy/plot.js'
+export { set_scaling_factors, direct_fetch, subscribe_scope_frames, set_acquisition, get_acquisition_status} from './proxy/plot.js'
 
 
 // DATA MODEL
@@ -51,7 +51,7 @@ export {import_application, import_peripherals} from './data_handling/import.js'
 export {get_next_id} from './utilities/id_management.js'
 export {download_json, download_plot, download_bitstream,download_text} from './utilities/downloads.js'
 export {upload_json, upload_raw} from './utilities/uploads.js'
-export {get_channel_number_from_id, get_channels_from_group, create_plot_channel, initialize_plot, update_plot_status, update_plot_data} from "./plot_handling.js";
+export {get_channel_number_from_id, get_channels_from_group, create_plot_channel, initialize_plot, update_plot_status, apply_scope_data} from "./plot_handling.js";
 
 export const set_redux_store = (rs: any) => {
     store = rs;

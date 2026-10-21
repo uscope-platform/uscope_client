@@ -13,13 +13,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {latest_scope_data, scope_command} from "./scope_stream.js";
+import {latest_scope_data, scope_command, subscribe_scope_frames} from "./scope_stream.js";
 import type {scope_control, scope_data_object, scope_settings, ScopeStatus} from "#interfaces/index.js";
 
 
 export const direct_fetch = (): Promise<scope_data_object[]> =>  {
     return Promise.resolve(latest_scope_data());
 };
+
+export {subscribe_scope_frames};
 
 export const set_scaling_factors = (scaling_factors: number[]) => {
     return scope_command("set_scaling_factors", scaling_factors).catch((err) => {

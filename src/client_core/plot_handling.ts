@@ -14,14 +14,13 @@
 // limitations under the License.
 
 
-import {direct_fetch} from "./proxy/plot.js";
-import type {application, channel, channel_group, plot_channel} from "#interfaces/index.js";
+import type {application, channel, channel_group, plot_channel, scope_data_object} from "#interfaces/index.js";
 
 export let create_plot_channel = (ch: channel): plot_channel => {
     return ({
         x: Array.from(Array(1024).keys()),
         y: Array(1024).fill(0),
-        type: 'scatter',
+        type: 'scattergl',
         mode: 'lines',
         name: ch.name,
         visible: ch.enabled,
@@ -54,17 +53,23 @@ export const initialize_plot = (app: application) =>{
     return ch_obj
 };
 
-export const update_plot_data =async (old_data: any[])=>{
-    let raw_data = await direct_fetch();
-    return  old_data.map((item)=>{
-        let new_item = item;
+/// Copies the samples of a scope frame in the traces, in place (plotly is going to be told about the change by the
+/// caller, no copies are made). Returns the indices of the traces that received data
+export const apply_scope_data = (plot_data: plot_channel[], raw_data: scope_data_object[]): number[] => {
+    let updated: number[] = [];
+    plot_data.forEach((item, index) => {
+        if(item.spec === undefined) return;
+        const number = Number(item.spec.number);
         for(let channel_payload of raw_data){
-            if(parseInt(new_item.spec.number)===channel_payload.channel){
-                new_item.y = channel_payload.data;
+            if(number === channel_payload.channel){
+                item.y = channel_payload.data;
+                // the timebase follows the length of the frame
+                if(item.x.length !== item.y.length) item.x = Array.from(Array(item.y.length).keys());
+                updated.push(index);
             }
         }
-        return new_item;
     });
+    return updated;
 }
 
 export const update_plot_status = (old_data:any[], status: Record<number, boolean>)=>{

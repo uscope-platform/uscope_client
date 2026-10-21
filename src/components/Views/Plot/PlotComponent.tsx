@@ -13,19 +13,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useContext, useEffect, useReducer, useState} from 'react';
-import Plotly from 'plotly.js-basic-dist';
-//@ts-ignore
-import createPlotlyComponent from 'react-plotly.js/factory';
+import React, {useContext, useEffect, useMemo, useRef, useState} from 'react';
 
 import {PlotConfigurations} from "#UI/index.js";
-import {download_plot, initialize_plot, update_plot_data} from "#client_core/index.js";
+import {apply_scope_data, download_plot, initialize_plot, subscribe_scope_frames} from "#client_core/index.js";
+import {latest_scope_data} from "#client_core/proxy/scope_stream.js";
 import useInterval from "../../Common_Components/useInterval.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
 import type {plot_channel} from "#interfaces/index.js";
+import {ScopePlot, ScopePlotly} from "./ScopePlotly.js";
 
-const Plot = createPlotlyComponent(Plotly);
-
+// the plot configuration is static
+const PLOT_CONFIG = {...PlotConfigurations.configs, response: true};
+// how often the acquisition status is refreshed while the scope is running
+const ACQUISITION_STATUS_PERIOD_MS = 1500;
 
 interface PlotComponentProps {
     on_data_init: (data: plot_channel[]) => void;
@@ -43,9 +44,16 @@ let  PlotComponent = (props: PlotComponentProps) =>{
     const application = useContext(ApplicationContext);
     let init_data:plot_channel[] =[]
     const [plot_data, set_plot_data] = useState(init_data);
-    const [data_revision, bump_revision] = useReducer(x => x + 1, 1);
 
-    const [acquisition_counter, set_acquisition_counter] = useState(0);
+    // The frames bypass react: the traces are updated in place and plotly is told directly about it, react only
+    // re-renders the plot when its structure (channels, visibility, palette) changes
+    const plot_data_ref = useRef(plot_data);
+    plot_data_ref.current = plot_data;
+    const plot_status_ref = useRef(props.plot_status);
+    plot_status_ref.current = props.plot_status;
+    const graph_div = useRef<HTMLElement | null>(null);
+
+    const layout = useMemo(() => ({...PlotConfigurations.layout, ...props.palette}), [props.palette]);
 
     useEffect(()=>{
         let data = initialize_plot(application);
@@ -64,30 +72,46 @@ let  PlotComponent = (props: PlotComponentProps) =>{
         set_plot_data(props.external_data);
     }, [props.external_data])
 
-    let  handleRefresh = async () =>{
-        if(props.plot_status){
-            let new_plot_data =await update_plot_data(plot_data);
-            set_plot_data(new_plot_data);
-            bump_revision();
-            if(acquisition_counter===9){
-                props.on_update_acquisition_status();
-                set_acquisition_counter(0);
-            } else{
-                set_acquisition_counter(acquisition_counter + 1);
-            }
-        }
-    };
+    // draws at most once per animation frame, and only when a new frame of data has been received
+    useEffect(() => {
+        let animation: number | undefined;
 
-    useInterval(async () => {
-        await handleRefresh();
-    },  PlotConfigurations.refresh_rate);
+        const draw = () => {
+            animation = undefined;
+            const div = graph_div.current;
+            if(!plot_status_ref.current || div === null) return;
+
+            const traces = plot_data_ref.current;
+            const updated = apply_scope_data(traces, latest_scope_data());
+            if(updated.length === 0) return;
+            void ScopePlotly.restyle(
+                div,
+                {x: updated.map(i => traces[i]!.x), y: updated.map(i => traces[i]!.y)},
+                updated
+            );
+        };
+
+        const unsubscribe = subscribe_scope_frames(() => {
+            if(animation === undefined) animation = requestAnimationFrame(draw);
+        });
+        return () => {
+            unsubscribe();
+            if(animation !== undefined) cancelAnimationFrame(animation);
+        };
+    }, [])
+
+    useInterval(() => {
+        if(props.plot_status) props.on_update_acquisition_status();
+    }, ACQUISITION_STATUS_PERIOD_MS);
 
     return(
-        <Plot
+        <ScopePlot
             data={plot_data}
-            layout={{...PlotConfigurations.layout,...props.palette}}
-            config={{...PlotConfigurations.configs, response:true}}
-            datarevision={data_revision + props.external_revision}
+            layout={layout}
+            config={PLOT_CONFIG}
+            datarevision={props.external_revision}
+            onInitialized={(_: unknown, div: HTMLElement) => { graph_div.current = div; }}
+            onUpdate={(_: unknown, div: HTMLElement) => { graph_div.current = div; }}
         />
     );
 };

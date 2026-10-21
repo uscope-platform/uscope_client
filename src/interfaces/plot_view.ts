@@ -19,8 +19,8 @@
 import type {channel} from "#interfaces/index.js";
 
 export interface plot_channel{
-    x: number[],
-    y: number[],
+    x: ArrayLike<number>,
+    y: ArrayLike<number>,
     type: string,
     mode: string,
     name: string,

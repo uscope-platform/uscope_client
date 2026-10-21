@@ -78,7 +78,7 @@ export interface scope_settings{
 
 export interface scope_data_object{
     channel:number,
-    data:number[]
+    data:ArrayLike<number>
 }
 
 export interface register_write{
