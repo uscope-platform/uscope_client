@@ -127,10 +127,9 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
             })
         } else{
             items = Object.values(props.objects).map((obj: any)=>{
-                types.push("generic");
                 let type_prop = props.type_prop
-                if(type_prop && props.objects[type_prop]){
-                    types.push(props.objects[type_prop][type_prop]);
+                if(type_prop && obj[type_prop]){
+                    types.push(obj[type_prop]);
                 } else {
                     types.push("generic");
                 }

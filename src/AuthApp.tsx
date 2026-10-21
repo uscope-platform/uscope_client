@@ -163,7 +163,7 @@ let AuthApp = (props: AuthAppProps) =>{
                 </div>
             );
 
-        case "RESOURCE LOADING":
+        case "RESOURCE_LOADING":
             return(
                 <></>
             );
@@ -185,7 +185,7 @@ let AuthApp = (props: AuthAppProps) =>{
                         <div style={{display: "flex", gap: InterfaceParameters.main_window.columns_gap}}>
                             <div style={{
                                 minWidth: InterfaceParameters.main_window.columns_min_widths[0],
-                                height: "1000px"
+                                height: "100vh"
                             }} key="nav">
                                 <Navbar views={views}/>
                             </div>
@@ -194,7 +194,7 @@ let AuthApp = (props: AuthAppProps) =>{
                                          padding: InterfaceParameters.main_window.padding,
                                          minWidth: InterfaceParameters.main_window.columns_min_widths[1],
                                          flexGrow: 6,
-                                         height: "1000px"
+                                         height: "100vh"
                                      }} level="level_1">
                                 <Routes>
                                     {construct_routes()}

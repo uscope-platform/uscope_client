@@ -43,7 +43,7 @@ export let  SelectableList = (props: SelectableListProps) =>{
             ret.push(
                 <SelectableListItem
                     multi_select={props.multi_select}
-                    key={Math.random().toString(36).slice(2, 7)}
+                    key={names[i]}
                     onRemove={props.onRemove}
                     onSelect={props.onSelect}
                     selected={selected}
