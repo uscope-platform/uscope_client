@@ -84,11 +84,12 @@ export const complete_command = () =>{
         return command.startsWith(current_line);
     })
     if(candidates.length === 1){
-        display_prompt();
         let candidate = candidates[0];
         if(candidate === undefined)return;
-        current_line = candidate;
-        terminal.write(candidate);
+        // the prompt and the typed part are on the screen already, only the rest is written, and a space follows, so
+        // that the next tab completes the arguments
+        terminal.write(candidate.slice(current_line.length) + " ");
+        current_line = candidate + " ";
     } else if(candidates.length >1){
         if(!complete_command){
             current_line = prefix(candidates);
@@ -124,13 +125,13 @@ export const complete_address = () =>{
                 if(candidate === undefined)return;
                 let present_substr = argument.split(".").pop()
                 if(present_substr === undefined) return;
-                let missing = candidate.replace(present_substr, "");
+                let missing = candidate.slice(present_substr.length);
                 current_line = current_line + missing;
                 terminal.write(missing);
             } else if(pref){
                 let present_substr = argument.split(".").pop()
                 if(present_substr === undefined) return;
-                let missing = pref.replace(present_substr, "");
+                let missing = pref.slice(present_substr.length);
                 for (let i = 0; i < candidates.length; i += 5) {
                     terminal.write("\r\n" + xterm_colors.blue + candidates.slice(i, i + 5).join("         ")  +  xterm_colors.white);
                 }
@@ -161,6 +162,15 @@ export const complete_version = () =>{
         candidates = candidates.filter((item)=>{
             return item.startsWith(component);
         })
+    }
+    if(candidates.length === 0) return;
+    // the candidates were only listed, never completed: complete as far as they agree (the whole name when there is one)
+    let common = prefix(candidates);
+    if(common.length > component.length){
+        let missing = common.slice(component.length);
+        current_line = current_line + missing;
+        terminal.write(missing);
+        return;
     }
     for (let i = 0; i < candidates.length; i += 5) {
         terminal.write("\r\n" + xterm_colors.blue + candidates.slice(i, i + 5).join("         ")  +  xterm_colors.white);
