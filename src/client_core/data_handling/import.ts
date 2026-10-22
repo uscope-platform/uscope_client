@@ -59,7 +59,7 @@ const unique_name = (taken: string[], name: string): string => {
     return candidate;
 };
 
-const free_id = (taken: number[]): number => get_next_id([...taken].sort((a, b) => a - b));
+const free_id = (taken: number[]): number => get_next_id(taken);
 
 ////////////////////////////////////////////////     APPLICATIONS
 

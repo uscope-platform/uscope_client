@@ -51,7 +51,7 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
     }
 
     let handleAdd = () => {
-        let id = get_next_id(Object.values(props.objects).map((a: any) => a[props.selection_key]).sort());
+        let id = get_next_id(Object.values(props.objects).map((a: any) => a[props.selection_key]));
         let obj = props.template.construct_empty(id);
         obj.add_remote().then(()=>{
             if(props.onAdd){
@@ -89,7 +89,7 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
                     if(JSON.stringify(props.objects[obj[props.selection_key]]) === JSON.stringify(obj.get_raw_obj())){
                         return;
                     } else {
-                        obj.id = get_next_id(Object.values(props.objects).map((a: any) => a[props.selection_key]).sort());
+                        obj.id = get_next_id(Object.values(props.objects).map((a: any) => a[props.selection_key]));
                         let labels = Object.values(props.objects).map((a: any) => a[props.display_key]);
                         if(labels.includes(obj[props.display_key])){
                             obj[props.display_key] = obj[props.display_key] + "_" + obj.id.toString();
@@ -151,7 +151,7 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
     };
 
     let handleCopy = async () =>{
-        let id = get_next_id(Object.values(props.objects).map((a: any) => a[props.selection_key]).sort());
+        let id = get_next_id(Object.values(props.objects).map((a: any) => a[props.selection_key]));
         let copy_obj = await props.template.duplicate(selected_item, id);
         await copy_obj.add_remote();
         if(props.onAdd){

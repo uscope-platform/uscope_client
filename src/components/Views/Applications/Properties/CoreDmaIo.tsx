@@ -186,7 +186,7 @@ export let  CoreDmaIo = (props: CoreDmaIoProps) =>{
                 return match[1];
             }
         }).filter((item)=>{return item !== undefined}).flat();
-        let id = get_next_id(ids.sort());
+        let id = get_next_id(ids);
 
 
         let new_io = {

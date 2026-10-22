@@ -45,7 +45,7 @@ let  BitstreamSidebar = (props: BitstreamSidebarProps) =>{
 
     let handleAdd = async () =>{
 
-        let ids = Object.values(bitstreams_store).map(a => a.id).sort();
+        let ids = Object.values(bitstreams_store).map(a => a.id);
         let id = get_next_id(ids);
         let event = await upload_raw();
         let file = await  up_bitstream.get_file_content( event);

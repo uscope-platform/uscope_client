@@ -79,7 +79,7 @@ let PeripheralsManager = (props: PeripheralsManagerProps)=>{
             }
         }).flat().filter((id): id is number=> id !== undefined);
 
-        let name ="new_register_" + get_next_id(ids.sort());
+        let name ="new_register_" + get_next_id(ids);
         selected_peripheral.add_register(name).then();
     }
 

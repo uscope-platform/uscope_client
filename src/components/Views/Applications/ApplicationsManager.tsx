@@ -179,7 +179,7 @@ let  ApplicationsManager = (props: ApplicationsManagerProps) =>{
         }
 
         ids = ids.filter(Boolean);
-        let selected_id = get_next_id(ids.sort())
+        let selected_id = get_next_id(ids)
         add_content(selected_id, item_type);
     }
 

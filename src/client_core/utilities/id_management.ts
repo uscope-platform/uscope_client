@@ -14,18 +14,11 @@
 // limitations under the License.
 
 
-export let get_next_id =(ids: number[]) => {
-    let id = null;
-    if(ids.length === 0) return 1;
-    if(ids[0]!>1) {
-        return 1;
-    }
-    for(let i = 1; i < ids.length; i++) {
-        if(ids[i]! - ids[i-1]! !== 1) {
-            id = ids[i-1]!+1;
-        }
-    }
-    if(id===null)
-        id = ids.length+1;
+/// The smallest positive integer that is not one of the ids, in whatever order they come (some callers have the ids
+/// as strings, read from names)
+export let get_next_id = (ids: (number | string)[]) => {
+    const taken = new Set(ids.map(Number));
+    let id = 1;
+    while(taken.has(id)) id++;
     return id;
 }
