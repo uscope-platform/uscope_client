@@ -14,6 +14,8 @@
 // limitations under the License.
 
 import React, { useReducer, useState} from 'react';
+import {styled} from "goober";
+import {MdDelete, MdDownload} from "react-icons/md";
 import {ColorTheme, PlotConfigurations, SelectableList, SimpleContent, UIPanel} from "#UI/index.js";
 
 //@ts-ignore
@@ -27,8 +29,100 @@ import type {EmulatorResultLegendItem} from "#interfaces/index.js";
 
 const Plot = createPlotlyComponent(Plotly);
 
+const PLOT_CONFIG = {...PlotConfigurations.configs, response: true};
+const {width: _fixed_width, height: _fixed_height, ...FLUID_LAYOUT} = PlotConfigurations.layout;
+const PLOT_STYLE = {width: "100%", height: "100%"};
+// the plot takes what the window leaves to the page header and to the selectors under it
+const PLOT_HEIGHT = "max(20em, calc(100vh - 230px - 20em))";
+
+const Toolbar = styled('div')`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0.8rem;
+  min-height: 2.2rem;
+`
+
+const Actions = styled('div')`
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex: 0 0 auto;
+`
+
+const Hint = styled('span')`
+  font-size: 0.8rem;
+  opacity: 0.6;
+`
+
+const Columns = styled('div')`
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  height: 15em;
+`
+
+const Column = styled('div')`
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  & + & {
+    border-left: 1px solid ${ColorTheme.background.borders};
+  }
+`
+
+const ColumnTitle = styled('div')`
+  padding: 0.5rem 0.8rem 0.3rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.6;
+`
+
+const ColumnBody = styled('div')`
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0 0.3rem 0.3rem;
+`
+
+const Empty = styled('div')`
+  padding: 0.4rem 0.5rem;
+  font-size: 0.85rem;
+  opacity: 0.5;
+`
+
+interface SelectorColumnProps {
+    title: string,
+    items: string[],
+    selected: string,
+    // what to do before there is anything to choose from
+    empty: string,
+    multi_select?: boolean | undefined,
+    onSelect: (name: string, multi?: boolean) => void,
+}
+
+let SelectorColumn = (props: SelectorColumnProps) => (
+    <Column>
+        <ColumnTitle>{props.title}</ColumnTitle>
+        <ColumnBody>
+            {props.items.length === 0
+                ? <Empty>{props.empty}</Empty>
+                : <SelectableList
+                    items={props.items}
+                    selected_item={props.selected}
+                    {...(props.multi_select ? {multi_select: true} : {})}
+                    onSelect={props.onSelect}
+                    style={{maxHeight: "none", width: "auto"}}
+                />}
+        </ColumnBody>
+    </Column>
+);
+
 interface EmulationResultsProps {
     results: up_emulator_result,
+    on_download: () => void,
 }
 
 let EmulationResults = function (props: EmulationResultsProps) {
@@ -46,56 +140,32 @@ let EmulationResults = function (props: EmulationResultsProps) {
 
     const [data_revision,update_data ] = useReducer(x => x + 1, 0);
 
-    let plot_layout = {...PlotConfigurations.layout,colorway:ColorTheme.plot_palette};
-    plot_layout.width = 800 as any;
-    plot_layout.height = 560 as any;
+    const plot_layout = {...FLUID_LAYOUT, autosize: true, colorway: ColorTheme.plot_palette};
 
-    let plot_config = {...PlotConfigurations.configs, response:true};
+    // draws what the results have selected
+    let refresh_plot = () =>{
+        let [timebase, series] = props.results.get_data_series();
+        set_data(series.map((item: any) => ({
+            name: item.name,
+            x: timebase,
+            y: item.content,
+            type: 'scatter',
+            mode: 'lines'
+        })));
+        set_plot_legends(series.map((item: any, index: number) => ({name: item.name, index: index})));
+        update_data();
+    }
 
     let handle_select_index = (index: string,multi_selection?:boolean)=>{
-        if(multi_selection=== undefined) multi_selection = false;
-        props.results.add_data_series(selected_source, selected_output, selected_channel, index,multi_selection);
-
-        let [timebase, data] = props.results.get_data_series();
-        let new_legend:EmulatorResultLegendItem[]= []
-        set_data(data.map((item: any, index: number)=>{
-            new_legend.push({
-                name:item.name,
-                index: index
-            })
-            return({
-                name:item.name,
-                x: timebase,
-                y: item.content,
-                type: 'scatter',
-                mode: 'lines'
-            })
-        }));
-        set_plot_legends(new_legend);
+        props.results.add_data_series(selected_source, selected_output, selected_channel, index, multi_selection ?? false);
+        refresh_plot();
         set_selected_index(index);
-        update_data();
     }
 
     let add_input_to_plot = (input_name: string,multi_selection:boolean) =>{
         props.results.add_input(selected_source, input_name, multi_selection);
-        let [timebase, data] = props.results.get_data_series();
-        let new_legend: EmulatorResultLegendItem[]= []
-        set_data(data.map((item: any, index: number)=>{
-            new_legend.push({
-                name:item.name,
-                index: index
-            })
-            return({
-                name:item.name,
-                x: timebase,
-                y: item.content,
-                type: 'scatter',
-                mode: 'lines'
-            })
-        }));
-        set_plot_legends(new_legend);
+        refresh_plot();
         set_selected_output(input_name);
-        update_data();
     }
 
     let handle_select_source = (source: string) =>{
@@ -129,6 +199,13 @@ let EmulationResults = function (props: EmulationResultsProps) {
         set_selected_index("");
     }
 
+    let handle_clear = () =>{
+        props.results.clear_selected_series();
+        refresh_plot();
+    }
+
+    const icon_style = {cursor: "pointer"};
+
     return(
         <div style={{
             display:"flex",
@@ -139,80 +216,71 @@ let EmulationResults = function (props: EmulationResultsProps) {
             flexGrow:1,
             minWidth:0
         }}>
-            <UIPanel key="emulation_result_plots" level="level_2">
-                <SimpleContent name="Results Plot" height="100%">
-                    <div style={{
-                        display:"flex",
-                        flexDirection:"row",
-                        gap:10,
-                        height:"100%"
-                    }}>
+            <UIPanel style={{flex: "0 0 auto"}} key="emulation_result_plots" level="level_2">
+                <SimpleContent name="Results Plot" height={PLOT_HEIGHT}>
+                  <div style={{display: "flex", flexDirection: "column", height: "100%"}}>
+                    <Toolbar>
+                        {plot_legends.length > 0
+                            ? <ResultsPlotLegend data={plot_legends}/>
+                            : <Hint>Pick a core, a series, a channel and an index below to plot it. Ctrl+click adds to the plot.</Hint>}
+                        <Actions>
+                            <MdDelete title="Clear the plot" size={ColorTheme.icons_size} color={ColorTheme.icons_color}
+                                      style={icon_style} onClick={handle_clear}/>
+                            <MdDownload title="Download the results" size={ColorTheme.icons_size} color={ColorTheme.icons_color}
+                                        style={icon_style} onClick={props.on_download}/>
+                        </Actions>
+                    </Toolbar>
+                    <div style={{flex: 1, minHeight: 0}}>
                         <Plot
                             data={data}
                             layout={plot_layout}
-                            config={plot_config}
+                            config={PLOT_CONFIG}
+                            style={PLOT_STYLE}
+                            useResizeHandler
                             revision={data_revision}
                         />
-                        <ResultsPlotLegend data={plot_legends}/>
                     </div>
+                  </div>
                 </SimpleContent>
             </UIPanel>
-            <div style={{
-                display:"flex",
-                flexDirection:"row",
-                minHeight:"300px",
-                gap:10
-            }}>
-                <UIPanel style={{flexGrow:1}} key="emulation_result_core_sel" level="level_2">
-                    <SimpleContent name="Core Selector" height="100%">
-                        <div>
-                            <SelectableList style={{maxHeight:"15em"}} items={props.results.get_data_sources().sources} selected_item={selected_source} onSelect={handle_select_source} />
-                        </div>
-                    </SimpleContent>
-                </UIPanel>
-                <UIPanel style={{flexGrow:1}} key="emulation_result_data_sel" level="level_2">
-                    <SimpleContent name="Data Selector" height="100%" >
-                        <div>
-                            <SelectableList
-                                style={{maxHeight:"15em"}}
-                                items={props.results.get_available_data_series(selected_source)}
-                                selected_item={selected_output}
-                                onSelect={handle_select_output}
-                            />
-                        </div>
-                    </SimpleContent>
-                </UIPanel>
-                <UIPanel style={{flexGrow:1}} key="emulation_channel_select" level="level_2">
-                    <SimpleContent name="Channel Selector" height="100%" >
-                        <div>
-                            <SelectableList
-                                style={{maxHeight:"15em"}}
-                                multi_select
-                                items={props.results.get_series_channels(selected_source, selected_output)}
-                                selected_item={selected_channel}
-                                onSelect={handle_select_channel}
-                            />
-                        </div>
-                    </SimpleContent>
-                </UIPanel>
-                <UIPanel style={{flexGrow:1}} key="emulation_array_select" level="level_2">
-                    <SimpleContent name="Array selector" height="100%">
-                        <div>
-                            <SelectableList
-                                style={{maxHeight:"15em"}}
-                                multi_select
-                                items={props.results.get_array_indices(selected_source,selected_output)}
-                                selected_item={selected_index}
-                                onSelect={handle_select_index}
-                            />
-                        </div>
-                    </SimpleContent>
-                </UIPanel>
-            </div>
+            <UIPanel style={{flex: "0 0 auto"}} key="emulation_result_selectors" level="level_2">
+                <SimpleContent name="Data">
+                    <Columns>
+                        <SelectorColumn
+                            title="Core"
+                            empty="No results yet, run the emulation"
+                            items={props.results.get_data_sources().sources}
+                            selected={selected_source}
+                            onSelect={handle_select_source}
+                        />
+                        <SelectorColumn
+                            title={inputs_mode ? "Input" : "Series"}
+                            empty="Select a core"
+                            items={props.results.get_available_data_series(selected_source)}
+                            selected={selected_output}
+                            onSelect={handle_select_output}
+                        />
+                        <SelectorColumn
+                            title="Channel"
+                            empty={inputs_mode ? "Not needed for an input" : "Select a series"}
+                            multi_select
+                            items={props.results.get_series_channels(selected_source, selected_output)}
+                            selected={selected_channel}
+                            onSelect={handle_select_channel}
+                        />
+                        <SelectorColumn
+                            title="Index"
+                            empty={inputs_mode ? "Not needed for an input" : "Select a channel"}
+                            multi_select
+                            items={props.results.get_array_indices(selected_source,selected_output)}
+                            selected={selected_index}
+                            onSelect={handle_select_index}
+                        />
+                    </Columns>
+                </SimpleContent>
+            </UIPanel>
         </div>
-
-
-);
+    );
 };
 
 

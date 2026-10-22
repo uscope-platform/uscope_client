@@ -23,32 +23,16 @@ interface ResultPlotLegendProps {
 }
 
 let ResultPlotLegend = function (props: ResultPlotLegendProps) {
-
-
-    let produce_legends =() =>{
-        let ret = [];
-        for(let i=0; i<props.data.length; i++){
-            let item = props.data[i];
-            let color = ColorTheme.plot_palette[i%ColorTheme.plot_palette.length];
-            if(item === undefined|| color == undefined) continue;
-            ret.push(
-                <LegendItem key={i} size={16} label={item.name} color={color}/>
-            );
-        }
-        return ret;
-    }
-
     return(
-        <div style={{
-            display:"flex",
-            flexDirection:"column",
-            gap:10,
-            paddingTop:"2em",
-            height:"100%"
-        }}>
-            {produce_legends()}
+        <div style={{display: "flex", flexWrap: "wrap", gap: "0.4em"}}>
+            {props.data.map((item, i) => (
+                <LegendItem
+                    key={item.name + i}
+                    label={item.name}
+                    color={ColorTheme.plot_palette[i % ColorTheme.plot_palette.length] ?? '#FFF'}
+                />
+            ))}
         </div>
     );
-
 };
 export default ResultPlotLegend;

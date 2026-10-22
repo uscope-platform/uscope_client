@@ -14,36 +14,38 @@
 // limitations under the License.
 
 import React from 'react';
+import {styled} from "goober";
 import {ColorTheme} from "#UI/ColorTheme.js";
 
+const Item = styled('div')`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  padding: 0.15em 0.7em 0.15em 0.55em;
+  border: 1px solid ${ColorTheme.background.borders};
+  border-radius: 9999px;
+  background: ${ColorTheme.background.level_3};
+  font-size: 0.8rem;
+  white-space: nowrap;
+`
+
+const Swatch = styled('span')`
+  width: 0.65em;
+  height: 0.65em;
+  border-radius: 50%;
+`
+
 interface LegendItemProps {
-    size?: number;
     color?: string;
     label: string;
 }
 
 let LegendItem = function (props: LegendItemProps) {
-    let size = props.size ? props.size : 10;
-    let color = props.color ? props.color : '#FFF';
-
     return (
-        <div
-            style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px' }}>
-            <div
-                style={{
-                    width: `${size}px`,
-                    height: `${size}px`,
-                    backgroundColor: color,
-                    marginRight: '8px',
-                    borderRadius: '2px',
-                    border: '1px solid ' + ColorTheme.background.bordersLight
-                }}
-            />
-            <span style={{ fontSize: '18px', fontWeight:'bold' }}>{props.label}</span>
-        </div>
+        <Item>
+            <Swatch style={{backgroundColor: props.color ?? '#FFF'}}/>
+            {props.label}
+        </Item>
     );
 };
 export default LegendItem;

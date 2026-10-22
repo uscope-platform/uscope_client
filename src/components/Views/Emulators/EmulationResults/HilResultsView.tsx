@@ -15,7 +15,6 @@
 
 import React from 'react';
 import EmulationResults from "./EmulationResults.jsx";
-import HilResultsSidebar from "../Sidebar/per_panel_sidebars/HilResultsSidebar.jsx";
 import {download_json, up_emulator_result} from "#client_core/index.js";
 
 interface HilResultsViewProps {
@@ -39,8 +38,8 @@ let HilResultsView = function (props: HilResultsViewProps) {
 
             <EmulationResults
                 results={props.emulation_results}
+                on_download={handle_download}
             />
-            <HilResultsSidebar on_download={handle_download}/>
         </div>
 
     );

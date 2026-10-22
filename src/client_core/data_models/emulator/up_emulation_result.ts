@@ -88,6 +88,10 @@ export class up_emulator_result {
         return [];
     }
 
+    clear_selected_series() {
+        this.selected_data_series = [];
+    }
+
     get_data_series() {
         return [this.timebase, this.selected_data_series];
     }
@@ -95,6 +99,8 @@ export class up_emulator_result {
     add_input(data_source?:string, input_name?:string, is_multiselection?:boolean) {
         if(data_source && input_name){
             if(is_multiselection){
+                // a series is plotted once
+                if(this.selected_data_series.some((item: any) => item.name === data_source + "." + input_name)) return [];
                 this.selected_data_series.push({
                     name:data_source + "." + input_name,
                     content:this.inputs[data_source][input_name]
@@ -113,6 +119,8 @@ export class up_emulator_result {
         if(data_source && data_series && channel &&index){
             let int_channel: number = parseInt((channel as string));
             if(is_multiselection){
+                // a series is plotted once
+                if(this.selected_data_series.some((item: any) => item.name === data_source + "." + data_series + "." + channel + "[" + index + "]")) return;
                 this.selected_data_series.push({
                     name:data_source + "." + data_series + "." + channel + "[" + index + "]",
                     content:this.data[data_source].outputs[data_series][int_channel][index]
