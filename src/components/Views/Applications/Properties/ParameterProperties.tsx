@@ -62,7 +62,7 @@ export let  ParameterProperties = (props: ParameterPropertiesProps) =>{
             <FormLayout columns="10.5rem">
                 <InputField id="parameter_name" name="parameter_name" defaultValue={props.parameter.parameter_name} onKeyDown={handleonKeyDown} label="Name"/>
                 <InputField id="parameter_id" name='parameter_id' defaultValue={props.parameter.parameter_id} onKeyDown={handleonKeyDown} label="Parameter ID"/>
-                <ScriptSelector name="trigger" value={props.parameter.trigger} onChange={handleScriptChange}/>
+                <ScriptSelector stacked name="trigger" value={props.parameter.trigger} onChange={handleScriptChange}/>
                 <InputField id="value" name='value' defaultValue={props.parameter.value.toString()} onKeyDown={handleonKeyDown} label="Value"/>
             </FormLayout>
         </Card>

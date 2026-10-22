@@ -23,6 +23,8 @@ const NO_SCRIPT: SimpleNumberOption = {label: "None", value: -1};
 interface ScriptSelectorProps {
     name: string;
     value: number | null;
+    // the label above the select, like the other fields of the cards that have them stacked
+    stacked?: boolean;
     onChange: (script_id: number | null) => void;
 }
 
@@ -37,6 +39,7 @@ export let ScriptSelector = (props: ScriptSelectorProps) =>{
     return(
         <SelectField<SimpleNumberOption>
             label="Script"
+            stacked={props.stacked ?? false}
             name={props.name}
             value={selected}
             options={options}
