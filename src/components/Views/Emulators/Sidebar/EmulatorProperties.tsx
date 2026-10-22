@@ -89,6 +89,7 @@ let  EmulatorProperties = (props: EmulatorPropertiesProps) =>{
 
     const handle_deployment_mode = async (event: React.ChangeEvent<HTMLInputElement>) =>{
         await props.selected_emulator.edit_deployment_mode(event.target.checked);
+        forceUpdate();
     }
 
     if(props.selected_emulator && props.enabled){
