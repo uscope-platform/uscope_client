@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useContext, useEffect, useReducer, useState} from 'react';
+import React, {useContext, useReducer, useState} from 'react';
 
 
 import {
@@ -71,57 +71,11 @@ let  ApplicationsManager = (props: ApplicationsManagerProps) =>{
         set_selected_app(new up_application(applications[app]));
     }
 
-    const calculate_selected_scripts = () =>{
-        return  selected_app.scripts.map((scr)=>{
-            let script = scripts[scr];
-            if(script === undefined) return;
-            return script.name;
-        }).filter((val)=>{return val !== undefined;})
-    }
-
-    const calculate_available_scripts = (sel_s: string[])=>{
-        return Object.values(scripts).filter((val)=>{
-            return !sel_s.includes(val.name);
-        }).map((scr)=>{
-            return scr.name;
-        })
-    }
-
-    const [selected_scripts, set_selected_scripts] = useState(calculate_selected_scripts())
-    let [available_scripts,set_available_scripts] = useState(calculate_available_scripts(selected_scripts));
-
-    const calculate_selected_programs = () =>{
-        return selected_app.programs.map((prg)=>{
-            let program = programs[prg];
-            if(program === undefined) return;
-            return program.name;
-        }).filter((val)=>{return val !== undefined;});
-    }
-
-
-    const calculate_available_programs = (sel_p : string[])=>{
-        return Object.values(programs).filter((val)=>{
-            return !sel_p.includes(val.name);
-        }).map((prg)=>{
-            return prg.name;
-        })
-    }
-
-    const [selected_programs, set_selected_programs] = useState(calculate_selected_programs())
-    let [available_programs,set_available_programs] = useState(calculate_available_programs(selected_programs));
-
-    useEffect(() => {
-        let new_selected_scripts = calculate_selected_scripts();
-        let new_available_scripts = calculate_available_scripts(new_selected_scripts)
-
-        let new_selected_programs = calculate_selected_programs();
-        let new_available_programs = calculate_available_programs(new_selected_programs)
-
-        set_selected_scripts(new_selected_scripts);
-        set_available_scripts(new_available_scripts);
-        set_selected_programs(new_selected_programs);
-        set_available_programs(new_available_programs);
-    }, [selected_app]);
+    // derived at every render, the scripts and the programs can change in the store while the page is open
+    const selected_scripts = selected_app.scripts.flatMap((id) => scripts[id] !== undefined ? [scripts[id].name] : []);
+    const available_scripts = Object.values(scripts).map((s) => s.name).filter((name) => !selected_scripts.includes(name));
+    const selected_programs = selected_app.programs.flatMap((id) => programs[id] !== undefined ? [programs[id].name] : []);
+    const available_programs = Object.values(programs).map((p) => p.name).filter((name) => !selected_programs.includes(name));
 
     let add_content = async (id: number, type: string) =>{
         switch (type) {
@@ -189,42 +143,14 @@ let  ApplicationsManager = (props: ApplicationsManagerProps) =>{
 
 
 
-    let handleDeselectScript = (id: string) =>{
-        selected_app.remove_selected_script(parseInt(id)).then(()=>{
-            let sel_s = calculate_selected_scripts();
-            let av_s = calculate_available_scripts(sel_s);
-            set_selected_scripts(sel_s);
-            set_available_scripts(av_s);
-        });
+    const update_selection = (change: Promise<void>) =>{
+        change.catch((e) => console.error(e)).finally(forceUpdate);
     }
 
-    let handleSelectScript = (id: string) =>{
-        selected_app.add_selected_script(parseInt(id)).then(()=>{
-            let sel_s = calculate_selected_scripts();
-            let av_s = calculate_available_scripts(sel_s);
-            set_selected_scripts(sel_s);
-            set_available_scripts(av_s);
-        });
-    }
-
-
-    let handleDeselectPrograms = (id: string) =>{
-        selected_app.remove_selected_program(parseInt(id)).then(()=>{
-            let sel_p = calculate_selected_programs();
-            let av_p = calculate_available_programs(sel_p);
-            set_selected_programs(sel_p);
-            set_available_programs(av_p);
-        });
-    }
-
-    let handleSelectPrograms = (id: string) =>{
-        selected_app.add_selected_program(parseInt(id)).then(()=>{
-            let sel_p = calculate_selected_programs();
-            let av_p = calculate_available_programs(sel_p);
-            set_selected_programs(sel_p);
-            set_available_programs(av_p);
-        });
-    }
+    let handleDeselectScript = (id: string) => update_selection(selected_app.remove_selected_script(parseInt(id)));
+    let handleSelectScript = (id: string) => update_selection(selected_app.add_selected_script(parseInt(id)));
+    let handleDeselectPrograms = (id: string) => update_selection(selected_app.remove_selected_program(parseInt(id)));
+    let handleSelectPrograms = (id: string) => update_selection(selected_app.add_selected_program(parseInt(id)));
 
 
     let misc_obj={application_name:selected_app.application_name, bitstream: selected_app.bitstream, ...selected_app.miscellaneous}
