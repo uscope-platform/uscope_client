@@ -24,7 +24,12 @@ interface SelectWrapperProps {
     stacked?: boolean | undefined;
 }
 
-const SelectWrapper = styled<'div', SelectWrapperProps>('div')(({stacked}) => `
+// goober hands every prop to the element, `stacked` is only for the style
+const SelectWrapperBase = ({stacked, ...rest}: SelectWrapperProps & React.HTMLAttributes<HTMLDivElement>) => (
+    <div {...rest}/>
+);
+
+const SelectWrapper = styled<SelectWrapperProps & React.HTMLAttributes<HTMLDivElement>>(SelectWrapperBase)(({stacked}) => `
     display: grid;
     grid-template-columns: ${stacked ? "1fr" : "repeat(2, auto)"};
     grid-gap: 0.3rem;
