@@ -41,7 +41,7 @@ interface CardProps {
         click: (value: {name: string, checked: boolean}) => void;
     }
     name: string,
-    onRemove: () => void,
+    onRemove?: (() => void) | undefined,
     children?: ReactNode;
     style?: CSSProperties;
 }

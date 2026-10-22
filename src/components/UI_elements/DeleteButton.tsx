@@ -72,7 +72,7 @@ export let  DeleteButton = (props: NamedDeleteButton | UnnamedDeleteButton) =>{
 
 
     return(
-        <MdDelete size={props.iconSize?props.iconSize:ColorTheme.icons_size} onClick={handle_remove} color={color}/>
+        <MdDelete size={props.iconSize?props.iconSize:ColorTheme.icons_size} onClick={handle_remove} color={color} style={{flexShrink: 0}}/>
     );
 };
 

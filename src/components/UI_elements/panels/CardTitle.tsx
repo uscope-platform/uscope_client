@@ -19,7 +19,7 @@ import {DeleteButton} from "#UI/DeleteButton.js";
 
 interface CardTitleProps {
     name: string;
-    onRemove: () => void;
+    onRemove?: (() => void) | undefined;
     additionalItems?: React.ReactNode;
 }
 
@@ -32,7 +32,7 @@ export let CardTitle = function (props: CardTitleProps) {
         }}>
             <Label>{props.name}</Label>
             {props.additionalItems}
-            <DeleteButton onRemove={props.onRemove}/>
+            {props.onRemove && <DeleteButton onRemove={props.onRemove}/>}
         </div>
     );
 };

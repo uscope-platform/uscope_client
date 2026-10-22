@@ -93,11 +93,6 @@ export let  PeripheralProperties = (props: PeripheralPropertiesProps) =>{
         }
     }
 
-    let handleRemove=async () =>{
-        await props.application.remove_peripheral(props.peripheral.name);
-        props.forceUpdate();
-    }
-
     let handle_parameter_change = async (change: HdlParameterChange) =>{
 
         let peripheral = props.application.peripherals.filter((p) =>{
@@ -132,7 +127,6 @@ export let  PeripheralProperties = (props: PeripheralPropertiesProps) =>{
     return(
         <Card
             name={props.peripheral.name}
-            onRemove={handleRemove}
             style={{width: "40rem", maxWidth: "100%", paddingLeft: 0}}
         >
             <FormLayout columns={COLUMN_WIDTH}>

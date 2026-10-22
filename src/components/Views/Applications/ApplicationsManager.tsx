@@ -38,6 +38,7 @@ import {
 
 import {get_next_id, up_application} from "#client_core/index.js";
 import ApplicationSidebar from "./ApplicationSidebar.js";
+import {PeripheralsEditor} from "#components/Views/Applications/PeripheralsEditor.js";
 import {MdAdd} from "react-icons/md";
 import {useAppSelector} from "#redux/hooks.js";
 
@@ -359,27 +360,12 @@ let  ApplicationsManager = (props: ApplicationsManagerProps) =>{
                         </CardStack>
                     </div>
                     <div key="peripherals">
-                        <MdAdd
-                            onClick={() => {handle_add_new("peripheral", selected_app.peripherals,"name");}}
-                            size={ColorTheme.icons_size}
-                            style={{marginLeft: "0.3em"}}
-                            color={ColorTheme.icons_color}
+                        <PeripheralsEditor
+                            application={selected_app}
+                            peripherals={peripherals}
+                            forceUpdate={forceUpdate}
+                            onAdd={() => {handle_add_new("peripheral", selected_app.peripherals,"name");}}
                         />
-                        <CardStack>
-                            {
-                                selected_app.peripherals.map((peripheral)=>{
-                                    return(
-                                        <PeripheralProperties
-                                            key={peripheral.name}
-                                            application={selected_app}
-                                            peripherals={peripherals}
-                                            forceUpdate={forceUpdate}
-                                            peripheral={peripheral}
-                                        />
-                                    )
-                                })
-                            }
-                        </CardStack>
                     </div>
                     <div key="soft_cores">
                         <MdAdd
