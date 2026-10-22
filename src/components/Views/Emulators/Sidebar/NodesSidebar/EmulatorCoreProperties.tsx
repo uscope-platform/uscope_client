@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { useState} from 'react';
+import React from 'react';
 
 import {InputField, SelectField} from "#UI/index.js";
 import {useAppSelector} from "#redux/hooks.js";
@@ -39,18 +39,10 @@ let  EmulatorCoreProperties = (props: EmulatorCorePropertiesProps) =>{
 
     const programs = useAppSelector(state => state.programs);
 
-    const [selected_program, set_selected_program] = useState({label:props.selected_core.program, value:props.selected_core.program});
-
-    const [selected_efi, set_selected_efi] = useState(()=>{
-        if(props.selected_core){
-            return {label:efi_names[props.selected_core.options.efi_implementation], value:props.selected_core.options.efi_implementation};
-        } else return {label: "", value:""};
-    })
-    const [selected_comparators, set_selected_comparators] = useState(()=>{
-        if(props.selected_core){
-            return {label:props.selected_core.options.comparators, value:props.selected_core.options.comparators};
-        } else return {label: "", value:""};
-    })
+    // read from the core at every render: the panel is shared by all the cores, whichever is selected is shown
+    const selected_program = {label: props.selected_core.program, value: props.selected_core.program};
+    const selected_efi = {label: efi_names[props.selected_core.options.efi_implementation], value: props.selected_core.options.efi_implementation};
+    const selected_comparators = {label: props.selected_core.options.comparators, value: props.selected_core.options.comparators};
 
     let programs_list = Object.keys(programs).map((prog_id)=>{
         let p = programs[parseInt(prog_id)]
@@ -76,28 +68,17 @@ let  EmulatorCoreProperties = (props: EmulatorCorePropertiesProps) =>{
     let handle_selection=(selection: SimpleStringOption | null, event: ActionMeta<SimpleStringOption>)=>{
         if(selection === null) return;
         let field, value;
-        if(event.name === "efi_implementation") {
+        if(event.name === "efi_implementation" || event.name === "comparators"){
             field = "options";
-            value = props.selected_core.options;
-            value["efi_implementation"] = selection.value as core_options["efi_implementation"] ;
-        } else if(event.name === "comparators"){
-            field = "options";
-            value = props.selected_core.options;
-            value["comparators"] = selection.value as core_options["comparators"];
+            // a copy: the core must not change before the edit is saved
+            value = {...props.selected_core.options, [event.name]: selection.value} as core_options;
         } else {
             field = "program"
             value = selection.value;
         }
 
         props.selected_emulator.edit_core_props(props.selected_component.obj.id, field as keyof core, value).then(()=>{
-            if(event.name==="program"){
-                set_selected_program(selection);
-            } else if(event.name==="efi_implementation") {
-                set_selected_efi(selection);
-            } else if(event.name ==="comparators"){
-                set_selected_comparators(selection);
-            }
-
+            props.bump_version();
         });
     }
 
