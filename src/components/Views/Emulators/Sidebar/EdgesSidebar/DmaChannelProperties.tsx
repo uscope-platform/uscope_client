@@ -42,11 +42,21 @@ let  DmaChannelProperties = (props: DmaChannelPropertiesProps) =>{
         return c.id === props.selected_connection.destination_core;
     })[0];
 
+    // an end of the connection can be an IO block, its ports are the ones to choose from
+    const source_io = props.selected_emulator.io_blocks[props.selected_connection.source_core];
+    const target_io = props.selected_emulator.io_blocks[props.selected_connection.destination_core];
+
     let source_outputs: string[] = [];
     let source_memories = [];
     let target_inputs: string[] = [];
     let target_memories: string[] = [];
     let enable_partial_channels = false;
+    if(source_io){
+        source_outputs = source_io.ports.map((p) => p.name);
+    }
+    if(target_io){
+        target_inputs = target_io.ports.map((p) => p.name);
+    }
     if(source_core && target_core){
         let source_endpoint = source_core.memory_init.filter((mem)=>{return mem.name ===  props.selected_channel.source_port})[0];
         let dest_endpoint = target_core.memory_init.filter((mem)=> {return mem.name === props.selected_channel.destination_port})[0];
@@ -75,6 +85,16 @@ let  DmaChannelProperties = (props: DmaChannelPropertiesProps) =>{
             target_inputs = [...target_inputs, ...target_memories];
         } else if(target_memories){
             target_inputs = target_memories;
+        }
+    } else {
+        if(source_core){
+            source_outputs = [...source_core.outputs.map((out)=> out.name), ...source_core.memory_init.map((mem)=> mem.name)];
+        }
+        if(target_core){
+            target_inputs = [
+                ...target_core.inputs.map((in_obj)=> in_obj.name),
+                ...target_core.memory_init.filter((mem)=> mem.is_input).map((mem)=> mem.name)
+            ];
         }
     }
 
@@ -144,7 +164,7 @@ let  DmaChannelProperties = (props: DmaChannelPropertiesProps) =>{
     return(
         <div key="dma_channel_props">
             <SelectField<SimpleStringOption>
-                label="Source Core Output"
+                label={source_io ? "Source IO Port" : "Source Core Output"}
                 onChange={handle_change_source_out}
                 value={{value: props.selected_channel.source_port , label: props.selected_channel.source_port}}
                 name="source_port"
@@ -153,7 +173,7 @@ let  DmaChannelProperties = (props: DmaChannelPropertiesProps) =>{
                 })}
             />
             <SelectField<SimpleStringOption>
-                label="Target Core Input"
+                label={target_io ? "Target IO Port" : "Target Core Input"}
                 onChange={handle_change_target_in}
                 value={{value: props.selected_channel.destination_port , label: props.selected_channel.destination_port}}
                 name="destination_port"

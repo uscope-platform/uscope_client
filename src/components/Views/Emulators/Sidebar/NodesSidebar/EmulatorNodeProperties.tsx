@@ -17,6 +17,7 @@ import React from 'react';
 
 import {SimpleContent, UIPanel} from "#UI/index.js";
 import NodeIomProperties from "./EndpointProperties/NodeIomProperties.jsx";
+import IoBlockProperties from "./IoBlockProperties.jsx";
 import EmulatorCoreProperties from "./EmulatorCoreProperties.jsx";
 import EmulatorCoreDeploymentProperties from "./EmulatorCoreDeploymentProperties.jsx";
 import {up_emulator} from "#client_core/index.js";
@@ -35,6 +36,16 @@ let  EmulatorNodeProperties = (props: EmulatorNodePropertiesProps) =>{
 
     let component = props.selected_component;
     if(props.enabled && props.selected_emulator){
+        const selected_io = component ? props.selected_emulator.io_blocks[component.obj.id] : undefined;
+        if(selected_io){
+            return(
+                <IoBlockProperties
+                    selected_block={selected_io}
+                    selected_emulator={props.selected_emulator}
+                    bump_version={props.bump_version}
+                />
+            );
+        }
         let selected_core = Object.values(props.selected_emulator.cores).filter((item)=>{
             if(component === null) return false;
             return item.id === component.obj.id;
