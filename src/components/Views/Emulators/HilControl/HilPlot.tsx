@@ -14,7 +14,6 @@
 // limitations under the License.
 
 import React, {useEffect, useReducer, useState} from 'react';
-//@ts-ignore
 import createPlotlyComponent from "react-plotly.js/factory";
 import Plotly from "plotly.js-basic-dist";
 import {download_plot, direct_fetch} from "#client_core/index.js";

@@ -18,7 +18,6 @@ import {styled} from "goober";
 import {MdDelete, MdDownload} from "react-icons/md";
 import {ColorTheme, PlotConfigurations, SelectableList, SimpleContent, UIPanel} from "#UI/index.js";
 
-//@ts-ignore
 import createPlotlyComponent from "react-plotly.js/factory";
 import Plotly from "plotly.js-basic-dist";
 

@@ -21,7 +21,6 @@ import Plotly from 'plotly.js-basic-dist';
 import createPlotlyComponent from 'react-plotly.js/factory';
 import {ColorTheme} from "#UI/index.js";
 
-//@ts-ignore  //Plotly is only typed for CommonJS, not for ES6 modules.
 const Plot = createPlotlyComponent(Plotly);
 
 interface FilterPlotProps {

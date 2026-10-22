@@ -15,16 +15,19 @@
 
 // Custom plotly bundle for the scope: only the scatter traces, rendered with WebGL (scattergl), the SVG renderer of
 // plotly-basic-dist can't keep up with the stream of frames
-//@ts-ignore
+import type PlotlyTypes from 'plotly.js';
 import Plotly from 'plotly.js/lib/core';
-//@ts-ignore
 import scatter from 'plotly.js/lib/scatter';
-//@ts-ignore
 import scattergl from 'plotly.js/lib/scattergl';
-//@ts-ignore
 import createPlotlyComponent from 'react-plotly.js/factory';
 
 Plotly.register([scatter, scattergl]);
 
-export const ScopePlotly: { restyle: (graph_div: HTMLElement, update: Record<string, unknown>, traces: number[]) => Promise<unknown> } = Plotly;
+type Restyle = typeof PlotlyTypes.restyle;
+
+// The update carries one Float32Array per trace, which the Plotly typings of restyle don't accept (Datum[][] only), the
+// rest of the signature is Plotly's own
+export const ScopePlotly: {
+    restyle: (graph_div: Parameters<Restyle>[0], update: Record<string, unknown>, traces: number[]) => ReturnType<Restyle>
+} = Plotly;
 export const ScopePlot = createPlotlyComponent(Plotly);
