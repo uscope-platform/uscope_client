@@ -33,7 +33,7 @@ import './App.css';
 
 
 let operator_views = ["Scope"];
-let user_views = ["Scripts", "Applications", "Programs", "Bitstreams", "Filters", "Emulator"];
+let user_views = ["Applications", "Scripts", "Programs", "Bitstreams", "Filters", "Emulator"];
 let admin_views =["Peripherals", "Platform", "Settings"];
 
 interface view {
