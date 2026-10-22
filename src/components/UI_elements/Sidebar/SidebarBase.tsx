@@ -163,7 +163,7 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
         <UIPanel key={props.content_name+"_list"} level="level_2">
             <SimpleContent name={props.content_name + " List"}>
                 <div
-                    style={{height:'20em'}}>
+                    style={{height:'20em', display:'flex', flexDirection:'column'}}>
                     <SideToolbar
                         onAdd={handleAdd}
                         onCopy={handleCopy}
@@ -178,6 +178,8 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
                         selected_item={selected_item[props.display_key]}
                         onRemove={handleRemove}
                         onSelect={handleSelect}
+                        // fills what the toolbar leaves and scrolls, instead of stopping short of the panel
+                        style={{flex: 1, maxHeight: "none", width: "auto"}}
                     />
                 </div>
             </SimpleContent>

@@ -63,7 +63,7 @@ let ApplicationChooserView = (props: ApplicationChooserViewProps) =>{
     const selected_name = apps_list.find(a => a.id === selected)?.name;
 
     return(
-        <UIPanel level="level_2" style={{width: "34rem", maxWidth: "95%", margin: "4rem auto", padding: "0.5em"}}>
+        <UIPanel level="level_2" style={{width: "34rem", maxWidth: "95%", margin: "4rem auto", padding: "0.5em", maxHeight: "calc(100vh - 8rem)"}}>
             <SimpleContent name="Choose an application">
                 <SelectableList
                     items={apps_list.map(a => a.name)}
@@ -72,7 +72,7 @@ let ApplicationChooserView = (props: ApplicationChooserViewProps) =>{
                     selected_item={selected_name}
                     onSelect={name => set_selected(id_from_name(name))}
                     onActivate={name => open(id_from_name(name))}
-                    style={{maxHeight: "55vh", margin: "0.5em", width: "auto"}}
+                    style={{maxHeight: "calc(100vh - 18rem)", margin: "0.5em", width: "auto"}}
                 />
                 <div style={{display: "flex", justifyContent: "flex-end", padding: "0.5em"}}>
                     <Button onClick={() => open(selected)} disabled={selected === null}>Open application</Button>
