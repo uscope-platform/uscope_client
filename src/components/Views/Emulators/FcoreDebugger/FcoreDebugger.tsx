@@ -14,7 +14,7 @@
 // limitations under the License.
 
 
-import React, {useMemo, useState} from 'react';
+import React, {useState} from 'react';
 import {Fcore} from "./FcoreLanguage.js";
 import {breakpoint_gutter} from "./breakpoint_gutter.js";
 import {ColorTheme, TextEditor, UIPanel} from "#UI/index.js";
@@ -116,10 +116,7 @@ let  FcoreDebugger = (props: FcoreDebuggerProps) =>{
 
     const highLight = EditorView.theme(produce_theme());
 
-    const gutter_extension = useMemo(
-        () => breakpoint_gutter(props.breakpoints, props.on_toggle_breakpoint),
-        [props.breakpoints, props.on_toggle_breakpoint]
-    );
+    const gutter_extension = breakpoint_gutter(props.breakpoints, props.on_toggle_breakpoint);
 
 
     return (

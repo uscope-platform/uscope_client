@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useCallback, useContext, useState} from 'react';
+import React, {useContext, useState} from 'react';
 
 import {FormLayout,SelectField} from "#UI/index.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
@@ -39,14 +39,14 @@ let  ScopeProperties = (props: ScopePropertiesProps) =>{
         {label:group.group_name, value:group.group_name}
     ));
 
-    let handleChGroupChange = useCallback((object: SimpleStringOption | null) => {
+    let handleChGroupChange = (object: SimpleStringOption | null) => {
         if(object === null)return;
         set_selected(object);
         let group = application.get_group_by_name(object.value)
         if(group === undefined)return;
         props.on_group_change(group)
 
-    }, [application.channel_groups]);
+    };
 
     return (
         <div style={{padding:"1rem"}}>

@@ -15,7 +15,7 @@
 
 import {styled} from 'goober';
 import {Label} from "./Label.js";
-import React, {type JSX, useCallback, useMemo} from "react";
+import React, {type JSX} from "react";
 import Select, {type ActionMeta} from "react-select";
 import {ColorTheme} from "./ColorTheme.js";
 import type {DefaultOption} from "#interfaces/index.js";
@@ -56,8 +56,7 @@ export let  SelectField = <Option extends DefaultOption = DefaultOption>(
 ): JSX.Element => {
 
 
-    const style = useMemo(()=>{
-        return {
+    const style = {
             control:(provided: any,  { data, isDisabled, isFocused, isSelected }: any) => ({
                 ...provided,
                 minWidth:"7em",
@@ -83,10 +82,9 @@ export let  SelectField = <Option extends DefaultOption = DefaultOption>(
                 ...provided,
                 color: ColorTheme.text
             })
-        };
-    }, [ColorTheme])
+    };
 
-    const onSelectChange = useCallback((value: any, event: ActionMeta<any>) => props.onChange(value, event), [props.onChange]);
+    const onSelectChange = (value: any, event: ActionMeta<any>) => props.onChange(value, event);
     // Only control the select when a value prop is supplied, otherwise it can never change selection
     const controlled_props = props.value !== undefined ? {value: props.value} : {};
 

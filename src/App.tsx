@@ -14,7 +14,7 @@
 // limitations under the License.
 
 //       REACT IMPORTS
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 //      APP RELATED IMPORTS
@@ -44,7 +44,7 @@ let App = (props: AppProps) =>{
     const [setup_problem, set_setup_problem] = useState("");
     const [user_role, set_user_role] = useState<UserRole>("operator");
 
-    const done = useCallback(async (login_credentials: ManualAuthRequest | AutoAuthRequest)=>{
+    const done = async (login_credentials: ManualAuthRequest | AutoAuthRequest)=>{
         try {
             let token: login_token;
             if(login_credentials.login_type === "user"){
@@ -62,7 +62,7 @@ let App = (props: AppProps) =>{
             localStorage.removeItem('login_token');
         }
 
-    }, []);
+    };
 
 
 
@@ -78,7 +78,7 @@ let App = (props: AppProps) =>{
     }, []);
 
     // try_automated_login is declared below, it is only called once the platform answered
-    const check_setup = useCallback(() =>{
+    const check_setup = () =>{
         set_setup("checking");
         need_onboarding().then(needed =>{
             set_setup(needed ? "onboarding" : "ready");
@@ -87,7 +87,7 @@ let App = (props: AppProps) =>{
             set_setup_problem(error_text(e));
             set_setup("unreachable");
         });
-    }, []);
+    };
 
     useEffect(()=>{
         set_address(import.meta.env.VITE_APP_SERVER);

@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useCallback} from 'react';
+import React from 'react';
 import {ColorTheme, SimpleContent, UIPanel} from "#UI/index.js";
 import TriggerControls from "../../Plot/Sidebar/TriggerControls.js";
 import {MdSimCardDownload} from "react-icons/md";
@@ -29,13 +29,13 @@ interface HilControlProps {
 
 let  HilControl = (props: HilControlProps) =>{
 
-    const handle_download = useCallback(()=>{
+    const handle_download = ()=>{
         props.onDownloadHilData(true);
-    }, [])
+    }
 
-    const handle_get_sim_file= useCallback(()=>{
+    const handle_get_sim_file= ()=>{
         props.onDownlodHilSim();
-    }, [])
+    }
 
 
     return(

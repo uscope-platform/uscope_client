@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useContext, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 
 import {PlotConfigurations} from "#UI/index.js";
 import {apply_scope_data, download_plot, initialize_plot, subscribe_scope_frames} from "#client_core/index.js";
@@ -56,7 +56,7 @@ let  PlotComponent = (props: PlotComponentProps) =>{
     plot_status_ref.current = props.plot_status;
     const graph_div = useRef<HTMLElement | null>(null);
 
-    const layout = useMemo(() => ({...FLUID_LAYOUT, autosize: true, ...props.palette}), [props.palette]);
+    const layout = {...FLUID_LAYOUT, autosize: true, ...props.palette};
 
     useEffect(()=>{
         let data = initialize_plot(application);

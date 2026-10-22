@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 
 /// idle: nothing to apply, dirty: typed and not applied yet, saving: the handler is running,
 /// applied: the handler succeeded (shown for a moment), error: the handler failed
@@ -46,14 +46,14 @@ export const useFieldFeedback = (
         set_status((current) => current === "dirty" || current === "error" ? "idle" : current);
     }, [applied_value]);
 
-    const show_applied = useCallback(() => {
+    const show_applied = () => {
         if(!mounted.current) return;
         set_status("applied");
         clearTimeout(timer.current);
         timer.current = setTimeout(() => {
             set_status((current) => current === "applied" ? "idle" : current);
         }, APPLIED_SHOWN_MS);
-    }, []);
+    };
 
     const differs = (text: string) => text !== String(applied_value ?? "");
 
