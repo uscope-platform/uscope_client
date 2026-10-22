@@ -19,7 +19,8 @@ import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy
 import {api_dictionary} from "../proxy/api_dictionary.js";
 import {addPeripheral, removePeripheral} from "#redux/index.js";
 import {up_register} from "#client_core/index.js";
-import type {peripheral} from "#interfaces/index.js";
+import type {hdl_parameter, peripheral} from "#interfaces/index.js";
+import {resolve_parameter} from "#src/client_core/index.js";
 import {fields_object} from "#client_core/data_models/register_proxy.js";
 import type {register_write} from "#interfaces/index.js";
 
@@ -65,16 +66,11 @@ export class up_peripheral {
         return new up_peripheral(new_periph);
     }
 
-    get_register_names = (parameters: Record<string, number>) =>{
+    get_register_names = (parameters: Record<string, hdl_parameter>) =>{
         return this.registers.map((reg) =>{
             let n_regs;
             if(reg.n_registers.length === 0 || reg.n_registers[0] === undefined) return [];
-            let param_value = parameters[reg.n_registers[0]]
-            if(param_value){
-                n_regs = param_value;
-            } else {
-                n_regs = parseInt(reg.n_registers[0]);
-            }
+            n_regs = resolve_parameter(reg.n_registers[0], parameters);
             let ret = [];
             for(let i = 0; i<n_regs; i++){
                 ret.push(reg.register_name.replace("$", i.toString()));
@@ -117,17 +113,12 @@ export class up_peripheral {
         return  store.dispatch(addPeripheral({[this.id]:this}))
     };
 
-    get_register_offset = (name: string, parameters: Record<string, number>): number | null =>{
+    get_register_offset = (name: string, parameters: Record<string, hdl_parameter>): number | null =>{
         let current_address_offset = 0;
         for (const r of this.registers) {
             let n_registers: number = 0;
             if(r.n_registers.length === 0 || r.n_registers[0] === undefined) return null;
-            let param_value = parameters[r.n_registers[0]];
-            if(param_value){
-                n_registers = param_value;
-            } else {
-                n_registers = parseInt(r.n_registers[0]);
-            }
+            n_registers = resolve_parameter(r.n_registers[0], parameters);
             for(let i = 0; i<n_registers;i++){
                 let current_name = r.register_name.replace("$", i.toString());
                 if(name === current_name) return current_address_offset
@@ -138,19 +129,14 @@ export class up_peripheral {
     }
 
 
-    get_proxied_registers = (periph_id: string, parameters: Record<string, number>): Record<string, fields_object> =>{
+    get_proxied_registers = (periph_id: string, parameters: Record<string, hdl_parameter>): Record<string, fields_object> =>{
         let registers:Record<string, any> = {}
 
         let current_address_offset = 0;
         for (const r of this.registers) {
             let n_registers = 0;
             if(r.n_registers.length === 0 || r.n_registers[0] === undefined) return {};
-            let param_value = parameters[r.n_registers[0]];
-            if(param_value){
-                n_registers = param_value;
-            } else {
-                n_registers = parseInt(r.n_registers[0]);
-            }
+            n_registers = resolve_parameter(r.n_registers[0], parameters);
             for(let i = 0; i<n_registers;i++){
                 current_address_offset +=4;
                 let local_r = JSON.parse(JSON.stringify(r));
@@ -162,12 +148,7 @@ export class up_peripheral {
                 let fields = [];
                 for(let f of local_r.fields){
                     let n_fields = 0;
-                    param_value = parameters[f.n_fields[0]];
-                    if(param_value){
-                        n_fields = param_value;
-                    } else {
-                        n_fields = parseInt(f.n_fields[0]);
-                    }
+                    n_fields = resolve_parameter(f.n_fields[0], parameters);
 
                     for(let j = 0; j<n_fields; j++){
                         let local_f= JSON.parse(JSON.stringify(f));

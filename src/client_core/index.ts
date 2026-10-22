@@ -57,6 +57,7 @@ export type {
     application_import_result
 } from './data_handling/import.js'
 export type {change_kind, property_change, diff_entry, diff_section, diff_report} from './data_models/diff_engine/index.js'
+export {parameter_number, resolve_parameter, format_parameter, parse_parameter, is_hdl_integer} from './utilities/hdl_parameters.js'
 export {get_next_id} from './utilities/id_management.js'
 export {download_json, download_plot, download_bitstream,download_text} from './utilities/downloads.js'
 export {upload_json, upload_raw} from './utilities/uploads.js'

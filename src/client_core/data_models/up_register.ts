@@ -18,7 +18,8 @@ import {up_field} from "./up_field.js";
 import {backend_patch} from "../proxy/backend.js";
 import {api_dictionary} from "../proxy/api_dictionary.js";
 import { removeRegister, upsertRegister} from "#redux/index.js";
-import type {register} from "#interfaces/index.ts";
+import type {hdl_parameter, register} from "#interfaces/index.ts";
+import {resolve_parameter} from "#src/client_core/index.js";
 
 export class up_register {
     public parent_periph: number;
@@ -47,17 +48,15 @@ export class up_register {
         }
     }
 
-    get_field_names = (parameters: Record<string, number>)=>{
+    get_field_names = (parameters: Record<string, hdl_parameter>)=>{
             return this.fields.map((field)=>{
             let n_fields;
             if(field.n_fields.length > 0){
                 let n_f_expr = field.n_fields[0];
                 if(!n_f_expr){
                     n_fields = 0;
-                } else if(parameters[n_f_expr]){
-                    n_fields = parameters[n_f_expr];
                 } else {
-                    n_fields = parseInt(n_f_expr);
+                    n_fields = resolve_parameter(n_f_expr, parameters);
                 }
             } else {
                 n_fields = 0

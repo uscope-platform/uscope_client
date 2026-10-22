@@ -72,11 +72,24 @@ export interface parameter {
 }
 
 
+/// How ananke serializes an HDL integer. `value` is the 64 bit truncation, `wide_value` (hex string) the full number,
+/// `wide` tells which of the two holds the actual value
+export interface hdl_integer {
+    value: number,
+    size: number,
+    signedness: boolean,
+    wide: boolean,
+    wide_value: string
+}
+
+/// The older files hold the parameters as plain numbers, ananke now produces `hdl_integer` objects
+export type hdl_parameter = hdl_integer | number;
+
 export interface peripheral_instance {
     name: string,
     peripheral_id: string,
     base_address: string,
-    hdl_parameters: Record<string, number>,
+    hdl_parameters: Record<string, hdl_parameter>,
     proxied: boolean,
     proxy_type: string,
     proxy_address:string,

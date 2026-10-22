@@ -71,6 +71,27 @@ export let application_schema = {
             "description": "Base address of the peripheral, from which all other registers are located",
             "type": "string"
           },
+          "hdl_parameters": {
+            "description": "Values of the HDL parameters of the peripheral, by parameter name",
+            "type": "object",
+            "additionalProperties": {
+              "description": "Ananke writes an integer object, the older files have a plain number. When wide is set the number is the one of wide_value (hex string), value is then only its 64 bit truncation",
+              "anyOf": [
+                {"type": "number"},
+                {
+                  "type": "object",
+                  "properties": {
+                    "value": {"type": "number"},
+                    "size": {"type": "integer"},
+                    "signedness": {"type": "boolean"},
+                    "wide": {"type": "boolean"},
+                    "wide_value": {"type": "string"}
+                  },
+                  "required": ["value", "size", "signedness", "wide", "wide_value"]
+                }
+              ]
+            }
+          },
           "name": {
             "description": "User friendly name of the peripheral",
             "type": "string"
