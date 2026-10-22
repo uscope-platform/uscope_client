@@ -20,6 +20,7 @@ import {
 } from "#UI/index.js";
 
 import {up_application} from "#client_core/index.js";
+import {ScriptSelector} from "#components/Views/Applications/Properties/ScriptSelector.js";
 import type {parameter} from "#interfaces/index.js";
 
 interface ParameterPropertiesProps{
@@ -42,6 +43,11 @@ export let  ParameterProperties = (props: ParameterPropertiesProps) =>{
         }
     }
 
+    let handleScriptChange = async (script_id: number | null) =>{
+        await props.application.edit_parameters(props.parameter.parameter_id, "trigger", script_id);
+        props.forceUpdate();
+    }
+
     let handleRemove= async () =>{
         await props.application.remove_parameter(props.parameter.parameter_id);
         props.forceUpdate();
@@ -60,7 +66,7 @@ export let  ParameterProperties = (props: ParameterPropertiesProps) =>{
         >
             <InputField inline id="parameter_name" name="parameter_name" defaultValue={props.parameter.parameter_name} onKeyDown={handleonKeyDown} label="Name"/>
             <InputField inline id="parameter_id" name='parameter_id' defaultValue={props.parameter.parameter_id} onKeyDown={handleonKeyDown} label="Parameter ID"/>
-            <InputField inline id="trigger" name='trigger' defaultValue={props.parameter.trigger} onKeyDown={handleonKeyDown} label="Trigger"/>
+            <ScriptSelector name="trigger" value={props.parameter.trigger} onChange={handleScriptChange}/>
             <InputField inline id="value" name='value' defaultValue={props.parameter.value.toString()} onKeyDown={handleonKeyDown} label="Value"/>
         </Card>
     );

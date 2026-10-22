@@ -54,12 +54,28 @@ export let application_schema = {
     "macro": {
       "description": "Array of user defined macros",
       "type": "array",
-      "items": {}
+      "items": {
+        "type": "object",
+        "properties": {
+          "trigger": {
+            "description": "The script that is run, by its id (null when there is none). The older files have the string the script is triggered by, which is resolved to the script when the application is read",
+            "anyOf": [{"type": "integer"}, {"type": "string"}, {"type": "null"}]
+          }
+        }
+      }
     },
     "parameters": {
       "description": "Array of user defined parameters",
       "type": "array",
-      "items": {}
+      "items": {
+        "type": "object",
+        "properties": {
+          "trigger": {
+            "description": "The script that is run, by its id (null when there is none). The older files have the string the script is triggered by, which is resolved to the script when the application is read",
+            "anyOf": [{"type": "integer"}, {"type": "string"}, {"type": "null"}]
+          }
+        }
+      }
     },
     "peripherals": {
       "description": "Array of channels that describe a peripheral",

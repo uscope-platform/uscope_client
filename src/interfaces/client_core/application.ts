@@ -58,15 +58,17 @@ export interface channel_group{
     default:boolean
 }
 
+/// The macros and the parameters run a script, which is referenced by its id (null when there is none). The older
+/// files hold the name the script is triggered by, which is resolved to the script when the application is read
 export interface macro {
     name: string,
-    trigger: string
+    trigger: number | null
 }
 
 export interface parameter {
     parameter_name: string,
     parameter_id: string,
-    trigger: string,
+    trigger: number | null,
     value: number,
     visible: boolean
 }

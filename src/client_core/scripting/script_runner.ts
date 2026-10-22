@@ -53,7 +53,7 @@ export const initialize_scripting_engine = (application: up_application | null ,
 
 
 export const run_script = (
-    trigger_string: string,
+    script_id: number | null,
     parameters: Record<string, number>,
     current_parameter: string,
     argument: number | null
@@ -61,11 +61,9 @@ export const run_script = (
     const scripts = store.getState().scripts;
 
 
-    let trigger = Object.values(scripts).filter((script)=>{
-        return script.triggers === trigger_string;
-    });
-    if(trigger.length === 0)return [];
-    let content = trigger[0].content;
+    const script = script_id === null ? undefined : scripts[script_id];
+    if(script === undefined) return [];
+    let content = script.content;
 
     let context =  {registers: {}, parameters: parameters, workspace: script_workspace};
 

@@ -20,6 +20,7 @@ import {
 } from "#UI/index.js";
 
 import {up_application} from "#client_core/index.js";
+import {ScriptSelector} from "#components/Views/Applications/Properties/ScriptSelector.js";
 import type {macro} from "#interfaces/index.js";
 
 interface MacroPropertiesProps{
@@ -37,6 +38,11 @@ export let  MacroProperties = (props: MacroPropertiesProps) =>{
         }
     }
 
+    let handleScriptChange = async (script_id: number | null) =>{
+        await props.application.edit_macro(props.macro.name, "trigger", script_id);
+        props.forceUpdate();
+    }
+
     let handleRemove= async () =>{
         await props.application.remove_macro(props.macro.name);
         props.forceUpdate();
@@ -49,7 +55,7 @@ export let  MacroProperties = (props: MacroPropertiesProps) =>{
             onRemove={handleRemove}
         >
             <InputField inline id='name' name='name' defaultValue={props.macro.name} onKeyDown={handleonKeyDown} label="Name"/>
-            <InputField inline id='trigger'  name='trigger' defaultValue={props.macro.trigger} onKeyDown={handleonKeyDown} label="Trigger"/>
+            <ScriptSelector name="trigger" value={props.macro.trigger} onChange={handleScriptChange}/>
         </Card>
     );
 };

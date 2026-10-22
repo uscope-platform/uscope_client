@@ -21,6 +21,8 @@ export interface script {
     name:string,
     path:string,
     content:string,
+    // only used to resolve the scripts the older applications reference by this string, the macros and the
+    // parameters now reference the script by its id
     triggers:string
 }
 

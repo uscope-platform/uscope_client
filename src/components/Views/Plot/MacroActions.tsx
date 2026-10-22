@@ -39,10 +39,9 @@ let  MacroActions = (props: MacroActionProps) =>{
 
     const application = useContext(ApplicationContext);
 
-    let onClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
-        let trigger_str = event.currentTarget.name;
+    let onClick = async (macro: macro) => {
         let params = application.get_parameters_map();
-        let bulk_registers = run_script(trigger_str, params, "", null);
+        let bulk_registers = run_script(macro.trigger, params, "", null);
         if(bulk_registers !== null){
             await up_peripheral.bulk_register_write(bulk_registers);
         }
@@ -53,7 +52,7 @@ let  MacroActions = (props: MacroActionProps) =>{
             {props.macro.map((macro) => {
                 return(
                     <div key={macro.name} style={{margin:'0.5rem'}}>
-                        <Button key={macro.name} className="macro_action_buttons" name={macro.trigger} onClick={onClick}>{macro.name}</Button>
+                        <Button key={macro.name} className="macro_action_buttons" onClick={() => onClick(macro)}>{macro.name}</Button>
                     </div>
                 );
             })}

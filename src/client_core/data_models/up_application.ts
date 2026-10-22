@@ -29,6 +29,17 @@ import type {
     channel_group, soft_core, filter, peripheral_instance, group_channel_token
 } from "#interfaces/index.js";
 
+/// The script a macro or a parameter runs. The older applications reference it by the string in the `triggers` of
+/// the script
+const resolve_trigger = (trigger: unknown): number | null => {
+    if(typeof trigger === "number") return trigger;
+    if(typeof trigger === "string" && trigger !== ""){
+        const script = Object.values(store.getState().scripts).find(s => s.triggers === trigger);
+        if(script !== undefined) return script.id;
+    }
+    return null;
+};
+
 export const empty_channel_group: channel_group = {
     group_name: "",
     group_id: "",
@@ -65,8 +76,8 @@ export class up_application {
         this.pl_clocks = app_data_obj.pl_clocks;
         this.clock_frequency = app_data_obj.clock_frequency;
         this.initial_registers_values = app_data_obj.initial_registers_values;
-        this.macro = app_data_obj.macro;
-        this.parameters = app_data_obj.parameters;
+        this.macro = app_data_obj.macro.map(m => ({...m, trigger: resolve_trigger(m.trigger)}));
+        this.parameters = app_data_obj.parameters.map(par => ({...par, trigger: resolve_trigger(par.trigger)}));
         this.peripherals = app_data_obj.peripherals;
         this.soft_cores = app_data_obj.soft_cores;
         this.filters = app_data_obj.filters;
@@ -370,7 +381,7 @@ export class up_application {
         let macro_name = "new_macro_" + id.toString();
         let m: macro =  {
             name: macro_name,
-            trigger: ""
+            trigger: null
         };
         this.macro.push(m);
         let edit = {application:this.id, item:m, action:"add", object:"macro"};
@@ -383,7 +394,7 @@ export class up_application {
         let p: parameter = {
             parameter_name: parameter_name,
             parameter_id: parameter_name.replace(/\s/g, "_").toLowerCase(),
-            trigger: '',
+            trigger: null,
             value: 0,
             visible: false
         };

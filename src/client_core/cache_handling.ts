@@ -120,9 +120,11 @@ export const refresh_caches = (): Promise<cache_result[]> =>{
     let state = store.getState();
     const refresh_ops: Promise<cache_result>[] = [];
 
-    refresh_ops.push(refresh_resource_cache("application_cache", state.applications, load_all_applications ,()=>{return backend_get(api_dictionary.applications.get_hash)}));
+    const scripts_op = refresh_resource_cache("scripts_cache", state.scripts, load_all_scripts , ()=>{return backend_get(api_dictionary.scripts.get_hash)});
+    // the applications resolve the scripts their macros and parameters run when they are read
+    refresh_ops.push(scripts_op.then(() => refresh_resource_cache("application_cache", state.applications, load_all_applications ,()=>{return backend_get(api_dictionary.applications.get_hash)})));
     refresh_ops.push(refresh_resource_cache("peripheral_cache", state.peripherals, load_all_peripherals,()=>{return backend_get(api_dictionary.peripherals.get_hash)}));
-    refresh_ops.push(refresh_resource_cache("scripts_cache", state.scripts, load_all_scripts , ()=>{return backend_get(api_dictionary.scripts.get_hash)}));
+    refresh_ops.push(scripts_op);
     refresh_ops.push(refresh_resource_cache("programs_cache",state.programs, load_all_programs , ()=>{return backend_get(api_dictionary.programs.get_hash)}));
     refresh_ops.push(refresh_resource_cache("bitstreams_cache",state.bitstreams, load_all_bitstreams , ()=>{return backend_get(api_dictionary.bitstream.get_hash)}));
     refresh_ops.push(refresh_resource_cache("filters_cache",state.filters, load_all_filters , ()=>{return backend_get(api_dictionary.filters.get_hash)}));
