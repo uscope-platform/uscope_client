@@ -41,7 +41,6 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-    "baseUrl": ".",
     "paths": {
       "#redux/*": ["./src/redux/*"],
       "#redux": ["./src/redux"],
@@ -56,5 +55,6 @@
       "#src/*": ["./src/*"],
       "#src": ["./src"]
     },
-  }
+  },
+  "exclude": ["node_modules", "build"]
 }
