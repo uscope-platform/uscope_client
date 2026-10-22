@@ -21,10 +21,12 @@
   padding: 0;
     scrollbar-width: thin;                 /* Firefox */
     scrollbar-color: var(--inactive-icons-color) transparent;
+}
 
-    /* Reserve space to avoid layout shift when bars appear/disappear */
+/* Reserve space to avoid layout shift when the bar of the page appears/disappears. On every element it also reserved a
+   strip on the right of each panel, tab and list that clips or scrolls, and those add up through the nesting */
+html {
     scrollbar-gutter: stable;
-
 }
 
 body {
