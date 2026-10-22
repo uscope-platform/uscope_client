@@ -21,11 +21,11 @@ import {DeleteButton} from "#UI/DeleteButton.js";
 
 interface ItemLayoutProps {
     selected: boolean;
-    card: boolean;
+    variant: 'card' | 'plain';
 }
 
 
-const ItemLayout = styled<'div', ItemLayoutProps>('div')(({ selected, card }) => card ? `
+const ItemLayout = styled<'div', ItemLayoutProps>('div')(({ selected, variant }) => variant === 'card' ? `
   display: flex;
   align-items: center;
   gap: 0.5em;
@@ -102,7 +102,7 @@ export let  SelectableListItem = (props: SelectableListItemProps) =>{
     }
 
     return(
-        <ItemLayout selected={props.selected} card={!!props.card}>
+        <ItemLayout selected={props.selected} variant={props.card ? "card" : "plain"}>
             <div></div>
             <div onMouseEnter={handleMouseEnter} onClick={handle_click} onDoubleClick={handle_double_click} style={{display:"flex", flexGrow:1}}>
                 {get_icon_image(props.icon)}

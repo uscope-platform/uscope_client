@@ -20,19 +20,24 @@ import Select, {type ActionMeta} from "react-select";
 import {ColorTheme} from "./ColorTheme.js";
 import type {DefaultOption} from "#interfaces/index.js";
 
-const SelectWrapper = styled('div')`
+interface SelectWrapperProps {
+    stacked?: boolean | undefined;
+}
+
+const SelectWrapper = styled<'div', SelectWrapperProps>('div')(({stacked}) => `
     display: grid;
-    grid-template-columns: repeat(2, auto);
+    grid-template-columns: ${stacked ? "1fr" : "repeat(2, auto)"};
     grid-gap: 0.3rem;
     justify-content: space-between;
     align-items: start;
-`
+`)
 
 
 interface SelectFieldProps<Option extends DefaultOption=DefaultOption> {
     onChange: (value: Option | null, event: ActionMeta<Option>) => void;
     name: string;
     label?: string;
+    stacked?: boolean;
     style?: React.CSSProperties;
     defaultValue?: Option;
     placeholder?: Option;
@@ -81,7 +86,7 @@ export let  SelectField = <Option extends DefaultOption = DefaultOption>(
     const controlled_props = props.value !== undefined ? {value: props.value} : {};
 
     return(
-        <SelectWrapper>
+        <SelectWrapper stacked={props.stacked}>
             <Label htmlFor={props.name} >{props.label}</Label>
             <Select
                 name={props.name}

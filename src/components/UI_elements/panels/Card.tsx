@@ -18,7 +18,7 @@ import {styled} from "goober";
 import {CardTitle} from "./CardTitle.jsx";
 import {ChipSelector} from "../ChipSelector.jsx";
 import {ColorTheme} from "../ColorTheme.js";
-import type {ReactNode} from "react";
+import type {CSSProperties, ReactNode} from "react";
 
 
 
@@ -43,12 +43,13 @@ interface CardProps {
     name: string,
     onRemove: () => void,
     children?: ReactNode;
+    style?: CSSProperties;
 }
 
 export let Card = function (props: CardProps) {
     let title_items = props.selector ? <ChipSelector name={props.selector.name} onClick={props.selector.click} value={props.selector.value} label={props.selector.label}/> :null
     return(
-        <CardContainer>
+        <CardContainer style={props.style}>
             <CardTitle name={props.name} onRemove={props.onRemove} additionalItems={title_items}/>
             {props.children}
         </CardContainer>
