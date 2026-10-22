@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import
-    React, {useReducer} from 'react';
+    React from 'react';
 
 import {InputField, SelectField} from "#UI/index.js";
 import {up_emulator} from "#client_core/index.js";
@@ -26,14 +26,13 @@ interface DmaChannelPropertiesProps {
     selected_connection: connection,
     source_core: number,
     target_core: number,
-    on_channel_edit: (channel:string) => void,
+    // the parent holds the channel that is shown, it is the one to render again
+    forceUpdate: () => void,
     selected_channel: port_link
 }
 
 let  DmaChannelProperties = (props: DmaChannelPropertiesProps) =>{
 
-
-    const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     let source_core = Object.values(props.selected_emulator.cores).filter((c)=>{
         return c.id === props.selected_connection.source_core;
@@ -90,7 +89,7 @@ let  DmaChannelProperties = (props: DmaChannelPropertiesProps) =>{
             value.value,
             id
         ).then(()=>{
-            forceUpdate();
+            props.forceUpdate();
         });
     }
 
@@ -103,7 +102,7 @@ let  DmaChannelProperties = (props: DmaChannelPropertiesProps) =>{
             value.value,
             props.selected_channel.id
         );
-        forceUpdate();
+        props.forceUpdate();
     }
 
     let handle_change_partial_channels = async (event: React.KeyboardEvent<HTMLInputElement>) =>{
@@ -117,7 +116,7 @@ let  DmaChannelProperties = (props: DmaChannelPropertiesProps) =>{
                 value,
                 props.selected_channel.id
             );
-            forceUpdate();
+            props.forceUpdate();
         }
     }
 

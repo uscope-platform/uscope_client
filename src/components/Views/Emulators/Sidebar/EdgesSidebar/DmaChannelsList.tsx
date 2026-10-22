@@ -33,9 +33,12 @@ interface DmaChannelsListProps {
 let  DmaChannelsList = (props: DmaChannelsListProps) =>{
 
     let handle_add = () =>{
-
-        props.selected_emulator.add_port_link(props.source_core, props.target_core, props.connections_list.length).then(() =>{
+        // after the biggest id: the length of the list is the id of an existing channel once one in the middle was removed
+        const new_id = Math.max(-1, ...props.connections_list) + 1;
+        props.selected_emulator.add_port_link(props.source_core, props.target_core, new_id).then(() =>{
             props.forceUpdate();
+            // the properties are the ones of the channel that was just added
+            props.on_select(new_id.toString());
         });
     }
 

@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useReducer, useState} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 
 import {SimpleContent, UIPanel} from "#UI/index.js";
 import DmaChannelsList from "./DmaChannelsList.jsx";
@@ -31,7 +31,7 @@ const null_link: port_link = {id:9999, source_port:"", destination_port:"", sour
 const null_connection: connection = {source_core: -1, destination_core: -1, ports: []}
 let  EmulatorEdgeProperties = (props: EmulatorEdgePropertiesProps) =>{
 
-    const [selected_dma_channel, set_selected_dma_channel] = useState(0);
+    const [selected_dma_channel, set_selected_dma_channel] = useState(-1);
 
     let selected_connection : connection  = null_connection;
     let connections_list: number[] = []
@@ -42,6 +42,13 @@ let  EmulatorEdgeProperties = (props: EmulatorEdgePropertiesProps) =>{
     let handle_select_dma = (sel: string) =>{
         set_selected_dma_channel(parseInt(sel));
     }
+
+    // another edge: the channel that was selected belongs to the previous one
+    const edge = props.selected_component && props.selected_component.type === "edge" ? props.selected_component.obj : null;
+    const edge_key = edge ? edge.from + "-" + edge.to : "";
+    useEffect(() => {
+        set_selected_dma_channel(-1);
+    }, [edge_key]);
 
     if(props.enabled && props.selected_emulator){
         let selected_component = props.selected_component;
@@ -69,7 +76,7 @@ let  EmulatorEdgeProperties = (props: EmulatorEdgePropertiesProps) =>{
         }
 
         let render_dma_properties = () =>{
-            if(selected_dma_channel !== null && selected_connection !== undefined){
+            if(selected_channel !== null_link){
                 return(<UIPanel key="channel_properties_tab" style={{maxHeight:"500px"}}  level="level_2">
                     <SimpleContent name={"DMA channel properties"}>
                         <DmaChannelProperties
@@ -78,7 +85,7 @@ let  EmulatorEdgeProperties = (props: EmulatorEdgePropertiesProps) =>{
                             source_core={source_core}
                             target_core={target_core}
                             selected_channel={selected_channel}
-                            on_channel_edit={handle_select_dma}
+                            forceUpdate={forceUpdate}
                         />
                     </SimpleContent>
                 </UIPanel>)
