@@ -65,8 +65,6 @@ let ScriptManager = (props: ScriptManagerProps) =>{
                         <FormLayout>
                             <InputField inline name='name' placeholder={selected_script.name}
                                         onKeyDown={handle_edit_field} label='name'/>
-                            <InputField inline name='path' placeholder={selected_script.path}
-                                        onKeyDown={handle_edit_field} label='path'/>
                         </FormLayout>
                     </SimpleContent>
                 </UIPanel>
