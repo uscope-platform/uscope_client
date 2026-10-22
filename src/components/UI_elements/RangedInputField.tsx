@@ -20,7 +20,6 @@ import {ColorTheme} from "./ColorTheme.js";
 import Select from "react-select";
 import {useFieldFeedback} from "./useFieldFeedback.js";
 
-import type {HTMLAttributes} from "react";
 
 interface InnerInputProps {
     color:string
@@ -45,9 +44,6 @@ export const InnerInput = styled<'input', InnerInputProps>('input')(({ color }) 
   &[data-status="error"] { border-color: ${ColorTheme.field.error}; }
   &[data-status="saving"] { opacity: 0.7; }
 `);
-
-
-interface InnerInputProps extends HTMLAttributes<HTMLDivElement>{}
 
 
 const Wrapper = styled('div')`
