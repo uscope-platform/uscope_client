@@ -18,15 +18,22 @@ import React from 'react';
 import {css} from "goober";
 import {ColorTheme} from "#UI/index.js";
 import EmulatorToolbar from "./EmulatorToolbar.jsx";
-//@ts-ignore
 import {Canvas, Edge, hasLink, MarkerArrow, Node, useSelection} from "reaflow";
+import type {EdgeData, NodeData} from "reaflow";
 import type {EmulatorGraphNode,EmulatorGraphEdge} from "#interfaces/index.js";
+
+type GraphMouseEvent = React.MouseEvent<SVGGElement, MouseEvent>;
+
+// reaflow identifies the nodes and the edges with strings, in the same space (the selections hold both): the edges are
+// told apart with a prefix
+const node_key = (id: number) => String(id);
+const edge_key = (id: number) => "edge-" + id;
 
 interface EmulatorDiagramProps {
     nodes: EmulatorGraphNode[];
     edges: EmulatorGraphEdge[];
-    onNodeSelect: (event: any, node: EmulatorGraphNode) => void;
-    onEdgeSelect: (event: any, edge: EmulatorGraphEdge) => void;
+    onNodeSelect: (event: GraphMouseEvent, node: EmulatorGraphNode) => void;
+    onEdgeSelect: (event: GraphMouseEvent, edge: EmulatorGraphEdge) => void;
     onCanvasClick: () => void;
     onAdd: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
     onAddIo: (direction: "source" | "sink") => void;
@@ -36,7 +43,7 @@ interface EmulatorDiagramProps {
     onHardwareSim: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
     onEdit: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
     onCopy: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
-    onLinkNodes: (event: any, from: EmulatorGraphNode, to:EmulatorGraphNode) => void;
+    onLinkNodes: (event: unknown, from: EmulatorGraphNode, to:EmulatorGraphNode) => void;
     enabled_actions: {
         add: boolean,
         copy: boolean,
@@ -77,57 +84,62 @@ const selected_edge_class = css`
 
 let EmulatorDiagram = function (props: EmulatorDiagramProps) {
 
-    const inner_nodes = props.nodes.map((node: EmulatorGraphNode) => {
-        return node.kind === "io" ? {...node, className: node.direction === "source" ? io_source_class : io_sink_class} : {...node};
+    const inner_nodes: NodeData[] = props.nodes.map((node: EmulatorGraphNode) => {
+        const {id, ...rest} = node;
+        const drawn: NodeData = {...rest, id: node_key(id)};
+        if(node.kind === "io") drawn.className = node.direction === "source" ? io_source_class : io_sink_class;
+        return drawn;
     });
 
-    const inner_edges = props.edges.map((edge: EmulatorGraphEdge) => {
-        let new_node = {...edge};
-        new_node.id = new_node.id+ 10000;
-        return new_node;
+    const inner_edges: EdgeData[] = props.edges.map((edge: EmulatorGraphEdge) => ({
+        id: edge_key(edge.id),
+        from: node_key(edge.from),
+        to: node_key(edge.to)
+    }));
+
+    let { selections, onCanvasClick, onClick } = useSelection({
+        nodes: inner_nodes,
+        edges: inner_edges
     });
 
-    let { selections, onCanvasClick, onClick, onKeyDown, clearSelections } = useSelection({
-        inner_nodes,
-        inner_edges,
-        onDataChange: (n:EmulatorGraphNode[], e: EmulatorGraphEdge[]) => {
-        },
-        onSelection: (s: any) => {
-        }
-    }
-    );
-
-    const drawn_edges = inner_edges.map((edge) => (
+    const drawn_edges: EdgeData[] = inner_edges.map((edge) => (
         selections.includes(edge.id) ? {...edge, className: selected_edge_class} : edge
     ));
 
-    let handle_node_click = (event: any, node: EmulatorGraphNode) => {
+    const model_node = (data: NodeData) => props.nodes.find((n) => node_key(n.id) === data.id);
+
+    let handle_node_click = (event: GraphMouseEvent, data: NodeData) => {
+        const node = model_node(data);
+        if(node === undefined) return;
         props.onNodeSelect(event, node);
-        onClick(event,node);
+        onClick?.(event, data);
     };
 
-    let handle_edge_click = (event: any, edge: EmulatorGraphEdge) => {
-        onClick(event,edge );
-        let orig_edge = {...edge};
-        orig_edge.id = orig_edge.id - 10000;
-        props.onEdgeSelect(event, orig_edge);
+    let handle_edge_click = (event: GraphMouseEvent, data: EdgeData) => {
+        onClick?.(event, data);
+        const edge = props.edges.find((e) => edge_key(e.id) === data.id);
+        if(edge === undefined) return;
+        props.onEdgeSelect(event, edge);
     };
 
     let handle_canvas_click = () => {
         props.onCanvasClick();
-        onCanvasClick();
+        onCanvasClick?.();
     };
 
     let handle_layout_change = () => {
         //console.log('Layout', layout);
     }
 
-    let handle_link_check = (event: any, from: number, to: number) => {
-        return !hasLink(props.edges, from, to);
+    let handle_link_check = (event: unknown, from: NodeData, to: NodeData) => {
+        return !hasLink(inner_edges, from, to);
     };
 
-    let handle_link_create = (event: any, from: EmulatorGraphNode, to: EmulatorGraphNode) => {
-       props.onLinkNodes(event, from,to);
+    let handle_link_create = (event: unknown, from: NodeData, to: NodeData) => {
+        const from_node = model_node(from);
+        const to_node = model_node(to);
+        if(from_node === undefined || to_node === undefined) return;
+        props.onLinkNodes(event, from_node, to_node);
     };
 
     return(
@@ -162,7 +174,7 @@ let EmulatorDiagram = function (props: EmulatorDiagramProps) {
                 nodes={inner_nodes}
                 edges={drawn_edges}
                 selections={selections}
-                height="550px"
+                height={550}
                 node={<Node onClick={handle_node_click} removable={false}/>}
                 edge={<Edge onClick={handle_edge_click} removable={false}/>}
                 onCanvasClick={handle_canvas_click}

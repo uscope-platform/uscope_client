@@ -170,11 +170,11 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
         }
     }
 
-    let handle_node_select = (event: any, node: EmulatorGraphNode) =>{
+    let handle_node_select = (event: unknown, node: EmulatorGraphNode) =>{
         props.on_selection({...props.selections, iom:null, component:{type:"node", obj:node}});
     }
 
-    let handle_edge_select = (event: any, edge: EmulatorGraphEdge) =>{
+    let handle_edge_select = (event: unknown, edge: EmulatorGraphEdge) =>{
         props.on_selection({...props.selections, iom:null, component:{type:"edge", obj:edge}});
     }
 
@@ -269,7 +269,7 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
         props.on_selection({...props.selections,...{component:null, iom:null}});
     }
 
-    let handle_link_nodes = (event: any, from: EmulatorGraphNode, to:EmulatorGraphNode) =>{
+    let handle_link_nodes = (event: unknown, from: EmulatorGraphNode, to:EmulatorGraphNode) =>{
         if(!props.emulator.deployment_mode && props.emulator.can_connect(from.id, to.id)){
             let found_edges = props.emulator.connections.filter((conn)=>{
                 return conn.source_core === from.id && conn.destination_core === to.id;

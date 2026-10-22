@@ -33,7 +33,7 @@ import {
 import type {application, peripheral} from "#interfaces/index.js";
 
 let validate_json = (obj: any, schema: object) => {
-    const ajv = new Ajv2020.default();
+    const ajv = new Ajv2020();
     const validate = ajv.compile(schema)
     const valid = validate(obj)
     let erorr_strings = [];
