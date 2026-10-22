@@ -42,6 +42,12 @@ export const ColorTheme = {
         borders: cssVar("borders"),
         bordersLight: cssVar("bordersLight")
     },
+    // the border of a field that has a pending, applied or failed edit
+    field:{
+        dirty: cssVar("accents"),
+        applied: cssVar("field_applied"),
+        error: cssVar("field_error")
+    },
     text: cssVar("text"),
     icons_color: cssVar("icons_color"),
     disabled_icon_color: cssVar("disabled_icon_color"),
