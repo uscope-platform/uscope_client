@@ -43,15 +43,18 @@ interface CardProps {
     // the title is left out when there is no name, no selector and nothing to remove
     name?: string | undefined,
     onRemove?: (() => void) | undefined,
+    // shown at the right of the title
+    actions?: ReactNode,
     children?: ReactNode;
     style?: CSSProperties;
 }
 
 export let Card = function (props: CardProps) {
-    let title_items = props.selector ? <Switch name={props.selector.name} onClick={props.selector.click} value={props.selector.value} label={props.selector.label} style={{marginLeft: "auto", marginRight: "0.5rem"}}/> :null
+    let selector_item = props.selector ? <Switch name={props.selector.name} onClick={props.selector.click} value={props.selector.value} label={props.selector.label} style={{marginLeft: "auto", marginRight: "0.5rem"}}/> :null
+    let title_items = (selector_item || props.actions) ? <>{selector_item}{props.actions}</> : null
     return(
         <CardContainer style={props.style}>
-            {(props.name !== undefined || props.selector || props.onRemove) &&
+            {(props.name !== undefined || props.selector || props.actions || props.onRemove) &&
                 <CardTitle name={props.name} onRemove={props.onRemove} additionalItems={title_items}/>}
             {props.children}
         </CardContainer>

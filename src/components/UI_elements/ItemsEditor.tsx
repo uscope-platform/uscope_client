@@ -56,6 +56,8 @@ interface ItemsEditorProps<T> {
     name: (item: T) => string;
     // the line under the name, which is also searched
     description?: (item: T) => string;
+    // shown before the name
+    icon?: (item: T) => ReactNode;
     onAdd: () => void;
     onRemove: (item: T) => void | Promise<void>;
     // the editor of the selected item
@@ -99,6 +101,7 @@ export let ItemsEditor = <T,>(props: ItemsEditorProps<T>) =>{
                 variant="card"
                 items={visible.map(props.name)}
                 {...(props.description ? {descriptions: visible.map(description)} : {})}
+                {...(props.icon ? {types: visible.map(props.icon)} : {})}
                 selected_item={selected === undefined ? undefined : props.name(selected)}
                 onSelect={(name) => set_selected_item(visible.find(item => props.name(item) === name) ?? null)}
                 onRemove={handleRemove}

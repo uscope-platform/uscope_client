@@ -15,7 +15,9 @@
 
 import React from 'react';
 
-import {ItemsEditor} from "#UI/index.js";
+import {MdStar} from "react-icons/md";
+
+import {ColorTheme, ItemsEditor} from "#UI/index.js";
 import {PlotChannelGroupProperties, PlotChannelProperties, ParameterProperties} from "#components/Views/Applications/Properties/index.js";
 import type {up_application} from "#client_core/index.js";
 
@@ -48,10 +50,19 @@ export let ChannelGroupsEditor = (props: EditorProps) =>(
         items={props.application.channel_groups}
         noun="channel groups"
         name={group => group.group_name}
+        // the star marks the default group, the others have a space of its width so that the names line up
+        icon={group => group.default
+            ? <MdStar size="1.4em" color={ColorTheme.background.accents} style={{flexShrink: 0, marginTop: "0.25em"}}/>
+            : <span style={{display: "inline-block", width: "1.4em", flexShrink: 0}}/>}
         description={group => group.channels.map(c => c.label).join(", ")}
         onAdd={props.onAdd}
         onRemove={async group => {
             await props.application.remove_channel_groups(group.group_name);
+            // the scope needs a default group, the first of the others takes over
+            const groups = props.application.channel_groups;
+            if(groups[0] !== undefined && !groups.some(g => g.default)){
+                await props.application.set_default_channel_group(groups[0].group_name);
+            }
             props.forceUpdate();
         }}
     >

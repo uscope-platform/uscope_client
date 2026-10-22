@@ -14,16 +14,46 @@
 // limitations under the License.
 
 import React from "react";
+import {styled} from "goober";
 import {
     InputField,
     FormLayout,
     ChipSelector,
+    ColorTheme,
     Label,
     Card
 } from "#UI/index.js";
 
 import {up_application} from "#client_core/index.js";
 import type {channel, channel_group} from "#interfaces/index.js";
+
+// the state of a group that can be the default one: a badge when it is, a quiet button to make it
+const DefaultBadge = styled('span')`
+  margin-left: auto;
+  margin-right: 0.5rem;
+  padding: 0.15em 0.8em;
+  border-radius: 3px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: black;
+  background: ${ColorTheme.background.accents};
+`
+
+const MakeDefaultButton = styled('button')`
+  margin-left: auto;
+  margin-right: 0.5rem;
+  padding: 0.15em 0.8em;
+  border-radius: 3px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: ${ColorTheme.text};
+  background: transparent;
+  border: 1px solid ${ColorTheme.background.bordersLight};
+  &:hover {
+    color: ${ColorTheme.background.accents};
+    border-color: ${ColorTheme.background.accents};
+  }
+`
 
 // the scope has a color for each channel of a group, and six of them
 const MAX_CHANNELS = 6;
@@ -38,8 +68,9 @@ export let  PlotChannelGroupProperties = (props:PlotChannelGroupPropertiesProps)
     const in_group = (ch: channel) => props.group.channels.some(token => token.value === ch.id);
     const full = props.group.channels.length >= MAX_CHANNELS;
 
-    let handleChangeDefault = async (target:  {name: string, checked: boolean})=>{
-        await props.application.edit_channel_group(props.group.group_name, target.name, target.checked);
+    // only one group is the default one, so this is not a toggle: another group is made the default
+    let handleMakeDefault = async ()=>{
+        await props.application.set_default_channel_group(props.group.group_name);
         props.forceUpdate();
     }
 
@@ -63,12 +94,10 @@ export let  PlotChannelGroupProperties = (props:PlotChannelGroupPropertiesProps)
     return(
         <Card
             style={{width: "100%", paddingLeft: 0}}
-            selector={{
-                name:"default",
-                label:"Default group",
-                click:handleChangeDefault,
-                value:props.group.default
-            }}
+            actions={props.group.default
+                ? <DefaultBadge>Default</DefaultBadge>
+                : <MakeDefaultButton onClick={handleMakeDefault}>Set as default</MakeDefaultButton>
+            }
         >
             <FormLayout columns="10.5rem">
                 <InputField id="group_name" name="group_name" defaultValue={props.group.group_name} onKeyDown={handleonKeyDown} label="Name"/>

@@ -358,7 +358,8 @@ export class up_application {
             group_name: chg_name,
             group_id: chg_name.replace(/\s/g, "_").toLowerCase(),
             channels:[],
-            default:false
+            // the scope opens with the default group, which there has to be one of
+            default:this.channel_groups.length === 0
         };
         this.channel_groups.push(chg);
         let edit = {application:this.id, item:chg, action:"add", object:"channel_group"};
@@ -526,6 +527,16 @@ export class up_application {
         };
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
+    }
+
+    /// Only one group is the default one: the others are not
+    set_default_channel_group = async (chg_name: string) =>{
+        for(const group of [...this.channel_groups]){
+            const is_default = group.group_name === chg_name;
+            if(group.default !== is_default){
+                await this.edit_channel_group(group.group_name, "default", is_default);
+            }
+        }
     }
 
     edit_irv = async (address: number,field_name: string, field_value:any) =>{
