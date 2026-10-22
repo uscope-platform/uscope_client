@@ -1,7 +1,5 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import viteTsconfigPaths from 'vite-tsconfig-paths';
-import path from 'path';
 
 import * as child from "child_process";
 
@@ -12,18 +10,11 @@ export default defineConfig({
         port:3004
     },
     resolve:{
-        alias:{
-            "#src": path.resolve(__dirname, "./src"),
-            "#client_core": path.resolve(__dirname, "./src/client_core"),
-            "#components": path.resolve(__dirname, "./src/components"),
-            "#UI": path.resolve(__dirname, "./src/components/UI_elements"),
-            "#redux": path.resolve(__dirname, "./src/redux"),
-            "#interfaces": path.resolve(__dirname, "./src/interfaces")
-        }
+        // the #aliases of the tsconfig paths
+        tsconfigPaths: true
     },
     plugins: [
-        react(),
-        viteTsconfigPaths()
+        react()
     ],
     build:{
         outDir:"build",
@@ -35,10 +26,12 @@ export default defineConfig({
         global: 'globalThis',
     },
     optimizeDeps: {
-        esbuildOptions: {
+        rolldownOptions: {
             // the dev server pre-bundles dependencies separately from `define` above
-            define: {
-                global: 'globalThis',
+            transform: {
+                define: {
+                    global: 'globalThis',
+                },
             },
         },
     },
