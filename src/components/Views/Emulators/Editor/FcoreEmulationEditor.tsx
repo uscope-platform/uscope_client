@@ -38,6 +38,11 @@ interface FcoreEmulationEditorProps {
     onEmulationDone: (result: up_emulator_result) => void,
 }
 
+/// The edges of the diagram, one per connection: the id is the position of the connection, so that they are all different
+const edges_of = (emulator: up_emulator): EmulatorGraphEdge[] =>{
+    return emulator.connections.map((c, idx: number) => ({id: idx, from: c.source_core, to: c.destination_core}));
+};
+
 let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
 
     const application = useContext(ApplicationContext);
@@ -115,15 +120,7 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
             set_n_cores(n);
             setNodes(nodes => (initial_nodes));
             //SETUP EDGES
-            let initial_edges: EmulatorGraphEdge[] = [];
-            props.emulator.connections.map((c, idx: number)=>{
-                initial_edges.push({
-                    id:idx,
-                    from: c.source_core,
-                    to: c.destination_core
-                })
-            });
-            setEdges(edges =>(initial_edges));
+            setEdges(edges_of(props.emulator));
             let inputs_obj: Record<string, Record<string, number[]>> ={};
 
             Object.values(props.emulator.cores).map((core)=>{
@@ -194,24 +191,17 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
         if(selection.type === "node"){
             let selected_node = selection.obj.id
             props.on_selection({...props.selections,component:null});
-            let new_edges: EmulatorGraphEdge[] = [];
-            edges.map((item)=> {
-                if (item.from !== selected_node && item.to !== selected_node) {
-                    new_edges.push(item);
-                }
-            });
             props.emulator.remove_node_connections(selected_node).then(()=>{
                 props.emulator.remove_core(selected_node).then();
                 setNodes(nodes.filter((item)=> item.id !== selected_node));
-                setEdges(new_edges);
+                setEdges(edges_of(props.emulator));
             });
         } else if (selection.type === "edge"){
             let edge = edges.filter((item)=> item.id === selection.obj.id)[0];
             if(edge == undefined)return;
             props.on_selection({...props.selections,component:null});
             props.emulator.remove_dma_connection(edge.from, edge.to).then(()=>{
-                let n_e = edges.filter((item) =>{ return item.id !== edge.id});
-                setEdges(n_e);
+                setEdges(edges_of(props.emulator));
             });
         }
 
@@ -250,22 +240,13 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
     }
 
     let handle_link_nodes = (event: any, from: EmulatorGraphNode, to:EmulatorGraphNode) =>{
-        debugger;
         if(!props.emulator.deployment_mode){
             let found_edges = props.emulator.connections.filter((conn)=>{
                 return conn.source_core === from.id && conn.destination_core === to.id;
             })
             if(found_edges.length === 0){
                 props.emulator.add_dma_connection(from.id, to.id).then(()=>{
-                    const id = `${from.id}-${to.id}`;
-                    setEdges([
-                        ...edges,
-                        {
-                            id:0,
-                            from: from.id,
-                            to: to.id
-                        }
-                    ]);
+                    setEdges(edges_of(props.emulator));
                 });
             }
         }

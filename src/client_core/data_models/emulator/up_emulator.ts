@@ -488,7 +488,8 @@ export class up_emulator {
         let edit = {id:this.id, field:"connections",  action:"remove", value:{source:source_id, destination:destination_id}};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         this.connections = this.connections.filter((item)=>{
-            return item.source_core !== source_id && item.destination_core !== destination_id;
+            // only the connection between these two cores goes
+            return item.source_core !== source_id || item.destination_core !== destination_id;
         });
         store.dispatch(update_emulator(this.deep_copy()));
     }
