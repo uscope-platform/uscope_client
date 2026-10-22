@@ -14,8 +14,9 @@
 // limitations under the License.
 
 
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {Fcore} from "./FcoreLanguage.js";
+import {breakpoint_gutter} from "./breakpoint_gutter.js";
 import {ColorTheme, TextEditor, UIPanel} from "#UI/index.js";
 import {PanelTitle} from "#UI/panels/UIPanel.js";
 import DebuggerToolbar from "./DebuggerToolbar.jsx";
@@ -35,7 +36,10 @@ interface FcoreDebuggerProps {
     selected_program: string,
     on_program_select: (program: string) => void,
     checkpoint: DebuggerCheckpoint,
-    content: SingleProgramDataPackage
+    content: SingleProgramDataPackage,
+    // the lines of the assembly with a breakpoint, 1 based
+    breakpoints: number[],
+    on_toggle_breakpoint: (line: number) => void,
 }
 
 // the tables under the editors have a height of their own, the editors take what is left
@@ -112,6 +116,11 @@ let  FcoreDebugger = (props: FcoreDebuggerProps) =>{
 
     const highLight = EditorView.theme(produce_theme());
 
+    const gutter_extension = useMemo(
+        () => breakpoint_gutter(props.breakpoints, props.on_toggle_breakpoint),
+        [props.breakpoints, props.on_toggle_breakpoint]
+    );
+
 
     return (
         <div style={{
@@ -138,7 +147,7 @@ let  FcoreDebugger = (props: FcoreDebuggerProps) =>{
                     <TextEditor
                         height="100%"
                         content={props.content.asm.program}
-                        extensions={[Fcore(), highLight]}
+                        extensions={[Fcore(), highLight, gutter_extension]}
                     />
                 </FillPanel>
                 <FillPanel title="C source">

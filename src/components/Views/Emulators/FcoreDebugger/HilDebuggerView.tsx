@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import React, {useEffect, useState} from 'react';
+import {toast} from "react-toastify";
 import FcoreDebugger from "./FcoreDebugger.jsx";
 import HilDebuggerSidebar from "../Sidebar/per_panel_sidebars/HilDebuggerSidebar.jsx";
 import {useAppSelector} from "#redux/hooks.js";
@@ -79,6 +80,19 @@ let HilDebuggerView = function (props: HilDebuggerViewProps) {
     }
 
 
+    // a click on the gutter of the assembly
+    let handle_toggle_breakpoint = async (line: number) =>{
+        if(props.selections.program === ""){
+            toast.info("Select a program to set breakpoints on it");
+            return;
+        }
+        if(breakpoints.includes(line)){
+            await handle_remove_breakpoint(line);
+        } else {
+            await handle_add_breakpoint(line);
+        }
+    }
+
     let handle_select_program = async (value: string)=>{
         props.set_selections({...props.selections, program: value});
 
@@ -127,6 +141,8 @@ let HilDebuggerView = function (props: HilDebuggerViewProps) {
                 on_emulation_end={props.set_emulation_results}
                 checkpoint={checkpoint}
                 set_checkpoint={set_checkpoint}
+                breakpoints={breakpoints}
+                on_toggle_breakpoint={handle_toggle_breakpoint}
             />
             <HilDebuggerSidebar
                 emulator={props.emulator}
