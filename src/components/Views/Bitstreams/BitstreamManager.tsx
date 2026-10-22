@@ -21,6 +21,7 @@ import {
     SimpleContent,
     UIPanel
 } from "#UI/index.js";
+import {SidebarPane, SplitGroup} from "#UI/index.js";
 import {up_bitstream, upload_raw} from "#client_core/index.js";
 import BitstreamSidebar from "./BitstreamSidebar.js";
 import type {bitstream_model} from "#interfaces/index.js";
@@ -66,13 +67,8 @@ let BitstreamManager = (props: BitstreamManagerProps) =>{
 
 
     return(
-        <div style={{
-            display:"flex",
-            flexDirection:"row",
-            gap:10,
-            height:"100%"
-        }}>
-            <UIPanel key="bitstream_properties" style={{flexGrow:1}} level="level_2">
+        <SplitGroup id="bitstreams" orientation="horizontal">
+            <UIPanel id="main" key="bitstream_properties" level="level_2" default_size={72} min_size={30}>
                 <SimpleContent name="Bitstream Properties">
                     <FormLayout>
                         <InputField inline name='name' placeholder={sel_bit.name} onKeyDown={handle_change_name} label='name'/>
@@ -81,8 +77,10 @@ let BitstreamManager = (props: BitstreamManagerProps) =>{
                     </FormLayout>
                 </SimpleContent>
             </UIPanel>
-            <BitstreamSidebar  bitstream={sel_bit} on_select={handle_select}/>
-        </div>
+            <SidebarPane>
+                <BitstreamSidebar  bitstream={sel_bit} on_select={handle_select}/>
+            </SidebarPane>
+        </SplitGroup>
     );
 
 }

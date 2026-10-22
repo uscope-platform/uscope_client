@@ -23,6 +23,7 @@ import {
     InputField,
     SelectField, ColorTheme
 } from "#UI/index.js"
+import {SidebarPane, SplitGroup} from "#UI/index.js";
 
 import {add_user, dump_database, restore_database, upload_json} from "#client_core/index.js";
 import { MdDownload, MdUpload} from "react-icons/md";
@@ -96,13 +97,8 @@ let  PlatformManager = () =>{
     }
 
     return(
-        <div style={{
-            display:"flex",
-            flexDirection:"row",
-            gap: 10,
-            height:"100%"
-        }}>
-            <UIPanel style={{flexGrow:1}} key="platform_management" level="level_2">
+        <SplitGroup id="platform" orientation="horizontal">
+            <UIPanel id="main" key="platform_management" level="level_2" default_size={72} min_size={30}>
                 <SimpleContent name="Platform Management">
                     <div>
                         {constructActionsBar()}
@@ -127,14 +123,14 @@ let  PlatformManager = () =>{
                     </div>
                 </SimpleContent>
             </UIPanel>
-            <div style={{minWidth:"300px", height:"100%"}}>
+            <SidebarPane>
                 <PlatformSidebar
                     user={selected_user}
                     on_select={handle_select}
                     view_version={view_version}
                 />
-            </div>
-        </div>
+            </SidebarPane>
+        </SplitGroup>
 
     );
 };
