@@ -165,7 +165,7 @@ let AuthApp = (props: AuthAppProps) =>{
         case "NORMAL":
             return (
                 <div className="App">
-                    <ApplicationContext.Provider value={application}>
+                    <ApplicationContext value={application}>
                         <div style={{display: "flex", gap: InterfaceParameters.main_window.columns_gap}}>
                             <div style={{
                                 minWidth: InterfaceParameters.main_window.columns_min_widths[0],
@@ -185,7 +185,7 @@ let AuthApp = (props: AuthAppProps) =>{
                                 </Routes>
                             </UIPanel>
                         </div>
-                    </ApplicationContext.Provider>
+                    </ApplicationContext>
                 </div>
             );
         default:
