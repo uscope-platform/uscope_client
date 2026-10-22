@@ -15,8 +15,7 @@
 
 //       REACT IMPORTS
 import React, {useEffect, useState} from 'react';
-import {Routes} from "react-router";
-import {Route} from 'react-router-dom'
+import {Routes, Route} from "react-router";
 
 //      APP RELATED IMPORTS
 import TabContent from "./components/TabContent.js";

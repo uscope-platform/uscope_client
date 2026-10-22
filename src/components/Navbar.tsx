@@ -15,7 +15,7 @@
 
 import React from 'react';
 import {ColorTheme, Image} from "#UI/index.js";
-import {NavLink} from "react-router-dom";
+import {NavLink} from "react-router";
 import  {styled} from "goober";
 
 

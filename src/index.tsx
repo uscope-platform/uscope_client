@@ -18,8 +18,8 @@ import {createRoot} from "react-dom/client";
 import App from './App.js';
 import {Provider} from "react-redux";
 import store from "./store.js";
-import {PersistGate} from "redux-persist/lib/integration/react";
-import {BrowserRouter} from "react-router-dom";
+import {PersistGate} from "redux-persist/es/integration/react";
+import {BrowserRouter} from "react-router";
 import {setup} from "goober";
 
 import {persistStore} from "redux-persist";
