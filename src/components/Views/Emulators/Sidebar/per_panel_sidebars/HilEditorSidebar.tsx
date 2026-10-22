@@ -14,30 +14,16 @@
 // limitations under the License.
 
 import React from 'react';
-import {styled} from "goober";
 
 
 import {up_emulator} from "#client_core/index.js";
-import {SidebarBase} from "#UI/index.js";
+import {SidebarBase, SidebarColumn} from "#UI/index.js";
 import EmulatorNodeProperties from "../NodesSidebar/EmulatorNodeProperties.jsx";
 import EmulatorEdgeProperties from "../EdgesSidebar/EmulatorEdgeProperties.jsx";
 import EmulatorProperties from "../EmulatorProperties.jsx";
 import WarningsPanel from "../WarningsPanel.jsx";
 import {useAppSelector} from "#redux/hooks.js";
 import type {EmulatorIomSelector, EmulatorSelections} from "#interfaces/index.js";
-
-// the panels keep their height and the column scrolls when they do not fit, instead of squeezing the ones above
-const Column = styled('div')`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
-  min-width: 25em;
-  padding: 10px 10px 10px 0;
-  overflow-y: auto;
-  & > * {
-    flex-shrink: 0;
-  }
-`
 
 interface HilEditorSidebarProps {
     emulator: up_emulator,
@@ -66,7 +52,7 @@ let  HilEditorSidebar = (props: HilEditorSidebarProps) =>{
     }
 
     return(
-        <Column>
+        <SidebarColumn style={{padding: "10px 0"}}>
             <SidebarBase
                 objects={emulators_store}
                 selection_key="id"
@@ -96,7 +82,7 @@ let  HilEditorSidebar = (props: HilEditorSidebarProps) =>{
                 compile_warning={props.compile_warning}
                 enabled={props.selections.component === null}
             />
-        </Column>
+        </SidebarColumn>
 
     );
 
