@@ -17,7 +17,7 @@
 import React from 'react';
 import {ColorTheme, SelectField} from "#UI/index.js";
 import { MdPlayArrow, MdWrapText, MdStart} from "react-icons/md";
-import {Tooltip} from "react-tooltip";
+import {Tooltip} from "#UI/Tooltip.js";
 import type {SimpleStringOption} from "#interfaces/index.js";
 
 interface DebuggerControlsProps {
@@ -48,17 +48,17 @@ let  DebuggerControls = (props: DebuggerControlsProps) =>{
             <div key="run" id="run">
                 <MdPlayArrow onClick={props.run} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
                              color={ColorTheme.icons_color}/>
-                <Tooltip anchorSelect="run" content={"run"} place="top"/>
+                <Tooltip anchorSelect="#run" content={"run"} place="top"/>
             </div>
             <div key="step" id="step">
                 <MdWrapText onClick={props.step} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
                             color={ColorTheme.icons_color}/>
-                <Tooltip anchorSelect="step" content={"Step over"} place="top"/>
+                <Tooltip anchorSelect="#step" content={"Step over"} place="top"/>
             </div>
             <div key="resume" id="resume">
                 <MdStart onClick={props.resume} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
                          color={ColorTheme.icons_color}/>
-                <Tooltip anchorSelect="resume" content={"Resume"} place="top"/>
+                <Tooltip anchorSelect="#resume" content={"Resume"} place="top"/>
             </div>
         </div>
     );

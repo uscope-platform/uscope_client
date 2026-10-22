@@ -26,7 +26,7 @@ import {
 
 import {add_user, dump_database, restore_database, upload_json} from "#client_core/index.js";
 import { MdDownload, MdUpload} from "react-icons/md";
-import {Tooltip} from "react-tooltip";
+import {Tooltip} from "#UI/Tooltip.js";
 import PlatformSidebar from "../Platform/PlatformSidebar.js";
 import {toast} from "react-toastify";
 

@@ -19,7 +19,7 @@ import React from 'react';
 
 import {ColorTheme} from "../index.jsx"
 import {MdNoteAdd, MdDownload, MdUpload, MdContentCopy} from "react-icons/md";
-import {Tooltip} from "react-tooltip";
+import {Tooltip} from "#UI/Tooltip.js";
 
 
 interface SideToolbarProps {

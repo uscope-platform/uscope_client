@@ -27,7 +27,7 @@ import {
     up_filter
 } from "#client_core/index.js";
 import {MdBuild, MdConstruction} from "react-icons/md";
-import {Tooltip} from "react-tooltip";
+import {Tooltip} from "#UI/Tooltip.js";
 
 import {report_error} from "#client_core/proxy/errors.js";
 import 'react-toastify/dist/ReactToastify.css';

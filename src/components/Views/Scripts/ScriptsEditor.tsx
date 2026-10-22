@@ -22,7 +22,7 @@ import {
     autocompletion_engine, up_script
 } from "#client_core/index.js";
 import {MdSave} from "react-icons/md";
-import {Tooltip} from "react-tooltip";
+import {Tooltip} from "#UI/Tooltip.js";
 import type {script} from "#interfaces/index.js";
 
 interface ScriptEditorProps {

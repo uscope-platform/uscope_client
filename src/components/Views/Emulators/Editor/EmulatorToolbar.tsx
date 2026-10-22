@@ -16,7 +16,7 @@
 import React from 'react';
 
 import {ColorTheme, DeleteButton} from "#UI/index.js";
-import {Tooltip} from "react-tooltip";
+import {Tooltip} from "#UI/Tooltip.js";
 import {
     MdAdd,
     MdArticle,
@@ -58,7 +58,7 @@ let  EmulatorToolbar = (props: EmulatorToolbarProps) =>{
             <div key="add_icon" id="add_icon">
                 <MdAdd onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
                        color={icon_color}/>
-                <Tooltip anchorSelect="add_icon" content={"Add Core"} place="top"/>
+                <Tooltip anchorSelect="#add_icon" content={"Add Core"} place="top"/>
             </div>
         )
     }
@@ -74,7 +74,7 @@ let  EmulatorToolbar = (props: EmulatorToolbarProps) =>{
             <div key="copy_icon" id="copy_icon">
                 <MdContentCopy onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
                        color={icon_color}/>
-                <Tooltip anchorSelect="copy_icon" content={"Copy Core"} place="top"/>
+                <Tooltip anchorSelect="#copy_icon" content={"Copy Core"} place="top"/>
             </div>
         )
 
@@ -91,7 +91,7 @@ let  EmulatorToolbar = (props: EmulatorToolbarProps) =>{
             <div key="edit" id="edit">
                 <MdArticle onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
                            color={icon_color}/>
-                <Tooltip anchorSelect="edit" content={"Edit Program"} place="top"/>
+                <Tooltip anchorSelect="#edit" content={"Edit Program"} place="top"/>
             </div>
         )
     }
@@ -107,7 +107,7 @@ let  EmulatorToolbar = (props: EmulatorToolbarProps) =>{
             <div key="run" id="run">
                 <MdPlayArrow onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
                              color={icon_color}/>
-                <Tooltip anchorSelect="run" content={"Run"} place="top"/>
+                <Tooltip anchorSelect="#run" content={"Run"} place="top"/>
             </div>
         )
     }
@@ -123,7 +123,7 @@ let  EmulatorToolbar = (props: EmulatorToolbarProps) =>{
             <div key="deploy" id="deploy">
                 <MdConstruction onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
                                 color={icon_color}/>
-                <Tooltip anchorSelect="deploy" content={"Deploy"} place="top"/>
+                <Tooltip anchorSelect="#deploy" content={"Deploy"} place="top"/>
             </div>
         )
     }
@@ -140,7 +140,7 @@ let  EmulatorToolbar = (props: EmulatorToolbarProps) =>{
             <div key="hw_sim" id="hw_sim">
                 <MdSimCardDownload onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
                              color={icon_color}/>
-                <Tooltip anchorSelect="hw_sim" content={"Download HW simulation files"} place="top"/>
+                <Tooltip anchorSelect="#hw_sim" content={"Download HW simulation files"} place="top"/>
             </div>
         )
     }
