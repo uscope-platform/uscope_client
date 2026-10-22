@@ -21,6 +21,7 @@ import {
     InputField,
     SimpleContent, UIPanel
 } from "#UI/index.js"
+import {MainPane, SidebarPane, SplitGroup} from "#UI/index.js";
 
 import {get_next_id, up_peripheral} from "#client_core/index.js"
 import PeripheralsSidebar from "./PeripheralsSidebar.jsx";
@@ -85,20 +86,10 @@ let PeripheralsManager = (props: PeripheralsManagerProps)=>{
 
 
     return (
-        <div style={{
-            display: "grid",
-            gridTemplateColumns: "5fr 1.5fr",
-            gap: 10,
-            height: "100%"
-        }}>
-            <div style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 10,
-                flexGrow: 1,
-                height: "100%"
-            }}>
-                <UIPanel style={{minHeight:"150px"}} key="properties" level="level_2">
+        <SplitGroup id="peripherals" orientation="horizontal">
+            <MainPane>
+            <SplitGroup id="peripherals_main" orientation="vertical">
+                <UIPanel id="properties" key="properties" level="level_2" default_size={25} min_size="150px">
                     <SimpleContent name="Peripheral Properties">
                         <div>
                             <InputField inline name="edit_name"
@@ -110,8 +101,7 @@ let PeripheralsManager = (props: PeripheralsManagerProps)=>{
                         </div>
                     </SimpleContent>
                 </UIPanel>
-                <UIPanel style={{flexGrow: 1}}
-                         key="registers" level="level_2">
+                <UIPanel id="registers" key="registers" level="level_2" default_size={75} min_size="8em">
                     <SimpleContent name="Registers">
                         <div>
                             <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
@@ -139,9 +129,12 @@ let PeripheralsManager = (props: PeripheralsManagerProps)=>{
                         </div>
                     </SimpleContent>
                 </UIPanel>
-            </div>
-            <PeripheralsSidebar on_select={handle_select}/>
-        </div>
+            </SplitGroup>
+            </MainPane>
+            <SidebarPane>
+                <PeripheralsSidebar on_select={handle_select}/>
+            </SidebarPane>
+        </SplitGroup>
 
     );
 }

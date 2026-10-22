@@ -24,6 +24,7 @@ import {
     SelectField,
     TabbedContent, TwoColumnSelector
 } from "#UI/index.js";
+import {MainPane, SidebarPane, SplitGroup} from "#UI/index.js";
 import ProgramsEditor from "./Editor/ProgramsEditor.js";
 import {up_program} from "#client_core/index.js";
 import BuildSettings from "./Editor/BuildSettings.js";
@@ -125,20 +126,10 @@ let ProgramsManager = (props: ProgramsManagerProps) =>{
     }
 
     return(
-        <div style={{
-            display:"flex",
-            flexDirection:"row",
-            gap:10,
-            height:"100%"
-        }}>
-            <div style={{
-                display:"flex",
-                flexDirection:"column",
-                gap:10,
-                flexGrow:1,
-                height:"100%"
-            }}>
-                <UIPanel key="program_properties" level="level_2">
+        <SplitGroup id="programs" orientation="horizontal">
+            <MainPane>
+            <SplitGroup id="programs_main" orientation="vertical">
+                <UIPanel id="properties" key="program_properties" level="level_2" default_size={25} min_size="6em">
                     <SimpleContent name="Program Properties" >
                         <FormLayout>
                             <InputField inline name='name' placeholder={selected_program.name} onKeyDown={handle_name_change} label="Name"/>
@@ -152,7 +143,7 @@ let ProgramsManager = (props: ProgramsManagerProps) =>{
                         </FormLayout>
                     </SimpleContent>
                 </UIPanel>
-                <UIPanel style={{flexGrow:1}} key="program_source" level="level_2">
+                <UIPanel id="source" key="program_source" level="level_2" default_size={75} min_size="8em">
                     <TabbedContent names={["Souce Code", "Build Settings", "Headers"]} onSelect={set_selectedTab} selected={selectedTab}>
                         <div key="program_editor">
                             <ProgramsEditor
@@ -175,13 +166,14 @@ let ProgramsManager = (props: ProgramsManagerProps) =>{
                         </div>
                     </TabbedContent>
                 </UIPanel>
-            </div>
-            <div style={{minWidth:"300px"}}>
+            </SplitGroup>
+            </MainPane>
+            <SidebarPane>
                 <ProgramSidebar
                     on_select={handle_select}
                 />
-            </div>
-        </div>
+            </SidebarPane>
+        </SplitGroup>
     );
 
 };

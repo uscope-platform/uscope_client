@@ -22,6 +22,7 @@ import {
     SimpleContent,
     UIPanel
 } from "#UI/index.js"
+import {MainPane, SidebarPane, SplitGroup} from "#UI/index.js";
 import {up_script} from "#client_core/index.js";
 import ScriptsEditor from "./ScriptsEditor.js";
 import ScriptSidebar from "./ScriptSidebar.js";
@@ -49,18 +50,10 @@ let ScriptManager = (props: ScriptManagerProps) =>{
     }
 
     return(
-        <div style={{
-            display: "flex",
-            flexDirection: "row",
-            gap:10
-        }}>
-            <div style={{
-                display: "flex",
-                flexDirection: "column",
-                flexGrow:1,
-                gap: 10
-            }}>
-                <UIPanel key="script_properties" level="level_2">
+        <SplitGroup id="scripts" orientation="horizontal">
+            <MainPane>
+            <SplitGroup id="scripts_main" orientation="vertical">
+                <UIPanel id="properties" key="script_properties" level="level_2" default_size={20} min_size="6em">
                     <SimpleContent name="Script Properties">
                         <FormLayout>
                             <InputField inline name='name' placeholder={selected_script.name}
@@ -69,16 +62,19 @@ let ScriptManager = (props: ScriptManagerProps) =>{
                     </SimpleContent>
                 </UIPanel>
 
-                <UIPanel key="script_source" level="level_2">
+                <UIPanel id="source" key="script_source" level="level_2" default_size={80} min_size="8em">
                     <SimpleContent name="Script Source Code">
                         <ScriptsEditor script={selected_script}/>
                     </SimpleContent>
                 </UIPanel>
-            </div>
-            <ScriptSidebar
-                on_select={handle_select}
-            />
-        </div>
+            </SplitGroup>
+            </MainPane>
+            <SidebarPane>
+                <ScriptSidebar
+                    on_select={handle_select}
+                />
+            </SidebarPane>
+        </SplitGroup>
 
     );
 

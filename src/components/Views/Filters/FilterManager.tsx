@@ -19,6 +19,7 @@ import {
     SimpleContent,
     UIPanel
 } from "#UI/index.js";
+import {MainPane, SidebarPane, SplitGroup} from "#UI/index.js";
 
 import FilterPlot from "./FilterPlot.jsx";
 import FilterDesignerControls from "./FilterDesignerControls.js";
@@ -106,32 +107,20 @@ let FilterManager = (props: FilterManagerProps) =>{
     }
 
     return (
-        <div style={{
-            display: "flex",
-            flexDirection:"row",
-            gap:10,
-            height: "100%"
-        }}>
-            <div style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 10,
-                flexGrow:1,
-                height: "100%"
-            }}>
+        <SplitGroup id="filters" orientation="horizontal">
+            <MainPane>
                 {!has_selection ? (
-                    <UIPanel key="no_filter" level="level_2" style={{flexGrow: 1}}>
-                        <SimpleContent name="Filter">
-                            <div style={{margin: "1em", opacity: 0.6}}>Select a filter or add a new one</div>
-                        </SimpleContent>
-                    </UIPanel>
-                ) : (<>
-                    <div style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        gap: 10
-                    }}>
-                        <UIPanel key="filter_designer_plot" level="level_2" style={{flexGrow: 1}}>
+                    <SplitGroup id="filter_none" orientation="vertical">
+                        <UIPanel id="filter" key="no_filter" level="level_2">
+                            <SimpleContent name="Filter">
+                                <div style={{margin: "1em", opacity: 0.6}}>Select a filter or add a new one</div>
+                            </SimpleContent>
+                        </UIPanel>
+                    </SplitGroup>
+                ) : (
+                    <SplitGroup id="filter_main" orientation="vertical">
+                    <SplitGroup id="filter_top" orientation="horizontal" default_size={50} min_size="8em">
+                        <UIPanel id="viewer" key="filter_designer_plot" level="level_2" default_size={50} min_size="10em">
                             <SimpleContent name="Filter Viewer">
                                 <FilterPlot
                                     keepout_shapes={keepout_shapes}
@@ -140,8 +129,7 @@ let FilterManager = (props: FilterManagerProps) =>{
                                 />
                             </SimpleContent>
                         </UIPanel>
-                        <UIPanel key="filter_designer_controls" style={{flexGrow: 1}}
-                                 level="level_2">
+                        <UIPanel id="design" key="filter_designer_controls" level="level_2" default_size={50} min_size="10em">
                             <SimpleContent name="Design Parameters">
                                 <div>
                                     <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
@@ -160,9 +148,8 @@ let FilterManager = (props: FilterManagerProps) =>{
                                 </div>
                             </SimpleContent>
                         </UIPanel>
-                    </div>
-                    <UIPanel key="filter_implementation_controls" style={{flexGrow: 1}}
-                             level="level_2">
+                    </SplitGroup>
+                    <UIPanel id="implementation" key="filter_implementation_controls" level="level_2" default_size={50} min_size="8em">
                         <SimpleContent name="Implementation Parameters">
                             <div>
                                 <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
@@ -179,15 +166,13 @@ let FilterManager = (props: FilterManagerProps) =>{
                             </div>
                         </SimpleContent>
                     </UIPanel>
-                </>)}
-            </div>
-            <div style={{
-                minWidth:"300px",
-                height: "100%"
-            }}>
+                    </SplitGroup>
+                )}
+            </MainPane>
+            <SidebarPane>
                 <FilterSidebar on_select={handle_select}/>
-            </div>
-        </div>
+            </SidebarPane>
+        </SplitGroup>
     );
 
 
