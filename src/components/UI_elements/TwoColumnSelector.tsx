@@ -41,6 +41,9 @@ export let  TwoColumnSelector = (props: TwoColumnSelectorProps) =>{
         let sel = Object.keys(props.data).filter((s)=>{
             return props.data[s][props.display_field] === available_highlight;
         })[0];
+        if(sel === undefined) return;
+        // the item moves to the other list, the highlight would point at nothing
+        set_available_highlight("");
         props.onSelect(sel);
     }
 
@@ -48,7 +51,9 @@ export let  TwoColumnSelector = (props: TwoColumnSelectorProps) =>{
         let sel = Object.keys(props.data).filter((s)=>{
             return props.data[s][props.display_field] === selected_highlight;
         })[0];
-      props.onDeselect(sel);
+        if(sel === undefined) return;
+        set_selected_highlight("");
+        props.onDeselect(sel);
     }
 
     return(
@@ -68,7 +73,7 @@ export let  TwoColumnSelector = (props: TwoColumnSelectorProps) =>{
                     <SelectableList
                         items={props.available_items}
                         selected_item={available_highlight}
-                        onSelect={set_available_highlight}
+                        onSelect={(name: string) => {set_available_highlight(name); set_selected_highlight("");}}
                     />
                 </SimpleContent>
             </UIPanel>
@@ -91,7 +96,7 @@ export let  TwoColumnSelector = (props: TwoColumnSelectorProps) =>{
                 }}
             >
                 <SimpleContent name={"Selected " + props.itemType}>
-                    <SelectableList items={props.selected_items} selected_item={selected_highlight} onSelect={set_selected_highlight} />
+                    <SelectableList items={props.selected_items} selected_item={selected_highlight} onSelect={(name: string) => {set_selected_highlight(name); set_available_highlight("");}} />
                 </SimpleContent>
             </UIPanel>
         </div>
