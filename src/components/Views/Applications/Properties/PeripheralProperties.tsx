@@ -140,7 +140,6 @@ export let  PeripheralProperties = (props: PeripheralPropertiesProps) =>{
                     options={peripherals_list}
                 />
                 <InputField id="base_address" name='base_address' defaultValue={props.peripheral.base_address} onKeyDown={handleonKeyDown} label="Base Address"/>
-                <InputField id="type" name='type' defaultValue={props.peripheral.type} onKeyDown={handleonKeyDown} label="Type"/>
 
                 <div style={{gridColumn: "1 / -1"}}>
                     <Checkbox name='proxied' value={props.peripheral.proxied} onChange={handleChange} label="Proxied Peripheral"/>

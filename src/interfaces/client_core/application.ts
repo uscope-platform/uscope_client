@@ -96,7 +96,6 @@ export interface peripheral_instance {
     proxied: boolean,
     proxy_type: string,
     proxy_address:string,
-    type: string,
     spec_id: string
 }
 

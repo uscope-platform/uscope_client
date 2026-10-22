@@ -403,7 +403,6 @@ export class up_application {
             proxied: false,
             proxy_address: "0",
             proxy_type: "",
-            type: 'Registers',
             spec_id: ""
         };
         let edit = {application:this.id, item:p, action:"add", object:"peripheral"};
