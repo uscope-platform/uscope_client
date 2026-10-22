@@ -29,7 +29,7 @@ export const UIPanel = styled<"div", UIPanelProps>("div")(({ level}) => `
   display: flex;
   flex-direction: column;
   background: ${ColorTheme.background[level]};
-  border-color: #434343;
+  border-color: ${ColorTheme.background.borders};
   border-width: 2px;
   border-style:solid;
 `);

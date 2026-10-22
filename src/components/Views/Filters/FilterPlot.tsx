@@ -13,6 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import {activePalette} from "#UI/themes.js";
 import React, {useEffect, useState} from 'react';
 
 
@@ -46,25 +47,25 @@ let  FilterPlot = (props: FilterPlotProps) =>{
         height:400,
         data_revision:data_rev,
         paper_bgcolor: "rgba(0,0,0,0)",
-        plot_bgcolor:"#444",
+        plot_bgcolor: activePalette.plot_background,
         font: {
-            color: '#FFFFFF'
+            color: activePalette.plot_foreground
         },
         xaxis: {
             showline: true,
             showgrid: true,
-            tickcolor: '#FFFFFF',
-            linecolor: '#FFFFFF',
-            gridcolor: '#777777',
+            tickcolor: activePalette.plot_foreground,
+            linecolor: activePalette.plot_foreground,
+            gridcolor: activePalette.plot_grid,
             range:[0, props.f_sample]
         },
         yaxis: {
             automargin: true,
             showline: true,
             showgrid: true,
-            tickcolor: '#FFFFFF',
-            linecolor: '#FFFFFF',
-            gridcolor: '#777777',
+            tickcolor: activePalette.plot_foreground,
+            linecolor: activePalette.plot_foreground,
+            gridcolor: activePalette.plot_grid,
             range:[-90,10]
         },
         shapes: []

@@ -23,6 +23,9 @@ import {BrowserRouter} from "react-router-dom";
 import {setup} from "goober";
 
 import {persistStore} from "redux-persist";
+import {applyTheme} from "#UI/themes.js";
+
+applyTheme();
 
 
 

@@ -41,12 +41,12 @@ export let  DeleteButton = (props: NamedDeleteButton | UnnamedDeleteButton) =>{
             set_color(ColorTheme.disabled_icon_color);
             set_confirm_needed(false);
         } else if(props.enable){
-            set_color("white");
+            set_color(ColorTheme.icons_color);
             set_confirm_needed(false);
         }
     }, [props.enable]);
 
-    let [color, set_color] = useState("white");
+    let [color, set_color] = useState(ColorTheme.icons_color);
     let [confirm_needed, set_confirm_needed] = useState(false);
 
 
@@ -57,7 +57,7 @@ export let  DeleteButton = (props: NamedDeleteButton | UnnamedDeleteButton) =>{
             set_confirm_needed(true);
             setTimeout(() => {
                 set_confirm_needed(false);
-                set_color("white");
+                set_color(ColorTheme.icons_color);
             }, 1500);
         } else{
             if(props.onRemove){

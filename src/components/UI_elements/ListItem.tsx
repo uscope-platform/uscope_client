@@ -15,6 +15,7 @@
 
 import {styled} from 'goober';
 import React, {useState} from "react";
+import {ColorTheme} from "./ColorTheme.js";
 import {MdDelete} from "react-icons/md";
 
 
@@ -34,7 +35,7 @@ interface ListItemProps {
 
 export let  ListItem = (props: ListItemProps) =>{
 
-    let [color, set_color] = useState("white");
+    let [color, set_color] = useState(ColorTheme.icons_color);
     let [confirm_needed, set_confirm_needed] = useState(false);
 
 
@@ -44,7 +45,7 @@ export let  ListItem = (props: ListItemProps) =>{
             set_confirm_needed(true);
             setTimeout(() => {
                 set_confirm_needed(false);
-                set_color("white");
+                set_color(ColorTheme.icons_color);
             }, 1500);
         } else{
             props.onRemove({type:props.type, name:props.name});

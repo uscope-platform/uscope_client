@@ -47,7 +47,7 @@ const Overlay = styled('div')`
 `;
 
 const Dialog = styled('div')`
-  background: #1e1e1e;
+  background: ${ColorTheme.background.select_background};
   border: 1px solid ${ColorTheme.background.borders};
   border-radius: 8px;
   color: ${ColorTheme.text};

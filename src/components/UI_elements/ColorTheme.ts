@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import {activePalette, cssVar} from "./themes.js";
+
 export const ColorTheme = {
     global: {
         colors: {
@@ -29,30 +31,23 @@ export const ColorTheme = {
         extend: undefined,
     },
     background:{
-        level_1: "#121212",
-        level_2: "rgba(255,255,255,0.07)",
-        level_3: "rgba(255,255,255,0.08)",
-        level_4: "rgba(255,255,255,0.11)",
-        level_5: "rgba(255,255,255,0.11)",
-        accents: "rgba(255,181,69,1)",
-        transparent_accents: "rgba(255,181,69,0.7)",
-        select_background:"#444444",
-        borders: "#434343",
-        bordersLight: "#636363"
+        level_1: cssVar("level_1"),
+        level_2: cssVar("level_2"),
+        level_3: cssVar("level_3"),
+        level_4: cssVar("level_4"),
+        level_5: cssVar("level_5"),
+        accents: cssVar("accents"),
+        transparent_accents: cssVar("transparent_accents"),
+        select_background:cssVar("select_background"),
+        borders: cssVar("borders"),
+        bordersLight: cssVar("bordersLight")
     },
-    text: "rgba(255, 255, 255, 0.87)",
-    icons_color: "rgba(255, 255, 255, 0.87)",
-    disabled_icon_color: "rgba(140, 140, 140, 0.87)",
-    inactive_icons_color: "rgba(255, 255, 255, 0.27)",
+    text: cssVar("text"),
+    icons_color: cssVar("icons_color"),
+    disabled_icon_color: cssVar("disabled_icon_color"),
+    inactive_icons_color: cssVar("inactive_icons_color"),
     icons_size: "2em",
-    plot_palette:[
-        "rgb(161, 201,244)",
-        "rgb(141, 229,161)",
-        "rgb(255, 159,155)",
-        "rgb(208, 187,255)",
-        "rgb(255, 254,163)",
-        "rgb(185, 242,240)",
-    ],
+    plot_palette: activePalette.plot_palette,
     scope_status:{
         "unknown":"rgb(255,0,0)",
         "run":"rgb(122, 255, 160)",

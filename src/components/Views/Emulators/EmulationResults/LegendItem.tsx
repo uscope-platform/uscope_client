@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import React from 'react';
+import {ColorTheme} from "#UI/ColorTheme.js";
 
 interface LegendItemProps {
     size?: number;
@@ -38,7 +39,7 @@ let LegendItem = function (props: LegendItemProps) {
                     backgroundColor: color,
                     marginRight: '8px',
                     borderRadius: '2px',
-                    border: '1px solid #ddd'
+                    border: '1px solid ' + ColorTheme.background.bordersLight
                 }}
             />
             <span style={{ fontSize: '18px', fontWeight:'bold' }}>{props.label}</span>

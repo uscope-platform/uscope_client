@@ -12,6 +12,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import {activePalette} from "./themes.js";
+
 
 export const PlotConfigurations = {
     layout: {
@@ -25,24 +27,24 @@ export const PlotConfigurations = {
         width: 1024,
         height:330,
         paper_bgcolor: "rgba(0,0,0,0)",
-        plot_bgcolor:"#444",
+        plot_bgcolor: activePalette.plot_background,
         font: {
-            color: '#FFFFFF'
+            color: activePalette.plot_foreground
         },
         xaxis: {
             showline: true,
             showgrid: true,
-            tickcolor: '#FFFFFF',
-            linecolor: '#FFFFFF',
-            gridcolor: '#777777'
+            tickcolor: activePalette.plot_foreground,
+            linecolor: activePalette.plot_foreground,
+            gridcolor: activePalette.plot_grid
         },
         yaxis: {
             automargin: true,
             showline: true,
             showgrid: true,
-            tickcolor: '#FFFFFF',
-            linecolor: '#FFFFFF',
-            gridcolor: '#777777'
+            tickcolor: activePalette.plot_foreground,
+            linecolor: activePalette.plot_foreground,
+            gridcolor: activePalette.plot_grid
         }
     },
     configs: {

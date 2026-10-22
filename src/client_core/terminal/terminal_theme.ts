@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import type {ITerminalOptions} from "xterm";
+import {activePalette} from "#UI/themes.js";
 import {xterm_colors as c} from "./terminal_colors.js";
 
 /// How the terminal looks. The background is also the one of the container of the terminal (Terminal.tsx)
@@ -25,31 +26,9 @@ export const terminal_options: ITerminalOptions = {
     cursorStyle: "bar",
     cursorWidth: 2,
     scrollback: 5000,
-    theme: {
-        background: "#0c0c0c",
-        foreground: "#e6e6e6",
-        cursor: "#ffb545",
-        cursorAccent: "#0c0c0c",
-        selectionBackground: "rgba(255,181,69,0.3)",
-        // the default dark blue is hard to read on a dark background
-        black: "#1e1e1e",
-        red: "#ff6b6b",
-        green: "#7ee787",
-        yellow: "#f5d76e",
-        blue: "#6cb6ff",
-        magenta: "#d2a8ff",
-        cyan: "#56d4dd",
-        white: "#e6e6e6",
-        brightBlack: "#6e7681",
-        brightRed: "#ff8e8e",
-        brightGreen: "#9ef0a6",
-        brightYellow: "#ffe58f",
-        brightBlue: "#9ccbff",
-        brightMagenta: "#e2c5ff",
-        brightCyan: "#86e8ef",
-        brightWhite: "#ffffff"
-    }
+    theme: activePalette.terminal
 };
+
 
 export const prompt = c.brightGreen + "uscope" + c.reset + c.dim + "$" + c.reset + " ";
 // the width of the prompt on the screen, without the escape sequences
