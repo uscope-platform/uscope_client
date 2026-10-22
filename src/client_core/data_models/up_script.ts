@@ -35,7 +35,6 @@ export class up_script {
     public name: string;
     public id: number;
     public content: string;
-    public triggers: string;
 
     constructor(script_obj: script) {
         if(!script_obj)
@@ -43,15 +42,13 @@ export class up_script {
         this.id = script_obj.id;
         this.name = script_obj.name;
         this.content = script_obj.content;
-        this.triggers = script_obj.triggers;
     }
 
     static get_empty_script = () :up_script => {
         return new up_script({
             name: "",
             id: 9999,
-            content: "",
-            triggers: ""
+            content: ""
         })
     }
 
@@ -59,8 +56,7 @@ export class up_script {
         return {
             id: old_script.id,
             name: old_script.name,
-            content: old_script.content,
-            triggers: old_script.triggers,
+            content: old_script.content
         };
     }
 
@@ -72,7 +68,7 @@ export class up_script {
     }
 
     static construct_empty(script_id: number): up_script {
-        let script_obj = {id:script_id, name:'new script_'+script_id,content:default_script_content, triggers:''};
+        let script_obj = {id:script_id, name:'new script_'+script_id,content:default_script_content};
         return new up_script(script_obj);
     }
 
@@ -92,8 +88,7 @@ export class up_script {
         return {
                 id: this.id,
                 name: this.name,
-                content: this.content,
-                triggers: this.triggers
+                content: this.content
             };
     }
 

@@ -19,10 +19,7 @@
 export interface script {
     id:number,
     name:string,
-    content:string,
-    // only used to resolve the scripts the older applications reference by this string, the macros and the
-    // parameters now reference the script by its id
-    triggers:string
+    content:string
 }
 
 export interface script_edit {

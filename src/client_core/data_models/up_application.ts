@@ -30,16 +30,8 @@ import type {
     channel_group, soft_core, filter, peripheral_instance, group_channel_token
 } from "#interfaces/index.js";
 
-/// The script a macro or a parameter runs. The older applications reference it by the string in the `triggers` of
-/// the script
-const resolve_trigger = (trigger: unknown): number | null => {
-    if(typeof trigger === "number") return trigger;
-    if(typeof trigger === "string" && trigger !== ""){
-        const script = Object.values(store.getState().scripts).find(s => s.triggers === trigger);
-        if(script !== undefined) return script.id;
-    }
-    return null;
-};
+/// The script a macro or a parameter runs, by its id. Anything else (the string of the older versions) is no script
+const resolve_trigger = (trigger: unknown): number | null => typeof trigger === "number" ? trigger : null;
 
 export const empty_channel_group: channel_group = {
     group_name: "",
