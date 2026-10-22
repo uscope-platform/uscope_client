@@ -17,7 +17,7 @@ import React, {useState} from 'react';
 
 import FcoreEmulationEditor from "./../Editor/FcoreEmulationEditor.js";
 import HilEditorSidebar from "../Sidebar/per_panel_sidebars/HilEditorSidebar.jsx";
-import {Pane, SplitGroup} from "#UI/index.js";
+import {MainPane, SidebarPane, SplitGroup} from "#UI/index.js";
 import {up_emulator, up_emulator_result} from "#client_core/index.js";
 import type {EmulatorSelections} from "#interfaces/index.js";
 
@@ -39,7 +39,7 @@ let HilEditorView = function (props: HilEditorViewProps) {
 
     return(
         <SplitGroup id="hil_editor" orientation="horizontal">
-            <Pane id="editor" default_size={72} min_size={30}>
+            <MainPane>
                 <FcoreEmulationEditor
                     onEmulationDone={props.set_emulation_results}
                     onInputDataChange={props.set_input_data}
@@ -49,8 +49,8 @@ let HilEditorView = function (props: HilEditorViewProps) {
                     selections={props.selections}
                     on_selection={props.set_selections}
                 />
-            </Pane>
-            <Pane id="sidebar" default_size={28} min_size="13em" max_size={60}>
+            </MainPane>
+            <SidebarPane>
                 <HilEditorSidebar
                     bump_version={props.bump_version}
                     emulator={props.emulator}
@@ -59,7 +59,7 @@ let HilEditorView = function (props: HilEditorViewProps) {
                     set_selections={props.set_selections}
                     compile_warning={compiler_warnings}
                 />
-            </Pane>
+            </SidebarPane>
         </SplitGroup>
     );
 };

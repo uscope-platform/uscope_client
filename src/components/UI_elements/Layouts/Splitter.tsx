@@ -83,6 +83,15 @@ export const Pane = (props: PaneProps & HTMLAttributes<HTMLDivElement>) => {
     );
 };
 
+/// The sizes the views give to the area they show and to their sidebar
+export const MainPane = (props: {children: ReactNode}) => (
+    <Pane id="main" default_size={72} min_size={30}>{props.children}</Pane>
+);
+
+export const SidebarPane = (props: {children: ReactNode}) => (
+    <Pane id="sidebar" default_size={28} min_size="13em" max_size={60}>{props.children}</Pane>
+);
+
 interface SplitGroupProps extends PaneProps {
     /// names the group in the storage, so it has to be different for every group of the app
     id: string;

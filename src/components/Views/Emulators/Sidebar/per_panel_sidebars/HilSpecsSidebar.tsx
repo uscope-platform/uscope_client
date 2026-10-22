@@ -34,7 +34,6 @@ let  HilSpecsSidebar = (props: HilSpecsSidebarProps) =>{
             display:"flex",
             flexDirection:"column",
             gap:"0.5em",
-            minWidth:"25em",
             paddingTop:"10px",
             paddingBottom:"10px",
             paddingRight:"10px"

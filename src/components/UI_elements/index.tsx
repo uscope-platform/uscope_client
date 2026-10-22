@@ -46,7 +46,7 @@ export {InterfaceParameters} from "./InterfaceParameters.js"
 
 export {FormLayout} from "./Layouts/FormLayout.js"
 export {SidebarColumn} from "./Layouts/SidebarColumn.js"
-export {SplitGroup, Pane} from "./Layouts/Splitter.js"
+export {SplitGroup, Pane, MainPane, SidebarPane} from "./Layouts/Splitter.js"
 export {FieldGrid, FieldPane, FieldSpan} from "./Layouts/FieldGrid.js"
 export {SidebarCollapsableNameLayout} from "./Layouts/SidebarCollapsableNameLayout.js"
 export {SidebarCollapsableContentLayout} from "./Layouts/SidebarCollapsableContentLayout.js"

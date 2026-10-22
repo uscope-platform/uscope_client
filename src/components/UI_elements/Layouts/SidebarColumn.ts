@@ -22,7 +22,6 @@ export const SidebarColumn = styled('div')`
   display: flex;
   flex-direction: column;
   gap: 0.5em;
-  min-width: 25em;
   overflow-y: auto;
   & > * {
     flex-shrink: 0;
