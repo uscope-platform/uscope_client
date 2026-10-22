@@ -37,6 +37,8 @@ let script_workspace = {};
 export const initialize_scripting_engine = (application: up_application | null , peripherals: PeripheralsState) =>{
     //TODO: This call is kind of redundant, this work should be done in the data_model
     if(application === null) return;
+    // the peripherals of the application chosen before must not stay
+    for(const key of Object.keys(scripting_engine_peripherals)) delete scripting_engine_peripherals[key];
     let applications_peripherals = application.peripherals;
     set_write_callback(register_write_callback);
     for (const p of applications_peripherals) {

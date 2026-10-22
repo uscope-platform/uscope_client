@@ -23,9 +23,10 @@ import store from "../../store.js";
 import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy/backend.js";
 import {api_dictionary} from "../proxy/api_dictionary.js";
 import {addApplication, removeApplication, updateApplication} from "#redux/index.js";
+import {initialize_scripting_engine, run_script} from "../scripting/script_runner.js";
 import {set_scope_address, set_scope_dma_disable} from "../proxy/plot.js";
 import type {
-    application, initial_register_value, clock_frequencies, channel, macro, parameter,
+    application, clock_frequencies, channel, macro, parameter,
     channel_group, soft_core, filter, peripheral_instance, group_channel_token
 } from "#interfaces/index.js";
 
@@ -55,7 +56,8 @@ export class up_application {
     public bitstream: string;
     public channels: channel[];
     public channel_groups: channel_group[];
-    public initial_registers_values:initial_register_value[];
+    // the script run when the application is loaded, by its id
+    public init_script: number | null;
     public macro: macro[];
     public parameters: parameter[];
     public peripherals: peripheral_instance[];
@@ -75,7 +77,7 @@ export class up_application {
         this.channel_groups = app_data_obj.channel_groups;
         this.pl_clocks = app_data_obj.pl_clocks;
         this.clock_frequency = app_data_obj.clock_frequency;
-        this.initial_registers_values = app_data_obj.initial_registers_values;
+        this.init_script = app_data_obj.init_script ?? null;
         this.macro = app_data_obj.macro.map(m => ({...m, trigger: resolve_trigger(m.trigger)}));
         this.parameters = app_data_obj.parameters.map(par => ({...par, trigger: resolve_trigger(par.trigger)}));
         this.peripherals = app_data_obj.peripherals;
@@ -99,7 +101,7 @@ export class up_application {
                 "2":100e6,
                 "3":100e6
             },
-            initial_registers_values:[],
+            init_script:null,
             macro:[],
             parameters:[],
             clock_frequency: 100e6,
@@ -122,7 +124,7 @@ export class up_application {
             channels:JSON.parse(JSON.stringify(this.channels)),
             channel_groups:JSON.parse(JSON.stringify(this.channel_groups)),
             pl_clocks:JSON.parse(JSON.stringify(this.pl_clocks)),
-            initial_registers_values:JSON.parse(JSON.stringify(this.initial_registers_values)),
+            init_script:this.init_script,
             macro:JSON.parse(JSON.stringify(this.macro)),
             parameters:JSON.parse(JSON.stringify(this.parameters)),
             peripherals: JSON.parse(JSON.stringify(this.peripherals)),
@@ -144,7 +146,7 @@ export class up_application {
             channels:JSON.parse(JSON.stringify(old_app.channels)),
             channel_groups:JSON.parse(JSON.stringify(old_app.channel_groups)),
             pl_clocks:JSON.parse(JSON.stringify(old_app.pl_clocks)),
-            initial_registers_values:  JSON.parse(JSON.stringify(old_app.initial_registers_values)),
+            init_script:old_app.init_script,
             macro:JSON.parse(JSON.stringify(old_app.macro)),
             parameters:JSON.parse(JSON.stringify(old_app.parameters)),
             peripherals:JSON.parse(JSON.stringify(old_app.peripherals)),
@@ -180,7 +182,7 @@ export class up_application {
         for(let i in this.pl_clocks){
             await this.set_global_clock_frequency(parseInt(i), this.pl_clocks[i]);
         }
-        await this.load_irv();
+        await this.run_init_script();
         await this.setup_scope();
         return this.load_soft_cores();
     }
@@ -205,13 +207,16 @@ export class up_application {
         return map;
     }
 
-    load_irv = () =>{
-        let writes = [];
-        for(let i of this.initial_registers_values){
-            writes.push({type:"direct", access_type:"full_reg", proxy_type:"", proxy_address:0, address:i.address, value:i.value})
+    /// Runs the init script, at the point where the application is loaded on the hardware (the clocks are set, the scope
+    /// and the cores are not): the writes of the script are sent in one batch
+    run_init_script = async () =>{
+        if(this.init_script === null) return;
+        // the engine is initialized for the application chosen once this is done, the script needs it now
+        initialize_scripting_engine(this, store.getState().peripherals);
+        const writes = run_script(this.init_script, this.get_parameters_map(), "", null);
+        if(writes.length !== 0){
+            await up_peripheral.bulk_register_write(writes);
         }
-
-        return backend_post(api_dictionary.operations.write_registers,writes)
     }
 
     load_soft_cores = async () =>{
@@ -364,17 +369,6 @@ export class up_application {
         };
         this.channel_groups.push(chg);
         let edit = {application:this.id, item:chg, action:"add", object:"channel_group"};
-        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
-    }
-
-    add_irv = async (irv_address: number) =>{
-        let irv: initial_register_value = {
-            address:irv_address,
-            value:0
-        }
-        this.initial_registers_values.push(irv);
-        let edit = {application:this.id, item:irv, action:"add", object:"irv"};
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
@@ -540,20 +534,17 @@ export class up_application {
         }
     }
 
-    edit_irv = async (address: number,field_name: string, field_value:any) =>{
-        let [irv] = this.initial_registers_values.filter((i) =>{
-            return i.address === address;
-        });
-        (irv as any)[field_name] = field_value;
+    set_init_script = async (script_id: number | null) =>{
+        this.init_script = script_id;
         let edit = {
             application:this.id,
             item:{
-                item_id:address,
-                field:field_name,
-                value:field_value
+                name:"init_script",
+                value:script_id,
+                edit_name:false
             },
             action:"edit",
-            object:"irv"
+            object:"misc"
         };
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
@@ -742,22 +733,6 @@ export class up_application {
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
-    remove_irv = async (address: number) =>{
-        let idx  = this.initial_registers_values.findIndex((i) =>{
-            return i.address === address;
-        })
-        if(idx >= 0) this.initial_registers_values.splice(idx,1);
-
-        let edit = {
-            application:this.id,
-            item:address,
-            action:"remove",
-            object:"irv"
-        };
-        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
-        store.dispatch(updateApplication(this.deep_copy()));
-    }
-
     remove_macro = async (macro_name: string) => {
         let idx  = this.macro.findIndex(m=>{
             return m.name === macro_name;
@@ -895,7 +870,7 @@ export class up_application {
             channels:this.channels,
             channel_groups:this.channel_groups,
             pl_clocks:this.pl_clocks,
-            initial_registers_values:this.initial_registers_values,
+            init_script:this.init_script,
             macro:this.macro,
             parameters:this.parameters,
             peripherals:this.peripherals,

@@ -81,14 +81,12 @@ const diff_record = (name: string, old_rec: Record<string, any> | undefined, new
     return prefix(diff_properties(old_rec ?? {}, new_rec ?? {}, []));
 };
 
-const hex = (n: number) => "0x" + n.toString(16).toUpperCase();
-
 /// What changes in an application when old_app is replaced by new_app. The id is not compared, as the replacement
 /// takes the id of the old one
 export const diff_applications = (old_app: application, new_app: application, context: application_diff_context = {}): diff_report => {
     const properties = [
         ...diff_properties(old_app, new_app, [
-            "id", "channels", "channel_groups", "initial_registers_values", "macro", "parameters", "peripherals",
+            "id", "channels", "channel_groups", "macro", "parameters", "peripherals",
             "soft_cores", "filters", "programs", "scripts", "miscellaneous", "pl_clocks",
             // not stored, the clocks are in pl_clocks
             "clock_frequency"
@@ -113,10 +111,6 @@ export const diff_applications = (old_app: application, new_app: application, co
         {
             title: "Parameters",
             entries: diff_keyed_list(old_app.parameters, new_app.parameters, p => p.parameter_id, p => p.parameter_name || p.parameter_id, ["parameter_id"])
-        },
-        {
-            title: "Initial register values",
-            entries: diff_keyed_list(old_app.initial_registers_values, new_app.initial_registers_values, v => String(v.address), v => "Register " + hex(v.address), ["address"])
         },
         {
             title: "Macros",

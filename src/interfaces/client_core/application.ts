@@ -25,7 +25,8 @@ export interface application {
     bitstream:string,
     channels:channel[],
     channel_groups:channel_group[],
-    initial_registers_values:initial_register_value[],
+    // the script run when the application is loaded, by its id
+    init_script:number | null,
     macro:macro[],
     parameters:parameter[],
     peripherals:peripheral_instance[],
@@ -119,12 +120,6 @@ export interface clock_frequencies{
     "2":number,
     "3":number
 }
-
-export interface initial_register_value{
-    address:number,
-    value:number
-}
-
 export interface core_load_info{
     id: string,
     address: number

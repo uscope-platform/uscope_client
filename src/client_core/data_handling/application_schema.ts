@@ -46,10 +46,9 @@ export let application_schema = {
       "additionalProperties": false,
       "minProperties": 4
     },
-    "initial_registers_values": {
-      "description": "array of objects that specify values to be written to specific registers upon FPGA loading",
-      "type": "array",
-      "items": {}
+    "init_script": {
+      "description": "The script run when the application is loaded on the hardware, by its id (null when there is none). It replaces the initial register values, which the files of the older versions still have and which are ignored",
+      "anyOf": [{"type": "integer"}, {"type": "null"}]
     },
     "macro": {
       "description": "Array of user defined macros",
@@ -159,7 +158,6 @@ export let application_schema = {
     "bitstream",
     "channel_groups",
     "channels",
-    "initial_registers_values",
     "macro",
     "parameters",
     "peripherals"

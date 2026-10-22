@@ -19,7 +19,6 @@ import React, {useContext, useEffect, useReducer, useState} from 'react';
 import {
     PlotChannelProperties,
     PlotChannelGroupProperties,
-    InitialRegisterValue,
     MacroProperties,
     ParameterProperties,
     PeripheralProperties,
@@ -39,6 +38,7 @@ import {
 import {get_next_id, up_application} from "#client_core/index.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
 import ApplicationSidebar from "./ApplicationSidebar.js";
+import {ScriptSelector} from "#components/Views/Applications/Properties/ScriptSelector.js";
 import {PeripheralsEditor} from "#components/Views/Applications/PeripheralsEditor.js";
 import {ChannelGroupsEditor, ChannelsEditor, ParametersEditor} from "#components/Views/Applications/ChannelsEditor.js";
 import {MdAdd} from "react-icons/md";
@@ -131,9 +131,6 @@ let  ApplicationsManager = (props: ApplicationsManagerProps) =>{
             case "channel":
                 await selected_app.add_channel(id);
                 break;
-            case "irv":
-                await selected_app.add_irv(id);
-                break;
             case"macro":
                 await selected_app.add_macro(id);
                 break;
@@ -171,11 +168,6 @@ let  ApplicationsManager = (props: ApplicationsManagerProps) =>{
     };
 
     let handle_add_new = (item_type: string, old_items: any, title_prop: string) =>{
-        if(item_type === "irv"){
-            add_content(0, item_type);
-            return;
-        }
-
         let taken: number[];
         if(item_type === "filter"){
             // the filters have a number as their id
@@ -249,7 +241,7 @@ let  ApplicationsManager = (props: ApplicationsManagerProps) =>{
                 height:"100%",
                 flexGrow:1
             }} level="level_2">
-                <TabbedContent names={["Channels", "Channel Groups","IRV", "Macro", "Parameters", "Peripherals", "Cores", "Misc", "Filters", "Scripts", "Programs"]}
+                <TabbedContent names={["Channels", "Channel Groups", "Macro", "Parameters", "Peripherals", "Cores", "Misc", "Filters", "Scripts", "Programs"]}
                                selected={selectedTab} onSelect={set_selectedTab}>
 
                     <div key="channels">
@@ -265,30 +257,6 @@ let  ApplicationsManager = (props: ApplicationsManagerProps) =>{
                             forceUpdate={forceUpdate}
                             onAdd={() => {handle_add_new("channel_group", selected_app.channel_groups, "group_name");}}
                         />
-                    </div>
-                    <div key="irvs">
-                        <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
-                            <MdAdd
-                                onClick={() => {handle_add_new("irv", selected_app.initial_registers_values, "address");}}
-                                size={ColorTheme.icons_size}
-                                style={{marginLeft: "0.3em"}}
-                                color={ColorTheme.icons_color}
-                            />
-                        </div>
-                        <CardStack>
-                            {
-                                selected_app.initial_registers_values.map((irv) => {
-                                    return (
-                                        <InitialRegisterValue
-                                            key={irv.address}
-                                            application={selected_app}
-                                            forceUpdate={forceUpdate}
-                                            irv={irv}
-                                        />
-                                    )
-                                })
-                            }
-                        </CardStack>
                     </div>
                     <div key="macros">
                         <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
@@ -396,6 +364,21 @@ let  ApplicationsManager = (props: ApplicationsManagerProps) =>{
                         </CardStack>
                     </div>
                     <div key="scripts_card">
+                        <div style={{margin: "0.5em", maxWidth: "24rem"}}>
+                            <ScriptSelector
+                                stacked
+                                label="Startup script"
+                                name="init_script"
+                                value={selected_app.init_script}
+                                onChange={async (script_id) => {
+                                    await selected_app.set_init_script(script_id);
+                                    forceUpdate();
+                                }}
+                            />
+                            <div style={{fontSize: "0.8rem", opacity: 0.6, marginTop: "0.25rem"}}>
+                                Run when the application is loaded, before the scope and the cores are set up
+                            </div>
+                        </div>
                         <TwoColumnSelector
                             itemType="Scripts"
                             data={scripts}
