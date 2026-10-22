@@ -34,7 +34,6 @@ const default_script_content = `
 export class up_script {
     public name: string;
     public id: number;
-    public path: string;
     public content: string;
     public triggers: string;
 
@@ -43,7 +42,6 @@ export class up_script {
             throw new Error("script_obj is required");
         this.id = script_obj.id;
         this.name = script_obj.name;
-        this.path = script_obj.path;
         this.content = script_obj.content;
         this.triggers = script_obj.triggers;
     }
@@ -52,7 +50,6 @@ export class up_script {
         return new up_script({
             name: "",
             id: 9999,
-            path: "",
             content: "",
             triggers: ""
         })
@@ -64,7 +61,6 @@ export class up_script {
             name: old_script.name,
             content: old_script.content,
             triggers: old_script.triggers,
-            path: old_script.path
         };
     }
 
@@ -76,7 +72,7 @@ export class up_script {
     }
 
     static construct_empty(script_id: number): up_script {
-        let script_obj = {id:script_id, name:'new script_'+script_id,path:`new script_${script_id}.js`, content:default_script_content, triggers:''};
+        let script_obj = {id:script_id, name:'new script_'+script_id,content:default_script_content, triggers:''};
         return new up_script(script_obj);
     }
 
@@ -95,7 +91,6 @@ export class up_script {
     _get_script = () =>{
         return {
                 id: this.id,
-                path: this.path,
                 name: this.name,
                 content: this.content,
                 triggers: this.triggers
