@@ -114,7 +114,7 @@ let  PlotComponent = (props: PlotComponentProps) =>{
             config={PLOT_CONFIG}
             style={PLOT_STYLE}
             useResizeHandler
-            datarevision={props.external_revision}
+            revision={props.external_revision}
             onInitialized={(_: unknown, div: HTMLElement) => { graph_div.current = div; }}
             onUpdate={(_: unknown, div: HTMLElement) => { graph_div.current = div; }}
         />
