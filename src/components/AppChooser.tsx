@@ -22,9 +22,10 @@ import {
     up_application,
 } from "#client_core/index.js"
 
-import { ToastContainer, toast } from 'react-toastify';
+import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import type {ApplicationsState} from "#interfaces/index.js";
+import {error_text} from "#client_core/proxy/errors.js";
 
 interface AppChooserProps {
     applications: ApplicationsState
@@ -48,7 +49,7 @@ let ApplicationChooser = (props: AppChooserProps) =>{
                 return;
             }
         }catch (error){
-            toast.error("Error: error while choosing application: " + error);
+            toast.error("Error: error while choosing application: " + error_text(error));
             console.log(error);
             return;
         }
@@ -57,18 +58,6 @@ let ApplicationChooser = (props: AppChooserProps) =>{
 
     return (
         <div className="App">
-            <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="dark"
-            />
             <ApplicationChooserView
                 applications={props.applications}
                 done={handleApplicationChosen}/>

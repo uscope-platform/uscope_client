@@ -15,6 +15,8 @@
 
 //       REACT IMPORTS
 import React, {useCallback, useEffect, useState} from 'react';
+import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 //      APP RELATED IMPORTS
 import AuthApp from "./AuthApp.js";
 import LoginPage from "./components/Common_Components/LoginPage.js";
@@ -24,6 +26,7 @@ import {set_address, set_auth_config, set_redux_store, need_onboarding} from "#c
 //////  STYLE IMPORTS
 import './App.css';
 import {auto_sign_in, manual_sign_in} from "./client_core/proxy/auth.js";
+import {backend_error, report_error} from "./client_core/proxy/errors.js";
 import type {AutoAuthRequest, login_token, ManualAuthRequest, UserRole} from "#interfaces/index.js";
 
 interface AppProps {
@@ -58,6 +61,17 @@ let App = (props: AppProps) =>{
     }, []);
 
 
+
+    // the failures of the server nobody handled are shown, instead of being lost in the console
+    useEffect(()=>{
+        const on_rejection = (event: PromiseRejectionEvent) =>{
+            if(!(event.reason instanceof backend_error)) return;
+            event.preventDefault();
+            report_error(event.reason);
+        };
+        window.addEventListener("unhandledrejection", on_rejection);
+        return () => window.removeEventListener("unhandledrejection", on_rejection);
+    }, []);
 
     useEffect(()=>{
         set_address(import.meta.env.VITE_APP_SERVER);
@@ -105,6 +119,19 @@ let App = (props: AppProps) =>{
                     <LoginPage done={done}/>
                 }
             </React.StrictMode>
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+                style={{whiteSpace: "pre-line"}}
+            />
         </div>
     )
 

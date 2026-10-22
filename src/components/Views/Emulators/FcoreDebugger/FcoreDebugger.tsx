@@ -22,7 +22,7 @@ import {cpp} from "@codemirror/lang-cpp";
 import MemoryViewer from "./MemoryViewer.jsx";
 import {EditorView} from "codemirror";
 import IoViewer from "./IoViewer.jsx";
-import {toast, ToastContainer} from "react-toastify";
+import {toast} from "react-toastify";
 import {up_emulator_result, up_emulator} from "#client_core/index.js";
 import TranslationTable from "../Sidebar/TranslationTable.jsx";
 import type {DebuggerCheckpoint, SingleProgramDataPackage} from "#interfaces/index.js";
@@ -95,18 +95,6 @@ let  FcoreDebugger = (props: FcoreDebuggerProps) =>{
 
     return (
         <div style={{flexGrow:1}}>
-            <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="dark"
-            />
             <DebuggerControls
                 select_types={set_visualization_type}
                 run={handle_run}

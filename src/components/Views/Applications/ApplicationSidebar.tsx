@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React, {useContext} from 'react';
-import {toast, ToastContainer} from "react-toastify";
+import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 import {
@@ -25,6 +25,7 @@ import type {application_conflict, application_import_result} from "#client_core
 import {SidebarBase} from "#UI/index.js";
 
 import {useAppSelector} from "#redux/hooks.js";
+import {error_text} from "#client_core/proxy/errors.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
 import {ImportConflictDialog} from "../../Common_Components/ImportConflictDialog.jsx";
 import {useConflictResolver} from "../../Common_Components/useConflictResolver.js";
@@ -57,7 +58,7 @@ let  ApplicationSidebar = (props: ApplicationSidebarProps) =>{
         try{
             toast.success(summarize_import(await import_application(app, conflicts.ask)));
         } catch (err){
-            const lines = Array.isArray(err) ? err.slice(0, 5).join("\n") : String(err);
+            const lines = Array.isArray(err) ? err.slice(0, 5).join("\n") : error_text(err);
             toast.error("Import failed:\n" + lines);
         }
     };
@@ -91,7 +92,6 @@ let  ApplicationSidebar = (props: ApplicationSidebarProps) =>{
                     onResolve={conflicts.resolve}
                 />
             }
-            <ToastContainer theme="dark" position="bottom-right" style={{whiteSpace: "pre-line"}}/>
         </>
     );
 

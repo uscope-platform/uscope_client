@@ -20,7 +20,7 @@ import {Tooltip} from "react-tooltip";
 import {MdSave, MdBuild} from 'react-icons/md'
 import {ColorTheme, TextEditor} from "#UI/index.js";
 
-import { ToastContainer, toast } from 'react-toastify';
+import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { up_program} from "#client_core/index.js";
 
@@ -95,18 +95,6 @@ let ProgramsEditor = (props: ProgramsEditorProps) =>{
 
     return(
         <div onKeyDown={handle_shortcuts}>
-            <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="dark"
-            />
             {constructActionsBar()}
 
             <TextEditor

@@ -15,7 +15,7 @@
 
 import React, {useContext, useEffect, useState} from 'react';
 import {useNavigate} from "react-router";
-import {ToastContainer, toast} from "react-toastify";
+import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 import EmulatorDiagram from "./EmulatorDiagram.js";
@@ -287,18 +287,6 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
                 minWidth:0,
                 flexGrow:1
             }}>
-                <ToastContainer
-                    position="top-right"
-                    autoClose={2000}
-                    hideProgressBar={false}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                    theme="dark"
-                />
                     <UIPanel key="emulator_diagram" level="level_2">
                         <SimpleContent name="Emulation_diagram" height="100%">
                             <EmulatorDiagram

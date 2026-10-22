@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React from 'react';
-import {toast, ToastContainer} from "react-toastify";
+import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 import {
@@ -25,6 +25,7 @@ import type {peripheral_conflict, peripherals_import_summary} from "#client_core
 
 import {SidebarBase} from "#UI/index.js";
 import {useAppSelector} from "#redux/hooks.js";
+import {error_text} from "#client_core/proxy/errors.js";
 import {ImportConflictDialog} from "../../Common_Components/ImportConflictDialog.jsx";
 import {useConflictResolver} from "../../Common_Components/useConflictResolver.js";
 
@@ -59,7 +60,7 @@ let  PeripheralsSidebar = (props: PeripheralsSidebarProps) =>{
             const summary = await import_peripherals(content, conflicts.ask);
             toast.success(summarize_import(summary));
         } catch (err){
-            const lines = Array.isArray(err) ? err.slice(0, 5).join("\n") : String(err);
+            const lines = Array.isArray(err) ? err.slice(0, 5).join("\n") : error_text(err);
             toast.error("Import failed:\n" + lines);
         }
     };
@@ -89,7 +90,6 @@ let  PeripheralsSidebar = (props: PeripheralsSidebarProps) =>{
                     onResolve={conflicts.resolve}
                 />
             }
-            <ToastContainer theme="dark" position="bottom-right" style={{whiteSpace: "pre-line"}}/>
         </>
     );
 };
