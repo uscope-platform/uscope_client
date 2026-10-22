@@ -762,7 +762,49 @@ export class up_emulator {
         return ret;
     }
 
+    /// What the data is, the same on both sides of a link or the core would read it wrong
+    private static describe_type = (t: {type: string, width: number, signed: boolean}) =>{
+        return t.type === "integer" ? (t.signed ? "signed " : "unsigned ") + t.width + " bit integer" : "float";
+    }
+
+    /// The links with an IO block whose endpoint and core port disagree on the type, or that are not completed
+    check_io_types = (): string[] =>{
+        const errors: string[] = [];
+        for(const c of this.connections){
+            const source_io = this.io_blocks[c.source_core];
+            const destination_io = this.io_blocks[c.destination_core];
+            if(!source_io && !destination_io) continue;
+            const io = (source_io ?? destination_io) as io_block;
+            const core = this.cores[source_io ? c.destination_core : c.source_core];
+            if(!core) continue;
+            for(const l of c.ports){
+                const endpoint_name = source_io ? l.source_port : l.destination_port;
+                const core_port_name = source_io ? l.destination_port : l.source_port;
+                const label = source_io ? io.name + "." + endpoint_name + " -> " + core.name + "." + core_port_name
+                                         : core.name + "." + core_port_name + " -> " + io.name + "." + endpoint_name;
+                const endpoint = io.ports.find((p) => p.name === endpoint_name);
+                const core_port = source_io
+                    ? [...core.inputs, ...core.memory_init.filter((m) => m.is_input)].find((p) => p.name === core_port_name)
+                    : [...core.outputs, ...core.memory_init].find((p) => p.name === core_port_name);
+                if(!endpoint || !core_port){
+                    errors.push("The link " + label + " is not completed");
+                    continue;
+                }
+                const on_bus = up_emulator.describe_type(endpoint);
+                const in_core = up_emulator.describe_type(core_port);
+                if(on_bus !== in_core){
+                    errors.push("Type mismatch in " + label + ": the bus carries a " + on_bus + ", the core uses a " + in_core);
+                }
+            }
+        }
+        return errors;
+    }
+
     build = () =>{
+        const io_errors = this.check_io_types();
+        if(io_errors.length > 0){
+            throw new Error(io_errors.join("\n"));
+        }
         let connections:server_side_port_link[]  = [];
         this.connections.map((item) => {
             // the links with an IO block are not between cores, they go out with the block

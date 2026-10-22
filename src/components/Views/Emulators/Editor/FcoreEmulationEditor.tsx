@@ -178,7 +178,15 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
         props.on_selection({...props.selections, iom:null, component:{type:"edge", obj:edge}});
     }
 
+    /// The build would throw on the same errors: they are shown here, one per line, instead
+    const io_types_ok = () =>{
+        const errors = props.emulator.check_io_types();
+        errors.forEach((e) => toast.error(e));
+        return errors.length === 0;
+    }
+
     let handle_run = async () =>{
+        if(!io_types_ok()) return;
         let results = await props.emulator.emulator_run();
         if(results.code && results.code === 7) {
         } else if(results.code && results.code === 9){
@@ -228,6 +236,7 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
     }
 
     let handle_hardware_sim = async () =>{
+        if(!io_types_ok()) return;
         let data = await props.emulator.download_hardware_sim_data();
         if(data === undefined) return;
         download_text(data.control, "control_bus.txt");
@@ -236,6 +245,7 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
     }
 
     let handle_deploy = async () =>{
+        if(!io_types_ok()) return;
         let deploy = true;
         if(application.application_name !== "HIL_base"){
             if(!window.confirm("This feature is only meant to work with the HIL_base application, do you wish to continue regardless:")){

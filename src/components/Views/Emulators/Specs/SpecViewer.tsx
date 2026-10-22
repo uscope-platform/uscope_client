@@ -25,7 +25,12 @@ interface SpecViewerProps {
 
 let SpecViewer = function (props : SpecViewerProps) {
 
-    const artifact = props.emulator.build();
+    let artifact;
+    try{
+        artifact = props.emulator.build();
+    } catch (e: any){
+        return <div style={{margin: "1em", whiteSpace: "pre-line"}}>{e instanceof Error ? e.message : String(e)}</div>;
+    }
     const artifact_string =  JSON.stringify(artifact, null, 4);
 
     let handle_download_json = ()=>{

@@ -118,6 +118,11 @@ let HilDebuggerView = function (props: HilDebuggerViewProps) {
 
     useEffect(()=>{
         if(props.emulator){
+            const io_errors = props.emulator.check_io_types();
+            if(io_errors.length > 0){
+                io_errors.forEach((e) => toast.error(e));
+                return;
+            }
             props.emulator.disassemble().then((asm)=>{
                 props.emulator.debug_init().then(()=>{
                     set_compiled_programs(asm);
