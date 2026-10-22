@@ -47,6 +47,9 @@ const ParametersLayout = styled('div')`
 
 const COLUMN_WIDTH = "10.5rem";
 
+// the proxy types the driver can write through, any other is refused by it
+const PROXY_TYPES = ["axis_constant"];
+
 interface PeripheralPropertiesProps{
     application: up_application,
     peripheral: peripheral_instance,
@@ -83,6 +86,16 @@ export let  PeripheralProperties = (props: PeripheralPropertiesProps) =>{
         if(value === null)return;
         set_selected(value)
         await props.application.edit_peripheral(props.peripheral.name,"spec_id", value.value);
+        props.forceUpdate();
+    }
+
+    // a value that is not one of the known ones (older files) is kept in the list, so that it is shown
+    const proxy_options: SimpleStringOption[] = [...PROXY_TYPES, ...(props.peripheral.proxy_type !== "" && !PROXY_TYPES.includes(props.peripheral.proxy_type) ? [props.peripheral.proxy_type] : [])]
+        .map(t => ({label: t, value: t}));
+
+    let handleProxyTypeChange = async (value: SimpleStringOption | null) =>{
+        if(value === null)return;
+        await props.application.edit_peripheral(props.peripheral.name, "proxy_type", value.value);
         props.forceUpdate();
     }
 
@@ -146,7 +159,14 @@ export let  PeripheralProperties = (props: PeripheralPropertiesProps) =>{
                 </div>
                 {props.peripheral.proxied && <>
                     <InputField id="proxy_address" name='proxy_address' defaultValue={props.peripheral.proxy_address} onKeyDown={handleonKeyDown} label="Proxy Address"/>
-                    <InputField id="proxy_type" name='proxy_type' defaultValue={props.peripheral.proxy_type} onKeyDown={handleonKeyDown} label="Proxy Type"/>
+                    <SelectField<SimpleStringOption>
+                        stacked
+                        label="Proxy Type"
+                        onChange={handleProxyTypeChange}
+                        value={{label: props.peripheral.proxy_type, value: props.peripheral.proxy_type}}
+                        name="proxy_type"
+                        options={proxy_options}
+                    />
                 </>}
 
                 {parameters.length > 0 && <>
