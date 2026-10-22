@@ -15,77 +15,70 @@
 
 import React, {useEffect, useState} from 'react';
 
-import {Button, SelectField} from "#UI/index.js"
-import {styled} from "goober";
-import type {application, SimpleNumberOption} from "#interfaces/index.js";
+import {Button, SelectableList, SimpleContent, UIPanel} from "#UI/index.js"
+import type {application} from "#interfaces/index.js";
 
-
-const ComponentLayout = styled('div')`
-display: flex;
-flex-direction: column;
-
-`
-const Centering = styled('div')`
-  margin-left: auto;
-  margin-right: auto;  
-`
 
 interface ApplicationChooserViewProps {
     applications: Record<number, application>;
     done: (application_id: number) => void;
 }
 
+const format_frequency = (hz: number | undefined) => {
+    if(!hz) return null;
+    return hz >= 1e6 ? (hz / 1e6) + " MHz" : (hz / 1e3) + " kHz";
+}
+
 
 let ApplicationChooserView = (props: ApplicationChooserViewProps) =>{
 
-    let apps_list = Object.entries(props.applications).map((application,i) => ({
-        value:parseInt(application[0]),
-        label:application[1].application_name
-    }))
+    const apps_list = Object.entries(props.applications).map(([id, app]) => ({
+        id: parseInt(id),
+        name: app.application_name,
+        description: [
+            format_frequency(app.clock_frequency),
+            (app.peripherals?.length ?? 0) + " peripherals",
+            app.bitstream
+        ].filter(Boolean).join(" · ")
+    }));
 
-    const [selected, set_selected] = useState({value:0, label:"Select an application"});
+    const [selected, set_selected] = useState<number | null>(null);
 
     useEffect(()=>{
         let last_app = localStorage.getItem("last_selected_application");
-        if(last_app){
-            let selected_app = props.applications[parseInt(last_app)];
-            if(selected_app){
-                set_selected({
-                    value:parseInt(last_app),
-                    label:selected_app.application_name
-                })
-            }
-        } else {
-            let def = apps_list[0];
-            if(def) set_selected(def);
+        if(last_app && props.applications[parseInt(last_app)]){
+            set_selected(parseInt(last_app));
+        } else if(apps_list[0]) {
+            set_selected(apps_list[0].id);
         }
     },[])
 
-
-
-    let handle_select = (value: SimpleNumberOption | null) =>{
-        if(!value) return;
-        set_selected(value);
-    }
-
-    let handle_close = (event:React.MouseEvent<HTMLButtonElement>) =>{
-        localStorage.setItem("last_selected_application",selected.value.toString());
-        props.done(selected.value);
+    let open = (id: number | null) =>{
+        if(id === null) return;
+        localStorage.setItem("last_selected_application", id.toString());
+        props.done(id);
     };
 
+    const id_from_name = (name: string) => apps_list.find(a => a.name === name)?.id ?? null;
+    const selected_name = apps_list.find(a => a.id === selected)?.name;
+
     return(
-        <ComponentLayout>
-            <Centering>
-                <SelectField<SimpleNumberOption>
-                    name="application_selector"
-                    label="Chose An Application"
-                    onChange={handle_select}
-                    value={selected}
-                    options={apps_list}
+        <UIPanel level="level_2" style={{width: "34rem", maxWidth: "95%", margin: "4rem auto", padding: "0.5em"}}>
+            <SimpleContent name="Choose an application">
+                <SelectableList
+                    items={apps_list.map(a => a.name)}
+                    variant="card"
+                    descriptions={apps_list.map(a => a.description)}
+                    selected_item={selected_name}
+                    onSelect={name => set_selected(id_from_name(name))}
+                    onActivate={name => open(id_from_name(name))}
+                    style={{maxHeight: "55vh", margin: "0.5em", width: "auto"}}
                 />
-                <Button style={{margin:"1rem 1rem"}} onClick={handle_close}>Save changes</Button>
-            </Centering>
-        </ComponentLayout>
+                <div style={{display: "flex", justifyContent: "flex-end", padding: "0.5em"}}>
+                    <Button onClick={() => open(selected)} disabled={selected === null}>Open application</Button>
+                </div>
+            </SimpleContent>
+        </UIPanel>
     );
 
 }

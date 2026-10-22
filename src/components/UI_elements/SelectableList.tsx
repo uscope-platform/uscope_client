@@ -18,9 +18,12 @@ import {SelectableListItem} from './SelectableListItem.js';
 
 interface SelectableListProps {
     multi_select?: boolean;
-    selected_item?: string | string[];
+    selected_item?: string | string[] | undefined;
     onSelect?: ((name: string, multi?: boolean) => void);
     onRemove?: (name: string) => void;
+    onActivate?: (name: string) => void;
+    descriptions?: string[];
+    variant?: 'plain' | 'card';
     style?: React.CSSProperties;
     items: string[] | undefined;
     types?: any[]| undefined;
@@ -46,6 +49,9 @@ export let  SelectableList = (props: SelectableListProps) =>{
                     key={names[i]}
                     onRemove={props.onRemove}
                     onSelect={props.onSelect}
+                    onActivate={props.onActivate}
+                    card={props.variant === 'card'}
+                    description={props.descriptions?.[i]}
                     selected={selected}
                     icon={icons ? icons[i]: undefined}
                     name={names[i]}/>
@@ -60,7 +66,7 @@ export let  SelectableList = (props: SelectableListProps) =>{
             <div style={{
                 display: "flex",
                 flexDirection: "column",
-                gap: "0.25em",
+                gap: props.variant === "card" ? "0.5em" : "0.25em",
                 margin: "0.5em",
                 minHeight:"0",
                 width:"100%",

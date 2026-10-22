@@ -21,10 +21,24 @@ import {DeleteButton} from "#UI/DeleteButton.js";
 
 interface ItemLayoutProps {
     selected: boolean;
+    card: boolean;
 }
 
 
-const ItemLayout = styled<'div', ItemLayoutProps>('div')(({ selected }) => `
+const ItemLayout = styled<'div', ItemLayoutProps>('div')(({ selected, card }) => card ? `
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.25em 0.75em;
+  border-radius: 0.5rem;
+  border: 1px solid ${selected ? ColorTheme.background.accents : ColorTheme.background.borders};
+  border-left-width: 4px;
+  background: ${selected ? ColorTheme.background.level_4 : ColorTheme.background.level_3};
+  transition: background 0.15s, border-color 0.15s;
+  &:hover {
+    background: ${ColorTheme.background.level_4};
+  }
+` : `
   display: flex;
   align-items: center;
   gap: 0.5em;
@@ -39,6 +53,9 @@ interface SelectableListItemProps {
     onRemove?: ((name: string) => void )| undefined;
     onSelect?: ((name: string, multi?: boolean) => void )| undefined;
     onMouseEnter?: (name: string) => void;
+    onActivate?: ((name: string) => void) | undefined;
+    description?: string | undefined;
+    card?: boolean | undefined;
     iconSize?: number | string;
 }
 
@@ -75,17 +92,24 @@ export let  SelectableListItem = (props: SelectableListItemProps) =>{
         }
     }
 
+    let handle_double_click = () =>{
+        if(props.onActivate) props.onActivate(props.name);
+    }
+
     let handleMouseEnter = () =>{
         if(props.onMouseEnter)
             props.onMouseEnter(props.name);
     }
 
     return(
-        <ItemLayout selected={props.selected}>
+        <ItemLayout selected={props.selected} card={!!props.card}>
             <div></div>
-            <div onMouseEnter={handleMouseEnter} onClick={handle_click} style={{display:"flex", flexGrow:1}}>
+            <div onMouseEnter={handleMouseEnter} onClick={handle_click} onDoubleClick={handle_double_click} style={{display:"flex", flexGrow:1}}>
                 {get_icon_image(props.icon)}
-                <p style={{marginLeft:"0.5em", paddingTop:"6px", cursor:"default"}}>{props.name}</p>
+                <div style={{marginLeft:"0.5em", cursor:"default"}}>
+                    <p style={{paddingTop:"6px"}}>{props.name}</p>
+                    {props.description && <p style={{fontSize:"0.8em", opacity:0.6, paddingBottom:"6px"}}>{props.description}</p>}
+                </div>
             </div>
             {render_delete()}
         </ItemLayout>
