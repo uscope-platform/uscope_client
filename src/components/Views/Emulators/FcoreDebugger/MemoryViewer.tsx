@@ -14,52 +14,27 @@
 // limitations under the License.
 
 
-import React, {useEffect, useState} from 'react';
-import {SelectableList, SimpleContent, UIPanel} from "#UI/index.js";
+import React from 'react';
+import {DataTable, SimpleContent, UIPanel} from "#UI/index.js";
+import {format_word} from "./format_word.js";
 
 interface MemoryViewerProps {
     memory: number[],
     vis_type: string,
+    height: string,
 }
 
 let  MemoryViewer = (props : MemoryViewerProps) =>{
-
-    const addresses = Array.from(Array(64).keys()).map(val=>val.toString());
-
-    let [data, set_data] = useState<string[]>([]);
-
-    useEffect(()=>{
-        set_data( props.memory.map(val=>{
-            if(props.vis_type === "float"){
-                let v = new DataView(new ArrayBuffer(4));
-                v.setUint32(0, val);
-                return v.getFloat32(0).toString();
-            } else {
-                return val.toString();
-            }
-        }));
-    }, [props.memory, props.vis_type]);
+    const rows = props.memory.map((word, address) => [address.toString(), format_word(word, props.vis_type)]);
 
     return (
-        <UIPanel key="memory_viewer"  level="level_2">
-            <SimpleContent name={"Memory Viewer"}>
-                <div style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gridColumnGap: "0.5em",
-                    height: "21em"
-                }}
-                     key="mem_view_content">
-                    <SelectableList
-                        style={{
-                            height: "100%"
-                        }}
-                        items={addresses}
-                    />
-                    <SelectableList
-                        items={data}
-                    />
-                </div>
+        <UIPanel key="memory_viewer" level="level_2">
+            <SimpleContent name={"Memory"} height={props.height}>
+                <DataTable
+                    columns={[{title: "Address", numeric: true}, {title: "Value", numeric: true}]}
+                    rows={rows}
+                    empty="The memory of the core shows up when the emulation stops"
+                />
             </SimpleContent>
         </UIPanel>
     );

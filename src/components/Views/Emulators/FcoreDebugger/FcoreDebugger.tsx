@@ -16,8 +16,9 @@
 
 import React, {useState} from 'react';
 import {Fcore} from "./FcoreLanguage.js";
-import {TextEditor} from "#UI/index.js";
-import DebuggerControls from "./DebuggerControls.js";
+import {ColorTheme, TextEditor, UIPanel} from "#UI/index.js";
+import {PanelTitle} from "#UI/panels/UIPanel.js";
+import DebuggerToolbar from "./DebuggerToolbar.jsx";
 import {cpp} from "@codemirror/lang-cpp";
 import MemoryViewer from "./MemoryViewer.jsx";
 import {EditorView} from "codemirror";
@@ -36,6 +37,25 @@ interface FcoreDebuggerProps {
     checkpoint: DebuggerCheckpoint,
     content: SingleProgramDataPackage
 }
+
+// the tables under the editors have a height of their own, the editors take what is left
+const TABLES_HEIGHT = "13em";
+// what the page header and the tabs take from the window, the debugger is at least as tall as what is left
+const PAGE_CHROME = "225px";
+
+// a panel whose content fills the height that the panel is given
+let FillPanel = (props: {title: string, children: React.ReactNode}) => (
+    <UIPanel level="level_2" style={{minHeight: 0}}>
+        <PanelTitle selected>
+            <p style={{marginLeft:"0.5em", marginRight:"0.5em", marginTop:"0.25em", paddingBottom:"0.1m"}}>{props.title}</p>
+        </PanelTitle>
+        <div style={{flex: 1, minHeight: 0, position: "relative", borderTop: "3px solid " + ColorTheme.background.borders}}>
+            <div style={{position: "absolute", inset: 0}}>
+                {props.children}
+            </div>
+        </div>
+    </UIPanel>
+);
 
 let  FcoreDebugger = (props: FcoreDebuggerProps) =>{
 
@@ -84,7 +104,7 @@ let  FcoreDebugger = (props: FcoreDebuggerProps) =>{
         let base_theme: Record<string, any> = {}
         if(props.checkpoint.breakpoint>=0){
             base_theme['.cm-line:nth-of-type(' + String(props.checkpoint.breakpoint+1) + ')'] = {
-                backgroundColor: 'rgb(139, 233, 253)'
+                backgroundColor: ColorTheme.background.transparent_accents
             }
         }
         return base_theme;
@@ -94,70 +114,57 @@ let  FcoreDebugger = (props: FcoreDebuggerProps) =>{
 
 
     return (
-        <div style={{flexGrow:1}}>
-            <DebuggerControls
-                select_types={set_visualization_type}
-                run={handle_run}
-                step={handle_step}
-                resume={handle_resume}
-            />
-            <div style={{
-                display: "grid",
-                gap: 10,
-                gridTemplateRows: "3fr 1fr",
-                height:"56em"
-            }}>
-                <div style={{
-                    display: "grid",
-                    gap: 10,
-                    gridTemplateColumns: "repeat(6, 1fr)",
-                    height:"56em"
-                }}>
-                    <div style={{
-                        gridArea: "1 / 1 / 2 / 4"
-                    }}>
-                        <TextEditor
-                            tab_name="Assembly"
-                            height="30em"
-                            content={props.content.asm.program}
-                            extensions={[Fcore(), highLight]}
-                        />
-                    </div>
-                    <div style={{
-                        gridArea: "1 / 4 / 2 / 7"
-                    }}>
-                        <TextEditor
-                            tab_name="C source"
-                            height="30em"
-                            content={props.content.source}
-                            extensions={[cpp()]}
-                        />
-                    </div>
-                    <div style={{
-                        gridArea: "2 / 1 / 3 / 3"
-                    }}>
-                        <MemoryViewer
-                            vis_type={visualization_type}
-                            memory={props.checkpoint.memory_view}
-                        />
-                    </div>
-                    <div style={{
-                        gridArea: "2 / 3 / 3 / 5"
-                    }}>
-                        <IoViewer
-                            vis_type={visualization_type}
-                            io={{names: current_inputs.names, values: current_inputs.values}}
-                        />
-                    </div>
-                    <div style={{
-                        gridArea: "2 / 5 / 3 / 7"
-                    }}>
-                        <TranslationTable
-                            channel_io={props.content.asm.translation_table}
-                            common_io={props.content.asm.common_io_translation_table}
-                        />
-                    </div>
-                </div>
+        <div style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 10,
+            flexGrow: 1,
+            minWidth: 0,
+            height: "100%",
+            minHeight: "calc(100vh - " + PAGE_CHROME + ")"
+        }}>
+            <UIPanel key="debugger_toolbar" level="level_2">
+                <DebuggerToolbar
+                    run={handle_run}
+                    step={handle_step}
+                    resume={handle_resume}
+                    vis_type={visualization_type}
+                    on_vis_type={set_visualization_type}
+                    checkpoint={props.checkpoint}
+                />
+            </UIPanel>
+            <div style={{display: "grid", gap: 10, gridTemplateColumns: "repeat(2, minmax(0, 1fr))", flex: 1, minHeight: "16em"}}>
+                <FillPanel title="Assembly">
+                    <TextEditor
+                        height="100%"
+                        content={props.content.asm.program}
+                        extensions={[Fcore(), highLight]}
+                    />
+                </FillPanel>
+                <FillPanel title="C source">
+                    <TextEditor
+                        height="100%"
+                        content={props.content.source}
+                        extensions={[cpp()]}
+                    />
+                </FillPanel>
+            </div>
+            <div style={{display: "grid", gap: 10, gridTemplateColumns: "repeat(3, minmax(0, 1fr))"}}>
+                <MemoryViewer
+                    height={TABLES_HEIGHT}
+                    vis_type={visualization_type}
+                    memory={props.checkpoint.memory_view}
+                />
+                <IoViewer
+                    height={TABLES_HEIGHT}
+                    vis_type={visualization_type}
+                    io={{names: current_inputs.names, values: current_inputs.values}}
+                />
+                <TranslationTable
+                    height={TABLES_HEIGHT}
+                    channel_io={props.content.asm.translation_table}
+                    common_io={props.content.asm.common_io_translation_table}
+                />
             </div>
         </div>
     );

@@ -15,7 +15,7 @@
 
 
 import React from 'react';
-import { InputField, SelectableList, SimpleContent, UIPanel} from "#UI/index.js";
+import {FieldPane, InputField, SelectableList, SimpleContent, UIPanel} from "#UI/index.js";
 
 interface BreakpointsPanelProps {
     breakpoints: number[],
@@ -27,26 +27,33 @@ let  BreakpointsPanel = (props: BreakpointsPanelProps) =>{
 
     let handle_add = async (event: React.KeyboardEvent<HTMLInputElement>)=>{
         if(event.key==="Enter"|| event.key ==="Tab") {
-            props.on_add(parseInt(event.currentTarget.value));
+            let line = parseInt(event.currentTarget.value);
+            // a line that is not there is not a breakpoint
+            if(!isNaN(line) && !props.breakpoints.includes(line)) props.on_add(line);
         }
     }
 
-    let bp = props.breakpoints.map(breakpoint => breakpoint.toString());
-
-    let handle_remove = (r: string) =>{
-        props.on_remove(parseInt(r));
+    let handle_remove = (name: string) =>{
+        props.on_remove(parseInt(name.replace("Line ", "")));
     }
 
+    let bp = [...props.breakpoints].sort((a, b) => a - b).map(breakpoint => "Line " + breakpoint);
+
     return (
-        <UIPanel key="breakpoints" style={{minHeight:"200px"}} level="level_2">
+        <UIPanel key="breakpoints" level="level_2">
             <SimpleContent name={"Breakpoints"}>
-                <div key="bp_view_contents">
-                    <InputField inline id="add_breakpoint" name="add_breakpoint" label="Add Breakpoint" onKeyDown={handle_add}/>
-                    <SelectableList
-                        onRemove={handle_remove}
-                        items={bp}
-                    />
-                </div>
+                <FieldPane key="bp_view_contents">
+                    <InputField id="add_breakpoint" name="add_breakpoint" label="Add a breakpoint on line" onKeyDown={handle_add}/>
+                    <div style={{marginTop: "0.8rem"}}>
+                        {bp.length === 0
+                            ? <div style={{fontSize: "0.85rem", opacity: 0.5, padding: "0 0.2rem"}}>No breakpoints, the emulation runs to the end</div>
+                            : <SelectableList
+                                onRemove={handle_remove}
+                                items={bp}
+                                style={{maxHeight: "12em", width: "auto"}}
+                            />}
+                    </div>
+                </FieldPane>
             </SimpleContent>
         </UIPanel>
     );

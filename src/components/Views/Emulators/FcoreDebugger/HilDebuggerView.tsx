@@ -138,7 +138,6 @@ let HilDebuggerView = function (props: HilDebuggerViewProps) {
                 breakpoints={breakpoints}
                 on_add_breakpoint={handle_add_breakpoint}
                 on_remove_breakpoint={handle_remove_breakpoint}
-                checkpoint={checkpoint}
             />
         </div>
 

@@ -17,13 +17,12 @@ import React from 'react';
 
 
 import {up_emulator} from "#client_core/index.js";
-import {SidebarBase} from "#UI/index.js";
+import {SidebarBase, SidebarColumn} from "#UI/index.js";
 import AsmSelector from "./../AsmSelector.jsx";
 import BreakpointsPanel from "./../BreakpointsPanel.jsx";
-import ProgressPanel from "../../FcoreDebugger/ProgressPanel.jsx";
 import {useAppSelector} from "#redux/hooks.js";
 import type {EmulatorSelections} from "#interfaces/index.js";
-import type {DebuggerCheckpoint, DecompiledPrograms} from "#interfaces/emulator_view.js";
+import type {DecompiledPrograms} from "#interfaces/emulator_view.js";
 
 interface HilDebuggerSidebarProps {
     emulator: up_emulator;
@@ -35,7 +34,6 @@ interface HilDebuggerSidebarProps {
     on_add_breakpoint: (value: number) => void,
     on_remove_breakpoint: (value: number) => void,
     breakpoints: number[],
-    checkpoint: DebuggerCheckpoint
 }
 
 let  HilDebuggerSidebar = (props: HilDebuggerSidebarProps) =>{
@@ -48,12 +46,7 @@ let  HilDebuggerSidebar = (props: HilDebuggerSidebarProps) =>{
     }
 
     return(
-        <div
-            style={{
-                display:"flex",
-                flexDirection:"column",
-                gap:"0.5em"
-            }}>
+        <SidebarColumn>
             <SidebarBase
                 objects={emulators_store}
                 selection_key="id"
@@ -72,10 +65,7 @@ let  HilDebuggerSidebar = (props: HilDebuggerSidebarProps) =>{
                 on_add={props.on_add_breakpoint}
                 on_remove={props.on_remove_breakpoint}
             />
-            <ProgressPanel
-                progress={props.checkpoint.progress}
-            />
-        </div>
+        </SidebarColumn>
 
     );
 

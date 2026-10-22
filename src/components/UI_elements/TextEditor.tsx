@@ -40,7 +40,7 @@ export let TextEditor = (props : TextEditorProps) => {
             flexGrow: 1,
             height: "100%"
         }}>
-            <p>{props.tab_name}</p>
+            {props.tab_name && <p>{props.tab_name}</p>}
             <CodeMirror
                 value={props.content}
                 width='auto'

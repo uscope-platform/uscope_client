@@ -14,81 +14,34 @@
 // limitations under the License.
 
 
-import React, {useEffect, useState} from 'react';
-import {SelectableList, SimpleContent, UIPanel} from "#UI/index.js";
+import React from 'react';
+import {DataTable, SimpleContent, UIPanel} from "#UI/index.js";
 import type {TranslationTableEntry} from "#interfaces/index.js";
 
 interface TranslationTableProps {
     channel_io: TranslationTableEntry[]
     common_io: TranslationTableEntry[]
+    height: string,
 }
 
+const COLUMNS = [{title: "Name"}, {title: "Kind"}, {title: "I/O side", numeric: true}, {title: "Core side", numeric: true}];
+
+const to_rows = (entries: TranslationTableEntry[] | undefined, kind: string) =>
+    (entries ?? []).map((entry) => [entry[1].name, kind, entry[0].toString(), entry[1].address.toString()]);
+
 let  TranslationTable = (props: TranslationTableProps) =>{
-
-    let [channel_io_names, set_channel_io_names] = useState<string[]>([])
-    let [channel_io_addr, set_channel_io_addr] = useState<string[]>([]);
-    let [channel_core_addr, set_channel_core_addr] = useState<string[]>([]);
-
-    let [common_io_names, set_common_io_names] = useState<string[]>([])
-    let [common_io_addr, set_common_io_addr] = useState<string[]>([]);
-    let [common_core_addr, set_common_core_addr] = useState<string[]>([]);
-
-
-    useEffect(() => {
-        if(props.channel_io){
-            set_channel_io_addr(["IO Side", ...props.channel_io.map((entry,)=>{
-                return entry[0].toString()
-            })]);
-            set_channel_core_addr(["Core Side", ...props.channel_io.map((line)=>{
-                return line[1].address.toString()
-            })]);
-            set_channel_io_names(["I/O name", ...props.channel_io.map((line)=>{
-                return line[1].name
-            })]);
-        }
-        if(props.common_io){
-            set_common_io_addr(["IO Side", ...props.common_io.map((line)=>{
-                return line[0].toString()
-            })]);
-            set_common_core_addr(["Core Side", ...props.common_io.map((line)=>{
-                return line[1].address.toString()
-            })]);
-            set_common_io_names(["I/O name", ...props.common_io.map((line)=>{
-                return line[1].name
-            })]);
-        }
-    }, [props.channel_io, props.common_io]);
+    const channel_rows = to_rows(props.channel_io, "channel");
+    const common_rows = to_rows(props.common_io, "common");
 
     return (
-        <UIPanel key="translation_table" style={{minHeight:"200px"}} level="level_2">
-            <SimpleContent name={"Translation Table"}>
-                <div style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr 1fr",
-                    gridColumnGap: "1em",
-                    height: "21em"
-                }}
-                     key="translation_table_content"
-                >
-                    <SelectableList
-                        items={channel_io_names}
-                    />
-                    <SelectableList
-                        items={channel_io_addr}
-                    />
-                    <SelectableList
-                        items={channel_core_addr}
-                    />
-                    <SelectableList
-                        items={common_io_names}
-                    />
-                    <SelectableList
-                        items={common_io_addr}
-                    />
-                    <SelectableList
-                        items={common_core_addr}
-                    />
-                </div>
+        <UIPanel key="translation_table" level="level_2">
+            <SimpleContent name={"Translation table"} height={props.height}>
+                {channel_rows.length === 0 && common_rows.length === 0
+                    ? <DataTable columns={COLUMNS} rows={[]} empty="Select a program to see where its I/O is mapped"/>
+                    : <DataTable
+                        columns={COLUMNS}
+                        rows={[...channel_rows, ...common_rows]}
+                    />}
             </SimpleContent>
         </UIPanel>
     );

@@ -33,6 +33,8 @@ export {Switch} from './Switch.js'
 export {ListItem} from './ListItem.js'
 export {TwoColumnSelector} from "./TwoColumnSelector.js"
 export {Chip} from "./Chip.js"
+export {DataTable} from "./DataTable.js"
+export type {DataTableColumn} from "./DataTable.js"
 export {RadioGroup} from "./RadioGroup.js"
 export {RangedInputField} from "./RangedInputField.js"
 export {TextEditor} from "./TextEditor.jsx"

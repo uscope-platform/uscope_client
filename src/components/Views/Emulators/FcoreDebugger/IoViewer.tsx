@@ -15,49 +15,29 @@
 
 
 import React from 'react';
-import {SelectableList, SimpleContent, UIPanel} from "#UI/index.js";
+import {DataTable, SimpleContent, UIPanel} from "#UI/index.js";
+import {format_word} from "./format_word.js";
 
 interface IoViewerProps {
     vis_type: string,
     io:{
         names: string[],
         values: number[],
-    }
+    },
+    height: string,
 }
 
 let  IoViewer = (props: IoViewerProps) =>{
-
-
-    const data = props.io.values.map(val=>{
-        if(props.vis_type === "float"){
-            let v = new DataView(new ArrayBuffer(4));
-            v.setUint32(0, val);
-            return v.getFloat32(0).toString();
-        } else {
-            return val.toString();
-        }
-    })
-
+    const rows = props.io.names.map((name, i) => [name, format_word(props.io.values[i] ?? 0, props.vis_type)]);
 
     return (
-        <UIPanel key="io_viewer" style={{minHeight:"200px"}} level="level_2">
-            <SimpleContent name={"IO Viewer"}>
-                <div
-                    style={{
-                        display: "grid",
-                        gridTemplateColumns: "1fr 1fr",
-                        gridColumnGap: "1em",
-                        height: "21em"
-                    }}
-                    key="io_view_content"
-                >
-                    <SelectableList
-                        items={props.io.names}
-                    />
-                    <SelectableList
-                        items={data}
-                    />
-                </div>
+        <UIPanel key="io_viewer" level="level_2">
+            <SimpleContent name={"Inputs"} height={props.height}>
+                <DataTable
+                    columns={[{title: "Name"}, {title: "Value", numeric: true}]}
+                    rows={rows}
+                    empty="The inputs of the core show up when the emulation stops"
+                />
             </SimpleContent>
         </UIPanel>
     );
