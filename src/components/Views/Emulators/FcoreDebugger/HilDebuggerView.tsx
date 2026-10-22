@@ -43,7 +43,7 @@ let HilDebuggerView = function (props: HilDebuggerViewProps) {
     });
 
     let [checkpoint, set_checkpoint] = useState<DebuggerCheckpoint>({
-        breakpoint:1,
+        breakpoint:-1,
         memory_view:[],
         inputs:{},
         status:"",

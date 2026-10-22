@@ -76,6 +76,10 @@ let  FcoreDebugger = (props: FcoreDebuggerProps) =>{
                 values: Object.values(res.inputs)
             })
             props.set_checkpoint(res);
+            // the code shown is the one of the core that paused
+            if(res.core_name !== "" && res.core_name !== props.selected_program){
+                props.on_program_select(res.core_name);
+            }
         } else {
             let results = new up_emulator_result(res.emulation_result, {});
             props.on_emulation_end(results);
