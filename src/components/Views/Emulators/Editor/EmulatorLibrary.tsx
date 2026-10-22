@@ -18,8 +18,8 @@
 
 import type {ReactNode} from "react";
 import {css} from "goober";
-import {MdInput, MdMemory, MdOutput} from "react-icons/md";
 import {ColorTheme} from "#UI/index.js";
+import {io_colors, io_dashes} from "./io_colors.js";
 
 export interface LibraryEntry {
     id: string,
@@ -35,6 +35,41 @@ interface EmulatorLibraryProps {
     onAddCore: () => void,
     onAddIo: (direction: "source" | "sink") => void
 }
+
+// the icons are small copies of the nodes of the diagram: a core is a solid box with the pins and the die of a chip, a source is a
+// dashed green box that the data leaves, a sink is a dotted orange box that the data enters
+const icon_props = {
+    width: 36,
+    height: 24,
+    viewBox: "0 0 36 24",
+    fill: "none",
+    strokeWidth: 1.75,
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    "aria-hidden": true
+} as const;
+
+const CoreIcon = () => (
+    <svg {...icon_props} stroke="currentColor">
+        <rect x="10" y="5" width="16" height="14" rx="2.5"/>
+        <rect x="14" y="9" width="8" height="6" rx="1"/>
+        <path d="M14 2v3M18 2v3M22 2v3M14 19v3M18 19v3M22 19v3M6 9h4M6 15h4M26 9h4M26 15h4"/>
+    </svg>
+);
+
+const SourceIcon = () => (
+    <svg {...icon_props} stroke={io_colors.source}>
+        <rect x="2" y="4" width="16" height="16" rx="2.5" strokeDasharray={io_dashes.source}/>
+        <path d="M18 12h14M27 7l5 5-5 5"/>
+    </svg>
+);
+
+const SinkIcon = () => (
+    <svg {...icon_props} stroke={io_colors.sink}>
+        <rect x="18" y="4" width="16" height="16" rx="2.5" strokeDasharray={io_dashes.sink}/>
+        <path d="M2 12h14M11 7l5 5-5 5"/>
+    </svg>
+);
 
 const library_class = css`
   display: flex;
@@ -96,24 +131,24 @@ let EmulatorLibrary = (props: EmulatorLibraryProps) =>{
         {
             id: "core",
             name: "Core",
-            description: "Runs a program",
-            icon: <MdMemory size="1.5em"/>,
+            description: "Runs a program on the core",
+            icon: <CoreIcon/>,
             group: "Compute",
             onAdd: props.onAddCore
         },
         {
             id: "io_source",
-            name: "IO Source",
-            description: "Data read from the bus",
-            icon: <MdInput size="1.5em"/>,
+            name: "Source",
+            description: "Feeds data in from the bus",
+            icon: <SourceIcon/>,
             group: "External IO",
             onAdd: () => props.onAddIo("source")
         },
         {
             id: "io_sink",
-            name: "IO Sink",
-            description: "Data written to the bus",
-            icon: <MdOutput size="1.5em"/>,
+            name: "Sink",
+            description: "Writes data out to the bus",
+            icon: <SinkIcon/>,
             group: "External IO",
             onAdd: () => props.onAddIo("sink")
         }

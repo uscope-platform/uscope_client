@@ -19,6 +19,7 @@ import {css} from "goober";
 import {ColorTheme} from "#UI/index.js";
 import EmulatorToolbar from "./EmulatorToolbar.jsx";
 import EmulatorLibrary from "./EmulatorLibrary.jsx";
+import {io_colors, io_dashes} from "./io_colors.js";
 import {Canvas, Edge, hasLink, MarkerArrow, Node, useSelection} from "reaflow";
 import type {EdgeData, NodeData} from "reaflow";
 import type {EmulatorGraphNode,EmulatorGraphEdge} from "#interfaces/index.js";
@@ -60,17 +61,17 @@ interface EmulatorDiagramProps {
 // the external sources and sinks, told apart from the cores and from each other
 const io_source_class = css`
   rect& {
-    stroke: rgb(60, 170, 100);
+    stroke: ${io_colors.source};
     stroke-width: 2px;
-    stroke-dasharray: 6 3;
+    stroke-dasharray: ${io_dashes.source};
   }
 `;
 
 const io_sink_class = css`
   rect& {
-    stroke: rgb(230, 140, 40);
+    stroke: ${io_colors.sink};
     stroke-width: 2px;
-    stroke-dasharray: 2 3;
+    stroke-dasharray: ${io_dashes.sink};
   }
 `;
 
