@@ -52,7 +52,7 @@ export let  ParameterProperties = (props: ParameterPropertiesProps) =>{
     return(
         <Card
             name={props.parameter.parameter_name}
-            style={{width: "40rem", maxWidth: "100%", paddingLeft: 0}}
+            style={{width: "100%", paddingLeft: 0}}
             selector={{
                 name:"visible",
                 label:"Visible",

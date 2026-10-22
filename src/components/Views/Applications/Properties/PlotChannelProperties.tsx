@@ -47,7 +47,7 @@ export let  PlotChannelProperties = (props: PlotChannelPropertiesProps) =>{
     return(
         <Card
             name={props.channel.name}
-            style={{width: "40rem", maxWidth: "100%", paddingLeft: 0}}
+            style={{width: "100%", paddingLeft: 0}}
             selector={{
                 name:"enabled",
                 label:"Enabled",

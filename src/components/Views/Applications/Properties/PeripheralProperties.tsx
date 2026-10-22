@@ -127,7 +127,7 @@ export let  PeripheralProperties = (props: PeripheralPropertiesProps) =>{
     return(
         <Card
             name={props.peripheral.name}
-            style={{width: "40rem", maxWidth: "100%", paddingLeft: 0}}
+            style={{width: "100%", paddingLeft: 0}}
         >
             <FormLayout columns={COLUMN_WIDTH}>
                 <InputField id="name" name="name" defaultValue={props.peripheral.name} onKeyDown={handleonKeyDown} label="Name"/>
