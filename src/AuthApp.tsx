@@ -24,7 +24,7 @@ import Navbar from "./components/Navbar.js";
 import ApplicationChooser from "./components/AppChooser.js";
 import {initialize_scripting_engine, refresh_caches, setup_client_core, up_application, up_settings} from "#client_core/index.js";
 import {UIPanel, InterfaceParameters} from "#UI/index.js";
-import PlatformManager from "./components/Views/Platform/PlatformManager.jsx";
+import OnboardingPage from "./components/Common_Components/OnboardingPage.jsx";
 import {useAppSelector} from "#redux/hooks.js";
 
 //////  STYLE IMPORTS
@@ -159,7 +159,7 @@ let AuthApp = (props: AuthAppProps) =>{
         case "ONBOARDING":
             return(
                 <div className="App">
-                    <PlatformManager  onboarding onboarding_done={props.onboarding_done} />
+                    <OnboardingPage onboarding_done={props.onboarding_done ?? (() => {})} />
                 </div>
             );
 

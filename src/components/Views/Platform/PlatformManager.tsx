@@ -24,18 +24,13 @@ import {
     SelectField, ColorTheme
 } from "#UI/index.js"
 
-import {add_user, do_onboarding, dump_database, restore_database, upload_json} from "#client_core/index.js";
+import {add_user, dump_database, restore_database, upload_json} from "#client_core/index.js";
 import { MdDownload, MdUpload} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
 import PlatformSidebar from "../Platform/PlatformSidebar.js";
 import {toast} from "react-toastify";
 
-interface PlatformManagerProps {
-    onboarding?: boolean,
-    onboarding_done?: (() => void) | undefined
-}
-
-let  PlatformManager = (props: PlatformManagerProps) =>{
+let  PlatformManager = () =>{
 
     const [selected_user, set_selected_user] = useState("");
     const [view_version, bump_user_version] = useReducer(x=>x+1, 0);
@@ -56,14 +51,8 @@ let  PlatformManager = (props: PlatformManagerProps) =>{
             toast.error("Role is nullor empty");
             return;
         }
-        if(props.onboarding){
-            await do_onboarding({user:username,password:pass, role:role});
-            bump_user_version();
-            if(props.onboarding_done) props.onboarding_done();
-        } else{
-            await add_user({user:username,password:pass, role:role});
-            bump_user_version();
-        }
+        await add_user({user:username,password:pass, role:role});
+        bump_user_version();
 
     };
 
