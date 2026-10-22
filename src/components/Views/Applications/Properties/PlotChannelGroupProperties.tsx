@@ -16,6 +16,7 @@
 import React, {useState} from "react";
 import {
     InputField,
+    FormLayout,
     MultiSelect,
     Card
 } from "#UI/index.js";
@@ -60,16 +61,10 @@ export let  PlotChannelGroupProperties = (props:PlotChannelGroupPropertiesProps)
         }
     }
 
-    let handleRemove= async () =>{
-        await props.application.remove_channel_groups(props.group.group_name)
-        props.forceUpdate();
-    }
-
-
     return(
         <Card
             name={props.group.group_name}
-            onRemove={handleRemove}
+            style={{width: "40rem", maxWidth: "100%", paddingLeft: 0}}
             selector={{
                 name:"default",
                 label:"Enabled",
@@ -77,15 +72,19 @@ export let  PlotChannelGroupProperties = (props:PlotChannelGroupPropertiesProps)
                 value:props.group.default
             }}
         >
-            <InputField inline id="group_name" name="group_name" defaultValue={props.group.group_name} onKeyDown={handleonKeyDown} label="Name"/>
-            <InputField inline id="group_id" name='group_id' defaultValue={props.group.group_id} onKeyDown={handleonKeyDown} label="ID"/>
-            <MultiSelect<group_channel_token>
-                inline
-                id="content"
-                onChange={handleChange}
-                value={channels_list}
-                options={options}
-                label="Content"/>
+            <FormLayout columns="10.5rem">
+                <InputField id="group_name" name="group_name" defaultValue={props.group.group_name} onKeyDown={handleonKeyDown} label="Name"/>
+                <InputField id="group_id" name='group_id' defaultValue={props.group.group_id} onKeyDown={handleonKeyDown} label="ID"/>
+                <div style={{gridColumn: "1 / -1"}}>
+                    <MultiSelect<group_channel_token>
+                        inline={false}
+                        id="content"
+                        onChange={handleChange}
+                        value={channels_list}
+                        options={options}
+                        label="Content"/>
+                </div>
+            </FormLayout>
         </Card>
     );
 };

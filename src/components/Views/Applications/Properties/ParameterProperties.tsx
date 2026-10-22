@@ -16,6 +16,7 @@
 import React from "react";
 import {
     InputField,
+    FormLayout,
     Card
 } from "#UI/index.js";
 
@@ -48,15 +49,10 @@ export let  ParameterProperties = (props: ParameterPropertiesProps) =>{
         props.forceUpdate();
     }
 
-    let handleRemove= async () =>{
-        await props.application.remove_parameter(props.parameter.parameter_id);
-        props.forceUpdate();
-    }
-
     return(
         <Card
             name={props.parameter.parameter_name}
-            onRemove={handleRemove}
+            style={{width: "40rem", maxWidth: "100%", paddingLeft: 0}}
             selector={{
                 name:"visible",
                 label:"Visible",
@@ -64,10 +60,12 @@ export let  ParameterProperties = (props: ParameterPropertiesProps) =>{
                 value:props.parameter.visible
             }}
         >
-            <InputField inline id="parameter_name" name="parameter_name" defaultValue={props.parameter.parameter_name} onKeyDown={handleonKeyDown} label="Name"/>
-            <InputField inline id="parameter_id" name='parameter_id' defaultValue={props.parameter.parameter_id} onKeyDown={handleonKeyDown} label="Parameter ID"/>
-            <ScriptSelector name="trigger" value={props.parameter.trigger} onChange={handleScriptChange}/>
-            <InputField inline id="value" name='value' defaultValue={props.parameter.value.toString()} onKeyDown={handleonKeyDown} label="Value"/>
+            <FormLayout columns="10.5rem">
+                <InputField id="parameter_name" name="parameter_name" defaultValue={props.parameter.parameter_name} onKeyDown={handleonKeyDown} label="Name"/>
+                <InputField id="parameter_id" name='parameter_id' defaultValue={props.parameter.parameter_id} onKeyDown={handleonKeyDown} label="Parameter ID"/>
+                <ScriptSelector name="trigger" value={props.parameter.trigger} onChange={handleScriptChange}/>
+                <InputField id="value" name='value' defaultValue={props.parameter.value.toString()} onKeyDown={handleonKeyDown} label="Value"/>
+            </FormLayout>
         </Card>
     );
 };

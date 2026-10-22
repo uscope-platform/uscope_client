@@ -16,7 +16,7 @@
 import React from "react";
 import {
     InputField,
-    ColorTheme,
+    FormLayout,
     Card
 } from "#UI/index.js";
 
@@ -44,15 +44,10 @@ export let  PlotChannelProperties = (props: PlotChannelPropertiesProps) =>{
         }
     }
 
-    let handleRemove= async () =>{
-        await props.application.remove_channel(props.channel.name);
-        props.forceUpdate();
-    }
-
     return(
         <Card
             name={props.channel.name}
-            onRemove={handleRemove}
+            style={{width: "40rem", maxWidth: "100%", paddingLeft: 0}}
             selector={{
                 name:"enabled",
                 label:"Enabled",
@@ -60,11 +55,13 @@ export let  PlotChannelProperties = (props: PlotChannelPropertiesProps) =>{
                 value:props.channel.enabled
             }}
         >
-            <InputField color={ColorTheme.background.level_4} inline id="name" name="name" defaultValue={props.channel.name} onKeyDown={handleonKeyDown} label="Name"/>
-            <InputField color={ColorTheme.background.level_4} inline id="id" name='id' defaultValue={props.channel.id} onKeyDown={handleonKeyDown} label="Channel ID"/>
-            <InputField color={ColorTheme.background.level_4} inline id="number" name='number' defaultValue={props.channel.number.toString()} onKeyDown={handleonKeyDown} label="Channel Number"/>
-            <InputField color={ColorTheme.background.level_4} inline id="mux_setting" name='mux_setting' defaultValue={props.channel.mux_setting.toString()} onKeyDown={handleonKeyDown} label="Mux Setting"/>
-            <InputField color={ColorTheme.background.level_4} inline id="scaling_factor" name='scaling_factor' defaultValue={props.channel.scaling_factor.toString()} onKeyDown={handleonKeyDown} label="Scaling Factor"/>
+            <FormLayout columns="10.5rem">
+                <InputField  id="name" name="name" defaultValue={props.channel.name} onKeyDown={handleonKeyDown} label="Name"/>
+                <InputField  id="id" name='id' defaultValue={props.channel.id} onKeyDown={handleonKeyDown} label="Channel ID"/>
+                <InputField  id="number" name='number' defaultValue={props.channel.number.toString()} onKeyDown={handleonKeyDown} label="Channel Number"/>
+                <InputField  id="mux_setting" name='mux_setting' defaultValue={props.channel.mux_setting.toString()} onKeyDown={handleonKeyDown} label="Mux Setting"/>
+                <InputField  id="scaling_factor" name='scaling_factor' defaultValue={props.channel.scaling_factor.toString()} onKeyDown={handleonKeyDown} label="Scaling Factor"/>
+            </FormLayout>
         </Card>
     );
 };

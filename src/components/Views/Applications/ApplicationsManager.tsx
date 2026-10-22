@@ -39,6 +39,7 @@ import {
 import {get_next_id, up_application} from "#client_core/index.js";
 import ApplicationSidebar from "./ApplicationSidebar.js";
 import {PeripheralsEditor} from "#components/Views/Applications/PeripheralsEditor.js";
+import {ChannelGroupsEditor, ChannelsEditor, ParametersEditor} from "#components/Views/Applications/ChannelsEditor.js";
 import {MdAdd} from "react-icons/md";
 import {useAppSelector} from "#redux/hooks.js";
 
@@ -242,52 +243,18 @@ let  ApplicationsManager = (props: ApplicationsManagerProps) =>{
                                selected={selectedTab} onSelect={set_selectedTab}>
 
                     <div key="channels">
-                        <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
-                            <MdAdd
-                                onClick={() => {handle_add_new("channel", selected_app.channels, "name");}}
-                                size={ColorTheme.icons_size}
-                                style={{marginLeft: "0.3em"}}
-                                color={ColorTheme.icons_color}
-                            />
-                        </div>
-                        <CardStack>
-                            {
-                                selected_app.channels.map((channel) => {
-                                    return (
-                                        <PlotChannelProperties
-                                            key={channel.name}
-                                            application={selected_app}
-                                            forceUpdate={forceUpdate}
-                                            channel={channel}
-                                        />
-                                    )
-                                })
-                            }
-                        </CardStack>
+                        <ChannelsEditor
+                            application={selected_app}
+                            forceUpdate={forceUpdate}
+                            onAdd={() => {handle_add_new("channel", selected_app.channels, "name");}}
+                        />
                     </div>
                     <div key="channel_groups">
-                        <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
-                            <MdAdd
-                                onClick={() => {handle_add_new("channel_group", selected_app.channel_groups, "group_name");}}
-                                size={ColorTheme.icons_size}
-                                style={{marginLeft: "0.3em"}}
-                                color={ColorTheme.icons_color}
-                            />
-                        </div>
-                        <CardStack>
-                            {
-                                selected_app.channel_groups.map((group) => {
-                                    return (
-                                        <PlotChannelGroupProperties
-                                            key={group.group_name}
-                                            application={selected_app}
-                                            forceUpdate={forceUpdate}
-                                            group={group}
-                                        />
-                                    )
-                                })
-                            }
-                        </CardStack>
+                        <ChannelGroupsEditor
+                            application={selected_app}
+                            forceUpdate={forceUpdate}
+                            onAdd={() => {handle_add_new("channel_group", selected_app.channel_groups, "group_name");}}
+                        />
                     </div>
                     <div key="irvs">
                         <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
@@ -338,26 +305,11 @@ let  ApplicationsManager = (props: ApplicationsManagerProps) =>{
                         </CardStack>
                     </div>
                     <div key="parameters">
-                        <MdAdd
-                            onClick={() => {handle_add_new("parameter", selected_app.parameters, "parameter_name");}}
-                            size={ColorTheme.icons_size}
-                            style={{marginLeft: "0.3em"}}
-                            color={ColorTheme.icons_color}
+                        <ParametersEditor
+                            application={selected_app}
+                            forceUpdate={forceUpdate}
+                            onAdd={() => {handle_add_new("parameter", selected_app.parameters, "parameter_name");}}
                         />
-                        <CardStack>
-                            {
-                                selected_app.parameters.map((parameter) => {
-                                    return (
-                                        <ParameterProperties
-                                            key={parameter.parameter_id}
-                                            application={selected_app}
-                                            forceUpdate={forceUpdate}
-                                            parameter={parameter}
-                                        />
-                                    )
-                                })
-                            }
-                        </CardStack>
                     </div>
                     <div key="peripherals">
                         <PeripheralsEditor
