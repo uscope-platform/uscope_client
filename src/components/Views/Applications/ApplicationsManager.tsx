@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect, useReducer, useState} from 'react';
+import React, {useContext, useEffect, useReducer, useState} from 'react';
 
 
 import {
@@ -37,6 +37,7 @@ import {
 } from "#UI/index.js";
 
 import {get_next_id, up_application} from "#client_core/index.js";
+import {ApplicationContext} from "#src/AuthApp.jsx";
 import ApplicationSidebar from "./ApplicationSidebar.js";
 import {PeripheralsEditor} from "#components/Views/Applications/PeripheralsEditor.js";
 import {ChannelGroupsEditor, ChannelsEditor, ParametersEditor} from "#components/Views/Applications/ChannelsEditor.js";
@@ -54,7 +55,12 @@ let  ApplicationsManager = (props: ApplicationsManagerProps) =>{
     const programs = useAppSelector(state => state.programs);
     const scripts = useAppSelector(state => state.scripts);
 
-    const [selected_app, set_selected_app] = useState(up_application.construct_empty(9999));
+    // the page opens on the application in use
+    const active_application = useContext(ApplicationContext);
+    const [selected_app, set_selected_app] = useState(() => {
+        const active = applications[active_application.id];
+        return active !== undefined ? new up_application(active) : up_application.construct_empty(9999);
+    });
 
     let [selectedTab, set_selectedTab] = useState(0);
 

@@ -41,9 +41,13 @@ interface SidebarBaseProps {
 
 export let SidebarBase = (props: SidebarBaseProps) =>{
 
-    const [selected, set_selected] = useState(null);
+    // the item selected to begin with, when there is one and it is in the list
+    const [selected, set_selected] = useState<string | null>(() => {
+        const id = props.initial_value?.[props.selection_key];
+        return id !== undefined && props.objects[id] !== undefined ? String(id) : null;
+    });
 
-    let selected_item = props.initial_value ? {[props.display_key]:props.initial_value.value}: {[props.display_key]:""};
+    let selected_item: any = {[props.display_key]:""};
     let export_enabled = false;
     if(selected){
         export_enabled = true;
