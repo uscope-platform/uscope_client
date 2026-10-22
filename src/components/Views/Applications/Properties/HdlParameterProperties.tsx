@@ -1,4 +1,4 @@
-// Copyright 2021 University of Nottingham Ningbo China
+// Copyright 2024 Filippo Savi
 // Author: Filippo Savi <filssavi@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,98 +13,59 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from "react";
-import {
-    Label,
-    InputField,
-    Button,
-    SidebarCollapsableContentLayout,
-    SidebarCollapsableNameLayout,
-    ColorTheme
-} from "#UI/index.js";
-
-import {MdArrowDropDown, MdArrowDropUp} from "react-icons/md";
+import React from "react";
+import {InputField, DeleteButton} from "#UI/index.js";
+import {format_parameter, parse_parameter} from "#client_core/index.js";
+import type {hdl_parameter} from "#interfaces/index.js";
 import {styled} from "goober";
 
 
-export const FieldPropsLayout = styled('div')`
-  border-radius: 1rem;
-  height: fit-content;
-  padding: 0.2rem 0 0.4rem 0.6rem;
-  margin: 0.1rem 0.5rem;
-  width: auto;
-  display: flex;
-  flex-direction: column;
-  background-color: ${() => ColorTheme.background.level_4};
+/// a name, a value and a remove button on one line
+const ParameterRow = styled('div')`
+  display: grid;
+  grid-template-columns: 1fr 1fr 2rem;
+  gap: 0.5rem;
+  align-items: center;
 `
+
+export const ParameterHeader = styled('div')`
+  display: grid;
+  grid-template-columns: 1fr 1fr 2rem;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  opacity: 0.6;
+`
+
+export interface HdlParameterChange {
+    type: "name" | "value" | "remove";
+    name: string;
+    new_value: hdl_parameter | string;
+}
 
 interface HdlParameterProps {
     name:string
-    onChange: (change: {type:string, name:string, new_value:number})=>void
-    value:number
+    onChange: (change: HdlParameterChange)=>void
+    value:hdl_parameter
 }
 
 export let  HdlParameterProperties = (props:HdlParameterProps) =>{
 
-    const [is_open, set_is_open] = useState(true);
-    let handleOpen = ()=>{
-        set_is_open(true);
-    }
-
-    let handleEditNameChange = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if(event.key==="Enter"){
-            props.onChange({type:"name", name:props.name, new_value:parseInt(event.currentTarget.value)});
-        }
-    }
-
-    let handleClose = ()=>{
-        set_is_open(false);
-    }
-
     let handleonKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) =>{
-        if(event.key==="Enter"|| event.key ==="Tab"){
-            switch (event.currentTarget.name) {
-                case "value":
-                    props.onChange({type:"value", name:props.name, new_value:parseInt(event.currentTarget.value)});
-                    break;
-                default:
-                    return;
-            }
+        if(event.key !== "Enter" && event.key !== "Tab") return;
+        const value = event.currentTarget.value;
+        if(event.currentTarget.name === "name"){
+            if(value !== props.name) props.onChange({type:"name", name:props.name, new_value:value});
+        } else {
+            const parsed = parse_parameter(value, props.value);
+            if(parsed !== null) props.onChange({type:"value", name:props.name, new_value:parsed});
         }
-
-    }
-
-
-    let handleRemove= () =>{
-
-    }
-
-
-    let renderContent = (props: HdlParameterProps) =>{
-
-        if(is_open)
-            return(
-                <SidebarCollapsableContentLayout>
-                    <InputField inline id="name" name="name" defaultValue={props.name} onKeyDown={handleEditNameChange} label="Name"/>
-                    <InputField inline id="value" name='value' defaultValue={props.value.toString()} onKeyDown={handleonKeyDown} label="Value"/>
-                    <Button onClick={handleRemove} >Remove</Button>
-                </SidebarCollapsableContentLayout>
-            )
-        return null;
     }
 
     return(
-        <FieldPropsLayout>
-            <SidebarCollapsableNameLayout>
-                <Label>{props.name}</Label>
-                {is_open
-                    ? <MdArrowDropUp size={ColorTheme.icons_size} onClick={handleClose} color={ColorTheme.icons_color}/>
-                    : <MdArrowDropDown size={ColorTheme.icons_size} onClick={handleOpen} color={ColorTheme.icons_color}/>
-                }
-            </SidebarCollapsableNameLayout>
-            {
-                renderContent(props)
-            }
-        </FieldPropsLayout>
+        <ParameterRow>
+            <InputField compact id={"name_" + props.name} name="name" defaultValue={props.name} onKeyDown={handleonKeyDown} label="Name"/>
+            <InputField compact id={"value_" + props.name} name="value" defaultValue={format_parameter(props.value)} onKeyDown={handleonKeyDown} label="Value"/>
+            <DeleteButton name={props.name} onRemove={() => props.onChange({type:"remove", name:props.name, new_value:0})}/>
+        </ParameterRow>
     );
 };

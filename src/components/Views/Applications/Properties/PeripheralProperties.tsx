@@ -18,13 +18,34 @@ import {
     InputField,
     Checkbox,
     SelectField,
-    Card
+    Card,
+    FormLayout,
+    ColorTheme
 } from "#UI/index.js";
+import {styled} from "goober";
 
 import {up_application, up_peripheral} from "#client_core/index.js";
-import {HdlParameterProperties} from "./HdlParameterProperties.jsx";
-import type {peripheral_instance, SimpleStringOption} from "#interfaces/index.js";
+import {HdlParameterProperties, ParameterHeader, type HdlParameterChange} from "./HdlParameterProperties.jsx";
+import type {peripheral_instance, SimpleStringOption, hdl_parameter} from "#interfaces/index.js";
 
+
+const SectionTitle = styled('div')`
+  grid-column: 1 / -1;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: ${ColorTheme.inactive_icons_color};
+  border-bottom: 1px solid ${ColorTheme.background.borders};
+`
+
+const ParametersLayout = styled('div')`
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+`
+
+const COLUMN_WIDTH = "10.5rem";
 
 interface PeripheralPropertiesProps{
     application: up_application,
@@ -77,7 +98,7 @@ export let  PeripheralProperties = (props: PeripheralPropertiesProps) =>{
         props.forceUpdate();
     }
 
-    let handle_parameter_change = async (change: {type:string, name:string, new_value:number}) =>{
+    let handle_parameter_change = async (change: HdlParameterChange) =>{
 
         let peripheral = props.application.peripherals.filter((p) =>{
             return p.peripheral_id === props.peripheral.peripheral_id;
@@ -88,9 +109,11 @@ export let  PeripheralProperties = (props: PeripheralPropertiesProps) =>{
             let value = parameters[change.name];
             if(value === undefined)return;
             delete parameters[change.name];
-            parameters[change.new_value] = value;
+            parameters[String(change.new_value)] = value;
+        } else if(change.type === "remove"){
+            delete parameters[change.name];
         } else {
-            parameters[change.name] = change.new_value;
+            parameters[change.name] = change.new_value as hdl_parameter;
         }
         await props.application.edit_peripheral(props.peripheral.name,"hdl_parameters", parameters);
         props.forceUpdate();
@@ -100,30 +123,48 @@ export let  PeripheralProperties = (props: PeripheralPropertiesProps) =>{
       return Object.keys(props.peripheral.hdl_parameters).map((item: string) =>{
           let parameter = props.peripheral.hdl_parameters[item];
           if(parameter === undefined)return;
-          return(<HdlParameterProperties name={item} value={parameter} onChange={handle_parameter_change}/>)
+          return(<HdlParameterProperties key={item} name={item} value={parameter} onChange={handle_parameter_change}/>)
       })
     };
+
+    const parameters = render_hdl_parameters();
 
     return(
         <Card
             name={props.peripheral.name}
             onRemove={handleRemove}
+            style={{width: "40rem", maxWidth: "100%", paddingLeft: 0}}
         >
-            <InputField inline id="name" name="name" defaultValue={props.peripheral.name} onKeyDown={handleonKeyDown} label="Name"/>
-            <InputField inline id="peripheral_id" name='peripheral_id' defaultValue={props.peripheral.peripheral_id} onKeyDown={handleonKeyDown} label="Peripheral id"/>
-            <SelectField<SimpleStringOption>
-                label="IP type"
-                onChange={handleIDChange}
-                value={selected}
-                name="spec_id"
-                options={peripherals_list}
-            />
-            <InputField inline id="base_address" name='base_address' defaultValue={props.peripheral.base_address} onKeyDown={handleonKeyDown} label="Base Address"/>
-            <InputField inline id="type" name='type' defaultValue={props.peripheral.type} onKeyDown={handleonKeyDown} label="Type"/>
-            <Checkbox name='proxied' value={props.peripheral.proxied} onChange={handleChange} label="Proxied Peripheral"/>
-            <InputField inline id="proxy_address" name='proxy_address' disabled={!props.peripheral.proxied} defaultValue={props.peripheral.proxy_address} onKeyDown={handleonKeyDown} label="Proxy Address"/>
-            <InputField inline id="proxy_type" name='proxy_type' disabled={!props.peripheral.proxied} defaultValue={props.peripheral.proxy_type} onKeyDown={handleonKeyDown} label="Proxy Type"/>
-            {render_hdl_parameters()}
+            <FormLayout columns={COLUMN_WIDTH}>
+                <InputField id="name" name="name" defaultValue={props.peripheral.name} onKeyDown={handleonKeyDown} label="Name"/>
+                <InputField id="peripheral_id" name='peripheral_id' defaultValue={props.peripheral.peripheral_id} onKeyDown={handleonKeyDown} label="Peripheral id"/>
+                <SelectField<SimpleStringOption>
+                    stacked
+                    label="IP type"
+                    onChange={handleIDChange}
+                    value={selected}
+                    name="spec_id"
+                    options={peripherals_list}
+                />
+                <InputField id="base_address" name='base_address' defaultValue={props.peripheral.base_address} onKeyDown={handleonKeyDown} label="Base Address"/>
+                <InputField id="type" name='type' defaultValue={props.peripheral.type} onKeyDown={handleonKeyDown} label="Type"/>
+
+                <div style={{gridColumn: "1 / -1"}}>
+                    <Checkbox name='proxied' value={props.peripheral.proxied} onChange={handleChange} label="Proxied Peripheral"/>
+                </div>
+                {props.peripheral.proxied && <>
+                    <InputField id="proxy_address" name='proxy_address' defaultValue={props.peripheral.proxy_address} onKeyDown={handleonKeyDown} label="Proxy Address"/>
+                    <InputField id="proxy_type" name='proxy_type' defaultValue={props.peripheral.proxy_type} onKeyDown={handleonKeyDown} label="Proxy Type"/>
+                </>}
+
+                {parameters.length > 0 && <>
+                    <SectionTitle>HDL parameters</SectionTitle>
+                    <ParametersLayout>
+                        <ParameterHeader><span>Name</span><span>Value</span></ParameterHeader>
+                        {parameters}
+                    </ParametersLayout>
+                </>}
+            </FormLayout>
         </Card>
     );
 };
