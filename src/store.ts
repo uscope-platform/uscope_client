@@ -14,8 +14,8 @@
 // limitations under the License.
 
 import {persistReducer} from 'redux-persist';
-import storage from 'redux-persist/lib/storage'
-import hardSet from "redux-persist/lib/stateReconciler/hardSet";
+import storage from 'redux-persist/es/storage'
+import hardSet from "redux-persist/es/stateReconciler/hardSet";
 import rootReducer from './redux/Slices/index.js';
 
 // TODO: immer AutoFreeze breaks plotly because plotly modifies his inputs!!! that are passes through redux
