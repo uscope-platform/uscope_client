@@ -15,6 +15,7 @@
 
 
 import axios, {type AxiosResponse} from "axios";
+import {to_backend_error} from "./errors.js";
 
 let server_address: string = "";
 let auth_config: any = null;
@@ -36,7 +37,7 @@ export const backend_get =<T = any> (endpoint: string): Promise<T> => {
             .then(res => {
                 resolve(res.data);
             }).catch(error => {
-                reject(error);
+                reject(to_backend_error(error));
             });
     });
 }
@@ -47,7 +48,7 @@ export const backend_post = <T = any> (endpoint: string, data: any): Promise<T> 
             .then(res => {
                 resolve(res.data);
             }).catch(error => {
-                reject(error);
+                reject(to_backend_error(error));
             });
     });
 }
@@ -58,7 +59,7 @@ export const backend_delete = (endpoint: string, data?: any): Promise<AxiosRespo
             .then(res => {
                 resolve(res.data);
             }).catch(error => {
-            reject(error);
+            reject(to_backend_error(error));
         });
     });
 }
@@ -69,7 +70,7 @@ export const backend_patch = (endpoint: string, data: any): Promise<AxiosRespons
             .then(res => {
                 resolve(res.data);
             }).catch(error => {
-            reject(error);
+            reject(to_backend_error(error));
         });
     });
 }
