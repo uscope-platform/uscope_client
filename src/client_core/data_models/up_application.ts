@@ -22,6 +22,7 @@ import {
 import store from "../../store.js";
 import {backend_delete, backend_get, backend_patch, backend_post} from "../proxy/backend.js";
 import {api_dictionary} from "../proxy/api_dictionary.js";
+import {error_text, report_error} from "../proxy/errors.js";
 import {addApplication, removeApplication, updateApplication} from "#redux/index.js";
 import {initialize_scripting_engine, run_script} from "../scripting/script_runner.js";
 import {set_scope_address, set_scope_dma_disable} from "../proxy/plot.js";
@@ -287,16 +288,22 @@ export class up_application {
 
     setup_scope_mux = async (channels: channel[]) =>{
         if(this.miscellaneous.scope_mux_address){
+            const failures: string[] = [];
             for(let item of channels){
                 if(item){
                     let channel_address = Math.round(parseInt(this.miscellaneous.scope_mux_address) + 4*(item.number+1));
                     try {
                         await up_peripheral.direct_register_write([[channel_address, Number(item.mux_setting)]]);
                     } catch (e) {
-                        let i = 0;
+                        // the other channels are still set up, the failures are reported together
+                        failures.push(error_text(e));
                     }
 
                 }
+            }
+            if(failures.length > 0){
+                const [first, ...others] = failures;
+                report_error(others.length > 0 ? first + " (and " + others.length + " more channels)" : first, "Scope mux setup");
             }
         }
     }
