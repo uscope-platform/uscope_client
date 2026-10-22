@@ -153,36 +153,40 @@ let  ApplicationsManager = (props: ApplicationsManagerProps) =>{
     }
 
 
+    // the beginning of the names the new items are given by add_* of up_application, the number after it is picked
+    const NEW_ITEM_PREFIX: Record<string, string> = {
+        channel: "new_channel_",
+        channel_group: "new_group_",
+        macro: "new_macro_",
+        parameter: "new_parameter_",
+        peripheral: "new_peripheral_",
+        soft_core: "new_core_",
+        misc: "new_parameter_"
+    };
+
     let handle_add_new = (item_type: string, old_items: any, title_prop: string) =>{
-        let ids: number[] =[];
-        if(item_type=== "irv"){
+        if(item_type === "irv"){
             add_content(0, item_type);
             return;
-        }else if(item_type === "misc"){
-            ids = Object.keys(old_items).map((item)=>{
-                const regex = new RegExp("new_parameter_(\\d+)", 'g');
-                let match = Array.from(item.matchAll(regex), m => m[1]);
-                if(match.length>0 && match[0] !== undefined){
-                    return  parseInt(match[0]);
-                } else{
-                    return;
-                }
-            }).filter((id)=>{return id !== undefined;});
-        } else {
-             ids = Object.values(old_items).map((item: any)=>{
-                const regex = new RegExp("new_"+item_type+"_(\\d+)", 'g');
-                 let match = Array.from((item[title_prop] as string).matchAll(regex), m => m[1]);
-                 if(match.length>0 && match[0] !== undefined){
-                     return  parseInt(match[0]);
-                 } else{
-                     return;
-                 }
-            }).filter((id)=>{return id !== undefined;});
         }
 
-        ids = ids.filter(Boolean);
-        let selected_id = get_next_id(ids)
-        add_content(selected_id, item_type);
+        let taken: number[];
+        if(item_type === "filter"){
+            // the filters have a number as their id
+            taken = Object.values(old_items).map((item: any) => item[title_prop] as number);
+        } else {
+            const prefix = NEW_ITEM_PREFIX[item_type] ?? "new_" + item_type + "_";
+            // the fields of misc are the keys, the other items have a property with their name
+            const names: string[] = item_type === "misc"
+                ? Object.keys(old_items)
+                : Object.values(old_items).map((item: any) => String(item[title_prop]));
+            taken = names.flatMap((name) => {
+                const suffix = name.startsWith(prefix) ? name.slice(prefix.length) : "";
+                return /^\d+$/.test(suffix) ? [parseInt(suffix)] : [];
+            });
+        }
+
+        add_content(get_next_id(taken), item_type);
     }
 
 
