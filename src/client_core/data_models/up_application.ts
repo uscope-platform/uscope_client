@@ -217,7 +217,7 @@ export class up_application {
     load_soft_cores = async () =>{
         let error_cores = [];
         for (let core of this.soft_cores){
-            let result = await this.load_core(core, {});
+            let result = await this.load_core(core, null);
             if(result[0].status !=="passed"){
                 error_cores.push(core.id)
             }
@@ -247,7 +247,8 @@ export class up_application {
 
     }
 
-    load_core = (core: any, program: any) =>{
+    /// Loads a program on a core: the given one, or the default program of the core when there is none
+    load_core = (core: any, program: any | null) =>{
 
         let selected_program;
         if(program){
