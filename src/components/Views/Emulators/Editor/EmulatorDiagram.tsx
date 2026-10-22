@@ -18,6 +18,7 @@ import React from 'react';
 import {css} from "goober";
 import {ColorTheme} from "#UI/index.js";
 import EmulatorToolbar from "./EmulatorToolbar.jsx";
+import EmulatorLibrary from "./EmulatorLibrary.jsx";
 import {Canvas, Edge, hasLink, MarkerArrow, Node, useSelection} from "reaflow";
 import type {EdgeData, NodeData} from "reaflow";
 import type {EmulatorGraphNode,EmulatorGraphEdge} from "#interfaces/index.js";
@@ -35,7 +36,7 @@ interface EmulatorDiagramProps {
     onNodeSelect: (event: GraphMouseEvent, node: EmulatorGraphNode) => void;
     onEdgeSelect: (event: GraphMouseEvent, edge: EmulatorGraphEdge) => void;
     onCanvasClick: () => void;
-    onAdd: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
+    onAdd: () => void;
     onAddIo: (direction: "source" | "sink") => void;
     onRun: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
     onDeploy: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
@@ -149,8 +150,6 @@ let EmulatorDiagram = function (props: EmulatorDiagramProps) {
             flexDirection:"column"
         }}>
             <EmulatorToolbar
-                onAdd={props.onAdd}
-                onAddIo={props.onAddIo}
                 onRun={props.onRun}
                 onDeploy={props.onDeploy}
                 onHardwareSim={props.onHardwareSim}
@@ -169,6 +168,13 @@ let EmulatorDiagram = function (props: EmulatorDiagramProps) {
                     </marker>
                 </defs>
             </svg>
+            <div style={{display: "flex", flexDirection: "row", minHeight: 0}}>
+            <EmulatorLibrary
+                enabled={props.enabled_actions.add}
+                onAddCore={props.onAdd}
+                onAddIo={props.onAddIo}
+            />
+            <div style={{flexGrow: 1, minWidth: 0}}>
             <Canvas
                 arrow={null}
                 nodes={inner_nodes}
@@ -182,6 +188,8 @@ let EmulatorDiagram = function (props: EmulatorDiagramProps) {
                 onNodeLinkCheck={handle_link_check}
                 onNodeLink={handle_link_create}
             />
+            </div>
+            </div>
         </div>
     );
 };

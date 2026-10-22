@@ -18,9 +18,6 @@ import React from 'react';
 import {ColorTheme, DeleteButton} from "#UI/index.js";
 import {Tooltip} from "#UI/Tooltip.js";
 import {
-    MdAdd,
-    MdInput,
-    MdOutput,
     MdArticle,
     MdConstruction,
     MdSimCardDownload,
@@ -29,8 +26,6 @@ import {
 } from "react-icons/md";
 
 interface EmulatorToolbarProps {
-    onAdd: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
-    onAddIo: (direction: "source" | "sink") => void;
     onCopy: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
     onEdit: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
     onRun: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
@@ -38,7 +33,6 @@ interface EmulatorToolbarProps {
     onHardwareSim: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
     onDelete: () => void;
     enable: {
-        add: boolean,
         copy: boolean,
         edit: boolean,
         run: boolean,
@@ -49,40 +43,6 @@ interface EmulatorToolbarProps {
 }
 
 let  EmulatorToolbar = (props: EmulatorToolbarProps) =>{
-
-    let render_add = () =>{
-        let handle_click = (event:React.MouseEvent<SVGElement, MouseEvent>) =>{
-            if(props.enable.add) {
-                props.onAdd(event);
-            }
-        };
-        let icon_color = props.enable.add ? ColorTheme.icons_color : ColorTheme.disabled_icon_color;
-        return (
-            <div key="add_icon" id="add_icon">
-                <MdAdd onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
-                       color={icon_color}/>
-                <Tooltip anchorSelect="#add_icon" content={"Add Core"} place="top"/>
-            </div>
-        )
-    }
-
-    let render_add_io = (direction: "source" | "sink") => {
-        const handle_click = () =>{
-            if(props.enable.add) {
-                props.onAddIo(direction);
-            }
-        };
-        const Icon = direction === "source" ? MdInput : MdOutput;
-        const id = "add_io_" + direction;
-        const icon_color = props.enable.add ? ColorTheme.icons_color : ColorTheme.disabled_icon_color;
-        return (
-            <div key={id} id={id}>
-                <Icon onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
-                      color={icon_color}/>
-                <Tooltip anchorSelect={"#" + id} content={direction === "source" ? "Add IO Source" : "Add IO Sink"} place="top"/>
-            </div>
-        )
-    }
 
     let render_copy = () => {
         let handle_click = (event:React.MouseEvent<SVGElement, MouseEvent>) =>{
@@ -173,9 +133,6 @@ let  EmulatorToolbar = (props: EmulatorToolbarProps) =>{
 
     return (
         <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
-            {render_add()}
-            {render_add_io("source")}
-            {render_add_io("sink")}
             {render_copy()}
             {render_edit()}
             {render_run()}
