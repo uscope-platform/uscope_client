@@ -1,7 +1,11 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import react, {reactCompilerPreset} from '@vitejs/plugin-react';
+import babel from '@rolldown/plugin-babel';
 
 import * as child from "child_process";
+
+// the React Compiler memoizes the components, REACT_COMPILER=0 builds without it
+const use_react_compiler = process.env.REACT_COMPILER !== '0';
 
 const commitHash = child.execSync('git rev-parse --short HEAD').toString().trimEnd();
 
@@ -14,7 +18,8 @@ export default defineConfig({
         tsconfigPaths: true
     },
     plugins: [
-        react()
+        react(),
+        ...(use_react_compiler ? [babel({presets: [reactCompilerPreset()]})] : [])
     ],
     build:{
         outDir:"build",
