@@ -29,7 +29,7 @@ import {
 import {MdBuild, MdConstruction} from "react-icons/md";
 import {Tooltip} from "react-tooltip";
 
-import {ToastContainer, toast} from "react-toastify";
+import {report_error} from "#client_core/proxy/errors.js";
 import 'react-toastify/dist/ReactToastify.css';
 import FilterImplementationControls from "./FilterImplementationControls.js";
 import FilterSidebar from "./FilterSidebar.jsx";
@@ -51,6 +51,9 @@ let FilterManager = (props: FilterManagerProps) =>{
 
     const [plot_filter, set_plot_filter] = useState({ideal:{x:[], y:[]}, quantized:{x:[], y:[]}})
 
+    // the editor is for a filter of the store, the empty one it starts with (or a deleted one) is not
+    const has_selection = filters_store[selected_filter.id] !== undefined;
+
     let handle_select = (flt: number) =>{
         let flt_obj = filters_store[flt];
         if(flt_obj === undefined) return;
@@ -58,35 +61,37 @@ let FilterManager = (props: FilterManagerProps) =>{
     }
 
     useEffect(() => {
+        if(!has_selection) return;
         set_keepout_shapes(filter_calculate_keepouts(selected_filter.parameters));
     }, [filter_revision]);
 
     useEffect(() => {
+        if(!has_selection) return;
         set_filter_revision(filter_revision+1)
+        set_plot_filter({ideal: {x:[], y:[]}, quantized: {x:[], y:[]}});
+        // a filter that was never designed has no response to plot
+        if(selected_filter.ideal_taps.length === 0) return;
         selected_filter.get_plots().then((resp)=>{
             set_plot_filter({
                 ideal: {x:resp.ideal.frequency, y:resp.ideal.response},
                 quantized:  {x:resp.quantized.frequency, y:resp.quantized.response}
             });
 
-        })
-        set_plot_filter({ideal: {x:[], y:[]}, quantized: {x:[], y:[]}});
-    }, [selected_filter]);
+        }).catch(report_error)
+    }, [selected_filter, has_selection]);
 
     let handleDesign = async () =>{
-        let filter = await selected_filter.design();
         try {
+            let filter = await selected_filter.design();
             set_plot_filter({ideal: {x:filter["frequency"], y:filter["response"]}, quantized: plot_filter.quantized});
         } catch (err: any) {
-            toast.error(err);
+            report_error(err);
         }
     }
     let handleImplement = () =>{
         selected_filter.implement().then((resp)=>{
             set_plot_filter({ideal: plot_filter.ideal, quantized: {x:resp["frequency"], y:resp["response"]}});
-        }).catch((err)=>{
-            toast.error(err);
-        })
+        }).catch(report_error)
     }
 
 
@@ -114,71 +119,67 @@ let FilterManager = (props: FilterManagerProps) =>{
                 flexGrow:1,
                 height: "100%"
             }}>
-                <ToastContainer
-                    position="top-right"
-                    autoClose={5000}
-                    hideProgressBar={false}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                    theme="dark"
-                />
-                <div style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    gap: 10
-                }}>
-                    <UIPanel key="filter_designer_plot" level="level_2" style={{flexGrow: 1}}>
-                        <SimpleContent name="Filter Viewer">
-                            <FilterPlot
-                                keepout_shapes={keepout_shapes}
-                                f_sample={selected_filter.parameters.sampling_frequency}
-                                plot_data={plot_filter}
-                            />
+                {!has_selection ? (
+                    <UIPanel key="no_filter" level="level_2" style={{flexGrow: 1}}>
+                        <SimpleContent name="Filter">
+                            <div style={{margin: "1em", opacity: 0.6}}>Select a filter or add a new one</div>
                         </SimpleContent>
                     </UIPanel>
-                    <UIPanel key="filter_designer_controls" style={{flexGrow: 1}}
+                ) : (<>
+                    <div style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: 10
+                    }}>
+                        <UIPanel key="filter_designer_plot" level="level_2" style={{flexGrow: 1}}>
+                            <SimpleContent name="Filter Viewer">
+                                <FilterPlot
+                                    keepout_shapes={keepout_shapes}
+                                    f_sample={selected_filter.parameters.sampling_frequency}
+                                    plot_data={plot_filter}
+                                />
+                            </SimpleContent>
+                        </UIPanel>
+                        <UIPanel key="filter_designer_controls" style={{flexGrow: 1}}
+                                 level="level_2">
+                            <SimpleContent name="Design Parameters">
+                                <div>
+                                    <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
+                                        <div id="design">
+                                            <MdBuild onClick={handleDesign} size={ColorTheme.icons_size}
+                                                     style={{marginLeft: "0.3em"}} color={ColorTheme.icons_color}/>
+                                            <Tooltip anchorId="design" content={"Design Filter"} place="top"/>
+                                        </div>
+                                    </div>
+                                    <FilterDesignerControls
+                                        name={selected_filter.name}
+                                        filter_parameters={selected_filter.parameters}
+                                        on_change={handleParamChanges}
+                                        on_rename={handleRename}
+                                    />
+                                </div>
+                            </SimpleContent>
+                        </UIPanel>
+                    </div>
+                    <UIPanel key="filter_implementation_controls" style={{flexGrow: 1}}
                              level="level_2">
-                        <SimpleContent name="Design Parameters">
+                        <SimpleContent name="Implementation Parameters">
                             <div>
                                 <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
-                                    <div id="design">
-                                        <MdBuild onClick={handleDesign} size={ColorTheme.icons_size}
-                                                 style={{marginLeft: "0.3em"}} color={ColorTheme.icons_color}/>
-                                        <Tooltip anchorId="design" content={"Design Filter"} place="top"/>
+                                    <div id="implement">
+                                        <MdConstruction onClick={handleImplement} size={ColorTheme.icons_size}
+                                                        style={{marginLeft: "0.3em"}} color={ColorTheme.icons_color}/>
+                                        <Tooltip anchorId="implement" content={"Implement Filter"} place="top"/>
                                     </div>
                                 </div>
-                                <FilterDesignerControls
-                                    name={selected_filter.name}
+                                <FilterImplementationControls
                                     filter_parameters={selected_filter.parameters}
                                     on_change={handleParamChanges}
-                                    on_rename={handleRename}
                                 />
                             </div>
                         </SimpleContent>
                     </UIPanel>
-                </div>
-                <UIPanel key="filter_implementation_controls" style={{flexGrow: 1}}
-                         level="level_2">
-                    <SimpleContent name="Implementation Parameters">
-                        <div>
-                            <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
-                                <div id="implement">
-                                    <MdConstruction onClick={handleImplement} size={ColorTheme.icons_size}
-                                                    style={{marginLeft: "0.3em"}} color={ColorTheme.icons_color}/>
-                                    <Tooltip anchorId="implement" content={"Implement Filter"} place="top"/>
-                                </div>
-                            </div>
-                            <FilterImplementationControls
-                                filter_parameters={selected_filter.parameters}
-                                on_change={handleParamChanges}
-                            />
-                        </div>
-                    </SimpleContent>
-                </UIPanel>
+                </>)}
             </div>
             <div style={{
                 minWidth:"300px",

@@ -33,7 +33,7 @@ import type {
     port_link,
     EmulatorHilChannelIdentifier
 } from "#interfaces/index.ts";
-import axios, {type AxiosError} from "axios";
+import {report_error} from "../../proxy/errors.js";
 import type {EmulatorHilInput} from "#interfaces/emulator_view.js";
 
 export class up_emulator {
@@ -116,10 +116,8 @@ export class up_emulator {
             let ret = await backend_post(api_dictionary.emulators.add + '/' + this.id, this._get_emulator());
             store.dispatch(addEmulator(this));
             return ret;
-        } catch (error: any | AxiosError) {
-            if(axios.isAxiosError(error)){
-                alert(error.response?.data.message || 'An unknown error occurred');
-            }
+        } catch (error: any) {
+            report_error(error);
         }
     }
 
