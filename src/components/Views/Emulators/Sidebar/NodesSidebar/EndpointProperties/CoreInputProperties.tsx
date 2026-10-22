@@ -17,6 +17,7 @@ import React, {useReducer} from 'react';
 import {Checkbox, InputField, SelectField, FieldPane, FieldSpan, SimpleContent} from "#UI/index.js";
 import {ConstantInputProperties, SeriesInputProperties, ExternalInputProperties, WaveformInputProperties} from "./inputs/index.js";
 import TypeOptionsContainer from "./TypeOptionsContainer.jsx";
+import ChannelRadioGroup from "./ChannelRadioGroup.jsx";
 import {up_emulator} from "#client_core/index.js";
 import type {
     core,
@@ -24,7 +25,7 @@ import type {
     EmulatorIomSelector,
     core_input,
     core_input_source,
-    SimpleStringOption, SimpleNumberOption
+    SimpleStringOption
 } from "#interfaces/index.js";
 import type {ActionMeta} from "react-select";
 
@@ -40,7 +41,9 @@ let  CoreInputProperties = (props: CoreInputPropertiesProps) =>{
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
-    let [selected_channel, set_selected_channel] = React.useState(0);
+    let [chosen_channel, set_selected_channel] = React.useState(0);
+    // the choice outlives the core it was made on
+    let selected_channel = Math.min(chosen_channel, Math.max(props.selected_core.channels - 1, 0));
 
     let sel_in = props.selected_core.inputs.filter((item)=>{
         return item.name === props.selected_iom.obj
@@ -79,6 +82,7 @@ let  CoreInputProperties = (props: CoreInputPropertiesProps) =>{
         if(e.name === "source_type"){
             let new_source = {...sel_in.source, ...{"type":obj.value}};
             await props.selected_emulator.edit_input(props.selected_component.obj.id, "source", new_source, props.selected_iom.obj)
+            forceUpdate();
             return;
         }
         await props.selected_emulator.edit_input(props.selected_component.obj.id, e.name as keyof core_input, obj.value, props.selected_iom.obj);
@@ -174,34 +178,14 @@ let  CoreInputProperties = (props: CoreInputPropertiesProps) =>{
         return ret;
     }
 
-    let get_channels_list = (): SimpleNumberOption[] =>{
-        let channels_idx = Array.from({ length: props.selected_core.channels }, (_, i) => i );
-        return channels_idx.map((index) =>{
-            return {label: index.toString(), value: index}
-        })
-    }
+    // the other sources have the same data for all the channels
+    let per_channel_source = sel_in.source.type === "constant" || sel_in.source.type === "waveform";
 
     if(sel_in){
         return(
             <SimpleContent name="Input Properties">
                 <FieldPane key="input_props">
                     <InputField id="name" name="name" label="Name" defaultValue={sel_in.name} onKeyDown={handle_change_iom}/>
-                    <TypeOptionsContainer label="Channel">
-                    <FieldSpan>
-                    <SelectField<SimpleNumberOption>
-                        stacked
-                        key="channel_selector"
-                        label="Channel selection"
-                        onChange={(obj: SimpleNumberOption |  null) =>{
-                            if(obj === null) return;
-                            set_selected_channel(obj.value);
-                        }}
-                        value={{value: selected_channel, label: selected_channel.toString()}}
-                        name="channel_selector"
-                        options={get_channels_list()}
-                    />
-                    </FieldSpan>
-                    </TypeOptionsContainer>
                     <TypeOptionsContainer label="Source">
                         <FieldSpan>
                         <SelectField<SimpleStringOption>
@@ -220,6 +204,15 @@ let  CoreInputProperties = (props: CoreInputPropertiesProps) =>{
                             ]}
                         />
                         </FieldSpan>
+                        {per_channel_source && props.selected_core.channels > 1 && (
+                            <FieldSpan key="channel_radio_group">
+                                <ChannelRadioGroup
+                                    count={props.selected_core.channels}
+                                    selected={selected_channel}
+                                    onSelect={set_selected_channel}
+                                />
+                            </FieldSpan>
+                        )}
                         {render_source_dependent_options()}
                     </TypeOptionsContainer>
                     <TypeOptionsContainer label="Data format">
