@@ -30,82 +30,94 @@ interface HilPlotTabProps {
     plot_prescaler: number
 }
 
-let HilPlotTab = function (props: HilPlotTabProps) {
+// the part of the page that needs a deployed emulator, its state lives here so that it exists only when it is shown
+let DeployedHilPlotTab = function (props: HilPlotTabProps) {
 
-    if(props.deployed){
-        let [input_tab_names, inputs, channels] =  props.emulator.get_inputs();
-        let [selected_core, set_selected_core] = React.useState(0);
-        let [selected_outputs, set_selected_outputs] = React.useState<string[]>([]);
+    let [input_tab_names, inputs, channels] =  props.emulator.get_inputs();
+    let [selected_core, set_selected_core] = React.useState(0);
+    let [selected_outputs, set_selected_outputs] = React.useState<string[]>([]);
 
-        let [sampling_freq, set_sampling_freq] = React.useState(1e3);
+    let [sampling_freq, set_sampling_freq] = React.useState(1e3);
 
-        useEffect(() => {
-            props.emulator.get_sampling_frequency().then(res => {
-                if(props.plot_prescaler>0) set_sampling_freq(res/props.plot_prescaler)
-                else set_sampling_freq(res);
-            });
-        }, [props.emulator, props.plot_prescaler]);
+    useEffect(() => {
+        props.emulator.get_sampling_frequency().then(res => {
+            if(props.plot_prescaler>0) set_sampling_freq(res/props.plot_prescaler)
+            else set_sampling_freq(res);
+        });
+    }, [props.emulator, props.plot_prescaler]);
 
-        let render_input_tabs = ()=>{
-            let ret_arr = []
-            for(let i in inputs){
-                let in_arr = inputs[i];
-                let n_c = channels[selected_core];
-                if(n_c === undefined || in_arr ===undefined) continue;
-                ret_arr.push(
-                    <HilInputsPanel
-                        key={i+ "inputs_tab"}
-                        inputs={in_arr}
-                        emulator={props.emulator}
-                        n_channels={n_c}
-                    />
-                );
-            }
-            return ret_arr;
+    let render_input_tabs = ()=>{
+        let ret_arr = []
+        for(let i in inputs){
+            let in_arr = inputs[i];
+            let n_c = channels[selected_core];
+            if(n_c === undefined || in_arr ===undefined) continue;
+            ret_arr.push(
+                <HilInputsPanel
+                    key={i+ "inputs_tab"}
+                    inputs={in_arr}
+                    emulator={props.emulator}
+                    n_channels={n_c}
+                />
+            );
         }
-        return(
+        return ret_arr;
+    }
+    return(
+       <div style={{
+           display:"flex",
+           flexDirection:"column",
+           gap:10,
+           margin:10
+       }}>
+           <UIPanel key="hil_scope" data-grid={{x: 0, y: 0, w: 24, h: 16, static: true}} level="level_2">
+               <SimpleContent name="Scope" height="100%">
+                   <HilPlot
+                       hil_plot_running={props.hil_plot_running}
+                       refreshPeriod={30}
+                       sampling_frequency={sampling_freq}
+                       download_data_request={props.download_data_request}
+                       on_download_done={props.on_download_done}
+                       selected_outputs={selected_outputs}
+                   />
+               </SimpleContent>
+           </UIPanel>
            <div style={{
                display:"flex",
-               flexDirection:"column",
-               gap:10,
-               margin:10
+               flexDirection:"row",
+               gap:10
            }}>
-               <UIPanel key="hil_scope" data-grid={{x: 0, y: 0, w: 24, h: 16, static: true}} level="level_2">
-                   <SimpleContent name="Scope" height="100%">
-                       <HilPlot
-                           hil_plot_running={props.hil_plot_running}
-                           refreshPeriod={30}
-                           sampling_frequency={sampling_freq}
-                           download_data_request={props.download_data_request}
-                           on_download_done={props.on_download_done}
-                           selected_outputs={selected_outputs}
+               <UIPanel key="Hil_inputs"  style={{flexGrow:0.5}} level="level_2">
+                   <TabbedContent names={input_tab_names}  selected={selected_core} onSelect={set_selected_core}>
+                       {render_input_tabs()}
+                   </TabbedContent>
+               </UIPanel>
+               <UIPanel key="hil_channel_selector" style={{flexGrow:1}}  level="level_2">
+                   <SimpleContent name="Channel Selector" height="100%">
+                       <HilChannelSelector
+                           emulator={props.emulator}
+                           set_selected_outputs={set_selected_outputs}
                        />
                    </SimpleContent>
                </UIPanel>
-               <div style={{
-                   display:"flex",
-                   flexDirection:"row",
-                   gap:10
-               }}>
-                   <UIPanel key="Hil_inputs"  style={{flexGrow:0.5}} level="level_2">
-                       <TabbedContent names={input_tab_names}  selected={selected_core} onSelect={set_selected_core}>
-                           {render_input_tabs()}
-                       </TabbedContent>
-                   </UIPanel>
-                   <UIPanel key="hil_channel_selector" style={{flexGrow:1}}  level="level_2">
-                       <SimpleContent name="Channel Selector" height="100%">
-                           <HilChannelSelector
-                               emulator={props.emulator}
-                               set_selected_outputs={set_selected_outputs}
-                           />
-                       </SimpleContent>
-                   </UIPanel>
-               </div>
            </div>
+       </div>
 
+    );
+
+};
+
+let HilPlotTab = function (props: HilPlotTabProps) {
+    if(!props.deployed){
+        return (
+            <UIPanel level="level_2" style={{flexGrow: 1, margin: 10}}>
+                <p style={{margin: "1em", opacity: 0.7}}>
+                    The emulator is not deployed to the hardware. Deploy it from the Editor tab to see its scope and inputs here.
+                </p>
+            </UIPanel>
         );
     }
-
+    return <DeployedHilPlotTab {...props}/>;
 };
 
 
