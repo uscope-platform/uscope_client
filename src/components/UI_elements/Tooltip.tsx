@@ -20,4 +20,6 @@ import {Tooltip as ReactTooltip, type ITooltip} from "react-tooltip";
 const SHOW_DELAY_MS = 2000;
 
 /// The tooltip of the interface: the one of react-tooltip, shown after the pointer rested on its anchor
-export const Tooltip = (props: ITooltip) => <ReactTooltip delayShow={SHOW_DELAY_MS} {...props}/>;
+/// It is attached to the element of the id given as anchorId
+export const Tooltip = ({anchorId, ...props}: ITooltip & {anchorId?: string}) =>
+    <ReactTooltip delayShow={SHOW_DELAY_MS} {...(anchorId ? {anchorSelect: "#" + anchorId} : {})} {...props}/>;
