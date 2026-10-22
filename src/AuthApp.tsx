@@ -24,7 +24,6 @@ import Navbar from "./components/Navbar.js";
 import ApplicationChooser from "./components/AppChooser.js";
 import {initialize_scripting_engine, refresh_caches, setup_client_core, up_application, up_settings} from "#client_core/index.js";
 import {UIPanel, InterfaceParameters} from "#UI/index.js";
-import OnboardingPage from "./components/Common_Components/OnboardingPage.jsx";
 import {useAppSelector} from "#redux/hooks.js";
 
 //////  STYLE IMPORTS
@@ -45,9 +44,7 @@ interface view {
 export const ApplicationContext = React.createContext(up_application.construct_empty(9999));
 
 interface AuthAppProps {
-    needs_onboarding?: boolean;
     user_role: 'admin' | 'user' | 'operator';
-    onboarding_done?: () => void
 }
 
 
@@ -75,36 +72,31 @@ let AuthApp = (props: AuthAppProps) =>{
     };
 
     useEffect(()=>{
-        if(props.needs_onboarding){
-            set_app_stage("ONBOARDING");
-        } else{
-            refresh_caches().then((res) =>{
-                let r = res[0];
+        refresh_caches().then((res) =>{
+            let r = res[0];
 
-                if(r !== undefined) {
-                    if(r.status ==="valid"){
-                        set_app_stage("APP_CHOICE");
-                    } else if(Object.keys(r.data).length !== 0) {
-                        set_app_stage("APP_CHOICE");
-                    } else {
-                        let app = up_application.construct_empty(1);
-                        app.add_remote().then(()=>{
-                            set_app_stage("APP_CHOICE");
-                        })
-                    }
+            if(r !== undefined) {
+                if(r.status ==="valid"){
+                    set_app_stage("APP_CHOICE");
+                } else if(Object.keys(r.data).length !== 0) {
+                    set_app_stage("APP_CHOICE");
                 } else {
                     let app = up_application.construct_empty(1);
                     app.add_remote().then(()=>{
                         set_app_stage("APP_CHOICE");
                     })
                 }
+            } else {
+                let app = up_application.construct_empty(1);
+                app.add_remote().then(()=>{
+                    set_app_stage("APP_CHOICE");
+                })
+            }
 
 
-            });
-            set_app_stage("RESOURCE_LOADING");
-        }
-
-    },[props.needs_onboarding])
+        });
+        set_app_stage("RESOURCE_LOADING");
+    },[])
 
     useEffect(()=>{
         if(application)
@@ -156,13 +148,6 @@ let AuthApp = (props: AuthAppProps) =>{
 
 
     switch (app_stage) {
-        case "ONBOARDING":
-            return(
-                <div className="App">
-                    <OnboardingPage onboarding_done={props.onboarding_done ?? (() => {})} />
-                </div>
-            );
-
         case "RESOURCE_LOADING":
             return(
                 <></>

@@ -26,7 +26,9 @@ import {set_address, set_auth_config, set_redux_store, need_onboarding} from "#c
 //////  STYLE IMPORTS
 import './App.css';
 import {auto_sign_in, manual_sign_in} from "./client_core/proxy/auth.js";
-import {backend_error, report_error} from "./client_core/proxy/errors.js";
+import {backend_error, error_text, report_error} from "./client_core/proxy/errors.js";
+import OnboardingPage from "./components/Common_Components/OnboardingPage.js";
+import ServerUnreachable from "./components/Common_Components/ServerUnreachable.js";
 import type {AutoAuthRequest, login_token, ManualAuthRequest, UserRole} from "#interfaces/index.js";
 
 interface AppProps {
@@ -37,7 +39,9 @@ let App = (props: AppProps) =>{
 
 
     const [logged, set_logged] = useState(false);
-    const [onboarding_needed, set_onboarding_needed] = useState(true);
+    // what the platform needs before anyone can log in: asking, a first account, nothing, or no answer
+    const [setup, set_setup] = useState<"checking" | "onboarding" | "ready" | "unreachable">("checking");
+    const [setup_problem, set_setup_problem] = useState("");
     const [user_role, set_user_role] = useState<UserRole>("operator");
 
     const done = useCallback(async (login_credentials: ManualAuthRequest | AutoAuthRequest)=>{
@@ -73,21 +77,24 @@ let App = (props: AppProps) =>{
         return () => window.removeEventListener("unhandledrejection", on_rejection);
     }, []);
 
+    // try_automated_login is declared below, it is only called once the platform answered
+    const check_setup = useCallback(() =>{
+        set_setup("checking");
+        need_onboarding().then(needed =>{
+            set_setup(needed ? "onboarding" : "ready");
+            if(!needed) try_automated_login();
+        }).catch((e) =>{
+            set_setup_problem(error_text(e));
+            set_setup("unreachable");
+        });
+    }, []);
+
     useEffect(()=>{
         set_address(import.meta.env.VITE_APP_SERVER);
         set_redux_store(store);
-
-        need_onboarding().then(response =>{
-            set_onboarding_needed(response);
-            if(response) {
-                set_logged(true);
-            } else{
-                try_automated_login();
-            }
-        });
-
+        check_setup();
     },[])
-    
+
     let try_automated_login = () =>{
         let raw_token = localStorage.getItem('login_token');
         if(raw_token ===null)return;
@@ -102,22 +109,24 @@ let App = (props: AppProps) =>{
         }
     }
 
-    let onboarding_done = () =>{
-        set_logged(false);
-        set_onboarding_needed(false);
-    }
+    const content = () =>{
+        switch (setup) {
+            case "checking":
+                return <></>;
+            case "unreachable":
+                return <ServerUnreachable message={setup_problem} on_retry={check_setup}/>;
+            case "onboarding":
+                // the account that was just created logs in from the login page
+                return <OnboardingPage onboarding_done={() => set_setup("ready")}/>;
+            case "ready":
+                return logged ? <AuthApp user_role={user_role}/> : <LoginPage done={done}/>;
+        }
+    };
 
     return(
         <div className="App">
             <React.StrictMode>
-                {logged?
-                    <AuthApp
-                        onboarding_done={onboarding_done}
-                        needs_onboarding={onboarding_needed}
-                        user_role={user_role}
-                    /> :
-                    <LoginPage done={done}/>
-                }
+                {content()}
             </React.StrictMode>
             <ToastContainer
                 position="top-right"
