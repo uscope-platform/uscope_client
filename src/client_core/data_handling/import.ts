@@ -14,13 +14,13 @@
 // limitations under the License.
 
 import Ajv2020 from "ajv/dist/2020.js"
-import {up_application} from "../data_models/up_application.js";
-import {up_peripheral} from "../data_models/up_peripheral.js";
+import {up_application} from "#src/client_core/index.js";
+import {up_peripheral} from "#src/client_core/index.js";
 import {application_schema} from "./application_schema.js";
 import {peripheral_schema} from "./peripheral_schema.js";
 import store from "../../store.js";
 import {addApplication} from "#redux/index.js";
-import {get_next_id} from "../utilities/id_management.js";
+import {get_next_id} from "#src/client_core/index.js";
 import {
     diff_applications,
     diff_is_empty,
