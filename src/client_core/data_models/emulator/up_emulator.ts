@@ -31,6 +31,7 @@ import type {
     core_output,
     io_block,
     io_port,
+    emulator_layout,
     emulator_hil_sim_data,
     port_link,
     EmulatorHilChannelIdentifier
@@ -43,6 +44,7 @@ export class up_emulator {
     public name:string;
     public cores: Record<string, core>;
     public io_blocks: Record<string, io_block>;
+    public layout: emulator_layout;
     public connections: connection[];
     public emulation_time:number;
     public deployment_mode:boolean;
@@ -53,6 +55,7 @@ export class up_emulator {
         this.name = emulator_obj.name;
         this.cores = emulator_obj.cores;
         this.io_blocks = emulator_obj.io_blocks ?? {};
+        this.layout = emulator_obj.layout ?? {};
         this.emulation_time = emulator_obj.emulation_time;
         this.deployment_mode = emulator_obj.deployment_mode;
         if(!emulator_obj.connections){
@@ -68,6 +71,7 @@ export class up_emulator {
             name:"",
             cores:{},
             io_blocks:{},
+            layout:{},
             connections:[],
             emulation_time:0.001,
             deployment_mode:false
@@ -80,6 +84,7 @@ export class up_emulator {
             id: this.id,
             cores: JSON.parse(JSON.stringify(this.cores)),
             io_blocks: JSON.parse(JSON.stringify(this.io_blocks)),
+            layout: JSON.parse(JSON.stringify(this.layout)),
             connections: JSON.parse(JSON.stringify(this.connections)),
             name: this.name,
             emulation_time: this.emulation_time,
@@ -92,6 +97,7 @@ export class up_emulator {
             id: emulator_obj.id,
             cores: JSON.parse(JSON.stringify(emulator_obj.cores)),
             io_blocks: JSON.parse(JSON.stringify(emulator_obj.io_blocks ?? {})),
+            layout: JSON.parse(JSON.stringify(emulator_obj.layout ?? {})),
             connections: JSON.parse(JSON.stringify(emulator_obj.connections)),
             name: emulator_obj.name,
             emulation_time: emulator_obj.emulation_time,
@@ -105,6 +111,7 @@ export class up_emulator {
             name:'new_emulator_'+ emulator_id,
             cores:{},
             io_blocks:{},
+            layout:{},
             connections:[],
             emulation_time:0.001,
             deployment_mode:false
@@ -251,6 +258,22 @@ export class up_emulator {
         }
         return new_source;
     }
+    /// Where the editor draws a node: presentation only, build() never reads it
+    set_node_positions = async (positions: emulator_layout) =>{
+        const layout = {...this.layout, ...positions};
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, {id:this.id, field:"layout", action:"edit", value:layout});
+        this.layout = layout;
+        store.dispatch(update_emulator(this.deep_copy()));
+    }
+
+    forget_node_position = async (node_id: number) =>{
+        if(this.layout[node_id] === undefined) return;
+        const layout = {...this.layout};
+        delete layout[node_id];
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, {id:this.id, field:"layout", action:"edit", value:layout});
+        this.layout = layout;
+    }
+
     is_io_block = (id: number) => this.io_blocks[id] !== undefined;
 
     /// An IO source feeds a core, an IO sink is fed by one: nothing goes from an IO block to another
@@ -336,6 +359,7 @@ export class up_emulator {
         let edit = {id:this.id, field:"io_blocks",  action:"remove", value:block_id};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         delete this.io_blocks[block_id];
+        await this.forget_node_position(block_id);
         store.dispatch(update_emulator(this.deep_copy()));
     }
 
@@ -343,6 +367,7 @@ export class up_emulator {
         let edit = {id:this.id, field:"cores",  action:"remove", value:core_id};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
         delete this.cores[core_id];
+        await this.forget_node_position(core_id);
         for(let i of this.connections){
             if(i.source_core === core_id || i.destination_core === core_id){
                 await this.remove_dma_connection(i.source_core, i.destination_core);
@@ -1211,6 +1236,7 @@ export class up_emulator {
             name: this.name,
             cores: this.cores,
             io_blocks: this.io_blocks,
+            layout: this.layout,
             emulation_time:this.emulation_time,
             connections: this.connections,
             deployment_mode: this.deployment_mode

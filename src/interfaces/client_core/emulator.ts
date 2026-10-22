@@ -158,11 +158,15 @@ export interface io_block{
     ports:io_port[]
 }
 
+/// Where the editor draws a node, by id: only presentation, it never goes to the driver
+export type emulator_layout = Record<string, {x:number, y:number}>;
+
 export interface emulator{
     id:number,
     name:string,
     cores: Record<string, core>
     io_blocks?: Record<string, io_block>,
+    layout?: emulator_layout,
     connections:connection[],
     emulation_time:number,
     deployment_mode:boolean
