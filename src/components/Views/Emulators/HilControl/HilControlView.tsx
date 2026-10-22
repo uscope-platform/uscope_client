@@ -18,6 +18,7 @@ import HilPlotTab from "./HilPlotTab.jsx";
 import HilControlSidebar from "../Sidebar/per_panel_sidebars/HilControlSidebar.jsx";
 import {up_emulator} from "#client_core/index.js";
 import type {EmulatorSelections} from "#interfaces/index.js";
+import {MainPane, SidebarPane, SplitGroup} from "#UI/index.js";
 
 interface HilControlViewProps {
     emulator: up_emulator,
@@ -33,32 +34,31 @@ let HilControlView = function (props: HilControlViewProps) {
     let [download_data_request, set_download_data_request] = useState(false);
     let [plot_prescaler, set_plot_prescaler] = useState<number>(0);
     return(
-        <div style={{
-            display:"flex",
-            flexDirection:"row",
-            gap:10,
-            height:"100%"
-        }}>
+        <SplitGroup id="hil_control" orientation="horizontal">
 
-            <HilPlotTab
-                emulator={props.emulator}
-                deployed={props.deployed}
-                hil_plot_running={hil_plot_running}
-                plot_prescaler={plot_prescaler}
-                download_data_request={download_data_request}
-                on_download_done={set_download_data_request}
-            />
-            <HilControlSidebar
-                emulator={props.emulator}
-                selections={props.selections}
-                set_selections={props.set_selections}
-                on_select={props.on_select}
-                hil_plot_running={hil_plot_running}
-                set_prescaler={set_plot_prescaler}
-                on_plot_status_update={set_hil_plot_running}
-                onDownloadHilData={set_download_data_request}
-            />
-        </div>
+            <MainPane>
+                <HilPlotTab
+                    emulator={props.emulator}
+                    deployed={props.deployed}
+                    hil_plot_running={hil_plot_running}
+                    plot_prescaler={plot_prescaler}
+                    download_data_request={download_data_request}
+                    on_download_done={set_download_data_request}
+                />
+            </MainPane>
+            <SidebarPane>
+                <HilControlSidebar
+                    emulator={props.emulator}
+                    selections={props.selections}
+                    set_selections={props.set_selections}
+                    on_select={props.on_select}
+                    hil_plot_running={hil_plot_running}
+                    set_prescaler={set_plot_prescaler}
+                    on_plot_status_update={set_hil_plot_running}
+                    onDownloadHilData={set_download_data_request}
+                />
+            </SidebarPane>
+        </SplitGroup>
 
     );
 };

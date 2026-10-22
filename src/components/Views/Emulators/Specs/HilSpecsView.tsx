@@ -17,6 +17,7 @@ import React from 'react';
 import HilSpecsSidebar from "../Sidebar/per_panel_sidebars/HilSpecsSidebar.jsx";
 import SpecViewer from "./SpecViewer.jsx";
 import {up_emulator} from "#client_core/index.js";
+import {MainPane, SidebarPane, SplitGroup} from "#UI/index.js";
 
 interface HilSpecsViewProps {
     emulator: up_emulator,
@@ -26,19 +27,18 @@ interface HilSpecsViewProps {
 let HilSpecsView = function (props: HilSpecsViewProps) {
 
     return(
-        <div style={{
-            display:"flex",
-            flexDirection:"row",
-            gap:10,
-            height:"100%"
-        }}>
-            <SpecViewer
-                emulator={props.emulator}
-            />
-            <HilSpecsSidebar
-                handle_select_emulator={props.handle_select_emulator}
-            />
-        </div>
+        <SplitGroup id="hil_specs" orientation="horizontal">
+            <MainPane>
+                <SpecViewer
+                    emulator={props.emulator}
+                />
+            </MainPane>
+            <SidebarPane>
+                <HilSpecsSidebar
+                    handle_select_emulator={props.handle_select_emulator}
+                />
+            </SidebarPane>
+        </SplitGroup>
 
     );
 };
