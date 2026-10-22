@@ -112,7 +112,13 @@ let EmulatorDiagram = function (props: EmulatorDiagramProps) {
                 enable={props.enabled_actions}
                 onCopy={props.onCopy}
             />
+            {/* reaflow 5.4.1 draws its arrow by spreading the element, which React warns about on every render: the
+                marker is drawn here instead (the edges refer to it by id) and the one of the canvas is turned off */}
+            <svg width={0} height={0} style={{position: "absolute"}} aria-hidden>
+                <defs><MarkerArrow/></defs>
+            </svg>
             <Canvas
+                arrow={null}
                 nodes={inner_nodes}
                 edges={inner_edges}
                 selections={selections}
