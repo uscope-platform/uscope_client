@@ -16,7 +16,6 @@
 import { Terminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 
-// @ts-ignore
 import 'xterm/css/xterm.css';
 
 import {terminal_backend, type TerminalCommand} from './terminal_backend.js'
