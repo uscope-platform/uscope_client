@@ -16,7 +16,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {FormLayout, InputField, SelectField, SimpleContent, UIPanel} from "#UI/index.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
-import ThemeSelector from "../../Common_Components/ThemeSelector.js";
+import ThemeSelector from "#components/Common_Components/ThemeSelector.js";
 import {up_application, up_settings} from "#client_core/index.js";
 import type {SimpleStringOption} from "#interfaces/index.js";
 
