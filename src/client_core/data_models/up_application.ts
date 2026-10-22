@@ -698,15 +698,15 @@ export class up_application {
     }
 
     ////////////////////////////////////////////////////
-    remove_channel = async (ch_id: string) =>{
+    remove_channel = async (ch_name: string) =>{
         let idx = this.channels.findIndex((ch) =>{
-            return ch.id === ch_id;
+            return ch.name === ch_name;
         })
-        this.channels.splice(idx,1);
+        if(idx >= 0) this.channels.splice(idx,1);
 
         let edit = {
             application:this.id,
-            item:ch_id,
+            item:ch_name,
             action:"remove",
             object:"channel"
         };
@@ -714,15 +714,15 @@ export class up_application {
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
-    remove_channel_groups = async (chg_id: string) =>{
+    remove_channel_groups = async (chg_name: string) =>{
         let idx = this.channel_groups.findIndex((chg) =>{
-            return chg.group_id === chg_id;
+            return chg.group_name === chg_name;
         })
-        this.channel_groups.splice(idx,1);
+        if(idx >= 0) this.channel_groups.splice(idx,1);
 
         let edit = {
             application:this.id,
-            item:chg_id,
+            item:chg_name,
             action:"remove",
             object:"channel_group"
         };
@@ -734,7 +734,7 @@ export class up_application {
         let idx  = this.initial_registers_values.findIndex((i) =>{
             return i.address === address;
         })
-        this.initial_registers_values.splice(idx,1);
+        if(idx >= 0) this.initial_registers_values.splice(idx,1);
 
         let edit = {
             application:this.id,
@@ -750,7 +750,7 @@ export class up_application {
         let idx  = this.macro.findIndex(m=>{
             return m.name === macro_name;
         })
-        this.macro.splice(idx,1);
+        if(idx >= 0) this.macro.splice(idx,1);
 
         let edit = {
             application:this.id,
@@ -766,7 +766,7 @@ export class up_application {
         let idx = this.parameters.findIndex((p) =>{
             return p.parameter_id === param_id;
         })
-        this.parameters.splice(idx,1);
+        if(idx >= 0) this.parameters.splice(idx,1);
 
         let edit = {
             application:this.id,
@@ -778,15 +778,15 @@ export class up_application {
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
-    remove_peripheral = async (periph_id: string) => {
+    remove_peripheral = async (periph_name: string) => {
         let idx = this.peripherals.findIndex((p) =>{
-            return p.peripheral_id === periph_id;
+            return p.name === periph_name;
         })
-        this.peripherals.splice(idx,1);
+        if(idx >= 0) this.peripherals.splice(idx,1);
 
         let edit = {
             application:this.id,
-            item:periph_id,
+            item:periph_name,
             action:"remove",
             object:"peripheral"
         };
@@ -798,7 +798,7 @@ export class up_application {
         let idx = this.soft_cores.findIndex((sc) =>{
             return sc.id === core_id;
         })
-        this.soft_cores.splice(idx,1);
+        if(idx >= 0) this.soft_cores.splice(idx,1);
 
         let edit = {
             application:this.id,
@@ -814,7 +814,7 @@ export class up_application {
         let idx = this.filters.findIndex((f) =>{
             return f.id === filter_id;
         })
-        this.filters.splice(idx,1);
+        if(idx >= 0) this.filters.splice(idx,1);
 
         let edit = {
             application:this.id,
@@ -828,7 +828,7 @@ export class up_application {
 
     remove_selected_script = async (script_id: number) => {
         let idx = this.scripts.indexOf(script_id)
-        this.scripts.splice(idx,1);
+        if(idx >= 0) this.scripts.splice(idx,1);
 
         let edit = {
             application:this.id,
@@ -842,7 +842,7 @@ export class up_application {
 
     remove_selected_program = async (program_id: number) => {
         let idx = this.programs.indexOf(program_id)
-        this.programs.splice(idx,1);
+        if(idx >= 0) this.programs.splice(idx,1);
 
         let edit = {
             application:this.id,

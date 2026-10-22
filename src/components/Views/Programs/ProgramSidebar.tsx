@@ -34,16 +34,16 @@ let  ProgramSidebar = (props: ProgramSidebarProps) =>{
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     let handleAdd = (added_obj: {id: any, object:any}) =>{
-        application.add_selected_program(added_obj.id.toString()).then(()=>{
+        application.add_selected_program(added_obj.id).then(()=>{
             forceUpdate();
         });
     };
 
     let handleRemove = (deleted: any) =>{
-        application.remove_selected_program(deleted.id.toString()).then();
+        application.remove_selected_program(deleted.id).then();
     };
     let handle_import_done = (obj: any) =>{
-        application.add_selected_program(obj.id.toString()).then();
+        application.add_selected_program(obj.id).then();
         forceUpdate();
     }
 

@@ -33,13 +33,13 @@ let ScriptSidebar = (props: ScriptSidebarProps) =>{
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     let handleAdd = (added_obj: any) =>{
-        application.add_selected_script(added_obj.id.toString()).then(()=>{
+        application.add_selected_script(added_obj.id).then(()=>{
             forceUpdate();
         });
     };
 
     let handleRemove = (deleted: any) =>{
-        application.remove_selected_script(deleted.id.toString()).then();
+        application.remove_selected_script(deleted.id).then();
     };
 
     return(
