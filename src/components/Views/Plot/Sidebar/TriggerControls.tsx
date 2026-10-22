@@ -20,8 +20,35 @@ import {Chip, InputField, SelectField} from "#UI/index.js";
 import PlotControls from "../PlotControls.jsx";
 import {get_ui_state, save_ui_state, set_acquisition} from "#client_core/index.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
+import {styled} from "goober";
 import type {ActionMeta} from "react-select";
 import type {scope_control, ScopeStatus, SimpleStringOption} from "#interfaces/index.js";
+
+const Panel = styled('div')`
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 0.8rem 1rem 1rem;
+`
+
+const Header = styled('div')`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 2.4rem;
+`
+
+const Fields = styled('div')`
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem 0.8rem;
+  align-items: start;
+`
+
+const Full = styled('div')`
+  grid-column: 1 / -1;
+`
 
 interface TriggerControlsProps {
     showAcquisitionStatus: boolean;
@@ -127,68 +154,68 @@ let  TriggerControls = (props: TriggerControlsProps) =>{
     }
 
     return(
-        <div>
-            {plot_status()}
-            <InputField
-                inline
-                name='trigger_level'
-                defaultValue={controls_state.trigger_level}
-                onKeyDown={handle_set_value}
-                label="Trigger Level"
-            />
-            <InputField
-                inline
-                name='trigger_point'
-                defaultValue={controls_state.trigger_point}
-                onKeyDown={handle_set_value}
-                label="Trigger point"
-            />
-            <SelectField<SimpleStringOption>
-                label="Acquisition mode"
-                onChange={handle_select}
-                value={controls_state.acquisition_mode}
-                name="acquisition_mode"
-                options={[
-                    {label:"continuous", value:"continuous"},
-                    {label:"single", value:"single"},
-                    {label:"free_running", value:"free_running"}
-                ]}
-            />
-            <SelectField<SimpleStringOption>
-                label="Trigger Source"
-                onChange={handle_select}
-                value={controls_state.trigger_source}
-                name="trigger_source"
-                options={[
-                    {label:"1", value:"1"},
-                    {label:"2", value:"2"},
-                    {label:"3", value:"3"},
-                    {label:"4", value:"4"},
-                    {label:"5", value:"5"},
-                    {label:"6", value:"6"},
-                ]}
-            />
-            <SelectField<SimpleStringOption>
-                label="Trigger mode"
-                onChange={handle_select}
-                value={controls_state.trigger_mode}
-                name="trigger_mode"
-                options={[
-                    {label:"rising edge", value:"rising_edge"},
-                    {label:"falling edge", value:"falling_edge"},
-                    {label:"both edges", value:"both_edges"}
-                ]}
-            />
-            <InputField
-                inline
-                name='tb_prescaler'
-                defaultValue={controls_state.tb_prescaler}
-                onKeyDown={handle_set_value}
-                label="Timebase Prescaler"
-            />
-            <PlotControls onPlay={props.onPlay} onPause={props.onPause} onDownload={props.onDownload} onStop={props.onStop}/>
-        </div>
-
+        <Panel>
+            <Header>
+                {plot_status()}
+                <PlotControls onPlay={props.onPlay} onPause={props.onPause} onDownload={props.onDownload} onStop={props.onStop}/>
+            </Header>
+            <Fields>
+                <Full>
+                    <SelectField<SimpleStringOption>
+                        stacked
+                        label="Acquisition mode"
+                        onChange={handle_select}
+                        value={controls_state.acquisition_mode}
+                        name="acquisition_mode"
+                        options={[
+                            {label:"continuous", value:"continuous"},
+                            {label:"single", value:"single"},
+                            {label:"free_running", value:"free_running"}
+                        ]}
+                    />
+                </Full>
+                <SelectField<SimpleStringOption>
+                    stacked
+                    label="Trigger source"
+                    onChange={handle_select}
+                    value={controls_state.trigger_source}
+                    name="trigger_source"
+                    options={["1", "2", "3", "4", "5", "6"].map(v => ({label: v, value: v}))}
+                />
+                <SelectField<SimpleStringOption>
+                    stacked
+                    label="Trigger mode"
+                    onChange={handle_select}
+                    value={controls_state.trigger_mode}
+                    name="trigger_mode"
+                    options={[
+                        {label:"rising edge", value:"rising_edge"},
+                        {label:"falling edge", value:"falling_edge"},
+                        {label:"both edges", value:"both_edges"}
+                    ]}
+                />
+                <InputField
+                    name='trigger_level'
+                    defaultValue={controls_state.trigger_level}
+                    onKeyDown={handle_set_value}
+                    label="Trigger level"
+                />
+                <InputField
+                    name='trigger_point'
+                    defaultValue={controls_state.trigger_point}
+                    onKeyDown={handle_set_value}
+                    label="Trigger point"
+                />
+                <Full>
+                    <InputField
+                        name='tb_prescaler'
+                        defaultValue={controls_state.tb_prescaler}
+                        onKeyDown={handle_set_value}
+                        label="Timebase prescaler"
+                    />
+                </Full>
+            </Fields>
+        </Panel>
     );
 };
 
