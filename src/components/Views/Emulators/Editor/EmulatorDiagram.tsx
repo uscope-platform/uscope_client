@@ -250,9 +250,9 @@ let DiagramCanvas = function (props: EmulatorDiagramProps) {
                 enable={props.enabled_actions}
                 onCopy={props.onCopy}
             />
-            <div style={{display: "flex", flexDirection: "row", minHeight: 0}}>
+            <div style={{display: "flex", flexDirection: "row", flex: 1, minHeight: 0}}>
                 <EmulatorLibrary enabled={props.enabled_actions.add} onAdd={add_at_center}/>
-                <div ref={wrapper} style={{flexGrow: 1, minWidth: 0, height: 550}} onDrop={handle_drop} onDragOver={handle_drag_over}>
+                <div ref={wrapper} style={{flexGrow: 1, minWidth: 0}} onDrop={handle_drop} onDragOver={handle_drag_over}>
                     <ReactFlow
                         className={flow_class}
                         nodes={rf_nodes}

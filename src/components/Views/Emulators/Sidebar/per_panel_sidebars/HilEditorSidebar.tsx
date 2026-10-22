@@ -52,7 +52,7 @@ let  HilEditorSidebar = (props: HilEditorSidebarProps) =>{
     }
 
     return(
-        <SidebarColumn style={{padding: "10px 0"}}>
+        <SidebarColumn style={{padding: "10px 0", minWidth: 0}}>
             <SidebarBase
                 objects={emulators_store}
                 selection_key="id"

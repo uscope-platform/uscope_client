@@ -21,7 +21,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import EmulatorDiagram from "./EmulatorDiagram.js";
 import type {BlockKind} from "./EmulatorLibrary.js";
 import {up_emulator_result, download_text, up_emulator} from "#client_core/index.js";
-import {SimpleContent, TabbedContent, UIPanel} from "#UI/index.js";
+import {SimpleContent, SplitGroup, TabbedContent, UIPanel} from "#UI/index.js";
 import CoreInputsList from "./CoreInputsList.js";
 import CoreOutputsList from "./CoreOutputsList.js";
 import CoreMemoriesList from "./CoreMemoriesList.js";
@@ -301,78 +301,66 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
     if(props.emulator){
         
         return(
-            <div style={{
-                display:"flex",
-                flexDirection: "column",
-                gap:10,
-                minWidth:0,
-                flexGrow:1
-            }}>
-                    <UIPanel key="emulator_diagram" level="level_2">
-                        <SimpleContent name="Emulation_diagram" height="100%">
-                            <EmulatorDiagram
-                                onNodeSelect={handle_node_select}
-                                onEdgeSelect={handle_edge_select}
-                                onCanvasClick={handle_canvas_click}
-                                onLinkNodes={handle_link_nodes}
-                                onAddBlock={add_block}
-                                onMoveNodes={move_nodes}
-                                layout={props.emulator.layout}
-                                view_key={props.emulator.id}
-                                selection={props.selections.component}
-                                can_link={props.emulator.can_connect}
-                                onDelete={delete_selection}
-                                onRun={handle_run}
-                                onCopy={copy_core}
-                                onDeploy={handle_deploy}
-                                onHardwareSim={handle_hardware_sim}
-                                onEdit={handle_edit}
-                                nodes={nodes}
-                                edges={edges}
-                                enabled_actions={enabled_actions}
+            <SplitGroup id="emulator_editor" orientation="vertical">
+                <UIPanel id="diagram" key="emulator_diagram" level="level_2" default_size={65} min_size={20}>
+                    <SimpleContent name="Emulation_diagram" height="100%">
+                        <EmulatorDiagram
+                            onNodeSelect={handle_node_select}
+                            onEdgeSelect={handle_edge_select}
+                            onCanvasClick={handle_canvas_click}
+                            onLinkNodes={handle_link_nodes}
+                            onAddBlock={add_block}
+                            onMoveNodes={move_nodes}
+                            layout={props.emulator.layout}
+                            view_key={props.emulator.id}
+                            selection={props.selections.component}
+                            can_link={props.emulator.can_connect}
+                            onDelete={delete_selection}
+                            onRun={handle_run}
+                            onCopy={copy_core}
+                            onDeploy={handle_deploy}
+                            onHardwareSim={handle_hardware_sim}
+                            onEdit={handle_edit}
+                            nodes={nodes}
+                            edges={edges}
+                            enabled_actions={enabled_actions}
+                        />
+                    </SimpleContent>
+                </UIPanel>
+                <SplitGroup id="emulator_properties" orientation="horizontal" default_size={35} min_size="150px">
+                    <UIPanel id="inputs" key="emulator_i_props" level="level_2" default_size={34} min_size="10em">
+                        <TabbedContent names={["Inputs", "Input Files"]} onSelect={set_selected_inputs_tab} selected={selected_inputs_tab}>
+                            <CoreInputsList
+                                emulator={props.emulator}
+                                on_selection={handle_select_iom}
+                                selections={props.selections}
+                            />
+                            <CoreInputFilesList
+                                emulator={props.emulator}
+                                selections={props.selections}
+                            />
+                        </TabbedContent>
+                    </UIPanel>
+                    <UIPanel id="outputs" key="emulator_o_props" level="level_2" default_size={33} min_size="10em">
+                        <SimpleContent name="Outputs" height="100%">
+                            <CoreOutputsList
+                                emulator={props.emulator}
+                                selections={props.selections}
+                                on_selection={handle_select_iom}
                             />
                         </SimpleContent>
                     </UIPanel>
-                    <div style={{
-                        display:"flex",
-                        flexDirection:"row",
-                        gap:10,
-                        minHeight:"270px"
-                    }}>
-                        <UIPanel style={{flexGrow:1}} key="emulator_i_props" level="level_2">
-                            <TabbedContent names={["Inputs", "Input Files"]} onSelect={set_selected_inputs_tab} selected={selected_inputs_tab}>
-                                <CoreInputsList
-                                    emulator={props.emulator}
-                                    on_selection={handle_select_iom}
-                                    selections={props.selections}
-                                />
-                                <CoreInputFilesList
-                                    emulator={props.emulator}
-                                    selections={props.selections}
-                                />
-                            </TabbedContent>
-                        </UIPanel>
-                        <UIPanel  style={{flexGrow:1}} key="emulator_o_props" level="level_2">
-                            <SimpleContent name="Outputs" height="100%" >
-                                <CoreOutputsList
-                                    emulator={props.emulator}
-                                    selections={props.selections}
-                                    on_selection={handle_select_iom}
-                                />
-                            </SimpleContent>
-                        </UIPanel>
-                        <UIPanel  style={{flexGrow:1}} key="emulator_m_props"  level="level_2">
-                            <SimpleContent name="Memory" height="100%" >
-                                <CoreMemoriesList
-                                    emulator={props.emulator}
-                                    selections={props.selections}
-                                    on_selection={handle_select_iom}
-                                />
-                            </SimpleContent>
-                        </UIPanel>
-                    </div>
-
-            </div>
+                    <UIPanel id="memory" key="emulator_m_props" level="level_2" default_size={33} min_size="10em">
+                        <SimpleContent name="Memory" height="100%">
+                            <CoreMemoriesList
+                                emulator={props.emulator}
+                                selections={props.selections}
+                                on_selection={handle_select_iom}
+                            />
+                        </SimpleContent>
+                    </UIPanel>
+                </SplitGroup>
+            </SplitGroup>
         );
     } else{
         return <></>

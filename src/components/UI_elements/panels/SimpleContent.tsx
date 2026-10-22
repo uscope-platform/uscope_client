@@ -26,7 +26,8 @@ interface SimpleContentProps {
 export let SimpleContent = function (props: SimpleContentProps) {
 
     return(
-        <div style={props.style}>
+        // fills the panel it is in, so that the content scrolls when the panel is resized smaller
+        <div style={{display: "flex", flexDirection: "column", flex: 1, minHeight: 0, ...props.style}}>
             <PanelTitle selected>
                 <p style={{marginLeft:"0.5em", marginRight:"0.5em", marginTop:"0.25em", paddingBottom:"0.1m"}}>{props.name}</p>
             </PanelTitle>
