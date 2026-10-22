@@ -42,7 +42,10 @@ export interface EmulatorIomSelector{
 
 export interface EmulatorGraphNode{
     id:number,
-    text:string
+    text:string,
+    kind?: "core" | "io",
+    direction?: "source" | "sink",
+    className?: string
 }
 
 export interface EmulatorGraphEdge{

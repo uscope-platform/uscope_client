@@ -26,7 +26,7 @@ import CoreOutputsList from "./CoreOutputsList.js";
 import CoreMemoriesList from "./CoreMemoriesList.js";
 import CoreInputFilesList from "./CoreInputFilesList.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
-import type {EmulatorGraphEdge, EmulatorGraphNode, EmulatorIomSelector, EmulatorSelections} from "#interfaces/index.js";
+import type {io_block, EmulatorGraphEdge, EmulatorGraphNode, EmulatorIomSelector, EmulatorSelections} from "#interfaces/index.js";
 
 interface FcoreEmulationEditorProps {
     emulator: up_emulator,
@@ -41,6 +41,22 @@ interface FcoreEmulationEditorProps {
 /// The edges of the diagram, one per connection: the id is the position of the connection, so that they are all different
 const edges_of = (emulator: up_emulator): EmulatorGraphEdge[] =>{
     return emulator.connections.map((c, idx: number) => ({id: idx, from: c.source_core, to: c.destination_core}));
+};
+
+/// The label tells a source from a sink, whatever the colors
+const io_node_of = (b: io_block): EmulatorGraphNode =>({
+    id: b.id,
+    text: (b.direction === "source" ? "IN: " : "OUT: ") + b.name,
+    kind: "io",
+    direction: b.direction
+});
+
+/// The nodes of the diagram: the cores and the IO blocks, that share the ids
+const nodes_of = (emulator: up_emulator): EmulatorGraphNode[] =>{
+    return [
+        ...Object.values(emulator.cores).map((c): EmulatorGraphNode => ({id: c.id, text: c.name, kind: "core"})),
+        ...Object.values(emulator.io_blocks).map((b): EmulatorGraphNode => io_node_of(b))
+    ];
 };
 
 let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
@@ -71,14 +87,16 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
             (props.selections.component.type === "node" || props.selections.component.type === "edge");
         if(props.selections.component){
             if(props.selections.component.type === "node"){
+                // an IO block has neither a program nor a copy
+                const is_core = !props.emulator.is_io_block(props.selections.component.obj.id);
                 set_enabled_actions({
                     add: enabled_actions.add,
-                    edit: true,
+                    edit: is_core,
                     build: enabled_actions.build,
                     run: enabled_actions.run,
                     deploy: enabled_actions.deploy,
                     hw_sim: enabled_actions.hw_sim,
-                    copy:true,
+                    copy: is_core,
                     delete: allow_delete
                 });
                 return;
@@ -111,14 +129,8 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
                 delete: false
             });
 
-            let initial_nodes: EmulatorGraphNode[] = [];
-            let n = 0;
-            Object.values(props.emulator.cores).map((c)=>{
-                n += 1;
-                initial_nodes.push({ id: c.id, text: c.name });
-            });
-            set_n_cores(n);
-            setNodes(nodes => (initial_nodes));
+            set_n_cores(Object.keys(props.emulator.cores).length);
+            setNodes(nodes_of(props.emulator));
             //SETUP EDGES
             setEdges(edges_of(props.emulator));
             let inputs_obj: Record<string, Record<string, number[]>> ={};
@@ -136,23 +148,24 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
 
     useEffect(()=>{
 
-        let new_nodes: EmulatorGraphNode[] = [];
-        Object.values(props.emulator.cores).map((c)=>{
-            new_nodes.push({ id: c.id, text: c.name });
-        });
-        setNodes(new_nodes);
+        setNodes(nodes_of(props.emulator));
     }, [props.selections.obj_version])
 
     let add_core = async ()=>{
         let core = await props.emulator.add_core();
-        setNodes([...nodes, {id:core.id, text:core.name}]);
+        setNodes([...nodes, {id:core.id, text:core.name, kind:"core"}]);
         set_n_cores(n_cores+1);
+    };
+
+    const add_io = async (direction: "source" | "sink")=>{
+        let block = await props.emulator.add_io_block(direction);
+        setNodes([...nodes, io_node_of(block)]);
     };
 
     const copy_core = async ()=>{
         if(props.selections.component && props.selections.component.type === "node"){
             let core = await props.emulator.duplicate_core(props.selections.component.obj.id);
-            setNodes([...nodes, {id:core.id, text:core.name}]);
+            setNodes([...nodes, {id:core.id, text:core.name, kind:"core"}]);
             set_n_cores(n_cores+1);
         }
     }
@@ -191,6 +204,13 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
         if(selection.type === "node"){
             let selected_node = selection.obj.id
             props.on_selection({...props.selections,component:null});
+            if(props.emulator.is_io_block(selected_node)){
+                props.emulator.remove_io_block(selected_node).then(()=>{
+                    setNodes(nodes.filter((item)=> item.id !== selected_node));
+                    setEdges(edges_of(props.emulator));
+                });
+                return;
+            }
             props.emulator.remove_node_connections(selected_node).then(()=>{
                 props.emulator.remove_core(selected_node).then();
                 setNodes(nodes.filter((item)=> item.id !== selected_node));
@@ -240,7 +260,7 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
     }
 
     let handle_link_nodes = (event: any, from: EmulatorGraphNode, to:EmulatorGraphNode) =>{
-        if(!props.emulator.deployment_mode){
+        if(!props.emulator.deployment_mode && props.emulator.can_connect(from.id, to.id)){
             let found_edges = props.emulator.connections.filter((conn)=>{
                 return conn.source_core === from.id && conn.destination_core === to.id;
             })
@@ -276,6 +296,7 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
                                 onCanvasClick={handle_canvas_click}
                                 onLinkNodes={handle_link_nodes}
                                 onAdd={add_core}
+                                onAddIo={add_io}
                                 onDelete={delete_selection}
                                 onRun={handle_run}
                                 onCopy={copy_core}

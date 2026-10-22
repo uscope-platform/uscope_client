@@ -29,6 +29,7 @@ interface EmulatorDiagramProps {
     onEdgeSelect: (event: any, edge: EmulatorGraphEdge) => void;
     onCanvasClick: () => void;
     onAdd: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
+    onAddIo: (direction: "source" | "sink") => void;
     onRun: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
     onDeploy: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
     onDelete: () => void;
@@ -48,6 +49,23 @@ interface EmulatorDiagramProps {
 }
 
 // the selected edge, the canvas has no other cue of it since its remove cross is not used
+// the external sources and sinks, told apart from the cores and from each other
+const io_source_class = css`
+  rect& {
+    stroke: rgb(60, 170, 100);
+    stroke-width: 2px;
+    stroke-dasharray: 6 3;
+  }
+`;
+
+const io_sink_class = css`
+  rect& {
+    stroke: rgb(230, 140, 40);
+    stroke-width: 2px;
+    stroke-dasharray: 2 3;
+  }
+`;
+
 const selected_edge_class = css`
   path& {
     stroke: ${ColorTheme.background.accents};
@@ -60,7 +78,7 @@ const selected_edge_class = css`
 let EmulatorDiagram = function (props: EmulatorDiagramProps) {
 
     const inner_nodes = props.nodes.map((node: EmulatorGraphNode) => {
-        return {...node};
+        return node.kind === "io" ? {...node, className: node.direction === "source" ? io_source_class : io_sink_class} : {...node};
     });
 
     const inner_edges = props.edges.map((edge: EmulatorGraphEdge) => {
@@ -120,6 +138,7 @@ let EmulatorDiagram = function (props: EmulatorDiagramProps) {
         }}>
             <EmulatorToolbar
                 onAdd={props.onAdd}
+                onAddIo={props.onAddIo}
                 onRun={props.onRun}
                 onDeploy={props.onDeploy}
                 onHardwareSim={props.onHardwareSim}
