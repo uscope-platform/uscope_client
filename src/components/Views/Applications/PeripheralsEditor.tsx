@@ -31,9 +31,12 @@ export let PeripheralsEditor = (props: PeripheralsEditorProps) =>{
 
     const ip_name = (spec_id: string) => props.peripherals[parseInt(spec_id)]?.name;
 
+    // by name, with the numbers inside compared as numbers (new_peripheral_2 before new_peripheral_10)
+    const sorted = [...props.application.peripherals].sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true}));
+
     return(
         <ItemsEditor
-            items={props.application.peripherals}
+            items={sorted}
             noun="peripherals"
             name={p => p.name}
             description={p => [ip_name(p.spec_id), p.base_address].filter(Boolean).join(" · ")}
