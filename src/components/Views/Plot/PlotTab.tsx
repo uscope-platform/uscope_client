@@ -32,6 +32,7 @@ import {
 import useInterval from "../../Common_Components/useInterval.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
 import type {channel_group, plot_channel, ScopeStatus} from "#interfaces/index.js";
+import {MainPane, SidebarPane, SplitGroup} from "#UI/index.js";
 
 // The page is sized to fit the window: what is left once the titles, the gaps and the padding are taken out is shared
 // between the three rows (the minimums make a very small window scroll instead of crushing them)
@@ -96,26 +97,15 @@ let PlotTab = function (props: PlotTabProps) {
     }
 
     return(
-            <div style={{
-                display:"flex",
-                flexDirection:"row",
-                gap:10,
-                // the main area has a fixed height and hides what overflows, the page scrolls inside of it
-                flex: 1,
-                minHeight: 0,
-                overflowY: "auto"
-            }}>
+            <SplitGroup id="scope" orientation="horizontal" style={{flex: 1, minHeight: 0}}>
+                <MainPane>
                 <div style={{
                     display: "flex",
                     flexDirection: "column",
                     gap: 10,
                     height: "100%",
-                    // grows with its content instead of squeezing the panels (the terminal) into the window
-                    minHeight: "max-content",
-                    // takes the width left by the sidebar and shrinks below its content, instead of pushing the
-                    // sidebar out of the window
-                    flex: "1 1 0",
-                    minWidth: 0
+                    // the main area has a fixed height and hides what overflows, the page scrolls inside of it
+                    overflowY: "auto"
                 }}>
                     <div style={{
                         display: "flex",
@@ -173,13 +163,16 @@ let PlotTab = function (props: PlotTabProps) {
                         </SimpleContent>
                     </UIPanel>
                 </div>
+                </MainPane>
+                <SidebarPane>
                 <PlotSidebar
                     on_plot_status_change={set_plot_status}
                     on_group_change={handle_group_change}
                     acquisition_status={acquisition_status}
                     on_download={set_request_download}
                 />
-            </div>
+                </SidebarPane>
+            </SplitGroup>
 
         );
 };
