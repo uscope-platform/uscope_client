@@ -29,7 +29,9 @@ export const InnerInput = styled<'input', InnerInputProps>('input')(({ color }) 
   border-width: 2px;
   border-style: solid;
   margin-top: 0.25em;
-  width: auto;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   background-color: ${color};
   border-color: ${ColorTheme.background.borders};
   color: ${ColorTheme.text};
@@ -62,7 +64,7 @@ const WrapperBase = ({ inline, children, ...rest }: WrapperProps) => (
 export const Wrapper = styled(WrapperBase)<WrapperProps>(({ inline }) => `
   margin: 0 0.2rem;
   display: grid;
-  grid-template-columns: ${inline ? "1fr 1fr" : "1fr"};
+  grid-template-columns: ${inline ? "minmax(0, 1fr) minmax(0, 1fr)" : "minmax(0, 1fr)"};
   grid-auto-rows: auto;
   justify-content: ${inline ? "space-between" : "start"};
   align-items: center;

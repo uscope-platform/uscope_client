@@ -84,7 +84,9 @@ let  CoreMemoryProperties = (props: CoreMemoryPropertiesProps) =>{
     let render_type_options = () =>{
         let ret = [
             <SelectField<SimpleStringOption>
-                label="Type"
+                stacked
+                key="data_type"
+                label="Data type"
                 onChange={handle_change_type}
                 value={{value: sel_mem.type, label: sel_mem.type}}
                 name="type"

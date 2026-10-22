@@ -135,6 +135,7 @@ let  CoreInputProperties = (props: CoreInputPropertiesProps) =>{
             if(sel_in.source.type==="constant"){
                 ret.push(
                     <ConstantInputProperties
+                        key="source_constant"
                         input={sel_in.source}
                         channel={selected_channel}
                         onChange={handle_source_change}
@@ -143,6 +144,7 @@ let  CoreInputProperties = (props: CoreInputPropertiesProps) =>{
             } else if(sel_in.source.type==="series"){
                 ret.push(
                     <SeriesInputProperties
+                        key="source_series"
                         input={sel_in.source}
                         channel={selected_channel}
                         selected_core={props.selected_core}
@@ -152,6 +154,7 @@ let  CoreInputProperties = (props: CoreInputPropertiesProps) =>{
             } else if(sel_in.source.type==="external"){
                 ret.push(
                     <ExternalInputProperties
+                        key="source_external"
                         input={sel_in.source}
                         channel={selected_channel}
                         onChange={handle_source_change}
@@ -160,6 +163,7 @@ let  CoreInputProperties = (props: CoreInputPropertiesProps) =>{
             } else if(sel_in.source.type==="waveform"){
                 ret.push(
                     <WaveformInputProperties
+                        key="source_waveform"
                         input={sel_in.source}
                         channel={selected_channel}
                         onChange={handle_source_change}

@@ -33,7 +33,9 @@ export const InnerInput = styled<'input', InnerInputProps>('input')(({ color }) 
   border-width: 2px;
   border-style: solid;
   margin-top: 0.25em;
-  width: auto;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   background-color: ${color};
   border-color: ${ColorTheme.background.borders};
   color: ${ColorTheme.text};

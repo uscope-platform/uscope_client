@@ -102,6 +102,16 @@ let  DmaChannelProperties = (props: DmaChannelPropertiesProps) =>{
             value.value,
             props.selected_channel.id
         );
+        // the data of an input fed by a DMA channel comes from outside of the core, any other source would never be used
+        let target_input = target_core?.inputs.find((in_obj)=> in_obj.name === value.value);
+        if(target_core && target_input && target_input.source.type !== "external"){
+            await props.selected_emulator.edit_input(
+                target_core.id,
+                "source",
+                {...target_input.source, type: "external"},
+                target_input.name
+            );
+        }
         props.forceUpdate();
     }
 
