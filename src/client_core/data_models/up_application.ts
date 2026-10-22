@@ -83,8 +83,9 @@ export class up_application {
         this.peripherals = app_data_obj.peripherals;
         this.soft_cores = app_data_obj.soft_cores;
         this.filters = app_data_obj.filters;
-        this.programs = app_data_obj.programs;
-        this.scripts = app_data_obj.scripts;
+        // copies, the lists are edited in place and the ones of the store are not to be touched
+        this.programs = [...app_data_obj.programs];
+        this.scripts = [...app_data_obj.scripts];
         this.miscellaneous = app_data_obj.miscellaneous;
     }
 
@@ -433,16 +434,28 @@ export class up_application {
     }
 
     add_selected_script = async (script_id: number) =>{
+        if(Number.isNaN(script_id) || this.scripts.some(s => Number(s) === script_id)) return;
         let edit = {application:this.id, item:script_id, action:"add", object:"selected_script"};
         this.scripts.push(script_id);
-        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
+        try{
+            await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
+        } catch (e) {
+            this.scripts.splice(this.scripts.lastIndexOf(script_id), 1);
+            throw e;
+        }
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
     add_selected_program = async (program_id: number) =>{
+        if(Number.isNaN(program_id) || this.programs.some(p => Number(p) === program_id)) return;
         let edit = {application:this.id, item:program_id, action:"add", object:"selected_program"};
         this.programs.push(program_id);
-        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
+        try{
+            await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
+        } catch (e) {
+            this.programs.splice(this.programs.indexOf(program_id), 1);
+            throw e;
+        }
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
@@ -814,30 +827,56 @@ export class up_application {
     }
 
     remove_selected_script = async (script_id: number) => {
-        let idx = this.scripts.indexOf(script_id)
-        if(idx >= 0) this.scripts.splice(idx,1);
+        let idx = this.scripts.findIndex(s => Number(s) === script_id);
+        if(idx < 0) return;
+        this.scripts.splice(idx,1);
+        // the script is not part of the application any more
+        const init_script_was = this.init_script;
+        if(this.init_script === script_id) this.init_script = null;
 
         let edit = {
             application:this.id,
-            item:script_id,
+            // the server keeps these ids in a text column and removes with a strict comparison
+            item:String(script_id),
             action:"remove",
             object:"selected_script"
         };
-        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
+        try{
+            await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
+        } catch (e) {
+            this.scripts.splice(idx, 0, script_id);
+            this.init_script = init_script_was;
+            throw e;
+        }
         store.dispatch(updateApplication(this.deep_copy()));
+        // the script is gone either way, a failure here must not undo the removal
+        if(init_script_was !== this.init_script){
+            try{
+                await this.set_init_script(null);
+            } catch (e) {
+                console.error(e);
+            }
+        }
     }
 
     remove_selected_program = async (program_id: number) => {
-        let idx = this.programs.indexOf(program_id)
-        if(idx >= 0) this.programs.splice(idx,1);
+        let idx = this.programs.findIndex(p => Number(p) === program_id);
+        if(idx < 0) return;
+        this.programs.splice(idx,1);
 
         let edit = {
             application:this.id,
-            item:program_id,
+            // the server keeps these ids in a text column and removes with a strict comparison
+            item:String(program_id),
             action:"remove",
             object:"selected_program"
         };
-        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
+        try{
+            await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
+        } catch (e) {
+            this.programs.splice(idx, 0, program_id);
+            throw e;
+        }
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
