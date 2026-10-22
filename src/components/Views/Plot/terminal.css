@@ -14,4 +14,10 @@ body > div[style*="-50000px"] span {
 /* the global rule reserving space for the scrollbar would leave a gap, xterm sizes the terminal around its own */
 .xterm .xterm-viewport {
     scrollbar-gutter: auto;
+    /* the scrollback is still scrolled with the wheel, the bar would be a second one next to the one of the page */
+    scrollbar-width: none;
+}
+
+.xterm .xterm-viewport::-webkit-scrollbar {
+    display: none;
 }

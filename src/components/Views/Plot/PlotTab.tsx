@@ -33,6 +33,15 @@ import useInterval from "../../Common_Components/useInterval.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
 import type {channel_group, plot_channel, ScopeStatus} from "#interfaces/index.js";
 
+// The page is sized to fit the window: what is left once the titles, the gaps and the padding are taken out is shared
+// between the three rows (the minimums make a very small window scroll instead of crushing them)
+const FREE_HEIGHT = "(100vh - 175px)";
+const ROW_HEIGHTS = {
+    plot: `max(220px, calc(${FREE_HEIGHT} * 0.42))`,
+    parameters: `max(110px, calc(${FREE_HEIGHT} * 0.26))`,
+    terminal: `max(120px, calc(${FREE_HEIGHT} * 0.32))`
+};
+
 interface PlotTabProps {}
 
 let PlotTab = function (props: PlotTabProps) {
@@ -90,13 +99,19 @@ let PlotTab = function (props: PlotTabProps) {
             <div style={{
                 display:"flex",
                 flexDirection:"row",
-                gap:10
+                gap:10,
+                // the main area has a fixed height and hides what overflows, the page scrolls inside of it
+                flex: 1,
+                minHeight: 0,
+                overflowY: "auto"
             }}>
                 <div style={{
                     display: "flex",
                     flexDirection: "column",
                     gap: 10,
                     height: "100%",
+                    // grows with its content instead of squeezing the panels (the terminal) into the window
+                    minHeight: "max-content",
                     // takes the width left by the sidebar and shrinks below its content, instead of pushing the
                     // sidebar out of the window
                     flex: "1 1 0",
@@ -109,7 +124,7 @@ let PlotTab = function (props: PlotTabProps) {
                         width: "100%"
                     }}>
                         <UIPanel key="ch_selector" style={{flex: "0 0 auto"}} level="level_2">
-                            <SimpleContent name="Channel Selector">
+                            <SimpleContent name="Channel Selector" height={ROW_HEIGHTS.plot}>
                                 <ChannelSelector
                                     data={external_data}
                                     on_channel_status_change={handle_channel_status_change}
@@ -117,7 +132,7 @@ let PlotTab = function (props: PlotTabProps) {
                             </SimpleContent>
                         </UIPanel>
                         <UIPanel key="scope" style={{flexGrow: 1}} level="level_2">
-                            <SimpleContent name="Scope">
+                            <SimpleContent name="Scope" height={ROW_HEIGHTS.plot}>
                                 <PlotComponent
                                     plot_status={plot_status}
                                     palette={plot_palette}
@@ -135,18 +150,17 @@ let PlotTab = function (props: PlotTabProps) {
                     <div style={{
                         display: "flex",
                         flexDirection: "row",
-                        gap: 10,
-                        minHeight: "300px"
+                        gap: 10
                     }}>
                         <UIPanel style={{flexGrow: 0.4}} key="parameters" level="level_2">
-                            <SimpleContent name="Parameters">
+                            <SimpleContent name="Parameters" height={ROW_HEIGHTS.parameters}>
                                 <ParametersArea
                                     parameters={application.parameters}
                                 />
                             </SimpleContent>
                         </UIPanel>
                         <UIPanel style={{flexGrow: 1}} key="macro" level="level_2">
-                            <SimpleContent name="Macro">
+                            <SimpleContent name="Macro" height={ROW_HEIGHTS.parameters}>
                                 <MacroActions
                                     macro={application.macro}
                                 />
@@ -154,7 +168,7 @@ let PlotTab = function (props: PlotTabProps) {
                         </UIPanel>
                     </div>
                     <UIPanel key="terminal" level="level_2">
-                        <SimpleContent name="Terminal" height="max(25vh, 14rem)">
+                        <SimpleContent name="Terminal" height={ROW_HEIGHTS.terminal}>
                             <TerminalComponent/>
                         </SimpleContent>
                     </UIPanel>

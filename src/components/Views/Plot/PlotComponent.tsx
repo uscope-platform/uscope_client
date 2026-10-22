@@ -25,9 +25,9 @@ import {ScopePlot, ScopePlotly} from "./ScopePlotly.js";
 
 // the plot configuration is static
 const PLOT_CONFIG = {...PlotConfigurations.configs, response: true};
-// the plot fills the width of its panel (the panel adapts to the window), only the height is fixed
-const {width: _fixed_width, ...FLUID_LAYOUT} = PlotConfigurations.layout;
-const PLOT_STYLE = {width: "100%", height: PlotConfigurations.layout.height};
+// the plot fills its panel (the panel adapts to the window)
+const {width: _fixed_width, height: _fixed_height, ...FLUID_LAYOUT} = PlotConfigurations.layout;
+const PLOT_STYLE = {width: "100%", height: "100%"};
 // how often the acquisition status is refreshed while the scope is running
 const ACQUISITION_STATUS_PERIOD_MS = 1500;
 

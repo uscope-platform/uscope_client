@@ -39,6 +39,7 @@ let TerminalComponent = (props: TerminalProps) =>{
             width: "100%",
             boxSizing: "border-box",
             padding: "6px 8px",
+            overflow: "hidden",
             background: terminal_options.theme?.background
         }} />
     )
