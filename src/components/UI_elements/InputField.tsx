@@ -17,6 +17,7 @@ import React from 'react';
 import {styled} from 'goober';
 import {Label} from "./Label.js";
 import {ColorTheme} from "./ColorTheme.js";
+import {useFieldFeedback} from "./useFieldFeedback.js";
 
 interface InnerInputProps {
     color:string
@@ -32,6 +33,11 @@ export const InnerInput = styled<'input', InnerInputProps>('input')(({ color }) 
   background-color: ${color};
   border-color: ${ColorTheme.background.borders};
   color: ${ColorTheme.text};
+  transition: border-color 0.2s;
+  &[data-status="dirty"], &[data-status="saving"] { border-color: ${ColorTheme.field.dirty}; }
+  &[data-status="applied"] { border-color: ${ColorTheme.field.applied}; }
+  &[data-status="error"] { border-color: ${ColorTheme.field.error}; }
+  &[data-status="saving"] { opacity: 0.7; }
 `);
 
 
@@ -76,7 +82,7 @@ interface InputFieldProps {
     label?:string;
     color?: string;
     disabled?:boolean;
-    onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+    onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void | Promise<unknown>;
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
     value?:string;
     placeholder?:string;
@@ -89,6 +95,14 @@ export let  InputField = (props: InputFieldProps) =>{
         key += props.defaultValue;
     else if(props.value)
         key += props.value;
+    // a field with a value of its own is controlled by its owner, it has no pending edit to show
+    const feedback = useFieldFeedback(props.defaultValue, props.onKeyDown, props.value === undefined);
+    const feedback_props = {
+        "data-status": feedback.status,
+        title: feedback.title,
+        onInput: feedback.on_input,
+        onKeyDown: feedback.key_down,
+    };
     if(props.compact){
         return (
             <InnerInput
@@ -100,7 +114,7 @@ export let  InputField = (props: InputFieldProps) =>{
                 color={props.color ? props.color : ColorTheme.background.level_3}
                 disabled = {props.disabled}
                 onChange={e => {if(props.onChange) props.onChange(e)}}
-                onKeyDown={e => {if(props.onKeyDown) props.onKeyDown(e)}}
+                {...feedback_props}
                 defaultValue={props.defaultValue}
                 value={props.value?props.value:undefined}
             />
@@ -117,7 +131,7 @@ export let  InputField = (props: InputFieldProps) =>{
                     type={(props.type)?props.type:"text"}
                     disabled = {props.disabled}
                     onChange={e => {if(props.onChange) props.onChange(e)}}
-                    onKeyDown={e => {if(props.onKeyDown) props.onKeyDown(e)}}
+                    {...feedback_props}
                     defaultValue={props.defaultValue}
                     value={props.value?props.value:undefined}
                 />
@@ -136,7 +150,7 @@ export let  InputField = (props: InputFieldProps) =>{
                     type={(props.type)?props.type:"text"}
                     disabled = {props.disabled}
                     onChange={e => {if(props.onChange) props.onChange(e)}}
-                    onKeyDown={e => {if(props.onKeyDown) props.onKeyDown(e)}}
+                    {...feedback_props}
                     defaultValue={props.defaultValue}
                     value={props.value?props.value:undefined}
                 />

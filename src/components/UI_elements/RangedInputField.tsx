@@ -18,6 +18,7 @@ import {styled} from 'goober';
 import {Label} from "./Label.js";
 import {ColorTheme} from "./ColorTheme.js";
 import Select from "react-select";
+import {useFieldFeedback} from "./useFieldFeedback.js";
 
 import type {HTMLAttributes} from "react";
 
@@ -36,6 +37,11 @@ export const InnerInput = styled<'input', InnerInputProps>('input')(({ color }) 
   background-color: ${color};
   border-color: ${ColorTheme.background.borders};
   color: ${ColorTheme.text};
+  transition: border-color 0.2s;
+  &[data-status="dirty"], &[data-status="saving"] { border-color: ${ColorTheme.field.dirty}; }
+  &[data-status="applied"] { border-color: ${ColorTheme.field.applied}; }
+  &[data-status="error"] { border-color: ${ColorTheme.field.error}; }
+  &[data-status="saving"] { opacity: 0.7; }
 `);
 
 
@@ -57,7 +63,7 @@ interface RangedInputFieldProps {
     name: string;
     label: string;
     rangeOptions: string[];
-    onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+    onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void | Promise<unknown>;
     onRangeChange: (value: string) => void;
     value: any;
     range: string;
@@ -66,6 +72,7 @@ interface RangedInputFieldProps {
 
 export let  RangedInputField = (props: RangedInputFieldProps) =>{
     let [range, set_range] = useState({label: "", value: "0"});
+    const feedback = useFieldFeedback(props.value, props.onKeyDown, true);
     const color= ColorTheme.background.select_background ;
 
     const SelectStyle = {
@@ -117,7 +124,10 @@ export let  RangedInputField = (props: RangedInputFieldProps) =>{
                 key={props.value}
                 color={ColorTheme.background.level_3}
                 id={props.id}
-                onKeyDown={(e: any) => {if(props.onKeyDown) props.onKeyDown(e)}}
+                data-status={feedback.status}
+                title={feedback.title}
+                onInput={feedback.on_input}
+                onKeyDown={feedback.key_down}
                 defaultValue={props.value}
             />
             <Select
