@@ -95,8 +95,9 @@ export let  InputField = (props: InputFieldProps) =>{
         key += props.defaultValue;
     else if(props.value)
         key += props.value;
-    // a field with a value of its own is controlled by its owner, it has no pending edit to show
-    const feedback = useFieldFeedback(props.defaultValue, props.onKeyDown, props.value === undefined);
+    // only a field that applies its edit on Enter has a pending edit to show: not a controlled one (it has a value of
+    // its own) and not one that reports every change
+    const feedback = useFieldFeedback(props.defaultValue, props.onKeyDown, props.value === undefined && props.onKeyDown !== undefined);
     const feedback_props = {
         "data-status": feedback.status,
         title: feedback.title,
