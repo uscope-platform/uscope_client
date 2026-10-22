@@ -19,6 +19,7 @@ import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 import EmulatorDiagram from "./EmulatorDiagram.js";
+import type {BlockKind} from "./EmulatorLibrary.js";
 import {up_emulator_result, download_text, up_emulator} from "#client_core/index.js";
 import {SimpleContent, TabbedContent, UIPanel} from "#UI/index.js";
 import CoreInputsList from "./CoreInputsList.js";
@@ -26,7 +27,7 @@ import CoreOutputsList from "./CoreOutputsList.js";
 import CoreMemoriesList from "./CoreMemoriesList.js";
 import CoreInputFilesList from "./CoreInputFilesList.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
-import type {io_block, EmulatorGraphEdge, EmulatorGraphNode, EmulatorIomSelector, EmulatorSelections} from "#interfaces/index.js";
+import type {io_block, emulator_layout, EmulatorGraphEdge, EmulatorGraphNode, EmulatorIomSelector, EmulatorSelections} from "#interfaces/index.js";
 
 interface FcoreEmulationEditorProps {
     emulator: up_emulator,
@@ -43,10 +44,9 @@ const edges_of = (emulator: up_emulator): EmulatorGraphEdge[] =>{
     return emulator.connections.map((c, idx: number) => ({id: idx, from: c.source_core, to: c.destination_core}));
 };
 
-/// The label tells a source from a sink, whatever the colors
 const io_node_of = (b: io_block): EmulatorGraphNode =>({
     id: b.id,
-    text: (b.direction === "source" ? "IN: " : "OUT: ") + b.name,
+    text: b.name,
     kind: "io",
     direction: b.direction
 });
@@ -151,20 +151,30 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
         setNodes(nodes_of(props.emulator));
     }, [props.selections.obj_version])
 
-    let add_core = async ()=>{
-        let core = await props.emulator.add_core();
-        setNodes([...nodes, {id:core.id, text:core.name, kind:"core"}]);
-        set_n_cores(n_cores+1);
+    const add_block = async (kind: BlockKind, position: {x: number, y: number})=>{
+        if(kind === "core"){
+            let core = await props.emulator.add_core();
+            await props.emulator.set_node_positions({[core.id]: position});
+            setNodes([...nodes, {id:core.id, text:core.name, kind:"core"}]);
+            set_n_cores(n_cores+1);
+        } else {
+            let block = await props.emulator.add_io_block(kind);
+            await props.emulator.set_node_positions({[block.id]: position});
+            setNodes([...nodes, io_node_of(block)]);
+        }
     };
 
-    const add_io = async (direction: "source" | "sink")=>{
-        let block = await props.emulator.add_io_block(direction);
-        setNodes([...nodes, io_node_of(block)]);
+    const move_nodes = (positions: emulator_layout)=>{
+        props.emulator.set_node_positions(positions).then();
     };
 
     const copy_core = async ()=>{
         if(props.selections.component && props.selections.component.type === "node"){
-            let core = await props.emulator.duplicate_core(props.selections.component.obj.id);
+            const original = props.selections.component.obj.id;
+            let core = await props.emulator.duplicate_core(original);
+            // next to the original
+            const at = props.emulator.layout[original];
+            if(at) await props.emulator.set_node_positions({[core.id]: {x: at.x + 30, y: at.y + 30}});
             setNodes([...nodes, {id:core.id, text:core.name, kind:"core"}]);
             set_n_cores(n_cores+1);
         }
@@ -305,8 +315,12 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
                                 onEdgeSelect={handle_edge_select}
                                 onCanvasClick={handle_canvas_click}
                                 onLinkNodes={handle_link_nodes}
-                                onAdd={add_core}
-                                onAddIo={add_io}
+                                onAddBlock={add_block}
+                                onMoveNodes={move_nodes}
+                                layout={props.emulator.layout}
+                                view_key={props.emulator.id}
+                                selection={props.selections.component}
+                                can_link={props.emulator.can_connect}
                                 onDelete={delete_selection}
                                 onRun={handle_run}
                                 onCopy={copy_core}

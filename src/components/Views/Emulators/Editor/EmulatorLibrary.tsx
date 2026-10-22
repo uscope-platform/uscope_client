@@ -21,19 +21,22 @@ import {css} from "goober";
 import {ColorTheme} from "#UI/index.js";
 import {io_colors, io_dashes} from "./io_colors.js";
 
+export type BlockKind = "core" | "source" | "sink";
+
+/// The type of the data carried by the drag of an entry of the library, the canvas takes the drop of it
+export const BLOCK_DRAG_TYPE = "application/x-uscope-block";
+
 export interface LibraryEntry {
-    id: string,
+    id: BlockKind,
     name: string,
     description: string,
     icon: ReactNode,
     group: string,
-    onAdd: () => void
 }
 
 interface EmulatorLibraryProps {
     enabled: boolean,
-    onAddCore: () => void,
-    onAddIo: (direction: "source" | "sink") => void
+    onAdd: (kind: BlockKind) => void
 }
 
 // the icons are small copies of the nodes of the diagram: a core is a solid box with the pins and the die of a chip, a source is a
@@ -133,24 +136,21 @@ let EmulatorLibrary = (props: EmulatorLibraryProps) =>{
             name: "Core",
             description: "Runs a program on the core",
             icon: <CoreIcon/>,
-            group: "Compute",
-            onAdd: props.onAddCore
+            group: "Compute"
         },
         {
-            id: "io_source",
+            id: "source",
             name: "Source",
             description: "Feeds data in from the bus",
             icon: <SourceIcon/>,
-            group: "External IO",
-            onAdd: () => props.onAddIo("source")
+            group: "External IO"
         },
         {
-            id: "io_sink",
+            id: "sink",
             name: "Sink",
             description: "Writes data out to the bus",
             icon: <SinkIcon/>,
-            group: "External IO",
-            onAdd: () => props.onAddIo("sink")
+            group: "External IO"
         }
     ];
 
@@ -167,8 +167,13 @@ let EmulatorLibrary = (props: EmulatorLibraryProps) =>{
                             type="button"
                             className={entry_class}
                             disabled={!props.enabled}
-                            title={"Add " + entry.name}
-                            onClick={entry.onAdd}
+                            draggable={props.enabled}
+                            title={"Add " + entry.name + ", click or drag it onto the diagram"}
+                            onClick={() => props.onAdd(entry.id)}
+                            onDragStart={(event) => {
+                                event.dataTransfer.setData(BLOCK_DRAG_TYPE, entry.id);
+                                event.dataTransfer.effectAllowed = "copy";
+                            }}
                         >
                             {entry.icon}
                             <span className={entry_text_class}>

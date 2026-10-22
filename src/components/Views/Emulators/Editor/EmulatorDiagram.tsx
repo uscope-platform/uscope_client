@@ -1,51 +1,72 @@
-// Copyright 2023 Filippo Savi
-// Author: Filippo Savi <filssavi@gmail.com>
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+/*
+ * Copyright(c) 2025. Filippo Savi
+ * Author: Filippo Savi <filssavi@gmail.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
 
-import React from 'react';
-
+import {useEffect, useRef} from "react";
 import {css} from "goober";
+import {
+    Background,
+    BackgroundVariant,
+    Controls,
+    Handle,
+    MarkerType,
+    Position,
+    ReactFlow,
+    ReactFlowProvider,
+    useEdgesState,
+    useNodesState,
+    useReactFlow
+} from "@xyflow/react";
+import type {Connection, Edge, Node, NodeProps} from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
 import {ColorTheme} from "#UI/index.js";
 import EmulatorToolbar from "./EmulatorToolbar.jsx";
-import EmulatorLibrary from "./EmulatorLibrary.jsx";
-import {io_colors, io_dashes} from "./io_colors.js";
-import {Canvas, Edge, hasLink, MarkerArrow, Node, useSelection} from "reaflow";
-import type {EdgeData, NodeData} from "reaflow";
-import type {EmulatorGraphNode,EmulatorGraphEdge} from "#interfaces/index.js";
-
-type GraphMouseEvent = React.MouseEvent<SVGGElement, MouseEvent>;
-
-// reaflow identifies the nodes and the edges with strings, in the same space (the selections hold both): the edges are
-// told apart with a prefix
-const node_key = (id: number) => String(id);
-const edge_key = (id: number) => "edge-" + id;
+import EmulatorLibrary, {BLOCK_DRAG_TYPE} from "./EmulatorLibrary.jsx";
+import type {BlockKind} from "./EmulatorLibrary.jsx";
+import {io_colors} from "./io_colors.js";
+import {auto_layout, NODE_HEIGHT, NODE_WIDTH} from "./auto_layout.js";
+import type {
+    EmulatorComponentSelector,
+    EmulatorGraphEdge,
+    EmulatorGraphNode,
+    emulator_layout
+} from "#interfaces/index.js";
 
 interface EmulatorDiagramProps {
     nodes: EmulatorGraphNode[];
     edges: EmulatorGraphEdge[];
-    onNodeSelect: (event: GraphMouseEvent, node: EmulatorGraphNode) => void;
-    onEdgeSelect: (event: GraphMouseEvent, edge: EmulatorGraphEdge) => void;
+    // where the nodes were left, the ones missing from it are placed by the diagram
+    layout: emulator_layout;
+    // the diagram is fitted again when it changes: the emulator that is shown
+    view_key: number;
+    selection: EmulatorComponentSelector | null;
+    onNodeSelect: (event: unknown, node: EmulatorGraphNode) => void;
+    onEdgeSelect: (event: unknown, edge: EmulatorGraphEdge) => void;
     onCanvasClick: () => void;
-    onAdd: () => void;
-    onAddIo: (direction: "source" | "sink") => void;
-    onRun: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
-    onDeploy: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
+    onAddBlock: (kind: BlockKind, position: {x: number, y: number}) => void;
+    onMoveNodes: (positions: emulator_layout) => void;
+    onRun: () => void;
+    onDeploy: () => void;
     onDelete: () => void;
-    onHardwareSim: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
-    onEdit: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
-    onCopy: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
-    onLinkNodes: (event: unknown, from: EmulatorGraphNode, to:EmulatorGraphNode) => void;
+    onHardwareSim: () => void;
+    onEdit: () => void;
+    onCopy: () => void;
+    onLinkNodes: (event: unknown, from: EmulatorGraphNode, to: EmulatorGraphNode) => void;
+    can_link: (from: number, to: number) => boolean;
     enabled_actions: {
         add: boolean,
         copy: boolean,
@@ -57,99 +78,169 @@ interface EmulatorDiagramProps {
     };
 }
 
-// the selected edge, the canvas has no other cue of it since its remove cross is not used
-// the external sources and sinks, told apart from the cores and from each other
-const io_source_class = css`
-  rect& {
-    stroke: ${io_colors.source};
-    stroke-width: 2px;
-    stroke-dasharray: ${io_dashes.source};
+type BlockNodeData = {node: EmulatorGraphNode};
+type BlockNode = Node<BlockNodeData, "block">;
+
+const KIND_CAPTION = {core: "Core", source: "Source", sink: "Sink"} as const;
+
+const node_style = (node: EmulatorGraphNode, selected: boolean): React.CSSProperties => {
+    const io = node.kind === "io";
+    const color = !io ? ColorTheme.background.borders : node.direction === "source" ? io_colors.source : io_colors.sink;
+    const dashes = !io ? "solid" : "dashed";
+    return {
+        width: NODE_WIDTH,
+        height: NODE_HEIGHT,
+        boxSizing: "border-box",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "0 0.5em",
+        borderRadius: 8,
+        borderWidth: 2,
+        borderStyle: dashes,
+        borderColor: selected ? ColorTheme.emulator.selected_node_border : color,
+        // the dash pattern of the source and the sink, told apart even without colors
+        ...(io && node.direction === "sink" ? {borderStyle: "dotted"} : {}),
+        background: ColorTheme.background.level_3,
+        color: ColorTheme.text,
+        fontSize: "0.85rem",
+        textAlign: "center",
+        overflow: "hidden"
+    };
+};
+
+const BlockNodeView = ({data, selected}: NodeProps<BlockNode>) => {
+    const node = data.node;
+    const caption = node.kind === "io" ? (node.direction === "source" ? KIND_CAPTION.source : KIND_CAPTION.sink) : KIND_CAPTION.core;
+    // a source only feeds the cores and a sink is only fed by them
+    const takes_input = node.kind !== "io" || node.direction === "sink";
+    const gives_output = node.kind !== "io" || node.direction === "source";
+    return (
+        <div style={node_style(node, selected)}>
+            {takes_input && <Handle type="target" position={Position.Left}/>}
+            <span style={{maxWidth: "100%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>{node.text}</span>
+            <small style={{opacity: 0.6, fontSize: "0.65rem"}}>{caption}</small>
+            {gives_output && <Handle type="source" position={Position.Right}/>}
+        </div>
+    );
+};
+
+const node_types = {block: BlockNodeView};
+
+// the controls of the canvas follow the theme of the application
+const flow_class = css`
+  & .react-flow__controls-button {
+    background: ${ColorTheme.background.level_3};
+    color: ${ColorTheme.text};
+    border-bottom: 1px solid ${ColorTheme.background.borders};
+  }
+  & .react-flow__controls-button:hover {
+    background: ${ColorTheme.background.level_4};
+  }
+  & .react-flow__controls-button svg {
+    fill: currentColor;
+  }
+  & .react-flow__handle {
+    background: ${ColorTheme.background.level_5};
+    border: 1px solid ${ColorTheme.text};
   }
 `;
 
-const io_sink_class = css`
-  rect& {
-    stroke: ${io_colors.sink};
-    stroke-width: 2px;
-    stroke-dasharray: ${io_dashes.sink};
-  }
-`;
+const edge_id = (id: number) => "edge-" + id;
 
-const selected_edge_class = css`
-  path& {
-    stroke: ${ColorTheme.background.accents};
-    stroke-width: 3px;
-    /* beats the marker the canvas sets in the attribute, the marker of the arrow is shared by all the edges */
-    marker-end: url(#end-arrow-selected);
-  }
-`;
+const to_graph_node = (n: BlockNode): EmulatorGraphNode => n.data.node;
 
-let EmulatorDiagram = function (props: EmulatorDiagramProps) {
+let DiagramCanvas = function (props: EmulatorDiagramProps) {
 
-    const inner_nodes: NodeData[] = props.nodes.map((node: EmulatorGraphNode) => {
-        const {id, ...rest} = node;
-        const drawn: NodeData = {...rest, id: node_key(id)};
-        if(node.kind === "io") drawn.className = node.direction === "source" ? io_source_class : io_sink_class;
-        return drawn;
-    });
+    const flow = useReactFlow();
+    const wrapper = useRef<HTMLDivElement>(null);
+    const [rf_nodes, set_rf_nodes, on_nodes_change] = useNodesState<BlockNode>([]);
+    const [rf_edges, set_rf_edges, on_edges_change] = useEdgesState<Edge>([]);
 
-    const inner_edges: EdgeData[] = props.edges.map((edge: EmulatorGraphEdge) => ({
-        id: edge_key(edge.id),
-        from: node_key(edge.from),
-        to: node_key(edge.to)
-    }));
+    // the nodes that were never moved are placed by their connections
+    const placed = {...auto_layout(props.nodes, props.edges), ...props.layout};
+    const selected_node = props.selection?.type === "node" ? props.selection.obj.id : null;
+    const selected_edge = props.selection?.type === "edge" ? props.selection.obj.id : null;
 
-    let { selections, onCanvasClick, onClick } = useSelection({
-        nodes: inner_nodes,
-        edges: inner_edges
-    });
+    useEffect(() => {
+        set_rf_nodes(props.nodes.map((node): BlockNode => ({
+            id: String(node.id),
+            type: "block",
+            position: placed[node.id] ?? {x: 0, y: 0},
+            data: {node: node},
+            selected: node.id === selected_node
+        })));
+        set_rf_edges(props.edges.map((edge): Edge => ({
+            id: edge_id(edge.id),
+            source: String(edge.from),
+            target: String(edge.to),
+            selected: edge.id === selected_edge,
+            markerEnd: {type: MarkerType.ArrowClosed, width: 18, height: 18},
+            style: edge.id === selected_edge ? {stroke: ColorTheme.background.accents, strokeWidth: 3} : {}
+        })));
+    }, [props.nodes, props.edges, props.layout, props.selection]);
 
-    const drawn_edges: EdgeData[] = inner_edges.map((edge) => (
-        selections.includes(edge.id) ? {...edge, className: selected_edge_class} : edge
-    ));
+    // the diagram of another emulator is shown whole
+    useEffect(() => {
+        const timer = setTimeout(() => flow.fitView({padding: 0.3, maxZoom: 1}), 60);
+        return () => clearTimeout(timer);
+    }, [props.view_key]);
 
-    const model_node = (data: NodeData) => props.nodes.find((n) => node_key(n.id) === data.id);
-
-    let handle_node_click = (event: GraphMouseEvent, data: NodeData) => {
-        const node = model_node(data);
-        if(node === undefined) return;
-        props.onNodeSelect(event, node);
-        onClick?.(event, data);
+    const handle_node_click = (event: React.MouseEvent, node: BlockNode) => {
+        props.onNodeSelect(event, to_graph_node(node));
     };
 
-    let handle_edge_click = (event: GraphMouseEvent, data: EdgeData) => {
-        onClick?.(event, data);
-        const edge = props.edges.find((e) => edge_key(e.id) === data.id);
-        if(edge === undefined) return;
-        props.onEdgeSelect(event, edge);
+    const handle_edge_click = (event: React.MouseEvent, edge: Edge) => {
+        props.onEdgeSelect(event, {id: Number(edge.id.slice("edge-".length)), from: Number(edge.source), to: Number(edge.target)});
     };
 
-    let handle_canvas_click = () => {
-        props.onCanvasClick();
-        onCanvasClick?.();
+    const handle_drag_stop = (_event: unknown, _node: BlockNode, moved: BlockNode[]) => {
+        const positions: emulator_layout = {};
+        for(const n of moved) positions[n.id] = {x: Math.round(n.position.x), y: Math.round(n.position.y)};
+        props.onMoveNodes(positions);
     };
 
-    let handle_layout_change = () => {
-        //console.log('Layout', layout);
-    }
+    const find_node = (id: string) => props.nodes.find((n) => String(n.id) === id);
 
-    let handle_link_check = (event: unknown, from: NodeData, to: NodeData) => {
-        return !hasLink(inner_edges, from, to);
+    const handle_connect = (connection: Connection) => {
+        const from = find_node(connection.source);
+        const to = find_node(connection.target);
+        if(from && to) props.onLinkNodes(null, from, to);
     };
 
-    let handle_link_create = (event: unknown, from: NodeData, to: NodeData) => {
-        const from_node = model_node(from);
-        const to_node = model_node(to);
-        if(from_node === undefined || to_node === undefined) return;
-        props.onLinkNodes(event, from_node, to_node);
+    const is_valid_connection = (connection: Connection | Edge) => {
+        return props.can_link(Number(connection.source), Number(connection.target));
     };
 
-    return(
-        <div style={{
-            height:"100%",
-            display:"flex",
-            flexDirection:"column"
-        }}>
+    // the node is dropped with its center under the pointer
+    const centered = (position: {x: number, y: number}) => ({x: Math.round(position.x - NODE_WIDTH / 2), y: Math.round(position.y - NODE_HEIGHT / 2)});
+
+    const add_at_center = (kind: BlockKind) => {
+        const rect = wrapper.current?.getBoundingClientRect();
+        if(!rect) return;
+        // each one a bit lower than the previous, so that they do not pile up
+        const shift = (props.nodes.length % 6) * 24;
+        const center = flow.screenToFlowPosition({x: rect.left + rect.width / 2 + shift, y: rect.top + rect.height / 2 + shift});
+        props.onAddBlock(kind, centered(center));
+    };
+
+    const handle_drop = (event: React.DragEvent) => {
+        const kind = event.dataTransfer.getData(BLOCK_DRAG_TYPE) as BlockKind;
+        if(!kind || !props.enabled_actions.add) return;
+        event.preventDefault();
+        props.onAddBlock(kind, centered(flow.screenToFlowPosition({x: event.clientX, y: event.clientY})));
+    };
+
+    const handle_drag_over = (event: React.DragEvent) => {
+        if(event.dataTransfer.types.includes(BLOCK_DRAG_TYPE)){
+            event.preventDefault();
+            event.dataTransfer.dropEffect = "copy";
+        }
+    };
+
+    return (
+        <div style={{height: "100%", display: "flex", flexDirection: "column"}}>
             <EmulatorToolbar
                 onRun={props.onRun}
                 onDeploy={props.onDeploy}
@@ -159,41 +250,43 @@ let EmulatorDiagram = function (props: EmulatorDiagramProps) {
                 enable={props.enabled_actions}
                 onCopy={props.onCopy}
             />
-            {/* reaflow 5.4.1 draws its arrow by spreading the element, which React warns about on every render: the
-                marker is drawn here instead (the edges refer to it by id) and the one of the canvas is turned off */}
-            <svg width={0} height={0} style={{position: "absolute"}} aria-hidden>
-                <defs>
-                    <MarkerArrow/>
-                    <marker id="end-arrow-selected" viewBox="0 -4 8 8" refX="8" markerWidth="8" markerHeight="8" orient="auto">
-                        <path d="M0,-4L8,0L0,4" style={{fill: ColorTheme.background.accents}}/>
-                    </marker>
-                </defs>
-            </svg>
             <div style={{display: "flex", flexDirection: "row", minHeight: 0}}>
-            <EmulatorLibrary
-                enabled={props.enabled_actions.add}
-                onAddCore={props.onAdd}
-                onAddIo={props.onAddIo}
-            />
-            <div style={{flexGrow: 1, minWidth: 0}}>
-            <Canvas
-                arrow={null}
-                nodes={inner_nodes}
-                edges={drawn_edges}
-                selections={selections}
-                height={550}
-                node={<Node onClick={handle_node_click} removable={false}/>}
-                edge={<Edge onClick={handle_edge_click} removable={false}/>}
-                onCanvasClick={handle_canvas_click}
-                onLayoutChange={handle_layout_change}
-                onNodeLinkCheck={handle_link_check}
-                onNodeLink={handle_link_create}
-            />
-            </div>
+                <EmulatorLibrary enabled={props.enabled_actions.add} onAdd={add_at_center}/>
+                <div ref={wrapper} style={{flexGrow: 1, minWidth: 0, height: 550}} onDrop={handle_drop} onDragOver={handle_drag_over}>
+                    <ReactFlow
+                        className={flow_class}
+                        nodes={rf_nodes}
+                        edges={rf_edges}
+                        nodeTypes={node_types}
+                        onNodesChange={on_nodes_change}
+                        onEdgesChange={on_edges_change}
+                        onNodeClick={handle_node_click}
+                        onEdgeClick={handle_edge_click}
+                        onNodeDragStop={handle_drag_stop}
+                        onPaneClick={props.onCanvasClick}
+                        onConnect={handle_connect}
+                        isValidConnection={is_valid_connection}
+                        deleteKeyCode={null}
+                        nodesConnectable={props.enabled_actions.add}
+                        proOptions={{hideAttribution: true}}
+                        minZoom={0.2}
+                        maxZoom={2}
+                    >
+                        <Background variant={BackgroundVariant.Dots} gap={20} size={1}/>
+                        <Controls showInteractive={false}/>
+                    </ReactFlow>
+                </div>
             </div>
         </div>
     );
 };
 
+let EmulatorDiagram = function (props: EmulatorDiagramProps) {
+    return (
+        <ReactFlowProvider>
+            <DiagramCanvas {...props}/>
+        </ReactFlowProvider>
+    );
+};
 
 export default EmulatorDiagram;
