@@ -17,8 +17,6 @@ import React from 'react';
 import {ColorTheme, Image} from "#UI/index.js";
 import {NavLink} from "react-router-dom";
 import  {styled} from "goober";
-import {themePreference, setTheme, type ThemePreference} from "#UI/themes.js";
-import {MdLightMode, MdDarkMode, MdSettingsBrightness} from "react-icons/md";
 
 
 const ComponentLayout = styled('div')`
@@ -26,30 +24,6 @@ const ComponentLayout = styled('div')`
     flex-direction: column;
     
 `
-
-const ThemeToggle = styled('button')`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 1rem auto 0;
-    padding: 0.35rem;
-    cursor: pointer;
-    color: ${ColorTheme.text};
-    background: transparent;
-    border: 1px solid ${ColorTheme.background.borders};
-    border-radius: 50%;
-    &:hover {
-        background: ${ColorTheme.background.level_4};
-    }
-`
-
-const next_theme: Record<ThemePreference, ThemePreference> = {system: "light", light: "dark", dark: "system"};
-
-const theme_icons: Record<ThemePreference, React.ReactNode> = {
-    system: <MdSettingsBrightness size="1.5em"/>,
-    light: <MdLightMode size="1.5em"/>,
-    dark: <MdDarkMode size="1.5em"/>,
-};
 
 interface NavbarProps {
     views: any;
@@ -101,12 +75,6 @@ let  Navbar = (props: NavbarProps) =>{
             <Image src="assets/logo.svg" alt='µScope Logo'/>
             <Image src="assets/name.svg" alt='µScope Name'/>
             {render_navbar()}
-            <ThemeToggle
-                onClick={() => setTheme(next_theme[themePreference])}
-                title={"Theme: " + themePreference + " (click for " + next_theme[themePreference] + ")"}
-                aria-label="Change theme">
-                {theme_icons[themePreference]}
-            </ThemeToggle>
         </ComponentLayout>
 
     );

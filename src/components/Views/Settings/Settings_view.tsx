@@ -13,14 +13,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {type CSSProperties, useContext, useEffect, useState} from 'react';
-import {InputField, SelectField, SimpleContent, UIPanel} from "#UI/index.js";
+import React, {useContext, useEffect, useState} from 'react';
+import {FormLayout, InputField, SelectField, SimpleContent, UIPanel} from "#UI/index.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
+import ThemeSelector from "../../Common_Components/ThemeSelector.js";
 import {up_application, up_settings} from "#client_core/index.js";
 import type {SimpleStringOption} from "#interfaces/index.js";
 
 interface SettingsViewProps {
 }
+
+type HilMap = {bases: Record<string, number>, offsets: Record<string, number>};
+
+// the fields of the HIL address map: [kind in the map, name in the map, label]
+const HIL_FIELDS: [keyof HilMap, string, string][] = [
+    ["bases", "cores_rom", "Cores ROM base"],
+    ["offsets", "cores_rom", "Cores ROM offset"],
+    ["bases", "cores_control", "Cores control base"],
+    ["offsets", "cores_control", "Cores control offset"],
+    ["bases", "cores_inputs", "Cores inputs base"],
+    ["offsets", "cores_inputs", "Cores inputs offset"],
+    ["bases", "controller", "Controller base"],
+    ["offsets", "controller", "Controller offset"],
+    ["offsets", "dma", "DMA offset"],
+    ["bases", "hil_control", "HIL control address"],
+    ["bases", "scope_mux", "Scope mux address"],
+    ["offsets", "hil_tb", "HIL timebase offset"],
+];
+
+const COLUMN_WIDTH = "14rem";
 
 let SettingsView = function (props: SettingsViewProps) {
 
@@ -30,7 +51,7 @@ let SettingsView = function (props: SettingsViewProps) {
 
     const [multichannel_debug, set_multichannel_debug] = useState({label:"false", value:"false"});
     const [debug_level, set_debug_level] = useState({label:"", value:""});
-    const [hil_address_map, set_hil_address_map] = useState({
+    const [hil_address_map, set_hil_address_map] = useState<HilMap>({
         "bases": {
             "cores_rom": 0,
             "cores_control": 0,
@@ -84,102 +105,68 @@ let SettingsView = function (props: SettingsViewProps) {
 
     let handle_edit_hil_setting = async (event: any) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
-            let tok = event.target.name.split(".");
+            // the name is "<name>.<kind>"
+            let [name, kind] = event.target.name.split(".");
             let new_map: any = hil_address_map;
-            new_map[tok[1]][tok[0]]= parseInt(event.target.value, 0);
+            new_map[kind][name]= parseInt(event.target.value, 0);
             set_hil_address_map(new_map);
             await up_settings.set_hil_address_map(new_map);
         }
     }
 
     let render_hil_components = () =>{
-        const div_style : CSSProperties = {
-            display:"flex",
-            flexDirection:"row",
-            gap:10
-        };
-
-        if(hil_present){
-            return(
-                <UIPanel key="hil_settings" style={{minHeight:"100px"}} level="level_2">
-                    <SimpleContent name="HIL Settings">
-                        <div>
-                            <div style={div_style}>
-                                <InputField inline name="cores_rom.bases" defaultValue={'0x'+hil_address_map.bases.cores_rom.toString(16)}
-                                            onKeyDown={handle_edit_hil_setting} label="Cores ROM: base"/>
-                                <InputField inline name="cores_rom.offsets"
-                                            defaultValue={'0x'+hil_address_map.offsets.cores_rom.toString(16)}
-                                            onKeyDown={handle_edit_hil_setting} label="Offset"/>
-                            </div>
-                            <div style={div_style}>
-                                <InputField inline name="cores_control.bases"
-                                            defaultValue={'0x'+hil_address_map.bases.cores_control.toString(16)}
-                                            onKeyDown={handle_edit_hil_setting} label="Cores Control: base"/>
-                                <InputField inline name="cores_control.offsets"
-                                            defaultValue={'0x'+hil_address_map.offsets.cores_control.toString(16)}
-                                            onKeyDown={handle_edit_hil_setting} label="Offset"/>
-                            </div>
-                            <div style={div_style}>
-                                <InputField inline name="cores_inputs.bases"
-                                            defaultValue={'0x'+hil_address_map.bases.cores_inputs.toString(16)}
-                                            onKeyDown={handle_edit_hil_setting} label="Cores Inputs: base"/>
-                                <InputField inline name="cores_inputs.offsets"
-                                            defaultValue={'0x'+hil_address_map.offsets.cores_inputs.toString(16)}
-                                            onKeyDown={handle_edit_hil_setting} label="Offset"/>
-                            </div>
-                            <div style={div_style}>
-                                <InputField inline name="controller.bases"
-                                            defaultValue={'0x'+hil_address_map.bases.controller.toString(16)}
-                                            onKeyDown={handle_edit_hil_setting} label="Controller: base"/>
-                                <InputField inline name="controller.offsets"
-                                            defaultValue={'0x'+hil_address_map.offsets.controller.toString(16)}
-                                            onKeyDown={handle_edit_hil_setting} label="Offset"/>
-                            </div>
-                            <InputField inline name="dma.offsets"
-                                        defaultValue={'0x'+hil_address_map.offsets.dma.toString(16)}
-                                        onKeyDown={handle_edit_hil_setting} label="DMA offset"/>
-                            <InputField inline name="hil_control.bases"
-                                        defaultValue={'0x'+hil_address_map.bases.hil_control.toString(16)}
-                                        onKeyDown={handle_edit_hil_setting} label="HIL control Address"/>
-                            <InputField inline name="scope_mux.bases"
-                                        defaultValue={'0x'+hil_address_map.bases.scope_mux.toString(16)}
-                                        onKeyDown={handle_edit_hil_setting} label="Scope Mux Address"/>
-                            <InputField inline name="hil_tb.bases"
-                                        defaultValue={'0x'+hil_address_map.offsets.hil_tb.toString(16)}
-                                        onKeyDown={handle_edit_hil_setting} label="HIL Timebase Offset"/>
-                        </div>
-                    </SimpleContent>
-                </UIPanel>
-            )
-        } else {
-            return null;
-        }
+        if(!hil_present) return null;
+        return(
+            <UIPanel key="hil_settings" level="level_2" style={{flexShrink: 0}}>
+                <SimpleContent name="HIL Settings">
+                    <FormLayout columns={COLUMN_WIDTH}>
+                        {HIL_FIELDS.map(([kind, name, label]) => (
+                            <InputField key={name + "." + kind} id={name + "." + kind} name={name + "." + kind}
+                                        defaultValue={'0x' + hil_address_map[kind]![name]!.toString(16)}
+                                        onKeyDown={handle_edit_hil_setting} label={label}/>
+                        ))}
+                    </FormLayout>
+                </SimpleContent>
+            </UIPanel>
+        )
     }
 
     return (
         <div style={{
             display: "flex",
             flexDirection: "column",
-            gap: 10,
-            margin: 10
+            gap: "1rem",
+            width: "100%",
+            maxWidth: "60rem",
+            margin: "0 auto",
+            padding: "1rem",
+            // the main area has a fixed height, this page scrolls inside of it
+            flex: 1,
+            minHeight: 0,
+            overflowY: "auto"
         }}>
-            <UIPanel key="clock_settings" style={{minHeight: "100px"}} level="level_2">
-                <SimpleContent name="PL Clocks">
-                    <div>
-                        <InputField inline name="fclk_0" defaultValue={application.pl_clocks["0"].toString()}
-                                    onKeyDown={handle_edit_clocks} label="PL clock frequency 0"/>
-                        <InputField inline name="fclk_1" defaultValue={application.pl_clocks["1"].toString()}
-                                    onKeyDown={handle_edit_clocks} label="PL clock frequency 1"/>
-                        <InputField inline name="fclk_2" defaultValue={application.pl_clocks["2"].toString()}
-                                    onKeyDown={handle_edit_clocks} label="PL clock frequency 2"/>
-                        <InputField inline name="fclk_3" defaultValue={application.pl_clocks["3"].toString()}
-                                    onKeyDown={handle_edit_clocks} label="PL clock frequency 3"/>
-                    </div>
+            <UIPanel key="appearance_settings" level="level_2" style={{flexShrink: 0}}>
+                <SimpleContent name="Appearance">
+                    <FormLayout>
+                        <ThemeSelector/>
+                    </FormLayout>
                 </SimpleContent>
             </UIPanel>
-            <UIPanel key="platform_settings" style={{minHeight:"100px"}} level="level_2">
+            <UIPanel key="clock_settings" level="level_2" style={{flexShrink: 0}}>
+                <SimpleContent name="PL Clocks">
+                    <FormLayout columns={COLUMN_WIDTH}>
+                        {["0", "1", "2", "3"].map(i => (
+                            <InputField key={i} id={"fclk_" + i} name={"fclk_" + i}
+                                        defaultValue={application.pl_clocks[i]!.toString()}
+                                        onKeyDown={handle_edit_clocks} label={"PL clock frequency " + i}
+                                        description="Press Enter to apply"/>
+                        ))}
+                    </FormLayout>
+                </SimpleContent>
+            </UIPanel>
+            <UIPanel key="platform_settings" level="level_2" style={{flexShrink: 0}}>
                 <SimpleContent name="Platform settings">
-                    <div>
+                    <FormLayout columns={COLUMN_WIDTH}>
                         <SelectField<SimpleStringOption>
                             label="Driver Log Level"
                             onChange={handle_set_debug_level}
@@ -195,13 +182,13 @@ let SettingsView = function (props: SettingsViewProps) {
                             label="Multichannel debug"
                             onChange={handle_multichannel_debug}
                             value={multichannel_debug}
-                            name="driver_log_level"
+                            name="multichannel_debug"
                             options={[
                                 {label:"true", value:"true"},
                                 {label:"false", value:"false"}
                             ]}
                         />
-                    </div>
+                    </FormLayout>
                 </SimpleContent>
             </UIPanel>
             {render_hil_components()}

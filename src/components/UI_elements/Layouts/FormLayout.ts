@@ -16,13 +16,16 @@
 
 import { styled } from 'goober';
 
-interface FormLayoutProps {}
+interface FormLayoutProps {
+    /// minimum width of a column, the form then flows in as many columns as fit
+    columns?: string | undefined;
+}
 
-export const FormLayout = styled('div')<FormLayoutProps>`
+export const FormLayout = styled<'div', FormLayoutProps>('div')(({ columns }) => `
     display: grid;
     margin: 1em;
     grid-template-rows: auto;
-    grid-auto-columns: auto;
-    grid-gap: 0.4rem;
+    ${columns ? `grid-template-columns: repeat(auto-fill, minmax(${columns}, 1fr));` : "grid-auto-columns: auto;"}
+    grid-gap: ${columns ? "1rem" : "0.4rem"};
     align-items: start;
-`
+`)
