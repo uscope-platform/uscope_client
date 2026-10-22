@@ -111,6 +111,10 @@ export const parse_application = (raw_json: string, id: number): application => 
     // the client handles the id of the specification as a string, the older files have an integer
     for(const p of imported_app.peripherals){
         p.spec_id = String(p.spec_id);
+        // the dot separates the peripheral from the register in the terminal and in the scripts, ananke puts one in
+        // the names of the instances of an array ("core.0")
+        p.name = p.name.replace(/\./g, "_");
+        p.peripheral_id = p.peripheral_id.replace(/\./g, "_");
     }
     return imported_app;
 }

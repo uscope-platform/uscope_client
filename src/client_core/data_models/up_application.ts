@@ -578,6 +578,10 @@ export class up_application {
     }
 
     edit_peripheral = async (periph_name: string, field_name: string, field_value: any) => {
+        if((field_name === "name" || field_name === "peripheral_id") && typeof field_value === "string"){
+            // a dot separates the peripheral from the register in the terminal and in the scripts
+            field_value = field_value.replace(/\./g, "_");
+        }
 
         let [periph] = this.peripherals.filter((p) =>{
             return p.name === periph_name;
