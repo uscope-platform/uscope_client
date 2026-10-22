@@ -139,10 +139,30 @@ export interface connection {
 }
 
 
+/// An endpoint of an IO block: a 32 bit word that the logic reads or writes on the bus, at its own address.
+/// The type is the one of the data on the bus, the core port it is linked to has the one the core needs
+export interface io_port{
+    name:string,
+    address:number,
+    type:string,
+    width:number,
+    signed:boolean
+}
+
+/// A group of the endpoints that feed the DMAs (source) or are written by them (sink), it only stands for the channels
+/// on the bus: it shares the id space of the cores, so the connections and the port links treat it as one of them
+export interface io_block{
+    name:string,
+    id:number,
+    direction:"source" | "sink",
+    ports:io_port[]
+}
+
 export interface emulator{
     id:number,
     name:string,
     cores: Record<string, core>
+    io_blocks?: Record<string, io_block>,
     connections:connection[],
     emulation_time:number,
     deployment_mode:boolean

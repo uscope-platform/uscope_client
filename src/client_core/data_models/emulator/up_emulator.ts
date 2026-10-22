@@ -29,6 +29,8 @@ import type {
     core_input_data,
     core_memory,
     core_output,
+    io_block,
+    io_port,
     emulator_hil_sim_data,
     port_link,
     EmulatorHilChannelIdentifier
@@ -40,6 +42,7 @@ export class up_emulator {
     public id:number;
     public name:string;
     public cores: Record<string, core>;
+    public io_blocks: Record<string, io_block>;
     public connections: connection[];
     public emulation_time:number;
     public deployment_mode:boolean;
@@ -49,6 +52,7 @@ export class up_emulator {
         this.id = emulator_obj.id;
         this.name = emulator_obj.name;
         this.cores = emulator_obj.cores;
+        this.io_blocks = emulator_obj.io_blocks ?? {};
         this.emulation_time = emulator_obj.emulation_time;
         this.deployment_mode = emulator_obj.deployment_mode;
         if(!emulator_obj.connections){
@@ -63,6 +67,7 @@ export class up_emulator {
             id:9999,
             name:"",
             cores:{},
+            io_blocks:{},
             connections:[],
             emulation_time:0.001,
             deployment_mode:false
@@ -74,6 +79,7 @@ export class up_emulator {
         return new up_emulator({
             id: this.id,
             cores: JSON.parse(JSON.stringify(this.cores)),
+            io_blocks: JSON.parse(JSON.stringify(this.io_blocks)),
             connections: JSON.parse(JSON.stringify(this.connections)),
             name: this.name,
             emulation_time: this.emulation_time,
@@ -85,6 +91,7 @@ export class up_emulator {
         return {
             id: emulator_obj.id,
             cores: JSON.parse(JSON.stringify(emulator_obj.cores)),
+            io_blocks: JSON.parse(JSON.stringify(emulator_obj.io_blocks ?? {})),
             connections: JSON.parse(JSON.stringify(emulator_obj.connections)),
             name: emulator_obj.name,
             emulation_time: emulator_obj.emulation_time,
@@ -97,6 +104,7 @@ export class up_emulator {
             id:emulator_id,
             name:'new_emulator_'+ emulator_id,
             cores:{},
+            io_blocks:{},
             connections:[],
             emulation_time:0.001,
             deployment_mode:false
@@ -155,9 +163,10 @@ export class up_emulator {
         return c;
     }
 
+    // cores and IO blocks share the ids, the connections refer to both
     find_free_id = () => {
         let id = 1;
-        while(this.cores[id] !== undefined){
+        while(this.cores[id] !== undefined || this.io_blocks[id] !== undefined){
             id++;
         }
         return id;
@@ -242,6 +251,94 @@ export class up_emulator {
         }
         return new_source;
     }
+    is_io_block = (id: number) => this.io_blocks[id] !== undefined;
+
+    /// An IO source feeds a core, an IO sink is fed by one: nothing goes from an IO block to another
+    can_connect = (source_id: number, destination_id: number) => {
+        const source_io = this.io_blocks[source_id];
+        const destination_io = this.io_blocks[destination_id];
+        if(source_io && destination_io) return false;
+        if(source_io) return source_io.direction === "source";
+        if(destination_io) return destination_io.direction === "sink";
+        return true;
+    }
+
+    add_io_block = async (direction: io_block["direction"]) => {
+        let id = this.find_free_id();
+        let block: io_block = {
+            name: (direction === "source" ? "new_source_" : "new_sink_") + id,
+            id: id,
+            direction: direction,
+            ports: []
+        };
+        return this.send_io_block(block, "add");
+    }
+
+    send_io_block = async (block: io_block, action: "add" | "edit") => {
+        let edit = {id:this.id, field:"io_blocks",  action:action, value:block};
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        this.io_blocks[block.id] = block;
+        store.dispatch(update_emulator(this.deep_copy()));
+        return block;
+    }
+
+    edit_io_block_props = async <K extends keyof io_block>(block_id: number, field: K, value: io_block[K]) => {
+        let block: io_block = JSON.parse(JSON.stringify(this.io_blocks[block_id]));
+        block[field] = value;
+        return this.send_io_block(block, "edit");
+    }
+
+    add_io_port = async (block_id: number) => {
+        let block: io_block = JSON.parse(JSON.stringify(this.io_blocks[block_id]));
+        // the word after the last one of the block
+        const last = block.ports[block.ports.length - 1];
+        const port: io_port = {
+            name: "port_" + block.ports.length,
+            address: last ? last.address + 4 : 0,
+            type: "float",
+            width: 32,
+            signed: true
+        };
+        block.ports.push(port);
+        return this.send_io_block(block, "edit");
+    }
+
+    edit_io_port = async <K extends keyof io_port>(block_id: number, port_name: string, field: K, value: io_port[K]) => {
+        let block: io_block = JSON.parse(JSON.stringify(this.io_blocks[block_id]));
+        const port = block.ports.find((p) => p.name === port_name);
+        if(!port) return block;
+        port[field] = value;
+        await this.send_io_block(block, "edit");
+        if(field === "name"){
+            // the links that used the port follow its new name
+            for(let c of [...this.connections]){
+                for(let l of [...c.ports]){
+                    if(c.source_core === block_id && l.source_port === port_name){
+                        await this.edit_port_link(c.source_core, c.destination_core, "source_port", value as string, l.id);
+                    }
+                    if(c.destination_core === block_id && l.destination_port === port_name){
+                        await this.edit_port_link(c.source_core, c.destination_core, "destination_port", value as string, l.id);
+                    }
+                }
+            }
+        }
+        return block;
+    }
+
+    remove_io_port = async (block_id: number, port_name: string) => {
+        let block: io_block = JSON.parse(JSON.stringify(this.io_blocks[block_id]));
+        block.ports = block.ports.filter((p) => p.name !== port_name);
+        return this.send_io_block(block, "edit");
+    }
+
+    remove_io_block = async (block_id: number) => {
+        await this.remove_node_connections(block_id);
+        let edit = {id:this.id, field:"io_blocks",  action:"remove", value:block_id};
+        await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
+        delete this.io_blocks[block_id];
+        store.dispatch(update_emulator(this.deep_copy()));
+    }
+
     remove_core = async (core_id: number) =>{
         let edit = {id:this.id, field:"cores",  action:"remove", value:core_id};
         await backend_patch(api_dictionary.emulators.edit+'/'+this.id, edit);
@@ -668,6 +765,8 @@ export class up_emulator {
     build = () =>{
         let connections:server_side_port_link[]  = [];
         this.connections.map((item) => {
+            // the links with an IO block are not between cores, they go out with the block
+            if(this.is_io_block(item.source_core) || this.is_io_block(item.destination_core)) return;
             let source_core = this.cores[item.source_core];
             let dest_core = this.cores[item.destination_core];
             if(!source_core || !dest_core){
@@ -783,6 +882,23 @@ export class up_emulator {
                 })
             }),
             interconnect: connections,
+            io_blocks: Object.values(this.io_blocks).map((block) => ({
+                id: block.name,
+                direction: block.direction,
+                ports: block.ports,
+                links: this.connections.flatMap((c) => {
+                    const is_source = c.source_core === block.id;
+                    if(!is_source && c.destination_core !== block.id) return [];
+                    const other = this.cores[is_source ? c.destination_core : c.source_core];
+                    if(!other) return [];
+                    return c.ports.map((l) => ({
+                        io_port: is_source ? l.source_port : l.destination_port,
+                        core_port: other.name + "." + (is_source ? l.destination_port : l.source_port),
+                        io_channel: is_source ? l.source_channel : l.destination_channel,
+                        core_channel: is_source ? l.destination_channel : l.source_channel
+                    }));
+                })
+            })),
             emulation_time:this.emulation_time,
             deployment_mode:this.deployment_mode
         };
@@ -907,6 +1023,8 @@ export class up_emulator {
         let dp: hil_data_point[] = [];
         Object.values(this.connections).map((dma)=>{
             let core = this.cores[dma.source_core];
+            // the data of an IO source comes from outside, there is nothing of it to plot
+            if(this.is_io_block(dma.source_core)) return [];
             if(!core){
                 console.error("Error: Core " + dma.source_core + " not found.");
                 return [];
@@ -1050,6 +1168,7 @@ export class up_emulator {
             id: this.id,
             name: this.name,
             cores: this.cores,
+            io_blocks: this.io_blocks,
             emulation_time:this.emulation_time,
             connections: this.connections,
             deployment_mode: this.deployment_mode
