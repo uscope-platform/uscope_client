@@ -18,7 +18,7 @@ import {Label} from "../Label.js";
 import {DeleteButton} from "#UI/DeleteButton.js";
 
 interface CardTitleProps {
-    name: string;
+    name?: string | undefined;
     onRemove?: (() => void) | undefined;
     additionalItems?: React.ReactNode;
 }
@@ -30,7 +30,7 @@ export let CardTitle = function (props: CardTitleProps) {
             display:"flex",
             flexDirection:"row",
         }}>
-            <Label>{props.name}</Label>
+            {props.name !== undefined && <Label>{props.name}</Label>}
             {props.additionalItems}
             {props.onRemove && <DeleteButton onRemove={props.onRemove}/>}
         </div>

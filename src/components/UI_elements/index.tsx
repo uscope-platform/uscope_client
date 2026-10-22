@@ -29,6 +29,7 @@ export {SelectableListItem} from './SelectableListItem.js'
 export {SelectableList} from './SelectableList.js'
 export {ItemsEditor} from './ItemsEditor.js'
 export {ChipSelector} from './ChipSelector.js'
+export {Switch} from './Switch.js'
 export {ListItem} from './ListItem.js'
 export {TwoColumnSelector} from "./TwoColumnSelector.js"
 export {Chip} from "./Chip.js"

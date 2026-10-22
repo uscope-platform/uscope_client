@@ -16,7 +16,7 @@
 
 import {styled} from "goober";
 import {CardTitle} from "./CardTitle.jsx";
-import {ChipSelector} from "../ChipSelector.jsx";
+import {Switch} from "../Switch.jsx";
 import {ColorTheme} from "../ColorTheme.js";
 import type {CSSProperties, ReactNode} from "react";
 
@@ -40,17 +40,19 @@ interface CardProps {
         value: boolean,
         click: (value: {name: string, checked: boolean}) => void;
     }
-    name: string,
+    // the title is left out when there is no name, no selector and nothing to remove
+    name?: string | undefined,
     onRemove?: (() => void) | undefined,
     children?: ReactNode;
     style?: CSSProperties;
 }
 
 export let Card = function (props: CardProps) {
-    let title_items = props.selector ? <ChipSelector name={props.selector.name} onClick={props.selector.click} value={props.selector.value} label={props.selector.label}/> :null
+    let title_items = props.selector ? <Switch name={props.selector.name} onClick={props.selector.click} value={props.selector.value} label={props.selector.label} style={{marginLeft: "auto", marginRight: "0.5rem"}}/> :null
     return(
         <CardContainer style={props.style}>
-            <CardTitle name={props.name} onRemove={props.onRemove} additionalItems={title_items}/>
+            {(props.name !== undefined || props.selector || props.onRemove) &&
+                <CardTitle name={props.name} onRemove={props.onRemove} additionalItems={title_items}/>}
             {props.children}
         </CardContainer>
     );

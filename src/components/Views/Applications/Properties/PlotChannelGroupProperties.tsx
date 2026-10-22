@@ -62,11 +62,10 @@ export let  PlotChannelGroupProperties = (props:PlotChannelGroupPropertiesProps)
 
     return(
         <Card
-            name={props.group.group_name}
             style={{width: "100%", paddingLeft: 0}}
             selector={{
                 name:"default",
-                label:"Enabled",
+                label:"Default group",
                 click:handleChangeDefault,
                 value:props.group.default
             }}

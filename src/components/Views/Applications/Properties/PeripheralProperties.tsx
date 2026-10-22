@@ -126,7 +126,6 @@ export let  PeripheralProperties = (props: PeripheralPropertiesProps) =>{
 
     return(
         <Card
-            name={props.peripheral.name}
             style={{width: "100%", paddingLeft: 0}}
         >
             <FormLayout columns={COLUMN_WIDTH}>
