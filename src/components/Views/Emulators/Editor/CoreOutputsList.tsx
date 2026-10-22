@@ -34,8 +34,8 @@ let  CoreOutputsList = (props: CoreOutputsListProps) =>{
     let [outputs, set_outputs] = useState<string[]>([]);
 
     useEffect(() => {
-        if(selected_core_id === null) return;
-        if(props.selections.component && props.selections.component.type === "node"){
+        // nothing selected, or an edge: the list of the core that was selected must not stay
+        if(selected_core_id !== null && props.selections.component && props.selections.component.type === "node"){
             set_outputs(props.emulator.get_output_names(selected_core_id));
         } else set_outputs([]);
     }, [props.selections.component, props.selections.obj_version]);

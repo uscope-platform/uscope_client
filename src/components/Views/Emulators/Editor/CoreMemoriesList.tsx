@@ -34,8 +34,8 @@ let  CoreMemoriesList = (props: CoreMemoriesListProps) =>{
     let [memories, set_memories] = useState<string[]>([]);
 
     useEffect(() => {
-        if(selected_core_id === null) return;
-        if(props.selections.component && props.selections.component.type === "node"){
+        // nothing selected, or an edge: the list of the core that was selected must not stay
+        if(selected_core_id !== null && props.selections.component && props.selections.component.type === "node"){
             set_memories(props.emulator.get_memory_names(selected_core_id));
         } else set_memories([]);
     }, [props.selections.component, props.selections.obj_version]);

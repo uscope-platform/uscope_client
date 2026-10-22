@@ -34,8 +34,8 @@ let  CoreInputsList = (props: CoreInputsListProps) =>{
     let [inputs, set_inputs] = useState<string[]>([]);
 
     useEffect(() => {
-        if(selected_core_id === null) return;
-        if(props.selections.component && props.selections.component.type === "node"){
+        // nothing selected, or an edge: the list of the core that was selected must not stay
+        if(selected_core_id !== null && props.selections.component && props.selections.component.type === "node"){
             set_inputs(props.emulator.get_input_names(selected_core_id));
         } else set_inputs([]);
     }, [props.selections.component, props.selections.obj_version]);
