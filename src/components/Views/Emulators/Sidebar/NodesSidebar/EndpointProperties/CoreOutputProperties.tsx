@@ -18,7 +18,7 @@
 
 import React from 'react';
 
-import {Checkbox, InputField, SelectField, SimpleContent} from "#UI/index.js";
+import {Checkbox, InputField, SelectField, FieldPane, FieldSpan, SimpleContent} from "#UI/index.js";
 import TypeOptionsContainer from "./TypeOptionsContainer.jsx";
 import {up_emulator} from "#client_core/index.js";
 import type {
@@ -79,7 +79,9 @@ let  CoreOutputProperties = (props: CoreOutputPropertiesProps) =>{
     let render_type_options = () =>{
         let ret = [
             <SelectField<SimpleStringOption>
-                label="Type"
+                stacked
+                key="data_type"
+                label="Data type"
                 onChange={handle_select}
                 value={{value: sel_out.type, label: sel_out.type}}
                 name="type"
@@ -91,13 +93,13 @@ let  CoreOutputProperties = (props: CoreOutputPropertiesProps) =>{
         ];
 
         if(sel_out.type==="integer"){
-            ret.push(<InputField id="width" name="width" label="Input width" defaultValue={sel_out.width.toString()} onKeyDown={handle_change_iom}/>);
-            ret.push(<Checkbox name='signed' value={sel_out.signed} onChange={handle_change_signed} label="Signed"/>);
+            ret.push(<InputField key="width" id="width" name="width" label="Width" defaultValue={sel_out.width.toString()} onKeyDown={handle_change_iom}/>);
+            ret.push(<Checkbox key="signed" name='signed' value={sel_out.signed} onChange={handle_change_signed} label="Signed"/>);
         }
 
-        ret.push(<Checkbox name='is_vector' value={sel_out.is_vector} onChange={handle_change_signed} label="Is Vector"/>);
+        ret.push(<Checkbox key="is_vector" name='is_vector' value={sel_out.is_vector} onChange={handle_change_signed} label="Is Vector"/>);
         if(sel_out.is_vector){
-            ret.push(<InputField id="vector_size" name="vector_size" label="Vector Size" defaultValue={sel_out.vector_size.toString()} onKeyDown={handle_change_iom}/>);
+            ret.push(<InputField key="vector_size" id="vector_size" name="vector_size" label="Vector size" defaultValue={sel_out.vector_size.toString()} onKeyDown={handle_change_iom}/>);
         }
         return ret;
     }
@@ -105,12 +107,12 @@ let  CoreOutputProperties = (props: CoreOutputPropertiesProps) =>{
     if(sel_out){
         return(
             <SimpleContent name="Output Properties">
-                <div key="output_props" style={{maxHeight:"13em"}}>
-                    <InputField inline id="name" name="name" label="Name" defaultValue={sel_out.name} onKeyDown={handle_change_iom}/>
-                    <TypeOptionsContainer label="Output data format">
+                <FieldPane key="output_props">
+                    <InputField id="name" name="name" label="Name" defaultValue={sel_out.name} onKeyDown={handle_change_iom}/>
+                    <TypeOptionsContainer label="Data format">
                         {render_type_options()}
                     </TypeOptionsContainer>
-                </div>
+                </FieldPane>
             </SimpleContent>
         )
     }

@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React from 'react';
-import {InputField, SelectField} from "#UI/index.js";
+import {FieldSpan, InputField, SelectField} from "#UI/index.js";
 import type {core_input_source, SimpleStringOption} from "#interfaces/index.js";
 import type {ActionMeta} from "react-select";
 
@@ -89,7 +89,7 @@ export let WaveformInputProperties = (props:WaveformInputPropertiesProps) =>{
 
 
     let render_square_properties = ()=>{
-        return <div>
+        return <>
             <InputField
                 key={"square_voff"}
                 id="voff"
@@ -130,12 +130,12 @@ export let WaveformInputProperties = (props:WaveformInputPropertiesProps) =>{
                 defaultValue={format_value(props.input.period[props.channel])}
                 onKeyDown={handle_parameter_change}
             />
-        </div>
+        </>
     }
 
     let render_triangle_properties = ()=>{
         let duty = props.input.duty[props.channel];
-        return <div>
+        return <>
             <InputField
                 key={"dc_offset"}
                 id="dc_offset"
@@ -176,11 +176,11 @@ export let WaveformInputProperties = (props:WaveformInputPropertiesProps) =>{
                 defaultValue={duty?duty.toFixed(2):""}
                 onKeyDown={handle_parameter_change}
             />
-        </div>
+        </>
     }
 
     let render_sine_properties = ()=>{
-        return  <div>
+        return <>
             <InputField
                 key={"dc_offset"}
                 id="dc_offset"
@@ -213,7 +213,7 @@ export let WaveformInputProperties = (props:WaveformInputPropertiesProps) =>{
                 defaultValue={format_value(props.input.phase[props.channel])}
                 onKeyDown={handle_parameter_change}
             />
-        </div>
+        </>
     }
 
     let render_properties = ()=>{
@@ -228,10 +228,12 @@ export let WaveformInputProperties = (props:WaveformInputPropertiesProps) =>{
     }
 
     return(
-        <div>
+        <>
+            <FieldSpan>
             <SelectField<SimpleStringOption>
+                stacked
                 key="waveform_shape"
-                label="Waveform Shape"
+                label="Waveform shape"
                 onChange={handle_select}
                 value={{value: props.input.shape, label: props.input.shape}}
                 name="shape"
@@ -241,7 +243,8 @@ export let WaveformInputProperties = (props:WaveformInputPropertiesProps) =>{
                     {label: "Sine", value: "sine"}
                 ]}
             />
+            </FieldSpan>
             {render_properties()}
-        </div>
+        </>
     );
 };

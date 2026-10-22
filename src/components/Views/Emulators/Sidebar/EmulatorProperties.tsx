@@ -15,7 +15,7 @@
 
 import React, {type ChangeEvent, useEffect, useReducer, useState} from 'react';
 
-import {InputField, SimpleContent, UIPanel, RangedInputField, Checkbox} from "#UI/index.js";
+import {InputField, SimpleContent, UIPanel, RangedInputField, Checkbox, FieldGrid, FieldPane, FieldSpan} from "#UI/index.js";
 import {up_emulator} from "#client_core/index.js";
 
 
@@ -97,21 +97,28 @@ let  EmulatorProperties = (props: EmulatorPropertiesProps) =>{
             <UIPanel key={"Item properties"} level="level_2">
                 {
                     <SimpleContent name={"Emulator Properties"}>
-                        <div style={{padding:10}} key="emulator_props">
-                            <InputField inline id="name" name="name" label="Emulator Name" defaultValue={props.selected_emulator.name} onKeyDown={handle_change}/>
-
-                            <RangedInputField
-                                id="emulation_time"
-                                name="emulation_time"
-                                label="Emulation Time"
-                                rangeOptions={["us", "ms", "s"]}
-                                onKeyDown={handle_change}
-                                onRangeChange={handle_range_change}
-                                value={indicated_time}
-                                range={range}
-                            />
-                            <Checkbox name='deployment_mode' value={props.selected_emulator.deployment_mode} onChange={handle_deployment_mode} label="Custom deployment mode"/>
-                        </div>
+                        <FieldPane key="emulator_props">
+                            <FieldGrid>
+                                <FieldSpan>
+                                    <InputField id="name" name="name" label="Emulator name" defaultValue={props.selected_emulator.name} onKeyDown={handle_change}/>
+                                </FieldSpan>
+                                <FieldSpan>
+                                    <RangedInputField
+                                        id="emulation_time"
+                                        name="emulation_time"
+                                        label="Emulation time"
+                                        rangeOptions={["us", "ms", "s"]}
+                                        onKeyDown={handle_change}
+                                        onRangeChange={handle_range_change}
+                                        value={indicated_time}
+                                        range={range}
+                                    />
+                                </FieldSpan>
+                                <FieldSpan>
+                                    <Checkbox name='deployment_mode' value={props.selected_emulator.deployment_mode} onChange={handle_deployment_mode} label="Custom deployment mode"/>
+                                </FieldSpan>
+                            </FieldGrid>
+                        </FieldPane>
                     </SimpleContent>
                 }
             </UIPanel>

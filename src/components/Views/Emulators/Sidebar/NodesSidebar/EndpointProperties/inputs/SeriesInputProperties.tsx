@@ -44,8 +44,9 @@ export let SeriesInputProperties = (props:SeriesInputPropertiesProps) =>{
 
     return(
         <SelectField<SimpleStringOption>
+            stacked
             key="source_value"
-            label="Data Series"
+            label="Data series"
             onChange={handle_select}
             value={{value: props.input.value, label: props.input.value}}
             name="value"

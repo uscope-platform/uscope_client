@@ -51,11 +51,9 @@ interface InnerInputProps extends HTMLAttributes<HTMLDivElement>{}
 const Wrapper = styled('div')`
 margin: 0 0.2rem;
 display: grid;
-grid-template-columns: 1fr 0.8fr 0.8fr;
-grid-auto-rows: auto;
-justify-content: space-between;
+grid-template-columns: minmax(0, 1fr) auto;
+gap: 0.25em 0.5em;
 align-items: center;
-flex-flow: wrap;
 `
 
 interface RangedInputFieldProps {
@@ -118,7 +116,7 @@ export let  RangedInputField = (props: RangedInputFieldProps) =>{
 
     return (
         <Wrapper>
-            <Label htmlFor={props.id}>{props.label}</Label>
+            <Label htmlFor={props.id} style={{gridColumn: "1 / -1"}}>{props.label}</Label>
             <InnerInput
                 name={props.name}
                 key={props.value}

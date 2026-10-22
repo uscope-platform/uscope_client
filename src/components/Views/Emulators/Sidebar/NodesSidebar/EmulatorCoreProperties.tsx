@@ -15,7 +15,7 @@
 
 import React from 'react';
 
-import {InputField, SelectField} from "#UI/index.js";
+import {FieldGrid, FieldPane, FieldSpan, InputField, SelectField} from "#UI/index.js";
 import {useAppSelector} from "#redux/hooks.js";
 import {up_emulator} from "#client_core/index.js";
 import type {EmulatorComponentSelector, core, SimpleStringOption, core_options} from "#interfaces/index.js";
@@ -83,38 +83,49 @@ let  EmulatorCoreProperties = (props: EmulatorCorePropertiesProps) =>{
     }
 
     return(
-        <div key="node_props">
-            <InputField inline id="name" name="name" label="Core Name" defaultValue={props.selected_core.name} onKeyDown={handle_change}/>
-            <InputField inline id="channels" name="channels" label="Channels #" defaultValue={props.selected_core.channels.toString()} onKeyDown={handle_change}/>
-            <SelectField
-                label="Program"
-                onChange={handle_selection}
-                value={selected_program}
-                name="program"
-                options={programs_list}/>
-            <InputField inline id="order" name="order" label="Execution Order" defaultValue={props.selected_core.order.toString()} onKeyDown={handle_change}/>
-            <SelectField<SimpleStringOption>
-                label="EFI"
-                onChange={handle_selection}
-                value={selected_efi}
-                name="efi_implementation"
-                options={[
-                    {label: "Trigonometry", value: "efi_trig"},
-                    {label: "Sort", value: "efi_sort"},
-                    {label: "FP Reciprocal", value: "efi_rec"}
-                ]}/>
-            <SelectField<SimpleStringOption>
-                label="Ccomparators"
-                onChange={handle_selection}
-                value={selected_comparators}
-                name="comparators"
-                options={[
-                    {label: "full", value: "full"},
-                    {label: "reducing", value: "reducing"},
-                    {label: "none", value: "none"}
-                ]}/>
-            <InputField inline id="sampling_frequency" name="sampling_frequency" label="Sampling Frequency" defaultValue={props.selected_core.sampling_frequency.toString()} onKeyDown={handle_change}/>
-        </div>
+        <FieldPane key="node_props">
+            <FieldGrid>
+                <FieldSpan>
+                    <InputField id="name" name="name" label="Core name" defaultValue={props.selected_core.name} onKeyDown={handle_change}/>
+                </FieldSpan>
+                <InputField id="channels" name="channels" label="Channels #" defaultValue={props.selected_core.channels.toString()} onKeyDown={handle_change}/>
+                <InputField id="order" name="order" label="Execution order" defaultValue={props.selected_core.order.toString()} onKeyDown={handle_change}/>
+                <FieldSpan>
+                    <SelectField
+                        stacked
+                        label="Program"
+                        onChange={handle_selection}
+                        value={selected_program}
+                        name="program"
+                        options={programs_list}/>
+                </FieldSpan>
+                <SelectField<SimpleStringOption>
+                    stacked
+                    label="EFI"
+                    onChange={handle_selection}
+                    value={selected_efi}
+                    name="efi_implementation"
+                    options={[
+                        {label: "Trigonometry", value: "efi_trig"},
+                        {label: "Sort", value: "efi_sort"},
+                        {label: "FP Reciprocal", value: "efi_rec"}
+                    ]}/>
+                <SelectField<SimpleStringOption>
+                    stacked
+                    label="Comparators"
+                    onChange={handle_selection}
+                    value={selected_comparators}
+                    name="comparators"
+                    options={[
+                        {label: "full", value: "full"},
+                        {label: "reducing", value: "reducing"},
+                        {label: "none", value: "none"}
+                    ]}/>
+                <FieldSpan>
+                    <InputField id="sampling_frequency" name="sampling_frequency" label="Sampling frequency" defaultValue={props.selected_core.sampling_frequency.toString()} onKeyDown={handle_change}/>
+                </FieldSpan>
+            </FieldGrid>
+        </FieldPane>
     );
 };
 

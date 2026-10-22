@@ -15,7 +15,7 @@
 
 import React from 'react';
 
-import {Checkbox, InputField, SelectField, SimpleContent} from "#UI/index.js";
+import {Checkbox, InputField, SelectField, FieldPane, FieldSpan, SimpleContent} from "#UI/index.js";
 import TypeOptionsContainer from "./TypeOptionsContainer.jsx";
 import {up_emulator} from "#client_core/index.js";
 import type {
@@ -96,13 +96,13 @@ let  CoreMemoryProperties = (props: CoreMemoryPropertiesProps) =>{
         ];
 
         if(sel_mem.type==="integer"){
-            ret.push(<InputField id="width" name="width" label="Input width" defaultValue={sel_mem.width.toString()} onKeyDown={handle_change_iom}/>);
-            ret.push(<Checkbox name='signed' value={sel_mem.signed} onChange={handle_change_signed} label="Signed"/>);
+            ret.push(<InputField key="width" id="width" name="width" label="Width" defaultValue={sel_mem.width.toString()} onKeyDown={handle_change_iom}/>);
+            ret.push(<Checkbox key="signed" name='signed' value={sel_mem.signed} onChange={handle_change_signed} label="Signed"/>);
         }
 
-        ret.push(<Checkbox name='is_vector' value={sel_mem.is_vector} onChange={handle_change_signed} label="Is Vector"/>);
+        ret.push(<Checkbox key="is_vector" name='is_vector' value={sel_mem.is_vector} onChange={handle_change_signed} label="Is Vector"/>);
         if(sel_mem.is_vector){
-            ret.push(<InputField id="vector_size" name="vector_size" label="Vector Size" defaultValue={sel_mem.vector_size.toString()} onKeyDown={handle_change_iom}/>);
+            ret.push(<InputField key="vector_size" id="vector_size" name="vector_size" label="Vector size" defaultValue={sel_mem.vector_size.toString()} onKeyDown={handle_change_iom}/>);
         }
 
         return ret;
@@ -111,17 +111,19 @@ let  CoreMemoryProperties = (props: CoreMemoryPropertiesProps) =>{
     if(sel_mem){
         return(
             <SimpleContent name="Memory Properties">
-                <div key="memory_props" style={{maxHeight:"13em"}}>
-                    <InputField inline id="name" name="name" label="Name" defaultValue={sel_mem.name} onKeyDown={handle_change_iom}/>
-                    <TypeOptionsContainer label="Memory Properties">
-                        <InputField inline id="value" name="value" label="Value" defaultValue={sel_mem.value} onKeyDown={handle_change_iom}/>
+                <FieldPane key="memory_props">
+                    <InputField id="name" name="name" label="Name" defaultValue={sel_mem.name} onKeyDown={handle_change_iom}/>
+                    <TypeOptionsContainer label="Contents">
+                        <FieldSpan>
+                            <InputField id="value" name="value" label="Value" defaultValue={sel_mem.value} onKeyDown={handle_change_iom}/>
+                        </FieldSpan>
                         <Checkbox name='is_output' value={sel_mem.is_output} onChange={handle_change_output} label="Use as Output"/>
                         <Checkbox name='is_input' value={sel_mem.is_input} onChange={handle_change_output} label="Use as Input"/>
                     </TypeOptionsContainer>
-                    <TypeOptionsContainer label="Memory data format">
+                    <TypeOptionsContainer label="Data format">
                         {render_type_options()}
                     </TypeOptionsContainer>
-                </div>
+                </FieldPane>
             </SimpleContent>
         )
     }

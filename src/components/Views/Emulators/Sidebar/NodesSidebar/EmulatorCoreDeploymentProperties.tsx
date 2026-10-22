@@ -15,7 +15,7 @@
 
 import React from 'react';
 
-import {Checkbox, InputField} from "#UI/index.js";
+import {Checkbox, FieldGrid, FieldPane, FieldSpan, InputField} from "#UI/index.js";
 import type {core, core_deployment_options} from "#interfaces/index.js";
 import {up_emulator} from "#client_core/index.js";
 
@@ -41,13 +41,17 @@ let  EmulatorCoreDeploymentProperties = (props: EmulatorCoreDeploymentProperties
     }
 
     return(
-        <div>
-            <InputField inline id="rom_address" name="rom_address" label="Code address"
-                        defaultValue={"0x" + props.deployment.rom_address.toString(16)} onKeyDown={handle_change_address}/>
-            <InputField inline id="control_address" name="control_address" label="Control address"
-                        defaultValue={"0x" + props.deployment.control_address.toString(16)} onKeyDown={handle_change_address}/>
-            <Checkbox name='has_reciprocal' value={props.deployment.has_reciprocal} onChange={handle_change_reciprocal} label="Reciprocal Support"/>
-        </div>
+        <FieldPane>
+            <FieldGrid>
+                <InputField id="rom_address" name="rom_address" label="Code address"
+                            defaultValue={"0x" + props.deployment.rom_address.toString(16)} onKeyDown={handle_change_address}/>
+                <InputField id="control_address" name="control_address" label="Control address"
+                            defaultValue={"0x" + props.deployment.control_address.toString(16)} onKeyDown={handle_change_address}/>
+                <FieldSpan>
+                    <Checkbox name='has_reciprocal' value={props.deployment.has_reciprocal} onChange={handle_change_reciprocal} label="Reciprocal support"/>
+                </FieldSpan>
+            </FieldGrid>
+        </FieldPane>
     );
 };
 

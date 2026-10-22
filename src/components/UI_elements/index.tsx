@@ -42,6 +42,7 @@ export {SideToolbar} from "./Sidebar/SideToolbar.jsx"
 export {InterfaceParameters} from "./InterfaceParameters.js"
 
 export {FormLayout} from "./Layouts/FormLayout.js"
+export {FieldGrid, FieldPane, FieldSpan} from "./Layouts/FieldGrid.js"
 export {SidebarCollapsableNameLayout} from "./Layouts/SidebarCollapsableNameLayout.js"
 export {SidebarCollapsableContentLayout} from "./Layouts/SidebarCollapsableContentLayout.js"
 

@@ -14,24 +14,39 @@
 // limitations under the License.
 
 import React from 'react';
-import {ColorTheme, Label} from "#UI/index.js";
+import {styled} from "goober";
+import {ColorTheme, FieldGrid} from "#UI/index.js";
+
+const Section = styled('div')`
+  margin-top: 1rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid ${ColorTheme.background.borders};
+`
+
+const Heading = styled('div')`
+  margin: 0 0 0.6rem 0.2rem;
+  font-family: Roboto,Helvetica,Arial,sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.6;
+`
 
 interface TypeOptionsContainerProps {
     children: React.ReactNode;
     label: string;
 }
 
+/// A titled group of the fields of a pane, they flow in the two columns of the grid
 let TypeOptionsContainer = (props:TypeOptionsContainerProps) => {
-    const {children, label} = props;
-
     return (
-        <div style={{
-            borderTopStyle: "solid", borderTopWidth: "thin", paddingTop: "0.2em", marginTop:"0.2em",
-            borderColor: ColorTheme.disabled_icon_color, borderWidth: "2px"
-        }}>
-        <Label style={{color: ColorTheme.disabled_icon_color, marginBottom:"0.2em"}}>{label}</Label>
-            {children}
-        </div>
+        <Section>
+            <Heading>{props.label}</Heading>
+            <FieldGrid>
+                {props.children}
+            </FieldGrid>
+        </Section>
     );
 };
 

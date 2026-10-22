@@ -16,7 +16,7 @@
 
 import React, {useContext, useEffect, useState} from 'react';
 
-import {Chip, InputField, SelectField} from "#UI/index.js";
+import {Chip, FieldGrid, FieldSpan, InputField, SelectField} from "#UI/index.js";
 import PlotControls from "../PlotControls.jsx";
 import {get_ui_state, save_ui_state, set_acquisition} from "#client_core/index.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
@@ -37,17 +37,6 @@ const Header = styled('div')`
   justify-content: space-between;
   gap: 0.5rem;
   min-height: 2.4rem;
-`
-
-const Fields = styled('div')`
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.6rem 0.8rem;
-  align-items: start;
-`
-
-const Full = styled('div')`
-  grid-column: 1 / -1;
 `
 
 interface TriggerControlsProps {
@@ -159,8 +148,8 @@ let  TriggerControls = (props: TriggerControlsProps) =>{
                 {plot_status()}
                 <PlotControls onPlay={props.onPlay} onPause={props.onPause} onDownload={props.onDownload} onStop={props.onStop}/>
             </Header>
-            <Fields>
-                <Full>
+            <FieldGrid>
+                <FieldSpan>
                     <SelectField<SimpleStringOption>
                         stacked
                         label="Acquisition mode"
@@ -173,7 +162,7 @@ let  TriggerControls = (props: TriggerControlsProps) =>{
                             {label:"free_running", value:"free_running"}
                         ]}
                     />
-                </Full>
+                </FieldSpan>
                 <SelectField<SimpleStringOption>
                     stacked
                     label="Trigger source"
@@ -206,15 +195,15 @@ let  TriggerControls = (props: TriggerControlsProps) =>{
                     onKeyDown={handle_set_value}
                     label="Trigger point"
                 />
-                <Full>
+                <FieldSpan>
                     <InputField
                         name='tb_prescaler'
                         defaultValue={controls_state.tb_prescaler}
                         onKeyDown={handle_set_value}
                         label="Timebase prescaler"
                     />
-                </Full>
-            </Fields>
+                </FieldSpan>
+            </FieldGrid>
         </Panel>
     );
 };

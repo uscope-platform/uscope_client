@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React, {useReducer} from 'react';
-import {Checkbox, InputField, SelectField, SimpleContent} from "#UI/index.js";
+import {Checkbox, InputField, SelectField, FieldPane, FieldSpan, SimpleContent} from "#UI/index.js";
 import {ConstantInputProperties, SeriesInputProperties, ExternalInputProperties, WaveformInputProperties} from "./inputs/index.js";
 import TypeOptionsContainer from "./TypeOptionsContainer.jsx";
 import {up_emulator} from "#client_core/index.js";
@@ -88,7 +88,9 @@ let  CoreInputProperties = (props: CoreInputPropertiesProps) =>{
     let render_type_options = () =>{
         let ret = [
             <SelectField<SimpleStringOption>
-                label="Data Type"
+                stacked
+                key="data_type"
+                label="Data type"
                 onChange={handle_select}
                 value={{value: sel_in.type, label: sel_in.type}}
                 name="type"
@@ -100,14 +102,14 @@ let  CoreInputProperties = (props: CoreInputPropertiesProps) =>{
         ];
 
         if(sel_in.type==="integer"){
-            ret.push(<InputField id="width" name="width" label="Input width" defaultValue={sel_in.width.toString()} onKeyDown={handle_change_iom}/>);
-            ret.push(<Checkbox name='signed' value={sel_in.signed} onChange={handle_change_signed} label="Signed"/>);
+            ret.push(<InputField key="width" id="width" name="width" label="Input width" defaultValue={sel_in.width.toString()} onKeyDown={handle_change_iom}/>);
+            ret.push(<Checkbox key="signed" name='signed' value={sel_in.signed} onChange={handle_change_signed} label="Signed"/>);
         }
 
-        ret.push(<Checkbox name='common_io' value={sel_in.common_io} onChange={handle_change_signed} label="Common IO"/>);
-        ret.push(<Checkbox name='is_vector' value={sel_in.is_vector} onChange={handle_change_signed} label="Is Vector"/>);
+        ret.push(<Checkbox key="common_io" name='common_io' value={sel_in.common_io} onChange={handle_change_signed} label="Common IO"/>);
+        ret.push(<Checkbox key="is_vector" name='is_vector' value={sel_in.is_vector} onChange={handle_change_signed} label="Is Vector"/>);
         if(sel_in.is_vector){
-            ret.push(<InputField id="vector_size" name="vector_size" label="Vector Size" defaultValue={sel_in.vector_size.toString()} onKeyDown={handle_change_iom}/>);
+            ret.push(<InputField key="vector_size" id="vector_size" name="vector_size" label="Vector size" defaultValue={sel_in.vector_size.toString()} onKeyDown={handle_change_iom}/>);
         }
         return ret;
     }
@@ -178,11 +180,14 @@ let  CoreInputProperties = (props: CoreInputPropertiesProps) =>{
     if(sel_in){
         return(
             <SimpleContent name="Input Properties">
-                <div key="input_props" style={{maxHeight:"13em"}}>
+                <FieldPane key="input_props">
                     <InputField id="name" name="name" label="Name" defaultValue={sel_in.name} onKeyDown={handle_change_iom}/>
+                    <TypeOptionsContainer label="Channel">
+                    <FieldSpan>
                     <SelectField<SimpleNumberOption>
+                        stacked
                         key="channel_selector"
-                        label="Channel Selection"
+                        label="Channel selection"
                         onChange={(obj: SimpleNumberOption |  null) =>{
                             if(obj === null) return;
                             set_selected_channel(obj.value);
@@ -191,8 +196,12 @@ let  CoreInputProperties = (props: CoreInputPropertiesProps) =>{
                         name="channel_selector"
                         options={get_channels_list()}
                     />
-                    <TypeOptionsContainer label="Source Properties">
+                    </FieldSpan>
+                    </TypeOptionsContainer>
+                    <TypeOptionsContainer label="Source">
+                        <FieldSpan>
                         <SelectField<SimpleStringOption>
+                            stacked
                             key="source_type"
                             label="Type"
                             onChange={handle_select}
@@ -206,12 +215,13 @@ let  CoreInputProperties = (props: CoreInputPropertiesProps) =>{
                                 {label: "Waveform", value: "waveform"}
                             ]}
                         />
+                        </FieldSpan>
                         {render_source_dependent_options()}
                     </TypeOptionsContainer>
-                    <TypeOptionsContainer label="Input data format">
+                    <TypeOptionsContainer label="Data format">
                         {render_type_options()}
                     </TypeOptionsContainer>
-                </div>
+                </FieldPane>
             </SimpleContent>
         )
     }
