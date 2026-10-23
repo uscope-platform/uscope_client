@@ -16,6 +16,8 @@
 import React, {useContext, useReducer} from 'react';
 
 import {up_program} from "#client_core/index.js";
+import ProgramProperties from "./ProgramProperties.js";
+import ProgramHeaders from "./ProgramHeaders.js";
 
 import {SidebarBase, SidebarColumn} from "#UI/index.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
@@ -24,6 +26,8 @@ import {useAppSelector} from "#redux/hooks.js";
 
 interface ProgramSidebarProps {
     on_select: (id: number) => void;
+    /// the program that is being edited, when there is one: it has its own panels
+    program: up_program | null;
 }
 
 let  ProgramSidebar = (props: ProgramSidebarProps) =>{
@@ -48,7 +52,7 @@ let  ProgramSidebar = (props: ProgramSidebarProps) =>{
     }
 
     return(
-        <SidebarColumn panels={[{title: "Program List", content: (
+        <SidebarColumn style={{padding: "10px 0"}} panels={[{title: "Program List", content: (
             <SidebarBase
                 objects={programs_store}
                 selection_key="id"
@@ -62,7 +66,15 @@ let  ProgramSidebar = (props: ProgramSidebarProps) =>{
                 omImportDone={handle_import_done}
                 onSelect={props.on_select}
             />
-        )}]}/>
+        )},
+            ...(props.program ? [
+                {title: "Program Properties", content: <ProgramProperties program={props.program}/>},
+                // only the C programs include headers
+                ...(props.program.type === "C" ? [
+                    {title: "Headers", content: <ProgramHeaders program={props.program} programs={programs_store}/>}
+                ] : [])
+            ] : [])
+        ]}/>
     );
 
 };

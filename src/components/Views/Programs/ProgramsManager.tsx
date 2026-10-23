@@ -18,16 +18,11 @@ import {useLocation} from "react-router";
 
 import {
     UIPanel,
-    SimpleContent,
-    FormLayout,
-    InputField,
-    SelectField,
-    TabbedContent, TwoColumnSelector
+    SimpleContent
 } from "#UI/index.js";
 import {MainPane, PaneGroup} from "#UI/index.js";
 import ProgramsEditor from "./Editor/ProgramsEditor.js";
 import {up_program} from "#client_core/index.js";
-import BuildSettings from "./Editor/BuildSettings.js";
 import ProgramSidebar from "./ProgramSidebar.js";
 import {useAppSelector} from "#redux/hooks.js";
 
@@ -41,19 +36,8 @@ let ProgramsManager = (props: ProgramsManagerProps) =>{
 
     const programs_store = useAppSelector(state => state.programs);
 
-
     let [selected_program, set_selected_program] = useState(up_program.construct_empty(9999));
-    let [selectedTab, set_selectedTab] = useState(0);
 
-    let allowed_types = [
-        {label:"asm", value:"asm"},
-        {label:"C", value:"C"},
-        {label:"H", value: "H"}
-    ];
-
-    const headers = Object.values(programs_store).filter((p) =>{
-        return p.type === "H";
-    })
     useEffect(() => {
         if(location.state){
             if(location.state.selected_program){
@@ -71,98 +55,25 @@ let ProgramsManager = (props: ProgramsManagerProps) =>{
         set_selected_program(new up_program(program));
     }
 
-    const calculate_headers = (): {selected:string[], available:string[]} =>{
-        if(!selected_program.headers){
-            return {selected:[], available:[]};
-        }
-        for(let i of selected_program.headers){
-
-            if(headers.filter(h=>h.id === i).length === 0){
-                selected_program.remove_header(i).then();
-            }
-        }
-        let sel = Object.values(headers).map((val)=>{
-            if(selected_program.headers.includes(val.id)){
-                return val.name;
-            }
-        }).filter(item => item);
-
-        let av = Object.values(headers).filter((val)=>{
-            return !sel.includes(val.name);
-        }).map((prg)=>{
-            return prg.name;
-        })
-
-        return {selected:sel, available:av}
-    };
-
-    let h = calculate_headers();
-
-    let handleDeselectHeader =  (id: string) =>{
-        selected_program.remove_header(parseInt(id)).then(()=>{
-            h = calculate_headers();
-        });
-    }
-
-    let handleSelectHeader = (id: string) =>{
-        selected_program.add_header(parseInt(id)).then(()=>{
-            h = calculate_headers();
-        });
-    }
-
-
-    let handleTypeChange = (event : any) =>{
-        selected_program.edit_field("type", event.value).then();
-    }
-
-    let handle_settings_edit = (settings: any) => {
-        //TODO: REMOVE WHEN THE PROGRAMMING OF CORES IS REWORKED
-    }
+    // the program that nothing was selected for is not one of the stored ones
+    const has_selection = programs_store[selected_program.id] !== undefined;
 
     return(
         <PaneGroup id="programs" orientation="horizontal">
             <MainPane>
             <PaneGroup id="programs_main" orientation="vertical">
-                <UIPanel id="properties" key="program_properties" level="level_2" default_size={25} min_size="6em">
-                    <SimpleContent name="Program Properties" >
-                        <FormLayout>
-                            <SelectField
-                                label="Program type"
-                                onChange={handleTypeChange}
-                                value={{label:selected_program.type, value:selected_program.type}}
-                                defaultValue="Select Type"
-                                name="type"
-                                options={allowed_types}/>
-                        </FormLayout>
+                <UIPanel id="source" key="program_source" level="level_2" default_size={100} min_size="8em">
+                    <SimpleContent name="Source Code">
+                        <ProgramsEditor
+                            program={selected_program}
+                        />
                     </SimpleContent>
-                </UIPanel>
-                <UIPanel id="source" key="program_source" level="level_2" default_size={75} min_size="8em">
-                    <TabbedContent names={["Souce Code", "Build Settings", "Headers"]} onSelect={set_selectedTab} selected={selectedTab}>
-                        <div key="program_editor">
-                            <ProgramsEditor
-                                program={selected_program}
-                            />
-                        </div>
-                        <div key="build_settings">
-                            <BuildSettings  build_settings={{}} onEdit={handle_settings_edit}/>
-                        </div>
-                        <div key="headers_selector">
-                            <TwoColumnSelector
-                                itemType="headers"
-                                data={programs_store}
-                                display_field="name"
-                                selected_items={h.selected}
-                                available_items={h.available}
-                                onSelect={handleSelectHeader}
-                                onDeselect={handleDeselectHeader}
-                            />
-                        </div>
-                    </TabbedContent>
                 </UIPanel>
             </PaneGroup>
             </MainPane>
             <ProgramSidebar
                 on_select={handle_select}
+                program={has_selection ? selected_program : null}
             />
         </PaneGroup>
     );
