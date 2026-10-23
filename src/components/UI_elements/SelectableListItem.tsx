@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import {styled} from 'goober';
-import React, {useState, type ReactNode} from "react";
+import React, {useRef, useState, type ReactNode} from "react";
 import {Image} from "./Image.js";
 import {ColorTheme} from "./ColorTheme.js";
 import {useContextMenu, type ContextMenuAction} from "./ContextMenu.js";
@@ -56,6 +56,10 @@ interface SelectableListItemProps {
     onSelect?: ((name: string, multi?: boolean) => void )| undefined;
     onMouseEnter?: (name: string) => void;
     onActivate?: ((name: string) => void) | undefined;
+    /// the item can be renamed, from its menu, when it is given
+    onRename?: ((name: string, new_name: string) => void) | undefined;
+    /// the names of the items of the list, that the new name cannot be
+    existing_names?: string[] | undefined;
     /// what is in the menu of the item, besides deleting it
     actions?: ContextMenuAction[] | undefined;
     description?: string | undefined;
@@ -92,7 +96,32 @@ export let  SelectableListItem = (props: SelectableListItemProps) =>{
 
     const [confirming_delete, set_confirming_delete] = useState(false);
 
+    const [renaming, set_renaming] = useState(false);
+    const [draft, set_draft] = useState(props.name);
+    const rename_done = useRef(false);
+
+    const draft_is_valid = draft.trim() !== "" && (draft === props.name || !(props.existing_names ?? []).includes(draft));
+
+    let finish_rename = (apply: boolean) =>{
+        if(rename_done.current) return;
+        if(apply && draft_is_valid){
+            rename_done.current = true;
+            set_renaming(false);
+            if(draft !== props.name) props.onRename?.(props.name, draft);
+        } else if(!apply){
+            rename_done.current = true;
+            set_renaming(false);
+        }
+    };
+
     const actions: ContextMenuAction[] = [...(props.actions ?? [])];
+    if(props.onRename){
+        actions.push({label: "Rename", onSelect: () => {
+            rename_done.current = false;
+            set_draft(props.name);
+            set_renaming(true);
+        }});
+    }
     if(props.onRemove){
         const remove = props.onRemove;
         actions.push({
@@ -118,7 +147,24 @@ export let  SelectableListItem = (props: SelectableListItemProps) =>{
             <div onMouseEnter={handleMouseEnter} onClick={handle_click} onDoubleClick={handle_double_click} style={{display:"flex", flexGrow:1}}>
                 {get_icon_image(props.icon)}
                 <div style={{marginLeft:"0.5em", cursor:"default"}}>
-                    <p style={{paddingTop:"6px"}}>{props.name}</p>
+                    {renaming ? (
+                        <input
+                            autoFocus
+                            value={draft}
+                            onFocus={(event) => event.currentTarget.select()}
+                            onChange={(event) => set_draft(event.target.value)}
+                            onClick={(event) => event.stopPropagation()}
+                            onKeyDown={(event) => {
+                                if(event.key === "Enter") finish_rename(true);
+                                if(event.key === "Escape") finish_rename(false);
+                            }}
+                            // leaving the field applies the name when it is a valid one and drops it when it is not
+                            onBlur={() => finish_rename(draft_is_valid)}
+                            style={{marginTop: "3px", width: "100%", font: "inherit", outline: draft_is_valid ? undefined : "1px solid " + ColorTheme.field.error}}
+                        />
+                    ) : (
+                        <p style={{paddingTop:"6px"}}>{props.name}</p>
+                    )}
                     {props.description && <p style={{fontSize:"0.8em", opacity:0.6, paddingBottom:"6px"}}>{props.description}</p>}
                 </div>
             </div>

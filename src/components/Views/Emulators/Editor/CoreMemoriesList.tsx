@@ -56,6 +56,14 @@ let  CoreMemoriesList = (props: CoreMemoriesListProps) =>{
         });
     }
 
+    let handle_rename = (old_name: string, new_name: string) =>{
+        if(selected_core_id === null) return;
+        props.emulator.edit_memory(selected_core_id, "name", new_name, old_name).then(()=>{
+            set_memories(props.emulator.get_memory_names(selected_core_id));
+            if(selected === old_name) handle_select(new_name);
+        });
+    }
+
     let handle_remove = (removed_item: string) =>{
         if(selected_core_id === null) return;
         props.emulator.remove_memory(selected_core_id, removed_item).then(()=>{
@@ -72,7 +80,7 @@ let  CoreMemoriesList = (props: CoreMemoriesListProps) =>{
         <div style={{maxHeight: "13em"}}>
             <AddCard label="Add memory" onClick={handle_add}/>
             <SelectableList style={{width: "auto"}} items={memories} selected_item={selected} onSelect={handle_select}
-                            onRemove={handle_remove}/>
+                            onRemove={handle_remove} onRename={handle_rename}/>
         </div>
     );
 };

@@ -56,6 +56,14 @@ let  CoreOutputsList = (props: CoreOutputsListProps) =>{
         });
     }
 
+    let handle_rename = (old_name: string, new_name: string) =>{
+        if(selected_core_id === null) return;
+        props.emulator.edit_output(selected_core_id, "name", new_name, old_name).then(()=>{
+            set_outputs(props.emulator.get_output_names(selected_core_id));
+            if(selected === old_name) handle_select(new_name);
+        });
+    }
+
     let handle_remove = (removed_item: string) =>{
         if(selected_core_id === null) return;
         props.emulator.remove_output(selected_core_id, removed_item).then(()=>{
@@ -72,7 +80,7 @@ let  CoreOutputsList = (props: CoreOutputsListProps) =>{
         <div>
             <AddCard label="Add output" onClick={handle_add}/>
             <SelectableList style={{width: "auto"}} items={outputs} selected_item={selected} onSelect={handle_select}
-                            onRemove={handle_remove}/>
+                            onRemove={handle_remove} onRename={handle_rename}/>
         </div>
     );
 };

@@ -57,6 +57,14 @@ let  CoreInputsList = (props: CoreInputsListProps) =>{
         });
     }
 
+    let handle_rename = (old_name: string, new_name: string) =>{
+        if(selected_core_id === null) return;
+        props.emulator.edit_input(selected_core_id, "name", new_name, old_name).then(()=>{
+            set_inputs(props.emulator.get_input_names(selected_core_id));
+            if(selected === old_name) handle_select(new_name);
+        });
+    }
+
     let handle_remove = (removed_item: string) =>{
         if(selected_core_id === null) return;
         props.emulator.remove_input(selected_core_id, removed_item).then(()=>{
@@ -74,7 +82,7 @@ let  CoreInputsList = (props: CoreInputsListProps) =>{
         <div  style={{maxHeight: "13em"}}>
             <AddCard label="Add input" onClick={handle_add}/>
             <SelectableList style={{width: "auto"}} items={inputs} selected_item={selected} onSelect={handle_select}
-                            onRemove={handle_remove}/>
+                            onRemove={handle_remove} onRename={handle_rename}/>
         </div>
     );
 };

@@ -23,6 +23,8 @@ interface SelectableListProps {
     onSelect?: ((name: string, multi?: boolean) => void);
     onRemove?: (name: string) => void;
     onActivate?: (name: string) => void;
+    /// the items can be renamed, from their menu, when it is given
+    onRename?: (name: string, new_name: string) => void;
     /// what is in the menu of an item, besides deleting it
     item_actions?: (name: string) => ContextMenuAction[];
     descriptions?: string[];
@@ -54,6 +56,8 @@ export let  SelectableList = (props: SelectableListProps) =>{
                     onSelect={props.onSelect}
                     onActivate={props.onActivate}
                     actions={props.item_actions?.(names[i])}
+                    onRename={props.onRename}
+                    existing_names={names}
                     card={props.variant === 'card'}
                     description={props.descriptions?.[i]}
                     selected={selected}

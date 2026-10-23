@@ -79,6 +79,20 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
         });
     };
 
+    let handleRename = async (name: string, new_name: string) =>{
+        const item = item_named(name);
+        if(item === undefined) return;
+        // what edits the name depends on the kind of the item
+        const instance = new props.template(item);
+        if(instance.edit_name){
+            await instance.edit_name(new_name);
+        } else if(instance.edit_field){
+            await instance.edit_field(props.display_key, new_name);
+        } else if(instance.edit_misc_param){
+            await instance.edit_misc_param(props.display_key, new_name, false);
+        }
+    };
+
     let handleExport = (item: any) =>{
         const content = props.export_format ? props.export_format(item) : item;
         download_json(content, item[props.display_key]);
@@ -186,6 +200,7 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
                 selected_item={selected_item[props.display_key]}
                 onRemove={handleRemove}
                 onSelect={handleSelect}
+                onRename={handleRename}
                 item_actions={item_actions}
                 // fills what the add card leaves and scrolls, instead of stopping short of the panel
                 style={{flex: 1, maxHeight: "none", width: "auto"}}
