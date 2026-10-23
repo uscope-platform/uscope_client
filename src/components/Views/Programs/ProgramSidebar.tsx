@@ -26,6 +26,8 @@ import {useAppSelector} from "#redux/hooks.js";
 
 interface ProgramSidebarProps {
     on_select: (id: number) => void;
+    on_reselect: (id: number) => void;
+    on_activate: (id: number) => void;
     /// the program that is being edited, when there is one: it has its own panels
     program: up_program | null;
 }
@@ -65,6 +67,8 @@ let  ProgramSidebar = (props: ProgramSidebarProps) =>{
                 onAdd={handleAdd}
                 omImportDone={handle_import_done}
                 onSelect={props.on_select}
+                onReselect={props.on_reselect}
+                onActivate={props.on_activate}
             />
         )},
             ...(props.program ? [

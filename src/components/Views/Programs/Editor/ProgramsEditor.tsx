@@ -26,7 +26,9 @@ import { up_program} from "#client_core/index.js";
 
 
 interface ProgramsEditorProps {
-    program: up_program
+    program: up_program,
+    /// told when there are changes that are not saved, or when there are none anymore
+    on_dirty_change?: (dirty: boolean) => void
 }
 
 let ProgramsEditor = (props: ProgramsEditorProps) =>{
@@ -39,7 +41,11 @@ let ProgramsEditor = (props: ProgramsEditorProps) =>{
             set_editor_content(props.program.content);
             set_dirty(false);
         }
-    },[props.program])
+    },[props.program.id, props.program.content])
+
+    useEffect(() => {
+        props.on_dirty_change?.(dirty);
+    }, [dirty]);
 
     let handle_change = (newValue: string) => {
         set_dirty(true);

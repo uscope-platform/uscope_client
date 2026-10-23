@@ -13,14 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {useLocation} from "react-router";
 
-import {
-    UIPanel,
-    SimpleContent
-} from "#UI/index.js";
-import {MainPane, PaneGroup} from "#UI/index.js";
+import {EditorTabs, MainPane, PaneGroup, UIPanel, useEditorTabs} from "#UI/index.js";
 import ProgramsEditor from "./Editor/ProgramsEditor.js";
 import {up_program} from "#client_core/index.js";
 import ProgramSidebar from "./ProgramSidebar.js";
@@ -36,7 +32,7 @@ let ProgramsManager = (props: ProgramsManagerProps) =>{
 
     const programs_store = useAppSelector(state => state.programs);
 
-    let [selected_program, set_selected_program] = useState(up_program.construct_empty(9999));
+    const tabs = useEditorTabs(programs_store);
 
     useEffect(() => {
         if(location.state){
@@ -44,36 +40,40 @@ let ProgramsManager = (props: ProgramsManagerProps) =>{
                 let prog = Object.values(programs_store).filter((prog)=>{
                     return prog.name === location.state.selected_program
                 })[0];
-                set_selected_program(new up_program(prog));
+                if(prog) tabs.activate(prog.id);
             }
         }
     }, []);
 
-    let handle_select = (sel: number) =>{
-        let program = programs_store[sel];
-        if(program===undefined) return;
-        set_selected_program(new up_program(program));
-    }
-
-    // the program that nothing was selected for is not one of the stored ones
-    const has_selection = programs_store[selected_program.id] !== undefined;
+    // the panels of the sidebar are the ones of the program that is shown
+    const shown = tabs.active_id !== null ? programs_store[tabs.active_id] : undefined;
 
     return(
         <PaneGroup id="programs" orientation="horizontal">
             <MainPane>
             <PaneGroup id="programs_main" orientation="vertical">
                 <UIPanel id="source" key="program_source" level="level_2" default_size={100} min_size="8em">
-                    <SimpleContent name="Source Code">
-                        <ProgramsEditor
-                            program={selected_program}
-                        />
-                    </SimpleContent>
+                    <EditorTabs
+                        title="Source Code"
+                        empty_message="Select a program from the list to edit it."
+                        items={tabs.open_items}
+                        active_id={tabs.active_id}
+                        preview_id={tabs.preview_id}
+                        on_select={tabs.set_active_id}
+                        on_keep={tabs.keep}
+                        on_close={tabs.close}
+                        render_editor={(program, on_dirty_change) => (
+                            <ProgramsEditor program={new up_program(program)} on_dirty_change={on_dirty_change}/>
+                        )}
+                    />
                 </UIPanel>
             </PaneGroup>
             </MainPane>
             <ProgramSidebar
-                on_select={handle_select}
-                program={has_selection ? selected_program : null}
+                on_select={tabs.select}
+                on_reselect={tabs.keep}
+                on_activate={tabs.activate}
+                program={shown ? new up_program(shown) : null}
             />
         </PaneGroup>
     );
