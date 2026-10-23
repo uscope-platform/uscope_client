@@ -20,7 +20,7 @@ import EmulatorSidebar from "../EmulatorSidebar.jsx";
 import CoreSidebar from "../NodesSidebar/CoreSidebar.jsx";
 import IoBlockSidebar from "../NodesSidebar/IoBlockSidebar.jsx";
 import EdgeSidebar from "../EdgesSidebar/EdgeSidebar.jsx";
-import type {EmulatorIomSelector, EmulatorSelections} from "#interfaces/index.js";
+import type {EmulatorSelections} from "#interfaces/index.js";
 
 interface HilEditorSidebarProps {
     emulator: up_emulator,
@@ -37,10 +37,6 @@ let  HilEditorSidebar = (props: HilEditorSidebarProps) =>{
     let handle_select_emulator = (sel: number) =>{
         props.on_emulator_select(sel);
         props.set_selections({...props.selections, iom:null})
-    }
-
-    const handle_node_iom_modify = (iom: EmulatorIomSelector) =>{
-        props.set_selections({...props.selections, iom:iom});
     }
 
     const component = props.selections.component;
@@ -80,8 +76,6 @@ let  HilEditorSidebar = (props: HilEditorSidebarProps) =>{
         emulator={props.emulator}
         selected_core={selected_core}
         selected_component={component}
-        selected_iom={props.selections.iom}
-        on_iom_modify={handle_node_iom_modify}
         on_select_emulator={handle_select_emulator}
         bump_version={props.bump_version}
     />;

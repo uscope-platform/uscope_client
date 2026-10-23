@@ -22,10 +22,7 @@ import EmulatorDiagram from "./EmulatorDiagram.js";
 import type {BlockKind} from "./EmulatorLibrary.js";
 import {up_emulator_result, download_text, up_emulator} from "#client_core/index.js";
 import {SimpleContent, PaneGroup, TabbedContent, UIPanel} from "#UI/index.js";
-import CoreInputsList from "./CoreInputsList.js";
-import CoreOutputsList from "./CoreOutputsList.js";
-import CoreMemoriesList from "./CoreMemoriesList.js";
-import CoreInputFilesList from "./CoreInputFilesList.js";
+import CoreIoPanel from "./CoreIoPanel.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
 import type {io_block, emulator_layout, EmulatorGraphEdge, EmulatorGraphNode, EmulatorIomSelector, EmulatorSelections} from "#interfaces/index.js";
 
@@ -301,7 +298,7 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
     if(props.emulator){
         
         return(
-            <PaneGroup id="emulator_editor" orientation="vertical">
+            <PaneGroup id="emulator_editor" orientation="vertical" style={{paddingTop: "10px", boxSizing: "border-box"}}>
                 <UIPanel id="diagram" key="emulator_diagram" level="level_2" default_size={65} min_size={20}>
                     <SimpleContent name="Emulation_diagram" height="100%">
                         <EmulatorDiagram
@@ -327,39 +324,15 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
                         />
                     </SimpleContent>
                 </UIPanel>
-                <PaneGroup id="emulator_properties" orientation="horizontal" default_size={35} min_size="150px">
-                    <UIPanel id="inputs" key="emulator_i_props" level="level_2" default_size={34} min_size="10em">
-                        <TabbedContent names={["Inputs", "Input Files"]} onSelect={set_selected_inputs_tab} selected={selected_inputs_tab}>
-                            <CoreInputsList
-                                emulator={props.emulator}
-                                on_selection={handle_select_iom}
-                                selections={props.selections}
-                            />
-                            <CoreInputFilesList
-                                emulator={props.emulator}
-                                selections={props.selections}
-                            />
-                        </TabbedContent>
-                    </UIPanel>
-                    <UIPanel id="outputs" key="emulator_o_props" level="level_2" default_size={33} min_size="10em">
-                        <SimpleContent name="Outputs" height="100%">
-                            <CoreOutputsList
-                                emulator={props.emulator}
-                                selections={props.selections}
-                                on_selection={handle_select_iom}
-                            />
-                        </SimpleContent>
-                    </UIPanel>
-                    <UIPanel id="memory" key="emulator_m_props" level="level_2" default_size={33} min_size="10em">
-                        <SimpleContent name="Memory" height="100%">
-                            <CoreMemoriesList
-                                emulator={props.emulator}
-                                selections={props.selections}
-                                on_selection={handle_select_iom}
-                            />
-                        </SimpleContent>
-                    </UIPanel>
-                </PaneGroup>
+                <UIPanel id="core_io" key="emulator_core_io" level="level_2" default_size={35} min_size="150px">
+                    <CoreIoPanel
+                        emulator={props.emulator}
+                        selections={props.selections}
+                        on_selection={handle_select_iom}
+                        selected_tab={selected_inputs_tab}
+                        on_tab_select={set_selected_inputs_tab}
+                    />
+                </UIPanel>
             </PaneGroup>
         );
     } else{
