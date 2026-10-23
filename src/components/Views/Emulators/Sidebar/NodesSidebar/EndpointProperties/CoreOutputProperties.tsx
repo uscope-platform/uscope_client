@@ -109,7 +109,6 @@ let  CoreOutputProperties = (props: CoreOutputPropertiesProps) =>{
     if(sel_out){
         return(
             <FieldPaneRow key="output_props">
-                <InputField id="name" name="name" label="Name" defaultValue={sel_out.name} onKeyDown={handle_change_iom}/>
                 <TypeOptionsContainer label="Data format">
                     {render_type_options()}
                 </TypeOptionsContainer>

@@ -101,11 +101,6 @@ let FilterManager = (props: FilterManagerProps) =>{
         selected_filter.edit_parameter(param_name, value).then();
     }
 
-    let handleRename = (param_name: string, value: any) =>{
-        set_filter_revision(filter_revision+1)
-        selected_filter.edit_field(param_name as keyof up_filter, value).then();
-    }
-
     return (
         <PaneGroup id="filters" orientation="horizontal">
             <MainPane>
@@ -143,7 +138,6 @@ let FilterManager = (props: FilterManagerProps) =>{
                                         name={selected_filter.name}
                                         filter_parameters={selected_filter.parameters}
                                         on_change={handleParamChanges}
-                                        on_rename={handleRename}
                                     />
                                 </div>
                             </SimpleContent>

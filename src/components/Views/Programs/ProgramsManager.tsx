@@ -115,12 +115,6 @@ let ProgramsManager = (props: ProgramsManagerProps) =>{
         selected_program.edit_field("type", event.value).then();
     }
 
-    let handle_name_change = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === "Enter" || event.key === "Tab") {
-            selected_program.edit_field(event.currentTarget.name as keyof up_program, event.currentTarget.value).then();
-        }
-    }
-
     let handle_settings_edit = (settings: any) => {
         //TODO: REMOVE WHEN THE PROGRAMMING OF CORES IS REWORKED
     }
@@ -132,7 +126,6 @@ let ProgramsManager = (props: ProgramsManagerProps) =>{
                 <UIPanel id="properties" key="program_properties" level="level_2" default_size={25} min_size="6em">
                     <SimpleContent name="Program Properties" >
                         <FormLayout>
-                            <InputField inline name='name' placeholder={selected_program.name} onKeyDown={handle_name_change} label="Name"/>
                             <SelectField
                                 label="Program type"
                                 onChange={handleTypeChange}

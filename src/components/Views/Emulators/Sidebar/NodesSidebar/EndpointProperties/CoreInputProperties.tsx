@@ -186,7 +186,6 @@ let  CoreInputProperties = (props: CoreInputPropertiesProps) =>{
     if(sel_in){
         return(
             <FieldPaneRow key="input_props">
-                <InputField id="name" name="name" label="Name" defaultValue={sel_in.name} onKeyDown={handle_change_iom}/>
                 <TypeOptionsContainer label="Source">
                     <FieldSpan>
                     <SelectField<SimpleStringOption>

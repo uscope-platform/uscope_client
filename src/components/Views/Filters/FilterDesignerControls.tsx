@@ -31,7 +31,6 @@ const ComponentStyle = styled('div')`
 interface FilterDesignerControls{
     name: string,
     on_change: (key: string, value: any) => void,
-    on_rename: (key: string, value: any) => void,
     filter_parameters: Record<string, any>
 }
 
@@ -45,12 +44,6 @@ let  FilterDesignerControls = (props: FilterDesignerControls) =>{
     let handle_edit_field = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if(event.key==="Enter"|| event.key ==="Tab"){
             props.on_change(event.currentTarget.name, parseFloat(event.currentTarget.value));
-        }
-    }
-
-    let handle_rename = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if(event.key==="Enter"|| event.key ==="Tab"){
-            props.on_rename(event.currentTarget.name, event.currentTarget.value);
         }
     }
 
@@ -102,7 +95,6 @@ let  FilterDesignerControls = (props: FilterDesignerControls) =>{
     let render_controls = () => {
         return (
             <div key={props.name + "_filter_design_div"}>
-                <InputField inline name="name" defaultValue={props.name} onKeyDown={handle_rename} label="Filter Name"/>
                 <InputField inline name="sampling_frequency" defaultValue={props.filter_parameters.sampling_frequency} onKeyDown={handle_edit_field} label="Sampling Frequency"/>
                 <ComponentStyle>
                     <LowPass  onClick={handleFilterChange} active={props.filter_parameters.type==="lp"} />

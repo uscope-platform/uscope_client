@@ -115,7 +115,6 @@ let  CoreMemoryProperties = (props: CoreMemoryPropertiesProps) =>{
     if(sel_mem){
         return(
             <FieldPaneRow key="memory_props">
-                <InputField id="name" name="name" label="Name" defaultValue={sel_mem.name} onKeyDown={handle_change_iom}/>
                 <TypeOptionsContainer label="Contents">
                     <FieldSpan>
                         <InputField id="value" name="value" label="Value" defaultValue={sel_mem.value} onKeyDown={handle_change_iom}/>

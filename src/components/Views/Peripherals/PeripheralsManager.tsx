@@ -62,12 +62,6 @@ let PeripheralsManager = (props: PeripheralsManagerProps)=>{
         }
     }
 
-    let handleEditName = (event: React.KeyboardEvent<HTMLInputElement>) =>{
-        if (event.key ==="Enter"){
-            selected_peripheral.edit_name(event.currentTarget.value).then();
-        }
-    }
-
     let handle_add_new = () =>{
 
         let ids = Object.values(selected_peripheral.registers).map((item)=>{
@@ -92,9 +86,6 @@ let PeripheralsManager = (props: PeripheralsManagerProps)=>{
                 <UIPanel id="properties" key="properties" level="level_2" default_size={25} min_size="150px">
                     <SimpleContent name="Peripheral Properties">
                         <div>
-                            <InputField inline name="edit_name"
-                                        defaultValue={selected_peripheral.name}
-                                        onKeyDown={handleEditName} label="Name"/>
                             <InputField inline name="edit_version"
                                         defaultValue={selected_peripheral.version}
                                         onKeyDown={handleEditVersion} label="Version"/>

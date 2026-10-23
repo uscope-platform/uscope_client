@@ -68,10 +68,7 @@ let  EmulatorProperties = (props: EmulatorPropertiesProps) =>{
 
     let handle_change = async (event: React.KeyboardEvent<HTMLInputElement>) =>{
         if(event.key==="Enter"|| event.key ==="Tab") {
-            if (event.currentTarget.name === "name"){
-                await props.selected_emulator.edit_name(event.currentTarget.value);
-                forceUpdate();
-            } else if(event.currentTarget.name === "emulation_time"){
+            if(event.currentTarget.name === "emulation_time"){
                 set_indicated_time(parseFloat(event.currentTarget.value));
                 let time = parseFloat(event.currentTarget.value)*ranges_map[range as keyof typeof ranges_map];
                 await props.selected_emulator.edit_emulation_time(time);
@@ -94,9 +91,6 @@ let  EmulatorProperties = (props: EmulatorPropertiesProps) =>{
     return(
         <FieldPane key="emulator_props">
             <FieldGrid>
-                <FieldSpan>
-                    <InputField id="name" name="name" label="Emulator name" defaultValue={props.selected_emulator.name} onKeyDown={handle_change}/>
-                </FieldSpan>
                 <FieldSpan>
                     <RangedInputField
                         id="emulation_time"
