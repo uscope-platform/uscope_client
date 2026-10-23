@@ -34,7 +34,7 @@ import {
     ColorTheme,
     UIPanel
 } from "#UI/index.js";
-import {SidebarPane, SplitGroup} from "#UI/index.js";
+import {SidebarPane, PaneGroup} from "#UI/index.js";
 
 import {get_next_id, up_application} from "#client_core/index.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
@@ -158,7 +158,7 @@ let  ApplicationsManager = (props: ApplicationsManagerProps) =>{
 
 
     return (
-        <SplitGroup id="applications" orientation="horizontal">
+        <PaneGroup id="applications" orientation="horizontal">
             <UIPanel id="main" level="level_2" default_size={72} min_size={30}>
                 <TabbedContent names={["Channels", "Channel Groups", "Macro", "Parameters", "Peripherals", "Cores", "Misc", "Filters", "Scripts", "Programs"]}
                                selected={selectedTab} onSelect={set_selectedTab}>
@@ -327,7 +327,7 @@ let  ApplicationsManager = (props: ApplicationsManagerProps) =>{
                     application={selected_app}
                 />
             </SidebarPane>
-        </SplitGroup>
+        </PaneGroup>
     );
 };
 

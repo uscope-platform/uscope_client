@@ -21,7 +21,7 @@ import {
     InputField,
     SimpleContent, UIPanel
 } from "#UI/index.js"
-import {MainPane, SidebarPane, SplitGroup} from "#UI/index.js";
+import {MainPane, SidebarPane, PaneGroup} from "#UI/index.js";
 
 import {get_next_id, up_peripheral} from "#client_core/index.js"
 import PeripheralsSidebar from "./PeripheralsSidebar.jsx";
@@ -86,9 +86,9 @@ let PeripheralsManager = (props: PeripheralsManagerProps)=>{
 
 
     return (
-        <SplitGroup id="peripherals" orientation="horizontal">
+        <PaneGroup id="peripherals" orientation="horizontal">
             <MainPane>
-            <SplitGroup id="peripherals_main" orientation="vertical">
+            <PaneGroup id="peripherals_main" orientation="vertical">
                 <UIPanel id="properties" key="properties" level="level_2" default_size={25} min_size="150px">
                     <SimpleContent name="Peripheral Properties">
                         <div>
@@ -129,12 +129,12 @@ let PeripheralsManager = (props: PeripheralsManagerProps)=>{
                         </div>
                     </SimpleContent>
                 </UIPanel>
-            </SplitGroup>
+            </PaneGroup>
             </MainPane>
             <SidebarPane>
                 <PeripheralsSidebar on_select={handle_select}/>
             </SidebarPane>
-        </SplitGroup>
+        </PaneGroup>
 
     );
 }

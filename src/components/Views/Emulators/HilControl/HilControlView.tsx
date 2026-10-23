@@ -18,7 +18,7 @@ import HilPlotTab from "./HilPlotTab.jsx";
 import HilControlSidebar from "../Sidebar/per_panel_sidebars/HilControlSidebar.jsx";
 import {up_emulator} from "#client_core/index.js";
 import type {EmulatorSelections} from "#interfaces/index.js";
-import {MainPane, SidebarPane, SplitGroup} from "#UI/index.js";
+import {MainPane, SidebarPane, PaneGroup} from "#UI/index.js";
 
 interface HilControlViewProps {
     emulator: up_emulator,
@@ -34,7 +34,7 @@ let HilControlView = function (props: HilControlViewProps) {
     let [download_data_request, set_download_data_request] = useState(false);
     let [plot_prescaler, set_plot_prescaler] = useState<number>(0);
     return(
-        <SplitGroup id="hil_control" orientation="horizontal">
+        <PaneGroup id="hil_control" orientation="horizontal">
 
             <MainPane>
                 <HilPlotTab
@@ -58,7 +58,7 @@ let HilControlView = function (props: HilControlViewProps) {
                     onDownloadHilData={set_download_data_request}
                 />
             </SidebarPane>
-        </SplitGroup>
+        </PaneGroup>
 
     );
 };

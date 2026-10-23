@@ -23,7 +23,7 @@ import {
     InputField,
     SelectField, ColorTheme
 } from "#UI/index.js"
-import {SidebarPane, SplitGroup} from "#UI/index.js";
+import {SidebarPane, PaneGroup} from "#UI/index.js";
 
 import {add_user, dump_database, restore_database, upload_json} from "#client_core/index.js";
 import { MdDownload, MdUpload} from "react-icons/md";
@@ -97,7 +97,7 @@ let  PlatformManager = () =>{
     }
 
     return(
-        <SplitGroup id="platform" orientation="horizontal">
+        <PaneGroup id="platform" orientation="horizontal">
             <UIPanel id="main" key="platform_management" level="level_2" default_size={72} min_size={30}>
                 <SimpleContent name="Platform Management">
                     <div>
@@ -130,7 +130,7 @@ let  PlatformManager = () =>{
                     view_version={view_version}
                 />
             </SidebarPane>
-        </SplitGroup>
+        </PaneGroup>
 
     );
 };

@@ -17,11 +17,11 @@
 
 import React from 'react';
 import type {HTMLAttributes} from 'react';
-import { styled } from 'goober';
 import { css } from 'goober';
 import {ColorTheme} from "../ColorTheme.js";
-import {Pane, use_split_pane} from "../Layouts/Splitter.js";
-import type {PaneProps} from "../Layouts/Splitter.js";
+import {Pane} from "../Layouts/Pane.js";
+import type {PaneProps} from "../Layouts/Pane.js";
+import {useIsPane} from "../Layouts/GroupContext.js";
 
 interface UIPanelProps extends PaneProps, HTMLAttributes<HTMLDivElement> {
     level: keyof typeof ColorTheme.background;
@@ -39,53 +39,34 @@ const panel_class = (level: UIPanelProps["level"]) => css`
   border-style:solid;
 `;
 
-/// Inside a SplitGroup the panel is one of its resizable panes, the size props then apply
-export const UIPanel = ({level, width, id, default_size, min_size, max_size, ...rest}: UIPanelProps) => {
-    const in_split = use_split_pane();
+/// Inside a PaneGroup the panel is one of its resizable panes, that can be folded to its title: the size props then apply
+export const UIPanel = ({level, width, id, default_size, min_size, max_size, collapsible = true, ...rest}: UIPanelProps) => {
+    const in_group = useIsPane();
     const class_name = panel_class(level);
-    if(in_split){
-        return <Pane id={id} default_size={default_size} min_size={min_size} max_size={max_size} className={class_name} {...rest}/>;
+    if(in_group){
+        return <Pane id={id} default_size={default_size} min_size={min_size} max_size={max_size} collapsible={collapsible} className={class_name} data-ui-panel="" {...rest}/>;
     }
-    return <div id={id} className={class_name} {...rest}/>;
+    return <div id={id} className={class_name} data-ui-panel="" {...rest}/>;
 };
 
 
 
 
 
-interface PanelTitleProps {
-    selected: boolean;
-}
-
-export const PanelTitle = styled<'div', PanelTitleProps>('div')(({ selected }) => `
-  overflow:hidden;
-  flex-shrink: 0;
-  width: fit-content;
-  cursor: default;
-  border-color: ${selected ? ColorTheme.background.accents : "#43434300"};
-  border-bottom-width: 3px;
-  border-top-width: 0;
-  border-left-width: 0;
-  border-right-width: 0;
-  border-style:solid;
-`);
-
-
-
-interface ContentDivProps {
+interface ContentDivProps extends HTMLAttributes<HTMLDivElement> {
     height?: number | string| undefined;
+    min_height?: number | string | undefined;
 }
 
-export const ContentDiv = styled<'div', ContentDivProps>('div')(({ height }) => `
-  overflow-y:auto;
+const content_class = (height: ContentDivProps["height"], min_height: ContentDivProps["min_height"]) => css`
+  overflow-y: auto;
   overflow-x: hidden;
-  // lets a panel with a fixed height, like the ones of a splitter, shrink it and scroll
-  min-height: 0;
-  border-style:solid;
-  border-color: ${ ColorTheme.background.borders};
-  border-bottom-width: 0;
-  border-top-width: 3px;
-  border-left-width: 0;
-  border-right-width: 0;
+  /* lets a panel with a fixed height, like the ones of a PaneGroup, shrink it and scroll */
+  min-height: ${min_height ?? 0};
   height: ${height ? height : "100%"};
-`);
+`;
+
+/// What is under the title bar of a panel
+export const ContentDiv = ({height, min_height, ...rest}: ContentDivProps) => (
+    <div className={content_class(height, min_height)} {...rest}/>
+);

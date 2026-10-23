@@ -14,8 +14,9 @@
 // limitations under the License.
 
 import React from 'react';
-import type {ReactNode, MouseEvent} from 'react';
-import {PanelTitle, ContentDiv} from "./UIPanel.js";
+import type {ReactNode} from 'react';
+import {ContentDiv} from "./UIPanel.js";
+import {PanelTitle, TitleBar} from "./TitleBar.js";
 
 interface TabbedContentProps {
     names: string[];
@@ -34,17 +35,13 @@ export let TabbedContent = function (props: TabbedContentProps) {
         return child;
     }) || [];
 
-    let handle_select_tab = (event: MouseEvent<HTMLParagraphElement>) => {
-        props.onSelect(props.names.indexOf(event.currentTarget.textContent));
-    }
-
     let construct_titles = () => {
         let ret_val = [];
         for(let i = 0; i < props.names.length; i++){
             let is_selected = {selected: i === props.selected};
             ret_val.push(
-                <PanelTitle key={props.names[i] + "_title"} {...is_selected}>
-                    <p style={{marginLeft:"0.5em", marginRight:"0.5em", marginTop:"0.25em"}} onClick={handle_select_tab}>{props.names[i]}</p>
+                <PanelTitle key={props.names[i] + "_title"} {...is_selected} onClick={() => props.onSelect(i)}>
+                    {props.names[i]}
                 </PanelTitle>
             )
         }
@@ -53,9 +50,9 @@ export let TabbedContent = function (props: TabbedContentProps) {
     
     return(
         <>
-            <div style={{display:"flex"}}>
+            <TitleBar name={props.names.join("_")}>
                 {construct_titles()}
-            </div>
+            </TitleBar>
             <ContentDiv>
                 {childrenArray[props.selected]}
             </ContentDiv>

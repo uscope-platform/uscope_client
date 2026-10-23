@@ -19,7 +19,7 @@ import {
     SimpleContent,
     UIPanel
 } from "#UI/index.js";
-import {MainPane, SidebarPane, SplitGroup} from "#UI/index.js";
+import {MainPane, SidebarPane, PaneGroup} from "#UI/index.js";
 
 import FilterPlot from "./FilterPlot.jsx";
 import FilterDesignerControls from "./FilterDesignerControls.js";
@@ -107,19 +107,19 @@ let FilterManager = (props: FilterManagerProps) =>{
     }
 
     return (
-        <SplitGroup id="filters" orientation="horizontal">
+        <PaneGroup id="filters" orientation="horizontal">
             <MainPane>
                 {!has_selection ? (
-                    <SplitGroup id="filter_none" orientation="vertical">
+                    <PaneGroup id="filter_none" orientation="vertical">
                         <UIPanel id="filter" key="no_filter" level="level_2">
                             <SimpleContent name="Filter">
                                 <div style={{margin: "1em", opacity: 0.6}}>Select a filter or add a new one</div>
                             </SimpleContent>
                         </UIPanel>
-                    </SplitGroup>
+                    </PaneGroup>
                 ) : (
-                    <SplitGroup id="filter_main" orientation="vertical">
-                    <SplitGroup id="filter_top" orientation="horizontal" default_size={50} min_size="8em">
+                    <PaneGroup id="filter_main" orientation="vertical">
+                    <PaneGroup id="filter_top" orientation="horizontal" default_size={50} min_size="8em">
                         <UIPanel id="viewer" key="filter_designer_plot" level="level_2" default_size={50} min_size="10em">
                             <SimpleContent name="Filter Viewer">
                                 <FilterPlot
@@ -148,7 +148,7 @@ let FilterManager = (props: FilterManagerProps) =>{
                                 </div>
                             </SimpleContent>
                         </UIPanel>
-                    </SplitGroup>
+                    </PaneGroup>
                     <UIPanel id="implementation" key="filter_implementation_controls" level="level_2" default_size={50} min_size="8em">
                         <SimpleContent name="Implementation Parameters">
                             <div>
@@ -166,13 +166,13 @@ let FilterManager = (props: FilterManagerProps) =>{
                             </div>
                         </SimpleContent>
                     </UIPanel>
-                    </SplitGroup>
+                    </PaneGroup>
                 )}
             </MainPane>
             <SidebarPane>
                 <FilterSidebar on_select={handle_select}/>
             </SidebarPane>
-        </SplitGroup>
+        </PaneGroup>
     );
 
 

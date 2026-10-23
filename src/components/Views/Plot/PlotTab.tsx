@@ -32,7 +32,7 @@ import {
 import useInterval from "../../Common_Components/useInterval.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
 import type {channel_group, plot_channel, ScopeStatus} from "#interfaces/index.js";
-import {MainPane, SidebarPane, SplitGroup} from "#UI/index.js";
+import {MainPane, SidebarPane, PaneGroup} from "#UI/index.js";
 
 // The page is sized to fit the window: what is left once the titles, the gaps and the padding are taken out is shared
 // between the three rows (the minimums make a very small window scroll instead of crushing them)
@@ -97,7 +97,7 @@ let PlotTab = function (props: PlotTabProps) {
     }
 
     return(
-            <SplitGroup id="scope" orientation="horizontal" style={{flex: 1, minHeight: 0}}>
+            <PaneGroup id="scope" orientation="horizontal" style={{flex: 1, minHeight: 0}}>
                 <MainPane>
                 <div style={{
                     display: "flex",
@@ -172,7 +172,7 @@ let PlotTab = function (props: PlotTabProps) {
                     on_download={set_request_download}
                 />
                 </SidebarPane>
-            </SplitGroup>
+            </PaneGroup>
 
         );
 };

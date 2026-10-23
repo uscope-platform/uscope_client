@@ -24,6 +24,7 @@ import {setup} from "goober";
 
 import {persistStore} from "redux-persist";
 import {applyTheme} from "#UI/themes.js";
+import {FoldProvider} from "#UI/index.js";
 
 applyTheme();
 
@@ -47,7 +48,9 @@ if(container === null) {
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
                 <BrowserRouter>
-                    <App />
+                    <FoldProvider>
+                        <App />
+                    </FoldProvider>
                 </BrowserRouter>
             </PersistGate>
         </Provider>,

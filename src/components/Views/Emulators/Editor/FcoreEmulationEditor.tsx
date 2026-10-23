@@ -21,7 +21,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import EmulatorDiagram from "./EmulatorDiagram.js";
 import type {BlockKind} from "./EmulatorLibrary.js";
 import {up_emulator_result, download_text, up_emulator} from "#client_core/index.js";
-import {SimpleContent, SplitGroup, TabbedContent, UIPanel} from "#UI/index.js";
+import {SimpleContent, PaneGroup, TabbedContent, UIPanel} from "#UI/index.js";
 import CoreInputsList from "./CoreInputsList.js";
 import CoreOutputsList from "./CoreOutputsList.js";
 import CoreMemoriesList from "./CoreMemoriesList.js";
@@ -301,7 +301,7 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
     if(props.emulator){
         
         return(
-            <SplitGroup id="emulator_editor" orientation="vertical">
+            <PaneGroup id="emulator_editor" orientation="vertical">
                 <UIPanel id="diagram" key="emulator_diagram" level="level_2" default_size={65} min_size={20}>
                     <SimpleContent name="Emulation_diagram" height="100%">
                         <EmulatorDiagram
@@ -327,7 +327,7 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
                         />
                     </SimpleContent>
                 </UIPanel>
-                <SplitGroup id="emulator_properties" orientation="horizontal" default_size={35} min_size="150px">
+                <PaneGroup id="emulator_properties" orientation="horizontal" default_size={35} min_size="150px">
                     <UIPanel id="inputs" key="emulator_i_props" level="level_2" default_size={34} min_size="10em">
                         <TabbedContent names={["Inputs", "Input Files"]} onSelect={set_selected_inputs_tab} selected={selected_inputs_tab}>
                             <CoreInputsList
@@ -359,8 +359,8 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
                             />
                         </SimpleContent>
                     </UIPanel>
-                </SplitGroup>
-            </SplitGroup>
+                </PaneGroup>
+            </PaneGroup>
         );
     } else{
         return <></>

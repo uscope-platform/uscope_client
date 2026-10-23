@@ -17,7 +17,7 @@ import React, {useState} from 'react';
 
 import FcoreEmulationEditor from "./../Editor/FcoreEmulationEditor.js";
 import HilEditorSidebar from "../Sidebar/per_panel_sidebars/HilEditorSidebar.jsx";
-import {MainPane, SidebarPane, SplitGroup} from "#UI/index.js";
+import {MainPane, SidebarPane, PaneGroup} from "#UI/index.js";
 import {up_emulator, up_emulator_result} from "#client_core/index.js";
 import type {EmulatorSelections} from "#interfaces/index.js";
 
@@ -38,7 +38,7 @@ let HilEditorView = function (props: HilEditorViewProps) {
     let [compiler_warnings] = useState<string[]>([]);
 
     return(
-        <SplitGroup id="hil_editor" orientation="horizontal">
+        <PaneGroup id="hil_editor" orientation="horizontal">
             <MainPane>
                 <FcoreEmulationEditor
                     onEmulationDone={props.set_emulation_results}
@@ -60,7 +60,7 @@ let HilEditorView = function (props: HilEditorViewProps) {
                     compile_warning={compiler_warnings}
                 />
             </SidebarPane>
-        </SplitGroup>
+        </PaneGroup>
     );
 };
 

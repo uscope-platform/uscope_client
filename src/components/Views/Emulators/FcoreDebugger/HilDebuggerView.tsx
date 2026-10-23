@@ -21,7 +21,7 @@ import {useAppSelector} from "#redux/hooks.js";
 import type {DebuggerCheckpoint, EmulatorSelections, SingleProgramDataPackage} from "#interfaces/index.js";
 import {up_emulator, up_emulator_result} from "#client_core/index.js";
 import type {DecompiledPrograms} from "#interfaces/emulator_view.js";
-import {MainPane, SidebarPane, SplitGroup} from "#UI/index.js";
+import {MainPane, SidebarPane, PaneGroup} from "#UI/index.js";
 
 interface HilDebuggerViewProps {
     emulator:up_emulator,
@@ -133,7 +133,7 @@ let HilDebuggerView = function (props: HilDebuggerViewProps) {
     }, [props.emulator])
 
     return(
-        <SplitGroup id="hil_debugger" orientation="horizontal">
+        <PaneGroup id="hil_debugger" orientation="horizontal">
             <MainPane>
                 <FcoreDebugger
                     emulator={props.emulator}
@@ -160,7 +160,7 @@ let HilDebuggerView = function (props: HilDebuggerViewProps) {
                     on_remove_breakpoint={handle_remove_breakpoint}
                 />
             </SidebarPane>
-        </SplitGroup>
+        </PaneGroup>
 
     );
 };

@@ -22,7 +22,7 @@ import {
     SimpleContent,
     UIPanel
 } from "#UI/index.js"
-import {MainPane, SidebarPane, SplitGroup} from "#UI/index.js";
+import {MainPane, SidebarPane, PaneGroup} from "#UI/index.js";
 import {up_script} from "#client_core/index.js";
 import ScriptsEditor from "./ScriptsEditor.js";
 import ScriptSidebar from "./ScriptSidebar.js";
@@ -50,9 +50,9 @@ let ScriptManager = (props: ScriptManagerProps) =>{
     }
 
     return(
-        <SplitGroup id="scripts" orientation="horizontal">
+        <PaneGroup id="scripts" orientation="horizontal">
             <MainPane>
-            <SplitGroup id="scripts_main" orientation="vertical">
+            <PaneGroup id="scripts_main" orientation="vertical">
                 <UIPanel id="properties" key="script_properties" level="level_2" default_size={20} min_size="6em">
                     <SimpleContent name="Script Properties">
                         <FormLayout>
@@ -67,14 +67,14 @@ let ScriptManager = (props: ScriptManagerProps) =>{
                         <ScriptsEditor script={selected_script}/>
                     </SimpleContent>
                 </UIPanel>
-            </SplitGroup>
+            </PaneGroup>
             </MainPane>
             <SidebarPane>
                 <ScriptSidebar
                     on_select={handle_select}
                 />
             </SidebarPane>
-        </SplitGroup>
+        </PaneGroup>
 
     );
 

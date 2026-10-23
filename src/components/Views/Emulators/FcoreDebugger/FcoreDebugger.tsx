@@ -18,7 +18,7 @@ import React, {useState} from 'react';
 import {Fcore} from "./FcoreLanguage.js";
 import {breakpoint_gutter} from "./breakpoint_gutter.js";
 import {ColorTheme, TextEditor, UIPanel} from "#UI/index.js";
-import {PanelTitle} from "#UI/panels/UIPanel.js";
+import {PanelTitle, TitleBar} from "#UI/panels/TitleBar.js";
 import DebuggerToolbar from "./DebuggerToolbar.jsx";
 import {cpp} from "@codemirror/lang-cpp";
 import MemoryViewer from "./MemoryViewer.jsx";
@@ -50,10 +50,10 @@ const PAGE_CHROME = "225px";
 // a panel whose content fills the height that the panel is given
 let FillPanel = (props: {title: string, children: React.ReactNode}) => (
     <UIPanel level="level_2" style={{minHeight: 0}}>
-        <PanelTitle selected>
-            <p style={{marginLeft:"0.5em", marginRight:"0.5em", marginTop:"0.25em", paddingBottom:"0.1m"}}>{props.title}</p>
-        </PanelTitle>
-        <div style={{flex: 1, minHeight: 0, position: "relative", borderTop: "3px solid " + ColorTheme.background.borders}}>
+        <TitleBar>
+            <PanelTitle selected>{props.title}</PanelTitle>
+        </TitleBar>
+        <div style={{flex: 1, minHeight: 0, position: "relative"}}>
             <div style={{position: "absolute", inset: 0}}>
                 {props.children}
             </div>

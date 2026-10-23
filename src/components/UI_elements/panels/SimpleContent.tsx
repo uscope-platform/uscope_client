@@ -13,7 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {PanelTitle, ContentDiv} from "./UIPanel.js";
+import {ContentDiv} from "./UIPanel.js";
+import {PanelTitle, TitleBar} from "./TitleBar.js";
 import type {CSSProperties, ReactNode} from "react";
 
 interface SimpleContentProps {
@@ -28,9 +29,9 @@ export let SimpleContent = function (props: SimpleContentProps) {
     return(
         // fills the panel it is in, so that the content scrolls when the panel is resized smaller
         <div style={{display: "flex", flexDirection: "column", flex: 1, minHeight: 0, ...props.style}}>
-            <PanelTitle selected>
-                <p style={{marginLeft:"0.5em", marginRight:"0.5em", marginTop:"0.25em", paddingBottom:"0.1m"}}>{props.name}</p>
-            </PanelTitle>
+            <TitleBar name={props.name}>
+                <PanelTitle selected>{props.name}</PanelTitle>
+            </TitleBar>
             <ContentDiv height={props.height}>
                 {props.children}
             </ContentDiv>

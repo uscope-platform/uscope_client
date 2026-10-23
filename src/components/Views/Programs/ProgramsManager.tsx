@@ -24,7 +24,7 @@ import {
     SelectField,
     TabbedContent, TwoColumnSelector
 } from "#UI/index.js";
-import {MainPane, SidebarPane, SplitGroup} from "#UI/index.js";
+import {MainPane, SidebarPane, PaneGroup} from "#UI/index.js";
 import ProgramsEditor from "./Editor/ProgramsEditor.js";
 import {up_program} from "#client_core/index.js";
 import BuildSettings from "./Editor/BuildSettings.js";
@@ -126,9 +126,9 @@ let ProgramsManager = (props: ProgramsManagerProps) =>{
     }
 
     return(
-        <SplitGroup id="programs" orientation="horizontal">
+        <PaneGroup id="programs" orientation="horizontal">
             <MainPane>
-            <SplitGroup id="programs_main" orientation="vertical">
+            <PaneGroup id="programs_main" orientation="vertical">
                 <UIPanel id="properties" key="program_properties" level="level_2" default_size={25} min_size="6em">
                     <SimpleContent name="Program Properties" >
                         <FormLayout>
@@ -166,14 +166,14 @@ let ProgramsManager = (props: ProgramsManagerProps) =>{
                         </div>
                     </TabbedContent>
                 </UIPanel>
-            </SplitGroup>
+            </PaneGroup>
             </MainPane>
             <SidebarPane>
                 <ProgramSidebar
                     on_select={handle_select}
                 />
             </SidebarPane>
-        </SplitGroup>
+        </PaneGroup>
     );
 
 };
