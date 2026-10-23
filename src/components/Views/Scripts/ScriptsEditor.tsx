@@ -26,7 +26,9 @@ import {Tooltip} from "#UI/Tooltip.js";
 import type {script} from "#interfaces/index.js";
 
 interface ScriptEditorProps {
-    script: script
+    script: script,
+    /// told when there are changes that are not saved, or when there are none anymore
+    on_dirty_change?: (dirty: boolean) => void
 }
 
 let ScriptsEditor = (props: ScriptEditorProps) =>{
@@ -38,7 +40,11 @@ let ScriptsEditor = (props: ScriptEditorProps) =>{
         if(typeof props.script !== 'undefined' && props.script !== null){
             set_editor_content(props.script.content);
         }
-    },[props.script])
+    },[props.script.id, props.script.content])
+
+    useEffect(() => {
+        props.on_dirty_change?.(dirty);
+    }, [dirty]);
 
     let handle_change = (newValue: string) => {
         set_dirty(true);

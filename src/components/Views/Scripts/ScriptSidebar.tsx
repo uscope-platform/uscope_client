@@ -22,6 +22,8 @@ import {useAppSelector} from "#redux/hooks.js";
 
 interface ScriptSidebarProps {
     on_select: (id: number) => void;
+    on_reselect: (id: number) => void;
+    on_activate: (id: number) => void;
 }
 
 let ScriptSidebar = (props: ScriptSidebarProps) =>{
@@ -53,6 +55,8 @@ let ScriptSidebar = (props: ScriptSidebarProps) =>{
                 content_name="Script"
                 onDelete={handleRemove}
                 onSelect={props.on_select}
+                onReselect={props.on_reselect}
+                onActivate={props.on_activate}
                 onAdd={handleAdd}
             />
         )}]}/>
