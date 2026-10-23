@@ -18,6 +18,7 @@ import React, {useReducer, useState} from 'react';
 import {SidebarColumn} from "#UI/index.js";
 import {up_emulator} from "#client_core/index.js";
 import EmulatorList from "../EmulatorList.jsx";
+import EmulatorProperties from "../EmulatorProperties.jsx";
 import DmaChannelsList from "./DmaChannelsList.jsx";
 import DmaChannelProperties from "./DmaChannelProperties.jsx";
 import type {connection, EmulatorGraphEdge} from "#interfaces/index.js";
@@ -45,6 +46,7 @@ let EdgeSidebar = (props: EdgeSidebarProps) =>{
             style={{padding: "10px 0"}}
             panels={[
                 {title: "Emulator List", content: <EmulatorList on_select={props.on_select_emulator}/>},
+                {title: "Emulator Properties", content: <EmulatorProperties selected_emulator={props.emulator}/>},
                 {title: "DMA channels", min_height: "200px", content: (
                     <DmaChannelsList
                         connections_list={connection.ports.map((port) => port.id)}

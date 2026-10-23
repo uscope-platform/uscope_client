@@ -18,6 +18,7 @@ import React, {useState} from 'react';
 import {SidebarColumn} from "#UI/index.js";
 import {up_emulator} from "#client_core/index.js";
 import EmulatorList from "../EmulatorList.jsx";
+import EmulatorProperties from "../EmulatorProperties.jsx";
 import {IoBlockFields, IoEndpointFields, IoEndpointsList} from "./IoBlockProperties.jsx";
 import type {io_block} from "#interfaces/index.js";
 
@@ -42,6 +43,7 @@ let IoBlockSidebar = (props: IoBlockSidebarProps) =>{
             style={{padding: "10px 0"}}
             panels={[
                 {title: "Emulator List", content: <EmulatorList on_select={props.on_select_emulator}/>},
+                {title: "Emulator Properties", content: <EmulatorProperties selected_emulator={props.emulator}/>},
                 {title: block.direction === "source" ? "IO Source Properties" : "IO Sink Properties", content: <IoBlockFields {...shared}/>},
                 {title: "Endpoints", min_height: "150px", content: (
                     <IoEndpointsList {...shared} selected_port_name={port_name} on_select_port={set_port_name}/>
