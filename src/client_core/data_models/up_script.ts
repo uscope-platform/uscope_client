@@ -72,6 +72,12 @@ export class up_script {
         return new up_script(script_obj);
     }
 
+    static delete(script: up_script){
+        return backend_delete(api_dictionary.scripts.delete+'/'+script.id, script).then(()=>{
+            store.dispatch(removeScript(script));
+        })
+    }
+
     add_remote = () => {
         store.dispatch(AddScript(this));
         return backend_post(api_dictionary.scripts.add+'/'+this.id, this._get_script());
