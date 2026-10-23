@@ -28,13 +28,11 @@ interface IoBlockPropertiesProps {
     bump_version: () => void,
 }
 
-const hex = (value: number) => "0x" + value.toString(16);
 
 /// The problems of the endpoints that the toolchain would refuse, shown as they are found
 const find_problems = (block: io_block, emulator: up_emulator): string[] => {
     const problems: string[] = [];
     for(const port of block.ports){
-        if(port.address % 4 !== 0) problems.push(port.name + " is not aligned to a 32 bit word");
         for(const other of Object.values(emulator.io_blocks)){
             for(const other_port of other.ports){
                 if(other_port === port || (other.id === block.id && other_port.name === port.name)) continue;
@@ -118,7 +116,7 @@ let IoBlockProperties = (props: IoBlockPropertiesProps) =>{
                                 <InputField id="name" name="name" label="Endpoint name" defaultValue={selected_port.name} onKeyDown={handle_port_change}/>
                             </FieldSpan>
                             <FieldSpan>
-                                <InputField id="address" name="address" label="Bus address" defaultValue={hex(selected_port.address)} onKeyDown={handle_port_change}/>
+                                <InputField id="address" name="address" label="Bus address" defaultValue={selected_port.address.toString()} onKeyDown={handle_port_change}/>
                             </FieldSpan>
                             <FieldSpan>
                                 <SelectField<SimpleStringOption>

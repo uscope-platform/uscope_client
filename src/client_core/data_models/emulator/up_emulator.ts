@@ -313,11 +313,10 @@ export class up_emulator {
 
     add_io_port = async (block_id: number) => {
         let block: io_block = JSON.parse(JSON.stringify(this.io_blocks[block_id]));
-        // the word after the last one of the block
-        const last = block.ports[block.ports.length - 1];
+
         const port: io_port = {
             name: "port_" + block.ports.length,
-            address: last ? last.address + 4 : 0,
+            address: 0,
             type: "float",
             width: 32,
             signed: true
