@@ -31,6 +31,10 @@ interface SidebarBaseProps {
     template: any;
     items_filter?: string[];
     onSelect?: (id: number) => void;
+    /// the item that is already selected is clicked again
+    onReselect?: (id: number) => void;
+    /// an item is double clicked
+    onActivate?: (id: number) => void;
     onAdd?: (item: {id: any, object:any}) => void;
     onDelete?: (item: any) => void;
     onImport?: (item: string) => void;
@@ -160,7 +164,16 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
 
     const [names, types] = get_content();
 
+    let handleActivate = (name: string) =>{
+        const item = item_named(name);
+        if(item !== undefined && props.onActivate) props.onActivate(item[props.selection_key]);
+    };
+
     let handleSelect = (selection: string) =>{
+        if(selected !== null && props.objects[selected]?.[props.display_key] === selection){
+            const item = item_named(selection);
+            if(item !== undefined && props.onReselect) props.onReselect(item[props.selection_key]);
+        }
         if(selected !==selection){
             let sel_item: any = Object.values(props.objects).filter((item: any)=>{
                 return item[props.display_key] === selection;
@@ -200,6 +213,7 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
                 selected_item={selected_item[props.display_key]}
                 onRemove={handleRemove}
                 onSelect={handleSelect}
+                onActivate={handleActivate}
                 onRename={handleRename}
                 item_actions={item_actions}
                 // fills what the add card leaves and scrolls, instead of stopping short of the panel

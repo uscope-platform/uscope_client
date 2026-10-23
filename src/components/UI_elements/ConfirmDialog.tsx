@@ -66,6 +66,8 @@ interface ConfirmDialogProps {
     title: string;
     message: string;
     confirm_label: string;
+    /// the dialog offers to not be asked again, as it does unless this is false
+    allow_skip?: boolean;
     /// the user chose not to be asked again when it is true
     onConfirm: (do_not_ask_again: boolean) => void;
     onCancel: () => void;
@@ -90,10 +92,12 @@ export const ConfirmDialog = (props: ConfirmDialogProps) => {
             <Dialog role="alertdialog" aria-label={props.title} onClick={(event) => event.stopPropagation()}>
                 <div style={{fontWeight: "bold"}}>{props.title}</div>
                 <div>{props.message}</div>
-                <label style={{display: "flex", alignItems: "center", gap: "0.5em", cursor: "pointer"}}>
-                    <input type="checkbox" checked={do_not_ask_again} onChange={(event) => set_do_not_ask_again(event.target.checked)}/>
-                    Don't ask me again
-                </label>
+                {props.allow_skip !== false && (
+                    <label style={{display: "flex", alignItems: "center", gap: "0.5em", cursor: "pointer"}}>
+                        <input type="checkbox" checked={do_not_ask_again} onChange={(event) => set_do_not_ask_again(event.target.checked)}/>
+                        Don't ask me again
+                    </label>
+                )}
                 <Footer>
                     <CancelButton onClick={props.onCancel}>Cancel</CancelButton>
                     <DangerButton onClick={() => props.onConfirm(do_not_ask_again)} autoFocus>{props.confirm_label}</DangerButton>
