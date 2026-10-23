@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React, {useEffect, useState} from 'react';
-import {MdAdd} from "react-icons/md";
+import ListAddButton from "./ListAddButton.js";
 import {SelectableList} from "#UI/index.js";
 import {up_emulator} from "#client_core/index.js";
 import type {EmulatorIomSelector, EmulatorSelections} from "#interfaces/index.js";
@@ -70,14 +70,8 @@ let  CoreMemoriesList = (props: CoreMemoriesListProps) =>{
 
     return (
         <div style={{maxHeight: "13em"}}>
-            <div style={{
-                display: "flex",
-                flexDirection: "row",
-                marginTop: "0.25em"
-            }}>
-                <MdAdd style={{marginLeft: "auto"}} onClick={handle_add}/>
-            </div>
-            <SelectableList items={memories} selected_item={selected} onSelect={handle_select}
+            <ListAddButton label="Add memory" onClick={handle_add}/>
+            <SelectableList style={{width: "auto"}} items={memories} selected_item={selected} onSelect={handle_select}
                             onRemove={handle_remove}/>
         </div>
     );
