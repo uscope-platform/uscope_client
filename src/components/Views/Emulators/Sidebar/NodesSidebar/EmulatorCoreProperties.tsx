@@ -85,9 +85,6 @@ let  EmulatorCoreProperties = (props: EmulatorCorePropertiesProps) =>{
     return(
         <FieldPane key="node_props">
             <FieldGrid>
-                <FieldSpan>
-                    <InputField id="name" name="name" label="Core name" defaultValue={props.selected_core.name} onKeyDown={handle_change}/>
-                </FieldSpan>
                 <InputField id="channels" name="channels" label="Channels #" defaultValue={props.selected_core.channels.toString()} onKeyDown={handle_change}/>
                 <InputField id="order" name="order" label="Execution order" defaultValue={props.selected_core.order.toString()} onKeyDown={handle_change}/>
                 <FieldSpan>

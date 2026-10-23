@@ -48,6 +48,7 @@ let HilEditorView = function (props: HilEditorViewProps) {
                     emulator={props.emulator}
                     selections={props.selections}
                     on_selection={props.set_selections}
+                    bump_version={props.bump_version}
                 />
             </MainPane>
             <HilEditorSidebar

@@ -45,29 +45,16 @@ const find_problems = (block: io_block, emulator: up_emulator): string[] => {
     return problems;
 }
 
-/// The name of an IO block, and the problems of its endpoints
+/// The problems of the endpoints of an IO block
 export let IoBlockFields = (props: IoBlockProps) =>{
 
     const block = props.block;
-
-    const handle_block_change = async (event: React.KeyboardEvent<HTMLInputElement>) =>{
-        if(event.key==="Enter"|| event.key ==="Tab") {
-            await props.emulator.edit_io_block_props(block.id, "name", event.currentTarget.value);
-            props.bump_version();
-        }
-    }
 
     const problems = find_problems(block, props.emulator);
 
     return(
         <>
-            <FieldPane key={"io_block_" + block.id}>
-                <FieldGrid>
-                    <FieldSpan>
-                        <InputField id="name" name="name" label="Block name" defaultValue={block.name} onKeyDown={handle_block_change}/>
-                    </FieldSpan>
-                </FieldGrid>
-            </FieldPane>
+            {problems.length === 0 && <div style={{margin: "0.5em", fontSize: "0.8rem", opacity: 0.6}}>No problems found.</div>}
             {problems.map((p) => <div key={p} style={{margin: "0.25em 0.5em", fontSize: "0.8rem"}}>{p}</div>)}
         </>
     );

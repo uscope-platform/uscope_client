@@ -34,6 +34,7 @@ interface FcoreEmulationEditorProps {
     onDeploy: ()=>void,
     input_data: Record<string, number[]>,
     onEmulationDone: (result: up_emulator_result) => void,
+    bump_version: () => void,
 }
 
 /// The edges of the diagram, one per connection: the id is the position of the connection, so that they are all different
@@ -177,6 +178,16 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
         }
     }
 
+    const rename_node = async (id: number, name: string) =>{
+        if(props.emulator.is_io_block(id)){
+            await props.emulator.edit_io_block_props(id, "name", name);
+        } else {
+            await props.emulator.edit_core_props(id, "name", name);
+        }
+        setNodes((current) => current.map((node) => node.id === id ? {...node, text: name} : node));
+        props.bump_version();
+    }
+
     let handle_node_select = (event: unknown, node: EmulatorGraphNode) =>{
         props.on_selection({...props.selections, iom:null, component:{type:"node", obj:node}});
     }
@@ -313,6 +324,7 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
                             selection={props.selections.component}
                             can_link={props.emulator.can_connect}
                             onDelete={delete_selection}
+                            onRename={rename_node}
                             onRun={handle_run}
                             onCopy={copy_core}
                             onDeploy={handle_deploy}

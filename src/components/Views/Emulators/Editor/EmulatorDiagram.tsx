@@ -33,7 +33,7 @@ import {
 } from "@xyflow/react";
 import type {Connection, Edge, Node, NodeProps} from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import {ColorTheme, ConfirmDialog, ContextMenu, confirm_delete_enabled, set_confirm_delete} from "#UI/index.js";
+import {ColorTheme, ConfirmDialog, ContextMenu, PromptDialog, confirm_delete_enabled, set_confirm_delete} from "#UI/index.js";
 import type {ContextMenuAction} from "#UI/index.js";
 import EmulatorToolbar from "./EmulatorToolbar.jsx";
 import EmulatorLibrary, {BLOCK_DRAG_TYPE} from "./EmulatorLibrary.jsx";
@@ -63,6 +63,7 @@ interface EmulatorDiagramProps {
     onRun: () => void;
     onDeploy: () => void;
     onDelete: () => void;
+    onRename: (id: number, name: string) => void;
     onHardwareSim: () => void;
     onEdit: () => void;
     onCopy: () => void;
@@ -193,7 +194,8 @@ let DiagramCanvas = function (props: EmulatorDiagramProps) {
     };
 
     // the menu of what is right clicked: what is clicked becomes the selection that the actions work on
-    const [menu, set_menu] = useState<{x: number, y: number, copyable: boolean, label: string} | null>(null);
+    const [menu, set_menu] = useState<{x: number, y: number, copyable: boolean, label: string, id: number | null} | null>(null);
+    const [renaming, set_renaming] = useState<{id: number, name: string} | null>(null);
     // the name of what is being deleted, when the user is asked
     const [confirming_delete, set_confirming_delete] = useState<string | null>(null);
 
@@ -201,17 +203,18 @@ let DiagramCanvas = function (props: EmulatorDiagramProps) {
         event.preventDefault();
         const graph_node = to_graph_node(node);
         props.onNodeSelect(event, graph_node);
-        set_menu({x: event.clientX, y: event.clientY, copyable: graph_node.kind === "core", label: graph_node.text});
+        set_menu({x: event.clientX, y: event.clientY, copyable: graph_node.kind === "core", label: graph_node.text, id: graph_node.id});
     };
 
     const handle_edge_context_menu = (event: React.MouseEvent, edge: Edge) => {
         event.preventDefault();
         handle_edge_click(event, edge);
-        set_menu({x: event.clientX, y: event.clientY, copyable: false, label: "connection"});
+        set_menu({x: event.clientX, y: event.clientY, copyable: false, label: "connection", id: null});
     };
 
-    const menu_actions = (copyable: boolean, label: string): ContextMenuAction[] => [
+    const menu_actions = (copyable: boolean, label: string, id: number | null): ContextMenuAction[] => [
         ...(copyable ? [{label: "Copy", onSelect: props.onCopy}] : []),
+        ...(id !== null ? [{label: "Rename", onSelect: () => set_renaming({id, name: label})}] : []),
         {
             label: "Delete",
             danger: true,
@@ -305,7 +308,21 @@ let DiagramCanvas = function (props: EmulatorDiagramProps) {
                     </ReactFlow>
                 </div>
             </div>
-            {menu && <ContextMenu x={menu.x} y={menu.y} actions={menu_actions(menu.copyable, menu.label)} onClose={() => set_menu(null)}/>}
+            {menu && <ContextMenu x={menu.x} y={menu.y} actions={menu_actions(menu.copyable, menu.label, menu.id)} onClose={() => set_menu(null)}/>}
+            {renaming && (
+                <PromptDialog
+                    title="Rename"
+                    initial_value={renaming.name}
+                    confirm_label="Rename"
+                    validate={(value) => props.nodes.some((n) => n.id !== renaming.id && n.text === value) ? "That name is already used." : null}
+                    onCancel={() => set_renaming(null)}
+                    onConfirm={(name) => {
+                        const id = renaming.id;
+                        set_renaming(null);
+                        if(name !== renaming.name) props.onRename(id, name);
+                    }}
+                />
+            )}
             {confirming_delete !== null && (
                 <ConfirmDialog
                     title={"Delete " + confirming_delete + "?"}
