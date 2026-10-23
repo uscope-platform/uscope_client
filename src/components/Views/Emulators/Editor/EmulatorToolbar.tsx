@@ -15,51 +15,29 @@
 
 import React from 'react';
 
-import {ColorTheme, DeleteButton} from "#UI/index.js";
+import {ColorTheme} from "#UI/index.js";
 import {Tooltip} from "#UI/Tooltip.js";
 import {
     MdArticle,
     MdConstruction,
     MdSimCardDownload,
-    MdPlayArrow,
-    MdContentCopy
+    MdPlayArrow
 } from "react-icons/md";
 
 interface EmulatorToolbarProps {
-    onCopy: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
     onEdit: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
     onRun: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
     onDeploy: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
     onHardwareSim: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
-    onDelete: () => void;
     enable: {
-        copy: boolean,
         edit: boolean,
         run: boolean,
         hw_sim: boolean,
         deploy: boolean,
-        delete: boolean,
     }
 }
 
 let  EmulatorToolbar = (props: EmulatorToolbarProps) =>{
-
-    let render_copy = () => {
-        let handle_click = (event:React.MouseEvent<SVGElement, MouseEvent>) =>{
-            if(props.enable.copy) {
-                props.onCopy(event);
-            }
-        };
-        let icon_color = props.enable.copy ? ColorTheme.icons_color : ColorTheme.disabled_icon_color;
-        return (
-            <div key="copy_icon" id="copy_icon">
-                <MdContentCopy onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
-                       color={icon_color}/>
-                <Tooltip anchorSelect="#copy_icon" content={"Copy Core"} place="top"/>
-            </div>
-        )
-
-    }
 
     let render_edit = () => {
         let handle_click = (event:React.MouseEvent<SVGElement, MouseEvent>) =>{
@@ -126,20 +104,12 @@ let  EmulatorToolbar = (props: EmulatorToolbarProps) =>{
         )
     }
 
-    let render_delete= () => {
-        return (<DeleteButton enable={props.enable.delete} onRemove={props.onDelete}/>)
-    }
-
-
     return (
         <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
-            {render_copy()}
             {render_edit()}
             {render_run()}
             {render_deploy()}
             {render_hw_sim()}
-            {render_delete()}
-
         </div>
     );
 };

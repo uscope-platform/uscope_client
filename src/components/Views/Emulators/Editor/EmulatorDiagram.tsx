@@ -16,7 +16,7 @@
  *
  */
 
-import {useEffect, useRef} from "react";
+import {useEffect, useRef, useState} from "react";
 import {css} from "goober";
 import {
     Background,
@@ -33,7 +33,8 @@ import {
 } from "@xyflow/react";
 import type {Connection, Edge, Node, NodeProps} from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import {ColorTheme} from "#UI/index.js";
+import {ColorTheme, ConfirmDialog, ContextMenu, confirm_delete_enabled, set_confirm_delete} from "#UI/index.js";
+import type {ContextMenuAction} from "#UI/index.js";
 import EmulatorToolbar from "./EmulatorToolbar.jsx";
 import EmulatorLibrary, {BLOCK_DRAG_TYPE} from "./EmulatorLibrary.jsx";
 import type {BlockKind} from "./EmulatorLibrary.jsx";
@@ -191,6 +192,33 @@ let DiagramCanvas = function (props: EmulatorDiagramProps) {
         props.onNodeSelect(event, to_graph_node(node));
     };
 
+    // the menu of what is right clicked: what is clicked becomes the selection that the actions work on
+    const [menu, set_menu] = useState<{x: number, y: number, copyable: boolean, label: string} | null>(null);
+    // the name of what is being deleted, when the user is asked
+    const [confirming_delete, set_confirming_delete] = useState<string | null>(null);
+
+    const handle_node_context_menu = (event: React.MouseEvent, node: BlockNode) => {
+        event.preventDefault();
+        const graph_node = to_graph_node(node);
+        props.onNodeSelect(event, graph_node);
+        set_menu({x: event.clientX, y: event.clientY, copyable: graph_node.kind === "core", label: graph_node.text});
+    };
+
+    const handle_edge_context_menu = (event: React.MouseEvent, edge: Edge) => {
+        event.preventDefault();
+        handle_edge_click(event, edge);
+        set_menu({x: event.clientX, y: event.clientY, copyable: false, label: "connection"});
+    };
+
+    const menu_actions = (copyable: boolean, label: string): ContextMenuAction[] => [
+        ...(copyable ? [{label: "Copy", onSelect: props.onCopy}] : []),
+        {
+            label: "Delete",
+            danger: true,
+            onSelect: () => confirm_delete_enabled() ? set_confirming_delete(label) : props.onDelete()
+        }
+    ];
+
     const handle_edge_click = (event: React.MouseEvent, edge: Edge) => {
         props.onEdgeSelect(event, {id: Number(edge.id.slice("edge-".length)), from: Number(edge.source), to: Number(edge.target)});
     };
@@ -246,9 +274,7 @@ let DiagramCanvas = function (props: EmulatorDiagramProps) {
                 onDeploy={props.onDeploy}
                 onHardwareSim={props.onHardwareSim}
                 onEdit={props.onEdit}
-                onDelete={props.onDelete}
                 enable={props.enabled_actions}
-                onCopy={props.onCopy}
             />
             <div style={{display: "flex", flexDirection: "row", flex: 1, minHeight: 0}}>
                 <EmulatorLibrary enabled={props.enabled_actions.add} onAdd={add_at_center}/>
@@ -262,6 +288,8 @@ let DiagramCanvas = function (props: EmulatorDiagramProps) {
                         onEdgesChange={on_edges_change}
                         onNodeClick={handle_node_click}
                         onEdgeClick={handle_edge_click}
+                        onNodeContextMenu={handle_node_context_menu}
+                        onEdgeContextMenu={handle_edge_context_menu}
                         onNodeDragStop={handle_drag_stop}
                         onPaneClick={props.onCanvasClick}
                         onConnect={handle_connect}
@@ -277,6 +305,20 @@ let DiagramCanvas = function (props: EmulatorDiagramProps) {
                     </ReactFlow>
                 </div>
             </div>
+            {menu && <ContextMenu x={menu.x} y={menu.y} actions={menu_actions(menu.copyable, menu.label)} onClose={() => set_menu(null)}/>}
+            {confirming_delete !== null && (
+                <ConfirmDialog
+                    title={"Delete " + confirming_delete + "?"}
+                    message="This cannot be undone."
+                    confirm_label="Delete"
+                    onCancel={() => set_confirming_delete(null)}
+                    onConfirm={(do_not_ask_again) => {
+                        set_confirming_delete(null);
+                        if(do_not_ask_again) set_confirm_delete(false);
+                        props.onDelete();
+                    }}
+                />
+            )}
         </div>
     );
 };
