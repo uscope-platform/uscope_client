@@ -17,7 +17,7 @@ import {styled} from 'goober';
 import React, {type ReactNode} from "react";
 import {Image} from "./Image.js";
 import {ColorTheme} from "./ColorTheme.js";
-import {DeleteButton} from "#UI/DeleteButton.js";
+import {useContextMenu, type ContextMenuAction} from "./ContextMenu.js";
 
 interface ItemLayoutProps {
     selected: boolean;
@@ -54,6 +54,8 @@ interface SelectableListItemProps {
     onSelect?: ((name: string, multi?: boolean) => void )| undefined;
     onMouseEnter?: (name: string) => void;
     onActivate?: ((name: string) => void) | undefined;
+    /// what is in the menu of the item, besides deleting it
+    actions?: ContextMenuAction[] | undefined;
     description?: string | undefined;
     card?: boolean | undefined;
     iconSize?: number | string;
@@ -86,11 +88,16 @@ export let  SelectableListItem = (props: SelectableListItemProps) =>{
         }
     }
 
-    let render_delete = () =>{
-        if(props.onRemove){
-            return(<DeleteButton onRemove={props.onRemove} name={props.name}/>);
-        }
+    const actions: ContextMenuAction[] = [...(props.actions ?? [])];
+    if(props.onRemove){
+        const remove = props.onRemove;
+        actions.push({
+            label: "Delete",
+            danger: true,
+            onSelect: () => remove(props.name)
+        });
     }
+    const context_menu = useContextMenu(actions);
 
     let handle_double_click = () =>{
         if(props.onActivate) props.onActivate(props.name);
@@ -102,7 +109,7 @@ export let  SelectableListItem = (props: SelectableListItemProps) =>{
     }
 
     return(
-        <ItemLayout selected={props.selected} variant={props.card ? "card" : "plain"}>
+        <ItemLayout selected={props.selected} variant={props.card ? "card" : "plain"} onContextMenu={context_menu.on_context_menu}>
             <div></div>
             <div onMouseEnter={handleMouseEnter} onClick={handle_click} onDoubleClick={handle_double_click} style={{display:"flex", flexGrow:1}}>
                 {get_icon_image(props.icon)}
@@ -111,7 +118,8 @@ export let  SelectableListItem = (props: SelectableListItemProps) =>{
                     {props.description && <p style={{fontSize:"0.8em", opacity:0.6, paddingBottom:"6px"}}>{props.description}</p>}
                 </div>
             </div>
-            {render_delete()}
+            {context_menu.button}
+            {context_menu.menu}
         </ItemLayout>
     );
 };

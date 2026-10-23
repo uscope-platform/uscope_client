@@ -15,6 +15,7 @@
 
 import React from "react";
 import {SelectableListItem} from './SelectableListItem.js';
+import type {ContextMenuAction} from './ContextMenu.js';
 
 interface SelectableListProps {
     multi_select?: boolean;
@@ -22,6 +23,8 @@ interface SelectableListProps {
     onSelect?: ((name: string, multi?: boolean) => void);
     onRemove?: (name: string) => void;
     onActivate?: (name: string) => void;
+    /// what is in the menu of an item, besides deleting it
+    item_actions?: (name: string) => ContextMenuAction[];
     descriptions?: string[];
     variant?: 'plain' | 'card';
     style?: React.CSSProperties;
@@ -50,6 +53,7 @@ export let  SelectableList = (props: SelectableListProps) =>{
                     onRemove={props.onRemove}
                     onSelect={props.onSelect}
                     onActivate={props.onActivate}
+                    actions={props.item_actions?.(names[i])}
                     card={props.variant === 'card'}
                     description={props.descriptions?.[i]}
                     selected={selected}

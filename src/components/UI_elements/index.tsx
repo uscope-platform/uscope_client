@@ -24,6 +24,8 @@ export {Checkbox} from "./checkbox.js"
 export {BlockTitle} from "./BlockTitle.js"
 export {Button} from "./Button.js"
 export {DeleteButton} from "./DeleteButton.js"
+export {ContextMenu, useContextMenu} from "./ContextMenu.js"
+export type {ContextMenuAction} from "./ContextMenu.js"
 export {MultiSelect} from "./MultiSelect.js"
 export {SelectableListItem} from './SelectableListItem.js'
 export {SelectableList} from './SelectableList.js'
