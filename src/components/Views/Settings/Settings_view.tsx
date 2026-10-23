@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React, {useContext, useEffect, useState} from 'react';
-import {FormLayout, InputField, SelectField, SimpleContent, UIPanel} from "#UI/index.js";
+import {Checkbox, FormLayout, InputField, SelectField, SimpleContent, UIPanel, set_confirm_delete, useConfirmDelete} from "#UI/index.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
 import ThemeSelector from "#components/Common_Components/ThemeSelector.js";
 import {up_application, up_settings} from "#client_core/index.js";
@@ -46,6 +46,8 @@ const COLUMN_WIDTH = "14rem";
 let SettingsView = function (props: SettingsViewProps) {
 
     const application: up_application = useContext(ApplicationContext);
+
+    const confirm_delete = useConfirmDelete();
 
     const hil_present = application.application_name === "HIL_base";
 
@@ -149,6 +151,18 @@ let SettingsView = function (props: SettingsViewProps) {
                 <SimpleContent name="Appearance">
                     <FormLayout>
                         <ThemeSelector/>
+                    </FormLayout>
+                </SimpleContent>
+            </UIPanel>
+            <UIPanel key="confirmation_settings" level="level_2" style={{flexShrink: 0}}>
+                <SimpleContent name="Confirmations">
+                    <FormLayout>
+                        <Checkbox
+                            name="confirm_delete"
+                            label="Ask before deleting"
+                            value={confirm_delete}
+                            onChange={(event) => set_confirm_delete(event.target.checked)}
+                        />
                     </FormLayout>
                 </SimpleContent>
             </UIPanel>

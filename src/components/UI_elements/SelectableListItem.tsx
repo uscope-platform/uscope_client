@@ -14,10 +14,12 @@
 // limitations under the License.
 
 import {styled} from 'goober';
-import React, {type ReactNode} from "react";
+import React, {useState, type ReactNode} from "react";
 import {Image} from "./Image.js";
 import {ColorTheme} from "./ColorTheme.js";
 import {useContextMenu, type ContextMenuAction} from "./ContextMenu.js";
+import {ConfirmDialog} from "./ConfirmDialog.js";
+import {confirm_delete_enabled, set_confirm_delete} from "./confirm_preference.js";
 
 interface ItemLayoutProps {
     selected: boolean;
@@ -88,13 +90,15 @@ export let  SelectableListItem = (props: SelectableListItemProps) =>{
         }
     }
 
+    const [confirming_delete, set_confirming_delete] = useState(false);
+
     const actions: ContextMenuAction[] = [...(props.actions ?? [])];
     if(props.onRemove){
         const remove = props.onRemove;
         actions.push({
             label: "Delete",
             danger: true,
-            onSelect: () => remove(props.name)
+            onSelect: () => confirm_delete_enabled() ? set_confirming_delete(true) : remove(props.name)
         });
     }
     const context_menu = useContextMenu(actions);
@@ -120,6 +124,19 @@ export let  SelectableListItem = (props: SelectableListItemProps) =>{
             </div>
             {context_menu.button}
             {context_menu.menu}
+            {confirming_delete && props.onRemove && (
+                <ConfirmDialog
+                    title={"Delete " + props.name + "?"}
+                    message="This cannot be undone."
+                    confirm_label="Delete"
+                    onCancel={() => set_confirming_delete(false)}
+                    onConfirm={(do_not_ask_again) => {
+                        set_confirming_delete(false);
+                        if(do_not_ask_again) set_confirm_delete(false);
+                        props.onRemove?.(props.name);
+                    }}
+                />
+            )}
         </ItemLayout>
     );
 };
