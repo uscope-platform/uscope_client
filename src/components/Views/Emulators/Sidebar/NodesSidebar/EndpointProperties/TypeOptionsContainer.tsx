@@ -20,6 +20,10 @@ import {ColorTheme, FieldGrid} from "#UI/index.js";
 const Section = styled('div')`
   padding-left: 1rem;
   border-left: 1px solid ${ColorTheme.background.bordersLight};
+  &:first-child {
+    padding-left: 0;
+    border-left: 0;
+  }
 `
 
 const Heading = styled('div')`
