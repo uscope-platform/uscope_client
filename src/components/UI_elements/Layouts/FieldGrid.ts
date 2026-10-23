@@ -33,3 +33,12 @@ export const FieldPane = styled('div')`
 export const FieldSpan = styled('div')`
   grid-column: 1 / -1;
 `
+
+/// A properties pane for a wide area: its groups of fields sit side by side as long as each keeps its width, and stack when the area is narrow
+export const FieldPaneRow = styled('div')`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13em, 1fr));
+  gap: 0.6rem 1rem;
+  align-items: start;
+  padding: 0.4rem 0.8rem 0.6rem;
+`

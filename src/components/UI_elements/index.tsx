@@ -50,7 +50,7 @@ export type {SidebarPanel} from "./Layouts/SidebarColumn.js"
 export {PaneGroup} from "./Layouts/PaneGroup.js"
 export {Pane, MainPane} from "./Layouts/Pane.js"
 export {FoldProvider} from "./panels/FoldStore.js"
-export {FieldGrid, FieldPane, FieldSpan} from "./Layouts/FieldGrid.js"
+export {FieldGrid, FieldPane, FieldPaneRow, FieldSpan} from "./Layouts/FieldGrid.js"
 export {SidebarCollapsableNameLayout} from "./Layouts/SidebarCollapsableNameLayout.js"
 export {SidebarCollapsableContentLayout} from "./Layouts/SidebarCollapsableContentLayout.js"
 

@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React, {useReducer} from 'react';
-import {Checkbox, InputField, SelectField, FieldPane, FieldSpan} from "#UI/index.js";
+import {Checkbox, InputField, SelectField, FieldPaneRow, FieldSpan} from "#UI/index.js";
 import {ConstantInputProperties, SeriesInputProperties, ExternalInputProperties, WaveformInputProperties} from "./inputs/index.js";
 import TypeOptionsContainer from "./TypeOptionsContainer.jsx";
 import ChannelRadioGroup from "./ChannelRadioGroup.jsx";
@@ -38,14 +38,16 @@ interface CoreInputPropertiesProps {
 }
 
 let  CoreInputProperties = (props: CoreInputPropertiesProps) =>{
+    // the emulator replaces the core when it edits it, so the one of the props is the old one after an edit
+    const core = props.selected_emulator.cores[props.selected_component.obj.id] ?? props.selected_core;
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     let [chosen_channel, set_selected_channel] = React.useState(0);
     // the choice outlives the core it was made on
-    let selected_channel = Math.min(chosen_channel, Math.max(props.selected_core.channels - 1, 0));
+    let selected_channel = Math.min(chosen_channel, Math.max(core.channels - 1, 0));
 
-    let sel_in = props.selected_core.inputs.filter((item)=>{
+    let sel_in = core.inputs.filter((item)=>{
         return item.name === props.selected_iom.obj
     })[0];
 
@@ -151,7 +153,7 @@ let  CoreInputProperties = (props: CoreInputPropertiesProps) =>{
                         key="source_series"
                         input={sel_in.source}
                         channel={selected_channel}
-                        selected_core={props.selected_core}
+                        selected_core={core}
                         onChange={handle_source_change}
                     />
                 )
@@ -183,7 +185,7 @@ let  CoreInputProperties = (props: CoreInputPropertiesProps) =>{
 
     if(sel_in){
         return(
-            <FieldPane key="input_props">
+            <FieldPaneRow key="input_props">
                 <InputField id="name" name="name" label="Name" defaultValue={sel_in.name} onKeyDown={handle_change_iom}/>
                 <TypeOptionsContainer label="Source">
                     <FieldSpan>
@@ -203,10 +205,10 @@ let  CoreInputProperties = (props: CoreInputPropertiesProps) =>{
                         ]}
                     />
                     </FieldSpan>
-                    {per_channel_source && props.selected_core.channels > 1 && (
+                    {per_channel_source && core.channels > 1 && (
                         <FieldSpan key="channel_radio_group">
                             <ChannelRadioGroup
-                                count={props.selected_core.channels}
+                                count={core.channels}
                                 selected={selected_channel}
                                 onSelect={set_selected_channel}
                             />
@@ -217,7 +219,7 @@ let  CoreInputProperties = (props: CoreInputPropertiesProps) =>{
                 <TypeOptionsContainer label="Data format">
                     {render_type_options()}
                 </TypeOptionsContainer>
-            </FieldPane>
+            </FieldPaneRow>
         )
     }
 

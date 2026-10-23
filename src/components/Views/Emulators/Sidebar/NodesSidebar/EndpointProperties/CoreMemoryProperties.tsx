@@ -15,7 +15,7 @@
 
 import React from 'react';
 
-import {Checkbox, InputField, SelectField, FieldPane, FieldSpan} from "#UI/index.js";
+import {Checkbox, InputField, SelectField, FieldPaneRow, FieldSpan} from "#UI/index.js";
 import TypeOptionsContainer from "./TypeOptionsContainer.jsx";
 import {up_emulator} from "#client_core/index.js";
 import type {
@@ -36,6 +36,8 @@ interface CoreMemoryPropertiesProps {
 
 
 let  CoreMemoryProperties = (props: CoreMemoryPropertiesProps) =>{
+    // the emulator replaces the core when it edits it, so the one of the props is the old one after an edit
+    const core = props.selected_emulator.cores[props.selected_component.obj.id] ?? props.selected_core;
 
 
     let handle_change_output = async (event: React.ChangeEvent<HTMLInputElement>)=>{
@@ -69,7 +71,7 @@ let  CoreMemoryProperties = (props: CoreMemoryPropertiesProps) =>{
             "type", change.value, props.selected_iom.obj)
     }
 
-    let sel_mem = props.selected_core.memory_init.filter((item)=>{
+    let sel_mem = core.memory_init.filter((item)=>{
         return item.name === props.selected_iom.obj
     })[0];
     if(sel_mem=== undefined) return;
@@ -112,7 +114,7 @@ let  CoreMemoryProperties = (props: CoreMemoryPropertiesProps) =>{
 
     if(sel_mem){
         return(
-            <FieldPane key="memory_props">
+            <FieldPaneRow key="memory_props">
                 <InputField id="name" name="name" label="Name" defaultValue={sel_mem.name} onKeyDown={handle_change_iom}/>
                 <TypeOptionsContainer label="Contents">
                     <FieldSpan>
@@ -124,7 +126,7 @@ let  CoreMemoryProperties = (props: CoreMemoryPropertiesProps) =>{
                 <TypeOptionsContainer label="Data format">
                     {render_type_options()}
                 </TypeOptionsContainer>
-            </FieldPane>
+            </FieldPaneRow>
         )
     }
 

@@ -18,9 +18,8 @@ import {styled} from "goober";
 import {ColorTheme, FieldGrid} from "#UI/index.js";
 
 const Section = styled('div')`
-  margin-top: 1rem;
-  padding-top: 0.7rem;
-  border-top: 1px solid ${ColorTheme.background.borders};
+  padding-left: 1rem;
+  border-left: 1px solid ${ColorTheme.background.bordersLight};
 `
 
 const Heading = styled('div')`
