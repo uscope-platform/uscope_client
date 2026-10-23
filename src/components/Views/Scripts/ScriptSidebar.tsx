@@ -16,7 +16,7 @@
 import React, {useContext, useReducer} from 'react';
 
 import {up_script} from "#client_core/index.js";
-import {SidebarBase} from "#UI/index.js";
+import {SidebarBase, SidebarColumn} from "#UI/index.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
 import {useAppSelector} from "#redux/hooks.js";
 
@@ -43,17 +43,19 @@ let ScriptSidebar = (props: ScriptSidebarProps) =>{
     };
 
     return(
-        <SidebarBase
-            objects={scripts_store}
-            selection_key="id"
-            template={up_script}
-            items_filter={application.scripts.map(s => s.toString())}
-            display_key="name"
-            content_name="Script"
-            onDelete={handleRemove}
-            onSelect={props.on_select}
-            onAdd={handleAdd}
-        />
+        <SidebarColumn panels={[{title: "Script List", content: (
+            <SidebarBase
+                objects={scripts_store}
+                selection_key="id"
+                template={up_script}
+                items_filter={application.scripts.map(s => s.toString())}
+                display_key="name"
+                content_name="Script"
+                onDelete={handleRemove}
+                onSelect={props.on_select}
+                onAdd={handleAdd}
+            />
+        )}]}/>
     );
 }
 

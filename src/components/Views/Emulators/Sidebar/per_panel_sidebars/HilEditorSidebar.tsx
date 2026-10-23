@@ -15,14 +15,11 @@
 
 import React from 'react';
 
-
 import {up_emulator} from "#client_core/index.js";
-import {SidebarBase, SidebarColumn} from "#UI/index.js";
-import EmulatorNodeProperties from "../NodesSidebar/EmulatorNodeProperties.jsx";
-import EmulatorEdgeProperties from "../EdgesSidebar/EmulatorEdgeProperties.jsx";
-import EmulatorProperties from "../EmulatorProperties.jsx";
-import WarningsPanel from "../WarningsPanel.jsx";
-import {useAppSelector} from "#redux/hooks.js";
+import EmulatorSidebar from "../EmulatorSidebar.jsx";
+import CoreSidebar from "../NodesSidebar/CoreSidebar.jsx";
+import IoBlockSidebar from "../NodesSidebar/IoBlockSidebar.jsx";
+import EdgeSidebar from "../EdgesSidebar/EdgeSidebar.jsx";
 import type {EmulatorIomSelector, EmulatorSelections} from "#interfaces/index.js";
 
 interface HilEditorSidebarProps {
@@ -34,12 +31,8 @@ interface HilEditorSidebarProps {
     set_selections:(selection: EmulatorSelections) => void,
 }
 
+/// The sidebar of the editor: the one of what is selected, the emulator, a core, an IO block or an edge
 let  HilEditorSidebar = (props: HilEditorSidebarProps) =>{
-
-    const emulators_store = useAppSelector(state => state.emulators);
-
-
-    const sel_component_type = props.selections.component ? props.selections.component.type : null;
 
     let handle_select_emulator = (sel: number) =>{
         props.on_emulator_select(sel);
@@ -47,45 +40,51 @@ let  HilEditorSidebar = (props: HilEditorSidebarProps) =>{
     }
 
     const handle_node_iom_modify = (iom: EmulatorIomSelector) =>{
-        let new_selection = {...props.selections, iom:iom};
-        props.set_selections(new_selection)
+        props.set_selections({...props.selections, iom:iom});
     }
 
-    return(
-        <SidebarColumn style={{padding: "10px 0"}}>
-            <SidebarBase
-                objects={emulators_store}
-                selection_key="id"
-                template={up_emulator}
-                display_key="name"
-                content_name="Emulator"
-                onSelect={handle_select_emulator}
-            />
-            <EmulatorNodeProperties
-                enabled={sel_component_type==="node"}
-                bump_version={props.bump_version}
-                selected_emulator={props.emulator}
-                on_iom_modify={handle_node_iom_modify}
-                selected_component={props.selections.component}
-                selected_iom={props.selections.iom}
-            />
-            <EmulatorEdgeProperties
-                enabled={sel_component_type==="edge"}
-                selected_emulator={props.emulator}
-                selected_component={props.selections.component}
-            />
-            <EmulatorProperties
-                enabled={sel_component_type !== "node"  && sel_component_type !== "edge"}
-                selected_emulator={props.emulator}
-            />
-            <WarningsPanel
-                compile_warning={props.compile_warning}
-                enabled={props.selections.component === null}
-            />
-        </SidebarColumn>
+    const component = props.selections.component;
 
-    );
+    if(component === null){
+        return <EmulatorSidebar
+            emulator={props.emulator}
+            compile_warning={props.compile_warning}
+            on_select_emulator={handle_select_emulator}
+        />;
+    }
 
+    if(component.type === "edge"){
+        return <EdgeSidebar
+            key={component.obj.from + "-" + component.obj.to}
+            emulator={props.emulator}
+            edge={component.obj}
+            on_select_emulator={handle_select_emulator}
+        />;
+    }
+
+    const io_block = props.emulator.io_blocks[component.obj.id];
+    if(io_block){
+        return <IoBlockSidebar
+            key={io_block.id}
+            emulator={props.emulator}
+            block={io_block}
+            on_select_emulator={handle_select_emulator}
+            bump_version={props.bump_version}
+        />;
+    }
+
+    const selected_core = Object.values(props.emulator.cores).find((c) => c.id === component.obj.id);
+    if(selected_core === undefined) return null;
+
+    return <CoreSidebar
+        emulator={props.emulator}
+        selected_core={selected_core}
+        selected_component={component}
+        selected_iom={props.selections.iom}
+        on_iom_modify={handle_node_iom_modify}
+        on_select_emulator={handle_select_emulator}
+        bump_version={props.bump_version}
+    />;
 };
 
 export default HilEditorSidebar;

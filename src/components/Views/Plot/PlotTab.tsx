@@ -32,7 +32,7 @@ import {
 import useInterval from "../../Common_Components/useInterval.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
 import type {channel_group, plot_channel, ScopeStatus} from "#interfaces/index.js";
-import {MainPane, SidebarPane, PaneGroup} from "#UI/index.js";
+import {MainPane, PaneGroup} from "#UI/index.js";
 
 // The page is sized to fit the window: what is left once the titles, the gaps and the padding are taken out is shared
 // between the three rows (the minimums make a very small window scroll instead of crushing them)
@@ -164,14 +164,12 @@ let PlotTab = function (props: PlotTabProps) {
                     </UIPanel>
                 </div>
                 </MainPane>
-                <SidebarPane>
-                <PlotSidebar
-                    on_plot_status_change={set_plot_status}
-                    on_group_change={handle_group_change}
-                    acquisition_status={acquisition_status}
-                    on_download={set_request_download}
-                />
-                </SidebarPane>
+            <PlotSidebar
+                on_plot_status_change={set_plot_status}
+                on_group_change={handle_group_change}
+                acquisition_status={acquisition_status}
+                on_download={set_request_download}
+            />
             </PaneGroup>
 
         );

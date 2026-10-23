@@ -14,49 +14,39 @@
 // limitations under the License.
 
 import React from 'react';
-import {SimpleContent, UIPanel} from "#UI/index.js";
 
 interface WarningsPanelProps {
     compile_warning: any;
-    enabled: boolean;
 }
 
 let  WarningsPanel = (props:WarningsPanelProps) =>{
 
-    if(props.compile_warning && props.enabled){
+    let print_warnings = () =>{
+        let ret: React.ReactNode[] = []
+        props.compile_warning.map((item: any)=>{
 
-        let print_warnings = () =>{
-            let ret: React.ReactNode[] = []
-            props.compile_warning.map((item: any)=>{
+            let warning_string = item[0].source + "." + item[0].name + "[" + item[0].address + "]";
+            ret.push(
+                <div key={warning_string}>
+                    <p>{warning_string}</p>
+                </div>
+            )
+            warning_string = item[1].source + "." + item[1].name + "[" + item[1].address + "]";
+            ret.push(
+                <div key={warning_string}>
+                    <p style={{marginLeft: "2em"}}>{warning_string}</p>
+                </div>
+            )
 
-                let warning_string = item[0].source + "." + item[0].name + "[" + item[0].address + "]";
-                ret.push(
-                    <div key={warning_string}>
-                        <p>{warning_string}</p>
-                    </div>
-                )
-                warning_string = item[1].source + "." + item[1].name + "[" + item[1].address + "]";
-                ret.push(
-                    <div key={warning_string}>
-                        <p style={{marginLeft: "2em"}}>{warning_string}</p>
-                    </div>
-                )
-
-            })
-            return ret;
-        }
-
-        return(
-            <UIPanel key="warnings" style={{margin:10}} level="level_2">
-                <SimpleContent name={"Warnings"}>
-                    <div style={{display:"flex", flexDirection:"column", gap:"0.25em", margin:"0.5em"}}>
-                        {print_warnings()}
-                    </div>
-                </SimpleContent>
-            </UIPanel>
-        )
-
+        })
+        return ret;
     }
+
+    return(
+        <div style={{display:"flex", flexDirection:"column", gap:"0.25em", margin:"0.5em"}}>
+            {print_warnings()}
+        </div>
+    )
 };
 
 export default WarningsPanel;

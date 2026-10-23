@@ -15,7 +15,7 @@
 
 
 import React from 'react';
-import {FieldPane, InputField, SelectableList, SimpleContent, UIPanel} from "#UI/index.js";
+import {FieldPane, InputField, SelectableList} from "#UI/index.js";
 
 interface BreakpointsPanelProps {
     breakpoints: number[],
@@ -40,22 +40,18 @@ let  BreakpointsPanel = (props: BreakpointsPanelProps) =>{
     let bp = [...props.breakpoints].sort((a, b) => a - b).map(breakpoint => "Line " + breakpoint);
 
     return (
-        <UIPanel key="breakpoints" level="level_2">
-            <SimpleContent name={"Breakpoints"}>
-                <FieldPane key="bp_view_contents">
-                    <InputField id="add_breakpoint" name="add_breakpoint" label="Add a breakpoint on line" onKeyDown={handle_add}/>
-                    <div style={{marginTop: "0.8rem"}}>
-                        {bp.length === 0
-                            ? <div style={{fontSize: "0.85rem", opacity: 0.5, padding: "0 0.2rem"}}>No breakpoints, the emulation runs to the end</div>
-                            : <SelectableList
-                                onRemove={handle_remove}
-                                items={bp}
-                                style={{maxHeight: "12em", width: "auto"}}
-                            />}
-                    </div>
-                </FieldPane>
-            </SimpleContent>
-        </UIPanel>
+        <FieldPane key="bp_view_contents">
+            <InputField id="add_breakpoint" name="add_breakpoint" label="Add a breakpoint on line" onKeyDown={handle_add}/>
+            <div style={{marginTop: "0.8rem"}}>
+                {bp.length === 0
+                    ? <div style={{fontSize: "0.85rem", opacity: 0.5, padding: "0 0.2rem"}}>No breakpoints, the emulation runs to the end</div>
+                    : <SelectableList
+                        onRemove={handle_remove}
+                        items={bp}
+                        style={{maxHeight: "12em", width: "auto"}}
+                    />}
+            </div>
+        </FieldPane>
     );
 };
 

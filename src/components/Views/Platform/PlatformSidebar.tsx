@@ -15,11 +15,7 @@
 
 import React, {useEffect, useState} from 'react';
 
-import {
-    UIPanel,
-    SimpleContent,
-    SelectableList, ColorTheme
-} from "#UI/index.js";
+import {SidebarColumn, SelectableList, ColorTheme} from "#UI/index.js";
 
 import {get_users_list, remove_user} from "#client_core/index.js";
 import {MdPerson} from "react-icons/md";
@@ -79,18 +75,16 @@ let  PlatformSidebar = (props: PlatformSidebarProps) =>{
 
 
     return (
-        <UIPanel key="users_list" level="level_2">
-            <SimpleContent name="Users List">
-                <SelectableList
-                    items={names}
-                    types={types}
-                    selected_item={props.user}
-                    onRemove={handleRemoveUser}
-                    onSelect={handleOnSelect}
-                />
-            </SimpleContent>
-        </UIPanel>
-        );
+        <SidebarColumn panels={[{title: "Users List", content: (
+            <SelectableList
+                items={names}
+                types={types}
+                selected_item={props.user}
+                onRemove={handleRemoveUser}
+                onSelect={handleOnSelect}
+            />
+        )}]}/>
+    );
 
 };
 

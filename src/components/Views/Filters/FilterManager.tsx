@@ -19,7 +19,7 @@ import {
     SimpleContent,
     UIPanel
 } from "#UI/index.js";
-import {MainPane, SidebarPane, PaneGroup} from "#UI/index.js";
+import {MainPane, PaneGroup} from "#UI/index.js";
 
 import FilterPlot from "./FilterPlot.jsx";
 import FilterDesignerControls from "./FilterDesignerControls.js";
@@ -169,9 +169,7 @@ let FilterManager = (props: FilterManagerProps) =>{
                     </PaneGroup>
                 )}
             </MainPane>
-            <SidebarPane>
-                <FilterSidebar on_select={handle_select}/>
-            </SidebarPane>
+            <FilterSidebar on_select={handle_select}/>
         </PaneGroup>
     );
 

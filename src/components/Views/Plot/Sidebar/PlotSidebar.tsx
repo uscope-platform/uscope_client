@@ -17,7 +17,7 @@ import React, {useReducer} from 'react';
 
 
 import ScopeProperties from "./ScopeProperties.js";
-import {SimpleContent, UIPanel} from "#UI/index.js";
+import {SidebarColumn} from "#UI/index.js";
 import TriggerControls from "./TriggerControls.js";
 import type {channel_group, ScopeStatus} from "#interfaces/index.js";
 
@@ -41,35 +41,25 @@ let  PlotSidebar = (props:PlotSidebarProps) =>{
 
 
     return (
-        <div style={{
-            display:"flex",
-            flexDirection:"column",
-            gap:10,
-            // keeps its natural width, the plot area gives way instead
-            flex:"0 0 auto"
-        }}>
-            <UIPanel key="scope_props" data-grid={{x: 0, y: 0, w: 24, h: 2, static: true}} level="level_2">
-                <SimpleContent name="Scope Properties">
-                    <ScopeProperties
-                        on_group_change={props.on_group_change}
-                    />
-                </SimpleContent>
-            </UIPanel>
-            <UIPanel key="trigger" data-grid={{x: 2, y: 2, w: 24, h: 2.2, static: true}} level="level_2">
-                <SimpleContent name="Trigger and Acquisition">
-                    <TriggerControls
-                        showAcquisitionStatus
-                        onPlay={handle_play}
-                        onPause={handle_pause}
-                        onDownload={()=>{
-                            props.on_download(download_req);
-                            bump_download_req();
-                        }}
-                        acquisition_status={props.acquisition_status}
-                    />
-                </SimpleContent>
-            </UIPanel>
-        </div>
+        <SidebarColumn panels={[
+            {title: "Scope Properties", content: (
+                <ScopeProperties
+                    on_group_change={props.on_group_change}
+                />
+            )},
+            {title: "Trigger and Acquisition", content: (
+                <TriggerControls
+                    showAcquisitionStatus
+                    onPlay={handle_play}
+                    onPause={handle_pause}
+                    onDownload={()=>{
+                        props.on_download(download_req);
+                        bump_download_req();
+                    }}
+                    acquisition_status={props.acquisition_status}
+                />
+            )}
+        ]}/>
     );
 };
 

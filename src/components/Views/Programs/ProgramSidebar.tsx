@@ -17,7 +17,7 @@ import React, {useContext, useReducer} from 'react';
 
 import {up_program} from "#client_core/index.js";
 
-import {SidebarBase} from "#UI/index.js";
+import {SidebarBase, SidebarColumn} from "#UI/index.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
 import {useAppSelector} from "#redux/hooks.js";
 
@@ -48,19 +48,21 @@ let  ProgramSidebar = (props: ProgramSidebarProps) =>{
     }
 
     return(
-        <SidebarBase
-            objects={programs_store}
-            selection_key="id"
-            template={up_program}
-            items_filter={application.programs.map(s=>s.toString())}
-            display_key="name"
-            content_name="Program"
-            type_prop="type"
-            onDelete={handleRemove}
-            onAdd={handleAdd}
-            omImportDone={handle_import_done}
-            onSelect={props.on_select}
-        />
+        <SidebarColumn panels={[{title: "Program List", content: (
+            <SidebarBase
+                objects={programs_store}
+                selection_key="id"
+                template={up_program}
+                items_filter={application.programs.map(s=>s.toString())}
+                display_key="name"
+                content_name="Program"
+                type_prop="type"
+                onDelete={handleRemove}
+                onAdd={handleAdd}
+                omImportDone={handle_import_done}
+                onSelect={props.on_select}
+            />
+        )}]}/>
     );
 
 };

@@ -18,7 +18,7 @@
 
 import React from 'react';
 
-import {Checkbox, InputField, SelectField, FieldPane, FieldSpan, SimpleContent} from "#UI/index.js";
+import {Checkbox, InputField, SelectField, FieldPane, FieldSpan} from "#UI/index.js";
 import TypeOptionsContainer from "./TypeOptionsContainer.jsx";
 import {up_emulator} from "#client_core/index.js";
 import type {
@@ -106,14 +106,12 @@ let  CoreOutputProperties = (props: CoreOutputPropertiesProps) =>{
 
     if(sel_out){
         return(
-            <SimpleContent name="Output Properties">
-                <FieldPane key="output_props">
-                    <InputField id="name" name="name" label="Name" defaultValue={sel_out.name} onKeyDown={handle_change_iom}/>
-                    <TypeOptionsContainer label="Data format">
-                        {render_type_options()}
-                    </TypeOptionsContainer>
-                </FieldPane>
-            </SimpleContent>
+            <FieldPane key="output_props">
+                <InputField id="name" name="name" label="Name" defaultValue={sel_out.name} onKeyDown={handle_change_iom}/>
+                <TypeOptionsContainer label="Data format">
+                    {render_type_options()}
+                </TypeOptionsContainer>
+            </FieldPane>
         )
     }
 

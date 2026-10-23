@@ -34,7 +34,7 @@ import {
     ColorTheme,
     UIPanel
 } from "#UI/index.js";
-import {SidebarPane, PaneGroup} from "#UI/index.js";
+import {PaneGroup} from "#UI/index.js";
 
 import {get_next_id, up_application} from "#client_core/index.js";
 import {ApplicationContext} from "#src/AuthApp.jsx";
@@ -321,12 +321,10 @@ let  ApplicationsManager = (props: ApplicationsManagerProps) =>{
                     </div>
                 </TabbedContent>
             </UIPanel>
-            <SidebarPane>
-                <ApplicationSidebar
-                    on_select={handle_select}
-                    application={selected_app}
-                />
-            </SidebarPane>
+            <ApplicationSidebar
+                on_select={handle_select}
+                application={selected_app}
+            />
         </PaneGroup>
     );
 };

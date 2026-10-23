@@ -22,7 +22,7 @@ import {
     up_application,
 } from "#client_core/index.js";
 import type {application_conflict, application_import_result} from "#client_core/index.js";
-import {SidebarBase} from "#UI/index.js";
+import {SidebarBase, SidebarColumn} from "#UI/index.js";
 
 import {useAppSelector} from "#redux/hooks.js";
 import {error_text} from "#client_core/proxy/errors.js";
@@ -66,7 +66,7 @@ let  ApplicationSidebar = (props: ApplicationSidebarProps) =>{
     const pending = conflicts.pending;
 
     return(
-        <>
+        <SidebarColumn panels={[{title: "Applications List", content: (
             <SidebarBase
                 objects={applications_redux}
                 selection_key="id"
@@ -77,6 +77,7 @@ let  ApplicationSidebar = (props: ApplicationSidebarProps) =>{
                 initial_value={props.application}
                 onSelect={props.on_select}
             />
+        )}]}>
             {pending !== null &&
                 <ImportConflictDialog
                     item_type="application"
@@ -92,7 +93,7 @@ let  ApplicationSidebar = (props: ApplicationSidebarProps) =>{
                     onResolve={conflicts.resolve}
                 />
             }
-        </>
+        </SidebarColumn>
     );
 
 };

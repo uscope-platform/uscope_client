@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React, {useReducer} from 'react';
-import {Checkbox, InputField, SelectField, FieldPane, FieldSpan, SimpleContent} from "#UI/index.js";
+import {Checkbox, InputField, SelectField, FieldPane, FieldSpan} from "#UI/index.js";
 import {ConstantInputProperties, SeriesInputProperties, ExternalInputProperties, WaveformInputProperties} from "./inputs/index.js";
 import TypeOptionsContainer from "./TypeOptionsContainer.jsx";
 import ChannelRadioGroup from "./ChannelRadioGroup.jsx";
@@ -183,43 +183,41 @@ let  CoreInputProperties = (props: CoreInputPropertiesProps) =>{
 
     if(sel_in){
         return(
-            <SimpleContent name="Input Properties">
-                <FieldPane key="input_props">
-                    <InputField id="name" name="name" label="Name" defaultValue={sel_in.name} onKeyDown={handle_change_iom}/>
-                    <TypeOptionsContainer label="Source">
-                        <FieldSpan>
-                        <SelectField<SimpleStringOption>
-                            stacked
-                            key="source_type"
-                            label="Type"
-                            onChange={handle_select}
-                            value={{value: sel_in.source.type, label: sel_in.source.type}}
-                            name="source_type"
-                            options={[
-                                {label: "constant", value: "constant"},
-                                {label: "series", value: "series"},
-                                {label: "random", value: "random"},
-                                {label: "external", value:"external"},
-                                {label: "Waveform", value: "waveform"}
-                            ]}
-                        />
+            <FieldPane key="input_props">
+                <InputField id="name" name="name" label="Name" defaultValue={sel_in.name} onKeyDown={handle_change_iom}/>
+                <TypeOptionsContainer label="Source">
+                    <FieldSpan>
+                    <SelectField<SimpleStringOption>
+                        stacked
+                        key="source_type"
+                        label="Type"
+                        onChange={handle_select}
+                        value={{value: sel_in.source.type, label: sel_in.source.type}}
+                        name="source_type"
+                        options={[
+                            {label: "constant", value: "constant"},
+                            {label: "series", value: "series"},
+                            {label: "random", value: "random"},
+                            {label: "external", value:"external"},
+                            {label: "Waveform", value: "waveform"}
+                        ]}
+                    />
+                    </FieldSpan>
+                    {per_channel_source && props.selected_core.channels > 1 && (
+                        <FieldSpan key="channel_radio_group">
+                            <ChannelRadioGroup
+                                count={props.selected_core.channels}
+                                selected={selected_channel}
+                                onSelect={set_selected_channel}
+                            />
                         </FieldSpan>
-                        {per_channel_source && props.selected_core.channels > 1 && (
-                            <FieldSpan key="channel_radio_group">
-                                <ChannelRadioGroup
-                                    count={props.selected_core.channels}
-                                    selected={selected_channel}
-                                    onSelect={set_selected_channel}
-                                />
-                            </FieldSpan>
-                        )}
-                        {render_source_dependent_options()}
-                    </TypeOptionsContainer>
-                    <TypeOptionsContainer label="Data format">
-                        {render_type_options()}
-                    </TypeOptionsContainer>
-                </FieldPane>
-            </SimpleContent>
+                    )}
+                    {render_source_dependent_options()}
+                </TypeOptionsContainer>
+                <TypeOptionsContainer label="Data format">
+                    {render_type_options()}
+                </TypeOptionsContainer>
+            </FieldPane>
         )
     }
 

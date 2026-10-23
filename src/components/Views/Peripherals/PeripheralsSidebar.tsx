@@ -23,7 +23,7 @@ import {
 } from "#client_core/index.js";
 import type {peripheral_conflict, peripherals_import_summary} from "#client_core/index.js";
 
-import {SidebarBase} from "#UI/index.js";
+import {SidebarBase, SidebarColumn} from "#UI/index.js";
 import {useAppSelector} from "#redux/hooks.js";
 import {error_text} from "#client_core/proxy/errors.js";
 import {ImportConflictDialog} from "../../Common_Components/ImportConflictDialog.jsx";
@@ -67,7 +67,7 @@ let  PeripheralsSidebar = (props: PeripheralsSidebarProps) =>{
 
 
     return(
-        <>
+        <SidebarColumn panels={[{title: "Peripherals List", content: (
             <SidebarBase
                 objects={peripherals_redux}
                 selection_key="id"
@@ -78,6 +78,7 @@ let  PeripheralsSidebar = (props: PeripheralsSidebarProps) =>{
                 export_format={export_peripheral}
                 onSelect={props.on_select}
             />
+        )}]}>
             {conflicts.pending !== null &&
                 <ImportConflictDialog
                     item_type="peripheral"
@@ -90,7 +91,7 @@ let  PeripheralsSidebar = (props: PeripheralsSidebarProps) =>{
                     onResolve={conflicts.resolve}
                 />
             }
-        </>
+        </SidebarColumn>
     );
 };
 

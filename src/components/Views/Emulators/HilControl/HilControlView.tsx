@@ -18,7 +18,7 @@ import HilPlotTab from "./HilPlotTab.jsx";
 import HilControlSidebar from "../Sidebar/per_panel_sidebars/HilControlSidebar.jsx";
 import {up_emulator} from "#client_core/index.js";
 import type {EmulatorSelections} from "#interfaces/index.js";
-import {MainPane, SidebarPane, PaneGroup} from "#UI/index.js";
+import {MainPane, PaneGroup} from "#UI/index.js";
 
 interface HilControlViewProps {
     emulator: up_emulator,
@@ -46,18 +46,16 @@ let HilControlView = function (props: HilControlViewProps) {
                     on_download_done={set_download_data_request}
                 />
             </MainPane>
-            <SidebarPane>
-                <HilControlSidebar
-                    emulator={props.emulator}
-                    selections={props.selections}
-                    set_selections={props.set_selections}
-                    on_select={props.on_select}
-                    hil_plot_running={hil_plot_running}
-                    set_prescaler={set_plot_prescaler}
-                    on_plot_status_update={set_hil_plot_running}
-                    onDownloadHilData={set_download_data_request}
-                />
-            </SidebarPane>
+            <HilControlSidebar
+                emulator={props.emulator}
+                selections={props.selections}
+                set_selections={props.set_selections}
+                on_select={props.on_select}
+                hil_plot_running={hil_plot_running}
+                set_prescaler={set_plot_prescaler}
+                on_plot_status_update={set_hil_plot_running}
+                onDownloadHilData={set_download_data_request}
+            />
         </PaneGroup>
 
     );

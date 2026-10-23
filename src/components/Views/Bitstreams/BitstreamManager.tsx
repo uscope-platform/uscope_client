@@ -21,7 +21,7 @@ import {
     SimpleContent,
     UIPanel
 } from "#UI/index.js";
-import {SidebarPane, PaneGroup} from "#UI/index.js";
+import {PaneGroup} from "#UI/index.js";
 import {up_bitstream, upload_raw} from "#client_core/index.js";
 import BitstreamSidebar from "./BitstreamSidebar.js";
 import type {bitstream_model} from "#interfaces/index.js";
@@ -77,9 +77,7 @@ let BitstreamManager = (props: BitstreamManagerProps) =>{
                     </FormLayout>
                 </SimpleContent>
             </UIPanel>
-            <SidebarPane>
-                <BitstreamSidebar  bitstream={sel_bit} on_select={handle_select}/>
-            </SidebarPane>
+            <BitstreamSidebar  bitstream={sel_bit} on_select={handle_select}/>
         </PaneGroup>
     );
 

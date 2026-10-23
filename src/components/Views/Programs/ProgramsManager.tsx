@@ -24,7 +24,7 @@ import {
     SelectField,
     TabbedContent, TwoColumnSelector
 } from "#UI/index.js";
-import {MainPane, SidebarPane, PaneGroup} from "#UI/index.js";
+import {MainPane, PaneGroup} from "#UI/index.js";
 import ProgramsEditor from "./Editor/ProgramsEditor.js";
 import {up_program} from "#client_core/index.js";
 import BuildSettings from "./Editor/BuildSettings.js";
@@ -168,11 +168,9 @@ let ProgramsManager = (props: ProgramsManagerProps) =>{
                 </UIPanel>
             </PaneGroup>
             </MainPane>
-            <SidebarPane>
-                <ProgramSidebar
-                    on_select={handle_select}
-                />
-            </SidebarPane>
+            <ProgramSidebar
+                on_select={handle_select}
+            />
         </PaneGroup>
     );
 

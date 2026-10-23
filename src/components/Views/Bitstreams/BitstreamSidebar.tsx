@@ -16,12 +16,7 @@
 import React from 'react';
 
 import {download_bitstream, get_next_id, up_bitstream, upload_raw} from "#client_core/index.js";
-import {
-    SelectableList,
-    SimpleContent,
-    UIPanel,
-    SideToolbar
-} from "#UI/index.js";
+import {SelectableList, SideToolbar, SidebarColumn} from "#UI/index.js";
 import {useAppSelector} from "#redux/hooks.js";
 import type {bitstream_model} from "#interfaces/index.js";
 
@@ -98,26 +93,24 @@ let  BitstreamSidebar = (props: BitstreamSidebarProps) =>{
 
 
     return(
-        <UIPanel key="bitstream_list" level="level_2">
-            <SimpleContent name="Bitstream List">
-                <div>
-                    <SideToolbar
-                        onAdd={handleAdd}
-                        onImport={handleImport}
-                        onExport={handleExport}
-                        contentName="Bitstream"
-                        exportEnabled={props.bitstream.id !== 9999}
-                    />
-                    <SelectableList
-                        items={names}
-                        types={types}
-                        selected_item={props.bitstream.name}
-                        onRemove={handleRemove}
-                        onSelect={handleOnSelect}
-                    />
-                </div>
-            </SimpleContent>
-        </UIPanel>
+        <SidebarColumn panels={[{title: "Bitstream List", content: (
+            <div>
+                <SideToolbar
+                    onAdd={handleAdd}
+                    onImport={handleImport}
+                    onExport={handleExport}
+                    contentName="Bitstream"
+                    exportEnabled={props.bitstream.id !== 9999}
+                />
+                <SelectableList
+                    items={names}
+                    types={types}
+                    selected_item={props.bitstream.name}
+                    onRemove={handleRemove}
+                    onSelect={handleOnSelect}
+                />
+            </div>
+        )}]}/>
     );
 };
 

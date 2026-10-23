@@ -17,9 +17,10 @@ import React from 'react';
 
 
 import {up_emulator,download_text} from "#client_core/index.js";
-import {SidebarBase} from "#UI/index.js";
-import HilControl from "../HilControl.jsx";
-import {useAppSelector} from "#redux/hooks.js";
+import {ColorTheme, SidebarColumn} from "#UI/index.js";
+import EmulatorList from "../EmulatorList.jsx";
+import TriggerControls from "../../../Plot/Sidebar/TriggerControls.js";
+import {MdSimCardDownload} from "react-icons/md";
 import type {EmulatorSelections} from "#interfaces/index.js";
 
 interface HilControlSidebarProps {
@@ -35,7 +36,6 @@ interface HilControlSidebarProps {
 
 let  HilControlSidebar = (props:HilControlSidebarProps) =>{
 
-    const emulators_store = useAppSelector(state => state.emulators);
 
     let handle_select_emulator = (sel: number) =>{
         props.on_select(sel);
@@ -66,29 +66,25 @@ let  HilControlSidebar = (props:HilControlSidebarProps) =>{
 
 
     return(
-        <div style={{
-                display:"flex",
-                flexDirection:"column",
-                gap:"0.5em"
-        }}>
-            <SidebarBase
-                objects={emulators_store}
-                selection_key="id"
-                template={up_emulator}
-                display_key="name"
-                content_name="Emulator"
-                onSelect={handle_select_emulator}
-            />
-            <HilControl
-                onDownloadHilData={props.onDownloadHilData}
-                onDownlodHilSim={download_sim_data}
-                onStart={on_start}
-                set_prescaler={props.set_prescaler}
-                onStop={on_stop}
-                onPause={on_pause}
-            />
-        </div>
-
+        <SidebarColumn panels={[
+            {title: "Emulator List", content: (
+                <EmulatorList on_select={handle_select_emulator}/>
+            )},
+            {title: "Trigger and Acquisition", content: (
+                <TriggerControls
+                    acquisition_status={"unknown"}
+                    showAcquisitionStatus={false}
+                    onPlay={on_start}
+                    onPause={on_pause}
+                    onStop={on_stop}
+                    set_prescaler={props.set_prescaler}
+                    onDownload={() => props.onDownloadHilData(true)}
+                />
+            )},
+            {title: "Controls", content: (
+                <MdSimCardDownload id='play' size={ColorTheme.icons_size} color={ColorTheme.icons_color} onClick={download_sim_data}/>
+            )}
+        ]}/>
     );
 
 };

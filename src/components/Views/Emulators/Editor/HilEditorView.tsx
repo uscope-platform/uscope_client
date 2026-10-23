@@ -17,7 +17,7 @@ import React, {useState} from 'react';
 
 import FcoreEmulationEditor from "./../Editor/FcoreEmulationEditor.js";
 import HilEditorSidebar from "../Sidebar/per_panel_sidebars/HilEditorSidebar.jsx";
-import {MainPane, SidebarPane, PaneGroup} from "#UI/index.js";
+import {MainPane, PaneGroup} from "#UI/index.js";
 import {up_emulator, up_emulator_result} from "#client_core/index.js";
 import type {EmulatorSelections} from "#interfaces/index.js";
 
@@ -50,16 +50,14 @@ let HilEditorView = function (props: HilEditorViewProps) {
                     on_selection={props.set_selections}
                 />
             </MainPane>
-            <SidebarPane>
-                <HilEditorSidebar
-                    bump_version={props.bump_version}
-                    emulator={props.emulator}
-                    on_emulator_select={props.on_emulator_select}
-                    selections={props.selections}
-                    set_selections={props.set_selections}
-                    compile_warning={compiler_warnings}
-                />
-            </SidebarPane>
+            <HilEditorSidebar
+                bump_version={props.bump_version}
+                emulator={props.emulator}
+                on_emulator_select={props.on_emulator_select}
+                selections={props.selections}
+                set_selections={props.set_selections}
+                compile_warning={compiler_warnings}
+            />
         </PaneGroup>
     );
 };

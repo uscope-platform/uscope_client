@@ -20,6 +20,8 @@ import type {CSSProperties, ReactNode} from "react";
 interface SimpleContentProps {
     name: string;
     height?: string | number | undefined;
+    /// the content keeps at least this height, the title and what is folded do not
+    min_height?: string | undefined;
     style?: CSSProperties | undefined;
     children: ReactNode;
 }
@@ -32,7 +34,7 @@ export let SimpleContent = function (props: SimpleContentProps) {
             <TitleBar name={props.name}>
                 <PanelTitle selected>{props.name}</PanelTitle>
             </TitleBar>
-            <ContentDiv height={props.height}>
+            <ContentDiv height={props.height} min_height={props.min_height}>
                 {props.children}
             </ContentDiv>
         </div>

@@ -17,10 +17,10 @@ import React from 'react';
 
 
 import {up_emulator} from "#client_core/index.js";
-import {SidebarBase, SidebarColumn} from "#UI/index.js";
+import {SidebarColumn} from "#UI/index.js";
+import EmulatorList from "../EmulatorList.jsx";
 import AsmSelector from "./../AsmSelector.jsx";
 import BreakpointsPanel from "./../BreakpointsPanel.jsx";
-import {useAppSelector} from "#redux/hooks.js";
 import type {EmulatorSelections} from "#interfaces/index.js";
 import type {DecompiledPrograms} from "#interfaces/emulator_view.js";
 
@@ -38,7 +38,6 @@ interface HilDebuggerSidebarProps {
 
 let  HilDebuggerSidebar = (props: HilDebuggerSidebarProps) =>{
 
-    const emulators_store = useAppSelector(state => state.emulators);
 
     let handle_select_emulator = (sel: number) =>{
         props.on_select(sel);
@@ -46,27 +45,25 @@ let  HilDebuggerSidebar = (props: HilDebuggerSidebarProps) =>{
     }
 
     return(
-        <SidebarColumn>
-            <SidebarBase
-                objects={emulators_store}
-                selection_key="id"
-                template={up_emulator}
-                display_key="name"
-                content_name="Emulator"
-                onSelect={handle_select_emulator}
-            />
-            <AsmSelector
-                programs={props.compiled_programs}
-                selected_program={props.selections.program}
-                on_select={props.on_program_select}
-            />
-            <BreakpointsPanel
-                breakpoints={props.breakpoints}
-                on_add={props.on_add_breakpoint}
-                on_remove={props.on_remove_breakpoint}
-            />
-        </SidebarColumn>
-
+        <SidebarColumn panels={[
+            {title: "Emulator List", content: (
+                <EmulatorList on_select={handle_select_emulator}/>
+            )},
+            {title: "Program", content: (
+                <AsmSelector
+                    programs={props.compiled_programs}
+                    selected_program={props.selections.program}
+                    on_select={props.on_program_select}
+                />
+            )},
+            {title: "Breakpoints", content: (
+                <BreakpointsPanel
+                    breakpoints={props.breakpoints}
+                    on_add={props.on_add_breakpoint}
+                    on_remove={props.on_remove_breakpoint}
+                />
+            )}
+        ]}/>
     );
 
 };

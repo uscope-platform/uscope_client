@@ -23,7 +23,7 @@ import {
     InputField,
     SelectField, ColorTheme
 } from "#UI/index.js"
-import {SidebarPane, PaneGroup} from "#UI/index.js";
+import {PaneGroup} from "#UI/index.js";
 
 import {add_user, dump_database, restore_database, upload_json} from "#client_core/index.js";
 import { MdDownload, MdUpload} from "react-icons/md";
@@ -123,13 +123,11 @@ let  PlatformManager = () =>{
                     </div>
                 </SimpleContent>
             </UIPanel>
-            <SidebarPane>
-                <PlatformSidebar
-                    user={selected_user}
-                    on_select={handle_select}
-                    view_version={view_version}
-                />
-            </SidebarPane>
+            <PlatformSidebar
+                user={selected_user}
+                on_select={handle_select}
+                view_version={view_version}
+            />
         </PaneGroup>
 
     );

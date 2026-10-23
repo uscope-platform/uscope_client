@@ -16,9 +16,8 @@
 import React from 'react';
 
 
-import {up_emulator} from "#client_core/index.js";
-import {SidebarBase} from "#UI/index.js";
-import {useAppSelector} from "#redux/hooks.js";
+import {SidebarColumn} from "#UI/index.js";
+import EmulatorList from "../EmulatorList.jsx";
 
 interface HilSpecsSidebarProps {
     handle_select_emulator: (emulator: number) => void
@@ -26,28 +25,14 @@ interface HilSpecsSidebarProps {
 
 let  HilSpecsSidebar = (props: HilSpecsSidebarProps) =>{
 
-    const emulators_store = useAppSelector(state => state.emulators);
 
     return(
-        <div
-        style={{
-            display:"flex",
-            flexDirection:"column",
-            gap:"0.5em",
-            paddingTop:"10px",
-            paddingBottom:"10px",
-            paddingRight:"10px"
-        }}>
-            <SidebarBase
-                objects={emulators_store}
-                selection_key="id"
-                template={up_emulator}
-                display_key="name"
-                content_name="Emulator"
-                onSelect={props.handle_select_emulator}
-            />
-        </div>
-
+        <SidebarColumn
+            style={{paddingTop: "10px", paddingBottom: "10px", paddingRight: "10px"}}
+            panels={[{title: "Emulator List", content: (
+                <EmulatorList on_select={props.handle_select_emulator}/>
+            )}]}
+        />
     );
 
 };

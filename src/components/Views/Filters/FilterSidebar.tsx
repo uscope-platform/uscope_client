@@ -16,7 +16,7 @@
 import React from 'react';
 
 import {up_filter} from "#client_core/index.js";
-import {SidebarBase} from "#UI/index.js";
+import {SidebarBase, SidebarColumn} from "#UI/index.js";
 import {useAppSelector} from "#redux/hooks.js";
 
 interface FilterSidebarProps {
@@ -28,14 +28,16 @@ let  FilterSidebar = (props: FilterSidebarProps) =>{
     const filters_store = useAppSelector(state => state.filters);
 
     return(
-        <SidebarBase
-            objects={filters_store}
-            selection_key="id"
-            template={up_filter}
-            display_key="name"
-            content_name="Filter"
-            onSelect={props.on_select}
-        />
+        <SidebarColumn panels={[{title: "Filter List", content: (
+            <SidebarBase
+                objects={filters_store}
+                selection_key="id"
+                template={up_filter}
+                display_key="name"
+                content_name="Filter"
+                onSelect={props.on_select}
+            />
+        )}]}/>
     );
 };
 

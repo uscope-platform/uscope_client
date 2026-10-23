@@ -15,7 +15,7 @@
 
 import React from 'react';
 
-import {SelectableList, SimpleContent, UIPanel} from "#UI/index.js";
+import {SelectableList} from "#UI/index.js";
 import type {DecompiledPrograms} from "#interfaces/emulator_view.js";
 
 interface AsmSelectorProps {
@@ -32,19 +32,14 @@ let  AsmSelector = (props: AsmSelectorProps) =>{
     }
 
     return(
-        <UIPanel key="programs_list" level="level_2">
-            <SimpleContent name={"Program"}>
-                <div style={{padding: "0.5rem"}}>
-                    <SelectableList
-                        items={Object.keys(props.programs)}
-                        selected_item={props.selected_program}
-                        onSelect={handle_select}
-                        style={{maxHeight: "14em", width: "auto"}}
-                    />
-                </div>
-            </SimpleContent>
-        </UIPanel>
-
+        <div style={{padding: "0.5rem"}}>
+            <SelectableList
+                items={Object.keys(props.programs)}
+                selected_item={props.selected_program}
+                onSelect={handle_select}
+                style={{maxHeight: "14em", width: "auto"}}
+            />
+        </div>
     )
 
 };

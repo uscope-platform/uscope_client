@@ -15,7 +15,7 @@
 
 import React, {useState} from 'react';
 
-import {SelectableList, SimpleContent, UIPanel} from "../index.jsx";
+import {SelectableList} from "../index.jsx";
 
 import 'react-tooltip/dist/react-tooltip.css'
 import {SideToolbar} from "./SideToolbar.jsx";
@@ -39,6 +39,7 @@ interface SidebarBaseProps {
     export_format?: (item: any) => unknown;
 }
 
+/// The list of the items of one kind with its toolbar, to be the content of a sidebar panel
 export let SidebarBase = (props: SidebarBaseProps) =>{
 
     // the item selected to begin with, when there is one and it is in the list
@@ -164,30 +165,25 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
     }
 
     return(
-        <UIPanel key={props.content_name+"_list"} level="level_2">
-            <SimpleContent name={props.content_name + " List"}>
-                <div
-                    style={{height:'20em', display:'flex', flexDirection:'column'}}>
-                    <SideToolbar
-                        onAdd={handleAdd}
-                        onCopy={handleCopy}
-                        onImport={handleImport}
-                        onExport={handleExport}
-                        contentName={props.content_name}
-                        exportEnabled={export_enabled}
-                    />
-                    <SelectableList
-                        items={names}
-                        types={types}
-                        selected_item={selected_item[props.display_key]}
-                        onRemove={handleRemove}
-                        onSelect={handleSelect}
-                        // fills what the toolbar leaves and scrolls, instead of stopping short of the panel
-                        style={{flex: 1, maxHeight: "none", width: "auto"}}
-                    />
-                </div>
-            </SimpleContent>
-        </UIPanel>
+        <div style={{height:'20em', display:'flex', flexDirection:'column'}}>
+            <SideToolbar
+                onAdd={handleAdd}
+                onCopy={handleCopy}
+                onImport={handleImport}
+                onExport={handleExport}
+                contentName={props.content_name}
+                exportEnabled={export_enabled}
+            />
+            <SelectableList
+                items={names}
+                types={types}
+                selected_item={selected_item[props.display_key]}
+                onRemove={handleRemove}
+                onSelect={handleSelect}
+                // fills what the toolbar leaves and scrolls, instead of stopping short of the panel
+                style={{flex: 1, maxHeight: "none", width: "auto"}}
+            />
+        </div>
     );
 
 };

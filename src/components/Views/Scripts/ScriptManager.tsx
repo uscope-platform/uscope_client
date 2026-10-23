@@ -22,7 +22,7 @@ import {
     SimpleContent,
     UIPanel
 } from "#UI/index.js"
-import {MainPane, SidebarPane, PaneGroup} from "#UI/index.js";
+import {MainPane, PaneGroup} from "#UI/index.js";
 import {up_script} from "#client_core/index.js";
 import ScriptsEditor from "./ScriptsEditor.js";
 import ScriptSidebar from "./ScriptSidebar.js";
@@ -69,11 +69,9 @@ let ScriptManager = (props: ScriptManagerProps) =>{
                 </UIPanel>
             </PaneGroup>
             </MainPane>
-            <SidebarPane>
-                <ScriptSidebar
-                    on_select={handle_select}
-                />
-            </SidebarPane>
+            <ScriptSidebar
+                on_select={handle_select}
+            />
         </PaneGroup>
 
     );

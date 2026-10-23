@@ -21,7 +21,7 @@ import {useAppSelector} from "#redux/hooks.js";
 import type {DebuggerCheckpoint, EmulatorSelections, SingleProgramDataPackage} from "#interfaces/index.js";
 import {up_emulator, up_emulator_result} from "#client_core/index.js";
 import type {DecompiledPrograms} from "#interfaces/emulator_view.js";
-import {MainPane, SidebarPane, PaneGroup} from "#UI/index.js";
+import {MainPane, PaneGroup} from "#UI/index.js";
 
 interface HilDebuggerViewProps {
     emulator:up_emulator,
@@ -147,19 +147,17 @@ let HilDebuggerView = function (props: HilDebuggerViewProps) {
                     on_toggle_breakpoint={handle_toggle_breakpoint}
                 />
             </MainPane>
-            <SidebarPane>
-                <HilDebuggerSidebar
-                    emulator={props.emulator}
-                    selections={props.selections}
-                    set_selections={props.set_selections}
-                    on_select={props.on_select}
-                    on_program_select={handle_select_program}
-                    compiled_programs={compiled_programs}
-                    breakpoints={breakpoints}
-                    on_add_breakpoint={handle_add_breakpoint}
-                    on_remove_breakpoint={handle_remove_breakpoint}
-                />
-            </SidebarPane>
+            <HilDebuggerSidebar
+                emulator={props.emulator}
+                selections={props.selections}
+                set_selections={props.set_selections}
+                on_select={props.on_select}
+                on_program_select={handle_select_program}
+                compiled_programs={compiled_programs}
+                breakpoints={breakpoints}
+                on_add_breakpoint={handle_add_breakpoint}
+                on_remove_breakpoint={handle_remove_breakpoint}
+            />
         </PaneGroup>
 
     );

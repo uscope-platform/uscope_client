@@ -21,7 +21,7 @@ import {
     InputField,
     SimpleContent, UIPanel
 } from "#UI/index.js"
-import {MainPane, SidebarPane, PaneGroup} from "#UI/index.js";
+import {MainPane, PaneGroup} from "#UI/index.js";
 
 import {get_next_id, up_peripheral} from "#client_core/index.js"
 import PeripheralsSidebar from "./PeripheralsSidebar.jsx";
@@ -131,9 +131,7 @@ let PeripheralsManager = (props: PeripheralsManagerProps)=>{
                 </UIPanel>
             </PaneGroup>
             </MainPane>
-            <SidebarPane>
-                <PeripheralsSidebar on_select={handle_select}/>
-            </SidebarPane>
+            <PeripheralsSidebar on_select={handle_select}/>
         </PaneGroup>
 
     );
