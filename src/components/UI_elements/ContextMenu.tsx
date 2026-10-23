@@ -36,15 +36,18 @@ const Menu = styled('div')`
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
 `
 
-const Entry = styled<'div', {danger: boolean}>('div')(({danger}) => `
+const Entry = styled('div')`
   padding: 0.35em 0.7em;
   border-radius: 4px;
   cursor: pointer;
-  color: ${danger ? ColorTheme.field.error : ColorTheme.text};
+  color: ${ColorTheme.text};
+  &[data-danger] {
+    color: ${ColorTheme.field.error};
+  }
   &:hover {
     background: ${ColorTheme.background.level_5};
   }
-`)
+`
 
 interface ContextMenuProps {
     /// where the menu opens, in the coordinates of the viewport
@@ -83,7 +86,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
         // a click on the menu must not reach the listener that closes it before the action runs
         <Menu style={{left, top}} onPointerDown={(event) => event.stopPropagation()} onContextMenu={(event) => {event.preventDefault(); event.stopPropagation();}}>
             {props.actions.map((action) => (
-                <Entry key={action.label} danger={action.danger === true} onClick={() => {
+                <Entry key={action.label} data-danger={action.danger ? "" : undefined} onClick={() => {
                     onClose();
                     action.onSelect();
                 }}>
@@ -111,7 +114,7 @@ export const useContextMenu = (actions: ContextMenuAction[]) => {
     const [at, set_at] = useState<{x: number, y: number} | null>(null);
 
     if(actions.length === 0){
-        return {on_context_menu: undefined, button: null, menu: null};
+        return {on_context_menu: undefined, button: null, menu: null, open: false};
     }
 
     const on_context_menu = (event: React.MouseEvent) => {
@@ -130,5 +133,5 @@ export const useContextMenu = (actions: ContextMenuAction[]) => {
 
     const menu = at ? <ContextMenu x={at.x} y={at.y} actions={actions} onClose={() => set_at(null)}/> : null;
 
-    return {on_context_menu, button, menu};
+    return {on_context_menu, button, menu, open: at !== null};
 };

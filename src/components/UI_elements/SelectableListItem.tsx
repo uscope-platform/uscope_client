@@ -37,14 +37,21 @@ const ItemLayout = styled<'div', ItemLayoutProps>('div')(({ selected, variant })
   border-left-width: 4px;
   background: ${selected ? ColorTheme.background.level_4 : ColorTheme.background.level_3};
   transition: background 0.15s, border-color 0.15s;
-  &:hover {
+  &:hover, &[data-menu-open] {
     background: ${ColorTheme.background.level_4};
   }
 ` : `
   display: flex;
   align-items: center;
   gap: 0.5em;
-  background: ${selected ? ColorTheme.background.transparent_accents : '#0000'};
+  border-radius: 4px;
+  /* the selected item has the accent around it, and the one under the pointer a background of its own, so that they are told apart */
+  box-shadow: inset 0 0 0 1px ${selected ? ColorTheme.background.accents : '#0000'};
+  background: #0000;
+  transition: background 0.15s;
+  &:hover, &[data-menu-open] {
+    background: ${ColorTheme.background.select_background};
+  }
 `);
 
 interface SelectableListItemProps {
@@ -142,7 +149,7 @@ export let  SelectableListItem = (props: SelectableListItemProps) =>{
     }
 
     return(
-        <ItemLayout selected={props.selected} variant={props.card ? "card" : "plain"} onContextMenu={context_menu.on_context_menu}>
+        <ItemLayout selected={props.selected} variant={props.card ? "card" : "plain"} onContextMenu={context_menu.on_context_menu} data-menu-open={context_menu.open || confirming_delete ? "" : undefined}>
             <div></div>
             <div onMouseEnter={handleMouseEnter} onClick={handle_click} onDoubleClick={handle_double_click} style={{display:"flex", flexGrow:1}}>
                 {get_icon_image(props.icon)}
