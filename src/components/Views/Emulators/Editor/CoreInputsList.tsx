@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React, {useEffect, useState} from 'react';
-import ListAddButton from "./ListAddButton.js";
+import {AddCard} from "#UI/index.js";
 import {SelectableList} from "#UI/index.js";
 import {up_emulator} from "#client_core/index.js";
 import type {EmulatorIomSelector, EmulatorSelections} from "#interfaces/index.js";
@@ -72,7 +72,7 @@ let  CoreInputsList = (props: CoreInputsListProps) =>{
 
     return (
         <div  style={{maxHeight: "13em"}}>
-            <ListAddButton label="Add input" onClick={handle_add}/>
+            <AddCard label="Add input" onClick={handle_add}/>
             <SelectableList style={{width: "auto"}} items={inputs} selected_item={selected} onSelect={handle_select}
                             onRemove={handle_remove}/>
         </div>

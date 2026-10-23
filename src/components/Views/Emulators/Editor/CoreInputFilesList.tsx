@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React, {useReducer, useState} from 'react';
-import ListAddButton from "./ListAddButton.js";
+import {AddCard} from "#UI/index.js";
 import {SelectableList} from "#UI/index.js";
 import {up_emulator, upload_json} from "#client_core/index.js";
 import type {EmulatorSelections} from "#interfaces/index.js";
@@ -95,7 +95,7 @@ let  CoreInputFilesList = (props: CoreInputFilesListProps) =>{
     }
     return(
         <div  style={{maxHeight: "13em", overflow:"auto" }} >
-            <ListAddButton label="Add file" onClick={handle_add}/>
+            <AddCard label="Add file" onClick={handle_add}/>
             <SelectableList style={{width: "auto"}} items={files_list} selected_item={selected} onSelect={handle_select} onRemove={handle_remove} />
         </div>
     );

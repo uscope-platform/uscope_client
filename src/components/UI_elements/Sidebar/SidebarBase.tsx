@@ -15,10 +15,10 @@
 
 import React, {useState} from 'react';
 
-import {SelectableList} from "../index.jsx";
+import {AddCard, SelectableList} from "../index.jsx";
+import type {ContextMenuAction} from "../ContextMenu.js";
 
 import 'react-tooltip/dist/react-tooltip.css'
-import {SideToolbar} from "./SideToolbar.jsx";
 import {download_json, get_next_id, upload_json} from "#client_core/index.js";
 
 interface SidebarBaseProps {
@@ -49,11 +49,13 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
     });
 
     let selected_item: any = {[props.display_key]:""};
-    let export_enabled = false;
     if(selected){
-        export_enabled = true;
         selected_item = props.objects[selected];
     }
+
+    let item_named = (name: string): any =>{
+        return Object.values(props.objects).find((obj: any) => obj[props.display_key] === name);
+    };
 
     let handleAdd = () => {
         let id = get_next_id(Object.values(props.objects).map((a: any) => a[props.selection_key]));
@@ -77,10 +79,9 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
         });
     };
 
-    let handleExport = () =>{
-        const content = props.export_format ? props.export_format(selected_item) : selected_item;
-        download_json(content, selected_item[props.display_key]);
-
+    let handleExport = (item: any) =>{
+        const content = props.export_format ? props.export_format(item) : item;
+        download_json(content, item[props.display_key]);
     };
 
     let handleImport = () =>{
@@ -155,32 +156,38 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
         }
     };
 
-    let handleCopy = async () =>{
+    let handleCopy = async (item: any) =>{
         let id = get_next_id(Object.values(props.objects).map((a: any) => a[props.selection_key]));
-        let copy_obj = await props.template.duplicate(selected_item, id);
+        let copy_obj = await props.template.duplicate(item, id);
         await copy_obj.add_remote();
         if(props.onAdd){
             props.onAdd({id:id, object:copy_obj});
         }
     }
 
+    const import_action: ContextMenuAction = {label: "Import", onSelect: handleImport};
+
+    // what is done to an item is done to the one the menu was opened on, not to the selected one
+    let item_actions = (name: string): ContextMenuAction[] =>{
+        const item = item_named(name);
+        return [
+            {label: "Duplicate", onSelect: () => handleCopy(item)},
+            {label: "Export", onSelect: () => handleExport(item)},
+            import_action
+        ];
+    };
+
     return(
         <div style={{height:'20em', display:'flex', flexDirection:'column'}}>
-            <SideToolbar
-                onAdd={handleAdd}
-                onCopy={handleCopy}
-                onImport={handleImport}
-                onExport={handleExport}
-                contentName={props.content_name}
-                exportEnabled={export_enabled}
-            />
+            <AddCard label={"Add " + props.content_name} onClick={handleAdd} actions={[import_action]}/>
             <SelectableList
                 items={names}
                 types={types}
                 selected_item={selected_item[props.display_key]}
                 onRemove={handleRemove}
                 onSelect={handleSelect}
-                // fills what the toolbar leaves and scrolls, instead of stopping short of the panel
+                item_actions={item_actions}
+                // fills what the add card leaves and scrolls, instead of stopping short of the panel
                 style={{flex: 1, maxHeight: "none", width: "auto"}}
             />
         </div>
