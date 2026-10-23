@@ -17,8 +17,6 @@ import React, {useState} from 'react';
 
 
 import {
-    FormLayout,
-    InputField,
     SimpleContent,
     UIPanel
 } from "#UI/index.js"
@@ -36,13 +34,6 @@ let ScriptManager = (props: ScriptManagerProps) =>{
 
     const scripts =  useAppSelector(state => state.scripts);
 
-    let handle_edit_field = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if(event.key==="Enter"|| event.key ==="Tab"){
-            selected_script.edit_field(event.currentTarget.name as keyof up_script, event.currentTarget.value);
-        }
-    }
-
-
     let handle_select = (selection: number) =>{
         let new_sel = scripts[selection]
         if(new_sel===undefined) return;
@@ -53,16 +44,7 @@ let ScriptManager = (props: ScriptManagerProps) =>{
         <PaneGroup id="scripts" orientation="horizontal">
             <MainPane>
             <PaneGroup id="scripts_main" orientation="vertical">
-                <UIPanel id="properties" key="script_properties" level="level_2" default_size={20} min_size="6em">
-                    <SimpleContent name="Script Properties">
-                        <FormLayout>
-                            <InputField inline name='name' placeholder={selected_script.name}
-                                        onKeyDown={handle_edit_field} label='name'/>
-                        </FormLayout>
-                    </SimpleContent>
-                </UIPanel>
-
-                <UIPanel id="source" key="script_source" level="level_2" default_size={80} min_size="8em">
+                <UIPanel id="source" key="script_source" level="level_2" default_size={100} min_size="8em">
                     <SimpleContent name="Script Source Code">
                         <ScriptsEditor script={selected_script}/>
                     </SimpleContent>
