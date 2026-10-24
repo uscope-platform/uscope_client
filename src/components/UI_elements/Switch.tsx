@@ -61,7 +61,7 @@ interface SwitchProps {
     label: string;
     name: string;
     onClick: (value: {name: string, checked: boolean}) => void;
-    style?: React.CSSProperties;
+    style?: React.CSSProperties | undefined;
 }
 
 /// An on/off setting, with its label

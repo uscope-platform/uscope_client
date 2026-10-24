@@ -13,20 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {styled} from 'goober';
 import React from "react";
-import {Label} from "./Label.js";
+import {Switch} from "./Switch.js";
 
-
-const InputCheckbox = styled('input')`
-border-width: 0;
-`
-
-const Wrapper = styled('div')`
-display: flex;
-align-items: center;
-flex-flow: wrap;
-`
 interface CheckboxProps {
     name: string;
     label: string;
@@ -35,19 +24,18 @@ interface CheckboxProps {
     style?: React.CSSProperties;
 }
 
+/// An on/off setting, shown as a switch. The handlers are the ones of a checkbox, so they get the name and the state in `target`.
 export let  Checkbox = (props: CheckboxProps) =>{
 
     return(
-        <Wrapper>
-            <Label htmlFor={props.name}>{props.label}</Label>
-            <InputCheckbox
-                id={props.name}
+        <div style={{padding: "0.3em 0"}}>
+            <Switch
                 name={props.name}
-                checked={props.value}
-                type="checkbox"
-                onChange={e => props.onChange(e)}
+                label={props.label}
+                value={props.value}
                 style={props.style}
+                onClick={({name, checked}) => props.onChange({target: {name, checked}} as React.ChangeEvent<HTMLInputElement>)}
             />
-        </Wrapper>
+        </div>
     );
 };
