@@ -43,6 +43,7 @@ export {up_settings} from './data_models/up_settings.js'
 
 //filter
 export {filter_calculate_keepouts} from './filters/filter_preview.js'
+export {filter_validate} from './filters/filter_validation.js'
 
 export let store = null;
 export let __selected_application: up_application;

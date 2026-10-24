@@ -14,7 +14,13 @@
 // limitations under the License.
 
 
+import {filter_validate} from "./filter_validation.js";
+
+/// The areas of the response that the filter has to stay out of. Nothing is drawn for a design that is not plausible:
+/// the areas would overlap, or be empty lines, and say nothing about the filter.
 export const filter_calculate_keepouts = (filter_parameters: Record<string, any>) =>{
+
+    if(Object.keys(filter_validate(filter_parameters)).length > 0) return [];
 
     let exclusion_zones = [];
     let limits = []
@@ -44,7 +50,7 @@ export const filter_calculate_keepouts = (filter_parameters: Record<string, any>
             x1: l[1],
             y1: l[3],
             line: {
-                color: 'rgba(55, 128, 191,0.3)'
+                width: 0
             },
             fillcolor: 'rgba(55, 128, 191, 0.3)',
             layer:"below"

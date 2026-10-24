@@ -16,6 +16,7 @@
 import React from 'react';
 
 import {InputField} from "#UI/index.js";
+import {filter_validate} from "#client_core/index.js";
 
 interface FilterImplementationControls{
     filter_parameters: Record<string, any>,
@@ -35,7 +36,7 @@ let  FilterImplementationControls = (props: FilterImplementationControls) =>{
     let render_controls = () =>{
         let ret = []
 
-        ret.push(<InputField key="taps_width" inline name="taps_width" defaultValue={props.filter_parameters.taps_width} onKeyDown={handle_edit_field} label="Width of the filter taps"/>);
+        ret.push(<InputField key="taps_width" inline name="taps_width" defaultValue={props.filter_parameters.taps_width} onKeyDown={handle_edit_field} label="Width of the filter taps" error={filter_validate(props.filter_parameters).taps_width}/>);
 
         return ret;
     }

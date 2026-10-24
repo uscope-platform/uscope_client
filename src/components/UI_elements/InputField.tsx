@@ -38,7 +38,7 @@ export const InnerInput = styled<'input', InnerInputProps>('input')(({ color }) 
   transition: border-color 0.2s;
   &[data-status="dirty"], &[data-status="saving"] { border-color: ${ColorTheme.field.dirty}; }
   &[data-status="applied"] { border-color: ${ColorTheme.field.applied}; }
-  &[data-status="error"] { border-color: ${ColorTheme.field.error}; }
+  &[data-status="error"], &[data-invalid] { border-color: ${ColorTheme.field.error}; }
   &[data-status="saving"] { opacity: 0.7; }
 `);
 
@@ -88,6 +88,8 @@ interface InputFieldProps {
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
     value?:string;
     placeholder?:string;
+    /// why the value is implausible, when it is: the field gets a red border and the message as its title
+    error?: string | undefined;
 }
 
 
@@ -102,7 +104,8 @@ export let  InputField = (props: InputFieldProps) =>{
     const feedback = useFieldFeedback(props.defaultValue, props.onKeyDown, props.value === undefined && props.onKeyDown !== undefined);
     const feedback_props = {
         "data-status": feedback.status,
-        title: feedback.title,
+        title: props.error ?? feedback.title,
+        "data-invalid": props.error ? "" : undefined,
         onInput: feedback.on_input,
         onKeyDown: feedback.key_down,
     };

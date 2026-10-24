@@ -17,6 +17,7 @@ import React from 'react';
 
 import {styled} from "goober";
 import {ColorTheme, InputField} from "#UI/index.js";
+import {filter_validate} from "#client_core/index.js";
 import LowPass from "./filterIcons/LowPass.js"
 import HighPass from "./filterIcons/HighPass.js"
 import BandPass from "./filterIcons/BandPass.js"
@@ -71,55 +72,32 @@ let  FilterDesignerControls = (props: FilterDesignerControls) =>{
         }
     }
 
+    const errors = filter_validate(props.filter_parameters);
+
+    // the fields of each type of filter, in the order the bands follow in the labels
+    const FIELDS: Record<string, [string, string][]> = {
+        lp: [["n_taps", "Number of taps"], ["pass_band_edge_1", "Pass band edge frequency"], ["stop_band_edge_1", "Stop band edge frequency"]],
+        hp: [["n_taps", "Number of taps"], ["pass_band_edge_1", "Pass band edge frequency"], ["stop_band_edge_1", "Stop band edge frequency"]],
+        bp: [["n_taps", "Number of taps"], ["stop_band_edge_1", "First stop band edge frequency"], ["pass_band_edge_1", "Pass band first edge frequency"], ["pass_band_edge_2", "Pass band second edge frequency"], ["stop_band_edge_2", "Second stop band edge  frequency"]],
+        bs: [["n_taps", "Number of taps"], ["pass_band_edge_1", "First pass band edge frequency"], ["stop_band_edge_1", "Stop band first edge frequency"], ["stop_band_edge_2", "Stop band second edge frequency"], ["pass_band_edge_2", "Second pass band edge  frequency"]],
+    };
+
     let render_filter_parameters = () =>{
-        if(["lp", "hp"].includes(props.filter_parameters.type)){
-            return(
-                <div>
-                    <InputField  inline name="n_taps" defaultValue={props.filter_parameters.n_taps} onKeyDown={handle_edit_field} label="Number of taps"/>
-                    <InputField inline name="pass_band_edge_1" defaultValue={props.filter_parameters.pass_band_edge_1} onKeyDown={handle_edit_field} label="Pass band edge frequency"/>
-                    <InputField inline name="stop_band_edge_1" defaultValue={props.filter_parameters.stop_band_edge_1} onKeyDown={handle_edit_field} label="Stop band edge frequency"/>
-                </div>
-            );
-
-        } else if(props.filter_parameters.type==="bp") {
-            return (
-                <div>
-                    <InputField inline name="n_taps" defaultValue={props.filter_parameters.n_taps}
-                                onKeyDown={handle_edit_field} label="Number of taps"/>
-                    <InputField inline name="stop_band_edge_1" defaultValue={props.filter_parameters.stop_band_edge_1}
-                                onKeyDown={handle_edit_field} label="First stop band edge frequency"/>
-                    <InputField inline name="pass_band_edge_1" defaultValue={props.filter_parameters.pass_band_edge_1}
-                                onKeyDown={handle_edit_field} label="Pass band first edge frequency"/>
-                    <InputField inline name="pass_band_edge_2" defaultValue={props.filter_parameters.pass_band_edge_2}
-                                onKeyDown={handle_edit_field} label="Pass band second edge frequency"/>
-                    <InputField inline name="stop_band_edge_2" defaultValue={props.filter_parameters.stop_band_edge_2}
-                                onKeyDown={handle_edit_field} label="Second stop band edge  frequency"/>
-                </div>
-            );
-        } else if (props.filter_parameters.type === "bs") {
-            return (
-                <div>
-                    <InputField inline name="n_taps" defaultValue={props.filter_parameters.n_taps}
-                                onKeyDown={handle_edit_field} label="Number of taps"/>
-                    <InputField inline name="pass_band_edge_1" defaultValue={props.filter_parameters.pass_band_edge_1}
-                                onKeyDown={handle_edit_field} label="First pass band edge frequency"/>
-                    <InputField inline name="stop_band_edge_1" defaultValue={props.filter_parameters.stop_band_edge_1}
-                                onKeyDown={handle_edit_field} label="Stop band first edge frequency"/>
-                    <InputField inline name="stop_band_edge_2" defaultValue={props.filter_parameters.stop_band_edge_2}
-                                onKeyDown={handle_edit_field} label="Stop band second edge frequency"/>
-                    <InputField inline name="pass_band_edge_2" defaultValue={props.filter_parameters.pass_band_edge_2}
-                                onKeyDown={handle_edit_field} label="Second pass band edge  frequency"/>
-                </div>
-            );
-        }
-
-        return;
+        const fields = FIELDS[props.filter_parameters.type];
+        if(fields === undefined) return;
+        return(
+            <div>
+                {fields.map(([name, label]) => (
+                    <InputField key={name} inline name={name} defaultValue={props.filter_parameters[name]} onKeyDown={handle_edit_field} label={label} error={errors[name]}/>
+                ))}
+            </div>
+        );
     }
 
     let render_controls = () => {
         return (
             <div key={props.name + "_filter_design_div"}>
-                <InputField inline name="sampling_frequency" defaultValue={props.filter_parameters.sampling_frequency} onKeyDown={handle_edit_field} label="Sampling Frequency"/>
+                <InputField inline name="sampling_frequency" defaultValue={props.filter_parameters.sampling_frequency} onKeyDown={handle_edit_field} label="Sampling Frequency" error={errors.sampling_frequency}/>
                 <TypeSelector role="group" aria-label="Filter type">
                     {[
                         {type: "lp", label: "Low pass", Icon: LowPass},

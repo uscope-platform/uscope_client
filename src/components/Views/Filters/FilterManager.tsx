@@ -26,6 +26,7 @@ import FilterPlot from "./FilterPlot.jsx";
 import FilterDesignerControls from "./FilterDesignerControls.js";
 import {
     filter_calculate_keepouts,
+    filter_validate,
     up_filter
 } from "#client_core/index.js";
 import {MdAutoFixHigh, MdConstruction} from "react-icons/md";
@@ -35,6 +36,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import FilterImplementationControls from "./FilterImplementationControls.js";
 import FilterSidebar from "./FilterSidebar.jsx";
 import {useAppSelector} from "#redux/hooks.js";
+
+// what the plot shows for parameters that are not plausible: the response is not the one of a filter that can exist
+const NO_RESPONSE = {ideal:{x:[], y:[]}, quantized:{x:[], y:[]}};
 
 interface FilterManagerProps {
 
@@ -56,6 +60,8 @@ let FilterManager = (props: FilterManagerProps) =>{
         () => stored_filter !== undefined ? new up_filter(stored_filter) : up_filter.construct_empty(9999),
         [stored_filter]
     );
+    // a filter that is not plausible is not sent to be designed or implemented
+    const parameters_ok = Object.keys(filter_validate(selected_filter.parameters)).length === 0;
     const keepout_shapes = useMemo(
         () => has_selection ? filter_calculate_keepouts(selected_filter.parameters) : [],
         [selected_filter]
@@ -114,18 +120,23 @@ let FilterManager = (props: FilterManagerProps) =>{
                 ) : (
                     <PaneGroup id="filter_main" orientation="vertical">
                         <UIPanel id="viewer" key="filter_designer_plot" level="level_2" default_size={60} min_size="10em" collapsible={false}>
-                            <div style={{flex: 1, minHeight: 0}}>
+                            <div style={{flex: 1, minHeight: 0, position: "relative"}}>
                                 <FilterPlot
                                     keepout_shapes={keepout_shapes}
-                                    f_sample={selected_filter.parameters.sampling_frequency}
-                                    plot_data={plot_filter}
+                                    f_sample={selected_filter.parameters.sampling_frequency > 0 ? selected_filter.parameters.sampling_frequency : 1000}
+                                    plot_data={parameters_ok ? plot_filter : NO_RESPONSE}
                                 />
+                                {!parameters_ok && (
+                                    <div style={{position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", padding: "1em", textAlign: "center", fontStyle: "italic", opacity: 0.6, pointerEvents: "none"}}>
+                                        Fix the parameters marked in red to see the response
+                                    </div>
+                                )}
                             </div>
                         </UIPanel>
                         <UIPanel id="implementation" key="filter_parameters" level="level_2" default_size={40} min_size="8em" collapsible={false}>
                             <Toolbar>
-                                <ToolbarButton label="Design" tooltip="Design Filter" icon={<MdAutoFixHigh size="1.5em"/>} onClick={handleDesign}/>
-                                <ToolbarButton label="Implement" tooltip="Implement Filter" icon={<MdConstruction size="1.5em"/>} onClick={handleImplement}/>
+                                <ToolbarButton label="Design" tooltip={parameters_ok ? "Design Filter" : "Fix the fields marked in red first"} icon={<MdAutoFixHigh size="1.5em"/>} enabled={parameters_ok} onClick={handleDesign}/>
+                                <ToolbarButton label="Implement" tooltip={parameters_ok ? "Implement Filter" : "Fix the fields marked in red first"} icon={<MdConstruction size="1.5em"/>} enabled={parameters_ok} onClick={handleImplement}/>
                             </Toolbar>
                             <div style={{flex: 1, minHeight: 0, overflowY: "auto"}}>
                                 <FilterDesignerControls
