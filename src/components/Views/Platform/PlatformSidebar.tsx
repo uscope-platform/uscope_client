@@ -13,75 +13,49 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect, useState} from 'react';
+import React from 'react';
+import {toast} from "react-toastify";
+import {MdAdminPanelSettings, MdPerson, MdSpeed} from "react-icons/md";
 
 import {SidebarColumn, SelectableList, ColorTheme} from "#UI/index.js";
 
-import {get_users_list, remove_user} from "#client_core/index.js";
-import {MdPerson} from "react-icons/md";
+import {remove_user} from "#client_core/index.js";
+import {error_text} from "#client_core/proxy/errors.js";
 import type {user_model} from "#interfaces/index.js";
 
 interface PlatformSidebarProps {
+    users: user_model[];
+    selected: string;
     on_select: (username: string) => void;
-    view_version: number;
-    user: string;
+    // told when a user was removed, for the list to be read again
+    on_changed: () => void;
 }
+
+const ROLE_ICONS: Record<string, React.ReactNode> = {
+    admin: <MdAdminPanelSettings size="1.6em" color={ColorTheme.icons_color}/>,
+    user: <MdPerson size="1.6em" color={ColorTheme.icons_color}/>,
+    operator: <MdSpeed size="1.6em" color={ColorTheme.icons_color}/>,
+};
 
 let  PlatformSidebar = (props: PlatformSidebarProps) =>{
 
-    const [users, setUsers] = useState([])
-    const [refreshList, setRefreshList] = useState(false)
-
-    useEffect(()=>{
-        get_users_list().then((response)=>{
-            setUsers(response)
-        })
-    },[props.view_version, refreshList])
-
     let handleRemoveUser = (username: string) =>{
-        remove_user(username).then((response)=>{
-            setRefreshList(!refreshList);
-        })
+        remove_user(username).then(() => {
+            props.on_changed();
+        }).catch((err: unknown) => toast.error(error_text(err)));
     }
-
-
-    let get_content = (): [string[], React.ReactNode[]] =>{
-        let types: React.ReactNode[] = [];
-        let items = Object.values(users).map((user: user_model)=>{
-            let color="";
-            if(user.role ==="admin"){
-                color = "green";
-            } else if(user.role === "user"){
-                color = "blue";
-            } else if(user.role === "operator"){
-                color = "red";
-            }
-            types.push(<MdPerson size={ColorTheme.icons_size} color={color} />);
-            return user.username;
-        })
-
-        return [items, types]
-    }
-
-
-    const [names, types] = get_content();
-
-    let handleOnSelect = (selection: string) => {
-        if(props.user !==selection){
-            props.on_select(selection);
-        }
-    };
-
-
 
     return (
-        <SidebarColumn panels={[{title: "Users List", content: (
+        <SidebarColumn panels={[{title: "Users", content: (
             <SelectableList
-                items={names}
-                types={types}
-                selected_item={props.user}
+                variant="card"
+                items={props.users.map((user) => user.username)}
+                types={props.users.map((user) => ROLE_ICONS[user.role] ?? ROLE_ICONS.user)}
+                descriptions={props.users.map((user) => user.role)}
+                selected_item={props.selected}
+                onSelect={props.on_select}
                 onRemove={handleRemoveUser}
-                onSelect={handleOnSelect}
+                style={{maxHeight: "none"}}
             />
         )}]}/>
     );
