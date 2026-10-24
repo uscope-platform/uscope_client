@@ -62,16 +62,6 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
     const application = useContext(ApplicationContext);
 
     const [n_cores, set_n_cores] = useState(0);
-    const [enabled_actions, set_enabled_actions] = useState({
-        add: false,
-        edit: false,
-        build: false,
-        run: false,
-        deploy: false,
-        hw_sim:true,
-        copy:false,
-        delete: false
-    })
     const navigate = useNavigate();
 
 
@@ -80,53 +70,26 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
 
     let [selected_inputs_tab, set_selected_inputs_tab] = useState(0);
 
-    useEffect(() =>{
-        let allow_delete = props.selections.component !== null &&
-            (props.selections.component.type === "node" || props.selections.component.type === "edge");
-        if(props.selections.component){
-            if(props.selections.component.type === "node"){
-                // an IO block has neither a program nor a copy
-                const is_core = !props.emulator.is_io_block(props.selections.component.obj.id);
-                set_enabled_actions({
-                    add: enabled_actions.add,
-                    edit: is_core,
-                    build: enabled_actions.build,
-                    run: enabled_actions.run,
-                    deploy: enabled_actions.deploy,
-                    hw_sim: enabled_actions.hw_sim,
-                    copy: is_core,
-                    delete: allow_delete
-                });
-                return;
-            }
-        }
-        set_enabled_actions({
-            add: enabled_actions.add,
-            edit: false,
-            build: enabled_actions.build,
-            run: enabled_actions.run,
-            deploy: enabled_actions.deploy,
-            hw_sim: enabled_actions.hw_sim,
-            copy: false,
-            delete: allow_delete
-        });
-
-    },[props.selections.component])
+    // what can be done follows from the emulator that is loaded and from what is selected, so it is not kept in a state
+    // that the two could overwrite one another in
+    const selected_component = props.selections.component;
+    const emulator_loaded = props.emulator.name !== "";
+    // an IO block has neither a program nor a copy
+    const is_core = selected_component !== null && selected_component.type === "node" && !props.emulator.is_io_block(selected_component.obj.id);
+    const enabled_actions = {
+        add: emulator_loaded,
+        edit: is_core,
+        build: emulator_loaded,
+        run: emulator_loaded,
+        deploy: emulator_loaded,
+        hw_sim: true,
+        copy: is_core,
+        delete: selected_component !== null
+    };
 
     useEffect(() => {
         //SETUP NODES
         if(props.emulator.name !== "" ){
-            set_enabled_actions({
-                add: true,
-                edit: false,
-                build: true,
-                run: true,
-                deploy: true,
-                hw_sim: true,
-                copy: false,
-                delete: false
-            });
-
             set_n_cores(Object.keys(props.emulator.cores).length);
             setNodes(nodes_of(props.emulator));
             //SETUP EDGES
