@@ -20,6 +20,7 @@ import {styled} from "goober";
 import {ColorTheme} from "./ColorTheme.js";
 import {InputField} from "./InputField.js";
 import {SelectableList} from "./SelectableList.js";
+import type {ContextMenuAction} from "./ContextMenu.js";
 
 // two rows, so that the editor starts level with the first card of the list and not with its header
 const Layout = styled('div')`
@@ -62,6 +63,10 @@ interface ItemsEditorProps<T> {
     onRemove: (item: T) => void | Promise<void>;
     // when given, the items are renamed from their menu
     onRename?: (item: T, new_name: string) => void | Promise<void>;
+    // the items selected with Shift or Ctrl are deleted together, when it is not done by removing one after the other
+    onRemoveMany?: (items: T[]) => void | Promise<void>;
+    // what is in the menu of the items selected with Shift or Ctrl besides deleting them, like exporting them
+    bulk_actions?: (items: T[]) => ContextMenuAction[];
     // the editor of the selected item
     children: (item: T) => ReactNode;
 }
@@ -73,6 +78,8 @@ export let ItemsEditor = <T,>(props: ItemsEditorProps<T>) =>{
     // the item itself, not its name: the items are edited in place, so it stays the selected one when it is renamed
     const [selected_item, set_selected_item] = useState<T | null>(null);
     const [filter, set_filter] = useState("");
+    // the names of the items when many are selected, with Shift or with Ctrl: then no one of them is edited
+    const [multi, set_multi] = useState<string[]>([]);
 
     const description = (item: T) => props.description ? props.description(item) : "";
 
@@ -91,6 +98,21 @@ export let ItemsEditor = <T,>(props: ItemsEditorProps<T>) =>{
             : visible[0];
     last_index.current = selected !== undefined ? props.items.indexOf(selected) : 0;
     last_name.current = selected !== undefined ? props.name(selected) : null;
+
+    const visible_names = visible.map(props.name);
+    const many = multi.filter((name) => visible_names.includes(name));
+    const selection = many.length > 1 ? many : null;
+    const items_named = (names: string[]) => names.flatMap((name) => props.items.filter((item) => props.name(item) === name));
+
+    let handleSelectionChange = (names: string[]) =>{
+        if(names.length > 1){
+            set_multi(names);
+            return;
+        }
+        set_multi([]);
+        const item = visible.find((i) => props.name(i) === names[0]);
+        if(item !== undefined) set_selected_item(item);
+    }
 
     let handleRemove = async (name: string) =>{
         const item = props.items.find(i => props.name(i) === name);
@@ -122,15 +144,26 @@ export let ItemsEditor = <T,>(props: ItemsEditorProps<T>) =>{
                 {...(props.description ? {descriptions: visible.map(description)} : {})}
                 {...(props.icon ? {types: visible.map(props.icon)} : {})}
                 selected_item={selected === undefined ? undefined : props.name(selected)}
-                onSelect={(name) => set_selected_item(visible.find(item => props.name(item) === name) ?? null)}
+                {...(selection ? {selection} : {})}
+                onSelectionChange={handleSelectionChange}
+                {...(props.onRemoveMany ? {onRemoveMany: (names: string[]) => props.onRemoveMany?.(items_named(names))} : {})}
+                {...(props.bulk_actions ? {bulk_actions: (names: string[]) => props.bulk_actions?.(items_named(names)) ?? []} : {})}
+                onSelect={(name) => {
+                    set_multi([]);
+                    set_selected_item(visible.find(item => props.name(item) === name) ?? null);
+                }}
                 onRemove={handleRemove}
                 {...(props.onRename ? {onRename: handleRename} : {})}
                 style={{maxHeight: "calc(100vh - 16rem)", margin: 0, width: "auto"}}
             />
-            {selected !== undefined
-                // keyed by position, so that the editor starts afresh for another item but not when this one is renamed
-                ? <React.Fragment key={props.items.indexOf(selected)}>{props.children(selected)}</React.Fragment>
-                : <div/>
+            {selection
+                ? <div style={{padding: "1em", textAlign: "center", fontStyle: "italic", opacity: 0.6}}>
+                    {selection.length} {props.noun} selected. Right click one of them for what can be done to all of them.
+                </div>
+                : selected !== undefined
+                    // keyed by position, so that the editor starts afresh for another item but not when this one is renamed
+                    ? <React.Fragment key={props.items.indexOf(selected)}>{props.children(selected)}</React.Fragment>
+                    : <div/>
             }
         </Layout>
     );
