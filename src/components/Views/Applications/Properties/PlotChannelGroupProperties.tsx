@@ -16,7 +16,6 @@
 import React from "react";
 import {styled} from "goober";
 import {
-    InputField,
     FormLayout,
     ChipSelector,
     ColorTheme,
@@ -84,13 +83,6 @@ export let  PlotChannelGroupProperties = (props:PlotChannelGroupPropertiesProps)
         props.forceUpdate();
     }
 
-    let handleonKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) =>{
-        if(event.key==="Enter"|| event.key ==="Tab"){
-            await props.application.edit_channel_group(props.group.group_name, event.currentTarget.name, event.currentTarget.value);
-            props.forceUpdate();
-        }
-    }
-
     return(
         <Card
             style={{width: "100%", paddingLeft: 0}}
@@ -100,8 +92,6 @@ export let  PlotChannelGroupProperties = (props:PlotChannelGroupPropertiesProps)
             }
         >
             <FormLayout columns="10.5rem">
-                <InputField id="group_name" name="group_name" defaultValue={props.group.group_name} onKeyDown={handleonKeyDown} label="Name"/>
-                <InputField id="group_id" name='group_id' defaultValue={props.group.group_id} onKeyDown={handleonKeyDown} label="ID"/>
                 <div style={{gridColumn: "1 / -1", display: "flex", flexDirection: "column", gap: "0.5rem"}}>
                     <Label>Channels ({props.group.channels.length} / {MAX_CHANNELS})</Label>
                     <div style={{display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(11rem, 1fr))", gap: "0.5rem"}}>

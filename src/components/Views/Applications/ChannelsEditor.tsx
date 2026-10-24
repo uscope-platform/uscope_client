@@ -33,8 +33,12 @@ export let ChannelsEditor = (props: EditorProps) =>(
         items={props.application.channels}
         noun="channels"
         name={ch => ch.name}
-        description={ch => "#" + ch.number + " · " + ch.id + (ch.enabled ? "" : " · disabled")}
+        description={ch => "#" + ch.number + (ch.enabled ? "" : " · disabled")}
         onAdd={props.onAdd}
+        onRename={async (ch, name) => {
+            await props.application.edit_channel(ch.name, "name", name);
+            props.forceUpdate();
+        }}
         onRemove={async ch => {
             await props.application.remove_channel(ch.name);
             props.forceUpdate();
@@ -56,6 +60,10 @@ export let ChannelGroupsEditor = (props: EditorProps) =>(
             : <span style={{display: "inline-block", width: "1.4em", flexShrink: 0}}/>}
         description={group => group.channels.map(c => c.label).join(", ")}
         onAdd={props.onAdd}
+        onRename={async (group, name) => {
+            await props.application.edit_channel_group(group.group_name, "group_name", name);
+            props.forceUpdate();
+        }}
         onRemove={async group => {
             await props.application.remove_channel_groups(group.group_name);
             // the scope needs a default group, the first of the others takes over

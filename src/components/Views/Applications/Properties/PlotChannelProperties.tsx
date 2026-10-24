@@ -55,8 +55,6 @@ export let  PlotChannelProperties = (props: PlotChannelPropertiesProps) =>{
             }}
         >
             <FormLayout columns="10.5rem">
-                <InputField  id="name" name="name" defaultValue={props.channel.name} onKeyDown={handleonKeyDown} label="Name"/>
-                <InputField  id="id" name='id' defaultValue={props.channel.id} onKeyDown={handleonKeyDown} label="Channel ID"/>
                 <InputField  id="number" name='number' defaultValue={props.channel.number.toString()} onKeyDown={handleonKeyDown} label="Channel Number"/>
                 <InputField  id="mux_setting" name='mux_setting' defaultValue={props.channel.mux_setting.toString()} onKeyDown={handleonKeyDown} label="Mux Setting"/>
                 <InputField  id="scaling_factor" name='scaling_factor' defaultValue={props.channel.scaling_factor.toString()} onKeyDown={handleonKeyDown} label="Scaling Factor"/>
