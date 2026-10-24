@@ -24,7 +24,7 @@ export {init_terminal, dispose_terminal} from './terminal/terminal.js'
 // SERVER PROXY
 export {set_address, set_auth_config} from './proxy/backend.js'
 
-export {add_user, remove_user, get_users_list, dump_database, restore_database, do_onboarding, need_onboarding} from './proxy/platform.js'
+export {add_user, edit_user, remove_user, get_users_list, dump_database, restore_database, do_onboarding, need_onboarding} from './proxy/platform.js'
 export { set_scaling_factors, direct_fetch, subscribe_scope_frames, set_acquisition, get_acquisition_status} from './proxy/plot.js'
 
 

@@ -63,6 +63,7 @@ export const api_dictionary = {
     platform:{
         add:'platform/user',
         delete: 'platform/user',
+        edit: 'platform/user',
         need_onboarding: 'platform/onboarding',
         do_onboarding: 'platform/onboarding',
         get_list: 'platform/user',

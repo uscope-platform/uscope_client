@@ -13,13 +13,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {backend_delete, backend_get, backend_post} from "./backend.js";
+import {backend_delete, backend_get, backend_patch, backend_post} from "./backend.js";
 
 import {api_dictionary} from './api_dictionary.js'
 import type {user_create_request} from "#interfaces/index.js";
 
 export const add_user = (user: user_create_request) =>{
     return backend_post(api_dictionary.platform.add, user);
+}
+
+/// Changes the name, the password or the role of a user: what is given
+export const edit_user = (user: string, changes: {user?: string, password?: string, role?: string}) =>{
+    return backend_patch(api_dictionary.platform.edit + "/" + encodeURIComponent(user), changes);
 }
 
 export const remove_user = (user: string) =>{
