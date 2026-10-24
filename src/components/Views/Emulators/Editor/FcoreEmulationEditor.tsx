@@ -199,7 +199,7 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
         navigate("/programs", {state: {
             selected_program: core.program,
             // lets the programs view bring the user back to what was open
-            return_to: {path: location.pathname, label: "Emulator", emulator: props.emulator.id, component: component}
+            return_to: {path: location.pathname, label: "Hardware", emulator: props.emulator.id, component: component}
         }});
     }
 

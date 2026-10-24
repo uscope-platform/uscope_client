@@ -32,7 +32,7 @@ import {ApplicationContext} from "./ApplicationContext.js";
 
 
 let operator_views = ["Scope"];
-let user_views = ["Applications", "Scripts", "Programs", "Bitstreams", "Filters", "Emulator"];
+let user_views = ["Applications", "Scripts", "Programs", "Bitstreams", "Filters", "Hardware"];
 let admin_views =["Peripherals", "Platform", "Settings"];
 
 interface view {

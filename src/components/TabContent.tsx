@@ -42,7 +42,7 @@ let TabContent = (props: TabContentProps) => {
         programs: <ProgramsManager/>,
         platform: <PlatformManager />,
         filters: <FilterManager />,
-        emulator:<HilView/>,
+        hardware:<HilView/>,
         settings:<SettingsView />
     };
 
