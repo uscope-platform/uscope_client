@@ -59,13 +59,13 @@ let  ApplicationsManager = (props: ApplicationsManagerProps) =>{
 
     // the page opens on the application in use
     const active_application = useContext(ApplicationContext);
+    const [revision, forceUpdate] = useReducer(x => x + 1, 0);
     const [selected_id, set_selected_id] = useState(active_application.id);
     // read from the store, so that what is changed from the sidebar or by an import shows right away
-    const selected_app = useStoredInstance(applications[selected_id], (app) => new up_application(app), () => up_application.construct_empty(9999));
+    const selected_app = useStoredInstance(applications[selected_id], (app) => new up_application(app), () => up_application.construct_empty(9999), revision);
 
     let [selectedTab, set_selectedTab] = useState(0);
 
-    const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     let handle_select = (app: number) =>{
         if(applications[app] === undefined) return;

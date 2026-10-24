@@ -38,7 +38,7 @@ let PeripheralsManager = (props: PeripheralsManagerProps)=>{
     const [periph_selector, set_periph_selector] = useState(0);
 
     // read from the store, so that what is added or edited shows right away
-    const selected_peripheral = useStoredInstance(peripherals[periph_selector], (periph) => new up_peripheral(periph), () => up_peripheral.construct_empty(9999));
+    const selected_peripheral = useStoredInstance(peripherals[periph_selector], (periph) => new up_peripheral(periph), () => up_peripheral.construct_empty(9999), data_version);
 
     let handle_select = (sel: number) =>{
         if(peripherals[sel]) set_periph_selector(sel);
