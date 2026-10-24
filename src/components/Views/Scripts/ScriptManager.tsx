@@ -26,7 +26,7 @@ let ScriptManager = (props: ScriptManagerProps) =>{
 
     const scripts =  useAppSelector(state => state.scripts);
 
-    const tabs = useEditorTabs(scripts);
+    const tabs = useEditorTabs("scripts", scripts);
 
     return(
         <PaneGroup id="scripts" orientation="horizontal">

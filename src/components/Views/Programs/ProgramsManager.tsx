@@ -37,7 +37,7 @@ let ProgramsManager = (props: ProgramsManagerProps) =>{
 
     const programs_store = useAppSelector(state => state.programs);
 
-    const tabs = useEditorTabs(programs_store);
+    const tabs = useEditorTabs("programs", programs_store);
 
     useEffect(() => {
         if(location.state){

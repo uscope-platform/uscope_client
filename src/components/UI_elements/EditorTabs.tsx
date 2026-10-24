@@ -21,12 +21,26 @@ import {ConfirmDialog} from "./ConfirmDialog.js";
 import {ContentDiv} from "./panels/UIPanel.js";
 import {PanelTitle, TitleBar} from "./panels/TitleBar.js";
 
+interface RememberedTabs {
+    open_ids: number[];
+    active_id: number | null;
+    preview_id: number | null;
+}
+
+// the tabs of each editor, for the view to find them as it was left when the user comes back to it
+const remembered_tabs = new Map<string, RememberedTabs>();
+
 /// Which items of a store are open in tabs, the one that is shown, and the preview: the tab that the next item opened
-/// takes the place of, as in VS Code, until it is kept.
-export const useEditorTabs = <T extends {id: number}>(items: Record<number, T>) => {
-    const [open_ids, set_open_ids] = useState<number[]>([]);
-    const [active_id, set_active_id] = useState<number | null>(null);
-    const [preview_id, set_preview_id] = useState<number | null>(null);
+/// takes the place of, as in VS Code, until it is kept. The tabs are remembered under `key` while the app is open, so
+/// that leaving the view and coming back finds them again.
+export const useEditorTabs = <T extends {id: number}>(key: string, items: Record<number, T>) => {
+    const [open_ids, set_open_ids] = useState<number[]>(() => remembered_tabs.get(key)?.open_ids ?? []);
+    const [active_id, set_active_id] = useState<number | null>(() => remembered_tabs.get(key)?.active_id ?? null);
+    const [preview_id, set_preview_id] = useState<number | null>(() => remembered_tabs.get(key)?.preview_id ?? null);
+
+    useEffect(() => {
+        remembered_tabs.set(key, {open_ids, active_id, preview_id});
+    }, [key, open_ids, active_id, preview_id]);
 
     // an item that is deleted loses its tab
     useEffect(() => {
