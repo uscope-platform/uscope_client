@@ -16,16 +16,41 @@
 import React from 'react';
 
 import {styled} from "goober";
-import {InputField} from "#UI/index.js";
+import {ColorTheme, InputField} from "#UI/index.js";
 import LowPass from "./filterIcons/LowPass.js"
 import HighPass from "./filterIcons/HighPass.js"
 import BandPass from "./filterIcons/BandPass.js"
 import BandStop from "./filterIcons/BandStop.js"
 
-const ComponentStyle = styled('div')`
+// the types of filter side by side, each a tile with the shape of its response
+const TypeSelector = styled('div')`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr));
+  gap: 0.4rem;
+  margin: 0.5em;
+`
+
+const TypeTile = styled('button')`
   display: flex;
+  align-items: center;
   justify-content: center;
-  flex-direction: row;
+  gap: 0.5em;
+  padding: 0.4em 0.7em;
+  border-radius: 5px;
+  border: 2px solid ${ColorTheme.background.borders};
+  background: ${ColorTheme.background.level_3};
+  color: ${ColorTheme.text};
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  &:hover {
+    border-color: ${ColorTheme.background.accents};
+  }
+  &[aria-pressed="true"] {
+    border-color: ${ColorTheme.background.accents};
+    background: ${ColorTheme.background.transparent_accents};
+  }
 `
 
 interface FilterDesignerControls{
@@ -36,8 +61,7 @@ interface FilterDesignerControls{
 
 let  FilterDesignerControls = (props: FilterDesignerControls) =>{
 
-    let handleFilterChange = (event: React.MouseEvent<SVGSVGElement>) => {
-        let type = event.currentTarget.id;
+    let handleFilterChange = (type: string) => {
         props.on_change("type", type);
     };
 
@@ -96,12 +120,19 @@ let  FilterDesignerControls = (props: FilterDesignerControls) =>{
         return (
             <div key={props.name + "_filter_design_div"}>
                 <InputField inline name="sampling_frequency" defaultValue={props.filter_parameters.sampling_frequency} onKeyDown={handle_edit_field} label="Sampling Frequency"/>
-                <ComponentStyle>
-                    <LowPass  onClick={handleFilterChange} active={props.filter_parameters.type==="lp"} />
-                    <HighPass onClick={handleFilterChange} active={props.filter_parameters.type==="hp"} />
-                    <BandPass onClick={handleFilterChange} active={props.filter_parameters.type==="bp"} />
-                    <BandStop onClick={handleFilterChange} active={props.filter_parameters.type==="bs"} />
-                </ComponentStyle>
+                <TypeSelector role="group" aria-label="Filter type">
+                    {[
+                        {type: "lp", label: "Low pass", Icon: LowPass},
+                        {type: "hp", label: "High pass", Icon: HighPass},
+                        {type: "bp", label: "Band pass", Icon: BandPass},
+                        {type: "bs", label: "Band stop", Icon: BandStop},
+                    ].map(({type, label, Icon}) => (
+                        <TypeTile key={type} aria-pressed={props.filter_parameters.type === type} onClick={() => handleFilterChange(type)}>
+                            <Icon onClick={() => {}} active={props.filter_parameters.type === type}/>
+                            {label}
+                        </TypeTile>
+                    ))}
+                </TypeSelector>
                 {render_filter_parameters()}
             </div>
 
