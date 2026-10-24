@@ -80,7 +80,7 @@ let SettingsView = function (props: SettingsViewProps) {
             set_hil_address_map(resp);
         })
         up_settings.get_debugger_option("multichannel_debug").then(resp=>{
-            set_multichannel_debug({label:String(resp), value:resp});
+            set_multichannel_debug({label:String(resp), value:String(resp)});
         })
 
     },[])
