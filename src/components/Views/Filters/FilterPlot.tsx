@@ -31,19 +31,31 @@ interface FilterPlotProps {
 
 
 
+const axis_style = {
+    automargin: true,
+    showline: true,
+    showgrid: true,
+    zeroline: false,
+    ticks: "outside",
+    ticklen: 5,
+    tickfont: {size: 11},
+    tickcolor: activePalette.plot_foreground,
+    linecolor: activePalette.plot_foreground,
+    gridcolor: activePalette.plot_grid,
+};
+
 let  FilterPlot = (props: FilterPlotProps) =>{
 
     const [data_rev, set_data_rev] = useState(1);
     const initial_plot_state : Record<string, any>= {
         margin: {
-            l: 25,
-            r: 25,
-            b: 25,
-            t: 25,
+            l: 20,
+            r: 20,
+            b: 20,
+            t: 15,
         },
         showlegend:false,
-        width: 530,
-        height:400,
+        autosize: true,
         data_revision:data_rev,
         paper_bgcolor: "rgba(0,0,0,0)",
         plot_bgcolor: activePalette.plot_background,
@@ -51,20 +63,20 @@ let  FilterPlot = (props: FilterPlotProps) =>{
             color: activePalette.plot_foreground
         },
         xaxis: {
-            showline: true,
-            showgrid: true,
-            tickcolor: activePalette.plot_foreground,
-            linecolor: activePalette.plot_foreground,
-            gridcolor: activePalette.plot_grid,
+            ...axis_style,
+            title: {text: "Frequency", standoff: 8},
+            // 1k, 2.5M instead of 1000, 2500000
+            tickformat: "~s",
+            ticksuffix: "Hz",
+            nticks: 8,
             range:[0, props.f_sample]
         },
         yaxis: {
-            automargin: true,
-            showline: true,
-            showgrid: true,
-            tickcolor: activePalette.plot_foreground,
-            linecolor: activePalette.plot_foreground,
-            gridcolor: activePalette.plot_grid,
+            ...axis_style,
+            title: {text: "Magnitude", standoff: 8},
+            tickformat: "~r",
+            ticksuffix: " dB",
+            nticks: 8,
             range:[-90,10]
         },
         shapes: []
@@ -150,13 +162,16 @@ let  FilterPlot = (props: FilterPlotProps) =>{
     }, [props.plot_data.quantized.x, props.plot_data.quantized.y]);
 
     return(
-        <Plot
-            data={plot_data}
-            config={{responsive: true, displaylogo: false}}
-            layout={{...plot_layout,colorway:ColorTheme.plot_palette}}
-
-
-        />
+        // fills the panel, whatever its size, and follows it when it is resized
+        <div style={{width: "100%", height: "100%", minHeight: "15em"}}>
+            <Plot
+                data={plot_data}
+                config={{responsive: true, displaylogo: false}}
+                layout={{...plot_layout,colorway:ColorTheme.plot_palette}}
+                style={{width: "100%", height: "100%"}}
+                useResizeHandler
+            />
+        </div>
     );
 };
 
