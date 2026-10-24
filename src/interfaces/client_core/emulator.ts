@@ -146,7 +146,10 @@ export interface io_port{
     address:number,
     type:string,
     width:number,
-    signed:boolean
+    signed:boolean,
+    /// Where the data of the endpoint of a source comes from in an emulation. It is for the emulation only: the
+    /// hardware gets its data from the bus
+    source?: core_input_source | undefined
 }
 
 /// A group of the endpoints that feed the DMAs (source) or are written by them (sink), it only stands for the channels

@@ -17,11 +17,13 @@
 import React, {useState} from "react";
 import {toast} from "react-toastify";
 
-import {AddCard, Checkbox, ColorTheme, FieldPaneRow, InputField, SelectableList, SelectField, useListSelection} from "#UI/index.js";
+import {MdScience} from "react-icons/md";
+import {AddCard, Checkbox, ColorTheme, FieldPaneRow, FieldSpan, InputField, SelectableList, SelectField, useListSelection} from "#UI/index.js";
 import {up_emulator} from "#client_core/index.js";
 import {error_text} from "#client_core/proxy/errors.js";
 import TypeOptionsContainer from "../Sidebar/NodesSidebar/EndpointProperties/TypeOptionsContainer.jsx";
-import type {io_block, io_port, SimpleStringOption} from "#interfaces/index.js";
+import {ConstantInputProperties, ExternalInputProperties, SeriesInputProperties, WaveformInputProperties} from "../Sidebar/NodesSidebar/EndpointProperties/inputs/index.js";
+import type {core_input_source, io_block, io_port, SimpleStringOption} from "#interfaces/index.js";
 
 interface IoBlockEndpointsProps {
     block: io_block,
@@ -30,6 +32,17 @@ interface IoBlockEndpointsProps {
 }
 
 const TYPES: SimpleStringOption[] = [{label: "float", value: "float"}, {label: "integer", value: "integer"}];
+
+const SOURCE_TYPES: SimpleStringOption[] = [
+    {label: "constant", value: "constant"},
+    {label: "series", value: "series"},
+    {label: "random", value: "random"},
+    {label: "external", value: "external"},
+    {label: "Waveform", value: "waveform"}
+];
+
+// the fields of a source that have a value for each channel: an endpoint carries one channel in each DMA slot, the first one
+const PER_CHANNEL_FIELDS = ["von", "voff", "tdelay", "ton", "period", "dc_offset", "amplitude", "frequency", "phase", "duty", "value"];
 
 /// The fields of one endpoint of an IO block
 const EndpointFields = (props: IoBlockEndpointsProps & {port: io_port}) =>{
@@ -51,9 +64,43 @@ const EndpointFields = (props: IoBlockEndpointsProps & {port: io_port}) =>{
         await edit(event.currentTarget.name as "address" | "width", number);
     };
 
+    // where the data comes from in an emulation, for the endpoints of a source: the hardware gets it from the bus
+    const source = port.source ?? up_emulator.default_io_source();
+
+    const handle_source_type = (selection: SimpleStringOption | null) =>{
+        if(selection !== null) edit("source", {...source, type: selection.value});
+    };
+
+    // the editors give the value of the channel: an endpoint has the one, the first
+    const handle_source_change = (field: string, value: string | number | number[]) =>{
+        if(PER_CHANNEL_FIELDS.includes(field)){
+            const values = JSON.parse(JSON.stringify(source[field as keyof core_input_source] ?? []));
+            values[0] = Array.isArray(value) ? value[0] : value;
+            edit("source", {...source, [field]: values});
+        } else {
+            edit("source", {...source, [field]: value});
+        }
+    };
+
+    const source_options = () =>{
+        switch(source.type){
+            case "constant":
+                return <ConstantInputProperties key="source_constant" input={source} channel={0} onChange={handle_source_change}/>;
+            case "series":
+                return <SeriesInputProperties key="source_series" input={source} channel={0} onChange={handle_source_change}
+                                              input_data={Object.values(emulator.cores).flatMap((core) => core.input_data)}/>;
+            case "external":
+                return <ExternalInputProperties key="source_external" input={source} channel={0} onChange={handle_source_change}/>;
+            case "waveform":
+                return <WaveformInputProperties key="source_waveform" input={source} channel={0} onChange={handle_source_change}/>;
+            default:
+                return null;
+        }
+    };
+
     return(
         <FieldPaneRow key={block.id + "." + port.name}>
-            <TypeOptionsContainer label="Endpoint">
+            <TypeOptionsContainer label="On hardware">
                 <InputField id="address" name="address" label="Bus address" defaultValue={port.address.toString()} onKeyDown={handle_number}/>
                 <SelectField<SimpleStringOption>
                     stacked
@@ -67,6 +114,20 @@ const EndpointFields = (props: IoBlockEndpointsProps & {port: io_port}) =>{
                     <Checkbox name="signed" value={port.signed} onChange={(event) => edit("signed", event.target.checked)} label="Signed"/>
                 </>}
             </TypeOptionsContainer>
+            {block.direction === "source" && (
+                <TypeOptionsContainer label="Source" emulation_only badge={{icon: <MdScience/>, text: "Emulation only"}}>
+                    <FieldSpan>
+                        <SelectField<SimpleStringOption>
+                            stacked
+                            label="Type"
+                            onChange={handle_source_type}
+                            value={{label: source.type, value: source.type}}
+                            name="source_type"
+                            options={SOURCE_TYPES}/>
+                    </FieldSpan>
+                    {source_options()}
+                </TypeOptionsContainer>
+            )}
         </FieldPaneRow>
     );
 };

@@ -27,6 +27,7 @@ import type {
     core_deployment_options,
     core_input,
     core_input_data,
+    core_input_source,
     core_memory,
     core_output,
     io_block,
@@ -311,6 +312,24 @@ export class up_emulator {
         return this.send_io_block(block, "edit");
     }
 
+    /// Where the data of the endpoint of a source comes from in an emulation, when it was not said: a constant of zero. It
+    /// has the shape of the source of the input of a core, with the one channel that an endpoint carries
+    static default_io_source = (): core_input_source => ({
+        type: "constant",
+        value: [0],
+        shape: "square",
+        von: [0],
+        voff: [0],
+        tdelay: [0],
+        ton: [0],
+        period: [0],
+        dc_offset: [0],
+        amplitude: [0],
+        frequency: [0],
+        phase: [0],
+        duty: [0]
+    } as core_input_source);
+
     add_io_port = async (block_id: number) => {
         let block: io_block = JSON.parse(JSON.stringify(this.io_blocks[block_id]));
 
@@ -319,7 +338,9 @@ export class up_emulator {
             address: 0,
             type: "float",
             width: 32,
-            signed: true
+            signed: true,
+            // the endpoints of a source are where the data of the emulation enters
+            ...(block.direction === "source" ? {source: up_emulator.default_io_source()} : {})
         };
         block.ports.push(port);
         return this.send_io_block(block, "edit");
