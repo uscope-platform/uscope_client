@@ -21,7 +21,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import EmulatorDiagram from "./EmulatorDiagram.js";
 import type {BlockKind} from "./EmulatorLibrary.js";
 import {up_emulator_result, download_text, up_emulator} from "#client_core/index.js";
-import {SimpleContent, PaneGroup, TabbedContent, UIPanel} from "#UI/index.js";
+import {PaneGroup, TabbedContent, UIPanel} from "#UI/index.js";
 import CoreIoPanel from "./CoreIoPanel.js";
 import {ApplicationContext} from "#src/ApplicationContext.js";
 import type {io_block, emulator_layout, EmulatorGraphEdge, EmulatorGraphNode, EmulatorIomSelector, EmulatorSelections} from "#interfaces/index.js";
@@ -321,8 +321,8 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
         
         return(
             <PaneGroup id="emulator_editor" orientation="vertical" style={{paddingTop: "10px", boxSizing: "border-box"}}>
-                <UIPanel id="diagram" key="emulator_diagram" level="level_2" default_size={65} min_size={20}>
-                    <SimpleContent name="Emulation_diagram" height="100%">
+                <UIPanel id="diagram" key="emulator_diagram" level="level_2" default_size={65} min_size={20} collapsible={false}>
+                    <div style={{flex: 1, minHeight: 0}}>
                         <EmulatorDiagram
                             onNodeSelect={handle_node_select}
                             onEdgeSelect={handle_edge_select}
@@ -345,7 +345,7 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
                             edges={edges}
                             enabled_actions={enabled_actions}
                         />
-                    </SimpleContent>
+                    </div>
                 </UIPanel>
                 <UIPanel id="core_io" key="emulator_core_io" level="level_2" default_size={35} min_size="150px">
                     <CoreIoPanel
