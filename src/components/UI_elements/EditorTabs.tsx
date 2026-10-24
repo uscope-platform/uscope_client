@@ -19,7 +19,7 @@ import {MdClose} from "react-icons/md";
 import {ColorTheme} from "./ColorTheme.js";
 import {ConfirmDialog} from "./ConfirmDialog.js";
 import {ContentDiv} from "./panels/UIPanel.js";
-import {PanelTitle, TitleBar} from "./panels/TitleBar.js";
+import {PanelTitle, TabStrip, TitleBar} from "./panels/TitleBar.js";
 
 interface RememberedTabs {
     open_ids: number[];
@@ -126,26 +126,28 @@ export const EditorTabs = <T extends {id: number, name: string}>(props: EditorTa
     return(
         <div style={{display: "flex", flexDirection: "column", flex: 1, minHeight: 0}}>
             <TitleBar name={props.title}>
-                {props.items.length === 0 && <PanelTitle selected>{props.title}</PanelTitle>}
-                {props.items.map((item) => (
-                    <PanelTitle
-                        key={item.id}
-                        selected={item.id === props.active_id}
-                        onClick={() => props.on_select(item.id)}
-                        onDoubleClick={(event) => {event.stopPropagation(); props.on_keep(item.id);}}
-                        style={item.id === props.preview_id ? {fontStyle: "italic"} : undefined}
-                    >
-                        {item.name}{dirty_ids[item.id] ? " *" : ""}
-                        <MdClose
-                            aria-label={"Close " + item.name}
-                            size="1.1em"
-                            color={ColorTheme.icons_color}
-                            style={{marginLeft: "0.5em", borderRadius: 3}}
-                            onClick={(event) => {event.stopPropagation(); request_close(item);}}
-                        />
-                    </PanelTitle>
-                ))}
-                {props.actions && <div style={{marginLeft: "auto", display: "flex", alignItems: "center"}}>{props.actions}</div>}
+                <TabStrip>
+                    {props.items.length === 0 && <PanelTitle selected>{props.title}</PanelTitle>}
+                    {props.items.map((item) => (
+                        <PanelTitle
+                            key={item.id}
+                            selected={item.id === props.active_id}
+                            onClick={() => props.on_select(item.id)}
+                            onDoubleClick={(event) => {event.stopPropagation(); props.on_keep(item.id);}}
+                            style={item.id === props.preview_id ? {fontStyle: "italic"} : undefined}
+                        >
+                            {item.name}{dirty_ids[item.id] ? " *" : ""}
+                            <MdClose
+                                aria-label={"Close " + item.name}
+                                size="1.1em"
+                                color={ColorTheme.icons_color}
+                                style={{marginLeft: "0.5em", borderRadius: 3}}
+                                onClick={(event) => {event.stopPropagation(); request_close(item);}}
+                            />
+                        </PanelTitle>
+                    ))}
+                </TabStrip>
+                {props.actions && <div style={{display: "flex", alignItems: "center", flexShrink: 0}}>{props.actions}</div>}
             </TitleBar>
             <ContentDiv>
                 {props.items.length === 0 && (

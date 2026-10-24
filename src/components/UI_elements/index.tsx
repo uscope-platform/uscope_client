@@ -61,7 +61,7 @@ export {SidebarCollapsableNameLayout} from "./Layouts/SidebarCollapsableNameLayo
 export {SidebarCollapsableContentLayout} from "./Layouts/SidebarCollapsableContentLayout.js"
 
 export {SimpleContent} from './panels/SimpleContent.js'
-export {TitleBar, PanelTitle} from './panels/TitleBar.js'
+export {TitleBar, PanelTitle, TabStrip} from './panels/TitleBar.js'
 export {EditorTabs, useEditorTabs} from './EditorTabs.js'
 export {Toolbar, ToolbarButton, ToolbarSeparator} from './Toolbar.js'
 export {ContentDiv} from './panels/UIPanel.js'

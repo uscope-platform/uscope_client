@@ -16,7 +16,7 @@
 import React from 'react';
 import type {ReactNode} from 'react';
 import {ContentDiv} from "./UIPanel.js";
-import {PanelTitle, TitleBar} from "./TitleBar.js";
+import {PanelTitle, TabStrip, TitleBar} from "./TitleBar.js";
 
 interface TabbedContentProps {
     names: string[];
@@ -51,7 +51,9 @@ export let TabbedContent = function (props: TabbedContentProps) {
     return(
         <>
             <TitleBar name={props.names.join("_")}>
-                {construct_titles()}
+                <TabStrip>
+                    {construct_titles()}
+                </TabStrip>
             </TitleBar>
             <ContentDiv>
                 {childrenArray[props.selected]}

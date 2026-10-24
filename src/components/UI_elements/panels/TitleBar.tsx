@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import type {HTMLAttributes, ReactNode} from 'react';
 import {css} from 'goober';
 import {MdKeyboardArrowDown} from "react-icons/md";
@@ -106,13 +106,20 @@ const title_class = (selected: boolean, clickable: boolean) => css`
     flex-shrink: 0;
     box-sizing: border-box;
     height: 100%;
-    padding: 0 0.7em;
+    padding: 0 0.8em;
     font-size: 0.92rem;
     font-weight: 600;
     white-space: nowrap;
     cursor: ${clickable ? "pointer" : "default"};
-    opacity: ${selected ? 1 : 0.6};
+    opacity: ${selected ? 1 : 0.65};
     border-bottom: 2px solid ${selected ? ColorTheme.background.accents : "transparent"};
+    ${clickable ? `
+    border-radius: 6px 6px 0 0;
+    transition: background 0.15s, opacity 0.15s;
+    background: ${selected ? ColorTheme.background.transparent_accents : "transparent"};
+    &:hover {
+        background: ${selected ? ColorTheme.background.transparent_accents : ColorTheme.background.level_5};
+    }` : ""}
     &:hover {
         opacity: 1;
     }
@@ -124,5 +131,85 @@ interface PanelTitleProps extends HTMLAttributes<HTMLDivElement> {
 
 /// A title of a panel, or a tab when it has an onClick; the selected one has the accent underline
 export const PanelTitle = ({selected, ...rest}: PanelTitleProps) => (
-    <div className={title_class(selected, rest.onClick !== undefined)} data-title="" {...rest}/>
+    <div
+        className={title_class(selected, rest.onClick !== undefined)}
+        data-title=""
+        data-selected={selected ? "" : undefined}
+        {...(rest.onClick !== undefined ? {role: "tab", "aria-selected": selected} : {})}
+        {...rest}
+    />
 );
+
+const strip_class = css`
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+`;
+
+// the width of the fade that tells there are tabs past the edge
+const FADE = "1.6em";
+
+/// The tabs of a title bar, in a row that scrolls when they do not fit: without a scrollbar, with a fade at the edge
+/// that has more tabs behind it, the wheel scrolling it sideways, and the selected tab brought into view.
+export const TabStrip = (props: {children: ReactNode}) => {
+    const strip = useRef<HTMLDivElement>(null);
+    const [more, set_more] = useState({before: false, after: false});
+
+    const measure = () => {
+        const el = strip.current;
+        if(!el) return;
+        const before = el.scrollLeft > 1;
+        const after = el.scrollLeft + el.clientWidth < el.scrollWidth - 1;
+        set_more((current) => current.before === before && current.after === after ? current : {before, after});
+    };
+
+    useEffect(() => {
+        const el = strip.current;
+        if(!el) return;
+        measure();
+        const observer = new ResizeObserver(measure);
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, []);
+
+    // the tab that was selected is brought into view, from the side it is out of
+    useEffect(() => {
+        const el = strip.current;
+        const tab = el?.querySelector<HTMLElement>("[data-selected]");
+        if(!el || !tab) return;
+        const margin = 24;
+        if(tab.offsetLeft - margin < el.scrollLeft) el.scrollLeft = Math.max(0, tab.offsetLeft - margin);
+        else if(tab.offsetLeft + tab.offsetWidth + margin > el.scrollLeft + el.clientWidth) el.scrollLeft = tab.offsetLeft + tab.offsetWidth + margin - el.clientWidth;
+        measure();
+    });
+
+    const on_wheel = (event: React.WheelEvent<HTMLDivElement>) => {
+        const el = strip.current;
+        // a mouse wheel scrolls up and down: here it is the way along the tabs
+        if(el && Math.abs(event.deltaY) > Math.abs(event.deltaX)) el.scrollLeft += event.deltaY;
+    };
+
+    const mask = `linear-gradient(to right, ${more.before ? "transparent" : "black"}, black ${more.before ? FADE : "0"}, black calc(100% - ${more.after ? FADE : "0px"}), ${more.after ? "transparent" : "black"})`;
+
+    return (
+        <div
+            ref={strip}
+            className={strip_class}
+            role="tablist"
+            onScroll={measure}
+            onWheel={on_wheel}
+            style={{maskImage: mask, WebkitMaskImage: mask}}
+        >
+            {props.children}
+        </div>
+    );
+};
