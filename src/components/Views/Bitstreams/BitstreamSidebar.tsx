@@ -13,101 +13,124 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
 
-import {download_bitstream, get_next_id, up_bitstream, upload_raw} from "#client_core/index.js";
-import {SelectableList, SideToolbar, SidebarColumn} from "#UI/index.js";
+import React from 'react';
+import {toast} from "react-toastify";
+
+import {download_bitstream, get_next_id, up_application, up_bitstream, upload_raw} from "#client_core/index.js";
+import {error_text} from "#client_core/proxy/errors.js";
+import {AddCard, SelectableList, SidebarColumn, useListSelection} from "#UI/index.js";
 import {useAppSelector} from "#redux/hooks.js";
 import type {bitstream_model} from "#interfaces/index.js";
+import {applications_using, short_hash} from "./bitstream_info.js";
 
 interface BitstreamSidebarProps {
-    on_select: (bitstream: bitstream_model) => void;
-    bitstream: up_bitstream;
+    on_select: (id: number) => void;
+    // the id of the bitstream that is shown
+    selected: number;
 }
 
 let  BitstreamSidebar = (props: BitstreamSidebarProps) =>{
 
     const bitstreams_store = useAppSelector(state => state.bitstreams);
+    const applications = useAppSelector(state => state.applications);
+    const selection = useListSelection("bitstreams");
 
-    let handleOnSelect = (selection: string) => {
-        if(props.bitstream.name !==selection){
-            let bit = Object.values(bitstreams_store).filter((bitstream)=>{
-                return bitstream.name === selection;
-            })[0];
-            props.on_select(bit);
-        }
+    const bitstreams = Object.values(bitstreams_store);
+    const named = (name: string) => bitstreams.find((bit) => bit.name === name);
+
+    let handleSelect = (name: string) => {
+        selection.clear();
+        const bit = named(name);
+        if(bit !== undefined) props.on_select(bit.id);
     };
 
     let handleAdd = async () =>{
-
-        let ids = Object.values(bitstreams_store).map(a => a.id);
-        let id = get_next_id(ids);
-        let event = await upload_raw();
-        let file = await  up_bitstream.get_file_content( event);
-
-        let bit : bitstream_model= {
-            id:id,
-            name:file.name,
-            data:file.content
+        try{
+            let event = await upload_raw();
+            let file = await up_bitstream.get_file_content(event);
+            const id = get_next_id(bitstreams.map(a => a.id));
+            // the applications refer to a bitstream by its name, so it has to be the only one with it
+            const name = named(file.name) === undefined ? file.name : file.name + "_" + id;
+            await new up_bitstream({id: id, name: name, data: file.content}).add_remote();
+            props.on_select(id);
+        } catch (err) {
+            toast.error(error_text(err));
         }
-        let bitstream = new up_bitstream(bit);
-        bitstream.add_remote().then();
-
     };
 
-    let handleRemove = (bitstream: string) =>{
-        let deleted = Object.values(bitstreams_store).filter((bit)=>{
-            return bit.name === bitstream;
-        })[0];
-        props.on_select({
-            id:9999,
-            name:"",
-            data:""
-        })
-        up_bitstream.delete_bitstream(deleted).then();
-
+    // the applications that loaded it by its name keep loading it
+    let handleRename = async (name: string, new_name: string) =>{
+        const bit = named(name);
+        if(bit === undefined) return;
+        try{
+            await new up_bitstream(bit).edit_field("name", new_name);
+            for(const application of applications_using(name, applications)){
+                await new up_application(application).edit_bitstream(new_name);
+            }
+        } catch (err) {
+            toast.error(error_text(err));
+        }
     };
 
-    let get_content = () =>{
-        let types: string[] = [];
-        let items = Object.values(bitstreams_store).map((scr)=>{
-            types.push("generic");
-            return scr.name;
-        })
-
-        return [items, types]
-    }
-
-
-    const [names, types] = get_content();
-
-
-    let handleImport = () =>{
-
+    let removeBitstream = async (bit: bitstream_model) =>{
+        await up_bitstream.delete_bitstream(new up_bitstream(bit));
     };
 
-    let handleExport = async () =>{
-        let file = await props.bitstream.export_bitstream();
-        download_bitstream(file.data, file.name);
+    let handleRemove = async (name: string) =>{
+        const bit = named(name);
+        if(bit === undefined) return;
+        const users = applications_using(name, applications);
+        if(users.length > 0) toast.warn(users.map((a) => a.application_name).join(", ") + (users.length > 1 ? " load" : " loads") + " this bitstream, and will not find it");
+        await removeBitstream(bit);
     };
 
+    let handleRemoveMany = async (names: string[]) =>{
+        for(const name of names){
+            const bit = named(name);
+            if(bit !== undefined) await removeBitstream(bit);
+        }
+    };
+
+    let exportBitstream = async (bit: bitstream_model) =>{
+        try{
+            const file = await new up_bitstream(bit).export_bitstream();
+            download_bitstream(file.data, file.name);
+        } catch (err) {
+            toast.error(error_text(err));
+        }
+    };
+
+    const names = bitstreams.map((bit) => bit.name);
+    const selected_bit = bitstreams_store[props.selected];
 
     return(
         <SidebarColumn panels={[{title: "Bitstream List", content: (
-            <div>
-                <SideToolbar
-                    onAdd={handleAdd}
-                    onImport={handleImport}
-                    onExport={handleExport}
-                    contentName="Bitstream"
-                    exportEnabled={props.bitstream.id !== 9999}
-                />
+            <div style={{display: "flex", flexDirection: "column"}}>
+                <AddCard label="Add Bitstream" onClick={handleAdd}/>
                 <SelectableList
+                    variant="card"
                     items={names}
-                    types={types}
-                    selected_item={props.bitstream.name}
+                    descriptions={bitstreams.map(short_hash)}
+                    selected_item={selected_bit?.name}
+                    {...(selection.many ? {selection: selection.many} : {})}
+                    onSelectionChange={(selected_names) => selection.change(selected_names, handleSelect)}
+                    onSelect={handleSelect}
+                    onRename={handleRename}
                     onRemove={handleRemove}
-                    onSelect={handleOnSelect}
+                    onRemoveMany={handleRemoveMany}
+                    item_actions={(name) => {
+                        const bit = named(name);
+                        return bit === undefined ? [] : [{label: "Export", onSelect: () => exportBitstream(bit)}];
+                    }}
+                    bulk_actions={(selected_names) => [{
+                        label: "Export " + selected_names.length + " items",
+                        onSelect: () => selected_names.forEach((name) => {
+                            const bit = named(name);
+                            if(bit !== undefined) exportBitstream(bit);
+                        })
+                    }]}
+                    style={{maxHeight: "none"}}
                 />
             </div>
         )}]}/>
@@ -115,5 +138,3 @@ let  BitstreamSidebar = (props: BitstreamSidebarProps) =>{
 };
 
 export default BitstreamSidebar;
-
-
