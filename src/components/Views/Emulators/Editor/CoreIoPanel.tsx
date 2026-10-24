@@ -21,11 +21,16 @@ import CoreInputsList from "./CoreInputsList.js";
 import CoreOutputsList from "./CoreOutputsList.js";
 import CoreMemoriesList from "./CoreMemoriesList.js";
 import CoreInputFilesList from "./CoreInputFilesList.js";
+import {IoBlockEndpoints} from "./IoBlockEndpoints.js";
+import {EdgeChannels} from "./EdgeChannels.js";
+import CoreProperties from "./CoreProperties.js";
+import EmulatorProperties from "./EmulatorProperties.js";
+import WarningsPanel from "./WarningsPanel.js";
 import NodeIomProperties from "../Sidebar/NodesSidebar/EndpointProperties/NodeIomProperties.js";
 import type {EmulatorIomSelector, EmulatorSelections} from "#interfaces/index.js";
 
-const TABS = ["Inputs", "Outputs", "Memory", "Input Files"];
-const TAB_TYPES: (EmulatorIomSelector["type"] | null)[] = ["inputs", "outputs", "memory_init", null];
+const TABS = ["Core Properties", "Inputs", "Outputs", "Memory", "Input Files"];
+const TAB_TYPES: (EmulatorIomSelector["type"] | null)[] = [null, "inputs", "outputs", "memory_init", null];
 
 interface CoreIoPanelProps {
     emulator: up_emulator,
@@ -33,6 +38,9 @@ interface CoreIoPanelProps {
     on_selection: (iom: EmulatorIomSelector) => void,
     selected_tab: number,
     on_tab_select: (tab: number) => void,
+    bump_version: () => void,
+    // what the toolchain found wrong with the emulator, shown when nothing is selected
+    compile_warning: string[],
 }
 
 // the hint that stands where there is nothing to show yet
@@ -55,11 +63,16 @@ let CoreIoPanel = (props: CoreIoPanelProps) =>{
         ? Object.values(props.emulator.cores).find((c) => c.id === component.obj.id)
         : undefined;
 
+    // a source or a sink has endpoints, not the inputs, outputs and memory of a core
+    const io_block = component?.type === "node" ? props.emulator.io_blocks[component.obj.id] : undefined;
+
     const iom = props.selections.iom;
     const show_properties = core !== undefined && component !== null && iom !== null && iom.type === TAB_TYPES[props.selected_tab];
 
     // the tab where many items are selected, and how many: the properties of one are not shown then
     const [multi, set_multi] = useState({tab: -1, count: 0});
+    // the tab of the emulator, that is what the bar shows when nothing is selected
+    const [emulator_tab, set_emulator_tab] = useState(0);
     const list_props = (tab: number) => ({
         emulator: props.emulator,
         selections: props.selections,
@@ -88,24 +101,57 @@ let CoreIoPanel = (props: CoreIoPanelProps) =>{
         </div>
     );
 
-    // without a core there is nothing to add to: the tab is dimmed and does not take clicks
-    const needs_core = (content: React.ReactNode) => core !== undefined ? content : (
-        <div style={{position: "relative", height: "100%"}}>
-            <div aria-disabled="true" inert style={{height: "100%", opacity: 0.4, pointerEvents: "none", filter: "grayscale(1)", userSelect: "none"}}>
-                {content}
-            </div>
-            <div style={{...placeholder_style, position: "absolute", inset: 0, height: "auto", pointerEvents: "none"}}>
-                Select a core to edit its inputs, outputs and memory
-            </div>
-        </div>
-    );
+    // nothing is selected: the emulator itself
+    if(core === undefined && io_block === undefined && component?.type !== "edge"){
+        return(
+            <TabbedContent names={["Emulator Properties", "Warnings"]} onSelect={set_emulator_tab} selected={emulator_tab}>
+                <EmulatorProperties selected_emulator={props.emulator}/>
+                <WarningsPanel compile_warning={props.compile_warning}/>
+            </TabbedContent>
+        );
+    }
+
+    // a connection between two nodes has its DMA channels
+    if(component?.type === "edge"){
+        return(
+            <TabbedContent names={["DMA Channels"]} onSelect={() => {}} selected={0}>
+                <EdgeChannels
+                    // another connection starts afresh
+                    key={component.obj.from + "-" + component.obj.to}
+                    emulator={props.emulator}
+                    edge={component.obj}
+                    revision={props.selections.obj_version}
+                />
+            </TabbedContent>
+        );
+    }
+
+    if(io_block !== undefined){
+        return(
+            <TabbedContent names={["Endpoints"]} onSelect={() => {}} selected={0}>
+                <IoBlockEndpoints
+                    block={io_block}
+                    emulator={props.emulator}
+                    bump_version={props.bump_version}
+                />
+            </TabbedContent>
+        );
+    }
+
+    if(core === undefined || component === null) return null;
 
     return(
         <TabbedContent names={TABS} onSelect={props.on_tab_select} selected={props.selected_tab}>
-            {needs_core(with_properties(<CoreInputsList {...list_props(0)}/>, 0))}
-            {needs_core(with_properties(<CoreOutputsList {...list_props(1)}/>, 1))}
-            {needs_core(with_properties(<CoreMemoriesList {...list_props(2)}/>, 2))}
-            {needs_core(<CoreInputFilesList emulator={props.emulator} selections={props.selections}/>)}
+            <CoreProperties
+                selected_core={core}
+                selected_emulator={props.emulator}
+                selected_component={component}
+                bump_version={props.bump_version}
+            />
+            {with_properties(<CoreInputsList {...list_props(1)}/>, 1)}
+            {with_properties(<CoreOutputsList {...list_props(2)}/>, 2)}
+            {with_properties(<CoreMemoriesList {...list_props(3)}/>, 3)}
+            <CoreInputFilesList emulator={props.emulator} selections={props.selections}/>
         </TabbedContent>
     );
 };

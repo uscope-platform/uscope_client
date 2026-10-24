@@ -49,6 +49,7 @@ let HilEditorView = function (props: HilEditorViewProps) {
                     selections={props.selections}
                     on_selection={props.set_selections}
                     bump_version={props.bump_version}
+                    compile_warning={compiler_warnings}
                 />
             </MainPane>
             <HilEditorSidebar
@@ -57,7 +58,6 @@ let HilEditorView = function (props: HilEditorViewProps) {
                 on_emulator_select={props.on_emulator_select}
                 selections={props.selections}
                 set_selections={props.set_selections}
-                compile_warning={compiler_warnings}
             />
         </PaneGroup>
     );

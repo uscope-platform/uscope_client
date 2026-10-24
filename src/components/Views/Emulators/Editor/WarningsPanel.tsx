@@ -42,6 +42,10 @@ let  WarningsPanel = (props:WarningsPanelProps) =>{
         return ret;
     }
 
+    if(props.compile_warning.length === 0){
+        return <div style={{padding: "1em", fontStyle: "italic", color: "var(--text-secondary)"}}>No warnings.</div>;
+    }
+
     return(
         <div style={{display:"flex", flexDirection:"column", gap:"0.25em", margin:"0.5em"}}>
             {print_warnings()}

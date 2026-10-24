@@ -15,7 +15,8 @@
 
 import React, {type ChangeEvent, useEffect, useReducer, useState} from 'react';
 
-import {InputField, RangedInputField, Checkbox, FieldGrid, FieldPane, FieldSpan} from "#UI/index.js";
+import {RangedInputField, Checkbox, FieldPaneRow} from "#UI/index.js";
+import TypeOptionsContainer from "../Sidebar/NodesSidebar/EndpointProperties/TypeOptionsContainer.jsx";
 import {up_emulator} from "#client_core/index.js";
 
 
@@ -89,25 +90,23 @@ let  EmulatorProperties = (props: EmulatorPropertiesProps) =>{
     }
 
     return(
-        <FieldPane key="emulator_props">
-            <FieldGrid>
-                <FieldSpan>
-                    <RangedInputField
-                        id="emulation_time"
-                        name="emulation_time"
-                        label="Emulation time"
-                        rangeOptions={["us", "ms", "s"]}
-                        onKeyDown={handle_change}
-                        onRangeChange={handle_range_change}
-                        value={indicated_time}
-                        range={range}
-                    />
-                </FieldSpan>
-                <FieldSpan>
-                    <Checkbox name='deployment_mode' value={props.selected_emulator.deployment_mode} onChange={handle_deployment_mode} label="Custom deployment mode"/>
-                </FieldSpan>
-            </FieldGrid>
-        </FieldPane>
+        <FieldPaneRow key="emulator_props">
+            <TypeOptionsContainer label="Emulation">
+                <RangedInputField
+                    id="emulation_time"
+                    name="emulation_time"
+                    label="Emulation time"
+                    rangeOptions={["us", "ms", "s"]}
+                    onKeyDown={handle_change}
+                    onRangeChange={handle_range_change}
+                    value={indicated_time}
+                    range={range}
+                />
+            </TypeOptionsContainer>
+            <TypeOptionsContainer label="Deployment">
+                <Checkbox name='deployment_mode' value={props.selected_emulator.deployment_mode} onChange={handle_deployment_mode} label="Custom deployment mode"/>
+            </TypeOptionsContainer>
+        </FieldPaneRow>
     );
 
 };

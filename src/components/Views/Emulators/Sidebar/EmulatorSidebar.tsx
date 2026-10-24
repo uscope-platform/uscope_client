@@ -18,24 +18,19 @@ import React from 'react';
 import {SidebarColumn} from "#UI/index.js";
 import {up_emulator} from "#client_core/index.js";
 import EmulatorList from "./EmulatorList.jsx";
-import EmulatorProperties from "./EmulatorProperties.jsx";
-import WarningsPanel from "./WarningsPanel.jsx";
 
 interface EmulatorSidebarProps {
     emulator: up_emulator,
-    compile_warning: string[],
     on_select_emulator: (emulator: number) => void,
 }
 
-/// The sidebar of the editor when nothing is selected: the emulator itself
+/// The sidebar of the editor when nothing is selected: the emulators. The properties of the emulator are in the bar under the diagram.
 let EmulatorSidebar = (props: EmulatorSidebarProps) =>{
     return(
         <SidebarColumn
             style={{padding: "10px 0"}}
             panels={[
                 {title: "Emulator List", content: <EmulatorList on_select={props.on_select_emulator}/>},
-                {title: "Emulator Properties", content: <EmulatorProperties selected_emulator={props.emulator}/>},
-                {title: "Warnings", content: <WarningsPanel compile_warning={props.compile_warning}/>}
             ]}
         />
     );

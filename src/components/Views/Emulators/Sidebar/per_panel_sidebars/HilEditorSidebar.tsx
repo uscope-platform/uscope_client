@@ -26,7 +26,6 @@ interface HilEditorSidebarProps {
     emulator: up_emulator,
     selections: EmulatorSelections,
     bump_version: () => void,
-    compile_warning: string[],
     on_emulator_select: (emulator: number) => void,
     set_selections:(selection: EmulatorSelections) => void,
 }
@@ -44,7 +43,6 @@ let  HilEditorSidebar = (props: HilEditorSidebarProps) =>{
     if(component === null){
         return <EmulatorSidebar
             emulator={props.emulator}
-            compile_warning={props.compile_warning}
             on_select_emulator={handle_select_emulator}
         />;
     }

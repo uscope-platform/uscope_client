@@ -35,6 +35,7 @@ interface FcoreEmulationEditorProps {
     input_data: Record<string, number[]>,
     onEmulationDone: (result: up_emulator_result) => void,
     bump_version: () => void,
+    compile_warning: string[],
 }
 
 /// The edges of the diagram, one per connection: the id is the position of the connection, so that they are all different
@@ -322,6 +323,8 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
                         on_selection={handle_select_iom}
                         selected_tab={selected_inputs_tab}
                         on_tab_select={set_selected_inputs_tab}
+                        bump_version={props.bump_version}
+                        compile_warning={props.compile_warning}
                     />
                 </UIPanel>
             </PaneGroup>
