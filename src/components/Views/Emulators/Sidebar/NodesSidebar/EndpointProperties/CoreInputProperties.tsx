@@ -153,7 +153,7 @@ let  CoreInputProperties = (props: CoreInputPropertiesProps) =>{
                         key="source_series"
                         input={sel_in.source}
                         channel={selected_channel}
-                        selected_core={core}
+                        input_data={core.input_data}
                         onChange={handle_source_change}
                     />
                 )

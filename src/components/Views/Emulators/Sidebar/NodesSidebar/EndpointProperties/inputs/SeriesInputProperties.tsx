@@ -15,19 +15,20 @@
 
 import React from 'react';
 import {SelectField} from "#UI/index.js";
-import type {core, core_input_source, SimpleStringOption} from "#interfaces/index.js";
+import type {core_input_data, core_input_source, SimpleStringOption} from "#interfaces/index.js";
 import type {ActionMeta} from "react-select";
 
 interface SeriesInputPropertiesProps {
     input: core_input_source,
-    selected_core: core,
+    // the files of data that the series can be taken from
+    input_data: core_input_data[],
     channel: number,
     onChange: (field: string, value: string) => void,
 }
 
 export let SeriesInputProperties = (props:SeriesInputPropertiesProps) =>{
 
-    let files = props.selected_core.input_data.map((item)=>{
+    let files = props.input_data.map((item)=>{
         return Object.keys(item.data).map((name)=>{
             let label = name.split("[")[0];
             return {label:item.name + "." + label, value:item.name + "." + label};
