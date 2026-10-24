@@ -692,6 +692,23 @@ export class up_application {
         store.dispatch(updateApplication(this.deep_copy()));
     }
 
+    /// The bitstream that is loaded with the application, by its name; an empty name is none
+    edit_bitstream = async (name: string) =>{
+        this.bitstream = name;
+        let edit = {
+            application:this.id,
+            item:{
+                name:"bitstream",
+                value:name,
+                edit_name:false
+            },
+            action:"edit",
+            object:"misc"
+        };
+        await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
+        store.dispatch(updateApplication(this.deep_copy()));
+    }
+
     edit_soft_core =async (core_id: string, field_name: string, field_value: any) =>{
         let [core] = this.soft_cores.filter((sc) =>{
             return sc.id === core_id;

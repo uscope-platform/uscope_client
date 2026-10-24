@@ -22,10 +22,11 @@ import {
     up_application,
 } from "#client_core/index.js";
 import type {application_conflict, application_import_result} from "#client_core/index.js";
-import {SidebarBase, SidebarColumn} from "#UI/index.js";
+import {SelectField, SidebarBase, SidebarColumn} from "#UI/index.js";
+import type {SimpleStringOption} from "#interfaces/index.js";
 
 import {useAppSelector} from "#redux/hooks.js";
-import {error_text} from "#client_core/proxy/errors.js";
+import {error_text, report_error} from "#client_core/proxy/errors.js";
 import {ApplicationContext} from "#src/ApplicationContext.js";
 import {ImportConflictDialog} from "../../Common_Components/ImportConflictDialog.jsx";
 import {useConflictResolver} from "../../Common_Components/useConflictResolver.js";
@@ -44,6 +45,34 @@ const summarize_import = (r: application_import_result): string => {
         case "kept_old": return `"${r.name}" left as stored`;
         case "unchanged": return `"${r.name}" is already up to date`;
     }
+};
+
+const NO_BITSTREAM: SimpleStringOption = {label: "None", value: ""};
+
+/// Picks the bitstream that is loaded on the hardware with the application
+let BitstreamPanel = (props: {application: up_application}) =>{
+    const bitstreams = useAppSelector(state => state.bitstreams);
+
+    const options: SimpleStringOption[] = [NO_BITSTREAM, ...Object.values(bitstreams).map((bit) => ({label: bit.name, value: bit.name}))];
+    // one that was deleted is still what the application has, so it is shown as such
+    const current = props.application.bitstream;
+    const selected = options.find((o) => o.value === current) ?? {label: current + " (not found)", value: current};
+
+    return(
+        <div style={{margin: "0.5em"}}>
+            <SelectField<SimpleStringOption>
+                stacked
+                name="bitstream"
+                label="Bitstream"
+                value={selected}
+                options={options}
+                onChange={(option) => {props.application.edit_bitstream(option?.value ?? "").catch(report_error)}}
+            />
+            <div style={{fontSize: "0.8rem", opacity: 0.6, marginTop: "0.25rem"}}>
+                Loaded on the hardware when the application is chosen
+            </div>
+        </div>
+    );
 };
 
 let  ApplicationSidebar = (props: ApplicationSidebarProps) =>{
@@ -77,7 +106,7 @@ let  ApplicationSidebar = (props: ApplicationSidebarProps) =>{
                 initial_value={props.application}
                 onSelect={props.on_select}
             />
-        )}]}>
+        )}, {title: "Bitstream", content: <BitstreamPanel application={props.application}/>}]}>
             {pending !== null &&
                 <ImportConflictDialog
                     item_type="application"
