@@ -16,6 +16,7 @@
 import React from "react";
 import {
     InputField,
+    FormLayout,
     Card
 } from "#UI/index.js";
 
@@ -34,24 +35,16 @@ export let  MiscFieldProperties = (props: MiscFieldProperties) =>{
 
     let handleonKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
-            await props.application.edit_misc_param(props.name,event.currentTarget.value, event.currentTarget.name==="name");
+            await props.application.edit_misc_param(props.name, event.currentTarget.value, false);
             props.forceUpdate();
         }
     }
 
-    let handleRemove = async () =>{
-        await props.application.remove_misc_field(props.name);
-        props.forceUpdate();
-    }
-
-
     return(
-        <Card
-            name={props.name}
-            onRemove={handleRemove}
-        >
-            <InputField inline id="name" name="name" defaultValue={props.name} onKeyDown={handleonKeyDown} label="Name"/>
-            <InputField inline id="value"  name='value' defaultValue={props.value} onKeyDown={handleonKeyDown} label="Value"/>
+        <Card style={{width: "100%", paddingLeft: 0}}>
+            <FormLayout columns="10.5rem">
+                <InputField id="value" name='value' defaultValue={props.value} onKeyDown={handleonKeyDown} label="Value"/>
+            </FormLayout>
         </Card>
     );
 };

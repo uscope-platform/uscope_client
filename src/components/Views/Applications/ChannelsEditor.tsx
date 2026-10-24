@@ -18,8 +18,9 @@ import React from 'react';
 import {MdStar} from "react-icons/md";
 
 import {ColorTheme, ItemsEditor} from "#UI/index.js";
-import {PlotChannelGroupProperties, PlotChannelProperties, ParameterProperties} from "#components/Views/Applications/Properties/index.js";
+import {MacroProperties, MiscFieldProperties, PlotChannelGroupProperties, PlotChannelProperties, ParameterProperties} from "#components/Views/Applications/Properties/index.js";
 import type {up_application} from "#client_core/index.js";
+import {useAppSelector} from "#redux/hooks.js";
 
 interface EditorProps {
     application: up_application;
@@ -94,3 +95,56 @@ export let ParametersEditor = (props: EditorProps) =>(
         {parameter => <ParameterProperties application={props.application} forceUpdate={props.forceUpdate} parameter={parameter}/>}
     </ItemsEditor>
 );
+
+/// The macros of an application, the actions that run a script
+export let MacrosEditor = (props: EditorProps) =>{
+    const scripts = useAppSelector(state => state.scripts);
+
+    return(
+        <ItemsEditor
+            items={props.application.macro}
+            noun="macros"
+            name={macro => macro.name}
+            description={macro => macro.trigger !== null ? (scripts[macro.trigger]?.name ?? "Script not found") : "No script"}
+            onAdd={props.onAdd}
+            onRename={async (macro, name) => {
+                await props.application.edit_macro(macro.name, "name", name);
+                props.forceUpdate();
+            }}
+            onRemove={async macro => {
+                await props.application.remove_macro(macro.name);
+                props.forceUpdate();
+            }}
+        >
+            {macro => <MacroProperties application={props.application} forceUpdate={props.forceUpdate} macro={macro}/>}
+        </ItemsEditor>
+    );
+};
+
+/// The free fields of an application, a name and a value each, that scripts and the hardware read
+export let MiscEditor = (props: EditorProps) =>{
+    // the name and the bitstream of the application are not fields of it, an older version of the page kept them here
+    const fields = Object.entries(props.application.miscellaneous)
+        .filter(([name]) => name !== "application_name" && name !== "bitstream")
+        .map(([name, value]) => ({name, value: String(value)}));
+
+    return(
+        <ItemsEditor
+            items={fields}
+            noun="fields"
+            name={field => field.name}
+            description={field => field.value}
+            onAdd={props.onAdd}
+            onRename={async (field, name) => {
+                await props.application.edit_misc_param(field.name, name, true);
+                props.forceUpdate();
+            }}
+            onRemove={async field => {
+                await props.application.remove_misc_field(field.name);
+                props.forceUpdate();
+            }}
+        >
+            {field => <MiscFieldProperties application={props.application} forceUpdate={props.forceUpdate} name={field.name} value={field.value}/>}
+        </ItemsEditor>
+    );
+};

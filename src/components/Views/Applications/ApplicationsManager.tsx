@@ -20,11 +20,9 @@ import {useStoredInstance} from "#redux/useStoredInstance.js";
 import {
     PlotChannelProperties,
     PlotChannelGroupProperties,
-    MacroProperties,
     ParameterProperties,
     PeripheralProperties,
     SoftCoreProperties,
-    MiscFieldProperties,
     FilterProperties,
 } from "../Applications/Properties/index.js"
 
@@ -42,7 +40,7 @@ import {ApplicationContext} from "#src/ApplicationContext.js";
 import ApplicationSidebar from "./ApplicationSidebar.js";
 import {ScriptSelector} from "#components/Views/Applications/Properties/ScriptSelector.js";
 import {PeripheralsEditor} from "#components/Views/Applications/PeripheralsEditor.js";
-import {ChannelGroupsEditor, ChannelsEditor, ParametersEditor} from "#components/Views/Applications/ChannelsEditor.js";
+import {ChannelGroupsEditor, ChannelsEditor, MacrosEditor, MiscEditor, ParametersEditor} from "#components/Views/Applications/ChannelsEditor.js";
 import {MdAdd} from "react-icons/md";
 import {useAppSelector} from "#redux/hooks.js";
 
@@ -154,7 +152,6 @@ let  ApplicationsManager = (props: ApplicationsManagerProps) =>{
     let handleSelectPrograms = (id: string) => update_selection(selected_app.add_selected_program(parseInt(id)));
 
 
-    let misc_obj={application_name:selected_app.application_name, bitstream: selected_app.bitstream, ...selected_app.miscellaneous}
 
 
     return (
@@ -178,28 +175,11 @@ let  ApplicationsManager = (props: ApplicationsManagerProps) =>{
                         />
                     </div>
                     <div key="macros">
-                        <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
-                            <MdAdd
-                                onClick={() => {handle_add_new("macro", selected_app.macro, "name");}}
-                                size={ColorTheme.icons_size}
-                                style={{marginLeft: "0.3em"}}
-                                color={ColorTheme.icons_color}
-                            />
-                        </div>
-                        <CardStack>
-                            {
-                                selected_app.macro.map((macro) => {
-                                    return (
-                                        <MacroProperties
-                                            key={macro.name}
-                                            application={selected_app}
-                                            forceUpdate={forceUpdate}
-                                            macro={macro}
-                                        />
-                                    )
-                                })
-                            }
-                        </CardStack>
+                        <MacrosEditor
+                            application={selected_app}
+                            forceUpdate={forceUpdate}
+                            onAdd={() => {handle_add_new("macro", selected_app.macro, "name");}}
+                        />
                     </div>
                     <div key="parameters">
                         <ParametersEditor
@@ -240,25 +220,11 @@ let  ApplicationsManager = (props: ApplicationsManagerProps) =>{
                         </CardStack>
                     </div>
                     <div key="misc_fields">
-                        <MdAdd
-                            onClick={() => {handle_add_new("misc", selected_app.miscellaneous, "name");}}
-                            size={ColorTheme.icons_size}
-                            style={{marginLeft: "0.3em"}}
-                            color={ColorTheme.icons_color}
+                        <MiscEditor
+                            application={selected_app}
+                            forceUpdate={forceUpdate}
+                            onAdd={() => {handle_add_new("misc", selected_app.miscellaneous, "name");}}
                         />
-                        <CardStack>
-                            {
-                                Object.keys(misc_obj).map((key)=>{
-                                    return <MiscFieldProperties
-                                        key={key}
-                                        application={selected_app}
-                                        forceUpdate={forceUpdate}
-                                        name={key}
-                                        value={misc_obj[key]}
-                                    />
-                                })
-                            }
-                        </CardStack>
                     </div>
                     <div key="filters_card">
                         <MdAdd

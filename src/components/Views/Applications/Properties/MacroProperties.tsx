@@ -15,7 +15,7 @@
 
 import React from "react";
 import {
-    InputField,
+    FormLayout,
     Card
 } from "#UI/index.js";
 
@@ -31,31 +31,16 @@ interface MacroPropertiesProps{
 
 export let  MacroProperties = (props: MacroPropertiesProps) =>{
 
-    let handleonKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) =>{
-        if(event.key==="Enter"|| event.key ==="Tab"){
-            await props.application.edit_macro(props.macro.name, event.currentTarget.name, event.currentTarget.value);
-            props.forceUpdate();
-        }
-    }
-
     let handleScriptChange = async (script_id: number | null) =>{
         await props.application.edit_macro(props.macro.name, "trigger", script_id);
         props.forceUpdate();
     }
 
-    let handleRemove= async () =>{
-        await props.application.remove_macro(props.macro.name);
-        props.forceUpdate();
-    }
-
-
     return(
-        <Card
-            name={props.macro.name}
-            onRemove={handleRemove}
-        >
-            <InputField inline id='name' name='name' defaultValue={props.macro.name} onKeyDown={handleonKeyDown} label="Name"/>
-            <ScriptSelector name="trigger" value={props.macro.trigger} onChange={handleScriptChange}/>
+        <Card style={{width: "100%", paddingLeft: 0}}>
+            <FormLayout columns="10.5rem">
+                <ScriptSelector stacked name="trigger" label="Script run by the macro" value={props.macro.trigger} onChange={handleScriptChange}/>
+            </FormLayout>
         </Card>
     );
 };
