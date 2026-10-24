@@ -18,11 +18,14 @@ import {AddCard} from "#UI/index.js";
 import {SelectableList} from "#UI/index.js";
 import {up_emulator} from "#client_core/index.js";
 import type {EmulatorIomSelector, EmulatorSelections} from "#interfaces/index.js";
+import {useListSelection} from "#UI/useListSelection.js";
 
 interface CoreMemoriesListProps {
     emulator: up_emulator,
     selections: EmulatorSelections,
-    on_selection: (iom: EmulatorIomSelector) => void
+    on_selection: (iom: EmulatorIomSelector) => void,
+    /// told when many items are selected (with their names), or not anymore
+    on_multi?: (names: string[]) => void
 }
 
 let  CoreMemoriesList = (props: CoreMemoriesListProps) =>{
@@ -30,6 +33,8 @@ let  CoreMemoriesList = (props: CoreMemoriesListProps) =>{
     let selected_core_id = props.selections.component ? props.selections.component.obj.id : null;
 
     let [selected, set_selected] = useState("");
+
+    const selection = useListSelection(selected_core_id, props.on_multi);
 
     let [memories, set_memories] = useState<string[]>([]);
 
@@ -71,7 +76,14 @@ let  CoreMemoriesList = (props: CoreMemoriesListProps) =>{
         });
     }
 
+    let remove_many = async (names: string[]) =>{
+        if(selected_core_id === null) return;
+        for(const name of names) await props.emulator.remove_memory(selected_core_id, name);
+        set_memories(props.emulator.get_memory_names(selected_core_id));
+    }
+
     let handle_select = (args: string) =>{
+        selection.clear();
         props.on_selection({type:"memory_init", obj:args});
         set_selected(args)
     }
@@ -80,6 +92,8 @@ let  CoreMemoriesList = (props: CoreMemoriesListProps) =>{
         <div style={{maxHeight: "13em"}}>
             <AddCard label="Add memory" onClick={handle_add}/>
             <SelectableList style={{width: "auto"}} items={memories} selected_item={selected} onSelect={handle_select}
+                            {...(selection.many ? {selection: selection.many} : {})}
+                            onSelectionChange={(names) => selection.change(names, handle_select)} onRemoveMany={remove_many}
                             onRemove={handle_remove} onRename={handle_rename}/>
         </div>
     );

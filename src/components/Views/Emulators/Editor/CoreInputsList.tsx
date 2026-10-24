@@ -18,11 +18,14 @@ import {AddCard} from "#UI/index.js";
 import {SelectableList} from "#UI/index.js";
 import {up_emulator} from "#client_core/index.js";
 import type {EmulatorIomSelector, EmulatorSelections} from "#interfaces/index.js";
+import {useListSelection} from "#UI/useListSelection.js";
 
 interface CoreInputsListProps {
     emulator: up_emulator,
     selections: EmulatorSelections,
     on_selection: (iom: EmulatorIomSelector) => void,
+    /// told when many items are selected (with their names), or not anymore
+    on_multi?: (names: string[]) => void,
 }
 
 let  CoreInputsList = (props: CoreInputsListProps) =>{
@@ -30,6 +33,8 @@ let  CoreInputsList = (props: CoreInputsListProps) =>{
     let selected_core_id = props.selections.component ? props.selections.component.obj.id : null;
 
     let [selected, set_selected] = useState("");
+
+    const selection = useListSelection(selected_core_id, props.on_multi);
 
     let [inputs, set_inputs] = useState<string[]>([]);
 
@@ -72,7 +77,14 @@ let  CoreInputsList = (props: CoreInputsListProps) =>{
         });
     }
 
+    let remove_many = async (names: string[]) =>{
+        if(selected_core_id === null) return;
+        for(const name of names) await props.emulator.remove_input(selected_core_id, name);
+        set_inputs(props.emulator.get_input_names(selected_core_id));
+    }
+
     let handle_select = (args: string) =>{
+        selection.clear();
         props.on_selection({type:"inputs", obj:args})
         set_selected(args)
     }
@@ -82,6 +94,8 @@ let  CoreInputsList = (props: CoreInputsListProps) =>{
         <div  style={{maxHeight: "13em"}}>
             <AddCard label="Add input" onClick={handle_add}/>
             <SelectableList style={{width: "auto"}} items={inputs} selected_item={selected} onSelect={handle_select}
+                            {...(selection.many ? {selection: selection.many} : {})}
+                            onSelectionChange={(names) => selection.change(names, handle_select)} onRemoveMany={remove_many}
                             onRemove={handle_remove} onRename={handle_rename}/>
         </div>
     );

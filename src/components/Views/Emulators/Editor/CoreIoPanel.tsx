@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import React, {useState} from 'react';
 
 import {ColorTheme, TabbedContent} from "#UI/index.js";
 import {up_emulator} from "#client_core/index.js";
@@ -58,9 +58,20 @@ let CoreIoPanel = (props: CoreIoPanelProps) =>{
     const iom = props.selections.iom;
     const show_properties = core !== undefined && component !== null && iom !== null && iom.type === TAB_TYPES[props.selected_tab];
 
-    const list_props = {emulator: props.emulator, selections: props.selections, on_selection: props.on_selection};
+    // the tab where many items are selected, and how many: the properties of one are not shown then
+    const [multi, set_multi] = useState({tab: -1, count: 0});
+    const list_props = (tab: number) => ({
+        emulator: props.emulator,
+        selections: props.selections,
+        on_selection: props.on_selection,
+        on_multi: (names: string[]) => set_multi({tab, count: names.length})
+    });
 
-    const properties = show_properties
+    const properties = (tab: number) => multi.tab === tab && multi.count > 1
+        ? <div style={{padding: "1em", textAlign: "center", fontStyle: "italic", color: "var(--text-secondary)"}}>
+            {multi.count} items selected. Right click one of them for what can be done to all of them.
+        </div>
+        : show_properties
         ? <NodeIomProperties
             selected_core={core}
             selected_iom={iom}
@@ -70,10 +81,10 @@ let CoreIoPanel = (props: CoreIoPanelProps) =>{
         />
         : <div style={placeholder_style}>Select an item to edit it</div>;
 
-    const with_properties = (list: React.ReactNode) => (
+    const with_properties = (list: React.ReactNode, tab: number) => (
         <div style={{display: "flex", flexDirection: "row", height: "100%"}}>
             <div style={{flex: "0 0 14em", overflowY: "auto", overflowX: "hidden", background: ColorTheme.background.level_3}}>{list}</div>
-            <div style={{flex: 1, minWidth: 0, overflow: "auto"}}>{properties}</div>
+            <div style={{flex: 1, minWidth: 0, overflow: "auto"}}>{properties(tab)}</div>
         </div>
     );
 
@@ -91,9 +102,9 @@ let CoreIoPanel = (props: CoreIoPanelProps) =>{
 
     return(
         <TabbedContent names={TABS} onSelect={props.on_tab_select} selected={props.selected_tab}>
-            {needs_core(with_properties(<CoreInputsList {...list_props}/>))}
-            {needs_core(with_properties(<CoreOutputsList {...list_props}/>))}
-            {needs_core(with_properties(<CoreMemoriesList {...list_props}/>))}
+            {needs_core(with_properties(<CoreInputsList {...list_props(0)}/>, 0))}
+            {needs_core(with_properties(<CoreOutputsList {...list_props(1)}/>, 1))}
+            {needs_core(with_properties(<CoreMemoriesList {...list_props(2)}/>, 2))}
             {needs_core(<CoreInputFilesList emulator={props.emulator} selections={props.selections}/>)}
         </TabbedContent>
     );

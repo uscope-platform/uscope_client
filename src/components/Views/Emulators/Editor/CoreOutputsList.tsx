@@ -18,11 +18,14 @@ import {AddCard} from "#UI/index.js";
 import {SelectableList} from "#UI/index.js";
 import {up_emulator} from "#client_core/index.js";
 import type {EmulatorIomSelector, EmulatorSelections} from "#interfaces/index.js";
+import {useListSelection} from "#UI/useListSelection.js";
 
 interface CoreOutputsListProps {
     emulator: up_emulator,
     selections: EmulatorSelections,
-    on_selection: (iom: EmulatorIomSelector) => void
+    on_selection: (iom: EmulatorIomSelector) => void,
+    /// told when many items are selected (with their names), or not anymore
+    on_multi?: (names: string[]) => void
 }
 
 let  CoreOutputsList = (props: CoreOutputsListProps) =>{
@@ -30,6 +33,8 @@ let  CoreOutputsList = (props: CoreOutputsListProps) =>{
     let selected_core_id = props.selections.component ? props.selections.component.obj.id : null;
 
     let [selected, set_selected] = useState("");
+
+    const selection = useListSelection(selected_core_id, props.on_multi);
 
     let [outputs, set_outputs] = useState<string[]>([]);
 
@@ -71,7 +76,14 @@ let  CoreOutputsList = (props: CoreOutputsListProps) =>{
         });
     }
 
+    let remove_many = async (names: string[]) =>{
+        if(selected_core_id === null) return;
+        for(const name of names) await props.emulator.remove_output(selected_core_id, name);
+        set_outputs(props.emulator.get_output_names(selected_core_id));
+    }
+
     let handle_select = (args: string) =>{
+        selection.clear();
         props.on_selection({type:"outputs", obj:args});
         set_selected(args)
     }
@@ -80,6 +92,8 @@ let  CoreOutputsList = (props: CoreOutputsListProps) =>{
         <div>
             <AddCard label="Add output" onClick={handle_add}/>
             <SelectableList style={{width: "auto"}} items={outputs} selected_item={selected} onSelect={handle_select}
+                            {...(selection.many ? {selection: selection.many} : {})}
+                            onSelectionChange={(names) => selection.change(names, handle_select)} onRemoveMany={remove_many}
                             onRemove={handle_remove} onRename={handle_rename}/>
         </div>
     );
