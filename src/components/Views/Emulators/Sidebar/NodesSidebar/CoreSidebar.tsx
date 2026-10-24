@@ -18,8 +18,6 @@ import React from 'react';
 import {SidebarColumn} from "#UI/index.js";
 import {up_emulator} from "#client_core/index.js";
 import EmulatorList from "../EmulatorList.jsx";
-import EmulatorProperties from "../EmulatorProperties.jsx";
-import EmulatorCoreProperties from "./EmulatorCoreProperties.jsx";
 import EmulatorCoreDeploymentProperties from "./EmulatorCoreDeploymentProperties.jsx";
 import type {core, EmulatorComponentSelector} from "#interfaces/index.js";
 
@@ -31,22 +29,13 @@ interface CoreSidebarProps {
     bump_version: () => void,
 }
 
-/// The sidebar of the editor when a core is selected
+/// The sidebar of the editor when a core is selected. Its properties are in the bar under the diagram.
 let CoreSidebar = (props: CoreSidebarProps) =>{
     return(
         <SidebarColumn
             style={{padding: "10px 0"}}
             panels={[
                 {title: "Emulator List", content: <EmulatorList on_select={props.on_select_emulator}/>},
-                {title: "Emulator Properties", content: <EmulatorProperties selected_emulator={props.emulator}/>},
-                {title: "Node Properties", content: (
-                    <EmulatorCoreProperties
-                        selected_core={props.selected_core}
-                        selected_emulator={props.emulator}
-                        selected_component={props.selected_component}
-                        bump_version={props.bump_version}
-                    />
-                )},
                 ...(props.emulator.deployment_mode ? [{title: "Deployment Properties", content: (
                     <EmulatorCoreDeploymentProperties
                         selected_core={props.selected_core}

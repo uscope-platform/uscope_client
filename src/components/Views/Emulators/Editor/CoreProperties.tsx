@@ -15,7 +15,8 @@
 
 import React from 'react';
 
-import {FieldGrid, FieldPane, FieldSpan, InputField, SelectField} from "#UI/index.js";
+import {FieldPaneRow, InputField, SelectField} from "#UI/index.js";
+import TypeOptionsContainer from "../Sidebar/NodesSidebar/EndpointProperties/TypeOptionsContainer.jsx";
 import {useAppSelector} from "#redux/hooks.js";
 import {up_emulator} from "#client_core/index.js";
 import type {EmulatorComponentSelector, core, SimpleStringOption, core_options} from "#interfaces/index.js";
@@ -28,14 +29,15 @@ const efi_names = {
     efi_rec: "Reciprocal"
 }
 
-interface EmulatorCorePropertiesProps {
+interface CorePropertiesProps {
     selected_core: core,
     selected_emulator: up_emulator,
     selected_component: EmulatorComponentSelector,
     bump_version: () => void,
 }
 
-let  EmulatorCoreProperties = (props: EmulatorCorePropertiesProps) =>{
+/// The properties of the selected core: when and how it runs, the program, and the options of its hardware
+let  CoreProperties = (props: CorePropertiesProps) =>{
 
     const programs = useAppSelector(state => state.programs);
 
@@ -83,19 +85,22 @@ let  EmulatorCoreProperties = (props: EmulatorCorePropertiesProps) =>{
     }
 
     return(
-        <FieldPane key="node_props">
-            <FieldGrid>
+        <FieldPaneRow key="core_props">
+            <TypeOptionsContainer label="Execution">
                 <InputField id="channels" name="channels" label="Channels #" defaultValue={props.selected_core.channels.toString()} onKeyDown={handle_change}/>
                 <InputField id="order" name="order" label="Execution order" defaultValue={props.selected_core.order.toString()} onKeyDown={handle_change}/>
-                <FieldSpan>
-                    <SelectField
-                        stacked
-                        label="Program"
-                        onChange={handle_selection}
-                        value={selected_program}
-                        name="program"
-                        options={programs_list}/>
-                </FieldSpan>
+                <InputField id="sampling_frequency" name="sampling_frequency" label="Sampling frequency" defaultValue={props.selected_core.sampling_frequency.toString()} onKeyDown={handle_change}/>
+            </TypeOptionsContainer>
+            <TypeOptionsContainer label="Program">
+                <SelectField
+                    stacked
+                    label="Program"
+                    onChange={handle_selection}
+                    value={selected_program}
+                    name="program"
+                    options={programs_list}/>
+            </TypeOptionsContainer>
+            <TypeOptionsContainer label="Hardware options">
                 <SelectField<SimpleStringOption>
                     stacked
                     label="EFI"
@@ -118,12 +123,9 @@ let  EmulatorCoreProperties = (props: EmulatorCorePropertiesProps) =>{
                         {label: "reducing", value: "reducing"},
                         {label: "none", value: "none"}
                     ]}/>
-                <FieldSpan>
-                    <InputField id="sampling_frequency" name="sampling_frequency" label="Sampling frequency" defaultValue={props.selected_core.sampling_frequency.toString()} onKeyDown={handle_change}/>
-                </FieldSpan>
-            </FieldGrid>
-        </FieldPane>
+            </TypeOptionsContainer>
+        </FieldPaneRow>
     );
 };
 
-export default EmulatorCoreProperties;
+export default CoreProperties;
