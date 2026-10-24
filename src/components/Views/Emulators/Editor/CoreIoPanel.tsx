@@ -35,6 +35,18 @@ interface CoreIoPanelProps {
     on_tab_select: (tab: number) => void,
 }
 
+// the hint that stands where there is nothing to show yet
+const placeholder_style: React.CSSProperties = {
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "1em",
+    textAlign: "center",
+    fontStyle: "italic",
+    color: "var(--text-secondary)",
+};
+
 /// The inputs, outputs and memory of the selected core, each tab with its list and the properties of the selected item beside it
 let CoreIoPanel = (props: CoreIoPanelProps) =>{
 
@@ -56,7 +68,7 @@ let CoreIoPanel = (props: CoreIoPanelProps) =>{
             selected_component={component}
             on_iom_modify={props.on_selection}
         />
-        : <span style={{color: "var(--text-secondary)"}}>Select an item to edit it</span>;
+        : <div style={placeholder_style}>Select an item to edit it</div>;
 
     const with_properties = (list: React.ReactNode) => (
         <div style={{display: "flex", flexDirection: "row", height: "100%"}}>
@@ -65,12 +77,24 @@ let CoreIoPanel = (props: CoreIoPanelProps) =>{
         </div>
     );
 
+    // without a core there is nothing to add to: the tab is dimmed and does not take clicks
+    const needs_core = (content: React.ReactNode) => core !== undefined ? content : (
+        <div style={{position: "relative", height: "100%"}}>
+            <div aria-disabled="true" inert style={{height: "100%", opacity: 0.4, pointerEvents: "none", filter: "grayscale(1)", userSelect: "none"}}>
+                {content}
+            </div>
+            <div style={{...placeholder_style, position: "absolute", inset: 0, height: "auto", pointerEvents: "none"}}>
+                Select a core to edit its inputs, outputs and memory
+            </div>
+        </div>
+    );
+
     return(
         <TabbedContent names={TABS} onSelect={props.on_tab_select} selected={props.selected_tab}>
-            {with_properties(<CoreInputsList {...list_props}/>)}
-            {with_properties(<CoreOutputsList {...list_props}/>)}
-            {with_properties(<CoreMemoriesList {...list_props}/>)}
-            <CoreInputFilesList emulator={props.emulator} selections={props.selections}/>
+            {needs_core(with_properties(<CoreInputsList {...list_props}/>))}
+            {needs_core(with_properties(<CoreOutputsList {...list_props}/>))}
+            {needs_core(with_properties(<CoreMemoriesList {...list_props}/>))}
+            {needs_core(<CoreInputFilesList emulator={props.emulator} selections={props.selections}/>)}
         </TabbedContent>
     );
 };
