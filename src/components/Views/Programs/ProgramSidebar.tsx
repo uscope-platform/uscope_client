@@ -20,7 +20,7 @@ import ProgramProperties from "./ProgramProperties.js";
 import ProgramHeaders from "./ProgramHeaders.js";
 
 import {SidebarBase, SidebarColumn} from "#UI/index.js";
-import {ApplicationContext} from "#src/AuthApp.jsx";
+import {ApplicationContext} from "#src/ApplicationContext.js";
 import {useAppSelector} from "#redux/hooks.js";
 
 

@@ -20,7 +20,7 @@ import {styled} from "goober";
 
 import {run_script, up_peripheral} from "#client_core/index.js";
 
-import {ApplicationContext} from "#src/AuthApp.jsx";
+import {ApplicationContext} from "#src/ApplicationContext.js";
 import type {macro} from "#interfaces/index.js";
 
 

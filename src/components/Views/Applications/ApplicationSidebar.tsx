@@ -26,7 +26,7 @@ import {SidebarBase, SidebarColumn} from "#UI/index.js";
 
 import {useAppSelector} from "#redux/hooks.js";
 import {error_text} from "#client_core/proxy/errors.js";
-import {ApplicationContext} from "#src/AuthApp.jsx";
+import {ApplicationContext} from "#src/ApplicationContext.js";
 import {ImportConflictDialog} from "../../Common_Components/ImportConflictDialog.jsx";
 import {useConflictResolver} from "../../Common_Components/useConflictResolver.js";
 

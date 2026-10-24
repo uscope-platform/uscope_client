@@ -19,7 +19,7 @@ import {PlotConfigurations} from "#UI/index.js";
 import {apply_scope_data, download_plot, initialize_plot, subscribe_scope_frames} from "#client_core/index.js";
 import {latest_scope_data} from "#client_core/proxy/scope_stream.js";
 import useInterval from "../../Common_Components/useInterval.js";
-import {ApplicationContext} from "#src/AuthApp.jsx";
+import {ApplicationContext} from "#src/ApplicationContext.js";
 import type {plot_channel} from "#interfaces/index.js";
 import {ScopePlot, ScopePlotly} from "./ScopePlotly.js";
 

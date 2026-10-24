@@ -15,7 +15,7 @@
 
 import React, {useContext, useEffect, useState} from 'react';
 import {Checkbox, FormLayout, InputField, SelectField, SimpleContent, UIPanel, set_confirm_delete, useConfirmDelete} from "#UI/index.js";
-import {ApplicationContext} from "#src/AuthApp.jsx";
+import {ApplicationContext} from "#src/ApplicationContext.js";
 import ThemeSelector from "#components/Common_Components/ThemeSelector.js";
 import {up_application, up_settings} from "#client_core/index.js";
 import type {SimpleStringOption} from "#interfaces/index.js";

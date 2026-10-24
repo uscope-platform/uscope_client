@@ -23,7 +23,7 @@ import type {BlockKind} from "./EmulatorLibrary.js";
 import {up_emulator_result, download_text, up_emulator} from "#client_core/index.js";
 import {SimpleContent, PaneGroup, TabbedContent, UIPanel} from "#UI/index.js";
 import CoreIoPanel from "./CoreIoPanel.js";
-import {ApplicationContext} from "#src/AuthApp.jsx";
+import {ApplicationContext} from "#src/ApplicationContext.js";
 import type {io_block, emulator_layout, EmulatorGraphEdge, EmulatorGraphNode, EmulatorIomSelector, EmulatorSelections} from "#interfaces/index.js";
 
 interface FcoreEmulationEditorProps {

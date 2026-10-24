@@ -19,7 +19,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Chip, FieldGrid, FieldSpan, InputField, SelectField} from "#UI/index.js";
 import PlotControls from "../PlotControls.jsx";
 import {get_ui_state, save_ui_state, set_acquisition} from "#client_core/index.js";
-import {ApplicationContext} from "#src/AuthApp.jsx";
+import {ApplicationContext} from "#src/ApplicationContext.js";
 import {styled} from "goober";
 import type {ActionMeta} from "react-select";
 import type {scope_control, ScopeStatus, SimpleStringOption} from "#interfaces/index.js";

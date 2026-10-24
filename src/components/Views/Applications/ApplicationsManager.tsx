@@ -37,7 +37,7 @@ import {
 import {PaneGroup} from "#UI/index.js";
 
 import {get_next_id, up_application} from "#client_core/index.js";
-import {ApplicationContext} from "#src/AuthApp.jsx";
+import {ApplicationContext} from "#src/ApplicationContext.js";
 import ApplicationSidebar from "./ApplicationSidebar.js";
 import {ScriptSelector} from "#components/Views/Applications/Properties/ScriptSelector.js";
 import {PeripheralsEditor} from "#components/Views/Applications/PeripheralsEditor.js";

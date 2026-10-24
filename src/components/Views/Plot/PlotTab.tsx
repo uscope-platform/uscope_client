@@ -30,7 +30,7 @@ import {
     empty_channel_group
 } from "#client_core/index.js";
 import useInterval from "../../Common_Components/useInterval.js";
-import {ApplicationContext} from "#src/AuthApp.jsx";
+import {ApplicationContext} from "#src/ApplicationContext.js";
 import type {channel_group, plot_channel, ScopeStatus} from "#interfaces/index.js";
 import {MainPane, PaneGroup} from "#UI/index.js";
 

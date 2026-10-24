@@ -16,7 +16,7 @@
 import React, {useContext, useState} from 'react';
 
 import {FormLayout,SelectField} from "#UI/index.js";
-import {ApplicationContext} from "#src/AuthApp.jsx";
+import {ApplicationContext} from "#src/ApplicationContext.js";
 import type {channel_group, SimpleStringOption} from "#interfaces/index.js";
 import {empty_channel_group} from "#client_core/index.js";
 

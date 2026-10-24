@@ -17,7 +17,7 @@
 import React, {useContext, useReducer, useState} from 'react';
 import {SelectField} from "#UI/index.js";
 import {get_ui_state, save_ui_state, up_emulator} from "#client_core/index.js";
-import {ApplicationContext} from "#src/AuthApp.jsx";
+import {ApplicationContext} from "#src/ApplicationContext.js";
 import type {EmulatorHilChannelIdentifier} from "#interfaces/index.js";
 import type {ActionMeta} from "react-select";
 

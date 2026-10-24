@@ -27,6 +27,7 @@ import {useAppSelector} from "#redux/hooks.js";
 
 //////  STYLE IMPORTS
 import './App.css';
+import {ApplicationContext} from "./ApplicationContext.js";
 
 
 
@@ -39,8 +40,6 @@ interface view {
     type: string;
 }
 
-
-export const ApplicationContext = React.createContext(up_application.construct_empty(9999));
 
 interface AuthAppProps {
     user_role: 'admin' | 'user' | 'operator';
