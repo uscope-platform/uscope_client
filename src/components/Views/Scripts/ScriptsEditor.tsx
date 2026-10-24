@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React, {useState, useEffect} from "react";
-import {ColorTheme, TextEditor} from "#UI/index.js"
+import {TextEditor, Toolbar, ToolbarButton} from "#UI/index.js"
 
 import { javascript } from '@codemirror/lang-javascript';
 import {autocompletion, type CompletionContext} from '@codemirror/autocomplete';
@@ -22,7 +22,6 @@ import {
     autocompletion_engine, up_script
 } from "#client_core/index.js";
 import {MdSave} from "react-icons/md";
-import {Tooltip} from "#UI/Tooltip.js";
 import type {script} from "#interfaces/index.js";
 
 interface ScriptEditorProps {
@@ -76,16 +75,11 @@ let ScriptsEditor = (props: ScriptEditorProps) =>{
         }
     }
 
-    let save_color = dirty ? ColorTheme.icons_color:"gray";
-
     return(
         <div onKeyDown={handle_shortcuts}>
-            <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
-                <div id="save_icon">
-                    <MdSave onClick={handle_save} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={save_color}/>
-                    <Tooltip content="Save Program" place="top" />
-                </div>
-            </div>
+            <Toolbar>
+                <ToolbarButton label="Save" tooltip="Save Script" icon={<MdSave size="1.5em"/>} enabled={dirty} onClick={handle_save}/>
+            </Toolbar>
             <TextEditor
                 content={editor_content}
                 extensions={[javascript({ jsx: true }),autocompletion({override: [registers_completion]})]}
