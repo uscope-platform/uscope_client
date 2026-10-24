@@ -15,6 +15,7 @@
 
 import React, {useState} from 'react';
 
+import {MdUpload} from "react-icons/md";
 import {AddCard, SelectableList} from "../index.jsx";
 import type {ContextMenuAction} from "../ContextMenu.js";
 
@@ -37,6 +38,8 @@ interface SidebarBaseProps {
     onActivate?: (id: number) => void;
     onAdd?: (item: {id: any, object:any}) => void;
     onDelete?: (item: any) => void;
+    /// the list has an import of its own, that gets the content of the file; or the generic one, that adds the item and
+    /// then calls omImportDone. The button that starts the import is only on the lists that have one of the two
     onImport?: (item: string) => void;
     omImportDone?: (item: any) => void;
     // the content of the exported file, when it is not the item itself
@@ -237,22 +240,19 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
         }
     }
 
-    const import_action: ContextMenuAction = {label: "Import", onSelect: handleImport};
-
     // what is done to an item is done to the one the menu was opened on, not to the selected one
     let item_actions = (name: string): ContextMenuAction[] =>{
         const item = item_named(name);
         return [
             {label: "Duplicate", onSelect: () => handleCopy(item)},
             {label: "Export", onSelect: () => handleExport(item)},
-            ...(props.extra_item_actions?.(item) ?? []),
-            import_action
+            ...(props.extra_item_actions?.(item) ?? [])
         ];
     };
 
     return(
         <div style={{height:'20em', display:'flex', flexDirection:'column'}}>
-            <AddCard label={"Add " + props.content_name} onClick={handleAdd} actions={[import_action]}/>
+            <AddCard label={"Add " + props.content_name} onClick={handleAdd} secondary={props.onImport || props.omImportDone ? {label: "Import", icon: <MdUpload size="1.2em"/>, onClick: handleImport} : undefined}/>
             <SelectableList
                 items={names}
                 types={types}

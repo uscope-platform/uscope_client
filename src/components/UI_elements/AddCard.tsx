@@ -14,24 +14,21 @@
 // limitations under the License.
 
 import React from 'react';
+import type {ReactNode} from 'react';
 import {MdAdd} from "react-icons/md";
 import {ColorTheme} from "./ColorTheme.js";
-import {useContextMenu, type ContextMenuAction} from "./ContextMenu.js";
 
 interface AddCardProps {
     label: string;
     onClick: () => void;
-    /// what is in the menu of the card, like importing instead of creating
-    actions?: ContextMenuAction[];
+    /// a second action of the card, next to the first one: like importing an item instead of creating it
+    secondary?: {label: string, icon: ReactNode, onClick: () => void} | undefined;
 }
 
 /// The row on top of a list that adds an item to it
 export const AddCard = (props: AddCardProps) => {
-    const context_menu = useContextMenu(props.actions ?? []);
-
     return(
         <div
-            onContextMenu={context_menu.on_context_menu}
             style={{
                 display: "flex",
                 alignItems: "center",
@@ -48,8 +45,17 @@ export const AddCard = (props: AddCardProps) => {
                 <MdAdd size="1.2em"/>
                 <span>{props.label}</span>
             </div>
-            {context_menu.button}
-            {context_menu.menu}
+            {props.secondary && (
+                <div
+                    role="button"
+                    title={props.secondary.label}
+                    onClick={props.secondary.onClick}
+                    style={{display: "flex", alignItems: "center", gap: "0.3em", paddingLeft: "0.6em", borderLeft: "1px solid " + ColorTheme.background.bordersLight}}
+                >
+                    {props.secondary.icon}
+                    <span>{props.secondary.label}</span>
+                </div>
+            )}
         </div>
     );
 };
