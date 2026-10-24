@@ -63,6 +63,7 @@ export {SidebarCollapsableContentLayout} from "./Layouts/SidebarCollapsableConte
 export {SimpleContent} from './panels/SimpleContent.js'
 export {TitleBar, PanelTitle} from './panels/TitleBar.js'
 export {EditorTabs, useEditorTabs} from './EditorTabs.js'
+export {Toolbar, ToolbarButton, ToolbarSeparator} from './Toolbar.js'
 export {ContentDiv} from './panels/UIPanel.js'
 export {TabbedContent} from './panels/TabbedContent.js'
 export {UIPanel} from './panels/UIPanel.js'

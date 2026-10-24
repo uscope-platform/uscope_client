@@ -16,9 +16,8 @@
 import React, {useState, useEffect} from "react";
 
 import {cpp} from '@codemirror/lang-cpp'
-import {Tooltip} from "#UI/Tooltip.js";
 import {MdSave, MdBuild} from 'react-icons/md'
-import {ColorTheme, TextEditor} from "#UI/index.js";
+import {TextEditor, Toolbar, ToolbarButton, ToolbarSeparator} from "#UI/index.js";
 
 import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -74,22 +73,13 @@ let ProgramsEditor = (props: ProgramsEditorProps) =>{
 
 
 
-    let constructActionsBar = () =>{
-        let save_color = dirty ? ColorTheme.icons_color:"gray";
-        return(
-            <div style={{display:"flex", marginRight:"0.5em", justifyContent:"right"}}>
-                <div id="save_icon">
-                    <MdSave onClick={handle_save} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={save_color}/>
-                    <Tooltip anchorSelect="#save_icon" content="Save Program" place="top" />
-                </div>
-                <div id="build_icon">
-                    <MdBuild onClick={handle_build} size={ColorTheme.icons_size} style={{marginLeft:"0.3em"}} color={ColorTheme.icons_color}/>
-                    <Tooltip anchorSelect="#build_icon" content="Compile Program" place="top" />
-                </div>
-
-            </div>
-        )
-    }
+    let constructActionsBar = () =>(
+        <Toolbar>
+            <ToolbarButton label="Save" tooltip="Save Program" icon={<MdSave size="1.5em"/>} enabled={dirty} onClick={handle_save}/>
+            <ToolbarSeparator/>
+            <ToolbarButton label="Compile" tooltip="Compile Program" icon={<MdBuild size="1.5em"/>} onClick={handle_build}/>
+        </Toolbar>
+    );
 
     let handle_shortcuts = (event: React.KeyboardEvent<HTMLDivElement>) =>{
         if((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
