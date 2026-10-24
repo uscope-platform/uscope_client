@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import React, {useState} from 'react';
 import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -23,7 +23,7 @@ import {
 } from "#client_core/index.js";
 import type {peripheral_conflict, peripherals_import_summary} from "#client_core/index.js";
 
-import {SidebarBase, SidebarColumn} from "#UI/index.js";
+import {PromptDialog, SidebarBase, SidebarColumn} from "#UI/index.js";
 import {useAppSelector} from "#redux/hooks.js";
 import {error_text} from "#client_core/proxy/errors.js";
 import {ImportConflictDialog} from "../../Common_Components/ImportConflictDialog.jsx";
@@ -53,6 +53,8 @@ let  PeripheralsSidebar = (props: PeripheralsSidebarProps) =>{
 
     const peripherals_redux = useAppSelector(state => state.peripherals);
     const conflicts = useConflictResolver<peripheral_conflict>();
+    // the peripheral whose version is being edited
+    const [editing_version, set_editing_version] = useState<{id: number, version: string} | null>(null);
 
     let handleImport = async (content: string) =>{
         conflicts.reset();
@@ -74,11 +76,27 @@ let  PeripheralsSidebar = (props: PeripheralsSidebarProps) =>{
                 template={up_peripheral}
                 display_key="name"
                 content_name="Peripherals"
+                description_key="version"
+                extra_item_actions={(item) => [{label: "Edit version", onSelect: () => set_editing_version({id: item.id, version: String(item.version)})}]}
                 onImport={handleImport}
                 export_format={export_peripheral}
                 onSelect={props.on_select}
             />
         )}]}>
+            {editing_version !== null &&
+                <PromptDialog
+                    title="Edit version"
+                    initial_value={editing_version.version}
+                    confirm_label="Save"
+                    validate={(value) => Number.isNaN(parseFloat(value)) ? "The version has to be a number." : null}
+                    onCancel={() => set_editing_version(null)}
+                    onConfirm={(version) => {
+                        const periph = peripherals_redux[editing_version.id];
+                        set_editing_version(null);
+                        if(periph) new up_peripheral(periph).set_version(version).catch((err) => toast.error(error_text(err)));
+                    }}
+                />
+            }
             {conflicts.pending !== null &&
                 <ImportConflictDialog
                     item_type="peripheral"

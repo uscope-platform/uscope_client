@@ -27,7 +27,7 @@ interface SelectableListProps {
     onRename?: (name: string, new_name: string) => void;
     /// what is in the menu of an item, besides deleting it
     item_actions?: (name: string) => ContextMenuAction[];
-    descriptions?: string[];
+    descriptions?: string[] | undefined;
     variant?: 'plain' | 'card';
     style?: React.CSSProperties;
     items: string[] | undefined;

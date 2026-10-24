@@ -41,6 +41,10 @@ interface SidebarBaseProps {
     omImportDone?: (item: any) => void;
     // the content of the exported file, when it is not the item itself
     export_format?: (item: any) => unknown;
+    /// the field shown under the name of each item, in gray
+    description_key?: string;
+    /// what is in the menu of an item besides the actions of the list, with the item the menu was opened on
+    extra_item_actions?: (item: any) => ContextMenuAction[];
 }
 
 /// The list of the items of one kind with its toolbar, to be the content of a sidebar panel
@@ -131,8 +135,14 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
         })
     };
 
+    const describe = (obj: any): string => {
+        const value = props.description_key ? obj[props.description_key] : undefined;
+        return value === undefined || value === null ? "" : String(value);
+    };
+
     let get_content = () =>{
         let types: any[] = [];
+        let descriptions: string[] = [];
         let items;
         let filter = props.items_filter;
         if(filter){
@@ -145,6 +155,7 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
                 } else {
                     types.push("generic");
                 }
+                descriptions.push(describe(props.objects[scr_id]));
                 return props.objects[scr_id][props.display_key];
             })
         } else{
@@ -155,14 +166,15 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
                 } else {
                     types.push("generic");
                 }
+                descriptions.push(describe(obj));
                 return obj[props.display_key];
             })
         }
 
-        return [items, types]
+        return [items, types, descriptions]
     }
 
-    const [names, types] = get_content();
+    const [names, types, descriptions] = get_content();
 
     let handleActivate = (name: string) =>{
         const item = item_named(name);
@@ -200,6 +212,7 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
         return [
             {label: "Duplicate", onSelect: () => handleCopy(item)},
             {label: "Export", onSelect: () => handleExport(item)},
+            ...(props.extra_item_actions?.(item) ?? []),
             import_action
         ];
     };
@@ -210,6 +223,7 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
             <SelectableList
                 items={names}
                 types={types}
+                descriptions={props.description_key ? descriptions : undefined}
                 selected_item={selected_item[props.display_key]}
                 onRemove={handleRemove}
                 onSelect={handleSelect}

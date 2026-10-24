@@ -13,13 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect, useReducer, useState} from 'react';
+import React, {useReducer, useState} from 'react';
 
 
 import {
-    CardStack, ColorTheme,
-    InputField,
-    SimpleContent, UIPanel
+    CardStack,
+    Toolbar, ToolbarButton, UIPanel
 } from "#UI/index.js"
 import {MainPane, PaneGroup} from "#UI/index.js";
 
@@ -37,29 +36,14 @@ let PeripheralsManager = (props: PeripheralsManagerProps)=>{
 
     const [data_version, forceUpdate] = useReducer(x => x + 1, 0);
 
-    const [selected_peripheral, set_selected_peripheral] = useState(up_peripheral.construct_empty(9999));
-
     const [periph_selector, set_periph_selector] = useState(0);
 
-    useEffect(()=>{
-        let periph = peripherals[periph_selector];
-        if(periph){
-            set_selected_peripheral(periph);
-        }
-    }, [data_version])
+    // read from the store at every render, so that what is added or edited shows right away
+    const stored_peripheral = peripherals[periph_selector];
+    const selected_peripheral = stored_peripheral !== undefined ? new up_peripheral(stored_peripheral) : up_peripheral.construct_empty(9999);
 
     let handle_select = (sel: number) =>{
-        let periph = peripherals[sel];
-        if(periph){
-            set_periph_selector(sel);
-            set_selected_peripheral(periph);
-        }
-    }
-
-    let handleEditVersion = (event: React.KeyboardEvent<HTMLInputElement>) =>{
-        if (event.key ==="Enter"){
-            selected_peripheral.set_version(event.currentTarget.value).then();
-        }
+        if(peripherals[sel]) set_periph_selector(sel);
     }
 
     let handle_add_new = () =>{
@@ -83,26 +67,12 @@ let PeripheralsManager = (props: PeripheralsManagerProps)=>{
         <PaneGroup id="peripherals" orientation="horizontal">
             <MainPane>
             <PaneGroup id="peripherals_main" orientation="vertical">
-                <UIPanel id="properties" key="properties" level="level_2" default_size={25} min_size="150px">
-                    <SimpleContent name="Peripheral Properties">
-                        <div>
-                            <InputField inline name="edit_version"
-                                        defaultValue={selected_peripheral.version}
-                                        onKeyDown={handleEditVersion} label="Version"/>
-                        </div>
-                    </SimpleContent>
-                </UIPanel>
-                <UIPanel id="registers" key="registers" level="level_2" default_size={75} min_size="8em">
-                    <SimpleContent name="Registers">
-                        <div>
-                            <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
-                                <MdAdd
-                                    onClick={() => {handle_add_new();}}
-                                    size={ColorTheme.icons_size}
-                                    style={{marginLeft: "0.3em"}}
-                                    color={ColorTheme.icons_color}
-                                />
-                            </div>
+                <UIPanel id="registers" key="registers" level="level_2" default_size={100} min_size="8em" collapsible={false}>
+                    <div style={{display: "flex", flexDirection: "column", flex: 1, minHeight: 0}}>
+                        <Toolbar>
+                            <ToolbarButton label="Add register" icon={<MdAdd size="1.5em"/>} enabled={selected_peripheral.id !== 9999} onClick={handle_add_new}/>
+                        </Toolbar>
+                        <div style={{flex: 1, minHeight: 0, overflowY: "auto"}}>
                             <CardStack>
                                 {
                                     selected_peripheral.registers.map((reg) => {
@@ -118,7 +88,7 @@ let PeripheralsManager = (props: PeripheralsManagerProps)=>{
                                 }
                             </CardStack>
                         </div>
-                    </SimpleContent>
+                    </div>
                 </UIPanel>
             </PaneGroup>
             </MainPane>
