@@ -60,6 +60,8 @@ interface ItemsEditorProps<T> {
     icon?: (item: T) => ReactNode;
     onAdd: () => void;
     onRemove: (item: T) => void | Promise<void>;
+    // when given, the items are renamed from their menu
+    onRename?: (item: T, new_name: string) => void | Promise<void>;
     // the editor of the selected item
     children: (item: T) => ReactNode;
 }
@@ -90,6 +92,11 @@ export let ItemsEditor = <T,>(props: ItemsEditorProps<T>) =>{
         if(item !== undefined) await props.onRemove(item);
     }
 
+    let handleRename = async (name: string, new_name: string) =>{
+        const item = props.items.find(i => props.name(i) === name);
+        if(item !== undefined && props.onRename) await props.onRename(item, new_name);
+    }
+
     return(
         <Layout>
             <ListHeader>
@@ -110,6 +117,7 @@ export let ItemsEditor = <T,>(props: ItemsEditorProps<T>) =>{
                 selected_item={selected === undefined ? undefined : props.name(selected)}
                 onSelect={(name) => set_selected_item(visible.find(item => props.name(item) === name) ?? null)}
                 onRemove={handleRemove}
+                {...(props.onRename ? {onRename: handleRename} : {})}
                 style={{maxHeight: "calc(100vh - 16rem)", margin: 0, width: "auto"}}
             />
             {selected !== undefined

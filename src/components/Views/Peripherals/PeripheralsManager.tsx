@@ -17,14 +17,13 @@ import React, {useReducer, useState} from 'react';
 
 
 import {
-    CardStack,
-    Toolbar, ToolbarButton, UIPanel
+    ItemsEditor, UIPanel
 } from "#UI/index.js"
 import {MainPane, PaneGroup} from "#UI/index.js";
 
-import {get_next_id, up_peripheral} from "#client_core/index.js"
+import {get_next_id, up_peripheral, up_register} from "#client_core/index.js"
+import {useStoredInstance} from "#redux/useStoredInstance.js"
 import PeripheralsSidebar from "./PeripheralsSidebar.jsx";
-import {MdAdd} from "react-icons/md";
 import {RegisterProperties} from './RegisterProperties.js'
 import {useAppSelector} from "#redux/hooks.js";
 
@@ -38,9 +37,8 @@ let PeripheralsManager = (props: PeripheralsManagerProps)=>{
 
     const [periph_selector, set_periph_selector] = useState(0);
 
-    // read from the store at every render, so that what is added or edited shows right away
-    const stored_peripheral = peripherals[periph_selector];
-    const selected_peripheral = stored_peripheral !== undefined ? new up_peripheral(stored_peripheral) : up_peripheral.construct_empty(9999);
+    // read from the store, so that what is added or edited shows right away
+    const selected_peripheral = useStoredInstance(peripherals[periph_selector], (periph) => new up_peripheral(periph), () => up_peripheral.construct_empty(9999));
 
     let handle_select = (sel: number) =>{
         if(peripherals[sel]) set_periph_selector(sel);
@@ -68,26 +66,37 @@ let PeripheralsManager = (props: PeripheralsManagerProps)=>{
             <MainPane>
             <PaneGroup id="peripherals_main" orientation="vertical">
                 <UIPanel id="registers" key="registers" level="level_2" default_size={100} min_size="8em" collapsible={false}>
-                    <div style={{display: "flex", flexDirection: "column", flex: 1, minHeight: 0}}>
-                        <Toolbar>
-                            <ToolbarButton label="Add register" icon={<MdAdd size="1.5em"/>} enabled={selected_peripheral.id !== 9999} onClick={handle_add_new}/>
-                        </Toolbar>
-                        <div style={{flex: 1, minHeight: 0, overflowY: "auto"}}>
-                            <CardStack>
-                                {
-                                    selected_peripheral.registers.map((reg) => {
-                                        return (
-                                            <RegisterProperties
-                                                key={reg.ID}
-                                                peripheral={selected_peripheral}
-                                                forceUpdate={forceUpdate}
-                                                register={reg}
-                                            />
-                                        )
-                                    })
-                                }
-                            </CardStack>
-                        </div>
+                    <div style={{flex: 1, minHeight: 0, overflowY: "auto", padding: "0.5em"}}>
+                        {selected_peripheral.id === 9999
+                            ? <div style={{padding: "0.5em", opacity: 0.6}}>Select a peripheral to edit its registers</div>
+                            : (
+                                // keyed by the peripheral, so that the selection starts afresh for another one
+                                <ItemsEditor
+                                    key={selected_peripheral.id}
+                                    items={selected_peripheral.registers}
+                                    noun="registers"
+                                    name={(reg) => reg.register_name}
+                                    description={(reg) => reg.ID}
+                                    onAdd={handle_add_new}
+                                    onRename={async (reg, name) => {
+                                        await new up_register(reg, selected_peripheral.id).edit_name(name);
+                                        forceUpdate();
+                                    }}
+                                    onRemove={async (reg) => {
+                                        await up_register.remove_register(selected_peripheral.id, reg.ID);
+                                        forceUpdate();
+                                    }}
+                                >
+                                    {(reg) => (
+                                        <RegisterProperties
+                                            peripheral={selected_peripheral}
+                                            forceUpdate={forceUpdate}
+                                            register={reg}
+                                        />
+                                    )}
+                                </ItemsEditor>
+                            )
+                        }
                     </div>
                 </UIPanel>
             </PaneGroup>

@@ -39,14 +39,6 @@ export let  RegisterProperties = (props: RegisterPropertyProps) =>{
 
 
 
-    let handleEditNameChange = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if(event.key==="Enter"){
-            register_obj.edit_name(event.currentTarget.value).then(()=>{
-                props.forceUpdate();
-            });
-        }
-    }
-
     let handleChange = (event: React.ChangeEvent<HTMLInputElement>)=>{
         register_obj.edit_direction(event.target).then(()=>{
             props.forceUpdate();
@@ -76,11 +68,6 @@ export let  RegisterProperties = (props: RegisterPropertyProps) =>{
                         props.forceUpdate();
                     })
                     break;
-                case "register_name":
-                    register_obj.edit_name(event.currentTarget.value).then(()=>{
-                        props.forceUpdate();
-                    })
-                    break;
                 default:
                     return;
             }
@@ -88,20 +75,8 @@ export let  RegisterProperties = (props: RegisterPropertyProps) =>{
 
     }
 
-    let handleRemove= () =>{
-        up_register.remove_register(props.peripheral.id, props.register.ID).then(()=>{
-            props.forceUpdate();
-        });
-    }
-
-
-
     return(
-        <Card
-            name={props.register.register_name}
-            onRemove={handleRemove}
-        >
-            <InputField inline name="register_name" defaultValue={props.register.register_name} onKeyDown={handleEditNameChange} label="Name"/>
+        <Card style={{width: "100%", paddingLeft: 0}}>
             <InputField inline name='ID' defaultValue={props.register.ID} onKeyDown={handleonKeyDown} label="Register ID"/>
 
             <div style={{display: "flex", flexDirection: "column"}}>
