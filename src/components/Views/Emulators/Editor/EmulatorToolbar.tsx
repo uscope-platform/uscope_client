@@ -14,21 +14,58 @@
 // limitations under the License.
 
 import React from 'react';
+import {styled} from "goober";
 
 import {ColorTheme} from "#UI/index.js";
 import {Tooltip} from "#UI/Tooltip.js";
 import {
-    MdArticle,
-    MdConstruction,
-    MdSimCardDownload,
-    MdPlayArrow
+    MdCode,
+    MdMemory,
+    MdPlayArrow,
+    MdRocketLaunch
 } from "react-icons/md";
 
+const Bar = styled('div')`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.1em;
+  padding: 0.1em 0.4em;
+`
+
+const Separator = styled('div')`
+  width: 1px;
+  align-self: stretch;
+  margin: 0.15em 0.2em;
+  background: ${ColorTheme.background.bordersLight};
+`
+
+const ToolButton = styled('button')`
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0.25em 0.55em;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: ${ColorTheme.text};
+  font: inherit;
+  font-size: 0.85em;
+  cursor: pointer;
+  &:hover:not(:disabled) {
+    background: ${ColorTheme.background.level_5};
+  }
+  &:disabled {
+    color: ${ColorTheme.disabled_icon_color};
+    cursor: default;
+  }
+`
+
 interface EmulatorToolbarProps {
-    onEdit: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
-    onRun: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
-    onDeploy: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
-    onHardwareSim: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
+    onEdit: () => void;
+    onRun: () => void;
+    onDeploy: () => void;
+    onHardwareSim: () => void;
     enable: {
         edit: boolean,
         run: boolean,
@@ -39,78 +76,22 @@ interface EmulatorToolbarProps {
 
 let  EmulatorToolbar = (props: EmulatorToolbarProps) =>{
 
-    let render_edit = () => {
-        let handle_click = (event:React.MouseEvent<SVGElement, MouseEvent>) =>{
-            if(props.enable.edit){
-                props.onEdit(event);
-            }
-        };
-        let icon_color = props.enable.edit ? ColorTheme.icons_color : ColorTheme.disabled_icon_color;
-        return (
-            <div key="edit" id="edit">
-                <MdArticle onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
-                           color={icon_color}/>
-                <Tooltip anchorSelect="#edit" content={"Edit Program"} place="top"/>
-            </div>
-        )
-    }
-
-    let render_run = () => {
-        let handle_click = (event:React.MouseEvent<SVGElement, MouseEvent>) =>{
-            if(props.enable.run) {
-                props.onRun(event);
-            }
-        };
-        let icon_color = props.enable.run ? ColorTheme.icons_color : ColorTheme.disabled_icon_color;
-        return (
-            <div key="run" id="run">
-                <MdPlayArrow onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
-                             color={icon_color}/>
-                <Tooltip anchorSelect="#run" content={"Run"} place="top"/>
-            </div>
-        )
-    }
-
-    let render_deploy = () => {
-        let handle_click = (event:React.MouseEvent<SVGElement, MouseEvent>) =>{
-            if(props.enable.deploy){
-                props.onDeploy(event);
-            }
-        };
-        let icon_color = props.enable.deploy ? ColorTheme.icons_color : ColorTheme.disabled_icon_color;
-        return (
-            <div key="deploy" id="deploy">
-                <MdConstruction onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
-                                color={icon_color}/>
-                <Tooltip anchorSelect="#deploy" content={"Deploy"} place="top"/>
-            </div>
-        )
-    }
-
-
-    let render_hw_sim= () => {
-        let handle_click = (event:React.MouseEvent<SVGElement, MouseEvent>) =>{
-            if(props.enable.hw_sim) {
-                props.onHardwareSim(event);
-            }
-        };
-        let icon_color = props.enable.hw_sim ? ColorTheme.icons_color : ColorTheme.disabled_icon_color;
-        return (
-            <div key="hw_sim" id="hw_sim">
-                <MdSimCardDownload onClick={handle_click} size={ColorTheme.icons_size} style={{marginLeft: "0.3em"}}
-                             color={icon_color}/>
-                <Tooltip anchorSelect="#hw_sim" content={"Download HW simulation files"} place="top"/>
-            </div>
-        )
-    }
+    const button = (id: string, label: string, tooltip: string, icon: React.ReactNode, enabled: boolean, onClick: () => void) => (
+        <ToolButton key={id} id={"toolbar_" + id} disabled={!enabled} onClick={onClick}>
+            {icon}
+            {label}
+            <Tooltip anchorSelect={"#toolbar_" + id} content={tooltip} place="bottom"/>
+        </ToolButton>
+    );
 
     return (
-        <div style={{display: "flex", marginRight: "0.5em", justifyContent: "right"}}>
-            {render_edit()}
-            {render_run()}
-            {render_deploy()}
-            {render_hw_sim()}
-        </div>
+        <Bar>
+            {button("run", "Run", "Run the emulation", <MdPlayArrow size="1.5em"/>, props.enable.run, props.onRun)}
+            <Separator/>
+            {button("edit", "Program", "Edit Program", <MdCode size="1.5em"/>, props.enable.edit, props.onEdit)}
+            {button("deploy", "Deploy", "Deploy", <MdRocketLaunch size="1.5em"/>, props.enable.deploy, props.onDeploy)}
+            {button("hw_sim", "HW sim", "Download HW simulation files", <MdMemory size="1.5em"/>, props.enable.hw_sim, props.onHardwareSim)}
+        </Bar>
     );
 };
 
