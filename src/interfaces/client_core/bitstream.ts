@@ -20,5 +20,7 @@
 export interface bitstream_model {
     id:number,
     name:string,
-    data:string
+    data:string,
+    /// the SHA-256 of the file, from the server: it tells which version of the bitstream it is
+    hash?: string | undefined
 }

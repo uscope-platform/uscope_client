@@ -23,10 +23,12 @@ export class up_bitstream {
     public id: number;
     public name: string;
     public data: string;
+    public hash: string | undefined;
     constructor(bitstream_obj: bitstream_model) {
         this.id = bitstream_obj.id;
         this.name = bitstream_obj.name;
         this.data = bitstream_obj.data;
+        this.hash = bitstream_obj.hash;
 
     }
 
@@ -37,15 +39,26 @@ export class up_bitstream {
 
     add_remote = async () => {
         await backend_post(api_dictionary.bitstream.add+'/'+this.id, this._get_bitstream());
-        return store.dispatch(AddBitstream(this));
+        store.dispatch(AddBitstream(this));
+        await this.refresh_hash();
+    }
+
+    /// Reads the hash of the file from the server, that computes it when it gets the file
+    refresh_hash = async () =>{
+        const stored: bitstream_model = await backend_get(api_dictionary.bitstream.get + '/' + this.id);
+        this.hash = stored.hash;
+        store.dispatch(AddBitstream(this));
     }
 
     update_file = async (bitstream: {name:string, content:string}) =>{
+        this.name = bitstream.name;
+        this.data = bitstream.content;
         let data_edit = {id:this.id , field:{name:"data", value:bitstream.content}};
         await backend_patch(api_dictionary.bitstream.edit+'/'+this.id,data_edit);
         let name_edit = {id:this.id , field:{name: "name", value: bitstream.name}};
         await backend_patch(api_dictionary.bitstream.edit+'/'+this.id,name_edit);
         store.dispatch(AddBitstream(this));
+        await this.refresh_hash();
     }
 
     edit_field =<K extends keyof this>(field: K, value: this[K]) => {
