@@ -72,6 +72,12 @@ interface SelectableListItemProps {
     description?: string | undefined;
     card?: boolean | undefined;
     iconSize?: number | string;
+    /// a click with Shift (a range) or with Ctrl or Cmd (one more or less) on the item, when the list has a selection of many
+    onModifiedSelect?: ((name: string, mode: "range" | "toggle") => void) | undefined;
+    /// the item is part of a selection of many: its menu is this one, for all of them, instead of its own
+    bulk_actions?: ContextMenuAction[] | undefined;
+    /// the menu of the item is opened
+    onMenuOpen?: ((name: string) => void) | undefined;
 }
 
 export let  SelectableListItem = (props: SelectableListItemProps) =>{
@@ -80,7 +86,11 @@ export let  SelectableListItem = (props: SelectableListItemProps) =>{
 
 
     let handle_click = (event: any) =>{
-        if(props.multi_select && props.onSelect){
+        if(props.onModifiedSelect && event.shiftKey){
+            props.onModifiedSelect(props.name, "range");
+        } else if(props.onModifiedSelect && (event.ctrlKey || event.metaKey)){
+            props.onModifiedSelect(props.name, "toggle");
+        } else if(props.multi_select && props.onSelect){
             if(event.ctrlKey) props.onSelect(props.name, true);
             else props.onSelect(props.name, false);
         } else{
@@ -137,7 +147,8 @@ export let  SelectableListItem = (props: SelectableListItemProps) =>{
             onSelect: () => confirm_delete_enabled() ? set_confirming_delete(true) : remove(props.name)
         });
     }
-    const context_menu = useContextMenu(actions);
+    // the menu of the selection of many replaces the one of the item
+    const context_menu = useContextMenu(props.bulk_actions ?? actions);
 
     let handle_double_click = () =>{
         if(props.onActivate) props.onActivate(props.name);
@@ -149,9 +160,9 @@ export let  SelectableListItem = (props: SelectableListItemProps) =>{
     }
 
     return(
-        <ItemLayout selected={props.selected} variant={props.card ? "card" : "plain"} onContextMenu={context_menu.on_context_menu} data-menu-open={context_menu.open || confirming_delete ? "" : undefined}>
+        <ItemLayout selected={props.selected} variant={props.card ? "card" : "plain"} onContextMenu={(event) => {props.onMenuOpen?.(props.name); context_menu.on_context_menu?.(event);}} data-menu-open={context_menu.open || confirming_delete ? "" : undefined}>
             <div></div>
-            <div onMouseEnter={handleMouseEnter} onClick={handle_click} onDoubleClick={handle_double_click} style={{display:"flex", flexGrow:1}}>
+            <div onMouseEnter={handleMouseEnter} onClick={handle_click} onDoubleClick={handle_double_click} style={{display:"flex", flexGrow:1, ...(props.onModifiedSelect ? {userSelect: "none"} : {})}}>
                 {get_icon_image(props.icon)}
                 <div style={{marginLeft:"0.5em", cursor:"default"}}>
                     {renaming ? (
