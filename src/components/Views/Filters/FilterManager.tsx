@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {
     ColorTheme,
     SimpleContent,
@@ -42,33 +42,33 @@ interface FilterManagerProps {
 
 let FilterManager = (props: FilterManagerProps) =>{
 
-    const [filter_revision, set_filter_revision] = useState( 0);
-
     const filters_store = useAppSelector(state => state.filters);
 
-    const [selected_filter, set_selected_filter] = useState(up_filter.construct_empty(9999));
-
-    const [keepout_shapes, set_keepout_shapes] = useState([] as any[]);
+    const [selected_id, set_selected_id] = useState(9999);
 
     const [plot_filter, set_plot_filter] = useState({ideal:{x:[], y:[]}, quantized:{x:[], y:[]}})
 
-    // the editor is for a filter of the store, the empty one it starts with (or a deleted one) is not
-    const has_selection = filters_store[selected_filter.id] !== undefined;
+    // read from the store, so that what is edited from the list or from here shows right away; the editor is for a
+    // filter of the store, the empty one it starts with (or a deleted one) is not
+    const stored_filter = filters_store[selected_id];
+    const has_selection = stored_filter !== undefined;
+    const selected_filter = useMemo(
+        () => stored_filter !== undefined ? new up_filter(stored_filter) : up_filter.construct_empty(9999),
+        [stored_filter]
+    );
+    const keepout_shapes = useMemo(
+        () => has_selection ? filter_calculate_keepouts(selected_filter.parameters) : [],
+        [selected_filter]
+    );
 
     let handle_select = (flt: number) =>{
-        let flt_obj = filters_store[flt];
-        if(flt_obj === undefined) return;
-        set_selected_filter( new up_filter(flt_obj) );
+        if(filters_store[flt] === undefined) return;
+        set_selected_id(flt);
     }
 
+    // the response is the one of the filter that is selected, whatever is edited in its parameters
     useEffect(() => {
         if(!has_selection) return;
-        set_keepout_shapes(filter_calculate_keepouts(selected_filter.parameters));
-    }, [filter_revision]);
-
-    useEffect(() => {
-        if(!has_selection) return;
-        set_filter_revision(filter_revision+1)
         set_plot_filter({ideal: {x:[], y:[]}, quantized: {x:[], y:[]}});
         // a filter that was never designed has no response to plot
         if(selected_filter.ideal_taps.length === 0) return;
@@ -79,7 +79,7 @@ let FilterManager = (props: FilterManagerProps) =>{
             });
 
         }).catch(report_error)
-    }, [selected_filter, has_selection]);
+    }, [selected_id, has_selection]);
 
     let handleDesign = async () =>{
         try {
@@ -97,7 +97,6 @@ let FilterManager = (props: FilterManagerProps) =>{
 
 
     let handleParamChanges = (param_name: string, value: any) =>{
-        set_filter_revision(filter_revision+1)
         selected_filter.edit_parameter(param_name, value).then();
     }
 

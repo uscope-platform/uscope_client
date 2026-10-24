@@ -24,6 +24,7 @@ import {
 import {PaneGroup} from "#UI/index.js";
 import {up_bitstream, upload_raw} from "#client_core/index.js";
 import BitstreamSidebar from "./BitstreamSidebar.js";
+import {useAppSelector} from "#redux/hooks.js";
 import type {bitstream_model} from "#interfaces/index.js";
 
 interface BitstreamManagerProps {}
@@ -32,11 +33,16 @@ let BitstreamManager = (props: BitstreamManagerProps) =>{
 
     const inputFile = useRef(null)
 
-    const [sel_bit, set_sel_bit] = useState(up_bitstream.construct_empty(9999));
+    const bitstreams = useAppSelector(state => state.bitstreams);
 
+    const [selected_id, set_selected_id] = useState(9999);
+
+    // read from the store at every render, so that what is edited from the list or from here shows right away
+    const stored_bit = bitstreams[selected_id];
+    const sel_bit = stored_bit !== undefined ? new up_bitstream(stored_bit) : up_bitstream.construct_empty(9999);
 
     let handle_select = (bit: bitstream_model)=>{
-        set_sel_bit(new up_bitstream(bit));
+        set_selected_id(bit.id);
     };
 
     let upload_file = (event: React.ChangeEvent<HTMLInputElement>) => {

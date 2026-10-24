@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import React, {useContext, useReducer, useState} from 'react';
+import {useStoredInstance} from "#redux/useStoredInstance.js";
 
 
 import {
@@ -58,10 +59,9 @@ let  ApplicationsManager = (props: ApplicationsManagerProps) =>{
 
     // the page opens on the application in use
     const active_application = useContext(ApplicationContext);
-    const [selected_app, set_selected_app] = useState(() => {
-        const active = applications[active_application.id];
-        return active !== undefined ? new up_application(active) : up_application.construct_empty(9999);
-    });
+    const [selected_id, set_selected_id] = useState(active_application.id);
+    // read from the store, so that what is changed from the sidebar or by an import shows right away
+    const selected_app = useStoredInstance(applications[selected_id], (app) => new up_application(app), () => up_application.construct_empty(9999));
 
     let [selectedTab, set_selectedTab] = useState(0);
 
@@ -69,7 +69,7 @@ let  ApplicationsManager = (props: ApplicationsManagerProps) =>{
 
     let handle_select = (app: number) =>{
         if(applications[app] === undefined) return;
-        set_selected_app(new up_application(applications[app]));
+        set_selected_id(app);
     }
 
     // derived at every render, the scripts and the programs can change in the store while the page is open

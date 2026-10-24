@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {type ReactNode, useState} from 'react';
+import React, {type ReactNode, useRef, useState} from 'react';
 import {MdAdd} from "react-icons/md";
 import {styled} from "goober";
 
@@ -77,8 +77,13 @@ export let ItemsEditor = <T,>(props: ItemsEditorProps<T>) =>{
     const needle = filter.trim().toLowerCase();
     const visible = props.items.filter((item) => needle === "" || (props.name(item) + " " + description(item)).toLowerCase().includes(needle));
 
-    // the one selected, or the first one when it is gone (removed, or the application changed)
-    const selected = selected_item !== null && props.items.includes(selected_item) ? selected_item : visible[0];
+    // the one selected. When the item itself is gone, because the items were built again from the store after an edit,
+    // the one that is in the same place is, and the first one when there is none (removed, or another application)
+    const last_index = useRef(0);
+    const selected = selected_item !== null && props.items.includes(selected_item)
+        ? selected_item
+        : selected_item !== null && last_index.current < props.items.length ? props.items[last_index.current] : visible[0];
+    last_index.current = selected !== undefined ? props.items.indexOf(selected) : 0;
 
     let handleRemove = async (name: string) =>{
         const item = props.items.find(i => props.name(i) === name);
