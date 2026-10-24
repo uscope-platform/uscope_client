@@ -18,19 +18,8 @@ import {useStoredInstance} from "#redux/useStoredInstance.js";
 
 
 import {
-    PlotChannelProperties,
-    PlotChannelGroupProperties,
-    ParameterProperties,
-    PeripheralProperties,
-    SoftCoreProperties,
-    FilterProperties,
-} from "../Applications/Properties/index.js"
-
-import {
     TwoColumnSelector,
-    CardStack,
     TabbedContent,
-    ColorTheme,
     UIPanel
 } from "#UI/index.js";
 import {PaneGroup} from "#UI/index.js";
@@ -40,8 +29,7 @@ import {ApplicationContext} from "#src/ApplicationContext.js";
 import ApplicationSidebar from "./ApplicationSidebar.js";
 import {ScriptSelector} from "#components/Views/Applications/Properties/ScriptSelector.js";
 import {PeripheralsEditor} from "#components/Views/Applications/PeripheralsEditor.js";
-import {ChannelGroupsEditor, ChannelsEditor, MacrosEditor, MiscEditor, ParametersEditor} from "#components/Views/Applications/ChannelsEditor.js";
-import {MdAdd} from "react-icons/md";
+import {ChannelGroupsEditor, ChannelsEditor, CoresEditor, FiltersEditor, MacrosEditor, MiscEditor, ParametersEditor} from "#components/Views/Applications/ChannelsEditor.js";
 import {useAppSelector} from "#redux/hooks.js";
 
 
@@ -197,27 +185,12 @@ let  ApplicationsManager = (props: ApplicationsManagerProps) =>{
                         />
                     </div>
                     <div key="soft_cores">
-                        <MdAdd
-                            onClick={() => {handle_add_new("soft_core", selected_app.soft_cores, "id");}}
-                            size={ColorTheme.icons_size}
-                            style={{marginLeft: "0.3em"}}
-                            color={ColorTheme.icons_color}
+                        <CoresEditor
+                            application={selected_app}
+                            programs={programs}
+                            forceUpdate={forceUpdate}
+                            onAdd={() => {handle_add_new("soft_core", selected_app.soft_cores, "id");}}
                         />
-                        <CardStack>
-                            {
-                                selected_app.soft_cores.map((soft_core)=>{
-                                    return(
-                                        <SoftCoreProperties
-                                            key={soft_core.id}
-                                            application={selected_app}
-                                            core={soft_core}
-                                            programs={programs}
-                                            forceUpdate={forceUpdate}
-                                        />
-                                    )
-                                })
-                            }
-                        </CardStack>
                     </div>
                     <div key="misc_fields">
                         <MiscEditor
@@ -227,26 +200,12 @@ let  ApplicationsManager = (props: ApplicationsManagerProps) =>{
                         />
                     </div>
                     <div key="filters_card">
-                        <MdAdd
-                            onClick={() => {handle_add_new("filter", selected_app.filters, "id");}}
-                            size={ColorTheme.icons_size}
-                            style={{marginLeft: "0.3em"}}
-                            color={ColorTheme.icons_color}
+                        <FiltersEditor
+                            application={selected_app}
+                            filter_designs={filters}
+                            forceUpdate={forceUpdate}
+                            onAdd={() => {handle_add_new("filter", selected_app.filters, "id");}}
                         />
-                        <CardStack>
-                            {
-                                selected_app.filters.map((field)=>{
-                                    return <FilterProperties
-                                        key={field.id}
-                                        application={selected_app}
-                                        forceUpdate={forceUpdate}
-                                        filter={field}
-                                        filter_designs={filters}
-                                        peripherals={selected_app.peripherals}
-                                    />
-                                })
-                            }
-                        </CardStack>
                     </div>
                     <div key="scripts_card">
                         <div style={{margin: "0.5em", maxWidth: "24rem"}}>

@@ -13,11 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from "react";
+import React from "react";
 import {
-    InputField,
     Card,
-    Checkbox,
+    FormLayout,
     SelectField
 } from "#UI/index.js";
 
@@ -48,63 +47,52 @@ export let  FilterProperties = (props: FilterPropertiesProps) =>{
     });
 
 
-    let init_peripheral_value: SimpleStringOption = props.filter.peripheral ? {label:props.filter.peripheral, value:props.filter.peripheral} : {label:"", value:""};
-    const [selected_periph, set_selected_periph] = useState(init_peripheral_value);
+    // what the application has, not a copy of it: it changes when the filter is edited from elsewhere
+    const selected_periph: SimpleStringOption = {label: props.filter.peripheral, value: props.filter.peripheral};
+    const selected_design: SimpleStringOption = {label: props.filter.filter_name, value: props.filter.filter_name};
 
-    let init_design_value: SimpleStringOption = props.filter.filter_name ? {label:props.filter.filter_name, value:props.filter.filter_name} : {label:"", value:""};
-    const [selected_design, set_selected_design] = useState(init_design_value);
-
-
-    let handleonKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) =>{
-        if(event.key==="Enter"|| event.key ==="Tab"){
-            await props.application.edit_filter(props.filter.id, event.currentTarget.name, event.currentTarget.value);
-            props.forceUpdate();
-        }
-    }
-
-    let handleRemove= async () =>{
-
-        await props.application.remove_filter(props.filter.id);
-        props.forceUpdate();
-    }
-    let handleEnable = async (event: React.ChangeEvent<HTMLInputElement>)=>{
-        await props.application.edit_filter(props.filter.id, event.target.name, event.target.checked);
+    let handleEnable = async (target: {name: string, checked: boolean})=>{
+        await props.application.edit_filter(props.filter.id, target.name, target.checked);
         props.forceUpdate();
     }
 
     let handleHardwareChange = async (change: SimpleStringOption | null)=>{
         if(change=== null) return;
-        set_selected_periph(change);
         await props.application.edit_filter(props.filter.id,"peripheral", change.value);
         props.forceUpdate();
     }
     let handleTapsChange = async (change: SimpleStringOption | null)=>{
         if(change=== null) return;
-        set_selected_design(change);
         await props.application.edit_filter(props.filter.id,"filter_name", change.value);
         props.forceUpdate();
     }
 
     return(
         <Card
-            name={props.filter.id.toString()}
-            onRemove={handleRemove}
+            style={{width: "100%", paddingLeft: 0}}
+            selector={{
+                name:"enabled",
+                label:"Enabled",
+                click:handleEnable,
+                value:props.filter.enabled
+            }}
         >
-            <InputField inline id='id' name='id' onKeyDown={handleonKeyDown} label="ID"/>
-
-            <SelectField<SimpleStringOption>
-                label="Filter Hardware"
-                onChange={handleHardwareChange}
-                value={selected_periph}
-                name="peripheral"
-                options={peripherals}/>
-            <SelectField<SimpleStringOption>
-                label="Filter Design"
-                onChange={handleTapsChange}
-                value={selected_design}
-                name="filter_name"
-                options={filter_designs}/>
-            <Checkbox name='enabled' value={props.filter.enabled} onChange={handleEnable} label="Enabled"/>
+            <FormLayout columns="10.5rem">
+                <SelectField<SimpleStringOption>
+                    stacked
+                    label="Filter Hardware"
+                    onChange={handleHardwareChange}
+                    value={selected_periph}
+                    name="peripheral"
+                    options={peripherals}/>
+                <SelectField<SimpleStringOption>
+                    stacked
+                    label="Filter Design"
+                    onChange={handleTapsChange}
+                    value={selected_design}
+                    name="filter_name"
+                    options={filter_designs}/>
+            </FormLayout>
         </Card>
     );
 };

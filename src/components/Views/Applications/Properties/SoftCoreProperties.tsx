@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useState} from "react";
-import {Card, InputField, SelectField} from "#UI/index.js";
+import React from "react";
+import {Card, FormLayout, InputField, SelectField} from "#UI/index.js";
 
 import {up_application} from "#client_core/index.js";
 import {CoreDmaIo} from "./CoreDmaIo.jsx";
@@ -42,16 +42,12 @@ export let  SoftCoreProperties = (props: SoftCorePropertiesProps) =>{
         });
     };
 
-    let init_value = props.core.default_program ?
+    // what the application has, not a copy of it: it changes when the core is edited from elsewhere
+    const selected: SimpleStringOption = props.core.default_program ?
         {label:props.core.default_program, value:props.core.default_program} : {label: "None", value: "None"};
-
-    const [selected, set_selected] = useState(init_value);
-
-
 
     let handleProgramChange = (option: SimpleStringOption| null)=>{
         if(option === null) return;
-        set_selected(option);
         props.application.edit_soft_core(props.core.id,"default_program", option.value).then(()=>{
             props.forceUpdate();
         });
@@ -61,35 +57,23 @@ export let  SoftCoreProperties = (props: SoftCorePropertiesProps) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
             let field = event.currentTarget.name;
             let value = event.currentTarget.value;
-            if(field==="address") {
-                await props.application.edit_soft_core(props.core.id, field, value);
-            } else {
-                await props.application.edit_soft_core(props.core.id, field, parseInt(value));
-            }
+            await props.application.edit_soft_core(props.core.id, field, field === "address" ? value : parseInt(value));
             props.forceUpdate();
         }
     }
 
-    let handleRemove= async () =>{
-        await props.application.remove_soft_core(props.core.id);
-        props.forceUpdate();
-    }
-
-
-
     return(
-        <Card
-            name={props.core.id}
-            onRemove={handleRemove}
-        >
-            <InputField inline id="id" name="id" defaultValue={props.core.id} onKeyDown={handleonKeyDown} label="Core ID"/>
-            <InputField inline id="address" name='address' defaultValue={props.core.address.toString()} onKeyDown={handleonKeyDown} label="Address"/>
-            <SelectField<SimpleStringOption>
-                label="Default Program"
-                onChange={handleProgramChange}
-                value={selected}
-                name="default_program"
-                options={programs_list()}/>
+        <Card style={{width: "100%", paddingLeft: 0}}>
+            <FormLayout columns="10.5rem">
+                <InputField id="address" name='address' defaultValue={props.core.address.toString()} onKeyDown={handleonKeyDown} label="Address"/>
+                <SelectField<SimpleStringOption>
+                    stacked
+                    label="Default Program"
+                    onChange={handleProgramChange}
+                    value={selected}
+                    name="default_program"
+                    options={programs_list()}/>
+            </FormLayout>
             <CoreDmaIo
                 forceUpdate={props.forceUpdate}
                 application={props.application}

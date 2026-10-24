@@ -18,8 +18,9 @@ import React from 'react';
 import {MdStar} from "react-icons/md";
 
 import {ColorTheme, ItemsEditor} from "#UI/index.js";
-import {MacroProperties, MiscFieldProperties, PlotChannelGroupProperties, PlotChannelProperties, ParameterProperties} from "#components/Views/Applications/Properties/index.js";
-import type {up_application} from "#client_core/index.js";
+import {FilterProperties, MacroProperties, MiscFieldProperties, SoftCoreProperties, PlotChannelGroupProperties, PlotChannelProperties, ParameterProperties} from "#components/Views/Applications/Properties/index.js";
+import type {up_application, up_filter} from "#client_core/index.js";
+import type {ProgramState} from "#interfaces/index.js";
 import {useAppSelector} from "#redux/hooks.js";
 
 interface EditorProps {
@@ -148,3 +149,56 @@ export let MiscEditor = (props: EditorProps) =>{
         </ItemsEditor>
     );
 };
+
+interface CoresEditorProps extends EditorProps {
+    programs: ProgramState;
+}
+
+/// The soft cores of an application, by their id: the id is what the terminal and the scripts call a core by
+export let CoresEditor = (props: CoresEditorProps) =>(
+    <ItemsEditor
+        items={props.application.soft_cores}
+        noun="cores"
+        name={core => core.id}
+        description={core => "0x" + core.address.toString(16) + (core.default_program ? " · " + core.default_program : "")}
+        onAdd={props.onAdd}
+        onRename={async (core, id) => {
+            await props.application.edit_soft_core(core.id, "id", id);
+            props.forceUpdate();
+        }}
+        onRemove={async core => {
+            await props.application.remove_soft_core(core.id);
+            props.forceUpdate();
+        }}
+    >
+        {core => <SoftCoreProperties application={props.application} core={core} programs={props.programs} forceUpdate={props.forceUpdate}/>}
+    </ItemsEditor>
+);
+
+interface FiltersEditorProps extends EditorProps {
+    filter_designs: Record<number, up_filter>;
+}
+
+/// The filters of an application: a design of the filters view that runs on a filter peripheral. They are told apart
+/// by a number, that nothing outside of the application reads
+export let FiltersEditor = (props: FiltersEditorProps) =>(
+    <ItemsEditor
+        items={props.application.filters}
+        noun="filters"
+        name={filter => "Filter " + filter.id}
+        description={filter => [filter.filter_name, filter.peripheral].filter(Boolean).join(" on ") + (filter.enabled ? "" : " · disabled")}
+        onAdd={props.onAdd}
+        onRemove={async filter => {
+            await props.application.remove_filter(filter.id);
+            props.forceUpdate();
+        }}
+    >
+        {filter => <FilterProperties
+            application={props.application}
+            forceUpdate={props.forceUpdate}
+            filter={filter}
+            filter_designs={props.filter_designs}
+            peripherals={props.application.peripherals}
+        />}
+    </ItemsEditor>
+);
