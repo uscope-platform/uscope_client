@@ -56,6 +56,9 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
         return id !== undefined && props.objects[id] !== undefined ? String(id) : null;
     });
 
+    // the names of the items when many are selected, with Shift or Ctrl
+    const [multi, set_multi] = useState<string[]>([]);
+
     let selected_item: any = {[props.display_key]:""};
     if(selected){
         selected_item = props.objects[selected];
@@ -98,6 +101,24 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
             await instance.edit_field(props.display_key, new_name);
         } else if(instance.edit_misc_param){
             await instance.edit_misc_param(props.display_key, new_name, false);
+        }
+    };
+
+    // each item is a file of its own, in the format that the import reads
+    let handleExportMany = (names: string[]) =>{
+        for(const name of names){
+            const item = item_named(name);
+            if(item !== undefined) handleExport(item);
+        }
+    };
+
+    let handleRemoveMany = async (names: string[]) =>{
+        set_selected(null);
+        for(const name of names){
+            const deleted = item_named(name);
+            if(deleted === undefined) continue;
+            await props.template.delete(deleted);
+            if(props.onDelete) props.onDelete(deleted);
         }
     };
 
@@ -175,13 +196,25 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
     }
 
     const [names, types, descriptions] = get_content();
+    // the ones of the selection of many that are still in the list
+    const many = multi.filter((name) => (names ?? []).includes(name));
 
     let handleActivate = (name: string) =>{
         const item = item_named(name);
         if(item !== undefined && props.onActivate) props.onActivate(item[props.selection_key]);
     };
 
+    let handleSelectionChange = (names: string[]) =>{
+        if(names.length > 1){
+            set_multi(names);
+            return;
+        }
+        set_multi([]);
+        if(names[0] !== undefined) handleSelect(names[0]);
+    };
+
     let handleSelect = (selection: string) =>{
+        set_multi([]);
         if(selected !== null && props.objects[selected]?.[props.display_key] === selection){
             const item = item_named(selection);
             if(item !== undefined && props.onReselect) props.onReselect(item[props.selection_key]);
@@ -226,6 +259,10 @@ export let SidebarBase = (props: SidebarBaseProps) =>{
                 descriptions={props.description_key ? descriptions : undefined}
                 selected_item={selected_item[props.display_key]}
                 onRemove={handleRemove}
+                {...(many.length > 1 ? {selection: many} : {})}
+                onSelectionChange={handleSelectionChange}
+                onRemoveMany={handleRemoveMany}
+                bulk_actions={(selected_names) => [{label: "Export " + selected_names.length + " items", onSelect: () => handleExportMany(selected_names)}]}
                 onSelect={handleSelect}
                 onActivate={handleActivate}
                 onRename={handleRename}
