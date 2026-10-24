@@ -16,7 +16,8 @@
 import
     React from 'react';
 
-import {InputField, SelectField} from "#UI/index.js";
+import {FieldPaneRow, InputField, SelectField} from "#UI/index.js";
+import TypeOptionsContainer from "../NodesSidebar/EndpointProperties/TypeOptionsContainer.jsx";
 import {up_emulator} from "#client_core/index.js";
 import type {connection, port_link, SimpleStringOption} from "#interfaces/index.js";
 import type {} from "#UI/Select.js";
@@ -150,39 +151,37 @@ let  DmaChannelProperties = (props: DmaChannelPropertiesProps) =>{
         }
     }
 
-    let render_partial_channels = () =>{
-        if(enable_partial_channels){
-            return(
-                <>
-                    <InputField inline id="source_channel" name="source_channel" label="Source Channel" defaultValue={props.selected_channel.source_channel.toString()} onKeyDown={handle_change_partial_channels}/>
-                    <InputField inline id="destination_channel" name="destination_channel" label="Destination Channel" defaultValue={props.selected_channel.destination_channel.toString()} onKeyDown={handle_change_partial_channels}/>
-                </>
-            )
-        }
-    }
-
     return(
-        <div key="dma_channel_props">
-            <SelectField<SimpleStringOption>
-                label={source_io ? "Source IO Port" : "Source Core Output"}
-                onChange={handle_change_source_out}
-                value={{value: props.selected_channel.source_port , label: props.selected_channel.source_port}}
-                name="source_port"
-                options={source_outputs.map((outs)=>{
-                    return {label:outs, value:outs};
-                })}
-            />
-            <SelectField<SimpleStringOption>
-                label={target_io ? "Target IO Port" : "Target Core Input"}
-                onChange={handle_change_target_in}
-                value={{value: props.selected_channel.destination_port , label: props.selected_channel.destination_port}}
-                name="destination_port"
-                options={target_inputs.map((ins)=>{
-                    return {label:ins, value:ins};
-                })}
-            />
-            {render_partial_channels()}
-        </div>
+        <FieldPaneRow key="dma_channel_props">
+            <TypeOptionsContainer label="DMA channel">
+                <SelectField<SimpleStringOption>
+                    stacked
+                    label={source_io ? "Source IO Port" : "Source Core Output"}
+                    onChange={handle_change_source_out}
+                    value={{value: props.selected_channel.source_port , label: props.selected_channel.source_port}}
+                    name="source_port"
+                    options={source_outputs.map((outs)=>{
+                        return {label:outs, value:outs};
+                    })}
+                />
+                <SelectField<SimpleStringOption>
+                    stacked
+                    label={target_io ? "Target IO Port" : "Target Core Input"}
+                    onChange={handle_change_target_in}
+                    value={{value: props.selected_channel.destination_port , label: props.selected_channel.destination_port}}
+                    name="destination_port"
+                    options={target_inputs.map((ins)=>{
+                        return {label:ins, value:ins};
+                    })}
+                />
+            </TypeOptionsContainer>
+            {enable_partial_channels && (
+                <TypeOptionsContainer label="Partial channels">
+                    <InputField id="source_channel" name="source_channel" label="Source Channel" defaultValue={props.selected_channel.source_channel.toString()} onKeyDown={handle_change_partial_channels}/>
+                    <InputField id="destination_channel" name="destination_channel" label="Destination Channel" defaultValue={props.selected_channel.destination_channel.toString()} onKeyDown={handle_change_partial_channels}/>
+                </TypeOptionsContainer>
+            )}
+        </FieldPaneRow>
     )
 
 };

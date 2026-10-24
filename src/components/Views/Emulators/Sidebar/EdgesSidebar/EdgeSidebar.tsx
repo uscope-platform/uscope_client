@@ -13,17 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useReducer, useState} from 'react';
+import React from 'react';
 
 import {SidebarColumn} from "#UI/index.js";
 import {up_emulator} from "#client_core/index.js";
 import EmulatorList from "../EmulatorList.jsx";
-import EmulatorProperties from "../EmulatorProperties.jsx";
-import DmaChannelsList from "./DmaChannelsList.jsx";
-import DmaChannelProperties from "./DmaChannelProperties.jsx";
-import type {connection, EmulatorGraphEdge} from "#interfaces/index.js";
-
-const NO_CONNECTION: connection = {source_core: -1, destination_core: -1, ports: []};
+import type {EmulatorGraphEdge} from "#interfaces/index.js";
 
 interface EdgeSidebarProps {
     emulator: up_emulator,
@@ -31,43 +26,13 @@ interface EdgeSidebarProps {
     on_select_emulator: (emulator: number) => void,
 }
 
-/// The sidebar of the editor when an edge is selected. The channel that is edited is picked in the list of the edge,
-/// so it is kept here, and it starts over for another edge: give the edge as the key.
+/// The sidebar of the editor when an edge is selected. The DMA channels of the edge are in the bar under the diagram.
 let EdgeSidebar = (props: EdgeSidebarProps) =>{
-    const [channel_id, set_channel_id] = useState(-1);
-    const [, force_update] = useReducer(x => x + 1, 0);
-
-    const edge = props.edge;
-    const connection = props.emulator.connections.find((c) => c.source_core === edge.from && c.destination_core === edge.to) ?? NO_CONNECTION;
-    const channel = connection.ports.find((port) => port.id === channel_id);
-
     return(
         <SidebarColumn
             style={{padding: "10px 0"}}
             panels={[
                 {title: "Emulator List", content: <EmulatorList on_select={props.on_select_emulator}/>},
-                {title: "Emulator Properties", content: <EmulatorProperties selected_emulator={props.emulator}/>},
-                {title: "DMA channels", min_height: "200px", content: (
-                    <DmaChannelsList
-                        connections_list={connection.ports.map((port) => port.id)}
-                        selected_emulator={props.emulator}
-                        source_core={edge.from}
-                        target_core={edge.to}
-                        forceUpdate={force_update}
-                        selected_channel={channel_id}
-                        on_select={(item) => set_channel_id(parseInt(item))}
-                    />
-                )},
-                ...(channel ? [{title: "DMA channel properties", content: (
-                    <DmaChannelProperties
-                        selected_emulator={props.emulator}
-                        selected_connection={connection}
-                        source_core={edge.from}
-                        target_core={edge.to}
-                        selected_channel={channel}
-                        forceUpdate={force_update}
-                    />
-                )}] : [])
             ]}
         />
     );
