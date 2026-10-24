@@ -80,12 +80,17 @@ export let ItemsEditor = <T,>(props: ItemsEditorProps<T>) =>{
     const visible = props.items.filter((item) => needle === "" || (props.name(item) + " " + description(item)).toLowerCase().includes(needle));
 
     // the one selected. When the item itself is gone, because the items were built again from the store after an edit,
-    // the one that is in the same place is, and the first one when there is none (removed, or another application)
+    // the one with the same name is, or the one in the same place (it was renamed elsewhere), and the first one when
+    // there is none (removed, or another application)
     const last_index = useRef(0);
+    const last_name = useRef<string | null>(null);
     const selected = selected_item !== null && props.items.includes(selected_item)
         ? selected_item
-        : selected_item !== null && last_index.current < props.items.length ? props.items[last_index.current] : visible[0];
+        : selected_item !== null
+            ? props.items.find(i => props.name(i) === last_name.current) ?? props.items[last_index.current] ?? visible[0]
+            : visible[0];
     last_index.current = selected !== undefined ? props.items.indexOf(selected) : 0;
+    last_name.current = selected !== undefined ? props.name(selected) : null;
 
     let handleRemove = async (name: string) =>{
         const item = props.items.find(i => props.name(i) === name);
@@ -94,6 +99,8 @@ export let ItemsEditor = <T,>(props: ItemsEditorProps<T>) =>{
 
     let handleRename = async (name: string, new_name: string) =>{
         const item = props.items.find(i => props.name(i) === name);
+        // the selection follows the item to its new name
+        if(item !== undefined && props.name(item) === last_name.current) last_name.current = new_name;
         if(item !== undefined && props.onRename) await props.onRename(item, new_name);
     }
 
