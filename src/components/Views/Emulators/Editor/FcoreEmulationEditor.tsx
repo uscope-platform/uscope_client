@@ -206,13 +206,24 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
     let handle_run = async () =>{
         if(!io_types_ok()) return;
         let results = await props.emulator.emulator_run();
-        if(results.code && results.code === 7) {
-        } else if(results.code && results.code === 9){
+        if(results.code === 9){
             toast.warn(results.error);
-        } else {
-            props.onEmulationDone(new up_emulator_result(JSON.parse(results.results), props.input_data));
-            toast.success("Emulation Completed");
+            return;
         }
+        // a failed emulation has its error as the text of the results, not a json
+        let parsed;
+        try{
+            // 7 is a failure of the emulation, 8 one of the compilation
+            if(results.code === 7 || results.code === 8 || results.results_valid === false) throw new Error(results.results);
+            parsed = JSON.parse(results.results);
+        } catch (e) {
+            const text = typeof results.results === "string" ? results.results : String(e);
+            console.error(text);
+            toast.error(text);
+            return;
+        }
+        props.onEmulationDone(new up_emulator_result(parsed, props.input_data));
+        toast.success("Emulation Completed");
     }
 
     let handle_edit = () => {
