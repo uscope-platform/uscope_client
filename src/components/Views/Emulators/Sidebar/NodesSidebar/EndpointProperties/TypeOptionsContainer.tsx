@@ -24,10 +24,24 @@ const Section = styled('div')`
     padding-left: 0;
     border-left: 0;
   }
+  /* what is only for the emulation is a box of its own, dashed: it is not on the hardware */
+  &[data-emulation-only], &[data-emulation-only]:first-child {
+    padding: 0.6rem 0.8rem 0.8rem;
+    border: 1px dashed ${ColorTheme.background.bordersLight};
+    border-radius: 8px;
+    background: ${ColorTheme.background.level_4};
+  }
+`
+
+const HeadingRow = styled('div')`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.6rem;
+  margin: 0 0 0.6rem 0.2rem;
 `
 
 const Heading = styled('div')`
-  margin: 0 0 0.6rem 0.2rem;
   font-family: Roboto,Helvetica,Arial,sans-serif;
   font-size: 0.7rem;
   font-weight: 600;
@@ -36,16 +50,34 @@ const Heading = styled('div')`
   opacity: 0.6;
 `
 
+const Badge = styled('span')`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0.05em 0.6em;
+  border-radius: 1em;
+  font-size: 0.7rem;
+  border: 1px solid ${ColorTheme.background.bordersLight};
+  opacity: 0.85;
+`
+
 interface TypeOptionsContainerProps {
     children: React.ReactNode;
     label: string;
+    /// tells where the fields of the group are used, like on the hardware or only in the emulation
+    badge?: {icon: React.ReactNode, text: string} | undefined;
+    /// the fields are used in the emulation only, the group is drawn apart for it to be told from the ones that describe the hardware
+    emulation_only?: boolean | undefined;
 }
 
 /// A titled group of the fields of a pane, they flow in the two columns of the grid
 let TypeOptionsContainer = (props:TypeOptionsContainerProps) => {
     return (
-        <Section>
-            <Heading>{props.label}</Heading>
+        <Section data-emulation-only={props.emulation_only ? "" : undefined}>
+            <HeadingRow>
+                <Heading>{props.label}</Heading>
+                {props.badge && <Badge>{props.badge.icon}{props.badge.text}</Badge>}
+            </HeadingRow>
             <FieldGrid>
                 {props.children}
             </FieldGrid>
