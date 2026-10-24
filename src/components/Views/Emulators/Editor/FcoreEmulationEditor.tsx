@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React, {useContext, useEffect, useState} from 'react';
-import {useNavigate} from "react-router";
+import {useLocation, useNavigate} from "react-router";
 import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -63,6 +63,7 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
 
     const [n_cores, set_n_cores] = useState(0);
     const navigate = useNavigate();
+    const location = useLocation();
 
 
     const [nodes, setNodes] = useState<EmulatorGraphNode[]>([]);
@@ -194,7 +195,11 @@ let FcoreEmulationEditor = function (props: FcoreEmulationEditorProps) {
         if(component === undefined || component === null) return;
         let core = props.emulator.cores[component.obj.id];
         if(core === undefined || core === null) return;
-        navigate("/programs", {state: {selected_program:core.program}});
+        navigate("/programs", {state: {
+            selected_program: core.program,
+            // lets the programs view bring the user back to what was open
+            return_to: {path: location.pathname, label: "Emulator", emulator: props.emulator.id, component: component}
+        }});
     }
 
     let delete_selection = ()=>{

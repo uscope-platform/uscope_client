@@ -86,6 +86,8 @@ interface EditorTabsProps<T extends {id: number, name: string}> {
     on_keep: (id: number) => void;
     on_close: (id: number) => void;
     empty_message: string;
+    /// at the end of the tab bar, like the button that goes back to where the user came from
+    actions?: ReactNode;
     /// the editor of an item, that tells when it has changes that are not saved
     render_editor: (item: T, on_dirty_change: (dirty: boolean) => void) => ReactNode;
 }
@@ -129,6 +131,7 @@ export const EditorTabs = <T extends {id: number, name: string}>(props: EditorTa
                         />
                     </PanelTitle>
                 ))}
+                {props.actions && <div style={{marginLeft: "auto", display: "flex", alignItems: "center"}}>{props.actions}</div>}
             </TitleBar>
             <ContentDiv>
                 {props.items.length === 0 && (

@@ -14,7 +14,8 @@
 // limitations under the License.
 
 import React, {useEffect} from "react";
-import {useLocation} from "react-router";
+import {useLocation, useNavigate} from "react-router";
+import {MdArrowBack} from "react-icons/md";
 
 import {EditorTabs, MainPane, PaneGroup, UIPanel, useEditorTabs} from "#UI/index.js";
 import ProgramsEditor from "./Editor/ProgramsEditor.js";
@@ -29,6 +30,10 @@ interface ProgramsManagerProps {
 let ProgramsManager = (props: ProgramsManagerProps) =>{
 
     const location = useLocation();
+    const navigate = useNavigate();
+
+    // where the user came from, when a view sent them here to edit a program
+    const return_to: {path: string, label: string} | undefined = location.state?.return_to;
 
     const programs_store = useAppSelector(state => state.programs);
 
@@ -56,6 +61,16 @@ let ProgramsManager = (props: ProgramsManagerProps) =>{
                     <EditorTabs
                         title="Source Code"
                         empty_message="Select a program from the list to edit it."
+                        actions={return_to && (
+                            <button
+                                title={"Back to the " + return_to.label.toLowerCase()}
+                                onClick={() => navigate(return_to.path, {state: {restore: location.state.return_to}})}
+                                style={{display: "flex", alignItems: "center", gap: "0.3em", padding: "0.2em 0.6em", border: "none", borderRadius: 4, background: "transparent", color: "inherit", font: "inherit", fontSize: "0.85em", cursor: "pointer"}}
+                            >
+                                <MdArrowBack size="1.3em"/>
+                                {return_to.label}
+                            </button>
+                        )}
                         items={tabs.open_items}
                         active_id={tabs.active_id}
                         preview_id={tabs.preview_id}

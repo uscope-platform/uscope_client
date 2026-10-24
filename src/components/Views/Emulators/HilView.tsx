@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import React, {useState} from 'react';
+import {useLocation} from "react-router";
 
 import {TabbedContent, UIPanel} from "#UI/index.js"
 import {up_emulator, up_emulator_result} from "#client_core/index.js";
@@ -29,8 +30,14 @@ interface HilViewProps {}
 
 let HilView = function (props: HilViewProps) {
 
+    const emulators_store = useAppSelector(state => state.emulators);
+
+    // the editor of a program sends the user back with what was open when they left
+    const restore = useLocation().state?.restore as {emulator: number, component: EmulatorSelections["component"]} | undefined;
+    const restored_emulator = restore !== undefined ? emulators_store[restore.emulator] : undefined;
+
     let [selections, set_selections] = useState<EmulatorSelections>({
-        component:null,
+        component: restored_emulator !== undefined ? restore!.component : null,
         iom:null,
         tab:0,
         program:"",
@@ -43,9 +50,7 @@ let HilView = function (props: HilViewProps) {
     let [deployed, set_deployed] = useState(false);
 
 
-    const emulators_store = useAppSelector(state => state.emulators);
-
-    let [emulator, set_emulator] = useState(up_emulator.get_dummy());
+    let [emulator, set_emulator] = useState(() => restored_emulator !== undefined ? new up_emulator(restored_emulator) : up_emulator.get_dummy());
 
 
     let versioned_handle_selection = (value: EmulatorSelections) =>{
