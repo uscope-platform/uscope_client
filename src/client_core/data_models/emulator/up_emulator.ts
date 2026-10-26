@@ -845,8 +845,67 @@ export class up_emulator {
         return errors;
     }
 
+    /// What the endpoints of the IO blocks say about the ports of the cores they are linked to, by "core.port". The
+    /// hardware knows no blocks: an external input listens at the address of its endpoint and an external output is
+    /// pushed to the address of its endpoint, so the address and the emulation data are folded into the port
+    external_bindings = () =>{
+        const inputs: Record<string, {address: number, source: core_input_source, from: string}> = {};
+        const outputs: Record<string, {address: number, from: string}> = {};
+        const errors: string[] = [];
+        for(const c of this.connections){
+            const source_io = this.io_blocks[c.source_core];
+            const destination_io = this.io_blocks[c.destination_core];
+            if(!source_io && !destination_io) continue;
+            const io = (source_io ?? destination_io) as io_block;
+            const core = this.cores[source_io ? c.destination_core : c.source_core];
+            if(!core) continue;
+            for(const l of c.ports){
+                const endpoint = io.ports.find((p) => p.name === (source_io ? l.source_port : l.destination_port));
+                if(!endpoint) continue;
+                const port_name = source_io ? l.destination_port : l.source_port;
+                const key = core.name + "." + port_name;
+                const from = io.name + "." + endpoint.name;
+                const port = [...core.inputs, ...core.outputs, ...core.memory_init].find((p) => p.name === port_name);
+                if(port && port.is_vector){
+                    errors.push(key + " is a vector, the endpoint " + from + " carries one word");
+                    continue;
+                }
+                if(source_io){
+                    const source = endpoint.source ?? up_emulator.default_io_source();
+                    const known = inputs[key];
+                    if(known && (known.address !== endpoint.address || JSON.stringify(known.source) !== JSON.stringify(source))){
+                        errors.push(key + " is fed by " + known.from + " and " + from + ", that differ in address or source");
+                        continue;
+                    }
+                    inputs[key] = {address: endpoint.address, source, from};
+                } else {
+                    const known = outputs[key];
+                    if(known && known.address !== endpoint.address){
+                        errors.push(key + " is sent to " + known.from + " and " + from + ", at different addresses");
+                        continue;
+                    }
+                    outputs[key] = {address: endpoint.address, from};
+                }
+            }
+        }
+        return {inputs, outputs, errors};
+    }
+
+    /// The series of the source of an endpoint, from the files of any core: the endpoint carries a single channel
+    resolve_io_source = (source: core_input_source): any =>{
+        if(source.type !== "series") return source;
+        const name = source.value?.[0];
+        const [file, column] = typeof name === "string" ? name.split(".") : [];
+        for(const core of Object.values(this.cores)){
+            const data = core.input_data.find((d) => d.name === file);
+            if(data && data.data[column!] !== undefined) return {type: "series", value: data.data[column!]};
+        }
+        throw new Error("The series " + name + " of an endpoint was not found in the selected files");
+    }
+
     build = () =>{
-        const io_errors = this.check_io_types();
+        const external = this.external_bindings();
+        const io_errors = [...this.check_io_types(), ...external.errors];
         if(io_errors.length > 0){
             throw new Error(io_errors.join("\n"));
         }
@@ -883,20 +942,25 @@ export class up_emulator {
                                 value: this.get_series_for_input(item.input_data, in_obj, item.channels)
                             };
                         }
+                        // fed from outside: it listens at the address of its endpoint, the emulation gets the data from it
+                        const ext = external.inputs[item.name + "." + in_obj.name];
                         return {
                             name: in_obj.name,
                             metadata:{
                                 type: in_obj.type,
                                 width: in_obj.width,
                                 signed: in_obj.signed,
-                                common_io:in_obj.common_io
+                                common_io:in_obj.common_io,
+                                ...(ext ? {io_address: [ext.address]} : {})
                             },
-                            source:source,
+                            source: ext ? {type: "external"} : source,
+                            ...(ext ? {emulation_source: this.resolve_io_source(ext.source)} : {}),
                             vector_size: in_obj.vector_size,
                             is_vector: in_obj.is_vector
                         };
                     }),
                     outputs: item.outputs.map((out) => {
+                        const ext = external.outputs[item.name + "." + out.name];
                         return {
                             name: out.name,
                             is_vector: out.is_vector,
@@ -905,7 +969,8 @@ export class up_emulator {
                                 type: out.type,
                                 width: out.width,
                                 signed: out.signed,
-                                common_io:false
+                                common_io:false,
+                                ...(ext ? {io_address: [ext.address]} : {})
                             }
                         };
                     }),
@@ -932,6 +997,7 @@ export class up_emulator {
                             init_val.push(parseInt(mem.value));
                         }
 
+                        const ext_mem = external.inputs[item.name + "." + mem.name] ?? external.outputs[item.name + "." + mem.name];
                         return {
                             name: mem.name,
                             vector_size: mem.vector_size,
@@ -939,6 +1005,7 @@ export class up_emulator {
                                 type: mem.type,
                                 width: mem.width,
                                 signed: mem.signed,
+                                ...(ext_mem ? {io_address: [ext_mem.address]} : {})
                             },
                             is_output: mem.is_output,
                             is_input: mem.is_input,
@@ -969,23 +1036,6 @@ export class up_emulator {
                 })
             }),
             interconnect: connections,
-            io_blocks: Object.values(this.io_blocks).map((block) => ({
-                id: block.name,
-                direction: block.direction,
-                ports: block.ports,
-                links: this.connections.flatMap((c) => {
-                    const is_source = c.source_core === block.id;
-                    if(!is_source && c.destination_core !== block.id) return [];
-                    const other = this.cores[is_source ? c.destination_core : c.source_core];
-                    if(!other) return [];
-                    return c.ports.map((l) => ({
-                        io_port: is_source ? l.source_port : l.destination_port,
-                        core_port: other.name + "." + (is_source ? l.destination_port : l.source_port),
-                        io_channel: is_source ? l.source_channel : l.destination_channel,
-                        core_channel: is_source ? l.destination_channel : l.source_channel
-                    }));
-                })
-            })),
             emulation_time:this.emulation_time,
             deployment_mode:this.deployment_mode
         };
