@@ -942,7 +942,8 @@ export class up_emulator {
                                 value: this.get_series_for_input(item.input_data, in_obj, item.channels)
                             };
                         }
-                        // fed from outside: it listens at the address of its endpoint, the emulation gets the data from it
+                        // fed from outside: it listens at the address of its endpoint and the emulation takes the data of the
+                        // endpoint. The deployment ignores the source of an input that has an address
                         const ext = external.inputs[item.name + "." + in_obj.name];
                         return {
                             name: in_obj.name,
@@ -953,8 +954,7 @@ export class up_emulator {
                                 common_io:in_obj.common_io,
                                 ...(ext ? {io_address: [ext.address]} : {})
                             },
-                            source: ext ? {type: "external"} : source,
-                            ...(ext ? {emulation_source: this.resolve_io_source(ext.source)} : {}),
+                            source: ext ? this.resolve_io_source(ext.source) : source,
                             vector_size: in_obj.vector_size,
                             is_vector: in_obj.is_vector
                         };
