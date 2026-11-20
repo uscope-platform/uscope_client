@@ -28,6 +28,7 @@ export type TerminalCommand = (args: string[]) => Promise<string[]>;
 /// The names completing the argument of a command, read from the store next to the commands that resolve them
 export const argument_completions: Record<string, () => string[]> = {
     load_bitstream: ()=> Object.values(store.getState().bitstreams).map((bitstream)=> bitstream.name),
+    load_program: ()=> Object.values(store.getState().programs).map((program)=> program.name),
 }
 
 export const terminal_backend : Record<string, TerminalCommand> = {
