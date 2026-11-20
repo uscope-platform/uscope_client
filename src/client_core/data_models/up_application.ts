@@ -181,6 +181,15 @@ export class up_application {
         return this.load_soft_cores();
     }
 
+    load_bitstream = async (id: number) => {
+        await set_scope_dma_disable(true);
+        try {
+            await backend_get(api_dictionary.operations.load_bitstream + '/' + this.id);
+        } catch (e) {
+            throw e;
+        }
+    }
+
     setup_scope = async () =>{
 
         let [channels, group] = this.get_scope_setup_info();

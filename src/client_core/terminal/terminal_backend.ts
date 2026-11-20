@@ -25,6 +25,11 @@ import store from "../../store.js";
 declare const __USCOPE_CLIENT_VERSION__: string;
 export type TerminalCommand = (args: string[]) => Promise<string[]>;
 
+/// The names completing the argument of a command, read from the store next to the commands that resolve them
+export const argument_completions: Record<string, () => string[]> = {
+    load_bitstream: ()=> Object.values(store.getState().bitstreams).map((bitstream)=> bitstream.name),
+}
+
 export const terminal_backend : Record<string, TerminalCommand> = {
     write: (args: string[]): Promise<string[]> =>{
         if(args[0] === "--help"){
@@ -75,6 +80,7 @@ export const terminal_backend : Record<string, TerminalCommand> = {
         // a failure of the write is reported, it used to be lost
         return up_peripheral.bulk_register_write(writes).then(()=>[]);
     },
+
     clear_queue:(args: string[]): Promise<string[]> =>{
         if(args[0] === "--help"){
             return new Promise((resolve)=>{
@@ -90,6 +96,7 @@ export const terminal_backend : Record<string, TerminalCommand> = {
             resolve([])
         })
     },
+
     execute_queue:(args: string[]): Promise<string[]> =>{
         if(args[0] === "--help"){
             return new Promise((resolve)=>{
@@ -108,6 +115,7 @@ export const terminal_backend : Record<string, TerminalCommand> = {
         })
         return up_peripheral.bulk_register_write(writes).then(()=>[]);
     },
+
     read:(args: string[]): Promise<string[]> =>{
         if(args[0] === "--help"){
             return new Promise((resolve)=>{
@@ -244,6 +252,41 @@ export const terminal_backend : Record<string, TerminalCommand> = {
         }
         let resp = await selected_program.load(c);
         return resp.response;
+    },
+    load_bitstream:async (args:string[]): Promise<string[]> => {
+        if(args[0] === "--help"){
+            return new Promise((resolve)=>{
+                resolve([
+                    "LOAD_BITSTREAM:",
+                    "Load the selected bitstream",
+                    "format: load_bitstream [BITSTREAM NAME]"
+                ]);
+            })
+        }
+        let bitstreams = store.getState().bitstreams;
+
+
+        if(args[0] === undefined){
+            return new Promise((resolve, reject)=>{
+                reject(["ERROR: Missing bitstream name"]);
+            })
+        }
+        let selected_bitstream = undefined;
+        for(let b in bitstreams){
+            if(bitstreams[b]!.name === args[0]){
+                selected_bitstream = bitstreams[b]?.id;
+            }
+        }
+        if(selected_bitstream === undefined){
+            return new Promise((resolve, reject)=>{
+                reject([
+                    "ERROR: Specified bitstream not found"
+                ])
+            })
+        }
+
+        await __selected_application.load_bitstream(selected_bitstream);
+        return [""];
     }
 }
 

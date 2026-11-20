@@ -14,8 +14,8 @@
 // limitations under the License.
 
 import {scripting_engine_peripherals} from "./script_runner.js";
-import {up_peripheral} from "../data_models/up_peripheral.js";
-import {up_register} from "../data_models/up_register.js";
+import {up_peripheral} from "#src/client_core";
+import {up_register} from "#src/client_core";
 import type {autocomplete_suggestion, autocompletion_context} from "#interfaces/index.js";
 
 export const autocompletion_engine = (line: autocompletion_context, explicit: boolean) : autocomplete_suggestion[] => {
@@ -48,18 +48,19 @@ export const prefix_extractor = (args: autocomplete_suggestion[] ) => {
     return null
 }
 
+/// The names starting with the text, as the suggestions of the engine are
+export const autocomplete_names = (names: string[], partial: string): autocomplete_suggestion[] =>{
+    return names
+        .filter((name)=> name.startsWith(partial))
+        .map((name)=> ({label: name, type: "keyword"}));
+};
+
 let autocomplete_peripheral_name = (path: string[]): autocomplete_suggestion[]  =>{
     
     if(path.length < 2) return [];
     let potential_name = path[1];
     if(potential_name === undefined) return [];
-    let matches = Object.keys(scripting_engine_peripherals).filter((item)=>{
-        return item.startsWith(potential_name);
-    })
-
-    return matches.map((item) => {
-        return {label: item, type: "keyword"};
-    });
+    return autocomplete_names(Object.keys(scripting_engine_peripherals), potential_name);
 };
 
 let autocomplete_register_name = (path: string[]): autocomplete_suggestion[]  =>{
@@ -75,12 +76,7 @@ let autocomplete_register_name = (path: string[]): autocomplete_suggestion[]  =>
     let parameters = peripheral_obj.periph_obj.hdl_parameters;
     let periph = new up_peripheral(peripheral_obj.spec_obj);
     let registers = periph.get_register_names(parameters);
-    let matches = registers.flat(1).filter((item) => {
-        return item.startsWith(reg_name);
-    });
-    return matches.map((item) => {
-        return {label: item, type: "keyword"};
-    });
+    return autocomplete_names(registers.flat(1), reg_name);
 };
 
 let autocomplete_field_name = (path: string[]): autocomplete_suggestion[]  =>{
@@ -97,21 +93,15 @@ let autocomplete_field_name = (path: string[]): autocomplete_suggestion[]  =>{
 
 
     let parameters = peripheral_obj.periph_obj.hdl_parameters;
-    let fields = [];
+    let fields: string[] = ["value"];
     peripheral_obj.spec_obj.registers.map((reg) =>{
         if(reg.ID === path[2]){
             let register = new up_register(reg, 9999);
-            let field_names = register.get_field_names(parameters);
-            fields = field_names.flat(1).filter((item) => {
-                return item.startsWith(field_name);
-            });
+            fields.push(...register.get_field_names(parameters).flat(1));
         }
 
     });
-    fields.push("value");
-    return fields.map((item) => {
-        return {label: item, type: "keyword"};
-    });
+    return autocomplete_names(fields, field_name);
 };
 
 export const prefix = (words:string[]) => {

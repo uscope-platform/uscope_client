@@ -18,11 +18,11 @@ import { FitAddon } from "xterm-addon-fit";
 
 import 'xterm/css/xterm.css';
 
-import {terminal_backend, type TerminalCommand} from './terminal_backend.js'
+import {argument_completions, terminal_backend, type TerminalCommand} from './terminal_backend.js'
 import {xterm_colors} from "./terminal_colors.js";
 import {history} from "./terminal_history.js";
 import {terminal_options, prompt, prompt_width, banner} from "./terminal_theme.js";
-import {autocompletion_engine, prefix} from "../scripting/autocompletion_engine.js";
+import {autocomplete_names, autocompletion_engine, prefix} from "../scripting/autocompletion_engine.js";
 
 // set by the clear command, the prompt that follows is on the first row already
 let screen_cleared = false;
@@ -138,6 +138,8 @@ const VERSION_COMPONENTS = ["client", "server", "driver", "module", "hardware", 
 const ADDRESS_COMMANDS = ["write", "write_direct", "read"];
 
 interface completion {
+    // where the word before the cursor starts
+    start: number;
     // the text replacing the word before the cursor
     word: string;
     // the candidates to list, when the word can not be extended
@@ -146,17 +148,69 @@ interface completion {
     done: boolean;
 }
 
+interface word {
+    text: string;
+    start: number;
+}
+
+interface tokenized_line {
+    words: word[];
+    // the line ends with a separator, so an empty word starts there
+    trailing: boolean;
+}
+
+/// Splits a command line in words: the text between quotes is kept together, a name can have spaces, and several
+/// spaces count as one. The words also carry where they start, for the completion.
+const scan_words = (line: string): tokenized_line =>{
+    let words: word[] = [];
+    let current = "";
+    let start = 0;
+    // true in a word, also when it is empty ("")
+    let in_word = false;
+    let quote: string | null = null;
+    for(let i = 0; i < line.length; i++){
+        let character = line[i]!;
+        if(quote !== null){
+            if(character === quote) quote = null;
+            else current += character;
+        } else if(character === '"' || character === "'"){
+            if(!in_word) start = i;
+            quote = character;
+            in_word = true;
+        } else if(/\s/.test(character)){
+            if(in_word) words.push({text: current, start});
+            current = "";
+            in_word = false;
+        } else {
+            if(!in_word) start = i;
+            current += character;
+            in_word = true;
+        }
+    }
+    if(in_word) words.push({text: current, start});
+    return {words, trailing: !in_word};
+}
+
+/// A bitstream name can have the spaces of the file name it comes from, and is then quoted as tokenize expects
+const quote_word = (word: string): string => /\s/.test(word) ? '"' + word + '"' : word;
+
 /// What completes the word that ends at the cursor
 const complete = (before_cursor: string): completion | null =>{
-    let words = before_cursor.trimStart().split(/ +/);
+    let scanned = scan_words(before_cursor);
+    let words = scanned.words;
+    // the completion works on the word being typed, which is empty after a trailing space
+    if(scanned.trailing) words.push({text: "", start: before_cursor.length});
     let index = words.length - 1;
-    let current = words[index] ?? "";
-    let command = words[0] ?? "";
+    let current = words[index]?.text ?? "";
+    let command = words[0]?.text ?? "";
+    let start = words[index]?.start ?? before_cursor.length;
 
     let candidates: string[];
     // the names before the one being completed, in peripheral.register.field
     let stem = "";
     let whole_names = true;
+    // the names completing the argument of a command that takes a stored object
+    let completion_names = index === 1 ? argument_completions[command] : undefined;
     if(index === 0 || (index === 1 && command === "help")){
         candidates = recognised_commands.filter((item)=> item.startsWith(current));
     } else if(index === 1 && command === "version"){
@@ -168,6 +222,8 @@ const complete = (before_cursor: string): completion | null =>{
         candidates = options.map((item)=> item.label).filter((item)=> item.startsWith(current.slice(stem.length)));
         // a name is followed by a dot or a space, the user knows which
         whole_names = false;
+    } else if(completion_names !== undefined){
+        candidates = autocomplete_names(completion_names(), current).map((item)=> item.label);
     } else {
         return null;
     }
@@ -176,7 +232,8 @@ const complete = (before_cursor: string): completion | null =>{
     if(candidates.length === 0) return null;
     let common = prefix(candidates);
     return {
-        word: stem + common,
+        start: start,
+        word: quote_word(stem + common),
         suggestions: candidates.length > 1 && common.length <= current.length - stem.length ? candidates : [],
         done: candidates.length === 1 && whole_names
     };
@@ -209,10 +266,9 @@ export const handle_tab = () =>{
         cursor = position;
         render();
     } else {
-        let word = before.split(/ +/).pop() ?? "";
         // a complete word gets a space, unless one follows already
         let space = result.done && !current_line.startsWith(" ", cursor) ? " " : "";
-        let completed = before.slice(0, before.length - word.length) + result.word + space;
+        let completed = before.slice(0, result.start) + result.word + space;
         current_line = completed + current_line.slice(cursor);
         cursor = completed.length;
         render();
@@ -221,30 +277,8 @@ export const handle_tab = () =>{
 
 /// Splits a command line in words: the text between quotes is kept together, a name can have spaces, and several
 /// spaces count as one
-export const tokenize = (line: string): string[] => {
-    let tokens: string[] = [];
-    let current = "";
-    // true in a word, also when it is empty ("")
-    let in_word = false;
-    let quote: string | null = null;
-    for(let character of line){
-        if(quote !== null){
-            if(character === quote) quote = null;
-            else current += character;
-        } else if(character === '"' || character === "'"){
-            quote = character;
-            in_word = true;
-        } else if(/\s/.test(character)){
-            if(in_word) tokens.push(current);
-            current = "";
-            in_word = false;
-        } else {
-            current += character;
-            in_word = true;
-        }
-    }
-    if(in_word) tokens.push(current);
-    return tokens;
+export const tokenize = (line: string): string[] =>{
+    return scan_words(line).words.map((word)=> word.text);
 }
 
 export const execute_command = (command_line: string): Promise<void> => {

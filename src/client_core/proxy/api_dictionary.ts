@@ -16,6 +16,7 @@
 export const api_dictionary = {
     operations: {
         load_application:"operations/load_application",
+        load_bitstream:"operations/load_bitstream",
         write_registers:"operations/write_registers",
         read_register:"operations/read_register",
         compile_program:"operations/compile_program",
