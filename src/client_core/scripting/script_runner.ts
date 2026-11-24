@@ -15,7 +15,7 @@
 
 import store from "../../store.js";
 import {saveParameter} from "#redux/index.js";
-import {up_peripheral, set_write_callback, up_application} from "#client_core/index.js";
+import {up_peripheral, set_write_callback, up_application, find_peripheral_spec} from "#client_core/index.js";
 import {parseFunction} from "./frontend.js";
 import {translate_registers} from "./backend.js";
 import {__selected_application} from "../index.js";
@@ -43,9 +43,7 @@ export const initialize_scripting_engine = (application: up_application | null ,
     set_write_callback(register_write_callback);
     for (const p of applications_peripherals) {
         if(p.spec_id!==""){
-            let p_obj = Object.values(peripherals).filter((val)=>{
-                return val.id === parseInt(p.spec_id);
-            })[0];
+            let p_obj = find_peripheral_spec(peripherals, p.spec_id);
             if(p_obj === undefined) continue;
             let periph = new up_peripheral(p_obj);
             scripting_engine_peripherals[p.peripheral_id] = {regs:periph.get_proxied_registers(p.peripheral_id, p.hdl_parameters), periph_obj:p, spec_obj:periph._get_periph()[periph.name]!};

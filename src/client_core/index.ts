@@ -60,6 +60,7 @@ export type {
 export type {change_kind, property_change, diff_entry, diff_section, diff_report} from './data_models/diff_engine/index.js'
 export {parameter_number, resolve_parameter, format_parameter, parse_parameter, is_hdl_integer} from './utilities/hdl_parameters.js'
 export {get_next_id} from './utilities/id_management.js'
+export {find_peripheral_spec} from './utilities/peripheral_spec.js'
 export {download_json, download_plot, download_bitstream,download_text} from './utilities/downloads.js'
 export {upload_json, upload_raw} from './utilities/uploads.js'
 export {get_channel_number_from_id, get_channels_from_group, create_plot_channel, initialize_plot, update_plot_status, apply_scope_data} from "./plot_handling.js";

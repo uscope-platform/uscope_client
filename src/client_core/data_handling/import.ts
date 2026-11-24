@@ -20,7 +20,7 @@ import {application_schema} from "./application_schema.js";
 import {peripheral_schema} from "./peripheral_schema.js";
 import store from "../../store.js";
 import {addApplication} from "#redux/index.js";
-import {get_next_id} from "#src/client_core/index.js";
+import {get_next_id, find_peripheral_spec} from "#src/client_core/index.js";
 import {
     diff_applications,
     diff_is_empty,
@@ -130,6 +130,14 @@ export const import_application = async (
     const stored = stored_applications();
     const new_id = free_id(stored.map(a => a.id));
     const incoming = normalize_application(parse_application(raw_json, new_id));
+    // ananke names the specification of a peripheral, the ids of the stored ones are what the client keeps, so a
+    // rename of the specification does not break the application. When the specification is not stored yet the name
+    // stays and is resolved when it is
+    const stored_specs = store.getState().peripherals as unknown as Record<number, up_peripheral>;
+    for(const p of incoming.peripherals){
+        const spec = find_peripheral_spec(stored_specs, p.spec_id);
+        if(spec !== undefined) p.spec_id = String(spec.id);
+    }
     const existing = stored.find(a => a.application_name === incoming.application_name);
 
     if(existing === undefined){
@@ -194,8 +202,16 @@ const stored_peripherals = (): peripheral[] => {
 
 /// The stored peripheral the imported one would clash with: the name identifies a peripheral for the user (and is
 /// unique in the database) so it has precedence over the id
-const find_peripheral_conflict = (stored: peripheral[], incoming: peripheral): peripheral | undefined => {
-    return stored.find(p => p.name === incoming.name) ?? stored.find(p => p.id === incoming.id);
+const find_peripheral_conflict = (stored: peripheral[], incoming: incoming_peripheral): peripheral | undefined => {
+    return stored.find(p => p.name === incoming.name)
+        ?? (incoming.id === undefined ? undefined : stored.find(p => p.id === incoming.id));
+};
+
+/// The peripheral with an id: the one of the file when it is free, otherwise the first free one
+const with_free_id = (stored: peripheral[], incoming: incoming_peripheral): peripheral => {
+    const taken = stored.map(p => p.id);
+    const id = incoming.id !== undefined && !taken.includes(incoming.id) ? incoming.id : free_id(taken);
+    return {...incoming, id} as peripheral;
 };
 
 const replace_peripheral = async (existing: peripheral, replacement: peripheral) => {
@@ -213,7 +229,10 @@ const replace_peripheral = async (existing: peripheral, replacement: peripheral)
     }
 };
 
-export const parse_peripherals = (raw_json: string): peripheral[] => {
+/// The id is local to a database: the files ananke exports do not have one, the client numbers the peripherals
+export type incoming_peripheral = Omit<peripheral, "id"> & {id?: number};
+
+export const parse_peripherals = (raw_json: string): incoming_peripheral[] => {
     let imported_periph = JSON.parse(raw_json);
     let [valid, errors] = validate_json(imported_periph, peripheral_schema);
     if(!valid){
@@ -229,13 +248,13 @@ export const import_peripherals = async (
     raw_json: string,
     resolve_conflict: (conflict: peripheral_conflict) => Promise<conflict_resolution>
 ): Promise<peripherals_import_summary> => {
-    const incoming_all = parse_peripherals(raw_json).map(normalize_peripheral);
+    const incoming_all = parse_peripherals(raw_json);
     const summary: peripherals_import_summary = {added: [], replaced: [], kept_both: [], kept_old: [], unchanged: []};
 
     let stored = stored_peripherals();
     const total = incoming_all.filter(p => {
         const existing = find_peripheral_conflict(stored, p);
-        return existing !== undefined && !diff_is_empty(diff_peripherals(existing, p));
+        return existing !== undefined && !diff_is_empty(diff_peripherals(existing, normalize_peripheral({...p, id: existing.id} as peripheral)));
     }).length;
     let index = 0;
 
@@ -243,13 +262,16 @@ export const import_peripherals = async (
         const existing = find_peripheral_conflict(stored, incoming);
 
         if(existing === undefined){
-            await new up_peripheral(incoming).add_remote();
-            stored.push(incoming);
-            summary.added.push(incoming.name);
+            const added = normalize_peripheral(with_free_id(stored, incoming));
+            await new up_peripheral(added).add_remote();
+            stored.push(added);
+            summary.added.push(added.name);
             continue;
         }
 
-        const diff = diff_peripherals(existing, incoming);
+        // the id of the stored one is what the comparison and the replacement use
+        const incoming_full = normalize_peripheral({...incoming, id: existing.id} as peripheral);
+        const diff = diff_peripherals(existing, incoming_full);
         if(diff_is_empty(diff)){
             summary.unchanged.push(incoming.name);
             continue;
@@ -257,7 +279,7 @@ export const import_peripherals = async (
 
         const keep_both_name = unique_name(stored.map(p => p.name), incoming.name);
         const resolution = await resolve_conflict({
-            existing, incoming, report: peripheral_diff_report(diff), keep_both_name, index: index++, total
+            existing, incoming: incoming_full, report: peripheral_diff_report(diff), keep_both_name, index: index++, total
         });
         switch (resolution) {
             case "keep_old":
@@ -265,16 +287,14 @@ export const import_peripherals = async (
                 break;
             case "use_new": {
                 // the id of the stored one is kept, the applications refer to the peripherals by id
-                const replacement = {...incoming, id: existing.id};
+                const replacement = {...incoming_full, id: existing.id};
                 await replace_peripheral(existing, replacement);
                 stored = stored.map(p => p.id === existing.id ? normalize_peripheral(replacement) : p);
                 summary.replaced.push(existing.name);
                 break;
             }
             case "keep_both": {
-                const taken_ids = stored.map(p => p.id);
-                const id = taken_ids.includes(incoming.id) ? free_id(taken_ids) : incoming.id;
-                const copy = {...incoming, id, name: keep_both_name};
+                const copy = normalize_peripheral(with_free_id(stored, {...incoming, name: keep_both_name}));
                 await new up_peripheral(copy).add_remote();
                 stored.push(normalize_peripheral(copy));
                 summary.kept_both.push(copy.name);

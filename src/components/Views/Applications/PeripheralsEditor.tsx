@@ -17,6 +17,7 @@ import React from 'react';
 
 import {ItemsEditor} from "#UI/index.js";
 import {PeripheralProperties} from "#components/Views/Applications/Properties/index.js";
+import {find_peripheral_spec} from "#client_core/index.js";
 import type {up_application, up_peripheral} from "#client_core/index.js";
 
 interface PeripheralsEditorProps {
@@ -29,7 +30,7 @@ interface PeripheralsEditorProps {
 /// The peripherals of an application, which can be dozens of them
 export let PeripheralsEditor = (props: PeripheralsEditorProps) =>{
 
-    const ip_name = (spec_id: string) => props.peripherals[parseInt(spec_id)]?.name;
+    const ip_name = (spec_id: string) => find_peripheral_spec(props.peripherals, spec_id)?.name;
 
     // by name, with the numbers inside compared as numbers (new_peripheral_2 before new_peripheral_10)
     const sorted = [...props.application.peripherals].sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true}));

@@ -24,7 +24,7 @@ import {
 } from "#UI/index.js";
 import {styled} from "goober";
 
-import {up_application, up_peripheral} from "#client_core/index.js";
+import {up_application, up_peripheral, find_peripheral_spec} from "#client_core/index.js";
 import {HdlParameterProperties, ParameterHeader, type HdlParameterChange} from "./HdlParameterProperties.jsx";
 import type {peripheral_instance, SimpleStringOption, hdl_parameter} from "#interfaces/index.js";
 
@@ -64,15 +64,10 @@ export let  PeripheralProperties = (props: PeripheralPropertiesProps) =>{
     })
 
     let initial_value: SimpleStringOption = (()=>{
-        let p =  Object.values(props.peripherals).filter((p)=>{
-            return p.id === parseInt(props.peripheral.spec_id);
-        })[0];
+        let p = find_peripheral_spec(props.peripherals, props.peripheral.spec_id);
         if(p === undefined)return {label: "", value: ""}
-        if(props.peripheral.spec_id !== ""){
-            return {label:p.name, value:props.peripheral.spec_id}
-        } else {
-            return {label: "", value: ""}
-        }
+        // the id of the specification is what the application stores, whether the file named it or numbered it
+        return {label:p.name, value:String(p.id)}
     })();
 
     let [selected, set_selected] = useState(initial_value);

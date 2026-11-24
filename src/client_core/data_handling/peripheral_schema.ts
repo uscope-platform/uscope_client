@@ -110,7 +110,6 @@ export let peripheral_schema = {
         },
         "additionalProperties": false,
         "required": [
-          "id",
           "name",
           "registers",
           "version"
