@@ -47,18 +47,20 @@ export const clear_axi_trace = () => {
     entries = [];
 }
 
-const hex = (value: number) => "0x" + (value >>> 0).toString(16).toUpperCase().padStart(8, "0");
+// the addresses are 64 bits, the data is the 32 bits of a register
+const hex_address = (address: number) => "0x" + BigInt(Math.trunc(address)).toString(16).toUpperCase().padStart(16, "0");
+const hex_data = (value: number) => "0x" + (value >>> 0).toString(16).toUpperCase().padStart(8, "0");
 
 export const axi_trace_csv = (): string => {
     let csv = "timestamp,address,data,type,proxy_type,proxy_address\n";
     for(const {time, write} of entries){
         csv += [
             new Date(time).toISOString(),
-            hex(write.address),
-            hex(write.value),
+            hex_address(write.address),
+            hex_data(write.value),
             write.type,
             write.proxy_type,
-            write.type === "proxied" ? hex(write.proxy_address) : ""
+            write.type === "proxied" ? hex_address(write.proxy_address) : ""
         ].join(",") + "\n";
     }
     return csv;
