@@ -80,3 +80,28 @@ export const construct_proxied_register = (reg:up_register, periph_id:string) : 
     let fields = new fields_object(reg, periph_id);
     return new Proxy(fields, register_proxy);
 }
+
+type registers_map = Record<string, fields_object>;
+
+const peripheral_proxy: ProxyHandler<registers_map> = {
+    // Assigning to a register writes it as a whole, `periph.reg = 5` is `periph.reg.value = 5`,
+    // while assigning an object writes its fields, `periph.reg = {field_a: 1, field_b: 2}`
+    set(regs, prop, value) {
+        const register = regs[String(prop)];
+        if (register === undefined) return false;
+        if (typeof value === "number") {
+            register.value = value;
+        } else if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+            for (const [field, field_value] of Object.entries(value)) {
+                register[field] = field_value as number;
+            }
+        } else {
+            throw new TypeError(`Cannot assign ${typeof value} to register ${String(prop)}, expected a number or an object of fields`);
+        }
+        return true;
+    }
+}
+
+export const construct_proxied_peripheral = (regs: registers_map): registers_map => {
+    return new Proxy(regs, peripheral_proxy);
+}

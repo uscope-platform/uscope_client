@@ -314,12 +314,10 @@ const parse_value = (text: string): number | null =>{
 // The errors are thrown as the lines to print, as the commands reject: the terminal reports them
 const translate_specifier = (spec: string, value: string) =>{
     let tokens = spec.split(".");
-    if(tokens.length===2)
-        tokens.push("value");
     let periph_name = tokens[0];
     let reg_name = tokens[1];
     let field_name = tokens[2];
-    if(!periph_name || !reg_name || !field_name)
+    if(!periph_name || !reg_name || tokens.length > 3 || tokens.length < 2)
         throw ["ERROR: Invalid specifier '" + spec + "', the format is PERIPHERAL.REGISTER[.FIELD]"];
     let periph_obj = scripting_engine_peripherals[periph_name];
     if(!periph_obj) throw ["ERROR: Unknown peripheral '" + periph_name + "'"];
@@ -328,12 +326,15 @@ const translate_specifier = (spec: string, value: string) =>{
     let parsed_value = parse_value(value);
     if(parsed_value === null) throw ["ERROR: Invalid value '" + value + "', it must be an integer (decimal, 0x hexadecimal or 0b binary)"];
     try {
-        reg[field_name] = parsed_value;
+        // without a field the whole register is written
+        if(field_name === undefined) reg.value = parsed_value;
+        else reg[field_name] = parsed_value;
     } catch (error) {
         // the register proxy refuses the fields it does not have
         throw ["ERROR: Unknown field '" + field_name + "' in register '" + reg_name + "'"];
     }
 }
 
-//   write adc_test.cmp_high_f.value 6
-//   write_direct adc_test.cmp_high_f.value 6
+//   write adc_test.cmp_high_f 6
+//   write adc_test.cmp_high_f.enable 1
+//   write_direct adc_test.cmp_high_f 6

@@ -26,6 +26,7 @@ import type {
     register_write,
     PeripheralsState
 } from "#interfaces/index.js";
+import {construct_proxied_peripheral} from "#client_core/data_models/register_proxy.js";
 import type {fields_object} from "#client_core/data_models/register_proxy.js";
 
 export let scripting_engine_peripherals : Record<string, autocomplete_periph_object> = {}
@@ -142,7 +143,7 @@ const register_write_callback = (
 const purge_peripherals = () =>{
     let purged:Record<string, Record<string, fields_object>> = {}
     for (const key in scripting_engine_peripherals) {
-        purged[key] = scripting_engine_peripherals[key]!.regs
+        purged[key] = construct_proxied_peripheral(scripting_engine_peripherals[key]!.regs)
     }
     return purged
 }
