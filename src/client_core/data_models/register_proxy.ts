@@ -88,7 +88,9 @@ const peripheral_proxy: ProxyHandler<registers_map> = {
     // while assigning an object writes its fields, `periph.reg = {field_a: 1, field_b: 2}`
     set(regs, prop, value) {
         const register = regs[String(prop)];
-        if (register === undefined) return false;
+        // throws, a failed set is silently ignored by the sloppy mode scripts
+        if (register === undefined)
+            throw new ReferenceError(`Unknown register '${String(prop)}', the registers are: ${Object.keys(regs).join(", ")}`);
         if (typeof value === "number") {
             register.value = value;
         } else if (typeof value === "object" && value !== null && !Array.isArray(value)) {

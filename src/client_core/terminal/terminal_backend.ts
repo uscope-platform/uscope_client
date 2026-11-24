@@ -19,6 +19,12 @@ import {up_peripheral} from "#client_core/index.js";
 import {__selected_application, up_program} from "../index.js";
 import {get_version} from "../proxy/platform.js";
 import {history} from "./terminal_history.js";
+import {
+    axi_trace_length,
+    clear_axi_trace,
+    download_axi_trace,
+    is_axi_tracing
+} from "../utilities/axi_trace.js";
 
 import store from "../../store.js";
 
@@ -177,6 +183,34 @@ export const terminal_backend : Record<string, TerminalCommand> = {
                 reject(["ERROR: Invalid component name"]);
             })
         }
+    },
+
+    axi_trace:(args: string[]): Promise<string[]>=>{
+        if(args[0] === "--help"){
+            return new Promise((resolve)=>{
+                resolve([
+                    "AXI_TRACE:",
+                    "This command handles the log of the AXI writes, enabled when the application is chosen",
+                    "download saves it as a csv with the address and the data of each write, clear forgets it",
+                    "format: axi_trace [status|download|clear]"
+                ]);
+            })
+        }
+        let action = args[0] ?? "status";
+        if(action !== "status" && !is_axi_tracing())
+            return Promise.reject(["ERROR: AXI tracing is off, enable it when choosing the application"]);
+        if(action === "status"){
+            return Promise.resolve([
+                "AXI tracing is " + (is_axi_tracing() ? "on, " + axi_trace_length() + " writes logged" : "off")
+            ]);
+        } else if(action === "download"){
+            download_axi_trace();
+            return Promise.resolve([axi_trace_length() + " writes saved"]);
+        } else if(action === "clear"){
+            clear_axi_trace();
+            return Promise.resolve([]);
+        }
+        return Promise.reject(["ERROR: Unknown action '" + action + "', the format is axi_trace [status|download|clear]"]);
     },
 
     history:(args: string[]): Promise<string[]>=>{

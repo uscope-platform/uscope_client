@@ -17,7 +17,8 @@ import React, {useReducer} from 'react';
 
 
 import ScopeProperties from "./ScopeProperties.js";
-import {SidebarColumn} from "#UI/index.js";
+import {Button, SidebarColumn} from "#UI/index.js";
+import {clear_axi_trace, download_axi_trace, is_axi_tracing} from "#client_core/utilities/axi_trace.js";
 import TriggerControls from "./TriggerControls.js";
 import type {channel_group, ScopeStatus} from "#interfaces/index.js";
 
@@ -58,7 +59,13 @@ let  PlotSidebar = (props:PlotSidebarProps) =>{
                     }}
                     acquisition_status={props.acquisition_status}
                 />
-            )}
+            )},
+            ...(is_axi_tracing() ? [{title: "AXI Trace", content: (
+                <div style={{display: "flex", gap: "0.5em", justifyContent: "center", padding: "0.5em"}}>
+                    <Button onClick={download_axi_trace}>Download CSV</Button>
+                    <Button onClick={clear_axi_trace}>Clear</Button>
+                </div>
+            )}] : [])
         ]}/>
     );
 };

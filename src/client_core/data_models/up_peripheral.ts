@@ -22,6 +22,7 @@ import {up_register} from "#client_core/index.js";
 import type {hdl_parameter, peripheral} from "#interfaces/index.js";
 import {resolve_parameter} from "#src/client_core/index.js";
 import {fields_object} from "#client_core/data_models/register_proxy.js";
+import {record_axi_writes} from "#client_core/utilities/axi_trace.js";
 import type {register_write} from "#interfaces/index.js";
 
 export class up_peripheral {
@@ -176,7 +177,11 @@ export class up_peripheral {
     }
 
     static bulk_register_write(data: register_write[]){
-        return backend_post(api_dictionary.operations.write_registers, data);
+        return backend_post(api_dictionary.operations.write_registers, data).then((response)=>{
+            // every write goes through here, the ones of scripts, macros, the terminal and the setup of the application
+            record_axi_writes(data);
+            return response;
+        });
     }
 
     static direct_register_write(writes: [number, number][]){

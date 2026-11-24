@@ -79,3 +79,17 @@ export let download_text = (content: string, filename: string) => {
     document.body.removeChild(link);
 }
 
+
+
+export let download_csv = (content: string, filename: string) => {
+    let blob = new Blob([content], {type: "text/csv;charset=utf-8"});
+    let url = URL.createObjectURL(blob);
+
+    let link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+}

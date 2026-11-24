@@ -15,7 +15,8 @@
 
 import React, {useEffect, useState} from 'react';
 
-import {Button, SelectableList, SimpleContent, UIPanel} from "#UI/index.js"
+import {Button, Checkbox, SelectableList, SimpleContent, UIPanel} from "#UI/index.js"
+import {set_axi_tracing} from "#client_core/utilities/axi_trace.js";
 import type {application} from "#interfaces/index.js";
 
 
@@ -43,6 +44,7 @@ let ApplicationChooserView = (props: ApplicationChooserViewProps) =>{
     }));
 
     const [selected, set_selected] = useState<number | null>(null);
+    const [axi_trace, set_axi_trace] = useState(false);
 
     useEffect(()=>{
         let last_app = localStorage.getItem("last_selected_application");
@@ -56,6 +58,7 @@ let ApplicationChooserView = (props: ApplicationChooserViewProps) =>{
     let open = (id: number | null) =>{
         if(id === null) return;
         localStorage.setItem("last_selected_application", id.toString());
+        set_axi_tracing(axi_trace);
         props.done(id);
     };
 
@@ -74,7 +77,12 @@ let ApplicationChooserView = (props: ApplicationChooserViewProps) =>{
                     onActivate={name => open(id_from_name(name))}
                     style={{maxHeight: "calc(100vh - 18rem)", margin: "0.5em", width: "auto"}}
                 />
-                <div style={{display: "flex", justifyContent: "flex-end", padding: "0.5em"}}>
+                <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.5em"}}>
+                    <Checkbox
+                        name="axi_trace"
+                        label="Trace AXI writes"
+                        value={axi_trace}
+                        onChange={(e) => set_axi_trace(e.target.checked)}/>
                     <Button onClick={() => open(selected)} disabled={selected === null}>Open application</Button>
                 </div>
             </SimpleContent>
