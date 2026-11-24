@@ -39,7 +39,15 @@ export let  PlotChannelProperties = (props: PlotChannelPropertiesProps) =>{
 
     let handleonKeyDown =async (event: React.KeyboardEvent<HTMLInputElement>) =>{
         if(event.key==="Enter"|| event.key ==="Tab"){
-            await props.application.edit_channel(props.channel.name, event.currentTarget.name, event.currentTarget.value);
+            const field = event.currentTarget.name;
+            let value: string | number = event.currentTarget.value;
+            // these fields are numeric in the channel model, the input only gives text
+            if(field === "number" || field === "mux_setting"){
+                const parsed = Number(value);
+                if(value.trim() === "" || !Number.isFinite(parsed)) return;
+                value = parsed;
+            }
+            await props.application.edit_channel(props.channel.name, field, value);
             props.forceUpdate();
         }
     }
