@@ -45,3 +45,11 @@ export let set_scope_address  = (args: scope_settings) =>{
 export let set_scope_dma_disable = (status: boolean) =>{
     return scope_command("disable_scope_dma", {status: status});
 }
+
+export type raw_capture_mode = "raw" | "columns";
+
+/// Reads one raw buffer straight from the driver, returned as csv text. The driver does not coordinate this with its
+/// reader, so the scope has to be paused while it runs
+export const capture_scope_frame = (mode: raw_capture_mode = "raw") =>{
+    return scope_command<string>("capture_scope_frame", {mode: mode});
+}

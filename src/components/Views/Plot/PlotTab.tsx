@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useContext, useReducer, useState} from 'react';
+import React, {useContext, useReducer, useRef, useState} from 'react';
 
 import ChannelSelector from "./ChannelSelector.js";
 import PlotComponent from "./PlotComponent.js";
@@ -27,11 +27,15 @@ import {
     get_channels_from_group,
     update_plot_status,
     get_acquisition_status,
+    set_scope_dma_disable,
+    capture_scope_frame,
     empty_channel_group
 } from "#client_core/index.js";
 import useInterval from "../../Common_Components/useInterval.js";
 import {ApplicationContext} from "#src/ApplicationContext.js";
 import type {channel_group, plot_channel, ScopeStatus} from "#interfaces/index.js";
+import type {raw_capture_mode} from "#client_core/index.js";
+import {download_csv} from "#client_core/utilities/downloads.js";
 import {MainPane, PaneGroup} from "#UI/index.js";
 
 // The page is sized to fit the window: what is left once the titles, the gaps and the padding are taken out is shared
@@ -90,6 +94,23 @@ let PlotTab = function (props: PlotTabProps) {
             await handle_update_acquisition_status();
         }
     },  650);
+
+    // the driver reads the buffer without coordinating with its own reader, so the scope is paused for the duration
+    const plot_status_before_capture = useRef(false);
+    let handle_raw_capture = async (mode: raw_capture_mode) =>{
+        plot_status_before_capture.current = plot_status;
+        set_plot_status(false);
+        try{
+            await set_scope_dma_disable(true);
+            const csv = await capture_scope_frame(mode);
+            download_csv(csv, "scope_" + mode + "_" + new Date().toISOString().replace(/[:.]/g, "-") + ".csv");
+        } catch(err){
+            alert('ERROR: error while capturing the raw scope buffer\n' + (err as Error).message);
+        } finally {
+            await set_scope_dma_disable(false).catch(() => {});
+            set_plot_status(plot_status_before_capture.current);
+        }
+    }
 
     let handle_update_acquisition_status = async ()=>{
         let status = await get_acquisition_status();
@@ -169,6 +190,7 @@ let PlotTab = function (props: PlotTabProps) {
                 on_group_change={handle_group_change}
                 acquisition_status={acquisition_status}
                 on_download={set_request_download}
+                on_raw_capture={handle_raw_capture}
             />
             </PaneGroup>
 

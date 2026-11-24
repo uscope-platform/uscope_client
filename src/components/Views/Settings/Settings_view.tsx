@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import React, {useContext, useEffect, useState} from 'react';
-import {Checkbox, FormLayout, InputField, SelectField, SimpleContent, UIPanel, set_confirm_delete, useConfirmDelete} from "#UI/index.js";
+import {Checkbox, FormLayout, InputField, SelectField, SimpleContent, UIPanel, set_confirm_delete, useConfirmDelete, set_developer_mode, useDeveloperMode} from "#UI/index.js";
 import {ApplicationContext} from "#src/ApplicationContext.js";
 import ThemeSelector from "#components/Common_Components/ThemeSelector.js";
 import {up_application, up_settings} from "#client_core/index.js";
@@ -48,6 +48,7 @@ let SettingsView = function (props: SettingsViewProps) {
     const application: up_application = useContext(ApplicationContext);
 
     const confirm_delete = useConfirmDelete();
+    const developer_mode = useDeveloperMode();
 
     const hil_present = application.application_name === "HIL_base";
 
@@ -162,6 +163,18 @@ let SettingsView = function (props: SettingsViewProps) {
                             label="Ask before deleting"
                             value={confirm_delete}
                             onChange={(event) => set_confirm_delete(event.target.checked)}
+                        />
+                    </FormLayout>
+                </SimpleContent>
+            </UIPanel>
+            <UIPanel key="developer_settings" level="level_2" style={{flexShrink: 0}}>
+                <SimpleContent name="Developer">
+                    <FormLayout>
+                        <Checkbox
+                            name="developer_mode"
+                            label="Developer mode (shows debugging tools such as the raw scope buffer dump)"
+                            value={developer_mode}
+                            onChange={(event) => set_developer_mode(event.target.checked)}
                         />
                     </FormLayout>
                 </SimpleContent>

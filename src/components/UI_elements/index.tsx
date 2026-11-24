@@ -29,6 +29,7 @@ export {AddCard} from "./AddCard.js"
 export {ConfirmDialog} from "./ConfirmDialog.js"
 export {PromptDialog} from "./PromptDialog.js"
 export {confirm_delete_enabled, set_confirm_delete, useConfirmDelete} from "./confirm_preference.js"
+export {developer_mode_enabled, set_developer_mode, useDeveloperMode} from "./developer_mode.js"
 export type {ContextMenuAction} from "./ContextMenu.js"
 export {MultiSelect} from "./MultiSelect.js"
 export {SelectableListItem} from './SelectableListItem.js'
