@@ -55,13 +55,21 @@ const placeholder_style: React.CSSProperties = {
     color: "var(--text-secondary)",
 };
 
+// the selected core, as it is now in the emulator
+const core_of = (emulator: up_emulator, component: EmulatorSelections["component"], version: number) => {
+    void version;
+    return component?.type === "node"
+        ? Object.values(emulator.cores).find((c) => c.id === component.obj.id)
+        : undefined;
+};
+
 /// The inputs, outputs and memory of the selected core, each tab with its list and the properties of the selected item beside it
 let CoreIoPanel = (props: CoreIoPanelProps) =>{
 
     const component = props.selections.component;
-    const core = component?.type === "node"
-        ? Object.values(props.emulator.cores).find((c) => c.id === component.obj.id)
-        : undefined;
+    // the emulator is edited in place, so the version it was read at is an argument: the compiler
+    // would otherwise keep the core of the last render, as nothing it depends on has changed
+    const core = core_of(props.emulator, component, props.selections.obj_version);
 
     // a source or a sink has endpoints, not the inputs, outputs and memory of a core
     const io_block = component?.type === "node" ? props.emulator.io_blocks[component.obj.id] : undefined;
