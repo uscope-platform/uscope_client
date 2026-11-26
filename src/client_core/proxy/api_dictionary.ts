@@ -22,6 +22,10 @@ export const api_dictionary = {
         compile_program:"operations/compile_program",
         apply_program:"operations/apply_program",
         clock: "operations/clock",
+        rpu_clock: "operations/rpu_clock",
+        rpu_load: "operations/rpu_load",
+        rpu_stop: "operations/rpu_stop",
+        rpu_status: "operations/rpu_status",
 
         scope_ticket:'operations/plot/ticket',
         sampling_frequency:'operations/hil/sampling_frequency',

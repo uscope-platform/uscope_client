@@ -17,6 +17,10 @@ import {backend_get, backend_post} from "../proxy/backend.js";
 import {api_dictionary} from "../proxy/api_dictionary.js";
 import type {hil_address_map} from "#interfaces/index.ts";
 
+/// The R5 clock range the kernel module accepts, in Hz
+export const RPU_CLOCK_MIN = 375_000_000;
+export const RPU_CLOCK_MAX = 500_000_000;
+
 export class up_settings {
 
     static set_debug_level(level:string){
@@ -25,6 +29,19 @@ export class up_settings {
 
     static get_debug_level(){
         return backend_get(api_dictionary.settings.debug_level);
+    }
+
+    /// The R5 clock frequency in Hz
+    static get_rpu_clock(): Promise<number> {
+        return backend_get<number>(api_dictionary.operations.rpu_clock);
+    }
+
+    /// The driver accepts RPU_CLOCK_MIN to RPU_CLOCK_MAX, a frequency outside of it is refused here with a clear message
+    static set_rpu_clock(frequency: number) {
+        if(!Number.isInteger(frequency) || frequency < RPU_CLOCK_MIN || frequency > RPU_CLOCK_MAX){
+            return Promise.reject(new Error("The RPU clock must be an integer between " + RPU_CLOCK_MIN + " and " + RPU_CLOCK_MAX + " Hz"));
+        }
+        return backend_post(api_dictionary.operations.rpu_clock, {value: frequency});
     }
 
     static get_hil_address_map() {

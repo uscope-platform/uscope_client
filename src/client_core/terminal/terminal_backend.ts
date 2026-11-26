@@ -16,7 +16,7 @@
 import {script_register_access_log, scripting_engine_peripherals} from "../scripting/script_runner.js";
 import {translate_registers} from "../scripting/backend.js";
 import {up_peripheral} from "#client_core/index.js";
-import {__selected_application, up_program} from "../index.js";
+import {__selected_application, up_program, up_rpu_program, up_settings} from "../index.js";
 import {get_version} from "../proxy/platform.js";
 import {history} from "./terminal_history.js";
 import {
@@ -35,7 +35,10 @@ export type TerminalCommand = (args: string[]) => Promise<string[]>;
 export const argument_completions: Record<string, () => string[]> = {
     load_bitstream: ()=> Object.values(store.getState().bitstreams).map((bitstream)=> bitstream.name),
     load_program: ()=> Object.values(store.getState().programs).map((program)=> program.name),
+    rpu_load: ()=> Object.values(store.getState().rpu).map((program)=> program.name),
 }
+
+const RPU_CORES = [0, 1];
 
 export const terminal_backend : Record<string, TerminalCommand> = {
     write: (args: string[]): Promise<string[]> =>{
@@ -323,6 +326,87 @@ export const terminal_backend : Record<string, TerminalCommand> = {
         await __selected_application.load_bitstream(selected_bitstream);
         return [""];
     }
+,
+
+    rpu_load:async (args: string[]): Promise<string[]> =>{
+        if(args[0] === "--help"){
+            return [
+                "RPU_LOAD:",
+                "This command loads an RPU program on the core it is stored for and starts it",
+                "a core that is not offline is stopped and reloaded, loading is also how a stopped core is restarted",
+                "format: rpu_load [RPU PROGRAM NAME]"
+            ];
+        }
+        if(args[0] === undefined) throw ["ERROR: Missing RPU program name"];
+        let program = Object.values(store.getState().rpu).find((p)=> p.name === args[0]);
+        if(program === undefined) throw ["ERROR: RPU program '" + args[0] + "' not found"];
+        await new up_rpu_program(program).load();
+        return ["RPU program " + program.name + " running on core " + program.core];
+    },
+
+    rpu_stop:async (args: string[]): Promise<string[]> =>{
+        if(args[0] === "--help"){
+            return [
+                "RPU_STOP:",
+                "This command stops an RPU core, a core that is already offline is left as it is",
+                "format: rpu_stop [CORE (0 or 1)]"
+            ];
+        }
+        let core = parse_rpu_core(args[0]);
+        await up_rpu_program.stop_core(core);
+        return ["RPU core " + core + " stopped"];
+    },
+
+    rpu_status:async (args: string[]): Promise<string[]> =>{
+        if(args[0] === "--help"){
+            return [
+                "RPU_STATUS:",
+                "This command reports the state of the RPU cores (offline, running, crashed, ...)",
+                "without a core it reports both of them",
+                "format: rpu_status [CORE (0 or 1)]"
+            ];
+        }
+        let cores = args[0] === undefined ? RPU_CORES : [parse_rpu_core(args[0])];
+        let lines: string[] = [];
+        for(let core of cores){
+            lines.push("RPU core " + core + ": " + await up_rpu_program.get_core_status(core));
+        }
+        return lines;
+    },
+
+    rpu_clock:async (args: string[]): Promise<string[]> =>{
+        if(args[0] === "--help"){
+            return [
+                "RPU_CLOCK:",
+                "This command reads the R5 clock frequency, or sets it when one is given",
+                "the frequency is in Hz, k and M suffixes are accepted (400M is 400000000)",
+                "format: rpu_clock [FREQUENCY]"
+            ];
+        }
+        if(args[0] === undefined){
+            return ["RPU clock: " + await up_settings.get_rpu_clock() + " Hz"];
+        }
+        let frequency = parse_frequency(args[0]);
+        if(frequency === null) throw ["ERROR: Invalid frequency '" + args[0] + "', the format is an integer in Hz, optionally with a k or M suffix"];
+        await up_settings.set_rpu_clock(frequency);
+        return ["RPU clock set to " + await up_settings.get_rpu_clock() + " Hz"];
+    }
+}
+
+/// The core argument of the RPU commands: 0 or 1
+const parse_rpu_core = (text: string | undefined): number =>{
+    if(text === undefined) throw ["ERROR: Missing RPU core (0 or 1)"];
+    if(text !== "0" && text !== "1") throw ["ERROR: Invalid RPU core '" + text + "', it must be 0 or 1"];
+    return Number(text);
+}
+
+/// A frequency in Hz, with an optional k or M multiplier: 400000000, 400M, 400000k, 437.5M
+const parse_frequency = (text: string): number | null =>{
+    let match = /^(\d+(?:\.\d+)?)([kM]?)$/.exec(text);
+    if(!match) return null;
+    let multiplier = match[2] === "M" ? 1e6 : match[2] === "k" ? 1e3 : 1;
+    let frequency = Number(match[1]) * multiplier;
+    return Number.isInteger(frequency) ? frequency : null;
 }
 
 /// The access log doubles as the queue of the write command: runs the action with an empty log, and puts the queued

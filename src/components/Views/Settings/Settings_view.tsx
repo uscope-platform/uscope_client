@@ -17,7 +17,9 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Checkbox, FormLayout, InputField, SelectField, SimpleContent, UIPanel, set_confirm_delete, useConfirmDelete, set_developer_mode, useDeveloperMode} from "#UI/index.js";
 import {ApplicationContext} from "#src/ApplicationContext.js";
 import ThemeSelector from "#components/Common_Components/ThemeSelector.js";
-import {up_application, up_settings} from "#client_core/index.js";
+import {up_application, up_settings, RPU_CLOCK_MIN, RPU_CLOCK_MAX} from "#client_core/index.js";
+import {error_text} from "#client_core/proxy/errors.js";
+import {toast} from "react-toastify";
 import type {SimpleStringOption} from "#interfaces/index.js";
 
 interface SettingsViewProps {
@@ -52,6 +54,8 @@ let SettingsView = function (props: SettingsViewProps) {
 
     const hil_present = application.application_name === "HIL_base";
 
+    // null until it is read, undefined when the platform has no RPU clock to read
+    const [rpu_clock, set_rpu_clock] = useState<number | null | undefined>(null);
     const [multichannel_debug, set_multichannel_debug] = useState({label:"false", value:"false"});
     const [debug_level, set_debug_level] = useState({label:"", value:""});
     const [hil_address_map, set_hil_address_map] = useState<HilMap>({
@@ -83,6 +87,7 @@ let SettingsView = function (props: SettingsViewProps) {
         up_settings.get_debugger_option("multichannel_debug").then(resp=>{
             set_multichannel_debug({label:String(resp), value:String(resp)});
         })
+        up_settings.get_rpu_clock().then(set_rpu_clock).catch(()=> set_rpu_clock(undefined));
 
     },[])
 
@@ -92,6 +97,36 @@ let SettingsView = function (props: SettingsViewProps) {
             let selected_clock = parseInt(event.currentTarget.name.replace("fclk_", ""));
             await application.edit_clock_frequency(selected_clock, parseFloat(event.currentTarget.value))
         }
+    }
+
+    let handle_edit_rpu_clock = async (event: React.KeyboardEvent<HTMLInputElement>) =>{
+        if(event.key !== "Enter" && event.key !== "Tab") return;
+        let input = event.currentTarget;
+        try {
+            await up_settings.set_rpu_clock(Number(input.value));
+            let applied = await up_settings.get_rpu_clock();
+            set_rpu_clock(applied);
+            input.value = applied.toString();
+        } catch (error) {
+            toast.error("Unable to set the RPU clock: " + error_text(error));
+        }
+    }
+
+    let render_rpu_clock = () =>{
+        // a platform without an RPU (Zynq 7000) has no clock to show
+        if(rpu_clock === undefined) return null;
+        return(
+            <UIPanel key="rpu_clock_settings" level="level_2" style={{flexShrink: 0}}>
+                <SimpleContent name="RPU Clock">
+                    <FormLayout columns={COLUMN_WIDTH}>
+                        <InputField key={rpu_clock ?? "loading"} id="rpu_clock" name="rpu_clock"
+                                    defaultValue={rpu_clock === null ? "" : rpu_clock.toString()}
+                                    onKeyDown={handle_edit_rpu_clock} label="RPU clock frequency"
+                                    description={"Hz, from " + RPU_CLOCK_MIN + " to " + RPU_CLOCK_MAX + ". Press Enter to apply"}/>
+                    </FormLayout>
+                </SimpleContent>
+            </UIPanel>
+        )
     }
 
     let handle_set_debug_level =async (value:  SimpleStringOption | null) =>{
@@ -191,6 +226,7 @@ let SettingsView = function (props: SettingsViewProps) {
                     </FormLayout>
                 </SimpleContent>
             </UIPanel>
+            {render_rpu_clock()}
             <UIPanel key="platform_settings" level="level_2" style={{flexShrink: 0}}>
                 <SimpleContent name="Platform settings">
                     <FormLayout columns={COLUMN_WIDTH}>

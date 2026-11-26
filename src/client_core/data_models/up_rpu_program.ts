@@ -71,6 +71,21 @@ export class up_rpu_program {
         return backend_patch(api_dictionary.rpu.edit+'/'+this.id,edit)
     }
 
+    /// Loads the program on the RPU core it is stored for and starts it. A core that is not offline is stopped
+    /// and reloaded: there is no plain start, loading the program again is how a stopped core is restarted
+    load = async () => {
+        await backend_post(api_dictionary.operations.rpu_load + '/' + this.id, {});
+    }
+
+    static stop_core = async (core: number) => {
+        await backend_post(api_dictionary.operations.rpu_stop + '/' + core, {});
+    }
+
+    /// The remoteproc state of the core: offline, running, crashed, ...
+    static get_core_status = async (core: number): Promise<string> => {
+        return backend_get<string>(api_dictionary.operations.rpu_status + '/' + core);
+    }
+
     export_program = async () => {
         return backend_get(api_dictionary.rpu.get + '/'+this.id + "?export-program=true");
     }
