@@ -38,7 +38,7 @@ import type {user_model} from "#interfaces/index.js";
 const ROLES = [
 
     {value: "admin", label: "Administrator", description: "Also manages the peripherals, the platform and the settings"},
-    {value: "user", label: "User", description: "Also edits the applications, scripts, programs, bitstreams, filters and emulators"},
+    {value: "user", label: "User", description: "Also edits the applications, scripts, programs, bitstreams, RPU programs, filters and emulators"},
     {value: "operator", label: "Operator", description: "Uses the scope"}
 ];
 

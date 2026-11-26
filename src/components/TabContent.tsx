@@ -24,6 +24,7 @@ const ApplicationsManager = React.lazy(() => import('./Views/Applications/Applic
 const ProgramsManager = React.lazy(()=> import('./Views/Programs/ProgramsManager.jsx'));
 const PlatformManager = React.lazy(()=> import('./Views/Platform/PlatformManager.jsx'));
 const BitstreamManager = React.lazy(()=> import('./Views/Bitstreams/BitstreamManager.jsx'));
+const RpuManager = React.lazy(()=> import('./Views/Rpu/RpuManager.jsx'));
 const HilView = React.lazy(() => import('./Views/Emulators/HilView.jsx'));
 const SettingsView = React.lazy(() => import('./Views/Settings/Settings_view.jsx'));
 
@@ -36,6 +37,7 @@ let TabContent = (props: TabContentProps) => {
     let components_associations : any = {
         scope:<PlotTab/>,
         bitstreams: <BitstreamManager />,
+        rpu: <RpuManager />,
         scripts: <ScriptManager/>,
         peripherals:<PeripheralsManager />,
         applications: <ApplicationsManager/>,
