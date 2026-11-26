@@ -23,7 +23,8 @@ import {
     up_filter,
     up_peripheral,
     up_program,
-    up_script
+    up_script,
+    up_rpu_program
 } from "#client_core/index.js";
 
 export interface ApplicationsState {
@@ -40,6 +41,9 @@ export interface BitstreamState{
     [key:number]: up_bitstream
 }
 
+export interface RpuState{
+    [key:number]: up_rpu_program
+}
 export interface FilterState{
     [key:number]: up_filter
 }

@@ -41,7 +41,7 @@ export {up_register} from  './data_models/up_register.js'
 export {up_emulator} from './data_models/emulator/up_emulator.js'
 export {up_emulator_result} from './data_models/emulator/up_emulation_result.js'
 export {up_settings} from './data_models/up_settings.js'
-
+export {up_rpu_program} from './data_models/up_rpu_program.js'
 //filter
 export {filter_calculate_keepouts} from './filters/filter_preview.js'
 export {filter_validate} from './filters/filter_validation.js'

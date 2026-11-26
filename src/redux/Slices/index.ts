@@ -15,13 +15,14 @@
 
 import {combineReducers} from "redux"
 
-import PeripheralSlice from './peripheralSlice.js'
-import ApplicationSlice from './applicationSlice.js'
-import ProgramSlice from "./programSlice.js"
-import BitstreamSlice from "./bitstreamSlice.js"
-import FilterSlice from "./filterSlice.js"
-import EmulatorSlice from "./emulatorSlice.js"
-import scriptSlice from "./scriptSlice.js"
+import PeripheralSlice from '#redux/Slices/peripheralSlice'
+import ApplicationSlice from '#redux/Slices/applicationSlice'
+import ProgramSlice from "#redux/Slices/programSlice"
+import BitstreamSlice from "#redux/Slices/bitstreamSlice"
+import FilterSlice from "#redux/Slices/filterSlice"
+import EmulatorSlice from "#redux/Slices/emulatorSlice"
+import scriptSlice from "#redux/Slices/scriptSlice"
+import RpuSlice from "#redux/Slices/rpuSlice";
 
 export default combineReducers({
     bitstreams: BitstreamSlice,
@@ -30,5 +31,6 @@ export default combineReducers({
     programs: ProgramSlice,
     scripts: scriptSlice,
     filters: FilterSlice,
-    emulators: EmulatorSlice
+    emulators: EmulatorSlice,
+    rpu: RpuSlice
     });

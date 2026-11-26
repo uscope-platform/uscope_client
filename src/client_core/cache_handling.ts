@@ -15,14 +15,14 @@
 
 
 import store from "../store.js";
-import {up_application, up_emulator, up_peripheral} from "./index.js"
+import {up_application, up_emulator, up_peripheral, up_rpu_program} from "./index.js"
 import {backend_get} from "./proxy/backend.js";
 import {api_dictionary} from "./proxy/api_dictionary.js";
 import {
     loadAllBitstreams,
     loadAllEmulators,
     loadAllFilters,
-    loadAllPrograms,
+    loadAllPrograms, loadAllRpuPrograms,
     loadAllScripts,
     loadApplications,
     loadPeripherals
@@ -91,6 +91,18 @@ let load_all_bitstreams = async () =>{
     return bitstreams_dict;
 }
 
+
+let load_all_rpu_programs = async () =>{
+    let raw_prog =await backend_get(api_dictionary.rpu.load_all);
+    let rpu_dict: Record<string, up_rpu_program> = {}
+    for (let item in raw_prog) {
+        let id = raw_prog[item].id;
+        rpu_dict[id] = new up_rpu_program(raw_prog[item]);
+    }
+    store.dispatch(loadAllRpuPrograms(rpu_dict));
+    return rpu_dict;
+}
+
 let load_all_filters = async () =>{
     let raw_flt = await backend_get(api_dictionary.filters.load_all);
     let filters_dict: Record<string, up_filter> = {}
@@ -127,6 +139,7 @@ export const refresh_caches = (): Promise<cache_result[]> =>{
     refresh_ops.push(scripts_op);
     refresh_ops.push(refresh_resource_cache("programs_cache",state.programs, load_all_programs , ()=>{return backend_get(api_dictionary.programs.get_hash)}));
     refresh_ops.push(refresh_resource_cache("bitstreams_cache",state.bitstreams, load_all_bitstreams , ()=>{return backend_get(api_dictionary.bitstream.get_hash)}));
+    refresh_ops.push(refresh_resource_cache("rpu_programs_cache",state.rpu, load_all_rpu_programs , ()=>{return backend_get(api_dictionary.rpu.get_hash)}));
     refresh_ops.push(refresh_resource_cache("filters_cache",state.filters, load_all_filters , ()=>{return backend_get(api_dictionary.filters.get_hash)}));
     refresh_ops.push(refresh_resource_cache("emulators_cache",state.emulators, load_all_emulators , ()=>{return backend_get(api_dictionary.emulators.get_hash)}));
     return Promise.all(refresh_ops);

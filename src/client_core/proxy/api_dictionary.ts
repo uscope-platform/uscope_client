@@ -46,6 +46,14 @@ export const api_dictionary = {
         edit: 'application',
         remove: 'application'
     },
+    rpu:{
+        get_hash: 'rpu/hash',
+        load_all: 'rpu/load_all',
+        get: 'rpu',
+        add: 'rpu',
+        edit: 'rpu',
+        delete: 'rpu'
+    },
     bitstream:{
         get_hash: 'bitstream/hash',
         load_all: 'bitstream/load_all',

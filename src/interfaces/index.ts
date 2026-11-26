@@ -23,11 +23,12 @@ export type {application, group_channel_token, core_load_info, clock_frequencies
 export type {hil_address_map, emulator,core_options,core_input_source, core, connection, server_side_port_link, hil_data_point, core_deployment_options, core_input, core_input_data, core_memory, core_output, emulator_hil_sim_data, port_link, io_block, io_port, emulator_layout} from './client_core/emulator.ts'
 export type {filter_specifications} from './client_core/filter.ts'
 export type {bitstream_model} from './client_core/bitstream.ts'
+export type {rpu_program_model, } from './client_core/rpu_program.ts'
 export type {register, peripheral, field} from './client_core/peripherals.ts'
 export type {autocomplete_periph_object, register_write_object, autocomplete_suggestion, autocompletion_context} from './client_core/scripting/types.js'
 export type {register_write, scope_control, scope_data_object, scope_settings,user_create_request, AutoAuthRequest, ManualAuthRequest, UserRole, login_token, user_model, ScopeStatus} from './client_core/proxy/types.js'
 export type {plot_channel} from './plot_view.js'
-export type {ApplicationsState, ScriptState,parameter_save_action, BitstreamState, FilterState,ProgramState,EmulatorState,
+export type {ApplicationsState, ScriptState,parameter_save_action, BitstreamState, FilterState,ProgramState,EmulatorState, RpuState,
             PeripheralsState,register_field_upsert_action, register_register_upsert_action, remove_register_action, remove_field_action} from './redux.js'
 export type {EmulatorSelections, EmulatorIomSelector, EmulatorGraphEdge, EmulatorComponentSelector, EmulatorGraphNode, EmulatorResultLegendItem, EmulatorHilChannelIdentifier, DebuggerDataPackage, TranslationTableEntry, DebuggerCheckpoint, SingleProgramDataPackage} from './emulator_view.js'
 
