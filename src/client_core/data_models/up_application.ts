@@ -501,6 +501,14 @@ export class up_application {
             action:"edit",
             object:"pl_clocks"
         };
+        await backend_post(api_dictionary.operations.clock, {
+            id:clock_id,
+            value:frequency,
+            is_primary:true
+        }).catch((err =>{
+            report_error(err);
+            return;
+        }));
         await backend_patch(api_dictionary.applications.edit + '/' + this.id, edit);
         store.dispatch(updateApplication(this.deep_copy()));
     }
