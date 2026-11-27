@@ -17,7 +17,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Checkbox, FormLayout, InputField, SelectField, SimpleContent, UIPanel, set_confirm_delete, useConfirmDelete, set_developer_mode, useDeveloperMode} from "#UI/index.js";
 import {ApplicationContext} from "#src/ApplicationContext.js";
 import ThemeSelector from "#components/Common_Components/ThemeSelector.js";
-import {up_application, up_settings, RPU_CLOCK_MIN, RPU_CLOCK_MAX} from "#client_core/index.js";
+import {up_application, up_settings, RPU_CLOCK_MIN, RPU_CLOCK_MAX, format_frequency, parse_frequency} from "#client_core/index.js";
 import {error_text} from "#client_core/proxy/errors.js";
 import {toast} from "react-toastify";
 import type {SimpleStringOption} from "#interfaces/index.js";
@@ -56,6 +56,8 @@ let SettingsView = function (props: SettingsViewProps) {
 
     // null until it is read, undefined when the platform has no RPU clock to read
     const [rpu_clock, set_rpu_clock] = useState<number | null | undefined>(null);
+    // the frequencies the PL clocks actually run at (the PLL can only approximate the requested ones), null until read
+    const [actual_pl_clocks, set_actual_pl_clocks] = useState<number[] | null>(null);
     const [multichannel_debug, set_multichannel_debug] = useState({label:"false", value:"false"});
     const [debug_level, set_debug_level] = useState({label:"", value:""});
     const [hil_address_map, set_hil_address_map] = useState<HilMap>({
@@ -88,25 +90,50 @@ let SettingsView = function (props: SettingsViewProps) {
             set_multichannel_debug({label:String(resp), value:String(resp)});
         })
         up_settings.get_rpu_clock().then(set_rpu_clock).catch(()=> set_rpu_clock(undefined));
+        refresh_actual_pl_clocks();
 
     },[])
 
-    let handle_edit_clocks = async (event: React.KeyboardEvent<HTMLInputElement>) =>{
+    let refresh_actual_pl_clocks = () =>{
+        application.get_global_clocks().then(set_actual_pl_clocks).catch((error)=>{
+            console.error(error);
+            set_actual_pl_clocks(null);
+        });
+    }
 
-        if(event.key==="Enter"|| event.key ==="Tab"){
-            let selected_clock = parseInt(event.currentTarget.name.replace("fclk_", ""));
-            await application.edit_clock_frequency(selected_clock, parseFloat(event.currentTarget.value))
+    let handle_edit_clocks = async (event: React.KeyboardEvent<HTMLInputElement>) =>{
+        if(event.key !== "Enter" && event.key !== "Tab") return;
+        let input = event.currentTarget;
+        let frequency = parse_frequency(input.value);
+        if(frequency === null || frequency <= 0){
+            toast.error("Invalid PL clock frequency \"" + input.value + "\", use e.g. 100 MHz, 250 kHz or 50000000");
+            return;
         }
+        let selected_clock = parseInt(input.name.replace("fclk_", ""));
+        await application.edit_clock_frequency(selected_clock, frequency);
+        input.value = format_frequency(frequency);
+        refresh_actual_pl_clocks();
+    }
+
+    let pl_clock_description = (i: number) =>{
+        let actual = actual_pl_clocks?.[i];
+        let actual_text = actual === undefined ? "unknown" : format_frequency(actual);
+        return "Actual: " + actual_text + ". Press Enter to apply";
     }
 
     let handle_edit_rpu_clock = async (event: React.KeyboardEvent<HTMLInputElement>) =>{
         if(event.key !== "Enter" && event.key !== "Tab") return;
         let input = event.currentTarget;
+        let frequency = parse_frequency(input.value);
+        if(frequency === null){
+            toast.error("Invalid RPU clock frequency \"" + input.value + "\", use e.g. 450 MHz");
+            return;
+        }
         try {
-            await up_settings.set_rpu_clock(Number(input.value));
+            await up_settings.set_rpu_clock(frequency);
             let applied = await up_settings.get_rpu_clock();
             set_rpu_clock(applied);
-            input.value = applied.toString();
+            input.value = format_frequency(applied);
         } catch (error) {
             toast.error("Unable to set the RPU clock: " + error_text(error));
         }
@@ -120,9 +147,9 @@ let SettingsView = function (props: SettingsViewProps) {
                 <SimpleContent name="RPU Clock">
                     <FormLayout columns={COLUMN_WIDTH}>
                         <InputField key={rpu_clock ?? "loading"} id="rpu_clock" name="rpu_clock"
-                                    defaultValue={rpu_clock === null ? "" : rpu_clock.toString()}
+                                    defaultValue={rpu_clock === null ? "" : format_frequency(rpu_clock)}
                                     onKeyDown={handle_edit_rpu_clock} label="RPU clock frequency"
-                                    description={"Hz, from " + RPU_CLOCK_MIN + " to " + RPU_CLOCK_MAX + ". Press Enter to apply"}/>
+                                    description={"From " + format_frequency(RPU_CLOCK_MIN) + " to " + format_frequency(RPU_CLOCK_MAX) + ". Press Enter to apply"}/>
                     </FormLayout>
                 </SimpleContent>
             </UIPanel>
@@ -219,9 +246,9 @@ let SettingsView = function (props: SettingsViewProps) {
                     <FormLayout columns={COLUMN_WIDTH}>
                         {["0", "1", "2", "3"].map(i => (
                             <InputField key={i} id={"fclk_" + i} name={"fclk_" + i}
-                                        defaultValue={application.pl_clocks[i]!.toString()}
+                                        defaultValue={format_frequency(application.pl_clocks[i]!)}
                                         onKeyDown={handle_edit_clocks} label={"PL clock frequency " + i}
-                                        description="Press Enter to apply"/>
+                                        description={pl_clock_description(parseInt(i))}/>
                         ))}
                     </FormLayout>
                 </SimpleContent>

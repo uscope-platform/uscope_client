@@ -244,6 +244,11 @@ export class up_application {
         )
     }
 
+    /// The frequencies (Hz) the four PL clocks actually run at, after the PLL rounding of the requested ones
+    get_global_clocks = (): Promise<number[]> =>{
+        return backend_get<number[]>(api_dictionary.operations.clock);
+    }
+
     get_global_clock_frequency = async (clock_n: number) =>{
         try{
             let clocks = await backend_get<Record<number, number>>(api_dictionary.operations.clock);
